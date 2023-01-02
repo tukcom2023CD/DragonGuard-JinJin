@@ -1,0 +1,142 @@
+# https://www.toptal.com/developers/gitignore/api/macos,swift,xcode,cocoapods에 의해 생성됨
+# https://www.toptal.com/developers/gitignore?templates=macos,swift,xcode,cocoapods에서 편집
+
+### 코코아팟 ###
+## CocoaPods GitIgnore 템플릿
+
+# CocoaPods - 대역폭을 절약하기 위해서만 사용/푸시 시간 절약
+# - 종속 포드가 많은 경우에도 유용합니다.
+# - https://guides.cocoapods.org/using/using-cocoapods.html에 따라 잠금 파일을 절대 무시하지 마십시오.
+포드/
+
+### 맥 OS ###
+# 일반적인
+.DS_스토어
+.AppleDouble
+.LSOverride
+
+# 아이콘은 두 개의 \r로 끝나야 합니다.
+상
+
+
+# 썸네일
+._*
+
+# 볼륨의 루트에 나타날 수 있는 파일
+.DocumentRevisions-V100
+.fseventsd
+.스포트라이트-V100
+.임시 항목
+.쓰레기
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# 원격 AFP 공유에서 잠재적으로 생성된 디렉토리
+.AppleDB
+.AppleDesktop
+네트워크 휴지통 폴더
+임시 항목
+.apdisk
+
+### macOS 패치 ###
+# iCloud 생성 파일
+*.아이클라우드
+
+### 빠른 ###
+# 엑스코드
+#
+# gitignore 기여자: Global/Xcode.gitignore, Objective-C.gitignore 및 Swift.gitignore를 업데이트하는 것을 잊지 마십시오.
+
+## 사용자 설정
+xcuserdata/
+
+## Xcode 8 및 이전 버전과의 호환성(Xcode 9 시작 시 필요하지 않은 무시)
+*.xcscm 청사진
+*.xc체크아웃
+
+## Xcode 3 및 이전 버전과의 호환성(Xcode 4 시작 시 필요하지 않음)
+짓다/
+파생 데이터/
+*.옆으로 이동
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+## Obj-C/Swift 특정
+*.hmap
+
+## 앱 패키징
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## 놀이터
+타임라인.xc타임라인
+운동장.xcworkspace
+
+# 스위프트 패키지 매니저
+# Swift Package Manager 종속성에서 소스 코드를 체크인하지 않으려면 이 줄을 추가합니다.
+# 패키지/
+# 패키지.핀
+# 패키지.해결됨
+# *.xcodeproj
+# Xcode는 .xcworkspacedata 파일과 xcuserdata로 이 디렉토리를 자동으로 생성합니다.
+# 따라서 패키지 구성 파일을 프로젝트에 추가하지 않는 한 필요하지 않습니다.
+# .swiftpm
+
+.짓다/
+
+# 코코아팟
+# .gitignore에 Pods 디렉토리를 추가하지 않는 것이 좋습니다. 하지만
+# 스스로 판단해야 합니다. 장단점은 다음에서 언급됩니다.
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
+# 포드/
+# Xcode 작업 공간에서 소스 코드를 체크인하지 않으려면 이 줄을 추가하십시오.
+# *.xc작업공간
+
+# 카르타고
+# Carthage 종속성에서 소스 코드를 체크인하지 않으려면 이 줄을 추가합니다.
+# 카르타고/체크아웃
+
+카르타고/빌드/
+
+# Accio 종속성 관리
+종속성/
+.accio/
+
+# 빠른 차선
+# 스크린샷은 git repo에 저장하지 않는 것을 권장합니다.
+# 대신 fastlane을 사용하여 필요할 때마다 스크린샷을 다시 생성하십시오.
+# 권장 설정에 대한 자세한 내용은 다음을 방문하십시오.
+# https://docs.fastlane.tools/best-practices/source-control/#source-control
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# 코드 주입
+# 새 코드 주입 도구 후에 /iOSInjectionProject 폴더가 생성됩니다.
+# https://github.com/johnno1962/injectionforxcode
+
+iOSInjectionProject/
+
+### 엑스코드 ###
+
+## Xcode 8 이하
+
+### 엑스코드 패치 ###
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
+
+# 끝 https://www.toptal.com/developers/gitignore/api/macos,swift,xcode,cocoapods
