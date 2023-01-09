@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+    command: gradle bootRun
+    container_name: backend
+    ports:
+      - 8080:8080
+    networks:
+      - app-tier
+    depends_on:
+      - db   
+    restart: on-failure
+    tty: true
+
+  db:
+    image: mysql
+    container_name: db
+    restart: on-failure
+    ports:
+      - 3307:3306
+    volumes:
+      - data_mysql:/var/lib/mysql
+    env_file:
+      - .env
+    networks:
+      - app-tier
+    tty: true
+
+networks:
+  app-tier:
+    driver: bridge
+
+volumes:
+  data_mysql: null
