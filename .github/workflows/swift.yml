@@ -1,0 +1,13 @@
+name: GitRank iOS Dev Github Actions
+on: [push, pull_request]
+defaults:
+  run:
+    shell: bash
+    working-directory: ./ios
+jobs:
+  ios-test:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: swift build -v
+    - run: swift test -v
