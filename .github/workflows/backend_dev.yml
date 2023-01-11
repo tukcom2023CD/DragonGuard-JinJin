@@ -14,5 +14,6 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         architecture: x64
+    - run: chmod +x gradlew
     - run: ./gradlew build -x test
     
