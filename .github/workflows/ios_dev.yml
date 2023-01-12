@@ -9,5 +9,4 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
-    - run: swift build -v
-    - run: swift test -v
+    - run: xcodebuild clean test -project DragonGuard-JinJin/ios/ios.xcodeproj -scheme ios -destination 'platform=iOS Simulator,name=iPhone 13 Pro,OS=latest'
