@@ -1,0 +1,19 @@
+name: GitRank Backend Dev Github Actions
+on: [push, pull_request]
+defaults:
+  run:
+    shell: bash
+    working-directory: ./backend
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        architecture: x64
+    - run: chmod +x gradlew
+    - run: ./gradlew build -x test
+    
