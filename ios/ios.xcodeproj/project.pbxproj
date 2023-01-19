@@ -13,6 +13,7 @@
 		3B1DB87C2963428A00308F43 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DB87B2963428A00308F43 /* ViewController.swift */; };
 		3B1DB8812963428B00308F43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DB8802963428B00308F43 /* Assets.xcassets */; };
 		3B1DB8842963428B00308F43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */; };
+		3BA0EEE62979A16700B9E952 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 3BA0EEE52979A16700B9E952 /* Charts */; };
 		3BE3F7D2297060DC0005B640 /* iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7D1297060DC0005B640 /* iosTests.swift */; };
 		3BE3F7DF297064340005B640 /* iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7DE297064340005B640 /* iosUITests.swift */; };
 		3BE3F7E1297064340005B640 /* iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7E0297064340005B640 /* iosUITestsLaunchTests.swift */; };
@@ -58,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BA0EEE62979A16700B9E952 /* Charts in Frameworks */,
 				A3AEEB622975286C00004722 /* RxSwift in Frameworks */,
 				A3AEEB652975311400004722 /* SnapKit in Frameworks */,
 				A3AEEB602975286C00004722 /* RxCocoa in Frameworks */,
@@ -185,6 +187,7 @@
 				A3AEEB5F2975286C00004722 /* RxCocoa */,
 				A3AEEB612975286C00004722 /* RxSwift */,
 				A3AEEB642975311400004722 /* SnapKit */,
+				3BA0EEE52979A16700B9E952 /* Charts */,
 			);
 			productName = ios;
 			productReference = 3B1DB8742963428A00308F43 /* ios.app */;
@@ -262,6 +265,7 @@
 				3B15C594296FB673004AE007 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				A3AEEB5E2975286C00004722 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				A3AEEB632975311400004722 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				3BA0EEE42979A16700B9E952 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			productRefGroup = 3B1DB8752963428A00308F43 /* Products */;
 			projectDirPath = "";
@@ -647,6 +651,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		3BA0EEE42979A16700B9E952 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.0;
+			};
+		};
 		A3AEEB5E2975286C00004722 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
@@ -670,6 +682,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3B15C594296FB673004AE007 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		3BA0EEE52979A16700B9E952 /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3BA0EEE42979A16700B9E952 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
 		};
 		A3AEEB5F2975286C00004722 /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
