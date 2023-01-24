@@ -29,6 +29,26 @@ services:
     networks:
       - app-tier
     tty: true
+  
+  scrapping:
+    build:
+      context: ./scrapping
+    ports:
+      - 5000:5000
+    environment:
+      FLASK_APP: ./app.py
+      APP_NAME: scrapping
+      FLASK_DEBUG: 1
+    container_name: scrapping
+    env_file: ./scrapping/.env
+    restart: on-failure
+    volumes:
+      - ./scrapping:/scrapping/
+    depends_on:
+      - db
+    networks:
+      - app-tier
+    tty: true
 
 networks:
   app-tier:
