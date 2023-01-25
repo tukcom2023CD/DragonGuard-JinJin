@@ -9,5 +9,5 @@ COPY requirements.txt /scrapping/
 RUN pip install -r requirements.txt
 COPY . ./
 
-ENTRYPOINT [ "./wait-for-it.sh" ]
-CMD [ "-t", "70", "db:3306", "--", "gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--reload" ]
+ENTRYPOINT [ "gunicorn" ]
+CMD [ "--bind", "0.0.0.0:5000", "app:app", "--reload" ]

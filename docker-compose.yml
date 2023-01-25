@@ -40,12 +40,9 @@ services:
       APP_NAME: scrapping
       FLASK_DEBUG: 1
     container_name: scrapping
-    env_file: ./scrapping/.env
     restart: on-failure
     volumes:
       - ./scrapping:/scrapping/
-    depends_on:
-      - db
     networks:
       - app-tier
     tty: true
