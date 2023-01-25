@@ -35,15 +35,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ns = api.namespace('/', description='GitRank API')
 
-@ns.route('/api/search/git-repos', methods=['POST'])
+@ns.route('/api/search/git-repos', methods=['GET'])
 class scrapping(Resource):
     
     '''레포명으로 검색한 페이지를 스크래핑한다'''
     def post(self):
         results = []
         
-        req = request.get_json()
-        repository = req['git-repo']
+        repository = request.args.get('name')
         page = int(request.args.get('page'))
         
         s = Search(search_word=repository, search_type='repository', search_page=page)
