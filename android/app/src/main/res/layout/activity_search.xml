@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.4"
-            android:background="#777777"
+            android:background="@android:color/transparent"
             android:gravity="center_vertical" />
 
         <LinearLayout
@@ -124,42 +124,49 @@
                     android:layout_marginHorizontal="40dp"
                     android:background="#000000" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/search_result"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_gravity="center_horizontal"
-                    android:visibility="gone"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:listitem="@layout/repository_list" />
-
-                <LinearLayout
-                    android:id="@+id/loading"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:visibility="gone"
                     android:orientation="vertical">
 
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/search_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="6"
+                        android:orientation="vertical"
+                        android:layout_gravity="center_horizontal"
+                        android:visibility="gone"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:listitem="@layout/repository_list" />
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/loading"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Loading.."
-                        android:textColor="#000000"
-                        android:textSize="20dp" />
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Loading.."
+                            android:textColor="#000000"
+                            android:textSize="20dp" />
+                    </LinearLayout>
                 </LinearLayout>
+
 
             </LinearLayout>
 

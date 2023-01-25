@@ -41,10 +41,15 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
         binding.searchActivity = this
+        val handler = Handler()
 
         val array2 = arrayListOf("DragonGuard-JinJin", "MBTI", "RISING","BOSS","AOK","GoldenClinic", "Pass", "BTS", "EVE")
         initRecycler(array2)
+//        handler.postDelayed({initRecycler(array2)},2000)
 
+        /*
+        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
+         */
         binding.searchName.setOnKeyListener { view, i, keyEvent ->
             if(keyEvent.action == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_ENTER){
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -56,6 +61,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /*
+    검색 옵션을 눌렀을때 사용하는 listener
+     */
     fun onOptionListener(){
         if(binding.optionIcon.tag == "down"){
             binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
@@ -66,10 +74,16 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /*
+    검색버튼을 눌렀을때 사용하는 listener
+     */
     fun onSearchListener(){
         Toast.makeText(applicationContext, "${binding.searchName.text} 검색", Toast.LENGTH_SHORT).show()
     }
 
+    /*
+    받아온 데이터를 리사이클러뷰에 추가하는 함수 initRecycler()
+     */
     fun initRecycler(array: ArrayList<String>){
         array1.addAll(array)
         if(count == 0){
@@ -87,52 +101,57 @@ class SearchActivity : AppCompatActivity() {
             binding.searchResult.scrollToPosition(position)
 //            Toast.makeText(applicationContext, "추가 완료!! $count", Toast.LENGTH_SHORT).show()
         }
-        binding.loading.visibility = View.GONE
         initScrollListener()
+        binding.loading.visibility = View.GONE
     }
 
+    /*
+    데이터 더 받아오는 함수 loadMorePosts() 구현
+     */
     private fun loadMorePosts() {
         if (binding.loading.visibility == View.GONE) {
             binding.loading.visibility = View.VISIBLE
-            CoroutineScope(Dispatchers.Main).launch {
-/*              데이터를 추가로 받아오는 부분 구현
+/*     CoroutineScope(Dispatchers.Main).launch {
+             데이터를 추가로 받아오는 부분 구현
 
-                val retrofitD =
-                    Retrofit.Builder().baseUrl(backendIp)
-                        .client(okHttpClient)
-                        .addConverterFactory(GsonConverterFactory.create()).build()
-                val apiD = retrofitD.create(DockerJejuPlaceApi::class.java)
+            val retrofitD =
+                Retrofit.Builder().baseUrl(backendIp)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create()).build()
+            val apiD = retrofitD.create(DockerJejuPlaceApi::class.java)
 
-                apiCallD(apiD, label, split)
- */
-                val array = arrayListOf("name","string")
-                initRecycler(array)
-            }
+            apiCallD(apiD, label, split)x
+        }
+*/
+            val array = arrayListOf("name","string")
+            initRecycler(array)
+//            val handler= Handler()
+//            handler.postDelayed({initRecycler(array)}, 2000)
         }
     }
 
-    //마지막 item에서 스크롤 하면 로딩과 함께 다시 받아서 추가하기
-    private fun initScrollListener() {
-        binding.searchResult.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//마지막 item에서 스크롤 하면 로딩과 함께 다시 받아서 추가하기
+private fun initScrollListener() {
+binding.searchResult.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        super.onScrolled(recyclerView, dx, dy)
 
-                val layoutManager = binding.searchResult.layoutManager
-                // hasNextPage() -> 다음 페이지가 있는 경우
+        val layoutManager = binding.searchResult.layoutManager
+        // hasNextPage() -> 다음 페이지가 있는 경우
 //                if (resultDecD <4401 ) {
-                    val lastVisibleItem = (layoutManager as LinearLayoutManager)
-                        .findLastCompletelyVisibleItemPosition()
-                    val itemTotalCount = recyclerView.adapter!!.itemCount - 1
-                    position = recyclerView.adapter!!.itemCount - 1
-                    // 마지막으로 보여진 아이템 position 이
-                    // 전체 아이템 개수보다 5개 모자란 경우, 데이터를 loadMore 한다
-                    if (!binding.searchResult.canScrollVertically(1) && lastVisibleItem == itemTotalCount) {
+            val lastVisibleItem = (layoutManager as LinearLayoutManager)
+                .findLastCompletelyVisibleItemPosition()
+            val itemTotalCount = recyclerView.adapter!!.itemCount - 1
+            position = recyclerView.adapter!!.itemCount - 1
+            // 마지막으로 보여진 아이템 position 이
+            // 전체 아이템 개수보다 5개 모자란 경우, 데이터를 loadMore 한다
+            if (!binding.searchResult.canScrollVertically(1) && lastVisibleItem == itemTotalCount) {
 //                        Toast.makeText(applicationContext, "끝에 도달!!", Toast.LENGTH_SHORT).show()
-                        loadMorePosts()
-                    }
-//                }
+                loadMorePosts()
             }
-        })
+//                }
     }
+})
+}
 }

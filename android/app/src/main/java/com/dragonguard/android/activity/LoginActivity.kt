@@ -16,6 +16,9 @@ class LoginActivity : AppCompatActivity() {
 
 
     }
+    /*
+    로그인 버튼 listener 구현
+     */
     fun loginListener(){
         finish()
     }

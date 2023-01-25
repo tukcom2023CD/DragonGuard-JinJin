@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 
+//검색한 레포지토리 나열하는 리사이클러뷰 어댑터 구현
 class RepositoryProfileAdapter (private val datas : ArrayList<String>,private val context: Context) : RecyclerView.Adapter<RepositoryProfileAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
