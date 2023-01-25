@@ -11,7 +11,7 @@ import SnapKit
 // 검색창
 class SearchPageController: UIViewController{
     
-    
+    let testData = ["1","2","3","4","5","6"]
     
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
@@ -60,7 +60,7 @@ class SearchPageController: UIViewController{
         // 결과 출력하는 테이블 뷰 적용
         self.resultTableView.dataSource = self
         self.resultTableView.delegate = self
-        self.resultTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Result")
+        self.resultTableView.register(SearchPageTableView.self, forCellReuseIdentifier: SearchPageTableView.identifier)
         self.view.addSubview(resultTableView)
         
     }
@@ -96,12 +96,14 @@ class SearchPageController: UIViewController{
 
 extension SearchPageController: UITableViewDataSource, UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 50
+        return testData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Result")! as UITableViewCell
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,
+        for: indexPath) as! SearchPageTableView
+        cell.bind(text: testData[indexPath.row])
+//        cell.sizeToFit()
         return cell
     }
     
