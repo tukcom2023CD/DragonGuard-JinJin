@@ -59,7 +59,7 @@ class SearchPageController: UIViewController{
     
     private func searchUISetLayout(){
         searchUI.snp.makeConstraints({ make in
-            make.top.equalTo(100)
+            make.top.equalTo(self.view.safeAreaLayoutGuide)
             make.leading.equalTo(10)
             make.trailing.equalTo(-10)
         })
