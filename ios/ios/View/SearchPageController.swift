@@ -11,6 +11,8 @@ import SnapKit
 // 검색창
 class SearchPageController: UIViewController{
     
+    
+    
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
     
@@ -23,6 +25,7 @@ class SearchPageController: UIViewController{
 
         
         searchUISetLayout()     // searchUI AutoLayout 함수
+        resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
     }
     
     /*
@@ -34,6 +37,12 @@ class SearchPageController: UIViewController{
         return searchBar
     }()
 
+    lazy var resultTableView: UITableView = {
+        let tableview = UITableView(frame: CGRect(x: 0, y: 0, width: deviceWidth, height: 0))
+        
+        return tableview
+    }()
+    
     /*
      UI Action 작성
      
@@ -47,6 +56,12 @@ class SearchPageController: UIViewController{
     //View에 적용할 때 사용하는 함수
     private func addUItoView(){
         self.view.addSubview(searchUI)  //searchUI 적용
+        
+        // 결과 출력하는 테이블 뷰 적용
+        self.resultTableView.dataSource = self
+        self.resultTableView.delegate = self
+        self.resultTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Result")
+        self.view.addSubview(resultTableView)
         
     }
     
@@ -65,8 +80,32 @@ class SearchPageController: UIViewController{
         })
     }
     
+    private func resultTableViewSetLayout(){
+        resultTableView.snp.makeConstraints({ make in
+            make.top.equalTo(self.searchUI.snp_bottomMargin)
+            make.bottom.equalTo(0)
+            make.leading.equalTo(10)
+            make.trailing.equalTo(-10)
+        })
+    }
+    
     
    
+}
+
+
+extension SearchPageController: UITableViewDataSource, UITableViewDelegate{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 50
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Result")! as UITableViewCell
+        
+        return cell
+    }
+    
+    
 }
 
 
