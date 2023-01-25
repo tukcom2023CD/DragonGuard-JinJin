@@ -29,6 +29,34 @@ services:
     networks:
       - app-tier
     tty: true
+  
+  scrapping:
+    build:
+      context: ./scrapping
+    ports:
+      - 5000:5000
+    environment:
+      FLASK_APP: ./app.py
+      APP_NAME: scrapping
+      FLASK_DEBUG: 1
+    container_name: scrapping
+    restart: on-failure
+    volumes:
+      - ./scrapping:/scrapping/
+    networks:
+      - app-tier
+    tty: true
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    container_name: nginx
+    networks:
+      - app-tier
+    tty: true
 
 networks:
   app-tier:
