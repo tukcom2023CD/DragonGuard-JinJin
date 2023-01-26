@@ -45,8 +45,9 @@ class MainController: UIViewController {
     @objc func searchUIClicked(){
         
         let searchPage = SearchPageController()
-        searchPage.modalPresentationStyle = UIModalPresentationStyle.fullScreen
-        self.present(searchPage,animated: true)
+        self.navigationController?.pushViewController(searchPage, animated: true)
+//        searchPage.modalPresentationStyle = UIModalPresentationStyle.fullScreen
+//        self.present(searchPage,animated: true)
         
     }
     
@@ -64,9 +65,6 @@ class MainController: UIViewController {
             make.trailing.equalTo(-10)
         })
     }
-    
-    
-    
 
 }
 
