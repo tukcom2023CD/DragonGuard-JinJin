@@ -33,6 +33,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.2" />
+
+            <!-- 화면전환 테스트용 버튼
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="검색화면으로"
+                android:id="@+id/btnadd"
+                android:textColor="@color/white"
+                android:backgroundTint="#222222" />
+                -->
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

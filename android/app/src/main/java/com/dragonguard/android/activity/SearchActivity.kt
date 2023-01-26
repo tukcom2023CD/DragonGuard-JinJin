@@ -1,5 +1,6 @@
 package com.dragonguard.android.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -47,6 +48,15 @@ class SearchActivity : AppCompatActivity() {
 
 //        검색 옵션 구현
         viewmodel.onOptionListener.observe(this, Observer {
+
+/*            화면전환 테스트
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(intent)
+
+ */
+
             if(viewmodel.onOptionListener.value == "down"){
                 binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
                 Log.d("option", "down")
@@ -85,15 +95,15 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
-
-
-
     }
+
+//    화면의 다른곳 눌렀을때 처리
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         closeKeyboard()
         return super.dispatchTouchEvent(ev)
     }
 
+//    edittext의 키보드 제거
     fun closeKeyboard(){
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
@@ -101,9 +111,8 @@ class SearchActivity : AppCompatActivity() {
 
 
 
-    /*
-    받아온 데이터를 리사이클러뷰에 추가하는 함수 initRecycler()
-     */
+
+//    받아온 데이터를 리사이클러뷰에 추가하는 함수 initRecycler()
     fun initRecycler(array: ArrayList<String>){
         array1.addAll(array)
         if(count == 0){
@@ -125,9 +134,8 @@ class SearchActivity : AppCompatActivity() {
         binding.loading.visibility = View.GONE
     }
 
-    /*
-    데이터 더 받아오는 함수 loadMorePosts() 구현
-     */
+
+//    데이터 더 받아오는 함수 loadMorePosts() 구현
     private fun loadMorePosts() {
         if (binding.loading.visibility == View.GONE) {
             binding.loading.visibility = View.VISIBLE

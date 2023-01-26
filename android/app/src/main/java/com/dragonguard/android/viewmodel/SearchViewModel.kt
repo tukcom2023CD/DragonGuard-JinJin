@@ -13,10 +13,10 @@ class SearchViewModel() {
     var onIconClickListener = MutableLiveData<Boolean>()
 
     fun clickSearchOption(){
-        if(onOptionListener.value == "up"){
-            onOptionListener.value = "down"
-        }else{
+        if(onOptionListener.value == "down"){
             onOptionListener.value = "up"
+        }else{
+            onOptionListener.value = "down"
         }
     }
 

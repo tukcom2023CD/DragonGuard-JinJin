@@ -9,6 +9,7 @@ import com.dragonguard.android.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+//    var count = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -18,6 +19,14 @@ class MainActivity : AppCompatActivity() {
         //로그인 화면으로 넘어가기
         val intent = Intent(applicationContext, LoginActivity::class.java)
         startActivity(intent)
+
+/*        화면전환 테스트용 버튼
+        binding.btnadd.setOnClickListener {
+            count++
+            binding.btnadd.setText(count.toString())
+        }
+
+ */
     }
 
     /*
