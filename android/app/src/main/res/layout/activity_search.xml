@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="searchActivity"
-            type="com.dragonguard.android.activity.SearchActivity" />
+            name="searchViewModel"
+            type="com.dragonguard.android.viewmodel.SearchViewModel" />
     </data>
 
     <LinearLayout
@@ -56,22 +56,25 @@
                     android:textSize="25dp"
                     android:textStyle="bold"
                     android:text="검색"/>
+
                 <EditText
                     android:id="@+id/search_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.6"
-                    android:textSize="25dp"
-                    android:maxLines="1"
                     android:background="@drawable/search_border"
                     android:imeOptions="actionSearch"
-                    android:textColor="@color/black" />
+                    android:maxLines="1"
+                    android:text="@={searchViewModel.onSearchListener}"
+                    android:textColor="@color/black"
+                    android:textSize="25dp" />
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1"
-                    android:onClick="@{()->searchActivity.onSearchListener()}"
+                    android:id="@+id/search_icon"
+                    android:onClick="@{()->searchViewModel.clickSearch()}"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_baseline_search_24" />
                 <LinearLayout
@@ -85,9 +88,9 @@
                     android:id="@+id/option_icon"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1"
-                    android:onClick="@{()->searchActivity.onOptionListener()}"
+                    android:onClick="@{()->searchViewModel.clickSearchOption()}"
                     android:adjustViewBounds="true"
-                    android:tag="down"
+                    android:tag="@{searchViewModel.onOptionListener}"
                     android:src="@drawable/ic_baseline_arrow_drop_down_24" />
                 <LinearLayout
                     android:layout_width="0dp"
