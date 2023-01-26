@@ -5,17 +5,16 @@
 
     <data>
         <variable
-            name="mainActivity"
-            type="com.dragonguard.android.activity.MainActivity" />
+            name="loginActivity"
+            type="com.dragonguard.android.activity.LoginActivity" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.MainActivity"
+        tools:context=".activity.LoginActivity"
         android:orientation="vertical">
 
-        <!--     기존 타이틀바 제거하고 다는 툴바       -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -29,34 +28,29 @@
             android:layout_height="0dp"
             android:layout_weight="3"
             android:orientation="vertical">
-            <LinearLayout
+
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.2" />
+                android:layout_weight="0.8" />
 
-            <!-- 화면전환 테스트용 버튼
             <Button
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="검색화면으로"
-                android:id="@+id/btnadd"
-                android:textColor="@color/white"
-                android:backgroundTint="#222222" />
-                -->
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="검색화면으로"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:text="메인화면으로"
                 android:id="@+id/login"
                 android:textColor="@color/white"
-                android:onClick="@{()->mainActivity.searchRepo()}"
+                android:onClick="@{()->loginActivity.loginListener()}"
                 android:backgroundTint="#222222" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.2" />
 
+                android:layout_weight="0.2" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
