@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -59,20 +60,43 @@ class SearchActivity : AppCompatActivity() {
 //        검색 아이콘 눌렀을때 검색 구현
         viewmodel.onIconClickListener.observe(this, Observer {
             Log.d("toast", "toast")
-            Toast.makeText(applicationContext, "${viewmodel.onSearchListener.value} 검색", Toast.LENGTH_SHORT).show()
-        })
-        /*
-        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
-         */
-        binding.searchName.setOnKeyListener { view, i, keyEvent ->
-            if(keyEvent.action == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_ENTER){
-                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
-                true
+            if(!viewmodel.onSearchListener.value.isNullOrEmpty()){
+                Toast.makeText(applicationContext, "아이콘  ${viewmodel.onSearchListener.value} 검색", Toast.LENGTH_SHORT).show()
+                closeKeyboard()
             }else{
-                false
+                Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
+                closeKeyboard()
             }
-        }
+
+        })
+//        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
+        viewmodel.onSearchListener.observe(this, Observer {
+            if(!viewmodel.onSearchListener.value.isNullOrEmpty() &&  viewmodel.onSearchListener.value!!.last() == '\n'){
+                val search = binding.searchName.text.substring(0 until binding.searchName.text.length-1)
+                binding.searchName.setText(search)
+                if(search.isNotEmpty()){
+                    Toast.makeText(applicationContext, "엔터 ${viewmodel.onSearchListener.value} 검색", Toast.LENGTH_SHORT).show()
+                    closeKeyboard()
+                }else{
+                    binding.searchName.setText("")
+                    Toast.makeText(applicationContext, "엔터 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
+                    closeKeyboard()
+                }
+            }
+        })
+
+
+
+
+    }
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        closeKeyboard()
+        return super.dispatchTouchEvent(ev)
+    }
+
+    fun closeKeyboard(){
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
     }
 
 
