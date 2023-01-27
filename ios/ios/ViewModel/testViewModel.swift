@@ -7,6 +7,8 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
+import RxCocoaRuntime
 
 //테스트용 viewModel 클래스입니다.
 class testViewModel{
