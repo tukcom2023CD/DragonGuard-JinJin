@@ -8,17 +8,15 @@
 import Foundation
 import RxSwift
 
+//테스트용 viewModel 클래스입니다.
 class testViewModel{
     
     let testData = ["1","2","3","4","5","6"]
     
-    
     var searchingData: BehaviorSubject<String> = BehaviorSubject(value: "")
     
+    var tableViewData: BehaviorSubject<[String]> = BehaviorSubject(value: [])
     
-    var tableViewData: Observable<[String]> = BehaviorSubject(value: [])
-    var checkValidId: Observable<String>{ searchingData.map({ $0}) }
-
-    
+    var checkValidId: Observable<String>{ searchingData.map({ $0 }) }
     
 }

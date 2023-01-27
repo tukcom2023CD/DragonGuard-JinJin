@@ -13,9 +13,8 @@ import RxCocoa
 // 검색창
 class SearchPageController: UIViewController{
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     private let searchViewModel = testViewModel()
-    
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
     
@@ -27,10 +26,10 @@ class SearchPageController: UIViewController{
 
         searchUISetLayout()     // searchUI AutoLayout 함수
         resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
-        bindOutput()
         
-        setTableView()
-
+        setTableViewDataSource()  //테이블 뷰 cell 및 개수 그리기
+        
+        bindInput() //테스트 목적
     }
     
     /*
@@ -64,13 +63,18 @@ class SearchPageController: UIViewController{
     //View에 적용할 때 사용하는 함수
     private func addUItoView(){
         self.view.addSubview(searchUI)  //searchUI 적용
-        
+        self.view.addSubview(resultTableView)   //tableview 적용
+                             
         // 결과 출력하는 테이블 뷰 적용
-//        self.resultTableView.dataSource = self
+        // datasource는 reactive 적용
         self.resultTableView.delegate = self
         
+        // searchControllerDelegate
+        self.searchUI.delegate = self
+        
+        // tableview 설치
         self.resultTableView.register(SearchPageTableView.self, forCellReuseIdentifier: SearchPageTableView.identifier)
-        self.view.addSubview(resultTableView)
+        
         
     }
     
@@ -105,54 +109,55 @@ class SearchPageController: UIViewController{
      */
     
     
-    
-    // UI 감지한 후 ViewModel로 바인딩하는 부분
-    private func bindOutput(){
-        self.searchUI.rx.text.orEmpty
-            .debounce(RxTimeInterval.microseconds(50), scheduler: ConcurrentMainScheduler.instance)
-            .distinctUntilChanged()
-            .bind(to: searchViewModel.searchingData)
-            .disposed(by: disposeBag)
+    private func bindInput(){
+        //데이터 잘들어가는 지 테스트
+        searchViewModel.checkValidId
+            .subscribe(onNext: {
+                print($0)
+            })
     }
     
-    /*
-     결과물 출력할 tableview 설정하는 부분
-     */
-
-
-     func setTableView(){
-        searchViewModel.tableViewData
+    
+    
+    // 결과물 출력할 tableview 설정하는 부분
+     func setTableViewDataSource(){
+         
+         // 데이터 잘들어가는지 테스트 용
+         searchViewModel.tableViewData.onNext(searchViewModel.testData)
+         
+         //Reactive 적용한 tableview
+         searchViewModel.tableViewData
             .observe(on: MainScheduler.instance)
             .filter{ !$0.isEmpty }
-            .bind(to: resultTableView.rx.items(cellIdentifier: SearchPageTableView.identifier,cellType: SearchPageTableView.self)){
-                index, item, cell in
+            .bind(to: resultTableView.rx
+                  // items에 index, item, cell을 가지고 온다 , 기존 tableviewCell 설정과 비슷
+                .items(cellIdentifier: SearchPageTableView.identifier,cellType: SearchPageTableView.self)){ index, item, cell in
                 cell.prepare(text: item)
             }
             .disposed(by: disposeBag)
+    }
+}
+
+// SearchController Delegate
+extension SearchPageController: UISearchBarDelegate{
+    //검색 버튼을 눌렀을 때 실행
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchUI.resignFirstResponder()
+        self.searchUI.showsCancelButton = false
+        
+        guard let searchText = searchUI.text else{return}
+        searchViewModel.searchingData
+            .onNext(searchText)
         
     }
 }
 
 
-extension SearchPageController: UITableViewDelegate //,UITableViewDataSource
-{
-//
-//    // 셀의 개수 지정
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return searchViewModel.testData.count
-//    }
-//
-//    // 셀에 들어갈 데이터 작성하는 부분
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,
-//        for: indexPath) as! SearchPageTableView
-//
-//
-//
-//        cell.customLabel.text = searchViewModel.testData[indexPath.row]
-//        return cell
-//    }
-//
+extension SearchPageController: UITableViewDelegate{
+    // tableview cell이 선택된 경우
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("selected \(indexPath.row)")
+    }
 }
 
 

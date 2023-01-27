@@ -26,7 +26,10 @@ class SearchPageTableView: UITableViewCell{
      */
     lazy var customLabel: UILabel = {
         let label = UILabel()
+        
+        // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(label)
+        
         label.font = UIFont.systemFont(ofSize: 30)
         label.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
@@ -36,6 +39,7 @@ class SearchPageTableView: UITableViewCell{
     }()
     
     
+    // 라벨에 텍스트 입력
     public func prepare(text:String){
         self.customLabel.text = text
     }
