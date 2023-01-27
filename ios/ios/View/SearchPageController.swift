@@ -15,7 +15,7 @@ class SearchPageController: UIViewController{
     
     let disposeBag = DisposeBag()
     private let searchViewModel = testViewModel()
-    
+    var inputWord = ""
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
     
@@ -27,8 +27,7 @@ class SearchPageController: UIViewController{
 
         searchUISetLayout()     // searchUI AutoLayout 함수
         resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
-        bindOutput()
-        
+        bindInput()
         setTableView()
 
     }
@@ -69,6 +68,9 @@ class SearchPageController: UIViewController{
 //        self.resultTableView.dataSource = self
         self.resultTableView.delegate = self
         
+        // searchControllerDelegate
+        self.searchUI.delegate = self
+        
         self.resultTableView.register(SearchPageTableView.self, forCellReuseIdentifier: SearchPageTableView.identifier)
         self.view.addSubview(resultTableView)
         
@@ -105,15 +107,13 @@ class SearchPageController: UIViewController{
      */
     
     
-    
-    // UI 감지한 후 ViewModel로 바인딩하는 부분
-    private func bindOutput(){
-        self.searchUI.rx.text.orEmpty
-            .debounce(RxTimeInterval.microseconds(50), scheduler: ConcurrentMainScheduler.instance)
-            .distinctUntilChanged()
-            .bind(to: searchViewModel.searchingData)
-            .disposed(by: disposeBag)
+    private func bindInput(){
+        searchViewModel.checkValidId
+            .subscribe(onNext: {
+                print($0)
+            })
     }
+    
     
     /*
      결과물 출력할 tableview 설정하는 부분
@@ -131,6 +131,22 @@ class SearchPageController: UIViewController{
             .disposed(by: disposeBag)
         
     }
+}
+
+// SearchController Delegate
+extension SearchPageController: UISearchBarDelegate{
+    
+    //검색 버튼을 눌렀을 때 실행
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchUI.resignFirstResponder()
+        self.searchUI.showsCancelButton = false
+        
+        guard let searchText = searchUI.text else{return}
+        searchViewModel.searchingData
+            .onNext(searchText)
+        
+    }
+    
 }
 
 
