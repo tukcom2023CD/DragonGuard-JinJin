@@ -47,8 +47,8 @@ class SearchActivity : AppCompatActivity() {
         binding.searchViewModel = viewmodel
 //        val handler = Handler()
 
-
-//        handler.postDelayed({initRecycler(array2)},2000)
+        binding.searchResult.addItemDecoration(VerticalItemDecorator(20))
+        binding.searchResult.addItemDecoration(HorizontalItemDecorator(10))
 
 //        검색 옵션 구현
         viewmodel.onOptionListener.observe(this, Observer {
@@ -75,20 +75,18 @@ class SearchActivity : AppCompatActivity() {
         viewmodel.onIconClickListener.observe(this, Observer {
             Log.d("toast", "toast")
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
-                Toast.makeText(
-                    applicationContext,
-                    "아이콘  ${viewmodel.onSearchListener.value} 검색",
-                    Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(applicationContext, "아이콘  ${viewmodel.onSearchListener.value} 검색", Toast.LENGTH_SHORT).show()
                 closeKeyboard()
                 if(lastSearch != viewmodel.onSearchListener.value!! && position !=0){
                     repoNames.clear()
+                    binding.searchResult.visibility = View.GONE
                     count = 0
                     position = 0
                 }
                 lastSearch = viewmodel.onSearchListener.value!!
                 Log.d("last", "$lastSearch")
                 callSearchApi(viewmodel.onSearchListener.value!!)
+                binding.searchResult.visibility = View.VISIBLE
             } else {
                 Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
                 closeKeyboard()
@@ -98,23 +96,22 @@ class SearchActivity : AppCompatActivity() {
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
         viewmodel.onSearchListener.observe(this, Observer {
             if (!viewmodel.onSearchListener.value.isNullOrEmpty() && viewmodel.onSearchListener.value!!.last() == '\n') {
+                Log.d("enter click", "edittext 클릭함")
                 val search =
                     binding.searchName.text.substring(0 until binding.searchName.text.length - 1)
                 binding.searchName.setText(search)
                 if (search.isNotEmpty()) {
-                    Toast.makeText(
-                        applicationContext,
-                        "엔터 ${viewmodel.onSearchListener.value} 검색",
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(applicationContext, "엔터 ${viewmodel.onSearchListener.value} 검색", Toast.LENGTH_SHORT).show()
                     closeKeyboard()
                     if(lastSearch != viewmodel.onSearchListener.value!! && position !=0 ){
                         repoNames.clear()
+                        binding.searchResult.visibility = View.GONE
                         count = 0
                         position = 0
                     }
                     lastSearch = viewmodel.onSearchListener.value!!
                     callSearchApi(viewmodel.onSearchListener.value!!)
+                    binding.searchResult.visibility = View.VISIBLE
                 } else {
                     binding.searchName.setText("")
                     Toast.makeText(applicationContext, "엔터 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
@@ -138,7 +135,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun callSearchApi(name: String) {
-
+        Log.d("api 시도 before", "api 시도 before")
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(1, TimeUnit.MINUTES)
             .readTimeout(50, TimeUnit.SECONDS)
@@ -151,13 +148,12 @@ class SearchActivity : AppCompatActivity() {
             .build()
 
         val api = searchRetrofit.create(GitRankAPI::class.java)
-        Toast.makeText(applicationContext, "${BuildConfig.server}scrap?page=${count+1}&name=${name}&type=repositories", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "${BuildConfig.server}scrap?page=${count+1}&name=${name}&type=repositories", Toast.LENGTH_SHORT).show()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
         queryMap.put("name",name)
         queryMap.put("type","repositories")
         val repoName = api.getRepoName(queryMap)
-        Log.d("api 시도 after", "api 시도 after")
         repoName.enqueue(object : Callback<RepoName> {
             override fun onResponse(
                 call: Call<RepoName>,
@@ -168,7 +164,11 @@ class SearchActivity : AppCompatActivity() {
                     if (repoNames.isNullOrEmpty()) {
                         repoNames = response.body()!!.result as ArrayList<Result>
                     } else {
-                        repoNames.addAll(response.body()!!.result)
+                        for(i in 0 until response.body()!!.result.size){
+                            if(!repoNames.contains(response.body()!!.result[i])){
+                                repoNames.add(response.body()!!.result[i])
+                            }
+                        }
                     }
                     initRecycler()
                 }
@@ -184,17 +184,17 @@ class SearchActivity : AppCompatActivity() {
 
     //    받아온 데이터를 리사이클러뷰에 추가하는 함수 initRecycler()
     private fun initRecycler() {
+        Log.d("count", "count: $count")
         if (count == 0) {
             repositoryProfileAdapter = RepositoryProfileAdapter(repoNames, this)
-            binding.searchResult.addItemDecoration(VerticalItemDecorator(20))
-            binding.searchResult.addItemDecoration(HorizontalItemDecorator(10))
             binding.searchResult.adapter = repositoryProfileAdapter
             binding.searchResult.layoutManager = LinearLayoutManager(this)
             repositoryProfileAdapter.notifyDataSetChanged()
             binding.searchResult.visibility = View.VISIBLE
 //            Toast.makeText(applicationContext, "첫 추가 완료!! $count", Toast.LENGTH_SHORT).show()
         } else {
-            binding.searchResult.scrollToPosition(position)
+            Toast.makeText(applicationContext, "위치 이동!!", Toast.LENGTH_SHORT).show()
+//            binding.searchResult.scrollToPosition(position)
 //            Toast.makeText(applicationContext, "추가 완료!! $count", Toast.LENGTH_SHORT).show()
         }
         count++
