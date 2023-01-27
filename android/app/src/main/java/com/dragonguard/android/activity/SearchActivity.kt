@@ -14,12 +14,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
+import com.dragonguard.android.connect.GitRankAPI
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
 import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
 import com.dragonguard.android.recycleradapter.VerticalItemDecorator
 import com.dragonguard.android.viewmodel.SearchViewModel
 import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 class SearchActivity : AppCompatActivity() {
@@ -27,13 +31,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var repositoryProfileAdapter : RepositoryProfileAdapter
     private var position = 0
     private var array1= ArrayList<String>()
-    private val backendIp = ""
     private var count = 0
-    private val okHttpClient = OkHttpClient.Builder()
-        .connectTimeout(1, TimeUnit.MINUTES)
-        .readTimeout(50, TimeUnit.SECONDS)
-        .writeTimeout(15, TimeUnit.SECONDS)
-        .build()
     var viewmodel = SearchViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,11 +107,26 @@ class SearchActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
     }
 
+    private fun callSearchApi(){
+        val backendIp = ""
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(1, TimeUnit.MINUTES)
+            .readTimeout(50, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .build()
+
+        val searchRetrofit = Retrofit.Builder().baseUrl(backendIp)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val api = searchRetrofit.create(GitRankAPI::class.java)
+    }
 
 
 
 //    받아온 데이터를 리사이클러뷰에 추가하는 함수 initRecycler()
-    fun initRecycler(array: ArrayList<String>){
+    private fun initRecycler(array: ArrayList<String>){
         array1.addAll(array)
         if(count == 0){
             repositoryProfileAdapter = RepositoryProfileAdapter(array1, this)
