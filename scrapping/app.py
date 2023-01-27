@@ -12,7 +12,7 @@ api = Api(app)
 ns = api.namespace('/', description='GitRank API')
 
 @ns.route('/scrap/search', methods=['GET'])
-class GitRepo(Resource):
+class Search(Resource):
     
     '''레포명으로 검색한 페이지를 스크래핑한다'''
     def get(self):
