@@ -50,4 +50,12 @@ public class Member extends BaseTime {
         }
         this.commits.add(commit);
     }
+
+    public Integer getCommitsSum() {
+        return this.commits.stream().mapToInt(Commit::getCommitNum).sum();
+    }
+
+    public void updateTier(Tier tier) {
+        this.tier = tier;
+    }
 }

@@ -15,7 +15,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<Long> saveMember(@RequestBody MemberRequest memberRequest) throws Exception {
+    public ResponseEntity<Long> saveMember(@RequestBody MemberRequest memberRequest) {
         return ResponseEntity.ok(memberService.saveMember(memberRequest));
     }
 
