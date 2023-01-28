@@ -1,6 +1,7 @@
 package com.dragonguard.backend.member.controller;
 
 import com.dragonguard.backend.member.dto.request.MemberRequest;
+import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,11 @@ public class MemberController {
     public ResponseEntity<Void> updateCommits(@PathVariable Long id) {
         memberService.updateCommits(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MemberResponse> getMember(@PathVariable Long id) {
+        return ResponseEntity.ok(memberService.getMember(id));
     }
 
     @GetMapping("/{id}/tier")

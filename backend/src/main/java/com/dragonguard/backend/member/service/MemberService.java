@@ -3,6 +3,7 @@ package com.dragonguard.backend.member.service;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
+import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.mapper.MemberMapper;
@@ -38,15 +39,25 @@ public class MemberService {
         Member member = memberRepository.findMemberByGithubId(githubId)
                 .orElseThrow(EntityNotFoundException::new);
         commits.stream().forEach(member::addCommit);
-        updateTier(member.getId());
+        updateTier(member);
         commitService.saveAllCommits(commits);
+    }
+
+    @Transactional
+    public void updateTier(Member member) {
+        Tier tier = Tier.checkTier(member.getCommitsSum());
+        member.updateTier(tier);
     }
 
     @Transactional
     public void updateCommits(Long id) {
         String githubId = memberRepository.findGithubIdById(id);
         getCommitByScrapping(githubId);
-        updateTier(id);
+        updateTier(getEntity(id));
+    }
+
+    public MemberResponse getMember(Long id) {
+        return memberMapper.toResponse(getEntity(id));
     }
 
     private Member getEntity(Long id) {
@@ -56,12 +67,5 @@ public class MemberService {
 
     private void getCommitByScrapping(String githubId) {
         commitService.scrappingCommits(githubId);
-    }
-
-    @Transactional
-    public void updateTier(Long id) {
-        Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Tier tier = Tier.checkTier(member.getCommitsSum());
-        member.updateTier(tier);
     }
 }
