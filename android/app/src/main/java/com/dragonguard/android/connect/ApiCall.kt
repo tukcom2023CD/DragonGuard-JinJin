@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit
 //api들 호출부분
 class ApiCall {
     fun searchApi(name: String, count: Int): ArrayList<Result> {
-        Log.d("api 시도 before", "api 시도 before")
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(1, TimeUnit.MINUTES)
             .readTimeout(50, TimeUnit.SECONDS)

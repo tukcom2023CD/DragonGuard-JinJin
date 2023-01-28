@@ -59,7 +59,6 @@ class SearchActivity : AppCompatActivity() {
             startActivity(intent)
 
  */
-
             if (viewmodel.onOptionListener.value == "down") {
                 binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
                 Log.d("option", "down")
