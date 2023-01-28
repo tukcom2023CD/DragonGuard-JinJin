@@ -1,4 +1,4 @@
-package com.dragonguard.backend.commit.messagequeue.consumer;
+package com.dragonguard.backend.commit.messagequeue;
 
 import com.dragonguard.backend.commit.dto.response.CommitScrappingResponse;
 import com.dragonguard.backend.commit.service.CommitService;

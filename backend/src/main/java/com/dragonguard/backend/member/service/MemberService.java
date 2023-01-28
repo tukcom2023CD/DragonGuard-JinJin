@@ -38,6 +38,7 @@ public class MemberService {
         Member member = memberRepository.findMemberByGithubId(githubId)
                 .orElseThrow(EntityNotFoundException::new);
         commits.stream().forEach(member::addCommit);
+        updateTier(member.getId());
         commitService.saveAllCommits(commits);
     }
 
@@ -45,6 +46,7 @@ public class MemberService {
     public void updateCommits(Long id) {
         String githubId = memberRepository.findGithubIdById(id);
         getCommitByScrapping(githubId);
+        updateTier(id);
     }
 
     private Member getEntity(Long id) {
@@ -54,5 +56,12 @@ public class MemberService {
 
     private void getCommitByScrapping(String githubId) {
         commitService.scrappingCommits(githubId);
+    }
+
+    @Transactional
+    public void updateTier(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Tier tier = Tier.checkTier(member.getCommitsSum());
+        member.updateTier(tier);
     }
 }
