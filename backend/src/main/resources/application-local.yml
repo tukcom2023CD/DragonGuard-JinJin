@@ -13,7 +13,16 @@ spring:
       hibernate:
         format_sql: true
 
+  kafka:
+    bootstrap-servers:
+      - localhost:9092
+    consumer:
+      group-id: gitrank
+
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+scrapping:
+  url: http://localhost:5000/scrap/

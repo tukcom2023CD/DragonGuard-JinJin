@@ -3,6 +3,9 @@ from flask_restx import Resource, Api
 from flask_cors import CORS
 from bs4 import BeautifulSoup
 import requests
+from kafka import KafkaProducer 
+from json import dumps
+from base_url import KAFKA_BASE_URL
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
@@ -10,6 +13,12 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 api = Api(app)
 
 ns = api.namespace('/', description='GitRank API')
+
+producer = KafkaProducer(acks=0,
+            compression_type='gzip',
+            bootstrap_servers=[KAFKA_BASE_URL],
+            value_serializer=lambda x: dumps(x).encode('utf-8')
+          )
 
 @ns.route('/scrap/search', methods=['GET'])
 class Search(Resource):
@@ -62,7 +71,9 @@ class MemberCommit(Resource):
         h2 = soup.find('h2', attrs={"class" : "f4 text-normal mb-2"})
         commit_num = int(h2.text.strip().split(' ')[0].rstrip())
         
-        return ({"commit_num" : commit_num}, 200)
+        producer.send('gitrank.to.backend.commit', value={"commitNum" : commit_num, "githubId" : member})
 
+        return ('success', 200)
+        
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
