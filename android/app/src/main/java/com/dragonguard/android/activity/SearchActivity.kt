@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.BuildConfig
 import com.dragonguard.android.R
+import com.dragonguard.android.connect.ApiCall
 import com.dragonguard.android.connect.GitRankAPI
 import com.dragonguard.android.connect.RepoName
 import com.dragonguard.android.connect.Result
@@ -24,9 +26,7 @@ import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
 import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
 import com.dragonguard.android.recycleradapter.VerticalItemDecorator
 import com.dragonguard.android.viewmodel.SearchViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -40,12 +40,11 @@ class SearchActivity : AppCompatActivity() {
     private var count = 0
     private var lastSearch = ""
     var viewmodel = SearchViewModel()
-
+    private var apiCall = ApiCall()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
         binding.searchViewModel = viewmodel
-//        val handler = Handler()
 
         binding.searchResult.addItemDecoration(VerticalItemDecorator(20))
         binding.searchResult.addItemDecoration(HorizontalItemDecorator(10))
@@ -75,7 +74,6 @@ class SearchActivity : AppCompatActivity() {
         viewmodel.onIconClickListener.observe(this, Observer {
             Log.d("toast", "toast")
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
-//                Toast.makeText(applicationContext, "아이콘  ${viewmodel.onSearchListener.value} 검색", Toast.LENGTH_SHORT).show()
                 closeKeyboard()
                 if(lastSearch != viewmodel.onSearchListener.value!! && position !=0){
                     repoNames.clear()
@@ -101,7 +99,6 @@ class SearchActivity : AppCompatActivity() {
                     binding.searchName.text.substring(0 until binding.searchName.text.length - 1)
                 binding.searchName.setText(search)
                 if (search.isNotEmpty()) {
-//                    Toast.makeText(applicationContext, "엔터 ${viewmodel.onSearchListener.value} 검색", Toast.LENGTH_SHORT).show()
                     closeKeyboard()
                     if(lastSearch != viewmodel.onSearchListener.value!! && position !=0 ){
                         repoNames.clear()
@@ -134,51 +131,38 @@ class SearchActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
     }
 
+//    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
-        Log.d("api 시도 before", "api 시도 before")
-        val okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(1, TimeUnit.MINUTES)
-            .readTimeout(50, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .build()
+        var result = arrayListOf<Result>()
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                apiCall.searchApi(name, count)
+            }
+            result = resultDeferred.await()
+            Log.d("api 시도", "api result에 넣기 $result")
+            checkSearchResult(result)
+        }
 
-        val searchRetrofit = Retrofit.Builder().baseUrl(BuildConfig.server)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    }
 
-        val api = searchRetrofit.create(GitRankAPI::class.java)
-//        Toast.makeText(applicationContext, "${BuildConfig.server}scrap?page=${count+1}&name=${name}&type=repositories", Toast.LENGTH_SHORT).show()
-        val queryMap = mutableMapOf<String, String>()
-        queryMap.put("page","${count+1}")
-        queryMap.put("name",name)
-        queryMap.put("type","repositories")
-        val repoName = api.getRepoName(queryMap)
-        repoName.enqueue(object : Callback<RepoName> {
-            override fun onResponse(
-                call: Call<RepoName>,
-                response: Response<RepoName>
-            ) {
-                if(response.isSuccessful && response.code() == 200){
-                    Log.d("api 시도", "api 성공${response.body()!!.result}")
-                    if (repoNames.isNullOrEmpty()) {
-                        repoNames = response.body()!!.result as ArrayList<Result>
-                    } else {
-                        for(i in 0 until response.body()!!.result.size){
-                            if(!repoNames.contains(response.body()!!.result[i])){
-                                repoNames.add(response.body()!!.result[i])
-                            }
-                        }
+//    api 호출결과 판별 및 출력
+    private fun checkSearchResult(result: ArrayList<Result>){
+        if(result.isNullOrEmpty()){
+            Log.d("api 시도", "api result 성공$result")
+        } else{
+            Log.d("api 시도", "api 성공$result")
+            if(repoNames.isNullOrEmpty()){
+                repoNames = result
+            } else{
+                for(i in 0 until result.size){
+                    if(!repoNames.contains(result[i])){
+                        repoNames.add(result[i])
                     }
-                    initRecycler()
                 }
             }
-
-            override fun onFailure(call: Call<RepoName>, t: Throwable) {
-
-                Log.d("api 시도", "api 실패 ${t.message}")
-            }
-        })
+            initRecycler()
+        }
     }
 
 
@@ -191,11 +175,6 @@ class SearchActivity : AppCompatActivity() {
             binding.searchResult.layoutManager = LinearLayoutManager(this)
             repositoryProfileAdapter.notifyDataSetChanged()
             binding.searchResult.visibility = View.VISIBLE
-//            Toast.makeText(applicationContext, "첫 추가 완료!! $count", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(applicationContext, "위치 이동!!", Toast.LENGTH_SHORT).show()
-//            binding.searchResult.scrollToPosition(position)
-//            Toast.makeText(applicationContext, "추가 완료!! $count", Toast.LENGTH_SHORT).show()
         }
         count++
         initScrollListener()
@@ -222,19 +201,15 @@ class SearchActivity : AppCompatActivity() {
                 super.onScrolled(recyclerView, dx, dy)
 
                 val layoutManager = binding.searchResult.layoutManager
-                // hasNextPage() -> 다음 페이지가 있는 경우
-//                       if (resultDecD <4401 ) {
                 val lastVisibleItem = (layoutManager as LinearLayoutManager)
                     .findLastCompletelyVisibleItemPosition()
                 val itemTotalCount = recyclerView.adapter!!.itemCount - 1
                 position = recyclerView.adapter!!.itemCount - 1
                 // 마지막으로 보여진 아이템 position 이
-                // 전체 아이템 개수보다 5개 모자란 경우, 데이터를 loadMore 한다
+                // 전체 아이템 개수보다 1개 모자란 경우, 데이터를 loadMore 한다
                 if (!binding.searchResult.canScrollVertically(1) && lastVisibleItem == itemTotalCount) {
-//                        Toast.makeText(applicationContext, "끝에 도달!!", Toast.LENGTH_SHORT).show()
                     loadMorePosts()
                 }
-//                }
             }
         })
     }

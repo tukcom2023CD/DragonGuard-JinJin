@@ -8,6 +8,6 @@ import retrofit2.http.QueryMap
 
 interface GitRankAPI {
 
-    @GET("scrap")
+    @GET("search")
     fun getRepoName(@QueryMap query: Map<String, String>) : Call<RepoName>
 }
