@@ -1,4 +1,4 @@
-package com.dragonguard.backend.member.dto.request;
+package com.dragonguard.backend.commit.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberRequest {
-    private String name;
-    private String githubId;
+public class CommitScrappingResponse {
+    String githubId;
+    Integer commitNum;
 }

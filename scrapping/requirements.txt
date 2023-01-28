@@ -13,3 +13,4 @@ requests
 beautifulsoup4
 lxml
 gunicorn
+kafka-python
