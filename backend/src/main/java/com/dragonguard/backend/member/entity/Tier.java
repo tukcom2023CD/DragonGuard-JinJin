@@ -4,24 +4,25 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
 public enum Tier {
-    UNKNOWN(0),
-    BRONZE(50),
-    SILVER(200),
-    GOLD(500),
-    PLATINUM(1000),
-    DIAMOND(3000),
-    RUBY(7000);
+    SPROUT(0, "새싹"),
+    BRONZE(50, "브론즈"),
+    SILVER(200, "실버"),
+    GOLD(500, "골드"),
+    PLATINUM(1000, "플레티넘"),
+    DIAMOND(3000, "다이아몬드"),
+    RUBY(5000, "루비"),
+    MASTER(Integer.MAX_VALUE, "마스터");
 
-    private final Integer minCommits;
+    private final Integer maxCommits;
+    private final String korean;
 
     public static Tier checkTier(Integer commitNum) {
         return Arrays.stream(values())
-                .filter(i -> i.getMinCommits() > commitNum)
+                .filter(i -> i.getMaxCommits() >= commitNum)
                 .findFirst()
                 .orElseThrow(TierNoneMatchException::new);
     }
