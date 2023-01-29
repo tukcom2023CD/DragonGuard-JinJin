@@ -39,7 +39,7 @@ public class Member extends BaseTime {
     public Member(String name, String githubId, Commit commit) {
         this.name = name;
         this.githubId = githubId;
-        this.tier = Tier.UNKNOWN;
+        this.tier = Tier.SPROUT;
         this.authStep = AuthStep.NONE;
         addCommit(commit);
     }
