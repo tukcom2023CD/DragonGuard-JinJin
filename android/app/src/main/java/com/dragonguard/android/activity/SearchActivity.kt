@@ -149,6 +149,7 @@ class SearchActivity : AppCompatActivity() {
     private fun checkSearchResult(result: ArrayList<Result>){
         if(result.isNullOrEmpty()){
             Log.d("api 시도", "api result 성공$result")
+            binding.loading.visibility = View.GONE
         } else{
             Log.d("api 시도", "api 성공$result")
             if(repoNames.isNullOrEmpty()){
