@@ -1,5 +1,11 @@
 name: GitRank iOS Dev Github Actions
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - '**.swift'
+  pull_request:
+    paths:
+      - '**.swift'
 defaults:
   run:
     shell: bash
