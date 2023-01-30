@@ -15,7 +15,7 @@ final class SettingController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.navigationBar.isHidden = false   // navigation bar 생성
         self.navigationItem.title = "설정"
         
         // UI view에 추가
@@ -50,7 +50,6 @@ final class SettingController: UIViewController{
         self.settingTableView.delegate = self
         self.settingTableView.dataSource = self
         self.settingTableView.register(SettingTableView.self, forCellReuseIdentifier: SettingTableView.identifier)
-        
     }
     
     /*
