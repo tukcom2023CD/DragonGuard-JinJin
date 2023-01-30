@@ -26,9 +26,12 @@ class ApiCall {
         queryMap.put("page","${count+1}")
         queryMap.put("name",name)
         queryMap.put("type","repositories")
-        var repoNames = arrayListOf<Result>()
+        var repoNames : ArrayList<Result> = arrayListOf<Result>()
         val repoName = api.getRepoName(queryMap)
-        repoNames = repoName.execute().body()!!.result as ArrayList<Result>
+        val result = repoName.execute()
+        if(result.isSuccessful){
+            repoNames = result.body()!!.result as ArrayList<Result>
+        }
         return repoNames
     }
 }

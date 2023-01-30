@@ -4,12 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.1995" />
+        <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.206" />
+        <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/drawable/round.xml" value="0.206" />
+        <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/drawable/roundc.xml" value="0.206" />
         <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/drawable/search_border.xml" value="0.1995" />
         <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/layout/activity_loading.xml" value="0.37771739130434784" />
         <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/layout/activity_login.xml" value="0.37771739130434784" />
-        <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/layout/activity_main.xml" value="0.37864583333333335" />
-        <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/layout/activity_search.xml" value="0.37771739130434784" />
+        <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/layout/activity_search.xml" value="0.33" />
         <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/layout/repository_list.xml" value="0.37771739130434784" />
+        <entry key="..\:/Users/sys/OneDrive/Desktop/2023-01~02/dragonguard/DragonGuard-JinJin/android/app/src/main/res/menu/menu1.xml" value="0.37447916666666664" />
         <entry key="..\:/Users/sys/OneDrive/Desktop/dragonguard/DragonGuard-JinJin/android/app/src/main/res/layout/activity_main.xml" value="0.37864583333333335" />
       </map>
     </option>
