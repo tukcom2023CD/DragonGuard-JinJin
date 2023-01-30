@@ -25,7 +25,7 @@ public class KafkaResultConsumer {
     private final ResultService resultService;
 
     @KafkaListener(topics = "gitrank.to.backend.result", containerFactory = "kafkaListenerContainerFactory")
-    public void handle(String message) {
+    public void consume(String message) {
         Map<Object, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -33,6 +33,10 @@ public class KafkaResultConsumer {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+        if (map.isEmpty()) {
+            return;
+        }
+
         List<Map<String, String>> results = (List<Map<String, String>>) map.get("result");
         List<ResultRequest> result = results.stream()
                 .map(o -> new ResultRequest(o.get("name")))
@@ -42,9 +46,6 @@ public class KafkaResultConsumer {
         SearchRequest searchRequest = new SearchRequest((String) getMap.get("name"),
                 SearchType.valueOf(((String) getMap.get("type")).toUpperCase()), Integer.parseInt((String) getMap.get("page")));
 
-        if (result.isEmpty() || searchRequest == null) {
-            return;
-        }
         resultService.saveAllResult(result, searchRequest);
     }
 }
