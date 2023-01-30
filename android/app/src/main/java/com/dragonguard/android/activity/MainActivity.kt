@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
@@ -38,8 +41,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun closeKeyboard() {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        closeKeyboard()
+        return super.dispatchTouchEvent(ev)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu1, menu)
+        menuInflater.inflate(R.menu.menu1, binding.toolbarBottom.menu)
         return true
     }
 
@@ -50,11 +63,4 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    /*
-        검색하는 화면으로 넘어가는 버튼 listener 구현
-         */
-    fun searchRepo() {
-        val intent = Intent(applicationContext, SearchActivity::class.java)
-        startActivity(intent)
-    }
 }
