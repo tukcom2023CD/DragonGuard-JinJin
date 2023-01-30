@@ -18,7 +18,7 @@ public class CommitService {
 
     private final CommitRepository commitRepository;
     private final CommitMapper commitMapper;
-    private final ScrappingClient<CommitScrappingRequest, String> scrappingClient;
+    private final ScrappingClient<CommitScrappingRequest> scrappingClient;
 
     public void scrappingCommits(String githubId) {
         scrappingClient.requestToScrapping(commitMapper.toRequest(githubId));

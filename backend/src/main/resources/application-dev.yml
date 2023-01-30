@@ -5,6 +5,9 @@ spring:
     username: root
     password: 1234
 
+  main:
+    allow-bean-definition-overriding: true
+
   jpa:
     show-sql: true
     hibernate:
@@ -12,6 +15,16 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 10800000 # 3시간
+      cache-null-values: true
+
+  redis:
+    host: redis
+    port: 6379
 
   kafka:
     bootstrap-servers: kafka:9092
