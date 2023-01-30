@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 
 //테스트용 viewModel 클래스입니다.
-class testViewModel{
+final class testViewModel{
     
     let testData = ["1","2","3","4","5","6"]
     
