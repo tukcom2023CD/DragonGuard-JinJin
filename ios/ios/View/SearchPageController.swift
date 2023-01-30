@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 // 검색창
-class SearchPageController: UIViewController{
+final class SearchPageController: UIViewController{
     
     private let disposeBag = DisposeBag()
     private let searchViewModel = testViewModel()
@@ -21,6 +21,7 @@ class SearchPageController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        self.navigationController?.navigationBar.isHidden = false
         
         addUItoView()   //View에 적용할 UI 작성
 
@@ -175,17 +176,20 @@ import SwiftUI
 struct VCPreView:PreviewProvider {
     static var previews: some View {
         SearchPageController().toPreview().previewDevice("iPhone 14 pro")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
 
 struct VCPreView1:PreviewProvider {
     static var previews: some View {
         SearchPageController().toPreview().previewDevice("iPhone 11")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
 
 struct VCPreView2:PreviewProvider {
     static var previews: some View {
         SearchPageController().toPreview().previewDevice("iPad (10th generation)")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }

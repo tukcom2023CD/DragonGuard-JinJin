@@ -1,15 +1,15 @@
 //
-//  SearchPageTableView.swift
+//  SettingTableView.swift
 //  ios
 //
-//  Created by 정호진 on 2023/01/25.
+//  Created by 정호진 on 2023/01/30.
 //
 
+import Foundation
 import UIKit
-import SnapKit
 
-final class SearchPageTableView: UITableViewCell{
-    static let identifier = "SearchPageIdentifier"
+final class SettingTableView: UITableViewCell{
+    static let identifier = "SettingTableView"
     
     // 클래스 생성자
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -20,17 +20,16 @@ final class SearchPageTableView: UITableViewCell{
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     /*
      UI 작성
      */
+    
+    // repo title
     lazy var customLabel: UILabel = {
         let label = UILabel()
-        
-        // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(label)
         
-        label.font = UIFont.systemFont(ofSize: 30)
+        label.font = UIFont.systemFont(ofSize: 20)
         label.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
             make.centerX.equalTo(contentView)
@@ -38,12 +37,10 @@ final class SearchPageTableView: UITableViewCell{
         return label
     }()
     
-    
     // 라벨에 텍스트 입력
-    public func prepare(text:String){
+    public func inputDataTableView(text:String){
         self.customLabel.text = text
     }
     
     
 }
-
