@@ -1,5 +1,11 @@
 name: GitRank Android Dev Github Actions
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - '**.kt'
+  pull_request:
+    paths:
+      - '**.kt'
 defaults:
   run:
     shell: bash

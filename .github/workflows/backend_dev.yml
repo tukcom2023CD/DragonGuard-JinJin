@@ -1,5 +1,11 @@
 name: GitRank Backend Dev Github Actions
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - '**.java'
+  pull_request:
+    paths:
+      - '**.java'
 defaults:
   run:
     shell: bash
