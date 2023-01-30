@@ -12,6 +12,7 @@
 		3B0022A12987A94B003FA5CC /* TokenGivenCriteria.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A02987A94B003FA5CC /* TokenGivenCriteria.swift */; };
 		3B0022A32987A9B0003FA5CC /* TierTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A22987A9B0003FA5CC /* TierTypes.swift */; };
 		3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A42987ABA1003FA5CC /* FAQPage.swift */; };
+		3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */; };
 		3B15C596296FB673004AE007 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 3B15C595296FB673004AE007 /* Alamofire */; };
 		3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DB8772963428A00308F43 /* AppDelegate.swift */; };
 		3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DB8792963428A00308F43 /* SceneDelegate.swift */; };
@@ -59,6 +60,7 @@
 		3B0022A02987A94B003FA5CC /* TokenGivenCriteria.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenGivenCriteria.swift; sourceTree = "<group>"; };
 		3B0022A22987A9B0003FA5CC /* TierTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierTypes.swift; sourceTree = "<group>"; };
 		3B0022A42987ABA1003FA5CC /* FAQPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQPage.swift; sourceTree = "<group>"; };
+		3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingController.swift; sourceTree = "<group>"; };
 		3B1DB8742963428A00308F43 /* ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B1DB8772963428A00308F43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3B1DB8792963428A00308F43 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 			children = (
 				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
 				3B1DB87B2963428A00308F43 /* MainController.swift */,
+				3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */,
 				3B00229C2987998B003FA5CC /* SettingController.swift */,
 				3B00229E29879F7D003FA5CC /* SettingTableView.swift */,
 				3BD6DD21298129B8008C05B2 /* SearchPageController.swift */,
@@ -361,6 +364,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
 				3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */,
 				3B0022A32987A9B0003FA5CC /* TierTypes.swift in Sources */,
 				3B0022A12987A94B003FA5CC /* TokenGivenCriteria.swift in Sources */,

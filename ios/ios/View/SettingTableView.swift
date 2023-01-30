@@ -28,19 +28,32 @@ final class SettingTableView: UITableViewCell{
     lazy var customLabel: UILabel = {
         let label = UILabel()
         contentView.addSubview(label)
-        
         label.font = UIFont.systemFont(ofSize: 20)
+        
+        //AutoLayout 설정
+        customLabelLayout(label: label)
+        
+        return label
+    }()
+    
+    /*
+     UI AutoLayout 코드 작성
+     
+     함수 실행시 private으로 시작할 것
+     */
+    
+    private func customLabelLayout(label: UILabel){
         label.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
             make.leading.equalTo(contentView)
         })
-        return label
-    }()
+    }
+    
     
     // 라벨에 텍스트 입력
     public func inputDataTableView(text:String, color: UIColor){
-        self.customLabel.text = text
-        self.customLabel.textColor = color
+        self.customLabel.text = text    // text 데이터
+        self.customLabel.textColor = color  // 색상 설정
     }
     
     
