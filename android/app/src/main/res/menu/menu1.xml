@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menus"
+        android:title="메뉴들"
+        android:icon="@drawable/ic_baseline_settings_24"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/logout"
+                android:title="로그아웃" />
+            <item
+                android:id="@+id/faq"
+                android:title="FAQ" />
+            <item
+                android:id="@+id/token_criterion"
+                android:title="토큰부여기준" />
+            <item
+                android:id="@+id/tear_kind"
+                android:title="티어 종류" />
+            <item
+                android:id="@+id/help"
+                android:title="도움말" />
+            <item
+                android:id="@+id/version"
+                android:title="버전 정보"/>
+        </menu>
+    </item>
 
 
 </menu>
