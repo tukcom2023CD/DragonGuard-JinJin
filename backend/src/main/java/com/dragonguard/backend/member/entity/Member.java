@@ -35,12 +35,16 @@ public class Member extends BaseTime {
     @Enumerated(EnumType.STRING)
     private AuthStep authStep;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Builder
     public Member(String name, String githubId, Commit commit) {
         this.name = name;
         this.githubId = githubId;
-        this.tier = Tier.UNKNOWN;
+        this.tier = Tier.SPROUT;
         this.authStep = AuthStep.NONE;
+        this.role = Role.ROLE_USER;
         addCommit(commit);
     }
 

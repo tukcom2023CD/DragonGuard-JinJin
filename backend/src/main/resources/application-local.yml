@@ -5,6 +5,9 @@ spring:
     username: root
     password: 1234
 
+  main:
+    allow-bean-definition-overriding: true
+
   jpa:
     show-sql: true
     hibernate:
@@ -13,9 +16,18 @@ spring:
       hibernate:
         format_sql: true
 
+  cache:
+    type: redis
+    redis:
+      time-to-live: 10800000 # 3시간
+      cache-null-values: true
+
+  redis:
+    host: localhost
+    port: 6379
+
   kafka:
-    bootstrap-servers:
-      - localhost:9092
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: gitrank
 

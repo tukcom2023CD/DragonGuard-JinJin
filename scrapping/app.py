@@ -23,7 +23,7 @@ producer = KafkaProducer(acks=0,
 @ns.route('/scrap/search', methods=['GET'])
 class Search(Resource):
     
-    '''레포명으로 검색한 페이지를 스크래핑한다'''
+    '''레포명 또는 유저명으로 검색한 페이지를 스크래핑한다'''
     def get(self):
         results = []
         
@@ -45,6 +45,9 @@ class Search(Resource):
 
         response = {}
         response['result'] = [{'name' : result} for result in results]
+        kafka_response = response
+        kafka_response['search'] = {'name' : name, 'type' : search_type, 'page' : page}
+        producer.send('gitrank.to.backend.result', value=kafka_response)
         
         return (response, 200)
     
