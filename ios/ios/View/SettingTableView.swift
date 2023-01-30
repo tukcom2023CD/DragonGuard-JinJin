@@ -32,14 +32,15 @@ final class SettingTableView: UITableViewCell{
         label.font = UIFont.systemFont(ofSize: 20)
         label.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
-            make.centerX.equalTo(contentView)
+            make.leading.equalTo(contentView)
         })
         return label
     }()
     
     // 라벨에 텍스트 입력
-    public func inputDataTableView(text:String){
+    public func inputDataTableView(text:String, color: UIColor){
         self.customLabel.text = text
+        self.customLabel.textColor = color
     }
     
     

@@ -76,10 +76,32 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       
+        var color = UIColor.black   // textColor 변경
         let cell = tableView.dequeueReusableCell(withIdentifier: SettingTableView.identifier,for: indexPath) as? SettingTableView ?? SettingTableView()
-        cell.inputDataTableView(text: settingData[indexPath.row])
+        
+        // textColor 변경
+        switch indexPath.row{
+        case 5:
+            color = UIColor.red
+        default:
+            color = UIColor.black
+        }
+        cell.inputDataTableView(text: settingData[indexPath.row],color: color)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        switch indexPath.row{
+        case 0:
+            self.navigationController?.pushViewController(TokenGivenCriteria(), animated: true)
+        case 1:
+            self.navigationController?.pushViewController(TierTypes(), animated: true)
+        case 2:
+            self.navigationController?.pushViewController(FAQPage(), animated: true)
+        default:
+            return
+        }
     }
     
     
