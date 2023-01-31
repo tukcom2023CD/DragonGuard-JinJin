@@ -1,5 +1,6 @@
 package com.dragonguard.backend.commit.entity;
 
+import com.dragonguard.backend.global.BaseTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Commit {
+public class Commit extends BaseTime {
     @Id @GeneratedValue
     private Long id;
 

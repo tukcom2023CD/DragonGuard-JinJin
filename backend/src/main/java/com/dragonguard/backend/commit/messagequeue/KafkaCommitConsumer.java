@@ -23,7 +23,7 @@ public class KafkaCommitConsumer {
     private final MemberService memberService;
 
     @KafkaListener(topics = "gitrank.to.backend.commit", containerFactory = "kafkaListenerContainerFactory")
-    public void handle(String message) {
+    public void consume(String message) {
         Map<Object, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -31,6 +31,10 @@ public class KafkaCommitConsumer {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+        if (map.isEmpty()) {
+            return;
+        }
+
         String githubId = (String) map.get("githubId");
         int commitNum = (Integer) map.get("commitNum");
         CommitScrappingResponse response = new CommitScrappingResponse(githubId, commitNum);

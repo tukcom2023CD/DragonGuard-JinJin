@@ -1,0 +1,11 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+= GIT-RANK API
+
+// include::./src/docs/asciidoc/member.adoc[]
+// include::./src/docs/asciidoc/search.adoc[]
