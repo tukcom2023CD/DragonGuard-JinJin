@@ -7,5 +7,5 @@
 
 = GIT-RANK API
 
-include::./src/docs/asciidoc/member.adoc[]
-include::./src/docs/asciidoc/search.adoc[]
+// include::./src/docs/asciidoc/member.adoc[]
+// include::./src/docs/asciidoc/search.adoc[]
