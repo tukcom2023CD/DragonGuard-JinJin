@@ -127,7 +127,8 @@ class SearchPageController: UIViewController{
              let cell = tableview.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath) as! SearchPageTableView
              cell.prepare(text: item)
              cell.layer.cornerRadius = 20
-             cell.backgroundColor = .yellow
+             cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+             cell.layer.borderWidth = 1
              return cell
          } titleForHeaderInSection: { dataSource, sectionIndex in
              return dataSource[sectionIndex].header
@@ -140,6 +141,7 @@ class SearchPageController: UIViewController{
             MySection(header: " ", items: ["3"]),
             MySection(header: " ", items: ["4"])
          ]
+         // 데이터 삽입
          Observable.just(sections)
              .bind(to: resultTableView.rx.items(dataSource: dataSource))
              .disposed(by: disposeBag)
@@ -167,6 +169,9 @@ extension SearchPageController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected \(indexPath.section)")
     }
+    
+    // section 간격 설정
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {  return 1 }
     
     
     
