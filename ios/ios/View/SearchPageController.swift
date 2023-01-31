@@ -22,7 +22,7 @@ class SearchPageController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        
+        SearchPageService().getPage()
         addUItoView()   //View에 적용할 UI 작성
 
         searchUISetLayout()     // searchUI AutoLayout 함수
