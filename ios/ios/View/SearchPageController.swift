@@ -10,9 +10,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
+
 // 검색창
-final class SearchPageController: UIViewController{
-    
+final class SearchPageController: UIViewController {
     private let disposeBag = DisposeBag()
     private let searchViewModel = testViewModel()
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
@@ -24,7 +24,7 @@ final class SearchPageController: UIViewController{
         self.navigationController?.navigationBar.isHidden = false
         
         addUItoView()   //View에 적용할 UI 작성
-
+        
         searchUISetLayout()     // searchUI AutoLayout 함수
         resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
         
@@ -42,7 +42,7 @@ final class SearchPageController: UIViewController{
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: deviceWidth, height: 0))
         return searchBar
     }()
-
+    
     // 결과물 출력할 tableview
     lazy var resultTableView: UITableView = {
         let tableview = UITableView(frame: CGRect(x: 0, y: 0, width: deviceWidth, height: 0))
@@ -65,7 +65,7 @@ final class SearchPageController: UIViewController{
     private func addUItoView(){
         self.view.addSubview(searchUI)  //searchUI 적용
         self.view.addSubview(resultTableView)   //tableview 적용
-                             
+        
         // 결과 출력하는 테이블 뷰 적용
         // datasource는 reactive 적용
         self.resultTableView.delegate = self
@@ -112,30 +112,40 @@ final class SearchPageController: UIViewController{
     
     private func bindInput(){
         //데이터 잘들어가는 지 테스트
-        searchViewModel.checkValidId
-            .subscribe(onNext: {
-                print($0)
-            })
+        //        searchViewModel.checkValidId
+        //            .subscribe(onNext: {
+        //                print($0)
+        //            })
     }
     
     
     
     // 결과물 출력할 tableview 설정하는 부분
-     func setTableViewDataSource(){
-         
-         // 데이터 잘들어가는지 테스트 용
-         searchViewModel.tableViewData.onNext(searchViewModel.testData)
-         
-         //Reactive 적용한 tableview
-         searchViewModel.tableViewData
+    func setTableViewDataSource(){
+        
+        // 데이터 잘들어가는지 테스트 용
+        searchViewModel.tableViewData.onNext(searchViewModel.testData)
+        
+        //Reactive 적용한 tableview
+        searchViewModel.tableViewData
             .observe(on: MainScheduler.instance)
             .filter{ !$0.isEmpty }
             .bind(to: resultTableView.rx
                   // items에 index, item, cell을 가지고 온다 , 기존 tableviewCell 설정과 비슷
                 .items(cellIdentifier: SearchPageTableView.identifier,cellType: SearchPageTableView.self)){ index, item, cell in
-                cell.prepare(text: item)
-            }
-            .disposed(by: disposeBag)
+                    
+                    cell.backgroundColor = UIColor(red: 255/255.0, green: 150/255.0, blue: 100/255.0, alpha: 0.4)   //셀 배경 색상
+                    cell.layer.cornerRadius = 15    //셀 모서리 둥글게
+                    cell.layer.borderWidth = 1  // 셀 바깥 선
+                    
+                    cell.prepare(text: item)
+                }
+                .disposed(by: disposeBag)
+        
+        
+        
+        
+        
     }
 }
 
@@ -146,9 +156,8 @@ extension SearchPageController: UISearchBarDelegate{
         searchUI.resignFirstResponder()
         self.searchUI.showsCancelButton = false
         
-        guard let searchText = searchUI.text else{return}
-        searchViewModel.searchingData
-            .onNext(searchText)
+        guard let searchText = searchUI.text else{ return }
+        searchViewModel.searchingData.onNext(searchText)
         
     }
 }
