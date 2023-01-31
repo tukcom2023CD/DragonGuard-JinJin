@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 class MainViewModel {
     var onSearchListener = MutableLiveData<String>()
     var onIconClickListener = MutableLiveData<Boolean>()
+    var onLookRanking = MutableLiveData<Boolean>()
 
     fun clickSearchIcon() {
         onIconClickListener.value = true
@@ -17,7 +18,7 @@ class MainViewModel {
     }
 
     fun lookRanking() {
-
+        onLookRanking.value = true
     }
 
     fun compareRepo() {

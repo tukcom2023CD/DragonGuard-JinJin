@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:weightSum="3.4"
         tools:context=".activity.MainActivity">
 
         <!--     기존 타이틀바 제거하고 다는 툴바       -->
@@ -21,12 +22,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:minHeight="?attr/actionBarSize"
             android:layout_weight="0.5"
-            android:background="@android:color/transparent"
-            android:layout_gravity="bottom|right"
-            android:gravity="right|bottom">
-
-        </androidx.appcompat.widget.Toolbar>
+            android:background="@android:color/transparent"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -109,6 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
+            android:weightSum="2"
             android:orientation="vertical">
 
             <LinearLayout
@@ -116,8 +115,7 @@
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="25dp"
-                android:layout_marginVertical="10dp"
-                android:layout_weight="0.7"
+                android:layout_weight="0.6"
                 android:background="@drawable/roundc"
                 android:orientation="horizontal">
 
@@ -139,7 +137,7 @@
                         android:id="@+id/user_tear"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:layout_gravity="center"
+                        android:layout_gravity="left"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:text="내 티어 : 다이아몬드"
@@ -151,7 +149,7 @@
                         android:id="@+id/user_token"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:layout_gravity="center"
+                        android:layout_gravity="left"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:text="내 토큰 : 232.4"
@@ -171,14 +169,20 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.05"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
-                android:layout_weight="0.8"
+
+                android:layout_weight="0.85"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -269,13 +273,19 @@
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.05"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="20dp"
-
+                android:weightSum="2"
                 android:layout_weight="0.4"
                 android:orientation="horizontal">
 
@@ -305,13 +315,7 @@
                     android:textSize="20dp"
                     android:textStyle="bold" />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginHorizontal="20dp"
-                android:layout_weight="0.05"
-                android:orientation="horizontal"/>
+
         </LinearLayout>
 
 

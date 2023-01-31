@@ -13,10 +13,16 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.RankingsActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+        <activity
             android:name=".activity.CriterionActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.FaqActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.SearchActivity"
