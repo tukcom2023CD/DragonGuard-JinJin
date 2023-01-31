@@ -7,6 +7,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.viewmodel.MainViewModel
@@ -38,7 +39,12 @@ class MainActivity : AppCompatActivity() {
         }
 
  */
-        viewmodel
+        viewmodel.onLookRanking.observe(this, Observer {
+            if(viewmodel.onLookRanking.value == true){
+                val intent = Intent(applicationContext, RankingsActivity::class.java)
+                startActivity(intent)
+            }
+        })
 
     }
 

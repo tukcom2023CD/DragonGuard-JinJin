@@ -20,11 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.5"
-            android:background="@android:color/transparent"
-            android:layout_gravity="bottom"
-            android:gravity="right">
-
-        </androidx.appcompat.widget.Toolbar>
+            android:background="@android:color/transparent"/>
 
         <LinearLayout
             android:layout_width="match_parent"
