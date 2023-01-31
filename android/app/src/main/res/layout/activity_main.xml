@@ -107,16 +107,6 @@
                 android:gravity="center_horizontal"
                 android:orientation="horizontal" />
 
-            <TextView
-                android:id="@+id/search_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.15"
-                android:maxLines="1"
-                android:text="검색"
-                android:textColor="@color/black"
-                android:textSize="25dp"
-                android:fontFamily="@font/ibm_semibold" />
 
             <EditText
                 android:id="@+id/search_name"
@@ -126,7 +116,8 @@
                 android:background="@drawable/search_border"
                 android:imeOptions="actionSearch"
                 android:maxLines="1"
-                android:text="@={mainViewModel.onSearchListener}"
+                android:focusable="false"
+                android:onClick="@{()->mainViewModel.clickSearchIcon()}"
                 android:textColor="@color/black"
                 android:textSize="25dp" />
 
