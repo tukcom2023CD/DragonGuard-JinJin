@@ -8,6 +8,11 @@ class MainViewModel {
     var onSearchListener = MutableLiveData<String>()
     var onIconClickListener = MutableLiveData<Boolean>()
     var onLookRanking = MutableLiveData<Boolean>()
+    var onUserIconSelect = MutableLiveData<Boolean>()
+
+    fun clickUserIcon() {
+        onUserIconSelect.value = true
+    }
 
     fun clickSearchIcon() {
         onIconClickListener.value = true
