@@ -20,6 +20,12 @@ final class SettingTableView: UITableViewCell{
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // 셀 내부 간격 설정
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+    }
+    
     /*
      UI 작성
      */
@@ -28,7 +34,7 @@ final class SettingTableView: UITableViewCell{
     lazy var customLabel: UILabel = {
         let label = UILabel()
         contentView.addSubview(label)
-        label.font = UIFont.systemFont(ofSize: 20)
+        label.font = UIFont.systemFont(ofSize: 23)
         
         //AutoLayout 설정
         customLabelLayout(label: label)

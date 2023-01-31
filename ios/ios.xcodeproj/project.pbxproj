@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		3B00229D2987998B003FA5CC /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B00229C2987998B003FA5CC /* SettingController.swift */; };
 		3B00229F29879F7D003FA5CC /* SettingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B00229E29879F7D003FA5CC /* SettingTableView.swift */; };
-		3B0022A12987A94B003FA5CC /* TokenGivenCriteria.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A02987A94B003FA5CC /* TokenGivenCriteria.swift */; };
 		3B0022A32987A9B0003FA5CC /* TierTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A22987A9B0003FA5CC /* TierTypes.swift */; };
 		3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A42987ABA1003FA5CC /* FAQPage.swift */; };
 		3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */; };
@@ -32,6 +31,7 @@
 		3BE3F7D2297060DC0005B640 /* iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7D1297060DC0005B640 /* iosTests.swift */; };
 		3BE3F7DF297064340005B640 /* iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7DE297064340005B640 /* iosUITests.swift */; };
 		3BE3F7E1297064340005B640 /* iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7E0297064340005B640 /* iosUITestsLaunchTests.swift */; };
+		3BF2B31329890F1900F20841 /* WatchRankingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */; };
 		A3AEEB602975286C00004722 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB5F2975286C00004722 /* RxCocoa */; };
 		A3AEEB622975286C00004722 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB612975286C00004722 /* RxSwift */; };
 		A3AEEB652975311400004722 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB642975311400004722 /* SnapKit */; };
@@ -57,7 +57,6 @@
 /* Begin PBXFileReference section */
 		3B00229C2987998B003FA5CC /* SettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingController.swift; sourceTree = "<group>"; };
 		3B00229E29879F7D003FA5CC /* SettingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableView.swift; sourceTree = "<group>"; };
-		3B0022A02987A94B003FA5CC /* TokenGivenCriteria.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenGivenCriteria.swift; sourceTree = "<group>"; };
 		3B0022A22987A9B0003FA5CC /* TierTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierTypes.swift; sourceTree = "<group>"; };
 		3B0022A42987ABA1003FA5CC /* FAQPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQPage.swift; sourceTree = "<group>"; };
 		3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingController.swift; sourceTree = "<group>"; };
@@ -76,6 +75,7 @@
 		3BE3F7DC297064340005B640 /* iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BE3F7DE297064340005B640 /* iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosUITests.swift; sourceTree = "<group>"; };
 		3BE3F7E0297064340005B640 /* iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingCollectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,12 +170,12 @@
 				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
 				3B1DB87B2963428A00308F43 /* MainController.swift */,
 				3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */,
+				3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */,
 				3B00229C2987998B003FA5CC /* SettingController.swift */,
 				3B00229E29879F7D003FA5CC /* SettingTableView.swift */,
 				3BD6DD21298129B8008C05B2 /* SearchPageController.swift */,
 				3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */,
 				3B0022A22987A9B0003FA5CC /* TierTypes.swift */,
-				3B0022A02987A94B003FA5CC /* TokenGivenCriteria.swift */,
 				3B0022A42987ABA1003FA5CC /* FAQPage.swift */,
 			);
 			path = View;
@@ -367,7 +367,6 @@
 				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
 				3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */,
 				3B0022A32987A9B0003FA5CC /* TierTypes.swift in Sources */,
-				3B0022A12987A94B003FA5CC /* TokenGivenCriteria.swift in Sources */,
 				3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */,
 				3B00229F29879F7D003FA5CC /* SettingTableView.swift in Sources */,
 				3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */,
@@ -375,6 +374,7 @@
 				3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */,
 				3B848F6C29826B24001DFE9F /* testViewModel.swift in Sources */,
 				3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */,
+				3BF2B31329890F1900F20841 /* WatchRankingCollectionView.swift in Sources */,
 				3B00229D2987998B003FA5CC /* SettingController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
