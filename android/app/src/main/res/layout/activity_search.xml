@@ -13,7 +13,7 @@
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.MainActivity"
+        tools:context=".activity.SearchActivity"
         android:orientation="vertical">
 
         <!--     기존 타이틀바 제거하고 다는 툴바       -->

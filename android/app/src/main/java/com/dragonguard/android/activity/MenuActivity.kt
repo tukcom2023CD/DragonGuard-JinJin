@@ -1,33 +1,27 @@
 package com.dragonguard.android.activity
 
-import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
-import android.view.Window
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
-import com.dragonguard.android.databinding.ActivityCriterionBinding
+import com.dragonguard.android.databinding.ActivityMenuBinding
+import com.dragonguard.android.viewmodel.MenuViewModel
 
-class CriterionActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityCriterionBinding
+class MenuActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMenuBinding
+    var viewmodel = MenuViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_criterion)
-        binding.cirterionActivity = this
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_menu)
+        binding.menuActivity = viewmodel
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_home_24)
-    }
 
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu1, binding.toolbar.menu)
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

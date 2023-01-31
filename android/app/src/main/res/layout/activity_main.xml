@@ -18,18 +18,62 @@
         tools:context=".activity.MainActivity">
 
         <!--     기존 타이틀바 제거하고 다는 툴바       -->
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:minHeight="?attr/actionBarSize"
-            android:layout_weight="0.5"
-            android:background="@android:color/transparent"/>
+            android:layout_weight="0.3"
+            android:background="@android:color/transparent"
+            android:minHeight="?attr/actionBarSize" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3">
+            android:layout_weight="0.25"
+            android:orientation="horizontal"
+            android:weightSum="1.1">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:onClick="@{()->mainViewModel.clickUserIcon()}"
+                android:id="@+id/githut_profile"/>
+
+            <TextView
+                android:id="@+id/user_id"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="posite"
+                android:textColor="@color/black"
+                android:onClick="@{()->mainViewModel.clickUserIcon()}"
+                android:textSize="25dp"
+                android:fontFamily="@font/ibm_semibold"
+                 />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -41,20 +85,20 @@
             <TextView
                 android:id="@+id/school_name"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="소속 학교"
                 android:gravity="center_vertical"
-                android:layout_height="match_parent" />
+                android:text="소속 학교"
+                android:textColor="@color/black"
+                android:textSize="25dp"
+                android:fontFamily="@font/ibm_semibold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:gravity="center"
-            android:layout_weight="0.3">
+            android:layout_weight="0.25"
+            android:gravity="center">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -72,7 +116,7 @@
                 android:text="검색"
                 android:textColor="@color/black"
                 android:textSize="25dp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/ibm_semibold" />
 
             <EditText
                 android:id="@+id/search_name"
@@ -107,8 +151,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:weightSum="2"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="2">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -143,7 +187,7 @@
                         android:text="내 티어 : 다이아몬드"
                         android:textColor="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/ibm_semibold" />
 
                     <Button
                         android:id="@+id/user_token"
@@ -155,7 +199,7 @@
                         android:text="내 토큰 : 232.4"
                         android:textColor="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/ibm_semibold" />
                 </LinearLayout>
 
                 <ImageView
@@ -169,6 +213,7 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -203,7 +248,7 @@
                         android:text="전체 사용자 랭킹"
                         android:textColor="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/ibm_semibold" />
 
                     <TextView
                         android:id="@+id/user_ranking"
@@ -215,7 +260,7 @@
                         android:text="등수"
                         android:textColor="@color/black"
                         android:textSize="30dp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/ibm_semibold" />
 
                     <TextView
                         android:id="@+id/user_percent"
@@ -273,6 +318,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -285,9 +331,9 @@
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="20dp"
-                android:weightSum="2"
                 android:layout_weight="0.4"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <Button
                     android:layout_width="0dp"
@@ -317,7 +363,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
 
         <LinearLayout
