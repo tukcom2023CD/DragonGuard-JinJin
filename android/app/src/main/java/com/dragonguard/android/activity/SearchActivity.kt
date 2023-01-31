@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.KeyEvent
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -15,7 +16,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.dragonguard.android.BuildConfig
 import com.dragonguard.android.R
 import com.dragonguard.android.connect.ApiCall
 import com.dragonguard.android.connect.GitRankAPI
@@ -48,6 +48,11 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchResult.addItemDecoration(VerticalItemDecorator(20))
         binding.searchResult.addItemDecoration(HorizontalItemDecorator(10))
+
+        setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_home_24)
 
 //        검색 옵션 구현
         viewmodel.onOptionListener.observe(this, Observer {
@@ -90,6 +95,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
         })
+
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
         viewmodel.onSearchListener.observe(this, Observer {
             if (!viewmodel.onSearchListener.value.isNullOrEmpty() && viewmodel.onSearchListener.value!!.last() == '\n') {
@@ -116,6 +122,24 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
+        viewmodel.onUserIconSelected.observe(this, Observer {
+            if(viewmodel.onUserIconSelected.value == true) {
+                val intent = Intent(applicationContext, MenuActivity::class.java)
+                startActivity(intent)
+            }
+        })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home->{
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     //    화면의 다른곳 눌렀을때 처리

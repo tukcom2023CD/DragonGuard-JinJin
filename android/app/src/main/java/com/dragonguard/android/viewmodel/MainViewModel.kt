@@ -6,16 +6,16 @@ import androidx.lifecycle.MutableLiveData
 
 class MainViewModel {
     var onSearchListener = MutableLiveData<String>()
-    var onIconClickListener = MutableLiveData<Boolean>()
+    var onSearchClickListener = MutableLiveData<Boolean>()
     var onLookRanking = MutableLiveData<Boolean>()
-    var onUserIconSelect = MutableLiveData<Boolean>()
+    var onUserIconSelected = MutableLiveData<Boolean>()
 
     fun clickUserIcon() {
-        onUserIconSelect.value = true
+        onUserIconSelected.value = true
     }
 
     fun clickSearchIcon() {
-        onIconClickListener.value = true
+        onSearchClickListener.value = true
     }
 
     fun searchRepo() {

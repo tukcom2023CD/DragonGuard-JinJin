@@ -33,13 +33,42 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="vertical"
-                android:layout_weight="0.1" />
+                android:layout_weight="0.25"
+                android:orientation="horizontal"
+                android:weightSum="1.1">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:onClick="@{()->searchViewModel.clickUserIcon()}"
+                    android:id="@+id/githut_profile"/>
+
+                <TextView
+                    android:id="@+id/user_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="posite"
+                    android:textColor="@color/black"
+                    android:onClick="@{()->searchViewModel.clickUserIcon()}"
+                    android:textSize="25dp"
+                    android:fontFamily="@font/ibm_semibold"
+                    />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.3"
+                android:layout_weight="0.2"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
                 <LinearLayout

@@ -1,6 +1,5 @@
 package com.dragonguard.android.activity
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -41,9 +40,16 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewmodel.onUserIconSelect.observe(this, Observer {
-            if(viewmodel.onUserIconSelect.value == true){
+        viewmodel.onUserIconSelected.observe(this, Observer {
+            if(viewmodel.onUserIconSelected.value == true){
                 val intent = Intent(applicationContext, MenuActivity::class.java)
+                startActivity(intent)
+            }
+        })
+
+        viewmodel.onSearchClickListener.observe(this, Observer {
+            if(viewmodel.onSearchClickListener.value == true) {
+                val intent = Intent(applicationContext, SearchActivity::class.java)
                 startActivity(intent)
             }
         })
