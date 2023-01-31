@@ -26,6 +26,15 @@ final class MainController: UIViewController {
         // UI AutoLayout 적용
         settingAutoLayout()
         
+//        // 폰트 체크 하기
+//        UIFont.familyNames.sorted().forEach { familyName in
+//            print("*** \(familyName) ***")
+//            UIFont.fontNames(forFamilyName: familyName).forEach { fontName in
+//                print("\(fontName)")
+//            }
+//            print("---------------------")
+//        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,6 +59,7 @@ final class MainController: UIViewController {
         let settingUI = UIButton()
         settingUI.setTitle("DragonGuard-JinJin", for: .normal)
         settingUI.setTitleColor(.black, for: .normal)
+        settingUI.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         settingUI.addTarget(self, action: #selector(settingUIClicked), for: .touchUpInside)
         return settingUI
     }()
@@ -58,6 +68,7 @@ final class MainController: UIViewController {
         let watchRanking = UIButton()
         watchRanking.setTitle("랭킹 보러가기", for: .normal)
         watchRanking.setTitleColor(.black, for: .normal)
+        watchRanking.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         watchRanking.addTarget(self, action: #selector(watchRankingClicked), for: .touchUpInside)
         return watchRanking
     }()
