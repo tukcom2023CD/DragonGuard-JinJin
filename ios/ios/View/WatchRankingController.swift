@@ -36,7 +36,7 @@ final class WatchRankingController: UIViewController{
         let settingUI = UIButton()
         settingUI.setTitle("DragonGuard-JinJin", for: .normal)
         settingUI.setTitleColor(.black, for: .normal)
-        settingUI.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        settingUI.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         settingUI.addTarget(self, action: #selector(settingUIClicked), for: .touchUpInside)
         return settingUI
     }()
@@ -110,8 +110,8 @@ extension WatchRankingController: UICollectionViewDataSource, UICollectionViewDe
         
         cell.btn.setTitle(rankingBtns[indexPath.row], for: .normal)
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
-        cell.btn.titleLabel?.font = UIFont.systemFont(ofSize: 20)   //폰트 사이즈
         cell.layer.cornerRadius = 20    //테두리 둥글게
+        
         return cell
     }
     

@@ -42,6 +42,8 @@ final class SearchPageTableView: UITableViewCell{
     // 라벨에 텍스트 입력
     public func prepare(text:String){
         self.customLabel.text = text
+        self.customLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        
     }
     
     

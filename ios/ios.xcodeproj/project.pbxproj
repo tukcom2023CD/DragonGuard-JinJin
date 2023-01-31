@@ -24,6 +24,8 @@
 		3B7B1D34298404B90038BD67 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3B7B1D33298404B90038BD67 /* SnapKit */; };
 		3B7B1D36298404BD0038BD67 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 3B7B1D35298404BD0038BD67 /* Charts */; };
 		3B7B1D38298404C70038BD67 /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 3B7B1D37298404C70038BD67 /* RxTest */; };
+		3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
+		3B80B6DC298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
 		3B848F6C29826B24001DFE9F /* testViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B848F6B29826B24001DFE9F /* testViewModel.swift */; };
 		3BA0EEE62979A16700B9E952 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 3BA0EEE52979A16700B9E952 /* Charts */; };
 		3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD21298129B8008C05B2 /* SearchPageController.swift */; };
@@ -67,6 +69,7 @@
 		3B1DB8802963428B00308F43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3B1DB8832963428B00308F43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3B1DB8852963428B00308F43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansKR-SemiBold.otf"; sourceTree = "<group>"; };
 		3B848F6B29826B24001DFE9F /* testViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testViewModel.swift; sourceTree = "<group>"; };
 		3BD6DD21298129B8008C05B2 /* SearchPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageController.swift; sourceTree = "<group>"; };
 		3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageTableView.swift; sourceTree = "<group>"; };
@@ -138,6 +141,7 @@
 		3B1DB8762963428A00308F43 /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				3B80B6DD298957DF007FF716 /* Fonts */,
 				3BA0EEE0297999FD00B9E952 /* Delegate */,
 				3BA0EEE129799A1100B9E952 /* View */,
 				3BA0EEE229799A2900B9E952 /* ViewModel */,
@@ -153,6 +157,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3B80B6DD298957DF007FF716 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		3BA0EEE0297999FD00B9E952 /* Delegate */ = {
@@ -338,6 +350,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */,
 				3B1DB8842963428B00308F43 /* LaunchScreen.storyboard in Resources */,
 				3B1DB8812963428B00308F43 /* Assets.xcassets in Resources */,
 			);
@@ -347,6 +360,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B80B6DC298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -34,7 +34,7 @@ final class SettingTableView: UITableViewCell{
     lazy var customLabel: UILabel = {
         let label = UILabel()
         contentView.addSubview(label)
-        label.font = UIFont.systemFont(ofSize: 23)
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 23)
         
         //AutoLayout 설정
         customLabelLayout(label: label)

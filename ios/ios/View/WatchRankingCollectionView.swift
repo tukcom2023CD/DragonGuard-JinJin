@@ -34,6 +34,7 @@ class WatchRankingCollectionView: UICollectionViewCell {
     lazy var btn: UIButton = {
         let btn = UIButton()
         btn.setTitleColor(.black, for: .normal)
+        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return btn
     }()
     
