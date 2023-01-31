@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 
 // 검색창
 class SearchPageController: UIViewController{
@@ -120,21 +121,29 @@ class SearchPageController: UIViewController{
     
     
     // 결과물 출력할 tableview 설정하는 부분
-     func setTableViewDataSource(){
+     func setTableViewDataSource() {
          
-         // 데이터 잘들어가는지 테스트 용
-         searchViewModel.tableViewData.onNext(searchViewModel.testData)
+         let dataSource = RxTableViewSectionedReloadDataSource<MySection> { _, tableview, indexPath, item in
+             let cell = tableview.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath) as! SearchPageTableView
+             cell.prepare(text: item)
+             cell.layer.cornerRadius = 20
+             cell.backgroundColor = .yellow
+             return cell
+         } titleForHeaderInSection: { dataSource, sectionIndex in
+             return dataSource[sectionIndex].header
+         }
          
-         //Reactive 적용한 tableview
-         searchViewModel.tableViewData
-            .observe(on: MainScheduler.instance)
-            .filter{ !$0.isEmpty }
-            .bind(to: resultTableView.rx
-                  // items에 index, item, cell을 가지고 온다 , 기존 tableviewCell 설정과 비슷
-                .items(cellIdentifier: SearchPageTableView.identifier,cellType: SearchPageTableView.self)){ index, item, cell in
-                cell.prepare(text: item)
-            }
-            .disposed(by: disposeBag)
+         // 데이터 테스트
+         let sections = [
+            MySection(header: " ", items: ["1"]),
+            MySection(header: " ", items: ["2"]),
+            MySection(header: " ", items: ["3"]),
+            MySection(header: " ", items: ["4"])
+         ]
+         Observable.just(sections)
+             .bind(to: resultTableView.rx.items(dataSource: dataSource))
+             .disposed(by: disposeBag)
+        
     }
 }
 
@@ -156,7 +165,30 @@ extension SearchPageController: UISearchBarDelegate{
 extension SearchPageController: UITableViewDelegate{
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("selected \(indexPath.row)")
+        print("selected \(indexPath.section)")
+    }
+    
+    
+    
+}
+
+
+// DataSource
+struct MySection {
+    var header: String
+    var items: [Item]
+}
+
+extension MySection : AnimatableSectionModelType {
+    typealias Item = String
+    
+    var identity: String {
+        return header
+    }
+    
+    init(original: MySection, items: [Item]) {
+        self = original
+        self.items = items
     }
 }
 

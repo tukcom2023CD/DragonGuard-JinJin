@@ -19,4 +19,7 @@ class testViewModel{
     
     var checkValidId: Observable<String>{ searchingData.map({ $0 }) }
     
+   
+    
+    
 }
