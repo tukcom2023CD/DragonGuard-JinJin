@@ -15,7 +15,7 @@ public enum Tier {
     PLATINUM(1000, "플레티넘"),
     DIAMOND(3000, "다이아몬드"),
     RUBY(5000, "루비"),
-    MASTER(Integer.MAX_VALUE, "마스터");
+    MASTER(10000, "마스터");
 
     private final Integer maxCommits;
     private final String korean;
