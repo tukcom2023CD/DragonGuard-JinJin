@@ -14,6 +14,8 @@ class SearchPageTableView: UITableViewCell{
     // 클래스 생성자
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        
     }
     
     required init?(coder: NSCoder) {
@@ -29,11 +31,10 @@ class SearchPageTableView: UITableViewCell{
         
         // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(label)
-        
-        label.font = UIFont.systemFont(ofSize: 30)
+        label.font = UIFont.systemFont(ofSize: 35)
         label.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
-            make.centerX.equalTo(contentView)
+            make.leading.equalTo(contentView).offset(20)
         })
         return label
     }()

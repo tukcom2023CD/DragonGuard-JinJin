@@ -126,7 +126,7 @@ class SearchPageController: UIViewController{
          let dataSource = RxTableViewSectionedReloadDataSource<MySection> { _, tableview, indexPath, item in
              let cell = tableview.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath) as! SearchPageTableView
              cell.prepare(text: item)
-             cell.layer.cornerRadius = 20
+             cell.layer.cornerRadius = 15
              cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
              cell.layer.borderWidth = 1
              return cell
