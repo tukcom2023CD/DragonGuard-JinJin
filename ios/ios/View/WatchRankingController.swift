@@ -16,7 +16,7 @@ final class WatchRankingController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.isHidden = true   // navigation bar 생성
+        self.navigationController?.navigationBar.isHidden = false   // navigation bar 생성
         self.navigationItem.backButtonTitle = "랭킹 보러가기"
         self.view.backgroundColor = .white
         
@@ -27,7 +27,7 @@ final class WatchRankingController: UIViewController{
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     /*
@@ -127,7 +127,7 @@ extension WatchRankingController: UICollectionViewDataSource, UICollectionViewDe
         let width = collectionView.bounds.width / 2
         let height = collectionView.bounds.height / 3
         
-        let size = CGSize(width: width - 5 , height: height - 10)
+        let size = CGSize(width: width - 5 , height: height - 30)
         return size
     }
     

@@ -32,6 +32,8 @@ final class SearchPageTableView: UITableViewCell{
         // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(label)
         label.font = UIFont.systemFont(ofSize: 35)
+        label.textColor = .black
+        
         label.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
             make.leading.equalTo(contentView).offset(20)

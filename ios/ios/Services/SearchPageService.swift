@@ -15,8 +15,8 @@ class SearchPageService {
         AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: ["Content-Type":"application/json", "Accept":"application/json"])
             .validate(statusCode: 200..<300)
             .responseJSON { json in
-            print(json)
-                print("hello")
+//            print(json)
+//                print("hello")
             }
     }
 }

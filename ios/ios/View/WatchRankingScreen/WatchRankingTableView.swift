@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 import SnapKit
 
+// 랭킹보러가기 하위 tableview cell들 사용하기 위한 클래스
+
 final class WatchRankingTableView: UITableViewCell {
     static let identifier = "WatchRankingTableView"
     
@@ -20,10 +22,14 @@ final class WatchRankingTableView: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
- 
+    
+    // Label UI
     lazy var rankingLabel: UILabel = {
         let rankingLabel = UILabel()
-        rankingLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        rankingLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 23)
+        rankingLabel.textColor = .black
+        contentView.addSubview(rankingLabel)
+        
         rankingLabel.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
             make.centerX.equalTo(contentView)
@@ -33,8 +39,11 @@ final class WatchRankingTableView: UITableViewCell {
     }()
     
     
-    func bind(text: String){
+    // 데이터 삽입
+    func prepare(text: String){
         rankingLabel.text = text
     }
     
 }
+
+
