@@ -26,6 +26,9 @@ final class WatchRankingController: UIViewController{
         configureCollectionView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.isHidden = true
+    }
     
     /*
      UI 코드 작성
@@ -108,7 +111,7 @@ extension WatchRankingController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WatchRankingCollectionView.identifier, for: indexPath) as? WatchRankingCollectionView ?? WatchRankingCollectionView()
         
-        cell.btn.setTitle(rankingBtns[indexPath.row], for: .normal)
+        cell.customLabel.text = rankingBtns[indexPath.row]
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
         cell.layer.cornerRadius = 20    //테두리 둥글게
         
@@ -121,6 +124,22 @@ extension WatchRankingController: UICollectionViewDataSource, UICollectionViewDe
     
     // cell 선택되었을 때
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch indexPath.row{
+        case 0:
+            self.navigationController?.pushViewController(MyRepositoryRankingController(), animated: true)
+        case 1:
+            self.navigationController?.pushViewController(MyOraganizationListController(), animated: true)
+        case 2:
+            self.navigationController?.pushViewController(UnivInRankingController(), animated: true)
+        case 3:
+            self.navigationController?.pushViewController(AllUnivRankingController(), animated: true)
+        case 4:
+            self.navigationController?.pushViewController(AllRankingController(), animated: true)
+        case 5:
+            self.navigationController?.pushViewController(AllRepositoryRankingController(), animated: true)
+        default:
+            return
+        }
         
     }
     

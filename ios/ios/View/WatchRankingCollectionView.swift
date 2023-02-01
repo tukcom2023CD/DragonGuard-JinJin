@@ -22,7 +22,7 @@ class WatchRankingCollectionView: UICollectionViewCell {
     
     func cellSetting() {
         self.backgroundColor = .white
-        self.addSubview(btn)
+        self.addSubview(customLabel)
         
         setAutoLayout()
     }
@@ -31,11 +31,11 @@ class WatchRankingCollectionView: UICollectionViewCell {
      UI 코드 작성
      */
     
-    lazy var btn: UIButton = {
-        let btn = UIButton()
-        btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        return btn
+    lazy var customLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return label
     }()
     
     
@@ -47,7 +47,7 @@ class WatchRankingCollectionView: UICollectionViewCell {
      */
     
     private func setAutoLayout(){
-        btn.snp.makeConstraints({ make in
+        customLabel.snp.makeConstraints({ make in
             make.center.equalToSuperview()
         })
         

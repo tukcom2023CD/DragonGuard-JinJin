@@ -9,7 +9,7 @@ from base_url import KAFKA_BASE_URL
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['CORS_HEADERS'] = 'Content-Type'   
 api = Api(app)
 
 ns = api.namespace('/', description='GitRank API')
