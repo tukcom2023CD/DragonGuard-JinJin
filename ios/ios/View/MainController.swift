@@ -57,6 +57,9 @@ final class MainController: UIViewController {
     // 유지 이름 버튼 누르면 설정 화면으로 이동
     lazy var settingUI: UIButton = {
         let settingUI = UIButton()
+        
+        settingUI.setImage(UIImage(named: "img1")?.resize(newWidth: 50),for: .normal)
+        settingUI.imageView?.layer.cornerRadius = 20
         settingUI.setTitle("DragonGuard-JinJin", for: .normal)
         settingUI.setTitleColor(.black, for: .normal)
         settingUI.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
@@ -119,7 +122,7 @@ final class MainController: UIViewController {
         
         // 사용자 이름 버튼 AutoLayout
         settingUI.snp.makeConstraints({ make in
-            make.top.equalTo(50)
+            make.top.equalTo(60)
             make.leading.equalTo(10)
         })
         
@@ -133,6 +136,20 @@ final class MainController: UIViewController {
 
 }
 
+extension UIImage {
+    //이미지 크기 재배치 하는 함수
+    func resize(newWidth: CGFloat) -> UIImage {
+        let scale = newWidth / self.size.width
+        let newHeight = self.size.height * scale
+
+        let size = CGSize(width: newWidth, height: newHeight)
+        let render = UIGraphicsImageRenderer(size: size)
+        let renderImage = render.image { context in
+            self.draw(in: CGRect(origin: .zero, size: size))
+        }
+        return renderImage
+    }
+}
 
 
 
