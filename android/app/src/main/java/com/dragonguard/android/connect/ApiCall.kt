@@ -28,8 +28,12 @@ class ApiCall {
         queryMap.put("page","${count+1}")
         queryMap.put("name",name)
         queryMap.put("type","repositories")
+<<<<<<< HEAD
 
         Log.d("api 호출", "$count 페이지 검색")
+=======
+        var repoNames : ArrayList<Result> = arrayListOf<Result>()
+>>>>>>> #32_android_main_screen
         val repoName = api.getRepoName(queryMap)
         val result = repoName.execute()
         if(result.isSuccessful){
