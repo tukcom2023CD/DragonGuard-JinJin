@@ -10,10 +10,9 @@ import RxSwift
 import Foundation
 
 final class SearchPageViewModel {
-    var searchPageService = SearchPageService()
-    
     var searchResult: BehaviorSubject<[SearchPageResultModel]> = BehaviorSubject (value: [])
     
+    var middleTest: Observable<[SearchPageResultModel]>{ searchResult.map({ $0 }) }
     
 }
 

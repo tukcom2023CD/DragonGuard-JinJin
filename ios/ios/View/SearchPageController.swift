@@ -143,6 +143,10 @@ final class SearchPageController: UIViewController {
              return dataSource[sectionIndex].header
          }
          
+         self.searchViewModel.searchResult.subscribe(onNext: {
+             print("first test \($0)")
+         }).disposed(by: disposeBag)
+         
          // 데이터 테스트
          let sections = [
             SearchModel(header: " ", items: ["1"]),
@@ -166,7 +170,7 @@ extension SearchPageController: UISearchBarDelegate{
         self.searchUI.showsCancelButton = false
         
         guard let searchText = searchUI.text else{ return }
-        searchViewModel.searchingData.onNext(searchText)
+//        searchViewModel.searchingData.onNext(searchText)
         
     }
 }
