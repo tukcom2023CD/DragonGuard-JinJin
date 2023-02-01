@@ -10,7 +10,7 @@ import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMyUniversityInternalRankingBinding
 import com.dragonguard.android.viewmodel.MyUniversityInternalViewModel
 
-class MyUniversityInternalRanking : AppCompatActivity() {
+class MyUniversityInternalActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyUniversityInternalRankingBinding
     var viewmodel = MyUniversityInternalViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {

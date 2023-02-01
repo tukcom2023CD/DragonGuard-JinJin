@@ -13,7 +13,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.MyUniversityInternalRanking"
+            android:name=".activity.MyUniversityInternalActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
