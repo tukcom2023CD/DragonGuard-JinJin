@@ -32,6 +32,7 @@ final class SettingController: UIViewController{
     
     lazy var settingTableView: UITableView = {
         let tableview = UITableView()
+        tableview.backgroundColor = .white 
         return tableview
     }()
     

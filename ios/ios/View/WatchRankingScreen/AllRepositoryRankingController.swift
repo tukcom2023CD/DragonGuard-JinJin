@@ -33,6 +33,7 @@ final class AllRepositoryRankingController: UIViewController{
     
     lazy var repoTableView: UITableView = {
         let repoTableView = UITableView()
+        repoTableView.backgroundColor = .white
         return repoTableView
     }()
     
@@ -78,6 +79,7 @@ final class AllRepositoryRankingController: UIViewController{
             cell.prepare(text: item)
             cell.layer.cornerRadius = 15
             cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+            
             cell.layer.borderWidth = 1
             return cell
         } titleForHeaderInSection: { dataSource, sectionIndex in

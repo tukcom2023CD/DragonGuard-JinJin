@@ -27,6 +27,7 @@ final class WatchRankingTableView: UITableViewCell {
     lazy var rankingLabel: UILabel = {
         let rankingLabel = UILabel()
         rankingLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 23)
+        rankingLabel.textColor = .black
         contentView.addSubview(rankingLabel)
         
         rankingLabel.snp.makeConstraints({ make in

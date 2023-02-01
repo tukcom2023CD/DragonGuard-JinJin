@@ -33,6 +33,7 @@ final class AllUnivRankingController: UIViewController{
     
     lazy var repoTableView: UITableView = {
         let repoTableView = UITableView()
+        repoTableView.backgroundColor = .white
         return repoTableView
     }()
     

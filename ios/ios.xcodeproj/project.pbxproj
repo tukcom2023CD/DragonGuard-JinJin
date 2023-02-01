@@ -36,6 +36,7 @@
 		3B9756F1298A32C700F27094 /* WatchRankingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F0298A32C700F27094 /* WatchRankingTableView.swift */; };
 		3B9756F4298A639000F27094 /* WatchRankingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F3298A639000F27094 /* WatchRankingModel.swift */; };
 		3B9756F6298A63F600F27094 /* SearchPageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F5298A63F600F27094 /* SearchPageModel.swift */; };
+		3B9756F9298A775900F27094 /* APIURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F8298A775900F27094 /* APIURL.swift */; };
 		3BA0EEE62979A16700B9E952 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 3BA0EEE52979A16700B9E952 /* Charts */; };
 		3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD21298129B8008C05B2 /* SearchPageController.swift */; };
 		3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */; };
@@ -94,6 +95,7 @@
 		3B9756F0298A32C700F27094 /* WatchRankingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingTableView.swift; sourceTree = "<group>"; };
 		3B9756F3298A639000F27094 /* WatchRankingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingModel.swift; sourceTree = "<group>"; };
 		3B9756F5298A63F600F27094 /* SearchPageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageModel.swift; sourceTree = "<group>"; };
+		3B9756F8298A775900F27094 /* APIURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIURL.swift; sourceTree = "<group>"; };
 		3BD6DD21298129B8008C05B2 /* SearchPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageController.swift; sourceTree = "<group>"; };
 		3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageTableView.swift; sourceTree = "<group>"; };
 		3BE3F7CF297060DC0005B640 /* iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +171,7 @@
 		3B1DB8762963428A00308F43 /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				3B9756F8298A775900F27094 /* APIURL.swift */,
 				3B80B6DD298957DF007FF716 /* Fonts */,
 				3BA0EEE0297999FD00B9E952 /* Delegate */,
 				3BA0EEE129799A1100B9E952 /* View */,
@@ -450,6 +453,7 @@
 				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
 				3B9756F4298A639000F27094 /* WatchRankingModel.swift in Sources */,
 				3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */,
+				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,
 				3B9756F1298A32C700F27094 /* WatchRankingTableView.swift in Sources */,
 				3B0022A32987A9B0003FA5CC /* TierTypes.swift in Sources */,
 				3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */,

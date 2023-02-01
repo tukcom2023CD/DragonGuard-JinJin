@@ -34,6 +34,7 @@ final class MyOraganizationListController: UIViewController{
     
     lazy var repoTableView: UITableView = {
         let repoTableView = UITableView()
+        repoTableView.backgroundColor = .white
         return repoTableView
     }()
     

@@ -82,6 +82,7 @@ final class MainController: UIViewController {
     
     // 검색 버튼 누르는 경우 네비게이션 뷰 방식으로 이동
     @objc func searchUIClicked(){
+        self.navigationItem.backButtonTitle = " "    //다른 화면에서 BackBtn title 설정
         self.navigationController?.pushViewController(SearchPageController(), animated: true)
     }
     
