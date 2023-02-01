@@ -13,6 +13,8 @@ final class AllRepositoryRankingController: UIViewController{
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        
     }
+    
+    
+    
 }

@@ -33,6 +33,7 @@
 		3B9756EB298A16D900F27094 /* AllRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756EA298A16D900F27094 /* AllRankingController.swift */; };
 		3B9756ED298A16FF00F27094 /* AllRepositoryRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756EC298A16FF00F27094 /* AllRepositoryRankingController.swift */; };
 		3B9756EF298A171300F27094 /* AllUnivRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756EE298A171300F27094 /* AllUnivRankingController.swift */; };
+		3B9756F1298A32C700F27094 /* WatchRankingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F0298A32C700F27094 /* WatchRankingTableView.swift */; };
 		3BA0EEE62979A16700B9E952 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 3BA0EEE52979A16700B9E952 /* Charts */; };
 		3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD21298129B8008C05B2 /* SearchPageController.swift */; };
 		3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */; };
@@ -83,6 +84,7 @@
 		3B9756EA298A16D900F27094 /* AllRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRankingController.swift; sourceTree = "<group>"; };
 		3B9756EC298A16FF00F27094 /* AllRepositoryRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRepositoryRankingController.swift; sourceTree = "<group>"; };
 		3B9756EE298A171300F27094 /* AllUnivRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUnivRankingController.swift; sourceTree = "<group>"; };
+		3B9756F0298A32C700F27094 /* WatchRankingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingTableView.swift; sourceTree = "<group>"; };
 		3BD6DD21298129B8008C05B2 /* SearchPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageController.swift; sourceTree = "<group>"; };
 		3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageTableView.swift; sourceTree = "<group>"; };
 		3BE3F7CF297060DC0005B640 /* iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -188,8 +190,18 @@
 				3B9756EE298A171300F27094 /* AllUnivRankingController.swift */,
 				3B9756EA298A16D900F27094 /* AllRankingController.swift */,
 				3B9756EC298A16FF00F27094 /* AllRepositoryRankingController.swift */,
+				3B9756F0298A32C700F27094 /* WatchRankingTableView.swift */,
 			);
 			path = WatchRankingScreen;
+			sourceTree = "<group>";
+		};
+		3B9756F2298A33E900F27094 /* SettingScreen */ = {
+			isa = PBXGroup;
+			children = (
+				3B0022A22987A9B0003FA5CC /* TierTypes.swift */,
+				3B0022A42987ABA1003FA5CC /* FAQPage.swift */,
+			);
+			path = SettingScreen;
 			sourceTree = "<group>";
 		};
 		3BA0EEE0297999FD00B9E952 /* Delegate */ = {
@@ -204,17 +216,16 @@
 		3BA0EEE129799A1100B9E952 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				3B9756E9298A16B200F27094 /* WatchRankingScreen */,
 				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
 				3B1DB87B2963428A00308F43 /* MainController.swift */,
 				3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */,
 				3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */,
+				3B9756E9298A16B200F27094 /* WatchRankingScreen */,
 				3B00229C2987998B003FA5CC /* SettingController.swift */,
 				3B00229E29879F7D003FA5CC /* SettingTableView.swift */,
+				3B9756F2298A33E900F27094 /* SettingScreen */,
 				3BD6DD21298129B8008C05B2 /* SearchPageController.swift */,
 				3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */,
-				3B0022A22987A9B0003FA5CC /* TierTypes.swift */,
-				3B0022A42987ABA1003FA5CC /* FAQPage.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -406,6 +417,7 @@
 			files = (
 				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
 				3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */,
+				3B9756F1298A32C700F27094 /* WatchRankingTableView.swift in Sources */,
 				3B0022A32987A9B0003FA5CC /* TierTypes.swift in Sources */,
 				3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */,
 				3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */,
