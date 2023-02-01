@@ -12,7 +12,7 @@ import RxCocoa
 import RxDataSources
 
 // 검색창
-class SearchPageController: UIViewController{
+final class SearchPageController: UIViewController{
     
     private let disposeBag = DisposeBag()
     private let searchViewModel = testViewModel()
