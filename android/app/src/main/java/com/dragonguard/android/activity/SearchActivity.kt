@@ -38,6 +38,7 @@ class SearchActivity : AppCompatActivity() {
     private var position = 0
     private var repoNames = ArrayList<Result>()
     private var count = 0
+    private var changed = false
     private var lastSearch = ""
     var viewmodel = SearchViewModel()
     private var apiCall = ApiCall()
@@ -84,9 +85,10 @@ class SearchActivity : AppCompatActivity() {
                     binding.searchResult.visibility = View.GONE
                     count = 0
                     position = 0
+                    changed = true
                 }
                 lastSearch = viewmodel.onSearchListener.value!!
-                Log.d("last", "$lastSearch")
+                Log.d("api 시도", "callSearchApi 실행")
                 callSearchApi(viewmodel.onSearchListener.value!!)
                 binding.searchResult.visibility = View.VISIBLE
             } else {
@@ -110,8 +112,10 @@ class SearchActivity : AppCompatActivity() {
                         binding.searchResult.visibility = View.GONE
                         count = 0
                         position = 0
+                        changed = true
                     }
                     lastSearch = viewmodel.onSearchListener.value!!
+                    Log.d("api 시도", "callSearchApi 실행")
                     callSearchApi(viewmodel.onSearchListener.value!!)
                     binding.searchResult.visibility = View.VISIBLE
                 } else {
@@ -182,6 +186,8 @@ class SearchActivity : AppCompatActivity() {
                 for(i in 0 until result.size){
                     if(!repoNames.contains(result[i])){
                         repoNames.add(result[i])
+                    }else{
+                        return
                     }
                 }
             }
@@ -201,6 +207,7 @@ class SearchActivity : AppCompatActivity() {
             binding.searchResult.visibility = View.VISIBLE
         }
         count++
+        Log.d("api 횟수", "$count 페이지 검색")
         initScrollListener()
         binding.loading.visibility = View.GONE
     }
@@ -208,9 +215,10 @@ class SearchActivity : AppCompatActivity() {
 
     //    데이터 더 받아오는 함수 loadMorePosts() 구현
     private fun loadMorePosts() {
-        if (binding.loading.visibility == View.GONE) {
+        if (binding.loading.visibility == View.GONE && count != 0) {
             binding.loading.visibility = View.VISIBLE
             CoroutineScope(Dispatchers.Main).launch {
+                Log.d("api 시도", "callSearchApi 실행  load more")
                 callSearchApi(lastSearch)
             }
 

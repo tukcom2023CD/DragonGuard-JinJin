@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit
 //api들 호출부분
 class ApiCall {
     fun searchApi(name: String, count: Int): ArrayList<Result> {
+
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(1, TimeUnit.MINUTES)
             .readTimeout(50, TimeUnit.SECONDS)
@@ -20,13 +21,15 @@ class ApiCall {
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+        var repoNames : ArrayList<Result> = arrayListOf<Result>()
 
         val api = searchRetrofit.create(GitRankAPI::class.java)
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
         queryMap.put("name",name)
         queryMap.put("type","repositories")
-        var repoNames : ArrayList<Result> = arrayListOf<Result>()
+
+        Log.d("api 호출", "$count 페이지 검색")
         val repoName = api.getRepoName(queryMap)
         val result = repoName.execute()
         if(result.isSuccessful){
