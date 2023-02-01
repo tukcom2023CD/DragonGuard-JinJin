@@ -15,7 +15,6 @@ class FaqActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFaqBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_faq)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_faq)
         binding.faqActivity = this
 

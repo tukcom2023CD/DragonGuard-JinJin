@@ -199,9 +199,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0.5"
-                    android:background="@android:color/transparent"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:background="@android:color/transparent" />
 
             </LinearLayout>
 
@@ -263,7 +261,7 @@
                         android:text="(비율)"
                         android:textColor="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/ibm_semibold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -284,7 +282,7 @@
                         android:text="대학교 내 랭킹"
                         android:textColor="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/ibm_semibold" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -295,7 +293,7 @@
                         android:text="등수"
                         android:textColor="@color/black"
                         android:textSize="30dp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/ibm_semibold" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -306,7 +304,7 @@
                         android:text="(비율)"
                         android:textColor="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/ibm_semibold" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -337,7 +335,7 @@
                     android:text="랭킹\n보러가기"
                     android:textColor="@color/black"
                     android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/ibm_semibold" />
 
                 <Button
                     android:layout_width="0dp"
@@ -350,7 +348,7 @@
                     android:text="레포지토리\n비교하기"
                     android:textColor="@color/black"
                     android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
         </LinearLayout>

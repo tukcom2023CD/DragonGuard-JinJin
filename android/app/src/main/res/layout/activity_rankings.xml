@@ -56,7 +56,8 @@
                     android:text="내 Repository 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:onClick="@{()->rankinsViewModel.clickMyRepo()}"
+                    android:fontFamily="@font/ibm_semibold" />
 
             </LinearLayout>
 
@@ -82,7 +83,8 @@
                     android:text="내 Organization 목록"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:onClick="@{()->rankinsViewModel.clickMyOrganization()}"
+                    android:fontFamily="@font/ibm_semibold"/>
             </LinearLayout>
 
             <LinearLayout
@@ -107,7 +109,8 @@
                     android:text="대학교 내 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:onClick="@{()->rankinsViewModel.clickMyUniversityInternal()}"
+                    android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
             <LinearLayout
@@ -132,7 +135,8 @@
                     android:text="전국 대학교 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:onClick="@{()->rankinsViewModel.clickTotalUniversities()}"
+                    android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
             <LinearLayout
@@ -157,7 +161,8 @@
                     android:text="전체 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:onClick="@{()->rankinsViewModel.clickUserRanking()}"
+                    android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
             <LinearLayout
@@ -182,7 +187,8 @@
                     android:text="전체 Repository 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:onClick="@{()->rankinsViewModel.clickTotalRepo()}"
+                    android:fontFamily="@font/ibm_semibold" />
 
             </LinearLayout>
 

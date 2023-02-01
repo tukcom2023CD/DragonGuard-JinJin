@@ -1,10 +1,6 @@
 package com.dragonguard.android.viewmodel
 
-import android.util.Log
-import android.view.View
 import androidx.lifecycle.MutableLiveData
-import com.dragonguard.android.R
-import com.dragonguard.android.model.SearchModel
 
 class SearchViewModel() {
 //    var model = SearchModel()
