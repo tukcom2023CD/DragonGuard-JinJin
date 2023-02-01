@@ -77,7 +77,7 @@ class SearchActivity : AppCompatActivity() {
             Log.d("toast", "toast")
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
                 closeKeyboard()
-                if(lastSearch != viewmodel.onSearchListener.value!! && position !=0){
+                if (lastSearch != viewmodel.onSearchListener.value!! && position != 0) {
                     repoNames.clear()
                     binding.searchResult.visibility = View.GONE
                     count = 0
@@ -104,7 +104,7 @@ class SearchActivity : AppCompatActivity() {
                 binding.searchName.setText(search)
                 if (search.isNotEmpty()) {
                     closeKeyboard()
-                    if(lastSearch != viewmodel.onSearchListener.value!! && position !=0 ){
+                    if (lastSearch != viewmodel.onSearchListener.value!! && position != 0) {
                         repoNames.clear()
                         binding.searchResult.visibility = View.GONE
                         count = 0
@@ -124,7 +124,7 @@ class SearchActivity : AppCompatActivity() {
         })
 
         viewmodel.onUserIconSelected.observe(this, Observer {
-            if(viewmodel.onUserIconSelected.value == true) {
+            if (viewmodel.onUserIconSelected.value == true) {
                 val intent = Intent(applicationContext, MenuActivity::class.java)
                 startActivity(intent)
             }
@@ -137,11 +137,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            android.R.id.home->{
+        when (item.itemId) {
+            android.R.id.home -> {
                 finish()
             }
-            R.id.home_menu->{
+            R.id.home_menu -> {
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -163,8 +163,9 @@ class SearchActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
     }
 
-//    repo 검색 api 호출 및 결과 출력
+    //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
+        binding.loading.visibility = View.VISIBLE
         var result = arrayListOf<Result>()
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -178,20 +179,20 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
-//    api 호출결과 판별 및 출력
-    private fun checkSearchResult(result: ArrayList<Result>){
-        if(result.isNullOrEmpty()){
+    //    api 호출결과 판별 및 출력
+    private fun checkSearchResult(result: ArrayList<Result>) {
+        if (result.isNullOrEmpty()) {
             Log.d("api 시도", "api result 성공$result")
             binding.loading.visibility = View.GONE
-        } else{
+        } else {
             Log.d("api 시도", "api 성공$result")
-            if(repoNames.isNullOrEmpty()){
+            if (repoNames.isNullOrEmpty()) {
                 repoNames = result
-            } else{
-                for(i in 0 until result.size){
-                    if(!repoNames.contains(result[i])){
+            } else {
+                for (i in 0 until result.size) {
+                    if (!repoNames.contains(result[i])) {
                         repoNames.add(result[i])
-                    }else{
+                    } else {
                         return
                     }
                 }

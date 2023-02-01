@@ -5,6 +5,7 @@ import com.dragonguard.android.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 //api들 호출부분
@@ -34,9 +35,13 @@ class ApiCall {
 
 
         val repoName = api.getRepoName(queryMap)
-        val result = repoName.execute()
-        if(result.isSuccessful){
-            repoNames = result.body()!!.result as ArrayList<Result>
+        try{
+            val result = repoName.execute()
+            if(result.isSuccessful){
+                repoNames = result.body()!!.result as ArrayList<Result>
+            }
+        }catch (e : SocketTimeoutException){
+            return repoNames
         }
         return repoNames
     }
