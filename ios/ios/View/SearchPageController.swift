@@ -169,6 +169,8 @@ extension SearchPageController: UITableViewDelegate{
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected \(indexPath.section)")
+        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     // section 간격 설정

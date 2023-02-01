@@ -112,6 +112,7 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
     
     // 셀이 선택되었을 때 실행
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
         // 셀 눌렀을 때 기능
         switch indexPath.section{
@@ -124,6 +125,7 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
         default:
             return
         }
+        
     }
     
     // Section 제목
