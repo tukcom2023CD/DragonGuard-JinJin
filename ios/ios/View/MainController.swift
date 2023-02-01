@@ -18,9 +18,9 @@ final class MainController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
             
-        self.view.addSubview(searchUI)
+
         
-        searchUISetLayout()
+        settingAutoLayout()
         
     }
     
@@ -43,14 +43,13 @@ final class MainController: UIViewController {
      */
     
     @objc func searchUIClicked(){
-        
-        let searchPage = SearchPageController()
-        self.navigationController?.pushViewController(searchPage, animated: true)
-//        searchPage.modalPresentationStyle = UIModalPresentationStyle.fullScreen
-//        self.present(searchPage,animated: true)
+        self.navigationController?.pushViewController(SearchPageController(), animated: true)
         
     }
     
+    private func addUItoView(){
+        self.view.addSubview(searchUI)
+    }
     
     /*
      UI AutoLayout 코드 작성
@@ -58,7 +57,7 @@ final class MainController: UIViewController {
      함수 실행시 private으로 시작할 것
      */
     
-    private func searchUISetLayout(){
+    private func settingAutoLayout(){
         searchUI.snp.makeConstraints({ make in
             make.top.equalTo(100)
             make.leading.equalTo(10)
