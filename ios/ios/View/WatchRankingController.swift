@@ -34,16 +34,6 @@ final class WatchRankingController: UIViewController{
      UI 코드 작성
      */
     
-    // 유지 이름 버튼 누르면 설정 화면으로 이동
-    lazy var settingUI: UIButton = {
-        let settingUI = UIButton()
-        settingUI.setTitle("DragonGuard-JinJin", for: .normal)
-        settingUI.setTitleColor(.black, for: .normal)
-        settingUI.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        settingUI.addTarget(self, action: #selector(settingUIClicked), for: .touchUpInside)
-        return settingUI
-    }()
-    
     // 버튼들 나열할 collectionView
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -56,18 +46,13 @@ final class WatchRankingController: UIViewController{
     /*
      UI Action 작성
      */
-    
-    // 유저 이름 누르는 경우 네비게이션 뷰 방식으로 이동
-    @objc func settingUIClicked(){
-        self.navigationController?.pushViewController(SettingController(), animated: true)
-    }
+
     
     /*
      UI 추가할 때 작성하는 함수
      */
     
     private func addUItoView(){
-        self.view.addSubview(settingUI)
         self.view.addSubview(collectionView)
     }
     
@@ -88,14 +73,8 @@ final class WatchRankingController: UIViewController{
     //AutoLayout 설정
     private func settingAutoLayout(){
         
-        // 사용자 이름 버튼 AutoLayout
-        settingUI.snp.makeConstraints({ make in
+        collectionView.snp.makeConstraints({ make in
             make.top.equalTo(50)
-            make.leading.equalTo(10)
-        })
-        
-        collectionView.snp.makeConstraints({make in
-            make.top.equalTo(settingUI.snp_bottomMargin).offset(20)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.bottom.equalTo(-30)
