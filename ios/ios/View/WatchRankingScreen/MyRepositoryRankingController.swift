@@ -115,24 +115,6 @@ extension MyRepositoryRankingController: UITableViewDelegate {
 }
 
 
-// DataSource
-struct rankingModel {
-    var header: String
-    var items: [Item]
-}
-
-extension rankingModel : AnimatableSectionModelType {
-    typealias Item = String
-    
-    var identity: String {
-        return header
-    }
-    
-    init(original: rankingModel, items: [Item]) {
-        self = original
-        self.items = items
-    }
-}
 
 
 /*

@@ -125,7 +125,7 @@ final class SearchPageController: UIViewController {
     // 결과물 출력할 tableview 설정하는 부분
      func setTableViewDataSource() {
          
-         let dataSource = RxTableViewSectionedReloadDataSource<MySection> { _, tableview, indexPath, item in
+         let dataSource = RxTableViewSectionedReloadDataSource<SearchModel> { _, tableview, indexPath, item in
              let cell = tableview.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath) as! SearchPageTableView
              cell.prepare(text: item)
              cell.layer.cornerRadius = 15
@@ -138,10 +138,10 @@ final class SearchPageController: UIViewController {
          
          // 데이터 테스트
          let sections = [
-            MySection(header: " ", items: ["1"]),
-            MySection(header: " ", items: ["2"]),
-            MySection(header: " ", items: ["3"]),
-            MySection(header: " ", items: ["4"])
+            SearchModel(header: " ", items: ["1"]),
+            SearchModel(header: " ", items: ["2"]),
+            SearchModel(header: " ", items: ["3"]),
+            SearchModel(header: " ", items: ["4"])
          ]
          // 데이터 삽입
          Observable.just(sections)
@@ -176,30 +176,7 @@ extension SearchPageController: UITableViewDelegate{
     // section 간격 설정
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {  return 1 }
     
-    
-    
 }
-
-
-// DataSource
-struct MySection {
-    var header: String
-    var items: [Item]
-}
-
-extension MySection : AnimatableSectionModelType {
-    typealias Item = String
-    
-    var identity: String {
-        return header
-    }
-    
-    init(original: MySection, items: [Item]) {
-        self = original
-        self.items = items
-    }
-}
-
 
 
 /*
