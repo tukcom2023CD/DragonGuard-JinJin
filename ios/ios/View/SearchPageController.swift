@@ -16,7 +16,7 @@ import RxDataSources
 final class SearchPageController: UIViewController {
     
     private let disposeBag = DisposeBag()
-    private let searchViewModel = testViewModel()
+    private let searchViewModel = SearchPageViewModel()
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
     let uiSearchController = UISearchController()
@@ -25,8 +25,6 @@ final class SearchPageController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false
-        
-//        SearchPageService().getPage()
         
         addUItoView()   //View에 적용할 UI 작성
         searchUISetLayout()     // searchUI AutoLayout 함수

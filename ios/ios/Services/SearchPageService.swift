@@ -7,16 +7,25 @@
 
 import Foundation
 import Alamofire
+import SwiftyJSON
 
 class SearchPageService {
     var repo1 = "DragonGuard-JinJin"
+    var ip = ""
+    var viewModel = SearchPageViewModel()
+    var resultArray = [SearchPageResultModel]()
+    
     func getPage() {
-        let url = "https://api.visitjeju.net/vsjApi/contents/searchList?apiKey=&${rrq71a2rotyj9tqm}&locale=kr&page="
-        AF.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: ["Content-Type":"application/json", "Accept":"application/json"])
+        let url = "http://\(ip)/scrap/search?page=1&name=\(repo1)&type=repositories"
+        AF.request(url)
             .validate(statusCode: 200..<300)
-            .responseJSON { json in
-//            print(json)
-//                print("hello")
+            .responseDecodable(of: SearchPageDecodingModel.self) { response in
+                guard let responseResult = response.value?.result else {return}
+                for i in responseResult {
+                    let j = SearchPageResultModel(name: i.name)
+                    self.resultArray.append(j)
+                }
+                self.viewModel.searchResult.onNext(self.resultArray)
             }
     }
 }
