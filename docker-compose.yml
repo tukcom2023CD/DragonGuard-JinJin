@@ -94,6 +94,9 @@ services:
     container_name: nginx
     networks:
       - app-tier
+    depends_on:
+      - backend
+      - scrapping
     tty: true
 
 networks:

@@ -11,9 +11,9 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
+
 // 검색창
-final class SearchPageController: UIViewController{
-    
+final class SearchPageController: UIViewController {
     private let disposeBag = DisposeBag()
     private let searchViewModel = testViewModel()
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
@@ -22,9 +22,11 @@ final class SearchPageController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        self.navigationController?.navigationBar.isHidden = false
+        
         SearchPageService().getPage()
         addUItoView()   //View에 적용할 UI 작성
-
+        
         searchUISetLayout()     // searchUI AutoLayout 함수
         resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
         
@@ -42,7 +44,7 @@ final class SearchPageController: UIViewController{
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: deviceWidth, height: 0))
         return searchBar
     }()
-
+    
     // 결과물 출력할 tableview
     lazy var resultTableView: UITableView = {
         let tableview = UITableView(frame: CGRect(x: 0, y: 0, width: deviceWidth, height: 0))
@@ -65,7 +67,7 @@ final class SearchPageController: UIViewController{
     private func addUItoView(){
         self.view.addSubview(searchUI)  //searchUI 적용
         self.view.addSubview(resultTableView)   //tableview 적용
-                             
+        
         // 결과 출력하는 테이블 뷰 적용
         // datasource는 reactive 적용
         self.resultTableView.delegate = self
@@ -112,10 +114,10 @@ final class SearchPageController: UIViewController{
     
     private func bindInput(){
         //데이터 잘들어가는 지 테스트
-        searchViewModel.checkValidId
-            .subscribe(onNext: {
-                print($0)
-            })
+        //        searchViewModel.checkValidId
+        //            .subscribe(onNext: {
+        //                print($0)
+        //            })
     }
     
     
@@ -156,9 +158,8 @@ extension SearchPageController: UISearchBarDelegate{
         searchUI.resignFirstResponder()
         self.searchUI.showsCancelButton = false
         
-        guard let searchText = searchUI.text else{return}
-        searchViewModel.searchingData
-            .onNext(searchText)
+        guard let searchText = searchUI.text else{ return }
+        searchViewModel.searchingData.onNext(searchText)
         
     }
 }
@@ -212,17 +213,20 @@ import SwiftUI
 struct VCPreView:PreviewProvider {
     static var previews: some View {
         SearchPageController().toPreview().previewDevice("iPhone 14 pro")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
 
 struct VCPreView1:PreviewProvider {
     static var previews: some View {
         SearchPageController().toPreview().previewDevice("iPhone 11")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
 
 struct VCPreView2:PreviewProvider {
     static var previews: some View {
         SearchPageController().toPreview().previewDevice("iPad (10th generation)")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }

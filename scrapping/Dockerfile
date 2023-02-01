@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 COPY . ./
 
 ENTRYPOINT [ "./wait-for-it.sh" ]
-CMD [ "-t", "50", "kafka:9092", "--", "gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--reload" ]
+CMD [ "-t", "50", "kafka:9092", "--", "gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--timeout", "70" , "--reload" ]
