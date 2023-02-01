@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class SearchPageTableView: UITableViewCell{
+final class SearchPageTableView: UITableViewCell{
     static let identifier = "SearchPageIdentifier"
     
     // 클래스 생성자

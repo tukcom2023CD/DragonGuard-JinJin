@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SearchPageViewModel {
+final class SearchPageViewModel {
     
 }
 

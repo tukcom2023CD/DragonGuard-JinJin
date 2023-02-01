@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 
-class MainController: UIViewController {
+final class MainController: UIViewController {
 
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
