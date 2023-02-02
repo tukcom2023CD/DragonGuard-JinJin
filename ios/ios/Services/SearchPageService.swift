@@ -13,21 +13,22 @@ import RxSwift
 
 class SearchPageService {
     
-    var ip = "192.168.0.14"
-    var resultArray = [SearchPageResultModel]()
+    var ip = ""
+    var resultArray = [SearchPageResultModel]() // 결과 저장할 변수
     
-    func getPage(searchWord: String) {
+    
+    func getPage(searchWord: String,page: Int) {
         resultArray = []
-        let url = "http://\(ip)/scrap/search?page=1&name=\(searchWord)&type=repositories"
+        let url = APIURL().testUrl(ip: ip, page: page, searchWord: searchWord)
+        
         DispatchQueue.global().async {
             AF.request(url)
                 .validate(statusCode: 200..<300)
                 .responseDecodable(of: SearchPageDecodingModel.self) { response in
                     guard let responseResult = response.value?.result else {return}
-                    for i in responseResult {
-                        print("i.name:  \(i.name)")
-                        let j = SearchPageResultModel(name: i.name)
-                        self.resultArray.append(j)
+                    for data in responseResult {
+                        let dataBundle = SearchPageResultModel(name: data.name)
+                        self.resultArray.append(dataBundle)
                     }
                 }
         }

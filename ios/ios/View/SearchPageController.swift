@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
-import RxDataSources
 
 
 // 검색창
@@ -19,11 +18,13 @@ final class SearchPageController: UIViewController {
     private let searchViewModel = SearchPageViewModel()
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
-    let uiSearchController = UISearchController()
-    let refreshTable = UIRefreshControl()
-    var resultData = [String]()
+    let refreshTable = UIRefreshControl()   //새로 고침 사용
+    var resultData = [String]() // 결과 데이터 저장하는 배열
     var data = [SearchPageResultModel]()
-    var timerThread: Timer?
+    var timerThread: Timer?     //일정 시간동안 API 호출되는 응답 감시하는 타이머
+    var searchText = ""         //검색하는 단어
+    var fetchingMore = false    // 무한 스크롤 감지
+    var sectionCount = 0        // 결과물 개수 저장
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,12 +33,10 @@ final class SearchPageController: UIViewController {
         
         addUItoView()   //View에 적용할 UI 작성
         resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
-        initRefreshTable()
-        
+        initRefreshTable()  //새로고침 함수
         
     }
     
-
     
     /*
      UI 작성
@@ -51,6 +50,7 @@ final class SearchPageController: UIViewController {
         searchBar.searchBarStyle = .minimal
         searchBar.layer.cornerRadius = 10
         searchBar.placeholder = "Repository or User"
+        searchBar.searchTextField.tintColor = .gray
         searchBar.showsCancelButton = true
         searchBar.searchTextField.leftView?.tintColor = .black  //돋보기 색상 변경
         return searchBar
@@ -60,6 +60,7 @@ final class SearchPageController: UIViewController {
     lazy var resultTableView: UITableView = {
         let tableview = UITableView()
         tableview.backgroundColor = .white
+        tableview.separatorStyle = .none
         return tableview
     }()
     
@@ -68,6 +69,7 @@ final class SearchPageController: UIViewController {
      
      */
     
+    // 새로고침하는 함수
     private func initRefreshTable(){
         refreshTable.addTarget(self, action: #selector(refreshing(refresh:)), for: .valueChanged)
         refreshTable.tintColor = .black
@@ -75,8 +77,6 @@ final class SearchPageController: UIViewController {
     }
     
     @objc func refreshing(refresh: UIRefreshControl){
-        print("새로고침 시작")
-                
         DispatchQueue.main.asyncAfter(deadline: .now()) {
             self.resultTableView.reloadData()
             refresh.endRefreshing()
@@ -85,21 +85,24 @@ final class SearchPageController: UIViewController {
     
     @objc func timer(){
         self.searchViewModel.switchData()
-        self.searchViewModel.searchResult.observe(on: MainScheduler.instance).subscribe(onNext: {
-            print("name : \($0)")
-            self.data = $0
-        }).disposed(by: self.disposeBag)
+        self.searchViewModel.searchResult
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: {
+                self.data = $0
+            })
+            .disposed(by: self.disposeBag)
         
         for i in self.data{
             self.resultData.append(i.name)
         }
-        self.resultTableView.reloadData()
         
+        self.resultTableView.reloadData()
+        fetchingMore = false
     }
     
     // 검색 결과 데이터 자동 쓰레드
     private func searchResultAutoThread(){
-        timerThread = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(timer), userInfo: nil, repeats: true)
+        timerThread = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timer), userInfo: nil, repeats: false)
     }
     
     
@@ -147,11 +150,13 @@ final class SearchPageController: UIViewController {
 // SearchController Delegate
 extension SearchPageController: UISearchBarDelegate{
     
+    // 검색 바 검색하기 시작할 때
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         resultData = []
         data = []
     }
     
+    // Cancel 취소 버튼 눌렀을 때
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchUI.text = ""
         searchUI.resignFirstResponder()
@@ -161,21 +166,31 @@ extension SearchPageController: UISearchBarDelegate{
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchUI.resignFirstResponder()
         
-        
         guard let searchText = searchUI.text else{ return }
-        searchViewModel.searchInput.onNext(searchText)
-        searchViewModel.getAPIData()
+        self.searchText = searchText
         
-        searchResultAutoThread()    // API 감지 스레드
-        
+        callAPI(searchText: searchText)
         resultTableView.reloadData()
         
+        callAPI(searchText: searchText)
+        resultTableView.reloadData()
+        searchResultAutoThread()    // API 감지 스레드
     }
+    
+    // API 호출
+    func callAPI(searchText: String?){
+        searchViewModel.searchInput.onNext(searchText ?? "")
+        searchViewModel.getAPIData()
+        
+    }
+    
 }
 
 
 extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     
+    
+    // tableview cell 구성
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath ) as! SearchPageTableView
         
@@ -183,6 +198,8 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         cell.layer.cornerRadius = 15
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
         cell.layer.borderWidth = 1
+        
+        sectionCount = indexPath.section
         
         return cell
     }
@@ -192,6 +209,21 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         print("selected \(indexPath.section)")
         
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    // 무한 스크롤하면서 API 호출하는 기능
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        
+        if position > (resultTableView.contentSize.height - scrollView.frame.size.height) || (sectionCount + 1) % 10 == 0{
+            if !fetchingMore {
+                
+                fetchingMore = true
+                callAPI(searchText: self.searchText)
+                searchResultAutoThread()    // API 감지 스레드
+            }
+        }
+        
     }
     
     // section 간격 설정
