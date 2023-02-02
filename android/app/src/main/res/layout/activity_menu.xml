@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="menuActivity"
-            type="com.dragonguard.android.viewmodel.MenuViewModel" />
-    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,7 +42,7 @@
                     android:layout_weight="0.1" />
 
                 <Button
-                    android:id="@+id/my_repo_ranking"
+                    android:id="@+id/logout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
@@ -56,7 +50,6 @@
                     android:text="로그아웃"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:onClick="@{()->menuActivity.clickLogout()}"
                     android:fontFamily="@font/ibm_semibold" />
 
             </LinearLayout>
@@ -75,14 +68,13 @@
                     android:layout_weight="0.1" />
 
                 <Button
-                    android:id="@+id/my_organization_list"
+                    android:id="@+id/faq"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
                     android:background="@drawable/roundc"
                     android:text="FAQ"
                     android:textColor="@color/black"
-                    android:onClick="@{()->menuActivity.clickFAQ()}"
                     android:textSize="25dp"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
@@ -101,14 +93,13 @@
                     android:layout_weight="0.1" />
 
                 <Button
-                    android:id="@+id/my_school_ranking"
+                    android:id="@+id/token_criterion"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
                     android:background="@drawable/roundc"
                     android:text="토큰부여기준"
                     android:textColor="@color/black"
-                    android:onClick="@{()->menuActivity.clickCriterion()}"
                     android:textSize="25dp"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
@@ -127,7 +118,7 @@
                     android:layout_weight="0.1" />
 
                 <Button
-                    android:id="@+id/all_schools_ranking"
+                    android:id="@+id/version"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
@@ -135,7 +126,6 @@
                     android:text="버전 정보"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:onClick="@{()->menuActivity.clickVersion()}"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 

@@ -1,10 +1,8 @@
 package com.dragonguard.android.activity
 
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -15,19 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.connect.ApiCall
-import com.dragonguard.android.connect.GitRankAPI
-import com.dragonguard.android.connect.RepoName
-import com.dragonguard.android.connect.Result
+import com.dragonguard.android.model.Result
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
 import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
 import com.dragonguard.android.recycleradapter.VerticalItemDecorator
 import com.dragonguard.android.viewmodel.SearchViewModel
 import kotlinx.coroutines.*
-import okhttp3.OkHttpClient
-import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
@@ -52,6 +44,7 @@ class SearchActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
+
 //        검색 옵션 구현
         viewmodel.onOptionListener.observe(this, Observer {
 
@@ -71,12 +64,9 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
-
 //        검색 아이콘 눌렀을때 검색 구현
-        viewmodel.onIconClickListener.observe(this, Observer {
-            Log.d("toast", "toast")
-            if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
-                closeKeyboard()
+        binding.searchIcon.setOnClickListener {
+            if(!viewmodel.onSearchListener.value.isNullOrEmpty()){
                 if (lastSearch != viewmodel.onSearchListener.value!! && position != 0) {
                     repoNames.clear()
                     binding.searchResult.visibility = View.GONE
@@ -88,12 +78,11 @@ class SearchActivity : AppCompatActivity() {
                 Log.d("api 시도", "callSearchApi 실행")
                 callSearchApi(viewmodel.onSearchListener.value!!)
                 binding.searchResult.visibility = View.VISIBLE
-            } else {
+            } else{
                 Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
                 closeKeyboard()
             }
-
-        })
+        }
 
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
         viewmodel.onSearchListener.observe(this, Observer {

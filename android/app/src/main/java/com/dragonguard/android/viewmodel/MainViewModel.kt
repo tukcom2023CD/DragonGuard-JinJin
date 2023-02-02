@@ -18,9 +18,6 @@ class MainViewModel {
         onSearchClickListener.value = true
     }
 
-    fun searchRepo() {
-
-    }
 
     fun lookRanking() {
         onLookRanking.value = true

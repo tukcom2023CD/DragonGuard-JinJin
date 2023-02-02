@@ -2,6 +2,7 @@ package com.dragonguard.android.connect
 
 import android.util.Log
 import com.dragonguard.android.BuildConfig
+import com.dragonguard.android.model.Result
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

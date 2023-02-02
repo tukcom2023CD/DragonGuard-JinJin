@@ -8,15 +8,12 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMyRepoRankingBinding
-import com.dragonguard.android.viewmodel.MyRepoRankingViewModel
 
 class MyRepoRankingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyRepoRankingBinding
-    var viewmodel = MyRepoRankingViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_repo_ranking)
-        binding.myRepoRankingViewModel = viewmodel
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)

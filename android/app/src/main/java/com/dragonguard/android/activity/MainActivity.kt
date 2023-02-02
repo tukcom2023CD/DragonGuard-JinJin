@@ -33,12 +33,10 @@ class MainActivity : AppCompatActivity() {
         }
 
  */
-        viewmodel.onLookRanking.observe(this, Observer {
-            if(viewmodel.onLookRanking.value == true){
-                val intent = Intent(applicationContext, RankingsActivity::class.java)
-                startActivity(intent)
-            }
-        })
+        binding.lookRanking.setOnClickListener {
+            val intent = Intent(applicationContext, RankingsActivity::class.java)
+            startActivity(intent)
+        }
 
         viewmodel.onUserIconSelected.observe(this, Observer {
             if(viewmodel.onUserIconSelected.value == true){
@@ -66,7 +64,5 @@ class MainActivity : AppCompatActivity() {
         closeKeyboard()
         return super.dispatchTouchEvent(ev)
     }
-
-
 
 }

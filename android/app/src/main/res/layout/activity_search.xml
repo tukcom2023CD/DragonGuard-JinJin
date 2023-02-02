@@ -98,7 +98,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1"
                     android:id="@+id/search_icon"
-                    android:onClick="@{()->searchViewModel.clickSearch()}"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_baseline_search_24" />
                 <LinearLayout

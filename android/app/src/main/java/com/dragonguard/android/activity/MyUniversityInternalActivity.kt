@@ -8,15 +8,13 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMyUniversityInternalRankingBinding
-import com.dragonguard.android.viewmodel.MyUniversityInternalViewModel
 
 class MyUniversityInternalActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyUniversityInternalRankingBinding
-    var viewmodel = MyUniversityInternalViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_university_internal_ranking)
-        binding.myUniversityInternalViewModel = viewmodel
+
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)

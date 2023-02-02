@@ -8,15 +8,12 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMyOrganizationListBinding
-import com.dragonguard.android.viewmodel.OrganizationViewModel
 
 class MyOrganizationListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyOrganizationListBinding
-    var viewmodel = OrganizationViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_organization_list)
-        binding.myOrganizationListViewModel = viewmodel
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)

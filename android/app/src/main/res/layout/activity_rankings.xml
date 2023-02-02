@@ -3,14 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="rankinsViewModel"
-            type="com.dragonguard.android.viewmodel.RankingsViewModel" />
-
-    </data>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -56,7 +48,6 @@
                     android:text="내 Repository 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:onClick="@{()->rankinsViewModel.clickMyRepo()}"
                     android:fontFamily="@font/ibm_semibold" />
 
             </LinearLayout>
@@ -83,7 +74,6 @@
                     android:text="내 Organization 목록"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:onClick="@{()->rankinsViewModel.clickMyOrganization()}"
                     android:fontFamily="@font/ibm_semibold"/>
             </LinearLayout>
 
@@ -101,7 +91,7 @@
                     android:layout_weight="0.1" />
 
                 <Button
-                    android:id="@+id/my_school_ranking"
+                    android:id="@+id/my_university_internal_ranking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
@@ -109,7 +99,6 @@
                     android:text="대학교 내 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:onClick="@{()->rankinsViewModel.clickMyUniversityInternal()}"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
@@ -127,7 +116,7 @@
                     android:layout_weight="0.1" />
 
                 <Button
-                    android:id="@+id/all_schools_ranking"
+                    android:id="@+id/total_universities_ranking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
@@ -135,7 +124,6 @@
                     android:text="전국 대학교 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:onClick="@{()->rankinsViewModel.clickTotalUniversities()}"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
@@ -153,7 +141,7 @@
                     android:layout_weight="0.1" />
 
                 <Button
-                    android:id="@+id/total_user_ranking"
+                    android:id="@+id/user_ranking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
@@ -161,7 +149,6 @@
                     android:text="전체 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:onClick="@{()->rankinsViewModel.clickUserRanking()}"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
@@ -187,7 +174,6 @@
                     android:text="전체 Repository 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:onClick="@{()->rankinsViewModel.clickTotalRepo()}"
                     android:fontFamily="@font/ibm_semibold" />
 
             </LinearLayout>

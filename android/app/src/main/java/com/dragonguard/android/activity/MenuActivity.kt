@@ -7,19 +7,15 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.Window
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMenuBinding
-import com.dragonguard.android.viewmodel.MenuViewModel
 
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
-    var viewmodel = MenuViewModel()
     private lateinit var versionDialog : Dialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_menu)
-        binding.menuActivity = viewmodel
 
         versionDialog = Dialog(this)
         versionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -30,29 +26,24 @@ class MenuActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
-        viewmodel.onLogoutSelected.observe(this, Observer {
+        binding.logout.setOnClickListener {
 
-        })
+        }
 
-        viewmodel.onFAQSelected.observe(this, Observer {
-            if(viewmodel.onFAQSelected.value == true) {
-                val intent = Intent(applicationContext, FaqActivity::class.java)
-                startActivity(intent)
-            }
-        })
+        binding.faq.setOnClickListener {
+            val intent = Intent(applicationContext, FaqActivity::class.java)
+            startActivity(intent)
+        }
 
-        viewmodel.onCriterionSelected.observe(this, Observer {
-            if(viewmodel.onCriterionSelected.value == true) {
-                val intent = Intent(applicationContext, CriterionActivity::class.java)
-                startActivity(intent)
-            }
-        })
+        binding.tokenCriterion.setOnClickListener {
+            val intent = Intent(applicationContext, CriterionActivity::class.java)
+            startActivity(intent)
+        }
 
-        viewmodel.onVersionSelected.observe(this, Observer {
-            if(viewmodel.onVersionSelected.value == true){
-                showDialog()
-            }
-        })
+        binding.version.setOnClickListener {
+            showDialog()
+        }
+
     }
 
     private fun showDialog() {

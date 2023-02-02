@@ -1,5 +1,6 @@
-package com.dragonguard.android.connect
+package com.dragonguard.android.model
 
+import com.dragonguard.android.model.Result
 import java.io.Serializable
 
 data class RepoName(

@@ -1,4 +1,4 @@
-package com.dragonguard.android.connect
+package com.dragonguard.android.model
 
 import java.io.Serializable
 
