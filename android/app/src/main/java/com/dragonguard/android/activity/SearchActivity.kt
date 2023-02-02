@@ -100,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
             if (!viewmodel.onSearchListener.value.isNullOrEmpty() && viewmodel.onSearchListener.value!!.last() == '\n') {
                 Log.d("enter click", "edittext 클릭함")
                 val search =
-                    binding.searchName.text.substring(0 until binding.searchName.text.length - 1)
+                    binding.searchName.text!!.substring(0 until binding.searchName.text!!.length - 1)
                 binding.searchName.setText(search)
                 if (search.isNotEmpty()) {
                     closeKeyboard()
