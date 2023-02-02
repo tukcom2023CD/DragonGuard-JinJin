@@ -10,9 +10,29 @@ import RxSwift
 import Foundation
 
 final class SearchPageViewModel {
-    var searchResult: BehaviorSubject<[SearchPageResultModel]> = BehaviorSubject (value: [])
+    var searchPageService = SearchPageService()
+    let disposeBag = DisposeBag()
+    var searchWord = ""
+    var searchResult: ReplaySubject<SearchPageResultModel> = ReplaySubject.create(bufferSize: 10)
+    var searchInput: BehaviorSubject<String> = BehaviorSubject(value: "")
     
-    var middleTest: Observable<[SearchPageResultModel]>{ searchResult.map({ $0 }) }
+    func switchData(){
+        print("aaa \(self.searchPageService.resultArray.count)")
+        
+        for data in self.searchPageService.resultArray {
+            self.searchResult.onNext(data)
+            print("data \(data.name)")
+        }
+    }
+    
+    func getAPIData(){
+        searchInput.subscribe(onNext: {
+            self.searchWord = $0
+        }).disposed(by: disposeBag)
+        
+        self.searchPageService.getPage(searchWord: searchWord)
+    }
+    
     
 }
 
