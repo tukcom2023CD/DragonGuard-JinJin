@@ -1,7 +1,10 @@
 package com.dragonguard.android.connect
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.dragonguard.android.BuildConfig
+import com.dragonguard.android.model.RepoName
 import com.dragonguard.android.model.Result
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -10,9 +13,11 @@ import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 //api들 호출부분
-class ApiCall {
-    fun searchApi(name: String, count: Int): ArrayList<Result> {
+class RepoSearchRepository {
+    private lateinit var api : GitRankAPI
+    private var repoNames : ArrayList<Result> = arrayListOf<Result>()
 
+    init {
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(1, TimeUnit.MINUTES)
             .readTimeout(50, TimeUnit.SECONDS)
@@ -24,9 +29,14 @@ class ApiCall {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        var repoNames : ArrayList<Result> = arrayListOf<Result>()
 
-        val api = searchRetrofit.create(GitRankAPI::class.java)
+        api = searchRetrofit.create(GitRankAPI::class.java)
+    }
+
+    fun searchApi(name: String, count: Int): ArrayList<Result> {
+
+
+
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
         queryMap.put("name",name)
@@ -46,4 +56,5 @@ class ApiCall {
         }
         return repoNames
     }
+
 }

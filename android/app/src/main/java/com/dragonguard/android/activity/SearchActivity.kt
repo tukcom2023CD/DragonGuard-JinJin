@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -12,7 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.connect.ApiCall
+import com.dragonguard.android.connect.RepoSearchRepository
 import com.dragonguard.android.model.Result
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
@@ -30,7 +31,7 @@ class SearchActivity : AppCompatActivity() {
     private var changed = false
     private var lastSearch = ""
     var viewmodel = SearchViewModel()
-    private var apiCall = ApiCall()
+    private var apiCall = RepoSearchRepository()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -78,6 +79,7 @@ class SearchActivity : AppCompatActivity() {
                 Log.d("api 시도", "callSearchApi 실행")
                 callSearchApi(viewmodel.onSearchListener.value!!)
                 binding.searchResult.visibility = View.VISIBLE
+                binding.searchName.isFocusable = true
             } else{
                 Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
                 closeKeyboard()
@@ -85,11 +87,10 @@ class SearchActivity : AppCompatActivity() {
         }
 
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
-        viewmodel.onSearchListener.observe(this, Observer {
-            if (!viewmodel.onSearchListener.value.isNullOrEmpty() && viewmodel.onSearchListener.value!!.last() == '\n') {
+        binding.searchName.setOnKeyListener { view, i, keyEvent ->
+            if(keyEvent.action == KeyEvent.ACTION_DOWN && i == KEYCODE_ENTER){
                 Log.d("enter click", "edittext 클릭함")
-                val search =
-                    binding.searchName.text!!.substring(0 until binding.searchName.text!!.length - 1)
+                val search = binding.searchName.text!!
                 binding.searchName.setText(search)
                 if (search.isNotEmpty()) {
                     closeKeyboard()
@@ -104,13 +105,18 @@ class SearchActivity : AppCompatActivity() {
                     Log.d("api 시도", "callSearchApi 실행")
                     callSearchApi(viewmodel.onSearchListener.value!!)
                     binding.searchResult.visibility = View.VISIBLE
+                    binding.searchName.isFocusable = true
                 } else {
                     binding.searchName.setText("")
                     Toast.makeText(applicationContext, "엔터 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
                     closeKeyboard()
                 }
             }
-        })
+            true
+        }
+
+
+
 
         viewmodel.onUserIconSelected.observe(this, Observer {
             if (viewmodel.onUserIconSelected.value == true) {
