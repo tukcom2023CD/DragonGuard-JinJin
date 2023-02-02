@@ -17,6 +17,7 @@ class SearchPageService {
     var resultArray = [SearchPageResultModel]()
     
     func getPage(searchWord: String) {
+        resultArray = []
         let url = "http://\(ip)/scrap/search?page=1&name=\(searchWord)&type=repositories"
         DispatchQueue.global().async {
             AF.request(url)

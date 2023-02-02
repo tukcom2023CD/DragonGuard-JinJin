@@ -20,7 +20,10 @@ final class SearchPageController: UIViewController {
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
     let uiSearchController = UISearchController()
+    let refreshTable = UIRefreshControl()
     var resultData = [String]()
+    var data = [SearchPageResultModel]()
+    var timerThread: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,14 +32,13 @@ final class SearchPageController: UIViewController {
         
         addUItoView()   //View에 적용할 UI 작성
         resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
+        initRefreshTable()
         
         
-//        setTableViewDataSource()  //테이블 뷰 cell 및 개수 그리기
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        print("called")
-    }
+
+    
     /*
      UI 작성
      */
@@ -66,6 +68,39 @@ final class SearchPageController: UIViewController {
      
      */
     
+    private func initRefreshTable(){
+        refreshTable.addTarget(self, action: #selector(refreshing(refresh:)), for: .valueChanged)
+        refreshTable.tintColor = .black
+        resultTableView.refreshControl = refreshTable
+    }
+    
+    @objc func refreshing(refresh: UIRefreshControl){
+        print("새로고침 시작")
+                
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            self.resultTableView.reloadData()
+            refresh.endRefreshing()
+        }
+    }
+    
+    @objc func timer(){
+        self.searchViewModel.switchData()
+        self.searchViewModel.searchResult.observe(on: MainScheduler.instance).subscribe(onNext: {
+            print("name : \($0)")
+            self.data = $0
+        }).disposed(by: self.disposeBag)
+        
+        for i in self.data{
+            self.resultData.append(i.name)
+        }
+        self.resultTableView.reloadData()
+        
+    }
+    
+    // 검색 결과 데이터 자동 쓰레드
+    private func searchResultAutoThread(){
+        timerThread = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(timer), userInfo: nil, repeats: true)
+    }
     
     
     /*
@@ -75,13 +110,11 @@ final class SearchPageController: UIViewController {
     
     //View에 적용할 때 사용하는 함수
     private func addUItoView(){
-//        self.view.addSubview(searchUI)  //searchUI 적용
         
         self.navigationItem.titleView = searchUI
         self.view.addSubview(resultTableView)   //tableview 적용
         
         // 결과 출력하는 테이블 뷰 적용
-        // datasource는 reactive 적용
         self.resultTableView.dataSource = self
         self.resultTableView.delegate = self
         
@@ -91,9 +124,7 @@ final class SearchPageController: UIViewController {
         // tableview 설치
         self.resultTableView.register(SearchPageTableView.self, forCellReuseIdentifier: SearchPageTableView.identifier)
         
-        
     }
-    
     
     /*
      UI AutoLayout 코드 작성
@@ -117,7 +148,8 @@ final class SearchPageController: UIViewController {
 extension SearchPageController: UISearchBarDelegate{
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        
+        resultData = []
+        data = []
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -134,8 +166,8 @@ extension SearchPageController: UISearchBarDelegate{
         searchViewModel.searchInput.onNext(searchText)
         searchViewModel.getAPIData()
         
+        searchResultAutoThread()    // API 감지 스레드
         
-        resultData.append(searchText)
         resultTableView.reloadData()
         
     }
@@ -145,14 +177,7 @@ extension SearchPageController: UISearchBarDelegate{
 extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath) as! SearchPageTableView
-        
-        var data = ""
-        searchViewModel.switchData()
-        searchViewModel.searchResult.subscribe(onNext: {
-            data = $0.name
-        }).disposed(by: disposeBag)
-        resultData.append(data)
+        let cell = tableView.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath ) as! SearchPageTableView
         
         cell.prepare(text: resultData[indexPath.section])
         cell.layer.cornerRadius = 15
@@ -181,36 +206,4 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     // 섹션 높이 지정
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
     
-}
-
-
-/*
- SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
- 
- preview 실행이 안되는 경우 단축키
- Command + Option + Enter : preview 그리는 캠버스 띄우기
- Command + Option + p : preview 재실행
- */
-
-import SwiftUI
-
-struct VCPreView:PreviewProvider {
-    static var previews: some View {
-        SearchPageController().toPreview().previewDevice("iPhone 14 pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-
-struct VCPreView1:PreviewProvider {
-    static var previews: some View {
-        SearchPageController().toPreview().previewDevice("iPhone 11")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-
-struct VCPreView2:PreviewProvider {
-    static var previews: some View {
-        SearchPageController().toPreview().previewDevice("iPad (10th generation)")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
 }

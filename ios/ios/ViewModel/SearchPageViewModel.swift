@@ -10,22 +10,21 @@ import RxSwift
 import Foundation
 
 final class SearchPageViewModel {
-    var searchPageService = SearchPageService()
+    let searchPageService = SearchPageService()
     let disposeBag = DisposeBag()
     var searchWord = ""
-    var searchResult: ReplaySubject<SearchPageResultModel> = ReplaySubject.create(bufferSize: 10)
+    var searchResult: BehaviorSubject<[SearchPageResultModel]> = BehaviorSubject(value: [])
     var searchInput: BehaviorSubject<String> = BehaviorSubject(value: "")
+    var resultCount = 0
     
     func switchData(){
         print("aaa \(self.searchPageService.resultArray.count)")
-        
-        for data in self.searchPageService.resultArray {
-            self.searchResult.onNext(data)
-            print("data \(data.name)")
-        }
+        self.searchResult.onNext(searchPageService.resultArray)
+        resultCount = self.searchPageService.resultArray.count
     }
     
     func getAPIData(){
+        
         searchInput.subscribe(onNext: {
             self.searchWord = $0
         }).disposed(by: disposeBag)
