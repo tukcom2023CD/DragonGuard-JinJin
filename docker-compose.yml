@@ -79,11 +79,23 @@ services:
     restart: on-failure
     depends_on:
       - kafka
+      - chromedriver
     volumes:
       - ./scrapping:/scrapping/
     networks:
       - app-tier
     tty: true
+
+  chromedriver:
+    image: selenium/standalone-chrome:latest
+    hostname: chromedriver
+    container_name: chromedriver
+    ports: 
+      - 4444:4444
+    networks:
+      - app-tier
+    privileged: true
+    shm_size: 2g
 
   nginx:
     build: ./nginx

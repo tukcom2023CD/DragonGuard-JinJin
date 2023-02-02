@@ -9,8 +9,7 @@ python-dotenv==0.20.0
 Flask-Session
 flask
 flask-cors
-requests
-beautifulsoup4
 lxml
 gunicorn
 kafka-python
+selenium

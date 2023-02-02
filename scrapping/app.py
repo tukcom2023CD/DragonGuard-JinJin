@@ -1,11 +1,13 @@
 from flask import Flask, request
 from flask_restx import Resource, Api
 from flask_cors import CORS
-from bs4 import BeautifulSoup
-import requests
 from kafka import KafkaProducer 
 from json import dumps
-from base_url import KAFKA_BASE_URL
+from base_url import KAFKA_BASE_URL, CHROME_BASE_URL
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
@@ -20,6 +22,12 @@ producer = KafkaProducer(acks=0,
             value_serializer=lambda x: dumps(x).encode('utf-8')
           )
 
+options = Options()
+options.headless = True
+options.add_argument("--window-size=1920,1200")
+driver = webdriver.Remote(command_executor=CHROME_BASE_URL, options=options, desired_capabilities=DesiredCapabilities.CHROME)
+
+
 @ns.route('/scrap/search', methods=['GET'])
 class Search(Resource):
     
@@ -31,14 +39,12 @@ class Search(Resource):
         search_type = request.args.get('type')
         page = request.args.get('page')
         
-        result = requests.get('https://github.com/search?q=' + name + '&type=' + search_type + '&p=' + page)
-        result.raise_for_status()
-        soup = BeautifulSoup(result.text, "lxml")
+        driver.get('https://github.com/search?q=' + name + '&type=' + search_type + '&p=' + page)
         
         if search_type == 'repositories':
-            tag_list = self.get_repository(soup)
+            tag_list = self.get_repository()
         elif search_type == 'users':
-            tag_list = self.get_user(soup)
+            tag_list = self.get_user()
             
         for tag in tag_list:
             results.append(tag.text)
@@ -51,13 +57,12 @@ class Search(Resource):
         
         return (response, 200)
     
-    def get_repository(self, soup):
-        repo_list = soup.find('ul', attrs={"class" : 'repo-list'})
-        return repo_list.find_all('a', attrs={"class" : "v-align-middle"})
+    def get_repository(self):
+        repo_list = driver.find_element(By.CLASS_NAME, 'repo-list')
+        return repo_list.find_elements(By.CLASS_NAME, "v-align-middle")
         
-    def get_user(self, soup):
-        user_list = soup.find_all('a', attrs={"class" : 'mr-1'})
-        return user_list
+    def get_user(self):
+        return driver.find_elements(By.CLASS_NAME, 'mr-1')
 
 @ns.route('/scrap/commits', methods=['GET'])
 class MemberCommit(Resource):
@@ -67,16 +72,14 @@ class MemberCommit(Resource):
         member = request.args.get('member')
         year = request.args.get('year')
         
-        result = requests.get('https://github.com/' + member + '?tab=overview&from=' + year + '-01-01')
-        result.raise_for_status()
+        driver.get('https://github.com/' + member + '?tab=overview&from=' + year + '-01-01')
         
-        soup = BeautifulSoup(result.text, "lxml")
-        h2 = soup.find('h2', attrs={"class" : "f4 text-normal mb-2"})
-        profile_imgs = soup.find_all('img', attrs={'class' : 'avatar avatar-user width-full border color-bg-default'})
-        for img in profile_imgs:
-            profile_img = img['src']
+        h2 = driver.find_element(By.CLASS_NAME, 'f4 text-normal mb-2')
         
-        name = soup.find('span', attrs={"itemprop" : "name"}).text.strip()
+        profile_img = driver.find_element(By.CLASS_NAME, 'avatar avatar-user width-full border color-bg-default')
+        profile_img = profile_img['src']
+        
+        name = driver.find(By.CLASS_NAME, 'p-name vcard-fullname d-block overflow-hidden').text
         
         commit_num = int(h2.text.strip().split(' ')[0].rstrip())
         
