@@ -19,7 +19,6 @@ public class Member extends BaseTime {
     @Id @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false, unique = true)
