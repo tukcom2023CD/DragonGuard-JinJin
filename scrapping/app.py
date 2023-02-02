@@ -76,7 +76,7 @@ class MemberCommit(Resource):
         for img in profile_imgs:
             profile_img = img['src']
         
-        name = soup.find('span', attrs={"itemprop" : "name"}).text
+        name = soup.find('span', attrs={"itemprop" : "name"}).text.strip()
         
         commit_num = int(h2.text.strip().split(' ')[0].rstrip())
         
