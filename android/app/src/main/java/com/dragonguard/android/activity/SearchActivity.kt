@@ -80,18 +80,19 @@ class SearchActivity : AppCompatActivity() {
                 callSearchApi(viewmodel.onSearchListener.value!!)
                 binding.searchResult.visibility = View.VISIBLE
                 binding.searchName.isFocusable = true
-            } else{
-                Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
-                closeKeyboard()
-            }
+                    } else{
+                        Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
+                        closeKeyboard()
+                    }
         }
 
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
-        binding.searchName.setOnKeyListener { view, i, keyEvent ->
-            if(keyEvent.action == KeyEvent.ACTION_DOWN && i == KEYCODE_ENTER){
+        viewmodel.onSearchListener.observe(this, Observer {
+            if (!viewmodel.onSearchListener.value.isNullOrEmpty() && viewmodel.onSearchListener.value!!.last() == '\n') {
                 Log.d("enter click", "edittext 클릭함")
-                val search = binding.searchName.text!!
+                val search = binding.searchName.text!!.substring(0 until binding.searchName.text!!.length - 1)
                 binding.searchName.setText(search)
+                binding.searchName.setSelection(binding.searchName.length())
                 if (search.isNotEmpty()) {
                     closeKeyboard()
                     if (lastSearch != viewmodel.onSearchListener.value!! && position != 0) {
@@ -112,8 +113,7 @@ class SearchActivity : AppCompatActivity() {
                     closeKeyboard()
                 }
             }
-            true
-        }
+        })
 
 
 
