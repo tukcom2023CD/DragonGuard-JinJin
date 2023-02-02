@@ -34,11 +34,12 @@ public class MemberService {
     }
 
     @Transactional
-    public void addMemberCommit(String githubId) {
+    public void addMemberCommitAndUpdate(String githubId, String name, String profileImage) {
         List<Commit> commits = commitService.findCommits(githubId);
         Member member = memberRepository.findMemberByGithubId(githubId)
                 .orElseThrow(EntityNotFoundException::new);
-        commits.stream().forEach(member::addCommit);
+        member.updateNameAndImage(name, profileImage);
+        commits.forEach(member::addCommit);
         updateTier(member);
         commitService.saveAllCommits(commits);
     }

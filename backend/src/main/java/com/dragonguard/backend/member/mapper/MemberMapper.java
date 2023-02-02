@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 public class MemberMapper {
     public Member toEntity(MemberRequest memberRequest) {
         return Member.builder()
-                .name(memberRequest.getName())
                 .githubId(memberRequest.getGithubId())
                 .build();
     }
@@ -22,6 +21,7 @@ public class MemberMapper {
                 .githubId(member.getGithubId())
                 .tier(member.getTier())
                 .authStep(member.getAuthStep())
+                .profileImage(member.getProfileImage())
                 .build();
     }
 }

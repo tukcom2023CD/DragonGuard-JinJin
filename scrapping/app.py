@@ -72,9 +72,15 @@ class MemberCommit(Resource):
         
         soup = BeautifulSoup(result.text, "lxml")
         h2 = soup.find('h2', attrs={"class" : "f4 text-normal mb-2"})
+        profile_imgs = soup.find_all('img', attrs={'class' : 'avatar avatar-user width-full border color-bg-default'})
+        for img in profile_imgs:
+            profile_img = img['src']
+        
+        name = soup.find('span', attrs={"itemprop" : "name"}).text
+        
         commit_num = int(h2.text.strip().split(' ')[0].rstrip())
         
-        producer.send('gitrank.to.backend.commit', value={"commitNum" : commit_num, "githubId" : member})
+        producer.send('gitrank.to.backend.commit', value={"commitNum" : commit_num, "name" : name, "githubId" : member, "profileImage" : profile_img})
 
         return ('success', 200)
         
