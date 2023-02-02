@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -13,7 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.connect.RepoSearchRepository
 import com.dragonguard.android.model.Result
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
@@ -31,7 +29,6 @@ class SearchActivity : AppCompatActivity() {
     private var changed = false
     private var lastSearch = ""
     var viewmodel = SearchViewModel()
-    private var apiCall = RepoSearchRepository()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -165,7 +162,7 @@ class SearchActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                apiCall.searchApi(name, count)
+                viewmodel.getResult(name, count)
             }
             result = resultDeferred.await()
             Log.d("api 시도", "api result에 넣기 $result")
@@ -184,13 +181,7 @@ class SearchActivity : AppCompatActivity() {
             if (repoNames.isNullOrEmpty()) {
                 repoNames = result
             } else {
-                for (i in 0 until result.size) {
-                    if (!repoNames.contains(result[i])) {
-                        repoNames.add(result[i])
-                    } else {
-                        return
-                    }
-                }
+                repoNames.addAll(result)
             }
             initRecycler()
         }

@@ -9,13 +9,10 @@ import com.dragonguard.android.model.Result
 class SearchViewModel() : ViewModel() {
 //    var model = SearchModel()
     private val repository = RepoSearchRepository()
-    private val _result = MutableLiveData<List<Result>>()
-    val result : LiveData<List<Result>>
-        get() = _result
 
-    fun getResult(name: String, count: Int) {
-        val response = repository.searchApi(name, count)
 
+    fun getResult(name: String, count: Int): ArrayList<Result> {
+        return repository.searchApi(name, count)
     }
 
     var onOptionListener = MutableLiveData<String>()
