@@ -187,7 +187,7 @@
                         android:layout_gravity="left"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:text="내 Commits : "
+                        android:text="내 기여도 : "
                         android:textAllCaps="false"
                         android:textColor="@color/black"
                         android:textSize="20dp"
