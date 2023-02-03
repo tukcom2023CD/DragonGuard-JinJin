@@ -6,11 +6,14 @@ cryptography==37.0.4
 flask-restx==0.5.1
 flask_script==2.0.5
 python-dotenv==0.20.0
+selenium==4.8.0
 Flask-Session
 flask
 flask-cors
-requests
-beautifulsoup4
 lxml
 gunicorn
 kafka-python
+requests
+beautifulsoup4
+lxml
+webdriver-manager

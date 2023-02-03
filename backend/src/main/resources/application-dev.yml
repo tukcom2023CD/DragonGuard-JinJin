@@ -37,4 +37,4 @@ logging:
     org.hibernate.type: trace
 
 scrapping:
-  url: http://scrapping:5000/scrap/
+  url: http://nginx:80/scrap/

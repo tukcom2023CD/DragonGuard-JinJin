@@ -17,4 +17,5 @@ public class MemberResponse {
     private String githubId;
     private Tier tier;
     private AuthStep authStep;
+    private String profileImage;
 }

@@ -12,7 +12,8 @@ services:
     networks:
       - app-tier
     depends_on:
-      - db   
+      - db
+      - kafka
     restart: on-failure
     tty: true
 

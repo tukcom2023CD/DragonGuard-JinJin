@@ -11,7 +11,5 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 public class MemberRequest {
     @NotEmpty
-    private String name;
-    @NotEmpty
     private String githubId;
 }

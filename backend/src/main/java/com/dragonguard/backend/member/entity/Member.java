@@ -19,11 +19,12 @@ public class Member extends BaseTime {
     @Id @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false, unique = true)
     private String githubId;
+
+    private String profileImage;
 
     @OneToMany
     @JoinColumn(name = "member_id")
@@ -53,6 +54,11 @@ public class Member extends BaseTime {
             throw new CommitDuplicateException();
         }
         this.commits.add(commit);
+    }
+
+    public void updateNameAndImage(String name, String profileImage) {
+        this.name = name;
+        this.profileImage = profileImage;
     }
 
     public Integer getCommitsSum() {
