@@ -61,10 +61,10 @@ public class Member extends BaseTime {
     public Integer evaluateCommitsSum() {
         this. commitsSum = this.commits.stream().mapToInt(Commit::getCommitNum).sum();
         return commitsSum;
+    }
     public void updateNameAndImage(String name, String profileImage) {
         this.name = name;
         this.profileImage = profileImage;
-    }
     }
 
     public void updateTier(Tier tier) {
