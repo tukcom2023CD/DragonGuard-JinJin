@@ -10,22 +10,20 @@ import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 //api들 호출부분
-class RepoSearchRepository {
+class ApiRepository {
+    private val okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(1, TimeUnit.MINUTES)
+        .readTimeout(50, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS)
+        .build()
+
+
     fun searchApi(name: String, count: Int): ArrayList<Result> {
-
-        val okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(1, TimeUnit.MINUTES)
-            .readTimeout(50, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .build()
-
         val searchRetrofit = Retrofit.Builder().baseUrl(BuildConfig.server)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
         var repoNames : ArrayList<Result> = arrayListOf<Result>()
-
         val api = searchRetrofit.create(GitRankAPI::class.java)
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
@@ -45,5 +43,25 @@ class RepoSearchRepository {
             return repoNames
         }
         return repoNames
+    }
+
+    fun getTier(id: Int): String {
+        val tierRetrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val api = tierRetrofit.create(GitRankAPI::class.java)
+        val tier = api.getTier(id)
+        var tierResult = ""
+        try{
+            val result = tier.execute()
+            if(result.isSuccessful){
+                tierResult = result.body()!!
+            }
+        }catch (e : SocketTimeoutException){
+            return tierResult
+        }
+        return tierResult
     }
 }

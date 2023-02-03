@@ -162,7 +162,7 @@ class SearchActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getResult(name, count)
+                viewmodel.getSearchRepoResult(name, count)
             }
             result = resultDeferred.await()
             Log.d("api 시도", "api result에 넣기 $result")

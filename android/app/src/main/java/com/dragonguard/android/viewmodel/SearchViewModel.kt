@@ -1,17 +1,16 @@
 package com.dragonguard.android.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dragonguard.android.connect.RepoSearchRepository
+import com.dragonguard.android.connect.ApiRepository
 import com.dragonguard.android.model.Result
 
 class SearchViewModel() : ViewModel() {
 //    var model = SearchModel()
-    private val repository = RepoSearchRepository()
+    private val repository = ApiRepository()
 
 
-    fun getResult(name: String, count: Int): ArrayList<Result> {
+    fun getSearchRepoResult(name: String, count: Int): ArrayList<Result> {
         return repository.searchApi(name, count)
     }
 

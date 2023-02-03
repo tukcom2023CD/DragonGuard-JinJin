@@ -2,12 +2,16 @@ package com.dragonguard.android.viewmodel
 
 
 import androidx.lifecycle.MutableLiveData
+import com.dragonguard.android.connect.ApiRepository
 
 
 class MainViewModel {
-    var onSearchListener = MutableLiveData<String>()
+    private val repository = ApiRepository()
+
+    fun getSearchTierResult(id: Int): String{
+        return repository.getTier(id)
+    }
     var onSearchClickListener = MutableLiveData<Boolean>()
-    var onLookRanking = MutableLiveData<Boolean>()
     var onUserIconSelected = MutableLiveData<Boolean>()
 
     fun clickUserIcon() {
@@ -18,16 +22,4 @@ class MainViewModel {
         onSearchClickListener.value = true
     }
 
-
-    fun lookRanking() {
-        onLookRanking.value = true
-    }
-
-    fun compareRepo() {
-
-    }
-
-    fun schoolRanking() {
-
-    }
 }

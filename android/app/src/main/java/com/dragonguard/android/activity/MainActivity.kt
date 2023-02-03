@@ -2,6 +2,7 @@ package com.dragonguard.android.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,10 @@ import androidx.lifecycle.Observer
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -21,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
 
+        searchTier(1)
 
         //로그인 화면으로 넘어가기
         val intent = Intent(applicationContext, LoginActivity::class.java)
@@ -54,6 +60,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun searchTier(id: Int){
+        var tier = ""
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                viewmodel.getSearchTierResult(1)
+            }
+            tier = resultDeferred.await()
+            Log.d("api 시도", "api result에 넣기 $tier")
+            binding.userTier.append(tier)
+        }
+    }
 
     private fun closeKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
