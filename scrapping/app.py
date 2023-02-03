@@ -8,6 +8,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import requests
 
@@ -28,7 +30,9 @@ options = Options()
 options.headless = True
 options.add_argument("--window-size=1920,1200")
 driver = webdriver.Remote(command_executor=CHROME_BASE_URL, options=options, desired_capabilities=DesiredCapabilities.CHROME)
-
+driver.get('https://github.com')
+driver.close()
+driver.quit()
 
 @ns.route('/scrap/search', methods=['GET'])
 class Search(Resource):
@@ -96,11 +100,15 @@ class GitRepos(Resource):
         name = request.args.get('name')
         year = request.args.get('year')
         
-        driver = webdriver.Remote()
+        chrome_driver = webdriver.Remote(command_executor=CHROME_BASE_URL, options=options, desired_capabilities=DesiredCapabilities.CHROME)
         
-        driver.get('https://github.com/' + name + '/graphs/contributors?from=2023-01-01&to=' + str(year + 1) + '-12-31&type=c')
+        chrome_driver.get('https://github.com/' + name + '/graphs/contributors?from=2023-01-01&to=' + str(int(year) + 1) + '-12-31&type=c')
+        WebDriverWait(chrome_driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, 'text-normal')))
         
-        elements = driver.find_elements(By.CLASS_NAME, 'border-bottom p-2 lh-condensed')
+        elements = chrome_driver.find_elements(By.CLASS_NAME, 'border-bottom p-2 lh-condensed')
+        
+        chrome_driver.close()
+        chrome_driver.quit()
         
         response = {}
         
@@ -108,8 +116,8 @@ class GitRepos(Resource):
             return ('No Content', 200)
         
         for e in elements:
-            member_name = e.find_element(By.CLASS_NAME, 'text-normal')
-            commits = e.find_element(By.CLASS_NAME, 'Link--secondary text-normal')
+            member_name = e.find_element(By.CLASS_NAME, 'text-normal').text
+            commits = e.find_element(By.CLASS_NAME, 'Link--secondary text-normal').text
             response[member_name] = int(commits.split(' ')[0])
         
         return (response, 200)
