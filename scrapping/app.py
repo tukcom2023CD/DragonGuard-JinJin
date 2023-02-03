@@ -7,6 +7,10 @@ from base_url import KAFKA_BASE_URL
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import *
+from time import sleep
 import requests, selenium
 
 app = Flask(__name__)
@@ -28,11 +32,9 @@ chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument("--single-process")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("disable-gpu")
-chrome_options.add_argument(f'user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36')
-driver = webdriver.Chrome('/usr/src/chrome/chromedriver', options=chrome_options)
-driver.get('https://github.com')
-driver.close()
-driver.quit()
+chrome_driver = webdriver.Chrome('/usr/src/chrome/chromedriver', options=chrome_options)
+chrome_driver.get('https://github.com')
+chrome_driver.close()
 
 @ns.route('/scrap/search', methods=['GET'])
 class Search(Resource):
@@ -102,29 +104,34 @@ class GitRepos(Resource):
         
         chrome_driver = webdriver.Chrome(options=chrome_options)
         
-        chrome_driver.get('https://github.com/' + name + '/graphs/contributors?from=2023-01-01&to=' + year + '-12-31&type=c')
-        chrome_driver.implicitly_wait(1)
+        chrome_driver.get('https://github.com/' + name + '/graphs/contributors?from=2022-01-01&to=' + year + '-12-31&type=c')
         
-        while not chrome_driver.find_elements(By.CLASS_NAME, 'border-bottom p-2 lh-condensed'):
-            try:
-                chrome_driver.implicitly_wait(1)
-                print('scrapping processing')
-            except selenium.common.exceptions.TimeoutException:
-                print('scrapping except occured')
-        
-        elements = chrome_driver.find_elements(By.CLASS_NAME, 'border-bottom p-2 lh-condensed')
+        try:
+            WebDriverWait(chrome_driver, 7.5).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '#contributors > ol')))
+        except selenium.common.exceptions.TimeoutException as e:
+            print('Error Occured')
         
         response = {}
-        
-        for e in elements:
-            member_name = e.find_element(By.CLASS_NAME, 'text-normal')
-            commits = e.find_element(By.CLASS_NAME, 'Link--secondary text-normal')
-            response[member_name.get_attribute('innerText')] = int(commits.get_attribute('innerText').split(' ')[0])
+        i, cnt = 1, 1
+        while True:
+            try:
+                commits = chrome_driver.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > a')
+                member_name = chrome_driver.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > a.text-normal')
+                addition = chrome_driver.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-success.text-normal')
+                deletion = chrome_driver.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-danger.text-normal')
+                response[member_name.get_attribute('innerText')] = { 'commits' : int(commits.get_attribute('innerText').split(' ')[0]), 
+                                                                    'addition' : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
+                                                                    'deletion' : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', ''))}
+            except selenium.common.exceptions.NoSuchElementException as e:
+                if cnt == 3:
+                    break
+                cnt += 1
+            finally:
+                i += 1
         
         chrome_driver.close()
-        chrome_driver.quit()
         
-        return (response, 200) if not response else ('No Content', 200)
+        return (response, 200) if response else ('No Content', 200)
         
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
