@@ -12,5 +12,11 @@ interface GitRankAPI {
     fun getRepoName(@QueryMap query: Map<String, String>) : Call<RepoName>
 
     @GET("members/{id}/tier")
-    fun getTier(@Path("id")userId : Int) : Call<String>
+    fun getUserTier(@Path("id")userId : Int) : Call<String>
+
+    @GET("")
+    fun getUserCommits()
+
+    @GET("")
+    fun getUserRanking()
 }

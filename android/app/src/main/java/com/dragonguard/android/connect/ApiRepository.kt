@@ -52,7 +52,7 @@ class ApiRepository {
             .build()
 
         val api = tierRetrofit.create(GitRankAPI::class.java)
-        val tier = api.getTier(id)
+        val tier = api.getUserTier(id)
         var tierResult = ""
         try{
             val result = tier.execute()
@@ -63,5 +63,23 @@ class ApiRepository {
             return tierResult
         }
         return tierResult
+    }
+
+    fun getUserCommits(id: Int) {
+        val tierRetrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val api = tierRetrofit.create(GitRankAPI::class.java)
+    }
+
+    fun getUserRankings(id: Int) {
+        val tierRetrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val api = tierRetrofit.create(GitRankAPI::class.java)
     }
 }

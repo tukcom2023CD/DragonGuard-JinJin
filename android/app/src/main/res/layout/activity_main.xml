@@ -168,7 +168,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <Button
+                    <TextView
                         android:id="@+id/user_tier"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
@@ -180,14 +180,15 @@
                         android:textSize="20dp"
                         android:fontFamily="@font/ibm_semibold" />
 
-                    <Button
+                    <TextView
                         android:id="@+id/user_token"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_gravity="left"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:text="내 토큰 : 232.4"
+                        android:text="내 Commits : "
+                        android:textAllCaps="false"
                         android:textColor="@color/black"
                         android:textSize="20dp"
                         android:fontFamily="@font/ibm_semibold" />

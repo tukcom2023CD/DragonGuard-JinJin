@@ -11,6 +11,14 @@ class MainViewModel {
     fun getSearchTierResult(id: Int): String{
         return repository.getTier(id)
     }
+
+    fun getCommits(id: Int): String{
+        return repository.getTier(id)
+    }
+
+    fun getRankings(id: Int) {
+
+    }
     var onSearchClickListener = MutableLiveData<Boolean>()
     var onUserIconSelected = MutableLiveData<Boolean>()
 

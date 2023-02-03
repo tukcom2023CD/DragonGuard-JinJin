@@ -46,6 +46,7 @@
                     android:layout_weight="0.8"
                     android:background="@drawable/roundc"
                     android:text="내 Repository 랭킹"
+                    android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="25dp"
                     android:fontFamily="@font/ibm_semibold" />
@@ -72,6 +73,7 @@
                     android:layout_weight="0.8"
                     android:background="@drawable/roundc"
                     android:text="내 Organization 목록"
+                    android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="25dp"
                     android:fontFamily="@font/ibm_semibold"/>
@@ -172,6 +174,7 @@
                     android:layout_weight="0.8"
                     android:background="@drawable/roundc"
                     android:text="전체 Repository 랭킹"
+                    android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="25dp"
                     android:fontFamily="@font/ibm_semibold" />
