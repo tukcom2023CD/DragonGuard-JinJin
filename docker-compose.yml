@@ -12,7 +12,8 @@ services:
     networks:
       - app-tier
     depends_on:
-      - db   
+      - db
+      - kafka
     restart: on-failure
     tty: true
 
@@ -79,23 +80,11 @@ services:
     restart: on-failure
     depends_on:
       - kafka
-      - chrome
     volumes:
       - ./scrapping:/scrapping/
     networks:
       - app-tier
     tty: true
-
-  chrome:
-    image: selenium/standalone-chrome:latest
-    hostname: chrome
-    container_name: chrome
-    ports: 
-      - 4444:4444
-    networks:
-      - app-tier
-    privileged: true
-    shm_size: 4g
 
   nginx:
     build: ./nginx

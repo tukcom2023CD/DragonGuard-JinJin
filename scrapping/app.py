@@ -3,19 +3,15 @@ from flask_restx import Resource, Api
 from flask_cors import CORS
 from kafka import KafkaProducer 
 from json import dumps
-from base_url import KAFKA_BASE_URL, CHROME_BASE_URL
+from base_url import KAFKA_BASE_URL
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
-import requests
+import requests, selenium
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-app.config['CORS_HEADERS'] = 'Content-Type'   
+app.config['CORS_HEADERS'] = 'Content-Type'
 api = Api(app)
 
 ns = api.namespace('/', description='GitRank API')
@@ -26,10 +22,14 @@ producer = KafkaProducer(acks=0,
             value_serializer=lambda x: dumps(x).encode('utf-8')
           )
 
-options = Options()
-options.headless = True
-options.add_argument("--window-size=1920,1200")
-driver = webdriver.Remote(command_executor=CHROME_BASE_URL, options=options, desired_capabilities=DesiredCapabilities.CHROME)
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument("--single-process")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("disable-gpu")
+chrome_options.add_argument(f'user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36')
+driver = webdriver.Chrome('/usr/src/chrome/chromedriver', options=chrome_options)
 driver.get('https://github.com')
 driver.close()
 driver.quit()
@@ -100,27 +100,31 @@ class GitRepos(Resource):
         name = request.args.get('name')
         year = request.args.get('year')
         
-        chrome_driver = webdriver.Remote(command_executor=CHROME_BASE_URL, options=options, desired_capabilities=DesiredCapabilities.CHROME)
+        chrome_driver = webdriver.Chrome(options=chrome_options)
         
-        chrome_driver.get('https://github.com/' + name + '/graphs/contributors?from=2023-01-01&to=' + str(int(year) + 1) + '-12-31&type=c')
-        WebDriverWait(chrome_driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, 'text-normal')))
+        chrome_driver.get('https://github.com/' + name + '/graphs/contributors?from=2023-01-01&to=' + year + '-12-31&type=c')
+        chrome_driver.implicitly_wait(1)
+        
+        while not chrome_driver.find_elements(By.CLASS_NAME, 'border-bottom p-2 lh-condensed'):
+            try:
+                chrome_driver.implicitly_wait(1)
+                print('scrapping processing')
+            except selenium.common.exceptions.TimeoutException:
+                print('scrapping except occured')
         
         elements = chrome_driver.find_elements(By.CLASS_NAME, 'border-bottom p-2 lh-condensed')
+        
+        response = {}
+        
+        for e in elements:
+            member_name = e.find_element(By.CLASS_NAME, 'text-normal')
+            commits = e.find_element(By.CLASS_NAME, 'Link--secondary text-normal')
+            response[member_name.get_attribute('innerText')] = int(commits.get_attribute('innerText').split(' ')[0])
         
         chrome_driver.close()
         chrome_driver.quit()
         
-        response = {}
-        
-        if not elements:
-            return ('No Content', 200)
-        
-        for e in elements:
-            member_name = e.find_element(By.CLASS_NAME, 'text-normal').text
-            commits = e.find_element(By.CLASS_NAME, 'Link--secondary text-normal').text
-            response[member_name] = int(commits.split(' ')[0])
-        
-        return (response, 200)
+        return (response, 200) if not response else ('No Content', 200)
         
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
