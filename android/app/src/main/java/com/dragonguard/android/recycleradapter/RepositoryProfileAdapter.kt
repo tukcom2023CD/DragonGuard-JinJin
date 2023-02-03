@@ -1,7 +1,6 @@
 package com.dragonguard.android.recycleradapter
 
 import android.content.Context
-import android.graphics.Paint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.connect.RepoName
-import com.dragonguard.android.connect.Result
+import com.dragonguard.android.model.Result
 
 //검색한 레포지토리 나열하는 리사이클러뷰 어댑터 구현
 class RepositoryProfileAdapter (private val datas : ArrayList<Result>, private val context: Context) : RecyclerView.Adapter<RepositoryProfileAdapter.ViewHolder>() {

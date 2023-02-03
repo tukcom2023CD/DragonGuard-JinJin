@@ -4,63 +4,359 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
-            name="mainActivity"
-            type="com.dragonguard.android.activity.MainActivity" />
+            name="mainViewModel"
+            type="com.dragonguard.android.viewmodel.MainViewModel" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.MainActivity"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="3.4"
+        tools:context=".activity.MainActivity">
 
         <!--     기존 타이틀바 제거하고 다는 툴바       -->
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.4"
+            android:layout_weight="0.3"
             android:background="@android:color/transparent"
-            android:gravity="center_vertical" />
+            android:minHeight="?attr/actionBarSize" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2" />
+            android:layout_weight="0.25"
+            android:orientation="horizontal"
+            android:weightSum="1.1">
 
-            <!-- 화면전환 테스트용 버튼
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="검색화면으로"
-                android:id="@+id/btnadd"
-                android:textColor="@color/white"
-                android:backgroundTint="#222222" />
-                -->
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="검색화면으로"
-                android:id="@+id/login"
-                android:textColor="@color/white"
-                android:onClick="@{()->mainActivity.searchRepo()}"
-                android:backgroundTint="#222222" />
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2" />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:onClick="@{()->mainViewModel.clickUserIcon()}"
+                android:id="@+id/githut_profile"/>
+
+            <TextView
+                android:id="@+id/user_id"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="posite"
+                android:textColor="@color/black"
+                android:onClick="@{()->mainViewModel.clickUserIcon()}"
+                android:textSize="25dp"
+                android:fontFamily="@font/ibm_semibold"
+                 />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="#777777"
-            android:layout_weight="0.4" />
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/school_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="소속 학교"
+                android:textColor="@color/black"
+                android:textSize="25dp"
+                android:fontFamily="@font/ibm_semibold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+
+
+            <EditText
+                android:id="@+id/search_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:background="@drawable/search_border"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"
+                android:focusable="false"
+                android:onClick="@{()->mainViewModel.clickSearchIcon()}"
+                android:textColor="@color/black"
+                android:textSize="25dp" />
+
+            <ImageView
+                android:id="@+id/search_icon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:adjustViewBounds="true"
+                android:onClick="@{()->mainViewModel.clickSearchIcon()}"
+                android:src="@drawable/ic_baseline_search_24" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="25dp"
+                android:layout_weight="0.6"
+                android:background="@drawable/roundc"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"
+                    android:orientation="vertical" />
+
+                <LinearLayout
+                    android:id="@+id/user_score"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/user_tier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_gravity="left"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:text="내 티어 : "
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/ibm_semibold" />
+
+                    <TextView
+                        android:id="@+id/user_token"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_gravity="left"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:text="내 기여도 : "
+                        android:textAllCaps="false"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/ibm_semibold" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/tier_img"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.5"
+                    android:background="@android:color/transparent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.05"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="20dp"
+
+                android:layout_weight="0.85"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/user_rankingbtn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/roundc"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.25"
+                        android:background="@android:color/transparent"
+                        android:gravity="bottom|center_horizontal"
+                        android:text="전체 사용자 랭킹"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/ibm_semibold" />
+
+                    <TextView
+                        android:id="@+id/user_ranking"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:text="등수"
+                        android:textColor="@color/black"
+                        android:textSize="30dp"
+                        android:fontFamily="@font/ibm_semibold" />
+
+                    <TextView
+                        android:id="@+id/user_percent"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.25"
+                        android:background="@android:color/transparent"
+                        android:gravity="top|center_horizontal"
+                        android:text="(비율)"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/ibm_semibold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/roundc"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.25"
+                        android:background="@android:color/transparent"
+                        android:gravity="bottom|center_horizontal"
+                        android:text="대학교 내 랭킹"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/ibm_semibold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:text="등수"
+                        android:textColor="@color/black"
+                        android:textSize="30dp"
+                        android:fontFamily="@font/ibm_semibold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.25"
+                        android:background="@android:color/transparent"
+                        android:gravity="top|center_horizontal"
+                        android:text="(비율)"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/ibm_semibold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.05"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight="0.4"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:id="@+id/look_ranking"
+                    android:background="@drawable/roundc"
+                    android:text="랭킹\n보러가기"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/ibm_semibold" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/roundc"
+                    android:text="레포지토리\n비교하기"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/ibm_semibold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:background="#777777" />
     </LinearLayout>
 </layout>

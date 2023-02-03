@@ -1,36 +1,24 @@
 package com.dragonguard.android.activity
 
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
-import android.view.KeyEvent
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.dragonguard.android.BuildConfig
 import com.dragonguard.android.R
-import com.dragonguard.android.connect.ApiCall
-import com.dragonguard.android.connect.GitRankAPI
-import com.dragonguard.android.connect.RepoName
-import com.dragonguard.android.connect.Result
+import com.dragonguard.android.model.Result
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
 import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
 import com.dragonguard.android.recycleradapter.VerticalItemDecorator
 import com.dragonguard.android.viewmodel.SearchViewModel
 import kotlinx.coroutines.*
-import okhttp3.OkHttpClient
-import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
@@ -38,9 +26,9 @@ class SearchActivity : AppCompatActivity() {
     private var position = 0
     private var repoNames = ArrayList<Result>()
     private var count = 0
+    private var changed = false
     private var lastSearch = ""
     var viewmodel = SearchViewModel()
-    private var apiCall = ApiCall()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -48,6 +36,12 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchResult.addItemDecoration(VerticalItemDecorator(20))
         binding.searchResult.addItemDecoration(HorizontalItemDecorator(10))
+
+        setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+
 
 //        검색 옵션 구현
         viewmodel.onOptionListener.observe(this, Observer {
@@ -68,46 +62,48 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
-
 //        검색 아이콘 눌렀을때 검색 구현
-        viewmodel.onIconClickListener.observe(this, Observer {
-            Log.d("toast", "toast")
-            if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
-                closeKeyboard()
-                if(lastSearch != viewmodel.onSearchListener.value!! && position !=0){
+        binding.searchIcon.setOnClickListener {
+            if(!viewmodel.onSearchListener.value.isNullOrEmpty()){
+                if (lastSearch != viewmodel.onSearchListener.value!! && position != 0) {
                     repoNames.clear()
                     binding.searchResult.visibility = View.GONE
                     count = 0
                     position = 0
+                    changed = true
                 }
                 lastSearch = viewmodel.onSearchListener.value!!
-                Log.d("last", "$lastSearch")
+                Log.d("api 시도", "callSearchApi 실행")
                 callSearchApi(viewmodel.onSearchListener.value!!)
                 binding.searchResult.visibility = View.VISIBLE
-            } else {
-                Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
-                closeKeyboard()
-            }
+                binding.searchName.isFocusable = true
+                    } else{
+                        Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
+                        closeKeyboard()
+                    }
+        }
 
-        })
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
         viewmodel.onSearchListener.observe(this, Observer {
             if (!viewmodel.onSearchListener.value.isNullOrEmpty() && viewmodel.onSearchListener.value!!.last() == '\n') {
                 Log.d("enter click", "edittext 클릭함")
-                val search =
-                    binding.searchName.text.substring(0 until binding.searchName.text.length - 1)
+                val search = binding.searchName.text!!.substring(0 until binding.searchName.text!!.length - 1)
                 binding.searchName.setText(search)
+                binding.searchName.setSelection(binding.searchName.length())
                 if (search.isNotEmpty()) {
                     closeKeyboard()
-                    if(lastSearch != viewmodel.onSearchListener.value!! && position !=0 ){
+                    if (lastSearch != viewmodel.onSearchListener.value!! && position != 0) {
                         repoNames.clear()
                         binding.searchResult.visibility = View.GONE
                         count = 0
                         position = 0
+                        changed = true
                     }
                     lastSearch = viewmodel.onSearchListener.value!!
+                    Log.d("api 시도", "callSearchApi 실행")
                     callSearchApi(viewmodel.onSearchListener.value!!)
                     binding.searchResult.visibility = View.VISIBLE
+                    binding.searchName.isFocusable = true
                 } else {
                     binding.searchName.setText("")
                     Toast.makeText(applicationContext, "엔터 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
@@ -116,6 +112,35 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
+
+
+
+        viewmodel.onUserIconSelected.observe(this, Observer {
+            if (viewmodel.onUserIconSelected.value == true) {
+                val intent = Intent(applicationContext, MenuActivity::class.java)
+                startActivity(intent)
+            }
+        })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+            R.id.home_menu -> {
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     //    화면의 다른곳 눌렀을때 처리
@@ -130,13 +155,14 @@ class SearchActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
     }
 
-//    repo 검색 api 호출 및 결과 출력
+    //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
+        binding.loading.visibility = View.VISIBLE
         var result = arrayListOf<Result>()
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                apiCall.searchApi(name, count)
+                viewmodel.getSearchRepoResult(name, count)
             }
             result = resultDeferred.await()
             Log.d("api 시도", "api result에 넣기 $result")
@@ -145,20 +171,17 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
-//    api 호출결과 판별 및 출력
-    private fun checkSearchResult(result: ArrayList<Result>){
-        if(result.isNullOrEmpty()){
+    //    api 호출결과 판별 및 출력
+    private fun checkSearchResult(result: ArrayList<Result>) {
+        if (result.isNullOrEmpty()) {
             Log.d("api 시도", "api result 성공$result")
-        } else{
+            binding.loading.visibility = View.GONE
+        } else {
             Log.d("api 시도", "api 성공$result")
-            if(repoNames.isNullOrEmpty()){
+            if (repoNames.isNullOrEmpty()) {
                 repoNames = result
-            } else{
-                for(i in 0 until result.size){
-                    if(!repoNames.contains(result[i])){
-                        repoNames.add(result[i])
-                    }
-                }
+            } else {
+                repoNames.addAll(result)
             }
             initRecycler()
         }
@@ -176,6 +199,7 @@ class SearchActivity : AppCompatActivity() {
             binding.searchResult.visibility = View.VISIBLE
         }
         count++
+        Log.d("api 횟수", "$count 페이지 검색")
         initScrollListener()
         binding.loading.visibility = View.GONE
     }
@@ -183,9 +207,10 @@ class SearchActivity : AppCompatActivity() {
 
     //    데이터 더 받아오는 함수 loadMorePosts() 구현
     private fun loadMorePosts() {
-        if (binding.loading.visibility == View.GONE) {
+        if (binding.loading.visibility == View.GONE && count != 0) {
             binding.loading.visibility = View.VISIBLE
             CoroutineScope(Dispatchers.Main).launch {
+                Log.d("api 시도", "callSearchApi 실행  load more")
                 callSearchApi(lastSearch)
             }
 
