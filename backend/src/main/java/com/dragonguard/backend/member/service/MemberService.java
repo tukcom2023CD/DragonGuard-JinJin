@@ -64,7 +64,7 @@ public class MemberService {
 
     public Member findMemberByGithubId(String githubId) {
         return memberRepository.findMemberByGithubId(githubId)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseGet(null);
     }
 
     public List<Member> getMemberRanking(Pageable pageable) {

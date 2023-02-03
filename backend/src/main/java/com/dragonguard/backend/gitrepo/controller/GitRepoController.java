@@ -6,10 +6,10 @@ import com.dragonguard.backend.gitrepomember.dto.GitRepoMemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -20,7 +20,7 @@ public class GitRepoController {
     private final GitRepoService gitRepoService;
 
     @GetMapping
-    public ResponseEntity<List<GitRepoMemberResponse>> getRepoMembers(GitRepoRequest gitRepoRequest) {
-        return ResponseEntity.ok(gitRepoService.findMembersByGitRepo(gitRepoRequest));
+    public ResponseEntity<List<GitRepoMemberResponse>> getRepoMembers(String name) {
+        return ResponseEntity.ok(gitRepoService.findMembersByGitRepo(new GitRepoRequest(name, LocalDate.now().getYear())));
     }
 }

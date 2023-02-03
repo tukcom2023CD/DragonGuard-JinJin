@@ -125,7 +125,8 @@ class GitRepos(Resource):
                 deletion = chrome_driver.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-danger.text-normal')
                 response[member_name.get_attribute('innerText')] = { 'commits' : int(commits.get_attribute('innerText').split(' ')[0]), 
                                                                     'addition' : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
-                                                                    'deletion' : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', ''))}
+                                                                    'deletion' : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', '')),
+                                                                    'gitRepo' : name}
             except selenium.common.exceptions.NoSuchElementException as e:
                 if cnt == 3:
                     break
@@ -134,7 +135,6 @@ class GitRepos(Resource):
                 i += 1
         
         chrome_driver.close()
-        response['gitRepo'] = name
         producer.send('gitrank.to.backend.git-repos', value=response)
         
         return (response, 200) if response else ('No Content', 200)

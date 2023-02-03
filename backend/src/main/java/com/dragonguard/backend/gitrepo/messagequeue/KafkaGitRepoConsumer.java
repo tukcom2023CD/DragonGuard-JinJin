@@ -1,6 +1,5 @@
 package com.dragonguard.backend.gitrepo.messagequeue;
 
-import com.dragonguard.backend.gitrepo.dto.response.GitRepoResponse;
 import com.dragonguard.backend.gitrepomember.dto.GitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.gitrepomember.service.GitRepoMemberService;
@@ -21,26 +20,26 @@ public class KafkaGitRepoConsumer {
 
     private final GitRepoMemberService gitRepoMemberService;
 
-    @KafkaListener(topics = "gitrank.to.backend.commit", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        Map<Object, Object> map = new HashMap<>();
+        Map<String, Map<String, Object>> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            map = mapper.readValue(message, new TypeReference<Map<Object, Object>>() {});
+            map = mapper.readValue(message, new TypeReference<Map<String, Map<String, Object>>>() {});
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         if (map.isEmpty()) {
             return;
         }
-        String gitRepo = (String) map.get("gitRepo");
         List<GitRepoMemberResponse> list = new ArrayList<>();
+        String gitRepo = null;
 
         for (Object key :  map.keySet()) {
-            Map<String, Integer> resultMap = (Map<String, Integer>)map.get(key);
-            list.add(new GitRepoMemberResponse((String)key, resultMap.get("commits"), resultMap.get("addition"), resultMap.get("deletion")));
+            Map<String, Object> resultMap = map.get(key);
+            list.add(new GitRepoMemberResponse((String)key, (Integer)resultMap.get("commits"), (Integer)resultMap.get("addition"), (Integer)resultMap.get("deletion")));
+            gitRepo = (String)resultMap.get("gitRepo");
         }
-
         gitRepoMemberService.saveAllDto(list, gitRepo);
     }
 }

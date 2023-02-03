@@ -25,7 +25,7 @@ public class GitRepoService {
 
     public List<GitRepoMemberResponse> findMembersByGitRepo(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
-        if (gitRepo.isEmpty()) {
+        if (gitRepo.isPresent()) {
             return gItRepoMemberRepository.findAllByGitRepo(gitRepo.get()).stream()
                     .map(gitRepoMemberMapper::toResponse)
                     .collect(Collectors.toList());
@@ -36,7 +36,7 @@ public class GitRepoService {
 
     public GitRepo findGitRepoByName(String name) {
         return gitRepoRepository.findByName(name)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseGet(null);
     }
 
     private void requestToScrapping(GitRepoRequest gitRepoRequest) {

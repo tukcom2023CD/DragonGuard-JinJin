@@ -25,10 +25,10 @@ public class GitRepoMemberService {
 
     public void saveAllDto(List<GitRepoMemberResponse> gitRepoResponses, String gitRepo) {
         List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepository -> {
-            Member member = memberService.findMemberByGithubId(gitRepository.getMemberName());
-            GitRepo gitRepoEntity = gitRepoService.findGitRepoByName(gitRepo);
-            return gitRepoMemberMapper.toEntity(gitRepository, member, gitRepoEntity);
-        }).collect(Collectors.toList());
+//            Member member = memberService.findMemberByGithubId(gitRepository.getMemberName());
+//            GitRepo gitRepoEntity = gitRepoService.findGitRepoByName(gitRepo);
+            return gitRepoMemberMapper.toEntity(gitRepository, null, null);
+        }).collect(Collectors.toList()); // TODO 깃 레포와 깃 레포 멤버 저장 (순서 조심)
 
         gitRepoMemberRepository.saveAll(list);
     }
