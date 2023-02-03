@@ -9,31 +9,34 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
-import RxDataSources
 
 
 // 검색창
 final class SearchPageController: UIViewController {
     
     private let disposeBag = DisposeBag()
-    private let searchViewModel = testViewModel()
+    private let searchViewModel = SearchPageViewModel()
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
-    let uiSearchController = UISearchController()
+    let refreshTable = UIRefreshControl()   //새로 고침 사용
+    var resultData = [String]() // 결과 데이터 저장하는 배열
+    var data = [SearchPageResultModel]()
+    var timerThread: Timer?     //일정 시간동안 API 호출되는 응답 감시하는 타이머
+    var searchText = ""         //검색하는 단어
+    var fetchingMore = false    // 무한 스크롤 감지
+    var sectionCount = 0        // 결과물 개수 저장
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false
         
-//        SearchPageService().getPage()
-        
         addUItoView()   //View에 적용할 UI 작성
-        searchUISetLayout()     // searchUI AutoLayout 함수
         resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
-        setTableViewDataSource()  //테이블 뷰 cell 및 개수 그리기
-        bindInput() //테스트 목적
+        initRefreshTable()  //새로고침 함수
+        
     }
+    
     
     /*
      UI 작성
@@ -47,6 +50,8 @@ final class SearchPageController: UIViewController {
         searchBar.searchBarStyle = .minimal
         searchBar.layer.cornerRadius = 10
         searchBar.placeholder = "Repository or User"
+        searchBar.searchTextField.tintColor = .gray
+        searchBar.showsCancelButton = true
         searchBar.searchTextField.leftView?.tintColor = .black  //돋보기 색상 변경
         return searchBar
     }()
@@ -55,6 +60,7 @@ final class SearchPageController: UIViewController {
     lazy var resultTableView: UITableView = {
         let tableview = UITableView()
         tableview.backgroundColor = .white
+        tableview.separatorStyle = .none
         return tableview
     }()
     
@@ -63,6 +69,41 @@ final class SearchPageController: UIViewController {
      
      */
     
+    // 새로고침하는 함수
+    private func initRefreshTable(){
+        refreshTable.addTarget(self, action: #selector(refreshing(refresh:)), for: .valueChanged)
+        refreshTable.tintColor = .black
+        resultTableView.refreshControl = refreshTable
+    }
+    
+    @objc func refreshing(refresh: UIRefreshControl){
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            self.resultTableView.reloadData()
+            refresh.endRefreshing()
+        }
+    }
+    
+    @objc func timer(){
+        self.searchViewModel.switchData()
+        self.searchViewModel.searchResult
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: {
+                self.data = $0
+            })
+            .disposed(by: self.disposeBag)
+        
+        for i in self.data{
+            self.resultData.append(i.name)
+        }
+        
+        self.resultTableView.reloadData()
+        fetchingMore = false
+    }
+    
+    // 검색 결과 데이터 자동 쓰레드
+    private func searchResultAutoThread(){
+        timerThread = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timer), userInfo: nil, repeats: false)
+    }
     
     
     /*
@@ -72,13 +113,12 @@ final class SearchPageController: UIViewController {
     
     //View에 적용할 때 사용하는 함수
     private func addUItoView(){
-//        self.view.addSubview(searchUI)  //searchUI 적용
         
         self.navigationItem.titleView = searchUI
         self.view.addSubview(resultTableView)   //tableview 적용
         
         // 결과 출력하는 테이블 뷰 적용
-        // datasource는 reactive 적용
+        self.resultTableView.dataSource = self
         self.resultTableView.delegate = self
         
         // searchControllerDelegate
@@ -87,24 +127,13 @@ final class SearchPageController: UIViewController {
         // tableview 설치
         self.resultTableView.register(SearchPageTableView.self, forCellReuseIdentifier: SearchPageTableView.identifier)
         
-        
     }
-    
     
     /*
      UI AutoLayout 코드 작성
      
      함수 실행시 private으로 시작할 것 (추천)
      */
-    
-    // 검색 UI Autolayout 설정
-    private func searchUISetLayout(){
-//        searchUI.snp.makeConstraints({ make in
-//            make.top.equalTo(self.view.safeAreaLayoutGuide)
-//            make.leading.equalTo(10)
-//            make.trailing.equalTo(-10)
-//        })
-    }
     
     // tableview Autolayout 설정
     private func resultTableViewSetLayout(){
@@ -116,65 +145,66 @@ final class SearchPageController: UIViewController {
         })
     }
     
-    /*
-     UI 입출력 감지
-     */
-    
-    
-    private func bindInput(){
-        //데이터 잘들어가는 지 테스트
-        //        searchViewModel.checkValidId
-        //            .subscribe(onNext: {
-        //                print($0)
-        //            })
-    }
-    
-    
-    
-    // 결과물 출력할 tableview 설정하는 부분
-     func setTableViewDataSource() {
-         
-         let dataSource = RxTableViewSectionedReloadDataSource<SearchModel> { _, tableview, indexPath, item in
-             let cell = tableview.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath) as! SearchPageTableView
-             cell.prepare(text: item)
-             cell.layer.cornerRadius = 15
-             cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
-             cell.layer.borderWidth = 1
-             return cell
-         } titleForHeaderInSection: { dataSource, sectionIndex in
-             return dataSource[sectionIndex].header
-         }
-         
-         // 데이터 테스트
-         let sections = [
-            SearchModel(header: " ", items: ["1"]),
-            SearchModel(header: " ", items: ["2"]),
-            SearchModel(header: " ", items: ["3"]),
-            SearchModel(header: " ", items: ["4"])
-         ]
-         // 데이터 삽입
-         Observable.just(sections)
-             .bind(to: resultTableView.rx.items(dataSource: dataSource))
-             .disposed(by: disposeBag)
-        
-    }
 }
 
 // SearchController Delegate
 extension SearchPageController: UISearchBarDelegate{
+    
+    // 검색 바 검색하기 시작할 때
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        resultData = []
+        data = []
+    }
+    
+    // Cancel 취소 버튼 눌렀을 때
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchUI.text = ""
+        searchUI.resignFirstResponder()
+    }
+    
     //검색 버튼을 눌렀을 때 실행
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchUI.resignFirstResponder()
-        self.searchUI.showsCancelButton = false
         
         guard let searchText = searchUI.text else{ return }
-        searchViewModel.searchingData.onNext(searchText)
+        self.searchText = searchText
+        
+        callAPI(searchText: searchText)
+        resultTableView.reloadData()
+        
+        callAPI(searchText: searchText)
+        resultTableView.reloadData()
+        searchResultAutoThread()    // API 감지 스레드
+    }
+    
+    // API 호출
+    func callAPI(searchText: String?){
+        searchViewModel.searchInput.onNext(searchText ?? "")
+        searchViewModel.pageCount += 1
+        searchViewModel.getAPIData()
         
     }
+    
 }
 
 
-extension SearchPageController: UITableViewDelegate{
+extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
+    
+    
+    // tableview cell 구성
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath ) as! SearchPageTableView
+        
+        cell.prepare(text: resultData[indexPath.section])
+        cell.layer.cornerRadius = 15
+        cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+        cell.layer.borderWidth = 1
+        
+        sectionCount = indexPath.section
+        
+        return cell
+    }
+    
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected \(indexPath.section)")
@@ -182,39 +212,34 @@ extension SearchPageController: UITableViewDelegate{
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    // 무한 스크롤하면서 API 호출하는 기능
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        
+        if position > (resultTableView.contentSize.height - scrollView.frame.size.height) || (sectionCount + 1) % 10 == 0{
+            if !fetchingMore {
+                
+                fetchingMore = true
+                callAPI(searchText: self.searchText)
+                searchResultAutoThread()    // API 감지 스레드
+            }
+        }
+        
+    }
+    
+    // cell 높이 설정
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return deviceHeight / 10 }
+    
     // section 간격 설정
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {  return 1 }
     
-}
-
-
-/*
- SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
- 
- preview 실행이 안되는 경우 단축키
- Command + Option + Enter : preview 그리는 캠버스 띄우기
- Command + Option + p : preview 재실행
- */
-
-import SwiftUI
-
-struct VCPreView:PreviewProvider {
-    static var previews: some View {
-        SearchPageController().toPreview().previewDevice("iPhone 14 pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-
-struct VCPreView1:PreviewProvider {
-    static var previews: some View {
-        SearchPageController().toPreview().previewDevice("iPhone 11")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-
-struct VCPreView2:PreviewProvider {
-    static var previews: some View {
-        SearchPageController().toPreview().previewDevice("iPad (10th generation)")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
+    // 색션 내부 row 개수
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
+    
+    // 색션 개수
+    func numberOfSections(in tableView: UITableView) -> Int { resultData.count }
+    
+    // 섹션 높이 지정
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
+    
 }

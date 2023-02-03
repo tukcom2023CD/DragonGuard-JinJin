@@ -20,6 +20,8 @@ final class MainController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true    // navigation bar 삭제
         self.navigationItem.backButtonTitle = "Home"    //다른 화면에서 BackBtn title 설정
         
+        
+        
         // UI view에 적용
         addUItoView()
         
