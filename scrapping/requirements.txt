@@ -13,3 +13,6 @@ lxml
 gunicorn
 kafka-python
 selenium
+requests
+beautifulsoup4
+lxml
