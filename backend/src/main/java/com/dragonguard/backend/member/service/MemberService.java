@@ -10,6 +10,7 @@ import com.dragonguard.backend.member.mapper.MemberMapper;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,7 @@ public class MemberService {
 
     @Transactional
     public void updateTier(Member member) {
-        Tier tier = Tier.checkTier(member.getCommitsSum());
+        Tier tier = Tier.checkTier(member.evaluateCommitsSum());
         member.updateTier(tier);
     }
 
@@ -58,7 +59,12 @@ public class MemberService {
     }
 
     public MemberResponse getMember(Long id) {
-        return memberMapper.toResponse(getEntity(id));
+        Member member = getEntity(id);
+        return memberMapper.toResponse(member, member.getCommitsSum());
+    }
+
+    public List<Member> getMemberRanking(Pageable pageable) {
+        return memberRepository.findRanking(pageable);
     }
 
     private Member getEntity(Long id) {

@@ -2,11 +2,17 @@ package com.dragonguard.backend.member.controller;
 
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
+import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,5 +40,11 @@ public class MemberController {
     @GetMapping("/{id}/tier")
     public ResponseEntity<Tier> getTier(@PathVariable Long id) {
         return ResponseEntity.ok(memberService.getTier(id));
+    }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<List<Member>> getTier(
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(memberService.getMemberRanking(pageable));
     }
 }

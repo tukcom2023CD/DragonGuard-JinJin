@@ -1,6 +1,5 @@
 package com.dragonguard.backend.member.mapper;
 
-import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Member;
@@ -14,11 +13,12 @@ public class MemberMapper {
                 .build();
     }
 
-    public MemberResponse toResponse(Member member) {
+    public MemberResponse toResponse(Member member, Integer commits) {
         return MemberResponse.builder()
                 .id(member.getId())
                 .name(member.getName())
                 .githubId(member.getGithubId())
+                .commits(commits)
                 .tier(member.getTier())
                 .authStep(member.getAuthStep())
                 .profileImage(member.getProfileImage())
