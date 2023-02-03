@@ -29,6 +29,8 @@ public class Member extends BaseTime {
     @JoinColumn(name = "member_id")
     private List<Commit> commits = new ArrayList<>();
 
+    private Integer commitsSum;
+
     @Enumerated(EnumType.STRING)
     private Tier tier;
 
@@ -55,8 +57,9 @@ public class Member extends BaseTime {
         this.commits.add(commit);
     }
 
-    public Integer getCommitsSum() {
-        return this.commits.stream().mapToInt(Commit::getCommitNum).sum();
+    public Integer evaluateCommitsSum() {
+        this. commitsSum = this.commits.stream().mapToInt(Commit::getCommitNum).sum();
+        return commitsSum;
     }
 
     public void updateTier(Tier tier) {

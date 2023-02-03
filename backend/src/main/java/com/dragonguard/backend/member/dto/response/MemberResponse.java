@@ -15,6 +15,7 @@ public class MemberResponse {
     private Long id;
     private String name;
     private String githubId;
+    private Integer commits;
     private Tier tier;
     private AuthStep authStep;
 }
