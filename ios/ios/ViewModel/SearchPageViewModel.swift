@@ -15,7 +15,7 @@ final class SearchPageViewModel {
     var searchWord = "" //검색단어
     var searchResult: BehaviorSubject<[SearchPageResultModel]> = BehaviorSubject(value: []) //API 결과값
     var searchInput: BehaviorSubject<String> = BehaviorSubject(value: "")   // view에서 검색단어 바인딩으로 받아옴
-    var pageCount = 1   //페이지 수
+    var pageCount = -1   //페이지 수
     
     // API 결과값 view로 전달
     func switchData(){
@@ -23,7 +23,6 @@ final class SearchPageViewModel {
     }
     
     func getAPIData(){
-        pageCount += 1  //페이지 개수 증가
         searchResult = BehaviorSubject(value: [])   // searchResult 초기화
         
         // 검색하는 단어 받아옴

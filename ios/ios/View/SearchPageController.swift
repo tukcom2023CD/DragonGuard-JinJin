@@ -180,6 +180,7 @@ extension SearchPageController: UISearchBarDelegate{
     // API 호출
     func callAPI(searchText: String?){
         searchViewModel.searchInput.onNext(searchText ?? "")
+        searchViewModel.pageCount += 1
         searchViewModel.getAPIData()
         
     }
@@ -225,6 +226,9 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         }
         
     }
+    
+    // cell 높이 설정
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return deviceHeight / 10 }
     
     // section 간격 설정
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {  return 1 }
