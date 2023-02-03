@@ -92,9 +92,11 @@ class MemberCommit(Resource):
         image = soup.find('img', attrs={ "class" : "avatar avatar-user width-full border color-bg-default"})['src']
         commit_num = int(h2.text.strip().split(' ')[0].rstrip())
         
-        producer.send('gitrank.to.backend.commit', value={ "name" : name, "commitNum" : commit_num, "githubId" : member, "profileImage" : image})
+        member = { "name" : name, "commitNum" : commit_num, "githubId" : member, "profileImage" : image}
+        
+        producer.send('gitrank.to.backend.commit', value=member)
 
-        return ('success', 200)
+        return (member, 200)
     
 @ns.route('/scrap/git-repos', methods=['GET'])
 class GitRepos(Resource):
@@ -132,6 +134,8 @@ class GitRepos(Resource):
                 i += 1
         
         chrome_driver.close()
+        response['gitRepo'] = name
+        producer.send('gitrank.to.backend.git-repos', value=response)
         
         return (response, 200) if response else ('No Content', 200)
         

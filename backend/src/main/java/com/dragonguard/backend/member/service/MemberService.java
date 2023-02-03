@@ -37,8 +37,7 @@ public class MemberService {
     @Transactional
     public void addMemberCommitAndUpdate(String githubId, String name, String profileImage) {
         List<Commit> commits = commitService.findCommits(githubId);
-        Member member = memberRepository.findMemberByGithubId(githubId)
-                .orElseThrow(EntityNotFoundException::new);
+        Member member = findMemberByGithubId(githubId);
         member.updateNameAndImage(name, profileImage);
         commits.forEach(member::addCommit);
         updateTier(member);
@@ -61,6 +60,11 @@ public class MemberService {
     public MemberResponse getMember(Long id) {
         Member member = getEntity(id);
         return memberMapper.toResponse(member, member.getCommitsSum());
+    }
+
+    public Member findMemberByGithubId(String githubId) {
+        return memberRepository.findMemberByGithubId(githubId)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     public List<Member> getMemberRanking(Pageable pageable) {
