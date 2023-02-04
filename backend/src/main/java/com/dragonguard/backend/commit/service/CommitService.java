@@ -25,7 +25,17 @@ public class CommitService {
     }
 
     public void saveCommit(CommitScrappingResponse commitScrappingResponse) {
-        commitRepository.save(commitMapper.toEntity(commitScrappingResponse));
+        List<Commit> commits
+                = commitRepository.findCommitsByGithubId(commitScrappingResponse.getGithubId());
+        Commit commit = commitMapper.toEntity(commitScrappingResponse);
+        if (commits.isEmpty()) {
+            commitRepository.save(commit);
+        } else {
+            commits.stream()
+                    .filter(c -> !c.equals(commit))
+                    .findFirst()
+                    .ifPresent(com -> commitRepository.save(com));
+        }
     }
 
     public void saveAllCommits(List<Commit> commits) {
