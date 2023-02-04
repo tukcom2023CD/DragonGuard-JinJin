@@ -23,7 +23,8 @@ ns = api.namespace('/', description='GitRank API')
 producer = KafkaProducer(acks=0,
             compression_type='gzip',
             bootstrap_servers=[KAFKA_BASE_URL],
-            value_serializer=lambda x: dumps(x).encode('utf-8')
+            value_serializer=lambda x: dumps(x).encode('utf-8'),
+            retries=1
           )
 
 chrome_options = webdriver.ChromeOptions()

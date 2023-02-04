@@ -27,14 +27,17 @@ public class GitRepoService {
 
     public List<GitRepoMemberResponse> findMembersByGitRepo(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
-        if (gitRepo.isPresent()) {
-            return gItRepoMemberRepository.findAllByGitRepo(gitRepo.get()).stream()
-                    .map(gitRepoMemberMapper::toResponse)
-                    .collect(Collectors.toList());
+        if (gitRepo.isEmpty()) {
+            gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
+            requestToScrapping(gitRepoRequest);
+            return List.of();
+        } else if (gitRepo.get().getGitRepoMember().isEmpty()) {
+            requestToScrapping(gitRepoRequest);
+            return List.of();
         }
-        gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
-        requestToScrapping(gitRepoRequest);
-        return List.of();
+        return gItRepoMemberRepository.findAllByGitRepo(gitRepo.get()).stream()
+                .map(gitRepoMemberMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     public GitRepo findGitRepoByName(String name) {

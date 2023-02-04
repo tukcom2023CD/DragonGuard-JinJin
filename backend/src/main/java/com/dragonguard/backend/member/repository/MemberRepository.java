@@ -16,4 +16,6 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberQue
 
     @Query(value = "UPDATE Member m SET m.tier = :tier WHERE m.id = :id")
     void updateTierById(Long id, Tier tier);
+
+    boolean existsByGithubId(String githubId);
 }

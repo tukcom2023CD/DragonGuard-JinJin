@@ -36,6 +36,10 @@ public class MemberService {
 
     public Member saveAndGetEntity(MemberRequest memberRequest) {
         getCommitByScrapping(memberRequest.getGithubId()); // TODO 이 라인 제외시킬지 논의 필요
+        if (memberRepository.existsByGithubId(memberRequest.getGithubId())) {
+            return memberRepository.findMemberByGithubId(memberRequest.getGithubId())
+                    .orElseThrow(EntityNotFoundException::new);
+        }
         return memberRepository
                 .save(memberMapper.toEntity(memberRequest));
     }
@@ -46,6 +50,9 @@ public class MemberService {
         List<Commit> commits = commitService.findCommits(githubId);
         Member member = findMemberByGithubId(githubId);
         member.updateNameAndImage(name, profileImage);
+        if (commits.isEmpty()) {
+            return;
+        }
         commits.forEach(member::addCommit);
         updateTier(member);
         commitService.saveAllCommits(commits);
@@ -71,7 +78,7 @@ public class MemberService {
 
     public Member findMemberByGithubId(String githubId) {
         return memberRepository.findMemberByGithubId(githubId)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseGet(() -> saveAndGetEntity(new MemberRequest(githubId)));
     }
 
     public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
