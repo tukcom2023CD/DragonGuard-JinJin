@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -27,5 +28,22 @@ public class Commit extends BaseTime {
         this.year = year;
         this.commitNum = commitNum;
         this.githubId = githubId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Commit commit = (Commit) o;
+        return year.equals(commit.year) && commitNum.equals(commit.commitNum) && githubId.equals(commit.githubId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(year, commitNum, githubId);
+    }
+
+    public boolean customEquals(Commit commit) {
+        return year.equals(commit.year) && githubId.equals(commit.githubId);
     }
 }

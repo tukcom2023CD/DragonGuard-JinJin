@@ -26,7 +26,7 @@ public class GitRepoMemberService {
 
     public void saveAllDto(List<GitRepoMemberResponse> gitRepoResponses, String gitRepo) {
         List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepository -> {
-            Member member = memberService.saveAndGetEntity(new MemberRequest(gitRepository.getMemberName()));
+            Member member = memberService.saveAndGetEntity(new MemberRequest(gitRepository.getGithubId()));
             GitRepo gitRepoEntity = gitRepoService.findGitRepoByName(gitRepo);
             return gitRepoMemberMapper.toEntity(gitRepository, member, gitRepoEntity);
         }).collect(Collectors.toList());

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoMemberResponse {
-    private String memberName;
+    private String githubId;
     private Integer commits;
     private Integer additions;
     private Integer deletions;

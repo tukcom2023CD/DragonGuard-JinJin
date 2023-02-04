@@ -3,7 +3,9 @@ package com.dragonguard.backend.member.service;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
+import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
+import com.dragonguard.backend.member.dto.response.QMemberRankResponse;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.mapper.MemberMapper;
@@ -33,7 +35,7 @@ public class MemberService {
     }
 
     public Member saveAndGetEntity(MemberRequest memberRequest) {
-        getCommitByScrapping(memberRequest.getGithubId());
+        getCommitByScrapping(memberRequest.getGithubId()); // TODO 이 라인 제외시킬지 논의 필요
         return memberRepository
                 .save(memberMapper.toEntity(memberRequest));
     }
@@ -72,7 +74,7 @@ public class MemberService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public List<Member> getMemberRanking(Pageable pageable) {
+    public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
         return memberRepository.findRanking(pageable);
     }
 

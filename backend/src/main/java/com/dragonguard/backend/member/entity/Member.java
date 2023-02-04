@@ -52,8 +52,10 @@ public class Member extends BaseTime {
     }
 
     public void addCommit(Commit commit) {
-        if(this.commits.contains(commit)){
+        if(this.commits.stream().anyMatch(commit::equals)){
             return;
+        } else if (this.commits.stream().anyMatch(commit::customEquals) {
+            commits.stream().filter(commit::customEquals).findFirst().ifPresent(commits::remove);
         }
         this.commits.add(commit);
     }
