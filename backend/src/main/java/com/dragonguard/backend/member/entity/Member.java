@@ -30,6 +30,8 @@ public class Member extends BaseTime {
     @JoinColumn(name = "member_id")
     private List<Commit> commits = new ArrayList<>();
 
+    private Integer commitsSum;
+
     @Enumerated(EnumType.STRING)
     private Tier tier;
 
@@ -50,19 +52,20 @@ public class Member extends BaseTime {
     }
 
     public void addCommit(Commit commit) {
-        if(this.commits.contains(commit)){
-            throw new CommitDuplicateException();
+        if (commit == null || this.commits.stream().anyMatch(commit::equals)) return;
+        else if (this.commits.stream().anyMatch(commit::customEquals)) {
+            this.commits.stream().filter(commit::customEquals).findFirst().ifPresent(this.commits::remove);
         }
         this.commits.add(commit);
     }
 
+    public Integer evaluateCommitsSum() {
+        this. commitsSum = this.commits.stream().mapToInt(Commit::getCommitNum).sum();
+        return commitsSum;
+    }
     public void updateNameAndImage(String name, String profileImage) {
         this.name = name;
         this.profileImage = profileImage;
-    }
-
-    public Integer getCommitsSum() {
-        return this.commits.stream().mapToInt(Commit::getCommitNum).sum();
     }
 
     public void updateTier(Tier tier) {

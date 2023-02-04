@@ -23,7 +23,8 @@ ns = api.namespace('/', description='GitRank API')
 producer = KafkaProducer(acks=0,
             compression_type='gzip',
             bootstrap_servers=[KAFKA_BASE_URL],
-            value_serializer=lambda x: dumps(x).encode('utf-8')
+            value_serializer=lambda x: dumps(x).encode('utf-8'),
+            retries=1
           )
 
 chrome_options = webdriver.ChromeOptions()
@@ -92,9 +93,11 @@ class MemberCommit(Resource):
         image = soup.find('img', attrs={ "class" : "avatar avatar-user width-full border color-bg-default"})['src']
         commit_num = int(h2.text.strip().split(' ')[0].rstrip())
         
-        producer.send('gitrank.to.backend.commit', value={ "name" : name, "commitNum" : commit_num, "githubId" : member, "profileImage" : image})
+        member = { "name" : name, "commitNum" : commit_num, "githubId" : member, "profileImage" : image}
+        
+        producer.send('gitrank.to.backend.commit', value=member)
 
-        return ('success', 200)
+        return (member, 200)
     
 @ns.route('/scrap/git-repos', methods=['GET'])
 class GitRepos(Resource):
@@ -123,7 +126,8 @@ class GitRepos(Resource):
                 deletion = chrome_driver.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-danger.text-normal')
                 response[member_name.get_attribute('innerText')] = { 'commits' : int(commits.get_attribute('innerText').split(' ')[0]), 
                                                                     'addition' : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
-                                                                    'deletion' : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', ''))}
+                                                                    'deletion' : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', '')),
+                                                                    'gitRepo' : name}
             except selenium.common.exceptions.NoSuchElementException as e:
                 if cnt == 3:
                     break
@@ -132,6 +136,7 @@ class GitRepos(Resource):
                 i += 1
         
         chrome_driver.close()
+        producer.send('gitrank.to.backend.git-repos', value=response)
         
         return (response, 200) if response else ('No Content', 200)
         
