@@ -6,6 +6,7 @@ import com.dragonguard.backend.gitrepomember.dto.GitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.gitrepomember.repository.GitRepoMemberRepository;
+import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +26,10 @@ public class GitRepoMemberService {
 
     public void saveAllDto(List<GitRepoMemberResponse> gitRepoResponses, String gitRepo) {
         List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepository -> {
-//            Member member = memberService.findMemberByGithubId(gitRepository.getMemberName());
-//            GitRepo gitRepoEntity = gitRepoService.findGitRepoByName(gitRepo);
-            return gitRepoMemberMapper.toEntity(gitRepository, null, null);
-        }).collect(Collectors.toList()); // TODO 깃 레포와 깃 레포 멤버 저장 (순서 조심)
+            Member member = memberService.saveAndGetEntity(new MemberRequest(gitRepository.getMemberName()));
+            GitRepo gitRepoEntity = gitRepoService.findGitRepoByName(gitRepo);
+            return gitRepoMemberMapper.toEntity(gitRepository, member, gitRepoEntity);
+        }).collect(Collectors.toList());
 
         gitRepoMemberRepository.saveAll(list);
     }

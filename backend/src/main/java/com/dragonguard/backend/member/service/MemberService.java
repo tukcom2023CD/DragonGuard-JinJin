@@ -29,10 +29,15 @@ public class MemberService {
     }
 
     public Long saveMember(MemberRequest memberRequest) {
+        return saveAndGetEntity(memberRequest).getId();
+    }
+
+    public Member saveAndGetEntity(MemberRequest memberRequest) {
         getCommitByScrapping(memberRequest.getGithubId());
         return memberRepository
-                .save(memberMapper.toEntity(memberRequest)).getId();
+                .save(memberMapper.toEntity(memberRequest));
     }
+
 
     @Transactional
     public void addMemberCommitAndUpdate(String githubId, String name, String profileImage) {
