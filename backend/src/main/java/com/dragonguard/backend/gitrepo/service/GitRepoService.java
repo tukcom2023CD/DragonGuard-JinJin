@@ -39,7 +39,7 @@ public class GitRepoService {
 
     public GitRepo findGitRepoByName(String name) {
         return gitRepoRepository.findByName(name)
-                .orElseGet(null);
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     private void requestToScrapping(GitRepoRequest gitRepoRequest) {

@@ -53,7 +53,7 @@ public class Member extends BaseTime {
 
     public void addCommit(Commit commit) {
         if(this.commits.contains(commit)){
-            throw new CommitDuplicateException();
+            return;
         }
         this.commits.add(commit);
     }
