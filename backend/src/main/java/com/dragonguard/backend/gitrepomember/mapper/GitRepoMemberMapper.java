@@ -21,7 +21,7 @@ public class GitRepoMemberMapper {
 
     public GitRepoMemberResponse toResponse(GitRepoMember gitRepoMember) {
         return GitRepoMemberResponse.builder()
-                .memberName(gitRepoMember.getMember().getName())
+                .memberName(gitRepoMember.getMember().getGithubId())
                 .additions(gitRepoMember.getAdditions())
                 .deletions(gitRepoMember.getDeletions())
                 .commits(gitRepoMember.getCommits())
