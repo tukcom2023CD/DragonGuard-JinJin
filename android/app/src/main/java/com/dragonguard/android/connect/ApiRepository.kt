@@ -17,14 +17,15 @@ class ApiRepository {
         .writeTimeout(15, TimeUnit.SECONDS)
         .build()
 
+    private val retrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
 
     fun searchApi(name: String, count: Int): ArrayList<Result> {
-        val searchRetrofit = Retrofit.Builder().baseUrl(BuildConfig.server)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
         var repoNames : ArrayList<Result> = arrayListOf<Result>()
-        val api = searchRetrofit.create(GitRankAPI::class.java)
+        val api = retrofit.create(GitRankAPI::class.java)
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
         queryMap.put("name",name)
@@ -37,7 +38,7 @@ class ApiRepository {
         try{
             val result = repoName.execute()
             if(result.isSuccessful){
-                repoNames = result.body()!!.result as ArrayList<Result>
+                repoNames = result.body()!!
             }
         }catch (e : SocketTimeoutException){
             return repoNames
@@ -46,12 +47,7 @@ class ApiRepository {
     }
 
     fun getTier(id: Int): String {
-        val tierRetrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val api = tierRetrofit.create(GitRankAPI::class.java)
+        val api = retrofit.create(GitRankAPI::class.java)
         val tier = api.getUserTier(id)
         var tierResult = ""
         try{
@@ -66,20 +62,10 @@ class ApiRepository {
     }
 
     fun getUserCommits(id: Int) {
-        val tierRetrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val api = tierRetrofit.create(GitRankAPI::class.java)
+        val api = retrofit.create(GitRankAPI::class.java)
     }
 
     fun getUserRankings(id: Int) {
-        val tierRetrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val api = tierRetrofit.create(GitRankAPI::class.java)
+        val api = retrofit.create(GitRankAPI::class.java)
     }
 }

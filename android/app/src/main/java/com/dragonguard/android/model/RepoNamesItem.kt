@@ -1,8 +1,6 @@
 package com.dragonguard.android.model
 
-import java.io.Serializable
-
-data class Result(
+data class RepoNamesItem(
     val id: String,
     val name: String
-):Serializable
+)
