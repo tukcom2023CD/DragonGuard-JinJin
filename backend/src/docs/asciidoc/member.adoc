@@ -22,10 +22,16 @@
 ==== HTTP request
 // include::../../../build/generated-snippets/get member tier/http-request.adoc[]
 ==== HTTP response
-// include::../../../build/generated-snippets/get member tier/http-response.adoc[]
+// in/clude::../../../build/generated-snippets/get member tier/http-response.adoc[]
 
 === 멤버 커밋 내역 업데이트
 ==== HTTP request
 // include::../../../build/generated-snippets/update member commits/http-request.adoc[]
 ==== HTTP response
 // include::../../../build/generated-snippets/update member commits/http-response.adoc[]
+
+=== 멤버 전체 랭킹 조회
+==== HTTP request
+// include::../../../build/generated-snippets/get member ranking/http-request.adoc[]
+==== HTTP response
+// include::../../../build/generated-snippets/get member ranking/http-response.adoc[]
