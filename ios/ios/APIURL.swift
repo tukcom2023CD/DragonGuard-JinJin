@@ -72,7 +72,7 @@ final class APIURL{
     }
     
     static func testUrl(ip: String, page:Int, searchWord: String) -> String {
-        let url = "http://\(ip)/scrap/search?page=\(page)&name=\(searchWord)&type=repositories"
+        let url = "http://\(ip)/api/search?page=\(page)&name=\(searchWord)&type=repositories"
         return url
     }
     

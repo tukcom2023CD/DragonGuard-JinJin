@@ -8,8 +8,11 @@
 import Foundation
 
 class SearchPageResultModel {
+    var id: String
     var name: String
-    init(name: String) {
+    
+    init(name: String,id: String) {
+        self.id = id
         self.name = name
     }
 }

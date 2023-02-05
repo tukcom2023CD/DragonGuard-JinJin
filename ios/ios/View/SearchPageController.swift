@@ -77,10 +77,10 @@ final class SearchPageController: UIViewController {
     }
     
     @objc func refreshing(refresh: UIRefreshControl){
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
-            self.resultTableView.reloadData()
-            refresh.endRefreshing()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now()) {
+//            self.resultTableView.reloadData()
+//            refresh.endRefreshing()
+//        }
     }
     
     @objc func timer(){
@@ -169,11 +169,10 @@ extension SearchPageController: UISearchBarDelegate{
         guard let searchText = searchUI.text else{ return }
         self.searchText = searchText
         
+        searchViewModel.pageCount = 0
         callAPI(searchText: searchText)
         resultTableView.reloadData()
         
-        callAPI(searchText: searchText)
-        resultTableView.reloadData()
         searchResultAutoThread()    // API 감지 스레드
     }
     
@@ -220,8 +219,8 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
             if !fetchingMore {
                 
                 fetchingMore = true
-                callAPI(searchText: self.searchText)
-                searchResultAutoThread()    // API 감지 스레드
+//                callAPI(searchText: self.searchText)
+//                searchResultAutoThread()    // API 감지 스레드
             }
         }
         
