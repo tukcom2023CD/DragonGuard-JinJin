@@ -25,6 +25,12 @@ final class AllRankingController: UIViewController{
         
         addUItoView()
         settingAutoLayout()
+        
+        // 테스트를 위한 코드
+        for i in 1...10{
+            resultData.append(UserInfoModel(id: 10-i, name: "a", githubId: "a\(i)", commits: i, tier: "Gold"))
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -100,6 +106,9 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier, for: indexPath) as? WatchRankingTableView ?? WatchRankingTableView()
         
         cell.prepare(text: self.resultData[indexPath.section].githubId)
+        cell.layer.cornerRadius = 15
+        cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+        cell.layer.borderWidth = 1
         
         return cell
     }
@@ -109,6 +118,8 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
         print("selected \(indexPath.section)")
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
     
     // section 간격 설정
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {  return 1 }
