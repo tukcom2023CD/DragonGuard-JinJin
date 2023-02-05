@@ -37,6 +37,9 @@
 		3B9756F4298A639000F27094 /* WatchRankingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F3298A639000F27094 /* WatchRankingModel.swift */; };
 		3B9756F6298A63F600F27094 /* SearchPageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F5298A63F600F27094 /* SearchPageModel.swift */; };
 		3B9756F9298A775900F27094 /* APIURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F8298A775900F27094 /* APIURL.swift */; };
+		3B9CF3D2298F997B00495D35 /* UserInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9CF3D1298F997B00495D35 /* UserInfoModel.swift */; };
+		3B9CF3D4298F9B8C00495D35 /* UserInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9CF3D3298F9B8C00495D35 /* UserInfoService.swift */; };
+		3B9CF3D6298FB5A700495D35 /* UserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9CF3D5298FB5A700495D35 /* UserInfoViewModel.swift */; };
 		3BA0EEE62979A16700B9E952 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 3BA0EEE52979A16700B9E952 /* Charts */; };
 		3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD21298129B8008C05B2 /* SearchPageController.swift */; };
 		3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */; };
@@ -98,6 +101,9 @@
 		3B9756F3298A639000F27094 /* WatchRankingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingModel.swift; sourceTree = "<group>"; };
 		3B9756F5298A63F600F27094 /* SearchPageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageModel.swift; sourceTree = "<group>"; };
 		3B9756F8298A775900F27094 /* APIURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIURL.swift; sourceTree = "<group>"; };
+		3B9CF3D1298F997B00495D35 /* UserInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoModel.swift; sourceTree = "<group>"; };
+		3B9CF3D3298F9B8C00495D35 /* UserInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoService.swift; sourceTree = "<group>"; };
+		3B9CF3D5298FB5A700495D35 /* UserInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewModel.swift; sourceTree = "<group>"; };
 		3BD6DD21298129B8008C05B2 /* SearchPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageController.swift; sourceTree = "<group>"; };
 		3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageTableView.swift; sourceTree = "<group>"; };
 		3BE3F7CF297060DC0005B640 /* iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -257,6 +263,7 @@
 			children = (
 				3B848F6B29826B24001DFE9F /* testViewModel.swift */,
 				A30BA46C298415B8008B594E /* SearchPageViewModel.swift */,
+				3B9CF3D5298FB5A700495D35 /* UserInfoViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -268,6 +275,7 @@
 				3B9756F5298A63F600F27094 /* SearchPageModel.swift */,
 				A3FA74ED298AAE8F00348D7D /* SearchPageDecodingModel.swift */,
 				A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */,
+				3B9CF3D1298F997B00495D35 /* UserInfoModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -293,6 +301,7 @@
 			isa = PBXGroup;
 			children = (
 				A30BA46F29841C97008B594E /* SearchPageService.swift */,
+				3B9CF3D3298F9B8C00495D35 /* UserInfoService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -455,6 +464,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B9CF3D2298F997B00495D35 /* UserInfoModel.swift in Sources */,
 				A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */,
 				A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */,
 				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
@@ -470,6 +480,8 @@
 				3B00229F29879F7D003FA5CC /* SettingTableView.swift in Sources */,
 				3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */,
 				3B1DB87C2963428A00308F43 /* MainController.swift in Sources */,
+				3B9CF3D6298FB5A700495D35 /* UserInfoViewModel.swift in Sources */,
+				3B9CF3D4298F9B8C00495D35 /* UserInfoService.swift in Sources */,
 				3B9756E8298A166300F27094 /* UnivInRankingController.swift in Sources */,
 				3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */,
 				3B9756ED298A16FF00F27094 /* AllRepositoryRankingController.swift in Sources */,

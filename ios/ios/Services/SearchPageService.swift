@@ -7,19 +7,15 @@
 
 import Foundation
 import Alamofire
-import SwiftyJSON
-import RxCocoa
-import RxSwift
 
 class SearchPageService {
-    
-    var ip = ""
+    let ip = APIURL.ip
     var resultArray = [SearchPageResultModel]() // 결과 저장할 변수
     
     
-    func getPage(searchWord: String,page: Int) {
+    func getSearchResult(searchWord: String,page: Int) {
         resultArray = []
-        let url = APIURL().testUrl(ip: ip, page: page, searchWord: searchWord)
+        let url = APIURL.testUrl(ip: ip, page: page, searchWord: searchWord)
         
         DispatchQueue.global().async {
             AF.request(url)
