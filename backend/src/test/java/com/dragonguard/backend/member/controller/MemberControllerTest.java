@@ -137,7 +137,7 @@ class MemberControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/members/ranking")
+                        get("/api/members/ranking?page=0&size=20&sort=commits,DESC")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then

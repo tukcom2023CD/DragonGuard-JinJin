@@ -22,7 +22,7 @@
 ==== HTTP request
 // include::../../../build/generated-snippets/get member tier/http-request.adoc[]
 ==== HTTP response
-// in/clude::../../../build/generated-snippets/get member tier/http-response.adoc[]
+// include::../../../build/generated-snippets/get member tier/http-response.adoc[]
 
 === 멤버 커밋 내역 업데이트
 ==== HTTP request
