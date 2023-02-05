@@ -1,17 +1,16 @@
 from flask import Flask, request
 from flask_restx import Resource, Api
 from flask_cors import CORS
-from kafka import KafkaProducer 
-from json import dumps
-from base_url import KAFKA_BASE_URL
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
-from time import sleep
+from selenium import webdriver
+from firefox_config import DRIVER, FIREFOX_OPTS
+from kafka_config import producer
 import requests, selenium
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
@@ -19,23 +18,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 api = Api(app)
 
 ns = api.namespace('/', description='GitRank API')
-
-producer = KafkaProducer(acks=0,
-            compression_type='gzip',
-            bootstrap_servers=[KAFKA_BASE_URL],
-            value_serializer=lambda x: dumps(x).encode('utf-8'),
-            retries=1
-          )
-
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--headless')
-chrome_options.add_argument('--no-sandbox')
-chrome_options.add_argument("--single-process")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("disable-gpu")
-chrome_driver = webdriver.Chrome('/usr/src/chrome/chromedriver', options=chrome_options)
-chrome_driver.get('https://github.com')
-chrome_driver.close()
+DRIVER.get('https://github.com')
 
 @ns.route('/scrap/search', methods=['GET'])
 class Search(Resource):
@@ -107,35 +90,35 @@ class GitRepos(Resource):
         name = request.args.get('name')
         year = request.args.get('year')
         
-        chrome_driver = webdriver.Chrome(options=chrome_options)
-        
-        chrome_driver.get('https://github.com/' + name + '/graphs/contributors?from=2022-01-01&to=' + year + '-12-31&type=c')
+        DRIVER = webdriver.Firefox(options=FIREFOX_OPTS)
+        DRIVER.get('https://github.com/' + name + '/graphs/contributors?from=2023-01-01&to=' + year + '-12-31&type=c')
         
         try:
-            WebDriverWait(chrome_driver, 7.5).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '#contributors > ol')))
+            WebDriverWait(DRIVER, 7.5).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '#contributors > ol')))
         except selenium.common.exceptions.TimeoutException as e:
             print('Error Occured')
         
         response = {}
         i, cnt = 1, 1
+        
         while True:
             try:
-                commits = chrome_driver.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > a')
-                member_name = chrome_driver.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > a.text-normal')
-                addition = chrome_driver.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-success.text-normal')
-                deletion = chrome_driver.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-danger.text-normal')
+                commits = DRIVER.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > a')
+                member_name = DRIVER.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > a.text-normal')
+                addition = DRIVER.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-success.text-normal')
+                deletion = DRIVER.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-danger.text-normal')
                 response[member_name.get_attribute('innerText')] = { 'commits' : int(commits.get_attribute('innerText').split(' ')[0]), 
                                                                     'addition' : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
                                                                     'deletion' : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', '')),
                                                                     'gitRepo' : name}
             except selenium.common.exceptions.NoSuchElementException as e:
-                if cnt == 3:
+                if cnt == 2:
                     break
                 cnt += 1
             finally:
                 i += 1
-        
-        chrome_driver.close()
+                
+        DRIVER.close()
         producer.send('gitrank.to.backend.git-repos', value=response)
         
         return (response, 200) if response else ('No Content', 200)

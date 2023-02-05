@@ -42,30 +42,50 @@ services:
     tty: true
 
   zookeeper:
-    image: wurstmeister/zookeeper
+    image: confluentinc/cp-zookeeper
     container_name: zookeeper
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
     ports:
       - 2181:2181
     networks:
      - app-tier
   
   kafka:
-    image: wurstmeister/kafka
+    image: confluentinc/cp-kafka
     ports:
       - 9092:9092
     container_name: kafka
     restart: on-failure
     environment:
-      - KAFKA_ADVERTISED_HOST_NAME=kafka
-      - KAFKA_ADVERTISED_PORT=9092
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CREATE_TOPICS=dresses:1:1,ratings:1:1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: dresses:1:1,ratings:1:1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - zookeeper
     networks:
       - app-tier
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    ports:
+      - 9000:9000
+    container_name: kafdrop
+    restart: on-failure
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9092
+      JVM_OPTS: "-Xms32M -Xmx64M"
+      SERVER_SERVLET_CONTEXTPATH: /
+    depends_on:
+      - kafka
+    networks:
+      - app-tier
+    tty: true
   
   scrapping:
     build:

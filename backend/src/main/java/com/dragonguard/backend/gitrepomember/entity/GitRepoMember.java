@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -37,5 +38,22 @@ public class GitRepoMember extends BaseTime {
         this.commits = commits;
         this.additions = additions;
         this.deletions = deletions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GitRepoMember that = (GitRepoMember) o;
+        return Objects.equals(gitRepo, that.gitRepo)
+                && Objects.equals(member, that.member)
+                && Objects.equals(commits, that.commits)
+                && Objects.equals(additions, that.additions)
+                && Objects.equals(deletions, that.deletions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gitRepo, member, commits, additions, deletions);
     }
 }

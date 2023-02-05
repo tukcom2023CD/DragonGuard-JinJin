@@ -34,7 +34,7 @@ public class CommitService {
             commits.stream()
                     .filter(c -> !c.equals(commit))
                     .findFirst()
-                    .ifPresent(com -> commitRepository.save(com));
+                    .ifPresent(commitRepository::save);
         }
     }
 

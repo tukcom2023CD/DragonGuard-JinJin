@@ -28,9 +28,19 @@ public class GitRepoMemberService {
         List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepository -> {
             Member member = memberService.saveAndGetEntity(new MemberRequest(gitRepository.getGithubId()));
             GitRepo gitRepoEntity = gitRepoService.findGitRepoByName(gitRepo);
-            return gitRepoMemberMapper.toEntity(gitRepository, member, gitRepoEntity);
+            GitRepoMember gitRepoMember = gitRepoMemberMapper.toEntity(gitRepository, member, gitRepoEntity);
+            List<GitRepoMember> duplicated =
+                    gitRepoMemberRepository.findAllByGitRepo(gitRepoEntity).stream()
+                            .filter(gitRepoMember::equals)
+                            .collect(Collectors.toList());
+            if (duplicated.isEmpty()) return gitRepoMember;
+            return null;
         }).collect(Collectors.toList());
 
-        gitRepoMemberRepository.saveAll(list);
+        list.stream().forEach(m -> {
+            if (m != null) {
+                gitRepoMemberRepository.saveAll(list);
+            }
+        });
     }
 }
