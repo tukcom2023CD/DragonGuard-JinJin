@@ -7,25 +7,29 @@
 
 import Foundation
 import UIKit
-import RxDataSources
 import RxCocoa
 import RxSwift
 
+// 전체 랭킹 
 final class AllRankingController: UIViewController{
     
     let disposeBag = DisposeBag()
+    let userInfoViewModel = UserInfoViewModel()
+    var resultData = [UserInfoModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        
-        
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "전체 랭킹"
         
         addUItoView()
         settingAutoLayout()
-        setTableViewDataSource()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.userInfoViewModel.userInfoIntoObeservable()
+        getData()
     }
     
     /*
@@ -48,11 +52,22 @@ final class AllRankingController: UIViewController{
         self.view.addSubview(repoTableView)   //tableview 적용
         
         // 결과 출력하는 테이블 뷰 적용
-        // datasource는 reactive 적용
+        self.repoTableView.dataSource = self
         self.repoTableView.delegate = self
         
         // tableview 설치
         self.repoTableView.register(WatchRankingTableView.self, forCellReuseIdentifier: WatchRankingTableView.identifier)
+    }
+    
+    func getData(){
+        
+        userInfoViewModel.allRankingobservable
+            .subscribe(onNext: {
+                for data in $0{
+                    self.resultData.append(data)
+                }
+            })
+            .disposed(by: disposeBag)
         
     }
     
@@ -73,38 +88,22 @@ final class AllRankingController: UIViewController{
         
     }
     
-    func setTableViewDataSource() {
-        
-        let dataSource = RxTableViewSectionedAnimatedDataSource<rankingModel> { _, tableview, indexPath, item in
-            let cell = tableview.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier,for: indexPath) as? WatchRankingTableView ?? WatchRankingTableView()
-            cell.prepare(text: item)
-            cell.layer.cornerRadius = 15
-            cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
-            cell.layer.borderWidth = 1
-            return cell
-        } titleForHeaderInSection: { dataSource, sectionIndex in
-            return dataSource[sectionIndex].header
-        }
-        
-        // 데이터 테스트
-        let sections = [
-            rankingModel(header: " ", items: ["1"]),
-            rankingModel(header: " ", items: ["2"]),
-            rankingModel(header: " ", items: ["3"]),
-            rankingModel(header: " ", items: ["4"])
-        ]
-        
-        // 데이터 삽입
-        Observable.just(sections)
-            .bind(to: repoTableView.rx.items(dataSource: dataSource))
-            .disposed(by: disposeBag)
-       
-   }
+
     
 }
 
 
-extension AllRankingController: UITableViewDelegate {
+extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier, for: indexPath) as? WatchRankingTableView ?? WatchRankingTableView()
+        
+        cell.prepare(text: self.resultData[indexPath.section].githubId)
+        
+        return cell
+    }
+    
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected \(indexPath.section)")
@@ -114,6 +113,11 @@ extension AllRankingController: UITableViewDelegate {
     // section 간격 설정
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {  return 1 }
     
+    // section 내부 cell 개수
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
+    
+    // section 개수
+    func numberOfSections(in tableView: UITableView) -> Int { return self.resultData.count }
 }
 
 

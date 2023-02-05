@@ -31,7 +31,7 @@ final class SearchPageViewModel {
         }).disposed(by: disposeBag)
         
         // 검색하는 단어, 페이지 이름 전달
-        self.searchPageService.getPage(searchWord: searchWord,page: pageCount)
+        self.searchPageService.getSearchResult(searchWord: searchWord,page: pageCount)
     }
     
     
