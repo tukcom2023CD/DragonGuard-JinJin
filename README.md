@@ -15,6 +15,10 @@
 ## 협업 툴
 <a href="https://seoullian.atlassian.net/jira/software/projects/DJ/boards/2/backlog" target="_blank"> Jira URL</a>
 
+## API 명세
+<a href="https://ohksj77.github.io/DragonGuard-JinJin-API-Docs/">Backend API Docs</a>
+<br>
+<a href="https://github.com/tukcom2023CD/DragonGuard-JinJin/wiki/System#api-%EB%AA%85%EC%84%B8">Scrapping API</a>
 
 ## 멤버 소개
 
