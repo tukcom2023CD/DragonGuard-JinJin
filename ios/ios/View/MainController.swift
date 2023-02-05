@@ -7,10 +7,13 @@
 
 import UIKit
 import SnapKit
+import SwiftUI
 
 
 final class MainController: UIViewController {
-
+    
+    
+    let indexBtns = ["내 티어 : 루비/n내 토큰 : 28.7T", "전체 사용자 랭킹", "대학교 내부 랭킹", "전국 대학교 랭킹", "랭킹 보러가기", "Repository 비교하기"]
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
     
@@ -28,14 +31,14 @@ final class MainController: UIViewController {
         // UI AutoLayout 적용
         settingAutoLayout()
         
-//        // 폰트 체크 하기
-//        UIFont.familyNames.sorted().forEach { familyName in
-//            print("*** \(familyName) ***")
-//            UIFont.fontNames(forFamilyName: familyName).forEach { fontName in
-//                print("\(fontName)")
-//            }
-//            print("---------------------")
-//        }
+        //        // 폰트 체크 하기
+        //        UIFont.familyNames.sorted().forEach { familyName in
+        //            print("*** \(familyName) ***")
+        //            UIFont.fontNames(forFamilyName: familyName).forEach { fontName in
+        //                print("\(fontName)")
+        //            }
+        //            print("---------------------")
+        //        }
         
     }
     
@@ -46,6 +49,14 @@ final class MainController: UIViewController {
     /*
      UI 코드 작성
      */
+    
+    // 버튼들 나열할 collectionView
+    lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .white
+        return cv
+    }()
     
     // 검색 버튼 UI
     lazy var searchUI: UIButton = {
@@ -80,7 +91,12 @@ final class MainController: UIViewController {
     /*
      UI Action 작성
      */
-    
+    // collectionView 설정
+    private func configureCollectionView(){
+        collectionView.register(MainCollectionView.self, forCellWithReuseIdentifier: MainCollectionView.identifier)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+    }
     
     // 검색 버튼 누르는 경우 네비게이션 뷰 방식으로 이동
     @objc func searchUIClicked(){
@@ -103,6 +119,7 @@ final class MainController: UIViewController {
      */
     
     private func addUItoView(){
+        self.view.addSubview(collectionView)
         self.view.addSubview(searchUI)
         self.view.addSubview(settingUI)
         self.view.addSubview(watchRanking)
@@ -136,7 +153,7 @@ final class MainController: UIViewController {
         })
         
     }
-
+    
 }
 
 extension UIImage {
@@ -144,7 +161,7 @@ extension UIImage {
     func resize(newWidth: CGFloat) -> UIImage {
         let scale = newWidth / self.size.width
         let newHeight = self.size.height * scale
-
+        
         let size = CGSize(width: newWidth, height: newHeight)
         let render = UIGraphicsImageRenderer(size: size)
         let renderImage = render.image { context in
@@ -154,16 +171,38 @@ extension UIImage {
     }
 }
 
+// CollectionView DataSouce, Delegate 설정
+extension MainController: UICollectionViewDataSource, UICollectionViewDelegate{
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionView.identifier, for: indexPath) as? MainCollectionView ?? MainCollectionView()
+        
+        cell.customLabel.text = indexBtns[indexPath.row]
+        
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    // cell 선택되었을 때
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+    }
+    
+    
+}
 
 
 
 
 /*
-    SwiftUI preview 사용하는 코드
+ SwiftUI preview 사용하는 코드
  
-    preview 실행이 안되는 경우 단축키
-    Command + Option + Enter : preview 그리는 캠버스 띄우기
-    Command + Option + p : preview 재실행
+ preview 실행이 안되는 경우 단축키
+ Command + Option + Enter : preview 그리는 캠버스 띄우기
+ Command + Option + p : preview 재실행
  */
 
 import SwiftUI
@@ -171,19 +210,19 @@ import SwiftUI
 #if DEBUG
 extension UIViewController {
     private struct Preview: UIViewControllerRepresentable {
-            let viewController: UIViewController
-
-            func makeUIViewController(context: Context) -> UIViewController {
-                return viewController
-            }
-
-            func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-            }
+        let viewController: UIViewController
+        
+        func makeUIViewController(context: Context) -> UIViewController {
+            return viewController
         }
-
-        func toPreview() -> some View {
-            Preview(viewController: self)
+        
+        func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
         }
+    }
+    
+    func toPreview() -> some View {
+        Preview(viewController: self)
+    }
 }
 #endif
 
@@ -194,3 +233,4 @@ struct VCPreViewMain:PreviewProvider {
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
+

@@ -117,7 +117,6 @@ extension MyRepositoryRankingController: UITableViewDelegate {
 
 
 
-
 /*
  SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
  
@@ -130,7 +129,7 @@ import SwiftUI
 
 struct VCPreViewRepoRanking:PreviewProvider {
     static var previews: some View {
-        MyRepositoryRankingController().toPreview().previewDevice("iPhone 14 pro")
+        MyOraganizationListController().toPreview().previewDevice("iPhone 14 pro")
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
