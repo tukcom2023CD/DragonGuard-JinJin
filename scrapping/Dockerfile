@@ -1,9 +1,6 @@
 FROM --platform=linux/amd64 python:3.8
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV DEBIAN_FRONTEND noninteractive
-ENV GECKODRIVER_VER v0.29.0
-ENV FIREFOX_VER 87.0
 
 RUN apt-get update && apt-get install firefox-esr -y
 
