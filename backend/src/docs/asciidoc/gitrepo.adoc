@@ -1,0 +1,12 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Github Repository
+=== 레포 구성원 기여정도 조회
+==== HTTP request
+// include::../../../build/generated-snippets/get git-repo contributors/http-request.adoc[]
+==== HTTP response
+// include::../../../build/generated-snippets/get git-repo contributors/http-response.adoc[]
