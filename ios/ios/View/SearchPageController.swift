@@ -86,7 +86,7 @@ final class SearchPageController: UIViewController {
     
     // 검색 결과 데이터 자동 쓰레드
     private func searchResultAutoThread(){
-        timerThread = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: { timer in
+        timerThread = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
             self.searchViewModel.switchData()
             self.searchViewModel.searchResult
                 .observe(on: MainScheduler.instance)
@@ -102,7 +102,7 @@ final class SearchPageController: UIViewController {
             self.resultTableView.reloadData()
             self.fetchingMore = false
             
-            if self.resultData.count % 10 == 0 && self.resultData.count != 0{
+            if self.resultData.count > 0 {
                 timer.invalidate()
             }
         })
@@ -223,7 +223,6 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         
         if position > (resultTableView.contentSize.height - scrollView.frame.size.height){
             if !fetchingMore && startSearch{
-                print("called")
                 fetchingMore = true
                 callAPI(searchText: self.searchText)
                 searchResultAutoThread()    // API 감지 스레드

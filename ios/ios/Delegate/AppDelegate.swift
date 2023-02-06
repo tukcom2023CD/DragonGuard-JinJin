@@ -13,11 +13,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool { return true }
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        print("UserInfoSerivce not started now..")
-        print("Go to AppDelegate.swift")
-        
         
         UserInfoService.sharedData.getMemberInfo(page: 0, size: 20)
+        
         return true
     }
     

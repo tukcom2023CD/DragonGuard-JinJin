@@ -17,7 +17,8 @@ final class AllRankingController: UIViewController{
     let disposeBag = DisposeBag()
     let userInfoViewModel = UserInfoViewModel()
     var resultData = [UserInfoModel]()
-    var fetchingMore = false    //
+    var fetchingMore = false
+    var checkData = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,16 +29,11 @@ final class AllRankingController: UIViewController{
         addUItoView()
         settingAutoLayout()
         
-//        // 테스트를 위한 코드
-//        for i in 1...10{
-//            resultData.append(UserInfoModel(id: 10-i, name: "a", githubId: "a\(i)", commits: i, tier: "Gold"))
-//        }
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.userInfoViewModel.userInfoIntoObeservable()
-        getData()
+        self.getData()
     }
     
     /*
@@ -69,14 +65,26 @@ final class AllRankingController: UIViewController{
     
     func getData(){
         
-        userInfoViewModel.allRankingobservable
-            .subscribe(onNext: {
-                for data in $0{
-                    self.resultData.append(data)
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+                self.userInfoViewModel.allRankingobservable
+                    .observe(on: MainScheduler.instance)
+                    .subscribe(onNext: {
+                        for data in $0{
+                            self.resultData.append(data)
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
+                
+                self.repoTableView.reloadData()
+                self.fetchingMore = false
+                self.checkData = true
+                if self.resultData.count > 0{
+                    timer.invalidate()
+                    
                 }
             })
-            .disposed(by: disposeBag)
         
+       
     }
     
     /*
@@ -125,10 +133,10 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
         let position = scrollView.contentOffset.y
         
         if position > (repoTableView.contentSize.height - scrollView.frame.size.height){
-            if !fetchingMore {
-                print("called")
+            if !fetchingMore && checkData{
                 fetchingMore = true
-                
+                self.userInfoViewModel.getDataRanking()
+                self.getData()
             }
         }
     }
