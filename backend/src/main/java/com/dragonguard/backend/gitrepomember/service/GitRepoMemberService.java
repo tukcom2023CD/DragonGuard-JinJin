@@ -37,10 +37,7 @@ public class GitRepoMemberService {
             return null;
         }).collect(Collectors.toList());
 
-        list.stream().forEach(m -> {
-            if (m != null) {
-                gitRepoMemberRepository.saveAll(list);
-            }
-        });
+        List<GitRepoMember> noneDuplicatedList = list.stream().filter(m -> m != null).collect(Collectors.toList());
+        gitRepoMemberRepository.saveAll(noneDuplicatedList);
     }
 }
