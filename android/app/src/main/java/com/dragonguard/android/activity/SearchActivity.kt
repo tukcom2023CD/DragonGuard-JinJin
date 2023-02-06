@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.model.Result
+import com.dragonguard.android.model.RepoSearchResultModel
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
 import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
@@ -24,7 +24,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     lateinit var repositoryProfileAdapter: RepositoryProfileAdapter
     private var position = 0
-    private var repoNames = ArrayList<Result>()
+    private var repoNames = ArrayList<RepoSearchResultModel>()
     private var count = 0
     private var changed = true
     private var lastSearch = ""
@@ -162,8 +162,8 @@ class SearchActivity : AppCompatActivity() {
 
     //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
-        binding.loading.visibility = View.VISIBLE
-        var result = arrayListOf<Result>()
+        binding.progressBar.visibility = View.VISIBLE
+        var result = arrayListOf<RepoSearchResultModel>()
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             var resultDeferred = coroutine.async(Dispatchers.IO) {
@@ -182,7 +182,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     //    api 호출결과 판별 및 출력
-    private fun checkSearchResult(searchResult: ArrayList<Result>): Boolean {
+    private fun checkSearchResult(searchResult: ArrayList<RepoSearchResultModel>): Boolean {
         return when(searchResult.isNullOrEmpty()){
             true ->{
                 false
@@ -215,14 +215,14 @@ class SearchActivity : AppCompatActivity() {
         count++
         Log.d("api 횟수", "$count 페이지 검색")
         initScrollListener()
-        binding.loading.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
     }
 
 
     //    데이터 더 받아오는 함수 loadMorePosts() 구현
     private fun loadMorePosts() {
-        if (binding.loading.visibility == View.GONE && count != 0) {
-            binding.loading.visibility = View.VISIBLE
+        if (binding.progressBar.visibility == View.GONE && count != 0) {
+            binding.progressBar.visibility = View.VISIBLE
             changed = true
             CoroutineScope(Dispatchers.Main).launch {
                 Log.d("api 시도", "callSearchApi 실행  load more")
