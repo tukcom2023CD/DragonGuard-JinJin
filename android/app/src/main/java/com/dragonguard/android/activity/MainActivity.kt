@@ -1,6 +1,8 @@
 package com.dragonguard.android.activity
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -12,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.model.RegisterGithubIdModel
+import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,23 +22,31 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        lateinit var prefs: IdPreference
+    }
     private lateinit var binding: ActivityMainBinding
     private var viewmodel = MainViewModel()
     private var backPressed : Long = 0
     private var id = 0
-
     //    var count = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
+        prefs = IdPreference(applicationContext)
+        id = prefs.getId("id", 0)
+        if(id == 0){
+            registerUser("posite")
+        } else {
+            searchUser(id)
+        }
 
-        registerUser("posite")
+
 
         //로그인 화면으로 넘어가기
         val intent = Intent(applicationContext, LoginActivity::class.java)
         startActivity(intent)
-
 
 //        랭킹 보러가기 버튼 눌렀을 때 랭킹 화면으로 전환
         binding.lookRanking.setOnClickListener {
@@ -69,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.postRegister(body)
             }
             id = resultDeferred.await()
+            prefs.setId("id", id)
             searchUser(id)
         }
 
