@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.MINUTES)
-        .readTimeout(50, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
         .build()
 
