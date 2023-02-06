@@ -12,7 +12,7 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL() 
-    static var ip = ""
+    static var ip = "192.168.0.14"
     
     private init(){}
     
@@ -67,7 +67,7 @@ final class APIURL{
     }
     
     static func getUserInfo(page: Int, size: Int?) -> String{
-        let url = "http://localhost/api/members/ranking?page=\(page)&size=\(size ?? 10)&sort=commits,DESC"
+        let url = "http://localhost/api/members/ranking?page=\(page)&size=\(size ?? 10)&sort=commits"
         return url
     }
     

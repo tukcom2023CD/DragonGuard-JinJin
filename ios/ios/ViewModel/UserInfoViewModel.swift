@@ -22,6 +22,7 @@ final class UserInfoViewModel{
     }
     
     func userInfoIntoObeservable(){
+        print("sorted Array: \(sortedDoneUserArray)")
         guard let sortedDoneUserArray = sortedDoneUserArray else { return }
         allRankingobservable.onNext(sortedDoneUserArray)
     }

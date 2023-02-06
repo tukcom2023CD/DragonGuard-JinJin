@@ -24,6 +24,7 @@ final class SearchPageController: UIViewController {
     var timerThread: Timer?     //일정 시간동안 API 호출되는 응답 감시하는 타이머
     var searchText = ""         //검색하는 단어
     var fetchingMore = false    // 무한 스크롤 감지
+    var startSearch = false
     var sectionCount = 0        // 결과물 개수 저장
     
     override func viewDidLoad() {
@@ -83,26 +84,30 @@ final class SearchPageController: UIViewController {
 //        }
     }
     
-    @objc func timer(){
-        self.searchViewModel.switchData()
-        self.searchViewModel.searchResult
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: {
-                self.data = $0
-            })
-            .disposed(by: self.disposeBag)
-        
-        for i in self.data{
-            self.resultData.append(i.name)
-        }
-        
-        self.resultTableView.reloadData()
-        fetchingMore = false
-    }
-    
     // 검색 결과 데이터 자동 쓰레드
     private func searchResultAutoThread(){
-        timerThread = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(timer), userInfo: nil, repeats: false)
+        timerThread = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: { timer in
+            self.searchViewModel.switchData()
+            self.searchViewModel.searchResult
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: {
+                    self.data = $0
+                })
+                .disposed(by: self.disposeBag)
+            
+            for i in self.data{
+                self.resultData.append(i.name)
+            }
+            
+            self.resultTableView.reloadData()
+            self.fetchingMore = false
+            
+            if self.resultData.count % 10 == 0 && self.resultData.count != 0{
+                timer.invalidate()
+            }
+        })
+        
+        
     }
     
     
@@ -169,6 +174,7 @@ extension SearchPageController: UISearchBarDelegate{
         guard let searchText = searchUI.text else{ return }
         self.searchText = searchText
         
+        startSearch = true
         searchViewModel.pageCount = 0
         callAPI(searchText: searchText)
         resultTableView.reloadData()
@@ -216,7 +222,7 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         let position = scrollView.contentOffset.y
         
         if position > (resultTableView.contentSize.height - scrollView.frame.size.height){
-            if !fetchingMore {
+            if !fetchingMore && startSearch{
                 print("called")
                 fetchingMore = true
                 callAPI(searchText: self.searchText)

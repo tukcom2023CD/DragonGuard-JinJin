@@ -13,9 +13,11 @@ import RxSwift
 // 전체 랭킹 
 final class AllRankingController: UIViewController{
     
+    let deviceHeight = UIScreen.main.bounds.height
     let disposeBag = DisposeBag()
     let userInfoViewModel = UserInfoViewModel()
     var resultData = [UserInfoModel]()
+    var fetchingMore = false    //
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,10 +28,10 @@ final class AllRankingController: UIViewController{
         addUItoView()
         settingAutoLayout()
         
-        // 테스트를 위한 코드
-        for i in 1...10{
-            resultData.append(UserInfoModel(id: 10-i, name: "a", githubId: "a\(i)", commits: i, tier: "Gold"))
-        }
+//        // 테스트를 위한 코드
+//        for i in 1...10{
+//            resultData.append(UserInfoModel(id: 10-i, name: "a", githubId: "a\(i)", commits: i, tier: "Gold"))
+//        }
         
     }
     
@@ -118,6 +120,20 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
         print("selected \(indexPath.section)")
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        
+        if position > (repoTableView.contentSize.height - scrollView.frame.size.height){
+            if !fetchingMore {
+                print("called")
+                fetchingMore = true
+                
+            }
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return deviceHeight / 10 }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
     

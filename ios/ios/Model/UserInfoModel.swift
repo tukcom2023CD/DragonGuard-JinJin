@@ -24,9 +24,6 @@ struct UserInfoModel{
 }
 
 
-struct UserInfoDecodingModel: Codable{
-    var result: [UserInfoDecodingData]
-}
 
 struct UserInfoDecodingData: Codable{
     var id: Int
