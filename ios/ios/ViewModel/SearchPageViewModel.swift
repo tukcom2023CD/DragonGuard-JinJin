@@ -32,6 +32,7 @@ final class SearchPageViewModel {
         
         // 검색하는 단어, 페이지 이름 전달
         self.searchPageService.getSearchResult(searchWord: searchWord,page: pageCount)
+        
     }
     
     

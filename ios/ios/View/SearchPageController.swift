@@ -102,7 +102,7 @@ final class SearchPageController: UIViewController {
     
     // 검색 결과 데이터 자동 쓰레드
     private func searchResultAutoThread(){
-        timerThread = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timer), userInfo: nil, repeats: false)
+        timerThread = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(timer), userInfo: nil, repeats: false)
     }
     
     
@@ -215,12 +215,12 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y
         
-        if position > (resultTableView.contentSize.height - scrollView.frame.size.height) || (sectionCount + 1) % 10 == 0{
+        if position > (resultTableView.contentSize.height - scrollView.frame.size.height){
             if !fetchingMore {
-                
+                print("called")
                 fetchingMore = true
-//                callAPI(searchText: self.searchText)
-//                searchResultAutoThread()    // API 감지 스레드
+                callAPI(searchText: self.searchText)
+                searchResultAutoThread()    // API 감지 스레드
             }
         }
         
