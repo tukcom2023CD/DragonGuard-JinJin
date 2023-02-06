@@ -2,7 +2,10 @@ package com.dragonguard.android.connect
 
 import android.util.Log
 import com.dragonguard.android.BuildConfig
-import com.dragonguard.android.model.Result
+import com.dragonguard.android.model.RegisterGithubIdModel
+import com.dragonguard.android.model.RepoContributorsItem
+import com.dragonguard.android.model.RepoSearchResultModel
+import com.dragonguard.android.model.UserInfoModel
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -13,18 +16,19 @@ import java.util.concurrent.TimeUnit
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.MINUTES)
-        .readTimeout(50, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
         .build()
 
+    private val retrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
-    fun searchApi(name: String, count: Int): ArrayList<Result> {
-        val searchRetrofit = Retrofit.Builder().baseUrl(BuildConfig.server)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        var repoNames : ArrayList<Result> = arrayListOf<Result>()
-        val api = searchRetrofit.create(GitRankAPI::class.java)
+    private var api = retrofit.create(GitRankAPI::class.java)
+
+    fun searchApi(name: String, count: Int): ArrayList<RepoSearchResultModel> {
+        var repoNames : ArrayList<RepoSearchResultModel> = arrayListOf<RepoSearchResultModel>()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
         queryMap.put("name",name)
@@ -32,12 +36,11 @@ class ApiRepository {
 
         Log.d("api 호출", "$count 페이지 검색")
 
-
         val repoName = api.getRepoName(queryMap)
         try{
             val result = repoName.execute()
             if(result.isSuccessful){
-                repoNames = result.body()!!.result as ArrayList<Result>
+                repoNames = result.body()!!
             }
         }catch (e : SocketTimeoutException){
             return repoNames
@@ -46,12 +49,6 @@ class ApiRepository {
     }
 
     fun getTier(id: Int): String {
-        val tierRetrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val api = tierRetrofit.create(GitRankAPI::class.java)
         val tier = api.getUserTier(id)
         var tierResult = ""
         try{
@@ -65,21 +62,54 @@ class ApiRepository {
         return tierResult
     }
 
-    fun getUserCommits(id: Int) {
-        val tierRetrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    fun getUserInfo(id: Int): UserInfoModel {
+        val userInfo = api.getUserInfo(id)
+        var userResult = UserInfoModel(null, null, null, null, null, null, null)
+        try {
+            val result = userInfo.execute()
+            if (result.isSuccessful) {
+                userResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return userResult
+        }
+        return userResult
+    }
 
-        val api = tierRetrofit.create(GitRankAPI::class.java)
+    fun getRepoContributors(repoName: String): ArrayList<RepoContributorsItem> {
+        val repoContributors = api.getRepoContributors(repoName)
+        var repoContResult = ArrayList<RepoContributorsItem>()
+        try{
+            val result = repoContributors.execute()
+            if(result.isSuccessful) {
+                repoContResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return repoContResult
+        }
+        return repoContResult
+    }
+
+    fun getUserCommits(id: Int) {
     }
 
     fun getUserRankings(id: Int) {
-        val tierRetrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    }
 
-        val api = tierRetrofit.create(GitRankAPI::class.java)
+    fun postRegister(body: RegisterGithubIdModel): Int {
+        val register = api.postGithubId(body)
+        var registerResult = 0
+        try{
+            val result = register.execute()
+            if(result.isSuccessful) {
+                registerResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.d("error", "${e.message}")
+            return registerResult
+        }
+        return registerResult
+
     }
 }

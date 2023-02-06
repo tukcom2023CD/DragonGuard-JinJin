@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.model.Result
+import com.dragonguard.android.model.RepoSearchResultModel
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
 import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
@@ -24,9 +24,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     lateinit var repositoryProfileAdapter: RepositoryProfileAdapter
     private var position = 0
-    private var repoNames = ArrayList<Result>()
+    private var repoNames = ArrayList<RepoSearchResultModel>()
     private var count = 0
-    private var changed = false
+    private var changed = true
     private var lastSearch = ""
     var viewmodel = SearchViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,30 +64,33 @@ class SearchActivity : AppCompatActivity() {
 
 //        검색 아이콘 눌렀을때 검색 구현
         binding.searchIcon.setOnClickListener {
-            if(!viewmodel.onSearchListener.value.isNullOrEmpty()){
+            if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
                 if (lastSearch != viewmodel.onSearchListener.value!! && position != 0) {
                     repoNames.clear()
                     binding.searchResult.visibility = View.GONE
                     count = 0
                     position = 0
                     changed = true
+                } else {
+                    changed = false
                 }
                 lastSearch = viewmodel.onSearchListener.value!!
                 Log.d("api 시도", "callSearchApi 실행")
                 callSearchApi(viewmodel.onSearchListener.value!!)
                 binding.searchResult.visibility = View.VISIBLE
                 binding.searchName.isFocusable = true
-                    } else{
-                        Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
-                        closeKeyboard()
-                    }
+            } else {
+                Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
+                closeKeyboard()
+            }
         }
 
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
         viewmodel.onSearchListener.observe(this, Observer {
             if (!viewmodel.onSearchListener.value.isNullOrEmpty() && viewmodel.onSearchListener.value!!.last() == '\n') {
                 Log.d("enter click", "edittext 클릭함")
-                val search = binding.searchName.text!!.substring(0 until binding.searchName.text!!.length - 1)
+                val search =
+                    binding.searchName.text!!.substring(0 until binding.searchName.text!!.length - 1)
                 binding.searchName.setText(search)
                 binding.searchName.setSelection(binding.searchName.length())
                 if (search.isNotEmpty()) {
@@ -98,6 +101,8 @@ class SearchActivity : AppCompatActivity() {
                         count = 0
                         position = 0
                         changed = true
+                    } else {
+                        changed = false
                     }
                     lastSearch = viewmodel.onSearchListener.value!!
                     Log.d("api 시도", "callSearchApi 실행")
@@ -157,34 +162,43 @@ class SearchActivity : AppCompatActivity() {
 
     //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
-        binding.loading.visibility = View.VISIBLE
-        var result = arrayListOf<Result>()
+        binding.progressBar.visibility = View.VISIBLE
+        var result = arrayListOf<RepoSearchResultModel>()
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
+            var resultDeferred = coroutine.async(Dispatchers.IO) {
                 viewmodel.getSearchRepoResult(name, count)
             }
             result = resultDeferred.await()
-            Log.d("api 시도", "api result에 넣기 $result")
-            checkSearchResult(result)
+            if(!checkSearchResult(result)){
+                resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getSearchRepoResult(name, count)
+                }
+                result = resultDeferred.await()
+                checkSearchResult(result)
+            }
         }
 
     }
 
     //    api 호출결과 판별 및 출력
-    private fun checkSearchResult(result: ArrayList<Result>) {
-        if (result.isNullOrEmpty()) {
-            Log.d("api 시도", "api result 성공$result")
-            binding.loading.visibility = View.GONE
-        } else {
-            Log.d("api 시도", "api 성공$result")
-            if (repoNames.isNullOrEmpty()) {
-                repoNames = result
-            } else {
-                repoNames.addAll(result)
+    private fun checkSearchResult(searchResult: ArrayList<RepoSearchResultModel>): Boolean {
+        return when(searchResult.isNullOrEmpty()){
+            true ->{
+                false
             }
-            initRecycler()
+            false ->{
+                Log.d("api 시도", "api 성공$searchResult")
+                if (repoNames.isNullOrEmpty()) {
+                    repoNames = searchResult
+                } else {
+                    repoNames.addAll(searchResult)
+                }
+                initRecycler()
+                true
+            }
         }
+
     }
 
 
@@ -201,14 +215,15 @@ class SearchActivity : AppCompatActivity() {
         count++
         Log.d("api 횟수", "$count 페이지 검색")
         initScrollListener()
-        binding.loading.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
     }
 
 
     //    데이터 더 받아오는 함수 loadMorePosts() 구현
     private fun loadMorePosts() {
-        if (binding.loading.visibility == View.GONE && count != 0) {
-            binding.loading.visibility = View.VISIBLE
+        if (binding.progressBar.visibility == View.GONE && count != 0) {
+            binding.progressBar.visibility = View.VISIBLE
+            changed = true
             CoroutineScope(Dispatchers.Main).launch {
                 Log.d("api 시도", "callSearchApi 실행  load more")
                 callSearchApi(lastSearch)
