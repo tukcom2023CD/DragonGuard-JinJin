@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommitScrappingResponse {
+public class CommitScrapingResponse {
     String githubId;
     Integer commitNum;
 }

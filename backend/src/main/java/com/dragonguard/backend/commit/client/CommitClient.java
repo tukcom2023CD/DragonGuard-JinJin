@@ -1,8 +1,8 @@
 package com.dragonguard.backend.commit.client;
 
-import com.dragonguard.backend.commit.dto.request.CommitScrappingRequest;
-import com.dragonguard.backend.global.exception.ScrappingRequestFailException;
-import com.dragonguard.backend.global.webclient.ScrappingClient;
+import com.dragonguard.backend.commit.dto.request.CommitScrapingRequest;
+import com.dragonguard.backend.global.exception.ScrapingRequestFailException;
+import com.dragonguard.backend.global.webclient.ScrapingClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -12,9 +12,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class CommitClient implements ScrappingClient<CommitScrappingRequest> {
+public class CommitClient implements ScrapingClient<CommitScrapingRequest> {
 
-    private static final String BASE_URL = "${scrapping.url}";
+    private static final String BASE_URL = "${scraping.url}";
     private final WebClient webClient;
 
     public CommitClient(@Value(BASE_URL) String baseUrl) {
@@ -22,7 +22,7 @@ public class CommitClient implements ScrappingClient<CommitScrappingRequest> {
     }
 
     @Override
-    public void requestToScrapping(CommitScrappingRequest request) {
+    public void requestToScraping(CommitScrapingRequest request) {
         webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
@@ -35,7 +35,7 @@ public class CommitClient implements ScrappingClient<CommitScrappingRequest> {
                 .retrieve()
                 .bodyToMono(String.class)
                 .blockOptional()
-                .orElseThrow(ScrappingRequestFailException::new);
+                .orElseThrow(ScrapingRequestFailException::new);
     }
 
     private WebClient generateWebClient(String baseUrl) {

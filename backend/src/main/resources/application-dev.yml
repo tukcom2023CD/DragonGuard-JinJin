@@ -36,5 +36,5 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
 
-scrapping:
-  url: http://nginx:80/scrap/
+scraping:
+  url: http://nginx:80/scrape/

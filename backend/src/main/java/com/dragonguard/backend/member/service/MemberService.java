@@ -5,7 +5,6 @@ import com.dragonguard.backend.commit.service.CommitService;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
-import com.dragonguard.backend.member.dto.response.QMemberRankResponse;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.mapper.MemberMapper;
@@ -35,7 +34,7 @@ public class MemberService {
     }
 
     public Member saveAndGetEntity(MemberRequest memberRequest) {
-        getCommitByScrapping(memberRequest.getGithubId()); // TODO 이 라인 제외시킬지 논의 필요
+        getCommitByScraping(memberRequest.getGithubId()); // TODO 이 라인 제외시킬지 논의 필요
         if (memberRepository.existsByGithubId(memberRequest.getGithubId())) {
             return memberRepository.findMemberByGithubId(memberRequest.getGithubId())
                     .orElseThrow(EntityNotFoundException::new);
@@ -67,7 +66,7 @@ public class MemberService {
     @Transactional
     public void updateCommits(Long id) {
         String githubId = memberRepository.findGithubIdById(id);
-        getCommitByScrapping(githubId);
+        getCommitByScraping(githubId);
         updateTier(getEntity(id));
     }
 
@@ -90,7 +89,7 @@ public class MemberService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private void getCommitByScrapping(String githubId) {
-        commitService.scrappingCommits(githubId);
+    private void getCommitByScraping(String githubId) {
+        commitService.scrapingCommits(githubId);
     }
 }

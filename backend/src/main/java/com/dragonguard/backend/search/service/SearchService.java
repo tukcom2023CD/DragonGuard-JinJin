@@ -30,7 +30,7 @@ public class SearchService {
         Search search = findOrSaveSearch(searchRequest);
         List<Result> results = resultRepository.findAllBySearchId(search.getId());
         if (results.isEmpty()) {
-            requestScrapping(searchRequest);
+            requestScraping(searchRequest);
             return List.of();
         }
         return results.stream()
@@ -50,7 +50,7 @@ public class SearchService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private void requestScrapping(SearchRequest searchRequest) {
-        searchClient.requestToScrapping(searchRequest);
+    private void requestScraping(SearchRequest searchRequest) {
+        searchClient.requestToScraping(searchRequest);
     }
 }

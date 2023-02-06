@@ -1,7 +1,7 @@
 package com.dragonguard.backend.search.client;
 
-import com.dragonguard.backend.global.exception.ScrappingRequestFailException;
-import com.dragonguard.backend.global.webclient.ScrappingClient;
+import com.dragonguard.backend.global.exception.ScrapingRequestFailException;
+import com.dragonguard.backend.global.webclient.ScrapingClient;
 import com.dragonguard.backend.search.dto.request.SearchRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -12,9 +12,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class SearchClient implements ScrappingClient<SearchRequest>{
+public class SearchClient implements ScrapingClient<SearchRequest> {
 
-    private static final String BASE_URL = "${scrapping.url}";
+    private static final String BASE_URL = "${scraping.url}";
     private final WebClient webClient;
 
     public SearchClient(@Value(BASE_URL) String baseUrl) {
@@ -29,7 +29,7 @@ public class SearchClient implements ScrappingClient<SearchRequest>{
     }
 
     @Override
-    public void requestToScrapping(SearchRequest request) {
+    public void requestToScraping(SearchRequest request) {
         webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
@@ -43,6 +43,6 @@ public class SearchClient implements ScrappingClient<SearchRequest>{
                 .retrieve()
                 .bodyToMono(String.class)
                 .blockOptional()
-                .orElseThrow(ScrappingRequestFailException::new);
+                .orElseThrow(ScrapingRequestFailException::new);
     }
 }

@@ -4,10 +4,10 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && apt-get install firefox-esr -y
 
-WORKDIR /scrapping
+WORKDIR /scraping
 RUN pip install --upgrade pip
 ENV FLASK_APP=app:app
-COPY requirements.txt /scrapping/
+COPY requirements.txt /scraping/
 RUN pip3 install -r requirements.txt
 COPY . ./
 

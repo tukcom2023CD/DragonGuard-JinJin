@@ -1,6 +1,6 @@
 package com.dragonguard.backend.commit.messagequeue;
 
-import com.dragonguard.backend.commit.dto.response.CommitScrappingResponse;
+import com.dragonguard.backend.commit.dto.response.CommitScrapingResponse;
 import com.dragonguard.backend.commit.service.CommitService;
 import com.dragonguard.backend.member.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -40,7 +40,7 @@ public class KafkaCommitConsumer {
         int commitNum = (Integer) map.get("commitNum");
         String profileImage = (String) map.get("profileImage");
 
-        CommitScrappingResponse response = new CommitScrappingResponse(githubId, commitNum);
+        CommitScrapingResponse response = new CommitScrapingResponse(githubId, commitNum);
         commitService.saveCommit(response);
         memberService.addMemberCommitAndUpdate(githubId, name, profileImage);
     }
