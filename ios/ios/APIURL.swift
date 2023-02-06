@@ -12,7 +12,7 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL() 
-    static var ip = "192.168.0.14"
+    static var ip = ""
     
     private init(){}
     
@@ -66,11 +66,12 @@ final class APIURL{
         
     }
     
-    static func getUserInfo(page: Int, size: Int?) -> String{
-        let url = "http://localhost/api/members/ranking?page=\(page)&size=\(size ?? 10)&sort=commits"
+    func getUserInfo(ip: String, page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/members/ranking?page=\(page)&size=\(size)"
         return url
     }
     
+    // 검색 필터링 추가할 때 변경해야함
     static func testUrl(ip: String, page:Int, searchWord: String) -> String {
         let url = "http://\(ip)/api/search?page=\(page)&name=\(searchWord)&type=repositories"
         return url

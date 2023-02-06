@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("UserInfoSerivce not started now..")
         print("Go to AppDelegate.swift")
         
+        
         UserInfoService.sharedData.getMemberInfo(page: 0, size: 20)
         return true
     }
