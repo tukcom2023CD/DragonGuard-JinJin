@@ -39,7 +39,7 @@ public class GitRepoMemberService {
 
         list.stream().forEach(m -> {
             if (m != null) {
-                gitRepoMemberRepository.saveAll(list);
+                gitRepoMemberRepository.save(m);
             }
         });
     }
