@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
         prefs = IdPreference(applicationContext)
-        id = prefs.getId("id", 0)
+//        id = prefs.getId("id", 0)
         if(id == 0){
             registerUser("posite")
         } else {
