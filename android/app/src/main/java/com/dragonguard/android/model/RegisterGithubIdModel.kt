@@ -1,5 +1,5 @@
 package com.dragonguard.android.model
 
-data class RegisterGithubId(
+data class RegisterGithubIdModel(
     val githubId: String
 )

@@ -2,7 +2,6 @@ package com.dragonguard.android.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -12,7 +11,7 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMainBinding
-import com.dragonguard.android.model.RegisterGithubId
+import com.dragonguard.android.model.RegisterGithubIdModel
 import com.dragonguard.android.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    var viewmodel = MainViewModel()
+    private var viewmodel = MainViewModel()
     private var backPressed : Long = 0
     private var id = 0
 
@@ -63,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun registerUser(githubId: String) {
-        var body = RegisterGithubId(githubId)
+        var body = RegisterGithubIdModel(githubId)
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
