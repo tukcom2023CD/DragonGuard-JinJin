@@ -1,10 +1,10 @@
 package com.dragonguard.android.connect
 
+import com.dragonguard.android.model.RegisterGithubId
 import com.dragonguard.android.model.RepoName
+import com.dragonguard.android.model.UserInfo
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.QueryMap
+import retrofit2.http.*
 
 interface GitRankAPI {
 
@@ -14,9 +14,13 @@ interface GitRankAPI {
     @GET("members/{id}/tier")
     fun getUserTier(@Path("id")userId : Int) : Call<String>
 
-    @GET("")
-    fun getUserCommits()
+    @GET("/api/members/{id}")
+    fun getUserInfo(@Path("id")userId : Int) : Call<UserInfo>
 
     @GET("")
     fun getUserRanking()
+
+    @POST("members")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postGithubId(@Body register: RegisterGithubId) : Call<Int>
 }

@@ -9,8 +9,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMainBinding
+import com.dragonguard.android.model.RegisterGithubId
 import com.dragonguard.android.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     var viewmodel = MainViewModel()
     private var backPressed : Long = 0
+    private var id = 0
 
     //    var count = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
 
-        searchUser(1)
+        registerUser("posite")
 
         //로그인 화면으로 넘어가기
         val intent = Intent(applicationContext, LoginActivity::class.java)
@@ -59,17 +62,30 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun registerUser(githubId: String) {
+        var body = RegisterGithubId(githubId)
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                viewmodel.postRegister(body)
+            }
+            id = resultDeferred.await()
+            searchUser(id)
+        }
+
+    }
+
 //  메인화면의 유저 정보 검색하기
     private fun searchUser(id: Int){
-        var tier = ""
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
                 viewmodel.getSearchTierResult(id)
             }
-            tier = resultDeferred.await()
-            Log.d("api 시도", "api result에 넣기 $tier")
-            binding.userTier.append(tier)
+            val userInfo = resultDeferred.await()
+            binding.userTier.append(userInfo.tier)
+            binding.userToken.append(userInfo.commits.toString())
+            Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
         }
     }
 
