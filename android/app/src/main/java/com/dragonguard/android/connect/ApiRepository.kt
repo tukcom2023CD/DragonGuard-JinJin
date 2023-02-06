@@ -2,7 +2,9 @@ package com.dragonguard.android.connect
 
 import android.util.Log
 import com.dragonguard.android.BuildConfig
+import com.dragonguard.android.model.RegisterGithubId
 import com.dragonguard.android.model.Result
+import com.dragonguard.android.model.UserInfo
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -61,11 +63,46 @@ class ApiRepository {
         return tierResult
     }
 
+
+    fun getUserInfo(id: Int): UserInfo {
+        val api = retrofit.create(GitRankAPI::class.java)
+        val userInfo = api.getUserInfo(id)
+        var userResult = UserInfo(null, null, null, null, null, null, null)
+        try {
+            val result = userInfo.execute()
+            if (result.isSuccessful) {
+                userResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return userResult
+        }
+        return userResult
+    }
+
     fun getUserCommits(id: Int) {
         val api = retrofit.create(GitRankAPI::class.java)
     }
 
     fun getUserRankings(id: Int) {
         val api = retrofit.create(GitRankAPI::class.java)
+
+    }
+
+    fun postRegister(body: RegisterGithubId): Int {
+        val api = retrofit.create(GitRankAPI::class.java)
+        val register = api.postGithubId(body)
+        var registerResult = 0
+        try{
+            val result = register.execute()
+            if(result.isSuccessful) {
+                registerResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.d("error", "${e.message}")
+            return registerResult
+        }
+        return registerResult
+
     }
 }
