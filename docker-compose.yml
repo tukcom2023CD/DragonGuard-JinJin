@@ -87,21 +87,21 @@ services:
       - app-tier
     tty: true
   
-  scrapping:
+  scraping:
     build:
-      context: ./scrapping
+      context: ./scraping
     ports:
       - 5000:5000
     environment:
       FLASK_APP: ./app.py
-      APP_NAME: scrapping
+      APP_NAME: scraping
       FLASK_DEBUG: 1
-    container_name: scrapping
+    container_name: scraping
     restart: on-failure
     depends_on:
       - kafka
     volumes:
-      - ./scrapping:/scrapping/
+      - ./scraping:/scraping/
     networks:
       - app-tier
     tty: true
@@ -117,7 +117,7 @@ services:
       - app-tier
     depends_on:
       - backend
-      - scrapping
+      - scraping
     tty: true
 
 networks:

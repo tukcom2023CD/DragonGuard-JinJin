@@ -1,11 +1,11 @@
 package com.dragonguard.backend.commit.service;
 
-import com.dragonguard.backend.commit.dto.request.CommitScrappingRequest;
-import com.dragonguard.backend.commit.dto.response.CommitScrappingResponse;
+import com.dragonguard.backend.commit.dto.request.CommitScrapingRequest;
+import com.dragonguard.backend.commit.dto.response.CommitScrapingResponse;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.mapper.CommitMapper;
 import com.dragonguard.backend.commit.repository.CommitRepository;
-import com.dragonguard.backend.global.webclient.ScrappingClient;
+import com.dragonguard.backend.global.webclient.ScrapingClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +18,16 @@ public class CommitService {
 
     private final CommitRepository commitRepository;
     private final CommitMapper commitMapper;
-    private final ScrappingClient<CommitScrappingRequest> scrappingClient;
+    private final ScrapingClient<CommitScrapingRequest> scrapingClient;
 
-    public void scrappingCommits(String githubId) {
-        scrappingClient.requestToScrapping(commitMapper.toRequest(githubId));
+    public void scrapingCommits(String githubId) {
+        scrapingClient.requestToScraping(commitMapper.toRequest(githubId));
     }
 
-    public void saveCommit(CommitScrappingResponse commitScrappingResponse) {
+    public void saveCommit(CommitScrapingResponse commitScrapingResponse) {
         List<Commit> commits
-                = commitRepository.findCommitsByGithubId(commitScrappingResponse.getGithubId());
-        Commit commit = commitMapper.toEntity(commitScrappingResponse);
+                = commitRepository.findCommitsByGithubId(commitScrapingResponse.getGithubId());
+        Commit commit = commitMapper.toEntity(commitScrapingResponse);
         if (commits.isEmpty()) {
             commitRepository.save(commit);
         } else {

@@ -29,10 +29,10 @@ public class GitRepoService {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
         if (gitRepo.isEmpty()) {
             gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
-            requestToScrapping(gitRepoRequest);
+            requestToScraping(gitRepoRequest);
             return List.of();
         } else if (gitRepo.get().getGitRepoMember().isEmpty()) {
-            requestToScrapping(gitRepoRequest);
+            requestToScraping(gitRepoRequest);
             return List.of();
         }
         return gItRepoMemberRepository.findAllByGitRepo(gitRepo.get()).stream()
@@ -45,7 +45,7 @@ public class GitRepoService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private void requestToScrapping(GitRepoRequest gitRepoRequest) {
-        gitRepoClient.requestToScrapping(gitRepoRequest);
+    private void requestToScraping(GitRepoRequest gitRepoRequest) {
+        gitRepoClient.requestToScraping(gitRepoRequest);
     }
 }

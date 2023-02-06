@@ -1,5 +1,5 @@
 from flask import Flask, request
-from flask_restx import Resource, Api, reqparse
+from flask_restx import Resource, Api
 from flask_cors import CORS
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
@@ -7,8 +7,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
 from selenium import webdriver
-from firefox_config import DRIVER, FIREFOX_OPTS
-from kafka_config import producer
+from config.firefox_config import DRIVER, FIREFOX_OPTS
+from config.kafka_config import producer
+from config.swagger_config import req1, req2, req3
 import requests, selenium
 
 
@@ -20,12 +21,7 @@ api = Api(app)
 ns = api.namespace('/', description='GitRank API')
 DRIVER.get('https://github.com')
 
-req1 = reqparse.RequestParser()
-req1.add_argument('name', type=str, default=None, help='검색어')
-req1.add_argument('type', type=str, default=None, help='users or repositories')
-req1.add_argument('page', type=int, default=None, help='페이지')
-
-@ns.route('/scrap/search', methods=['GET'])
+@ns.route('/scrape/search', methods=['GET'])
 class Search(Resource):
     
     '''레포명 또는 유저명으로 검색한 페이지를 스크래핑한다'''
@@ -65,11 +61,7 @@ class Search(Resource):
         user_list = soup.find_all('a', attrs={"class" : 'mr-1'})
         return user_list
 
-req2 = reqparse.RequestParser()
-req2.add_argument('member', type=str, default=None, help='github id')
-req2.add_argument('year', type=str, default=None, help='현재년도')
-
-@ns.route('/scrap/commits', methods=['GET'])
+@ns.route('/scrape/commits', methods=['GET'])
 class MemberCommit(Resource):
     
     '''유저 페이지의 커밋 수를 스크래핑한다'''
@@ -93,11 +85,7 @@ class MemberCommit(Resource):
 
         return (member, 200)
 
-req3 = reqparse.RequestParser()
-req3.add_argument('name', type=str, default=None, help='github id')
-req3.add_argument('year', type=str, default=None, help='현재년도')
-
-@ns.route('/scrap/git-repos', methods=['GET'])
+@ns.route('/scrape/git-repos', methods=['GET'])
 class GitRepos(Resource):
     
     '''유저 페이지의 커밋 수를 스크래핑한다'''
@@ -119,14 +107,23 @@ class GitRepos(Resource):
         
         while True:
             try:
-                commits = DRIVER.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > a')
-                member_name = DRIVER.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > a.text-normal')
-                addition = DRIVER.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-success.text-normal')
-                deletion = DRIVER.find_element(By.CSS_SELECTOR, '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-danger.text-normal')
+                commits = DRIVER.find_element(By.CSS_SELECTOR, 
+                                              '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > a')
+                
+                member_name = DRIVER.find_element(By.CSS_SELECTOR, 
+                                                  '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > a.text-normal')
+                
+                addition = DRIVER.find_element(By.CSS_SELECTOR, 
+                                               '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-success.text-normal')
+                
+                deletion = DRIVER.find_element(By.CSS_SELECTOR, 
+                                               '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-danger.text-normal')
+                
                 response[member_name.get_attribute('innerText')] = { 'commits' : int(commits.get_attribute('innerText').split(' ')[0]), 
                                                                     'addition' : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
                                                                     'deletion' : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', '')),
                                                                     'gitRepo' : name}
+                
             except selenium.common.exceptions.NoSuchElementException as e:
                 if cnt == 2:
                     break

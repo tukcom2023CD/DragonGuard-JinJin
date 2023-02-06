@@ -1,8 +1,8 @@
 package com.dragonguard.backend.gitrepo.client;
 
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
-import com.dragonguard.backend.global.exception.ScrappingRequestFailException;
-import com.dragonguard.backend.global.webclient.ScrappingClient;
+import com.dragonguard.backend.global.exception.ScrapingRequestFailException;
+import com.dragonguard.backend.global.webclient.ScrapingClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -12,9 +12,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class GitRepoClient implements ScrappingClient<GitRepoRequest> {
+public class GitRepoClient implements ScrapingClient<GitRepoRequest> {
 
-    private static final String BASE_URL = "${scrapping.url}";
+    private static final String BASE_URL = "${scraping.url}";
     private final WebClient webClient;
 
     public GitRepoClient(@Value(BASE_URL) String baseUrl) {
@@ -22,7 +22,7 @@ public class GitRepoClient implements ScrappingClient<GitRepoRequest> {
     }
 
     @Override
-    public void requestToScrapping(GitRepoRequest request) {
+    public void requestToScraping(GitRepoRequest request) {
         webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
@@ -35,7 +35,7 @@ public class GitRepoClient implements ScrappingClient<GitRepoRequest> {
                 .retrieve()
                 .bodyToMono(String.class)
                 .blockOptional()
-                .orElseThrow(ScrappingRequestFailException::new);
+                .orElseThrow(ScrapingRequestFailException::new);
     }
 
     private WebClient generateWebClient(String baseUrl) {

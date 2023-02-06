@@ -1,4 +1,4 @@
-from base_url import KAFKA_BASE_URL
+from .base_url import KAFKA_BASE_URL
 from kafka import KafkaProducer 
 from json import dumps
 
