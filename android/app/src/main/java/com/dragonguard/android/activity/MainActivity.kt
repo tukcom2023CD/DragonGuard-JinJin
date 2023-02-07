@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.model.RegisterGithubIdModel
+import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.MainViewModel
 import kotlinx.coroutines.*
@@ -92,12 +93,19 @@ class MainActivity : AppCompatActivity() {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
                 viewmodel.getSearchTierResult(id)
             }
-            val userInfo = resultDeferred.await()
-            binding.userTier.append(userInfo.tier)
-            binding.userToken.append(userInfo.commits.toString())
-            Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
+            val userInfo : UserInfoModel = resultDeferred.await()
+            if(userInfo.name == null) {
+                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
+                registerUser("posite")
+            } else {
+                binding.userTier.append(userInfo.tier)
+                binding.userToken.append(userInfo.commits.toString())
+                binding.userRanking.text = userInfo.rank
+                Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
+            }
         }
     }
+
 
     //    edittext 키보드 제거
     private fun closeKeyboard() {
