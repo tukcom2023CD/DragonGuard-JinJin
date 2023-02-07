@@ -64,7 +64,7 @@ class ApiRepository {
 
     fun getUserInfo(id: Int): UserInfoModel {
         val userInfo = api.getUserInfo(id)
-        var userResult = UserInfoModel(null, null, null, null, null, null, null)
+        var userResult = UserInfoModel(null, null, null, null, null, null, null, null)
         try {
             val result = userInfo.execute()
             if (result.isSuccessful) {
