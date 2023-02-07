@@ -27,6 +27,7 @@
 		3B7B1D38298404C70038BD67 /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 3B7B1D37298404C70038BD67 /* RxTest */; };
 		3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
 		3B80B6DC298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
+		3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B88801F2992881200680F1A /* RepoContributorInfoController.swift */; };
 		3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756E3298A15BB00F27094 /* MyRepositoryRankingController.swift */; };
 		3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756E5298A162200F27094 /* MyOrganizationListController.swift */; };
 		3B9756E8298A166300F27094 /* UnivInRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756E7298A166300F27094 /* UnivInRankingController.swift */; };
@@ -93,6 +94,7 @@
 		3B1DB8832963428B00308F43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3B1DB8852963428B00308F43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansKR-SemiBold.otf"; sourceTree = "<group>"; };
+		3B88801F2992881200680F1A /* RepoContributorInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoController.swift; sourceTree = "<group>"; };
 		3B9756E3298A15BB00F27094 /* MyRepositoryRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRepositoryRankingController.swift; sourceTree = "<group>"; };
 		3B9756E5298A162200F27094 /* MyOrganizationListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOrganizationListController.swift; sourceTree = "<group>"; };
 		3B9756E7298A166300F27094 /* UnivInRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnivInRankingController.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 				3B9756F2298A33E900F27094 /* SettingScreen */,
 				3BD6DD21298129B8008C05B2 /* SearchPageController.swift */,
 				3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */,
+				3B88801F2992881200680F1A /* RepoContributorInfoController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -501,6 +504,7 @@
 				3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */,
 				3B9756ED298A16FF00F27094 /* AllRepositoryRankingController.swift in Sources */,
 				A30BA47029841C97008B594E /* SearchPageService.swift in Sources */,
+				3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */,
 				3B9756F6298A63F600F27094 /* SearchPageModel.swift in Sources */,
 				3B9756EB298A16D900F27094 /* AllRankingController.swift in Sources */,
 				3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */,
