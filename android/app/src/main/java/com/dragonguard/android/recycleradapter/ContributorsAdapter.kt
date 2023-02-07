@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.model.RepoContributorsItem
 
-class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, private val context: Context) : RecyclerView.Adapter<ContributorsAdapter.ViewHolder>() {
+class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, private val context: Context, private val colors: ArrayList<Int>) : RecyclerView.Adapter<ContributorsAdapter.ViewHolder>() {
     private var ranking  = 1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,6 +38,7 @@ class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, 
             val green = (Math.random()*255).toInt()
             val blue = (Math.random()*255).toInt()
             color.imageTintList = ColorStateList.valueOf(Color.rgb(red,green,blue))
+            colors.add(Color.rgb(red,green,blue))
         }
     }
 
