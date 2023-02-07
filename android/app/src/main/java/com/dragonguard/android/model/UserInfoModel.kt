@@ -7,5 +7,6 @@ data class UserInfoModel(
     val id: Int?,
     val name: String?,
     val profileImage: String?,
-    val tier: String?
+    val tier: String?,
+    val rank: String?
 )
