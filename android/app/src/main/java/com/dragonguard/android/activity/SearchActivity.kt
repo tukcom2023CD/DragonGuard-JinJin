@@ -51,7 +51,6 @@ class SearchActivity : AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
-
  */
             if (viewmodel.onOptionListener.value == "down") {
                 binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
@@ -70,10 +69,8 @@ class SearchActivity : AppCompatActivity() {
                     binding.searchResult.visibility = View.GONE
                     count = 0
                     position = 0
-                    changed = true
-                } else {
-                    changed = false
                 }
+                changed = true
                 lastSearch = viewmodel.onSearchListener.value!!
                 Log.d("api 시도", "callSearchApi 실행")
                 callSearchApi(viewmodel.onSearchListener.value!!)
@@ -100,10 +97,8 @@ class SearchActivity : AppCompatActivity() {
                         binding.searchResult.visibility = View.GONE
                         count = 0
                         position = 0
-                        changed = true
-                    } else {
-                        changed = false
                     }
+                    changed = true
                     lastSearch = viewmodel.onSearchListener.value!!
                     Log.d("api 시도", "callSearchApi 실행")
                     callSearchApi(viewmodel.onSearchListener.value!!)
@@ -170,24 +165,24 @@ class SearchActivity : AppCompatActivity() {
                 viewmodel.getSearchRepoResult(name, count)
             }
             result = resultDeferred.await()
-            if(!checkSearchResult(result)){
-                resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getSearchRepoResult(name, count)
-                }
-                result = resultDeferred.await()
-                checkSearchResult(result)
-            }
+            delay(500)
+            checkSearchResult(result)
         }
-
     }
 
     //    api 호출결과 판별 및 출력
-    private fun checkSearchResult(searchResult: ArrayList<RepoSearchResultModel>): Boolean {
-        return when(searchResult.isNullOrEmpty()){
+    private fun checkSearchResult(searchResult: ArrayList<RepoSearchResultModel>) {
+        return when(searchResult.isNullOrEmpty() ){
             true ->{
-                false
+                if(changed) {
+                    changed = false
+                    callSearchApi(viewmodel.onSearchListener.value!!)
+                } else {
+                    initRecycler()
+                }
             }
             false ->{
+                changed = false
                 Log.d("api 시도", "api 성공$searchResult")
                 if (repoNames.isNullOrEmpty()) {
                     repoNames = searchResult
@@ -195,7 +190,6 @@ class SearchActivity : AppCompatActivity() {
                     repoNames.addAll(searchResult)
                 }
                 initRecycler()
-                true
             }
         }
 
