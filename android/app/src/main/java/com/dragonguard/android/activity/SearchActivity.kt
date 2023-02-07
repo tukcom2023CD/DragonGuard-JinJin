@@ -175,10 +175,15 @@ class SearchActivity : AppCompatActivity() {
                     viewmodel.getSearchRepoResult(name, count)
                 }
                 result = resultDeferred.await()
-                checkSearchResult(result)
+                if(!checkSearchResult(result)) {
+                    resultDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getSearchRepoResult(name, count)
+                    }
+                    result = resultDeferred.await()
+                    checkSearchResult(result)
+                }
             }
         }
-
     }
 
     //    api 호출결과 판별 및 출력
@@ -188,11 +193,15 @@ class SearchActivity : AppCompatActivity() {
                 false
             }
             false ->{
-                Log.d("api 시도", "api 성공$searchResult")
-                if (repoNames.isNullOrEmpty()) {
-                    repoNames = searchResult
+                if(searchResult.size != 10) {
+                    return false
                 } else {
-                    repoNames.addAll(searchResult)
+                    Log.d("api 시도", "api 성공$searchResult")
+                    if (repoNames.isNullOrEmpty()) {
+                        repoNames = searchResult
+                    } else {
+                        repoNames.addAll(searchResult)
+                    }
                 }
                 initRecycler()
                 true
