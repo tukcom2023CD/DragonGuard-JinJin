@@ -13,7 +13,7 @@ public class MemberMapper {
                 .build();
     }
 
-    public MemberResponse toResponse(Member member, Integer commits) {
+    public MemberResponse toResponse(Member member, Integer commits, Integer rank) {
         return MemberResponse.builder()
                 .id(member.getId())
                 .name(member.getName())
@@ -22,6 +22,7 @@ public class MemberMapper {
                 .tier(member.getTier())
                 .authStep(member.getAuthStep())
                 .profileImage(member.getProfileImage())
+                .rank(rank)
                 .build();
     }
 }

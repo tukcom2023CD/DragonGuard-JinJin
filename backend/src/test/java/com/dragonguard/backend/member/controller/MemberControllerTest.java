@@ -82,7 +82,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회")
     void getmember() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(1L, "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh");
+        MemberResponse expected = new MemberResponse(1L, "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000);
         given(memberService.getMember(any())).willReturn(expected);
 
         // when

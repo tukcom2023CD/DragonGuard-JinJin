@@ -1,6 +1,8 @@
 package com.dragonguard.backend.member.repository;
 
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
+import com.dragonguard.backend.member.dto.response.MemberResponse;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -27,4 +29,16 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
                 .orderBy(memberOrderConverter.convert(pageable.getSort()))
                 .fetch();
     }
+
+    @Override
+    public Integer findRankingById(Long id) {
+        return jpaQueryFactory
+                .select(member)
+                .from(member)
+                .where(member.commitsSum.gt(
+                        JPAExpressions
+                        .select(member.commitsSum).from(member).where(member.id.eq(id))))
+                .fetch().size() + 1;
+    }
+
 }
