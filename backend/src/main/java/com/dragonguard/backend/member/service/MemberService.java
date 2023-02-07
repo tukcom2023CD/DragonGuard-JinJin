@@ -72,7 +72,8 @@ public class MemberService {
 
     public MemberResponse getMember(Long id) {
         Member member = getEntity(id);
-        return memberMapper.toResponse(member, member.getCommitsSum());
+        Integer rank = memberRepository.findRankingById(id);
+        return memberMapper.toResponse(member, member.getCommitsSum(), rank);
     }
 
     public Member findMemberByGithubId(String githubId) {

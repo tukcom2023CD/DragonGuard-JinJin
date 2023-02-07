@@ -19,4 +19,5 @@ public class MemberResponse {
     private Tier tier;
     private AuthStep authStep;
     private String profileImage;
+    private Integer rank;
 }

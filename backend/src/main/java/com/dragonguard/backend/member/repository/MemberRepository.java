@@ -11,11 +11,6 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long>, MemberQueryRepository {
     Optional<Member> findMemberByGithubId(String githubId);
-
     String findGithubIdById(Long id);
-
-    @Query(value = "UPDATE Member m SET m.tier = :tier WHERE m.id = :id")
-    void updateTierById(Long id, Tier tier);
-
     boolean existsByGithubId(String githubId);
 }
