@@ -1,5 +1,5 @@
 //
-//  AllRankingController.swift
+//  MyRepositoryRanking.swift
 //  ios
 //
 //  Created by 정호진 on 2023/02/01.
@@ -11,7 +11,7 @@ import RxDataSources
 import RxCocoa
 import RxSwift
 
-final class AllRankingController: UIViewController{
+final class MyRepositoryRankingController: UIViewController{
     
     let disposeBag = DisposeBag()
     
@@ -19,9 +19,8 @@ final class AllRankingController: UIViewController{
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        
         self.navigationController?.navigationBar.isHidden = false
-        self.navigationItem.title = "전체 랭킹"
+        self.navigationItem.title = "내 Repository 랭킹"
         
         addUItoView()
         settingAutoLayout()
@@ -104,7 +103,7 @@ final class AllRankingController: UIViewController{
 }
 
 
-extension AllRankingController: UITableViewDelegate {
+extension MyRepositoryRankingController: UITableViewDelegate {
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected \(indexPath.section)")
@@ -117,3 +116,20 @@ extension AllRankingController: UITableViewDelegate {
 }
 
 
+
+/*
+ SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
+ 
+ preview 실행이 안되는 경우 단축키
+ Command + Option + Enter : preview 그리는 캠버스 띄우기
+ Command + Option + p : preview 재실행
+ */
+
+import SwiftUI
+
+struct VCPreViewRepoRanking:PreviewProvider {
+    static var previews: some View {
+        MyOraganizationListController().toPreview().previewDevice("iPhone 14 pro")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
+}

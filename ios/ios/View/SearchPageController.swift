@@ -24,12 +24,14 @@ final class SearchPageController: UIViewController {
     var timerThread: Timer?     //일정 시간동안 API 호출되는 응답 감시하는 타이머
     var searchText = ""         //검색하는 단어
     var fetchingMore = false    // 무한 스크롤 감지
+    var startSearch = false
     var sectionCount = 0        // 결과물 개수 저장
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false
+        self.navigationItem.backButtonTitle = "검색"
         
         addUItoView()   //View에 적용할 UI 작성
         resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
@@ -77,32 +79,36 @@ final class SearchPageController: UIViewController {
     }
     
     @objc func refreshing(refresh: UIRefreshControl){
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
-            self.resultTableView.reloadData()
-            refresh.endRefreshing()
-        }
-    }
-    
-    @objc func timer(){
-        self.searchViewModel.switchData()
-        self.searchViewModel.searchResult
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: {
-                self.data = $0
-            })
-            .disposed(by: self.disposeBag)
-        
-        for i in self.data{
-            self.resultData.append(i.name)
-        }
-        
-        self.resultTableView.reloadData()
-        fetchingMore = false
+//        DispatchQueue.main.asyncAfter(deadline: .now()) {
+//            self.resultTableView.reloadData()
+//            refresh.endRefreshing()
+//        }
     }
     
     // 검색 결과 데이터 자동 쓰레드
     private func searchResultAutoThread(){
-        timerThread = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(timer), userInfo: nil, repeats: false)
+        timerThread = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+            self.searchViewModel.switchData()
+            self.searchViewModel.searchResult
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: {
+                    self.data = $0
+                })
+                .disposed(by: self.disposeBag)
+            
+            for i in self.data{
+                self.resultData.append(i.name)
+            }
+            
+            self.resultTableView.reloadData()
+            self.fetchingMore = false
+            
+            if self.resultData.count > 0 {
+                timer.invalidate()
+            }
+        })
+        
+        
     }
     
     
@@ -169,11 +175,11 @@ extension SearchPageController: UISearchBarDelegate{
         guard let searchText = searchUI.text else{ return }
         self.searchText = searchText
         
+        startSearch = true
+        searchViewModel.pageCount = 0
         callAPI(searchText: searchText)
         resultTableView.reloadData()
         
-        callAPI(searchText: searchText)
-        resultTableView.reloadData()
         searchResultAutoThread()    // API 감지 스레드
     }
     
@@ -208,7 +214,8 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected \(indexPath.section)")
-        
+        RepoContributorInfoService.repoShared.selectedName = resultData[indexPath.section]
+        self.navigationController?.pushViewController(RepoContributorInfoController(), animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -216,9 +223,8 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y
         
-        if position > (resultTableView.contentSize.height - scrollView.frame.size.height) || (sectionCount + 1) % 10 == 0{
-            if !fetchingMore {
-                
+        if position > (resultTableView.contentSize.height - scrollView.frame.size.height){
+            if !fetchingMore && startSearch{
                 fetchingMore = true
                 callAPI(searchText: self.searchText)
                 searchResultAutoThread()    // API 감지 스레드

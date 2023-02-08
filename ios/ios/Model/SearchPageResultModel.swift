@@ -7,9 +7,19 @@
 
 import Foundation
 
-class SearchPageResultModel {
+
+struct SearchPageDecodingData: Codable {
+    var id: String
     var name: String
-    init(name: String) {
+}
+
+
+class SearchPageResultModel {
+    var id: String
+    var name: String
+    
+    init(name: String,id: String) {
+        self.id = id
         self.name = name
     }
 }
