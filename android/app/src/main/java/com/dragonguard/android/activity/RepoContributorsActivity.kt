@@ -4,11 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +14,7 @@ import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityRepoContributorsBinding
 import com.dragonguard.android.model.RepoContributorsItem
 import com.dragonguard.android.recycleradapter.ContributorsAdapter
-import com.dragonguard.android.viewmodel.RepoContributorsViewModel
+import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -31,7 +29,8 @@ class RepoContributorsActivity : AppCompatActivity() {
     lateinit var contributorsAdapter: ContributorsAdapter
     private var contributors = ArrayList<RepoContributorsItem>()
     private var repoName = ""
-    var viewmodel = RepoContributorsViewModel()
+    var viewmodel = Viewmodel()
+    private var called = true
     private val colorsets = ArrayList<Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,16 +60,27 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     fun checkContributors(result: ArrayList<RepoContributorsItem>) {
         if (!result.isNullOrEmpty()) {
-            for (i in 0 until result.size) {
-                val compare = contributors.filter{it.githubId == result[i].githubId}
-                if(compare.isNullOrEmpty()) {
-                    contributors.add(result[i])
+            if(result[0].additions == null) {
+                if(called) {
+                    called = false
+                    val handler = Handler()
+                    handler.postDelayed({repoContributors(repoName)}, 5000)
+                } else {
+                    initRecycler()
                 }
+
+            } else {
+                contributors.addAll(result)
+                initRecycler()
             }
-            initRecycler()
         } else {
-            val handler = Handler()
-            handler.postDelayed({repoContributors(repoName)}, 5000)
+            if(called) {
+                called = false
+                val handler = Handler()
+                handler.postDelayed({repoContributors(repoName)}, 5000)
+            } else {
+                binding.progressBar.visibility = View.GONE
+            }
         }
     }
 
@@ -91,7 +101,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.contributorsChart.run {
             var count = 1
             contributors.forEach {
-                entries.add(BarEntry(count + 0.1f, it.commits.toFloat(), it.commits.toFloat()))
+                entries.add(BarEntry(count + 0.1f, it.commits!!.toFloat(), it.commits.toFloat()))
                 count++
 //                Toast.makeText(applicationContext, "현재 count = $count", Toast.LENGTH_SHORT).show()
             }

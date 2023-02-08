@@ -41,7 +41,7 @@ class RankingsActivity : AppCompatActivity() {
         }
 
         binding.userRanking.setOnClickListener {
-            val intent = Intent(applicationContext, UserRankingActivity::class.java)
+            val intent = Intent(applicationContext, TotalUsersRankingActivity::class.java)
             startActivity(intent)
         }
 

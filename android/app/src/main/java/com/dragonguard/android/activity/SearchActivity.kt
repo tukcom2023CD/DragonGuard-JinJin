@@ -17,7 +17,7 @@ import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
 import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
 import com.dragonguard.android.recycleradapter.VerticalItemDecorator
-import com.dragonguard.android.viewmodel.SearchViewModel
+import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
 
 class SearchActivity : AppCompatActivity() {
@@ -28,7 +28,7 @@ class SearchActivity : AppCompatActivity() {
     private var count = 0
     private var changed = true
     private var lastSearch = ""
-    var viewmodel = SearchViewModel()
+    var viewmodel = Viewmodel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -218,8 +218,8 @@ class SearchActivity : AppCompatActivity() {
         }
         count++
         Log.d("api 횟수", "$count 페이지 검색")
-        initScrollListener()
         binding.progressBar.visibility = View.GONE
+        initScrollListener()
     }
 
 
@@ -232,7 +232,6 @@ class SearchActivity : AppCompatActivity() {
                 Log.d("api 시도", "callSearchApi 실행  load more")
                 callSearchApi(lastSearch)
             }
-
         }
     }
 

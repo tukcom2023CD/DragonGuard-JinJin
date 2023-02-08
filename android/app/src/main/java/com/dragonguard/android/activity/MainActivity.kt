@@ -1,8 +1,6 @@
 package com.dragonguard.android.activity
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -16,7 +14,7 @@ import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.model.RegisterGithubIdModel
 import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.preferences.IdPreference
-import com.dragonguard.android.viewmodel.MainViewModel
+import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var prefs: IdPreference
     }
     private lateinit var binding: ActivityMainBinding
-    private var viewmodel = MainViewModel()
+    private var viewmodel = Viewmodel()
     private var backPressed : Long = 0
     private var id = 0
     //    var count = 0

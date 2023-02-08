@@ -1,9 +1,6 @@
 package com.dragonguard.android.connect
 
-import com.dragonguard.android.model.RegisterGithubIdModel
-import com.dragonguard.android.model.RepoContributorsModel
-import com.dragonguard.android.model.RepoNameModel
-import com.dragonguard.android.model.UserInfoModel
+import com.dragonguard.android.model.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -20,6 +17,9 @@ interface GitRankAPI {
 
     @GET("git-repos")
     fun getRepoContributors(@Query("name") repoName: String): Call<RepoContributorsModel>
+
+    @GET("/members/rankings")
+    fun getTotalUsersRanking(@QueryMap query: Map<String, String>) : Call<TotalUsersRankingModel>
 
     @GET("")
     fun getUserRanking()
