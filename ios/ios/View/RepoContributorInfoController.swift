@@ -17,6 +17,7 @@ final class RepoContributorInfoController: UIViewController{
     
     let num = [1,2,3,4,5]
     let name = ["a","b","c","d","e"]
+    let dataColor = [[NSUIColor.cyan],[NSUIColor.blue],[NSUIColor.yellow],[NSUIColor.red],[NSUIColor.brown]]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +39,13 @@ final class RepoContributorInfoController: UIViewController{
         return chart
     }()
     
+    lazy var userTableView: UITableView = {
+        let tableview = UITableView()
+        tableview.register(RepoContributorTableView.self, forCellReuseIdentifier: RepoContributorTableView.identifier)
+        
+        return tableview
+    }()
+    
     /*
      UI 추가할 때 작성하는 함수
      */
@@ -45,8 +53,10 @@ final class RepoContributorInfoController: UIViewController{
     private func addUItoView(){
         
         self.barChart.delegate = self
-        
-        
+        self.userTableView.delegate = self
+        self.userTableView.dataSource = self
+        self.view.addSubview(barChart)
+        self.view.addSubview(userTableView)
     }
     
     
@@ -57,11 +67,19 @@ final class RepoContributorInfoController: UIViewController{
      */
     
     private func setAutoLayout(){
+        // Chart AutoLayout
         barChart.snp.makeConstraints({ make in
             make.height.equalTo(deviceWidth)
             make.leading.equalTo(10)
             make.trailing.equalTo(-10)
-            make.bottom.equalTo(0)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        })
+        
+        userTableView.snp.makeConstraints({ make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.bottom.equalTo(barChart.snp.top).offset(0)
         })
     }
     
@@ -69,12 +87,34 @@ final class RepoContributorInfoController: UIViewController{
     
 }
 
+// tableview 설정
+extension RepoContributorInfoController: UITableViewDelegate, UITableViewDataSource{
+    
+    // cell 설정
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: RepoContributorTableView.identifier, for: indexPath) as? RepoContributorTableView ?? RepoContributorTableView()
+        
+        print( num[indexPath.row])
+        
+        cell.setLabel(num: num[indexPath.row], name: name[indexPath.row], color: .brown)
+        
+        return cell
+    }
+    
+    // 각 색션 내부 셀 개수
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return name.count }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return 60 }
+    
+}
+
+// Chart 설정
 extension RepoContributorInfoController: ChartViewDelegate {
     
     private func setchartOption(){
         
         var dataSet: [BarChartDataSet] = []
-        let dataColor = [[NSUIColor.cyan],[NSUIColor.blue],[NSUIColor.yellow],[NSUIColor.red],[NSUIColor.brown]]
+        
         
         for i in 0..<name.count{
             var contributorInfo = [ChartDataEntry]()
@@ -90,10 +130,7 @@ extension RepoContributorInfoController: ChartViewDelegate {
         let data = BarChartData(dataSets: dataSet)
         
         barChart.data = data
-        
         customChart()
-        view.addSubview(barChart)
-        
     }
     
     private func customChart(){
@@ -122,6 +159,13 @@ import SwiftUI
 struct VCPreViewRepoConriInfo:PreviewProvider {
     static var previews: some View {
         RepoContributorInfoController().toPreview().previewDevice("iPhone 14 pro")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
+}
+
+struct VCPreViewRepoConriInfo2:PreviewProvider {
+    static var previews: some View {
+        RepoContributorInfoController().toPreview().previewDevice("iPad (10th generation)")
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
