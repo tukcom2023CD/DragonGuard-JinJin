@@ -22,7 +22,7 @@ class Viewmodel {
     }
 
     fun getSearchRepoResult(name: String, count: Int): ArrayList<RepoSearchResultModel> {
-        return repository.searchApi(name, count)
+        return repository.getRepositoryNames(name, count)
     }
 
 

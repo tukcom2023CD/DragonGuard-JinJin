@@ -18,7 +18,7 @@ interface GitRankAPI {
     @GET("git-repos")
     fun getRepoContributors(@Query("name") repoName: String): Call<RepoContributorsModel>
 
-    @GET("/members/rankings")
+    @GET("members/ranking")
     fun getTotalUsersRanking(@QueryMap query: Map<String, String>) : Call<TotalUsersRankingModel>
 
     @GET("")

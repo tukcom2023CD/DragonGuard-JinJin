@@ -7,6 +7,7 @@ import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,6 +55,7 @@ class RepoContributorsActivity : AppCompatActivity() {
                 viewmodel.getRepoContributors(repoName)
             }
             val result = resultDeferred.await()
+//            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()
             checkContributors(result)
         }
     }
@@ -70,7 +72,12 @@ class RepoContributorsActivity : AppCompatActivity() {
                 }
 
             } else {
-                contributors.addAll(result)
+                for(i in 0 until result.size) {
+                    val compare = contributors.filter { it.githubId==result[i].githubId }
+                    if(compare.isEmpty()) {
+                        contributors.add(result[i])
+                    }
+                }
                 initRecycler()
             }
         } else {
@@ -86,6 +93,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     private fun initRecycler() {
 //        Toast.makeText(applicationContext, "리사이클러뷰 시작", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "contributors 수 : ${contributors.size}", Toast.LENGTH_SHORT).show()
         contributorsAdapter = ContributorsAdapter(contributors, this, colorsets)
         binding.repoContributors.adapter = contributorsAdapter
         binding.repoContributors.layoutManager = LinearLayoutManager(this)
@@ -98,26 +106,26 @@ class RepoContributorsActivity : AppCompatActivity() {
     private fun initGraph() {
 //        Toast.makeText(applicationContext,"그래프 그리기 시작", Toast.LENGTH_SHORT).show()
         val entries = mutableListOf<BarEntry>()
-        binding.contributorsChart.run {
-            var count = 1
-            contributors.forEach {
-                entries.add(BarEntry(count + 0.1f, it.commits!!.toFloat(), it.commits.toFloat()))
-                count++
+        var count = 1
+        contributors.forEach {
+            entries.add(BarEntry(count.toFloat() , it.commits!!.toFloat()))
+            count++
 //                Toast.makeText(applicationContext, "현재 count = $count", Toast.LENGTH_SHORT).show()
-            }
+        }
+        binding.contributorsChart.run {
 //            Toast.makeText(applicationContext, "그래프 entry  = ${entries.size}", Toast.LENGTH_SHORT).show()
-            setDrawValueAboveBar(true)
+            setDrawValueAboveBar(true) // 입력?값이 차트 위or아래에 그려질 건지 (true=위, false=아래)
             setMaxVisibleValueCount(entries.size) // 최대 보이는 그래프 개수를 contributors의 개수로 지정
             setDrawBarShadow(false) // 그래프 그림자
             setTouchEnabled(false) // 차트 터치 막기
             setPinchZoom(false) // 두손가락으로 줌 설정
             setDrawGridBackground(false) // 격자구조
             description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
-            legend.isEnabled = false // 차트 범례 설정(legend object chart)
+            legend.isEnabled = true // 차트 범례 설정(legend object chart)
             axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
             axisLeft.run { //왼쪽 축. 즉 Y방향 축을 뜻한다.
                 axisMinimum = 0f // 최소값 0
-                granularity = 50f // 50 단위마다 선을 그리려고 설정.
+                granularity = 10f // 50 단위마다 선을 그리려고 설정.
                 setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
                 setDrawGridLines(true) //격자 라인 활용
                 setDrawAxisLine(true) // 축 그리기 설정
@@ -127,6 +135,7 @@ class RepoContributorsActivity : AppCompatActivity() {
                 textSize = 13f //라벨 텍스트 크기
             }
             xAxis.run {
+                isEnabled = true
                 position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
                 granularity = 1f // 1 단위만큼 간격 두기
                 setDrawAxisLine(true) // 축 그림
@@ -140,9 +149,11 @@ class RepoContributorsActivity : AppCompatActivity() {
 
         var set = BarDataSet(entries,"DataSet").apply{
             this.colors = colorsets
-            setDrawIcons(false)
+            formSize = 15f
+            valueTextSize = 12f
             setDrawValues(true)
-            valueTextColor = R.color.black
+            valueFormatter = ScoreCustomFormatter()
+            setDrawIcons(true)
         }
         val dataSet = mutableListOf<IBarDataSet>()
         dataSet.add(set)
@@ -150,11 +161,11 @@ class RepoContributorsActivity : AppCompatActivity() {
         data.apply {
             setValueTextSize(10f)
             barWidth = 0.3f //막대 너비 설정
-            setValueFormatter(ScoreCustomFormatter())
         }
         binding.contributorsChart.run {
             this.data = data //차트의 데이터를 data로 설정해줌.
 //            setFitBars(true)
+
             invalidate()
         }
     }
@@ -168,8 +179,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     class ScoreCustomFormatter : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {
-            val score = value.toInt()
-            return score.toString()
+           return "" + value.toInt()
         }
     }
 

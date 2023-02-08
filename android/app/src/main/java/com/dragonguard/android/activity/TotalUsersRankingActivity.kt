@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +29,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
     private val size = 10
     private var page = 0
     private var position = 0
-    private lateinit var usersRanking : ArrayList<TotalUsersRankingModelItem>
+    private var usersRanking = ArrayList<TotalUsersRankingModelItem>()
     private var changed = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,8 @@ class TotalUsersRankingActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+
+        getTotalUsersRanking(page, size)
     }
 
     private fun getTotalUsersRanking(page: Int, size: Int) {
@@ -54,23 +57,14 @@ class TotalUsersRankingActivity : AppCompatActivity() {
     }
 
     private fun checkRankings(result: ArrayList<TotalUsersRankingModelItem>) {
+        Toast.makeText(applicationContext, "개수 : ${result.size}",Toast.LENGTH_SHORT).show()
         if(!result.isNullOrEmpty()) {
-            if(result[0].commits == null) {
-                if(changed) {
-                    changed = false
-                    val handler = Handler()
-                    handler.postDelayed({getTotalUsersRanking(page, size)}, 4000)
-                } else {
-                    binding.progressBar.visibility = View.GONE
-                }
+            if(usersRanking.isNullOrEmpty()) {
+                usersRanking = result
             } else {
-                if(usersRanking.isNullOrEmpty()) {
-                    usersRanking = result
-                } else {
-                    usersRanking.addAll(result)
-                }
-                initRecycler()
+                usersRanking.addAll(result)
             }
+            initRecycler()
         } else {
             if(changed) {
                 changed = false
@@ -83,6 +77,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
+        Toast.makeText(applicationContext, "개수 : ${usersRanking.size}",Toast.LENGTH_SHORT).show()
         if(page == 0) {
             totalUserRankingAdapter = TotalUsersRankingAdapter(usersRanking, this)
             binding.totalUsersRankings.adapter = totalUserRankingAdapter

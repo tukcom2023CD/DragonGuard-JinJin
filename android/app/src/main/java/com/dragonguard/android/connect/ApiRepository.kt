@@ -24,7 +24,7 @@ class ApiRepository {
 
     private var api = retrofit.create(GitRankAPI::class.java)
 
-    fun searchApi(name: String, count: Int): ArrayList<RepoSearchResultModel> {
+    fun getRepositoryNames(name: String, count: Int): ArrayList<RepoSearchResultModel> {
         var repoNames : ArrayList<RepoSearchResultModel> = arrayListOf<RepoSearchResultModel>()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
@@ -91,11 +91,11 @@ class ApiRepository {
     }
 
     fun getTotalUsersRankings(page: Int, size: Int): ArrayList<TotalUsersRankingModelItem> {
-        var rankingResult = arrayListOf(TotalUsersRankingModelItem(null, null, null, null, null))
+        var rankingResult = ArrayList<TotalUsersRankingModelItem>()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${page}")
         queryMap.put("size","$size")
-        queryMap.put("sort","commits")
+        queryMap.put("sort","commits,DESC")
         val ranking = api.getTotalUsersRanking(queryMap)
         try {
             val result = ranking.execute()
@@ -103,8 +103,8 @@ class ApiRepository {
                 rankingResult = result.body()!!
             }
         } catch (e: Exception) {
-            rankingResult
             Log.d("error", "유저랭킹 api 에러 ${e.message}")
+            return rankingResult
         }
         return rankingResult
     }

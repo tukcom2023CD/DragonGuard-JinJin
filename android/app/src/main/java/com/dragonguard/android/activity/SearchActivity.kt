@@ -164,6 +164,7 @@ class SearchActivity : AppCompatActivity() {
                 viewmodel.getSearchRepoResult(name, count)
             }
             val result = resultDeferred.await()
+            delay(1000)
             if(!checkSearchResult(result)) {
                 val secondDeferred = coroutine.async(Dispatchers.IO) {
                     viewmodel.getSearchRepoResult(name, count)
