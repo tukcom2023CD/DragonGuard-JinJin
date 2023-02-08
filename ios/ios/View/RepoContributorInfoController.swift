@@ -17,13 +17,12 @@ final class RepoContributorInfoController: UIViewController{
     
     let num = [1,2,3,4,5]
     let name = ["a","b","c","d","e"]
-    let dataColor = [[NSUIColor.cyan],[NSUIColor.blue],[NSUIColor.yellow],[NSUIColor.red],[NSUIColor.brown]]
+    var dataColor:[[UIColor]] = []  // 랜덤 색상 설정
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        setchartOption()
         addUItoView()
         setAutoLayout()
     }
@@ -76,7 +75,7 @@ final class RepoContributorInfoController: UIViewController{
         })
         
         userTableView.snp.makeConstraints({ make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.bottom.equalTo(barChart.snp.top).offset(0)
@@ -84,6 +83,16 @@ final class RepoContributorInfoController: UIViewController{
     }
     
     
+    
+    // 색상 랜덤 설정
+    private func randomColor(){
+        for _ in 0..<name.count{
+            let r: CGFloat = CGFloat.random(in: 0...1)
+            let g: CGFloat = CGFloat.random(in: 0...1)
+            let b: CGFloat = CGFloat.random(in: 0...1)
+            dataColor.append([UIColor(red: r, green: g, blue: b, alpha: 0.8)])
+        }
+    }
     
 }
 
@@ -94,10 +103,9 @@ extension RepoContributorInfoController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RepoContributorTableView.identifier, for: indexPath) as? RepoContributorTableView ?? RepoContributorTableView()
         
-        print( num[indexPath.row])
-        
-        cell.setLabel(num: num[indexPath.row], name: name[indexPath.row], color: .brown)
-        
+        randomColor()
+        cell.setLabel(num: num[indexPath.row], name: name[indexPath.row], color: dataColor[indexPath.row][0])
+        setchartOption()
         return cell
     }
     
@@ -115,12 +123,12 @@ extension RepoContributorInfoController: ChartViewDelegate {
         
         var dataSet: [BarChartDataSet] = []
         
-        
         for i in 0..<name.count{
             var contributorInfo = [ChartDataEntry]()
             
             let dataEntry = BarChartDataEntry(x: Double(i), y: Double(num[i]))
             contributorInfo.append(dataEntry)
+            
             
             let set1 = BarChartDataSet(entries: contributorInfo, label: "\(name[i])")
             set1.colors = dataColor[i]
@@ -128,7 +136,7 @@ extension RepoContributorInfoController: ChartViewDelegate {
         }
 
         let data = BarChartData(dataSets: dataSet)
-        
+        data.setValueFont(UIFont.systemFont(ofSize: 12))    // 그래프 위 숫자
         barChart.data = data
         customChart()
     }
@@ -137,8 +145,12 @@ extension RepoContributorInfoController: ChartViewDelegate {
         barChart.rightAxis.enabled = false
         barChart.animate(xAxisDuration: 1, yAxisDuration: 2)
         barChart.leftAxis.enabled = true
+        barChart.doubleTapToZoomEnabled = false
         barChart.xAxis.enabled = false
-        
+        barChart.leftAxis.labelFont = .systemFont(ofSize: 15)
+        barChart.noDataText = "출력 데이터가 없습니다."
+        barChart.noDataFont = .systemFont(ofSize: 30)
+        barChart.noDataTextColor = .lightGray
         
     }
     

@@ -31,6 +31,7 @@ final class SearchPageController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false
+        self.navigationItem.backButtonTitle = "검색"
         
         addUItoView()   //View에 적용할 UI 작성
         resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
