@@ -81,12 +81,12 @@ final class RepoContributorTableView: UITableViewCell{
         nameLabel.snp.makeConstraints({ make in
             make.leading.equalTo(numLabel.snp.trailing)
             make.top.equalTo(5)
-            make.width.equalTo(contentView.bounds.width / 3)
+//            make.width.equalTo(contentView.bounds.width / 3)
             
         })
         
         colorView.snp.makeConstraints({ make in
-            make.leading.equalTo(nameLabel.snp.trailing).offset(20)
+//            make.leading.equalTo(nameLabel.snp.trailing).offset(20)
             make.top.equalTo(5)
             make.trailing.equalTo(contentView.snp.trailing).offset(-10)
             make.width.equalTo(contentView.bounds.height - 10)

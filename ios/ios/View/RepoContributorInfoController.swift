@@ -15,6 +15,7 @@ final class RepoContributorInfoController: UIViewController{
     let deviceWidth = UIScreen.main.bounds.width    //기기의 너비를 받아옴
     let deviceHeight = UIScreen.main.bounds.height
     
+    
     let num = [1,2,3,4,5]
     let name = ["a","b","c","d","e"]
     var dataColor:[[UIColor]] = []  // 랜덤 색상 설정
@@ -22,7 +23,7 @@ final class RepoContributorInfoController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        
+        RepoContributorInfoService.repoShared.getRepoContriInfo()
         addUItoView()
         setAutoLayout()
     }
@@ -74,6 +75,7 @@ final class RepoContributorInfoController: UIViewController{
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         })
         
+        //tableview Autolayout
         userTableView.snp.makeConstraints({ make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.leading.equalTo(30)

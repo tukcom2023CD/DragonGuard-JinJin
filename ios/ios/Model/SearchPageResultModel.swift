@@ -7,6 +7,13 @@
 
 import Foundation
 
+
+struct SearchPageDecodingData: Codable {
+    var id: String
+    var name: String
+}
+
+
 class SearchPageResultModel {
     var id: String
     var name: String

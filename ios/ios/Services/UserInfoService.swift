@@ -14,38 +14,24 @@ class UserInfoService{
     static let sharedData = UserInfoService()
     let ip = APIURL.ip
     var resultArray = [UserInfoModel]()
-    var checkData = false
+    
     
     private init() { }
     
     func getMemberInfo(page: Int, size: Int){
         let url = APIURL.apiUrl.getUserInfo(ip: ip, page: page, size: size)
         self.resultArray = []
-        checkData = false
         
-//        Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
-            AF.request(url)
-                .validate(statusCode: 200..<201)
-                .responseDecodable(of: [UserInfoDecodingData].self) { response in
-                    guard let responseResult = response.value else {return}
-                    print("responseResult \(responseResult)")
-                    if(responseResult.count != 0 && self.resultArray.count == 0){
-                        for data in responseResult {
-                            self.checkData = true
-                            let dataBundle = UserInfoModel(id: data.id, name: data.name, githubId: data.githubId, commits: data.commits, tier: data.tier)
-                            self.resultArray.append(dataBundle)
-                        }
+        AF.request(url)
+            .validate(statusCode: 200..<201)
+            .responseDecodable(of: [UserInfoDecodingData].self) { response in
+                guard let responseResult = response.value else {return}
+                if(responseResult.count != 0 && self.resultArray.count == 0){
+                    for data in responseResult {
+                        let dataBundle = UserInfoModel(id: data.id, name: data.name, githubId: data.githubId, commits: data.commits, tier: data.tier)
+                        self.resultArray.append(dataBundle)
                     }
                 }
-            
-//            if self.checkData{
-//                timer.invalidate()
-//            }
-//            Thread.sleep(forTimeInterval: 1)
-//        })
-        
-        
+            }
     }
-    
-    
 }

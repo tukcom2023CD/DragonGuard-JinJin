@@ -32,4 +32,6 @@ final class UserInfoViewModel{
         allRankingobservable.onNext(sortedDoneUserArray)
     }
     
+    
+    
 }
