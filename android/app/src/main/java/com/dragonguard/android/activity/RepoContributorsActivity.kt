@@ -3,6 +3,7 @@ package com.dragonguard.android.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -29,6 +30,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRepoContributorsBinding
     lateinit var contributorsAdapter: ContributorsAdapter
     private var contributors = ArrayList<RepoContributorsItem>()
+    private var repoName = ""
     var viewmodel = RepoContributorsViewModel()
     private val colorsets = ArrayList<Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,32 +43,23 @@ class RepoContributorsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
-        val repoName = intent.getStringExtra("repoName")
+        repoName = intent.getStringExtra("repoName")!!
 //        Toast.makeText(applicationContext, "reponame = $repoName", Toast.LENGTH_SHORT).show()
-        repoContributors(repoName!!)
+        repoContributors(repoName)
     }
 
     fun repoContributors(repoName: String) {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            var resultDeferred = coroutine.async(Dispatchers.IO) {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
                 viewmodel.getRepoContributors(repoName)
             }
-            var result = resultDeferred.await()
-            delay(1000)
-            if (!checkContributors(result)) {
-//                Toast.makeText(applicationContext, "비어있음", Toast.LENGTH_SHORT).show()
-                resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getRepoContributors(repoName)
-                }
-                result = resultDeferred.await()
-                delay(1000)
-                checkContributors(result)
-            }
+            val result = resultDeferred.await()
+            checkContributors(result)
         }
     }
 
-    fun checkContributors(result: ArrayList<RepoContributorsItem>): Boolean {
+    fun checkContributors(result: ArrayList<RepoContributorsItem>) {
         if (!result.isNullOrEmpty()) {
             for (i in 0 until result.size) {
                 val compare = contributors.filter{it.githubId == result[i].githubId}
@@ -75,9 +68,10 @@ class RepoContributorsActivity : AppCompatActivity() {
                 }
             }
             initRecycler()
-            return true
+        } else {
+            val handler = Handler()
+            handler.postDelayed({repoContributors(repoName)}, 5000)
         }
-        return false
     }
 
     private fun initRecycler() {
@@ -167,6 +161,13 @@ class RepoContributorsActivity : AppCompatActivity() {
             val score = value.toInt()
             return score.toString()
         }
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(applicationContext, SearchActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -158,27 +158,37 @@ class SearchActivity : AppCompatActivity() {
     //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
         binding.progressBar.visibility = View.VISIBLE
-        var result = arrayListOf<RepoSearchResultModel>()
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            var resultDeferred = coroutine.async(Dispatchers.IO) {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
                 viewmodel.getSearchRepoResult(name, count)
             }
-            result = resultDeferred.await()
-            delay(500)
-            checkSearchResult(result)
+            val result = resultDeferred.await()
+            if(!checkSearchResult(result)) {
+                val secondDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getSearchRepoResult(name, count)
+                }
+                val second = secondDeferred.await()
+                if(checkSearchResult(second)) {
+                    initRecycler()
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                }
+            } else {
+                initRecycler()
+            }
         }
     }
 
     //    api 호출결과 판별 및 출력
-    private fun checkSearchResult(searchResult: ArrayList<RepoSearchResultModel>) {
+    private fun checkSearchResult(searchResult: ArrayList<RepoSearchResultModel>): Boolean {
         return when(searchResult.isNullOrEmpty() ){
             true ->{
                 if(changed) {
                     changed = false
-                    callSearchApi(viewmodel.onSearchListener.value!!)
+                    false
                 } else {
-                    initRecycler()
+                    true
                 }
             }
             false ->{
@@ -189,7 +199,7 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     repoNames.addAll(searchResult)
                 }
-                initRecycler()
+                true
             }
         }
 

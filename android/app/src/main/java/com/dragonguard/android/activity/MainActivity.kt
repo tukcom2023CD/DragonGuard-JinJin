@@ -79,7 +79,6 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.postRegister(body)
             }
             id = resultDeferred.await()
-            delay(500)
             prefs.setId("id", id)
             searchUser(id)
         }
