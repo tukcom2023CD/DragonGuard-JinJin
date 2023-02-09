@@ -13,7 +13,7 @@ import SwiftUI
 final class MainController: UIViewController {
     
     
-    let indexBtns = ["내 티어 : 루비", "전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교하기"]
+    let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교하기"]
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
     
@@ -58,6 +58,15 @@ final class MainController: UIViewController {
         return cv
     }()
     
+    // 소속 대학교 이름 label
+    lazy var univNameLabel: UILabel = {
+       let univName = UILabel()
+        univName.text = "한국공학대학교"
+        univName.textColor = .black
+        univName.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
+        return univName
+    }()
+    
     // 검색 버튼 UI
     lazy var searchUI: UIButton = {
         let searchUI = UIButton()
@@ -65,6 +74,14 @@ final class MainController: UIViewController {
         searchUI.setTitleColor(.black, for: .normal)
         searchUI.addTarget(self, action: #selector(searchUIClicked), for: .touchUpInside)
         return searchUI
+    }()
+    
+    // 내 티어, 토큰 띄우는 UI
+    lazy var tierTokenUI: TierTokenCustomUIView = {
+        let tierTokenUI = TierTokenCustomUIView()
+        tierTokenUI.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+        tierTokenUI.layer.cornerRadius = 20
+        return tierTokenUI
     }()
     
     // 유지 이름 버튼 누르면 설정 화면으로 이동
@@ -107,8 +124,10 @@ final class MainController: UIViewController {
     
     private func addUItoView(){
         self.view.addSubview(collectionView)
+        self.view.addSubview(univNameLabel)
         self.view.addSubview(searchUI)
         self.view.addSubview(settingUI)
+        self.view.addSubview(tierTokenUI)
         configureCollectionView()
     }
     
@@ -120,9 +139,17 @@ final class MainController: UIViewController {
     
     private func settingAutoLayout(){
         
+        // 소속 대학교 이름 AutoLayout
+        univNameLabel.snp.makeConstraints({ make in
+            make.top.equalTo(settingUI.snp.bottom).offset(30)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.bottom.equalTo(searchUI.snp.top).offset(-20)
+        })
+        
         // 검색 버튼 AutoLayout
         searchUI.snp.makeConstraints({ make in
-            make.top.equalTo(100)
+            make.top.equalTo(univNameLabel.snp.bottom)
             make.leading.equalTo(10)
             make.trailing.equalTo(-10)
         })
@@ -133,9 +160,18 @@ final class MainController: UIViewController {
             make.leading.equalTo(10)
         })
         
+        // 내 티어, 토큰 띄우는 UI AutoLayout
+        tierTokenUI.snp.makeConstraints({ make in
+            make.top.equalTo(searchUI.snp.bottom)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.height.equalTo(deviceHeight/6)
+            make.bottom.equalTo(collectionView.snp.top).offset(-10)
+        })
+        
+        
         // CollectionView AutoLayout
         collectionView.snp.makeConstraints({ make in
-            make.top.equalTo(120)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.bottom.equalTo(-30)
@@ -178,8 +214,8 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellHeight = collectionView.bounds.height/3-30
-        let cellWidth = collectionView.bounds.width/2-5
+        let cellHeight = deviceHeight*24/100
+        let cellWidth = collectionView.bounds.width*48/100
         
         return CGSize(width: cellWidth, height: cellHeight)
     }
