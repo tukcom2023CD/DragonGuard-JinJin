@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.getSearchTierResult(id)
             }
             val userInfo : UserInfoModel = resultDeferred.await()
-            if(userInfo.name == null) {
+            if(userInfo.githubId == null) {
                 Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
                 registerUser("posite")
             } else {

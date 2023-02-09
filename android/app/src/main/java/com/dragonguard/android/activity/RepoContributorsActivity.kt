@@ -52,7 +52,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         repoContributors(repoName)
     }
 
-//    repo의 contributors 검색
+    //    repo의 contributors 검색
     fun repoContributors(repoName: String) {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -65,39 +65,39 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
     }
 
-//    검색한 결과가 잘 왔는지 확인
+    //    검색한 결과가 잘 왔는지 확인
     fun checkContributors(result: ArrayList<RepoContributorsItem>) {
         if (!result.isNullOrEmpty()) {
-            if(result[0].additions == null) {
-                if(called) {
+            if (result[0].additions == null) {
+                if (called) {
                     called = false
                     val handler = Handler()
-                    handler.postDelayed({repoContributors(repoName)}, 5000)
+                    handler.postDelayed({ repoContributors(repoName) }, 5000)
                 } else {
                     initRecycler()
                 }
 
             } else {
-                for(i in 0 until result.size) {
-                    val compare = contributors.filter { it.githubId==result[i].githubId }
-                    if(compare.isEmpty()) {
+                for (i in 0 until result.size) {
+                    val compare = contributors.filter { it.githubId == result[i].githubId }
+                    if (compare.isEmpty()) {
                         contributors.add(result[i])
                     }
                 }
                 initRecycler()
             }
         } else {
-            if(called) {
+            if (called) {
                 called = false
                 val handler = Handler()
-                handler.postDelayed({repoContributors(repoName)}, 5000)
+                handler.postDelayed({ repoContributors(repoName) }, 5000)
             } else {
                 binding.progressBar.visibility = View.GONE
             }
         }
     }
 
-//    리사이클러뷰 실행
+    //    리사이클러뷰 실행
     private fun initRecycler() {
 //        Toast.makeText(applicationContext, "리사이클러뷰 시작", Toast.LENGTH_SHORT).show()
 //        Toast.makeText(applicationContext, "contributors 수 : ${contributors.size}", Toast.LENGTH_SHORT).show()
@@ -110,20 +110,35 @@ class RepoContributorsActivity : AppCompatActivity() {
         initGraph()
     }
 
-//    그래프 그리기
+    //    그래프 그리기
     private fun initGraph() {
 //        Toast.makeText(applicationContext,"그래프 그리기 시작", Toast.LENGTH_SHORT).show()
-        val entries = mutableListOf<BarEntry>()
+        val entries = ArrayList<BarEntry>()
         var count = 1
         contributors.forEach {
-            entries.add(BarEntry(count.toFloat() , it.commits!!.toFloat()))
+            entries.add(BarEntry(count.toFloat(), it.commits!!.toFloat()))
             count++
 //                Toast.makeText(applicationContext, "현재 count = $count", Toast.LENGTH_SHORT).show()
         }
-        binding.contributorsChart.run {
+
+        val set = BarDataSet(entries,"DataSet")
+        set.colors = colorsets
+        set.apply{
+            formSize = 15f
+            valueTextSize = 12f
+            setDrawValues(true)
+            valueFormatter = ScoreCustomFormatter(contributors)
+            setDrawIcons(true)
+        }
+        val dataSet = ArrayList<IBarDataSet>()
+        dataSet.add(set)
+        val data = BarData()
+        data.addDataSet(set)
+
+        binding.contributorsChart.apply {
 //            Toast.makeText(applicationContext, "그래프 entry  = ${entries.size}", Toast.LENGTH_SHORT).show()
-            setDrawValueAboveBar(true) // 입력?값이 차트 위or아래에 그려질 건지 (true=위, false=아래)
-            setMaxVisibleValueCount(entries.size) // 최대 보이는 그래프 개수를 contributors의 개수로 지정
+//            setDrawValueAboveBar(true) // 입력?값이 차트 위or아래에 그려질 건지 (true=위, false=아래)
+//            setMaxVisibleValueCount(entries.size) // 최대 보이는 그래프 개수를 contributors의 개수로 지정
             setDrawBarShadow(false) // 그래프 그림자
             setTouchEnabled(false) // 차트 터치 막기
             setPinchZoom(false) // 두손가락으로 줌 설정
@@ -131,18 +146,18 @@ class RepoContributorsActivity : AppCompatActivity() {
             description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
             legend.isEnabled = true // 차트 범례 설정(legend object chart)
             axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
-            axisLeft.run { //왼쪽 축. 즉 Y방향 축을 뜻한다.
+            axisLeft.apply { //왼쪽 축. 즉 Y방향 축을 뜻한다.
                 axisMinimum = 0f // 최소값 0
                 granularity = 10f // 50 단위마다 선을 그리려고 설정.
                 setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
                 setDrawGridLines(true) //격자 라인 활용
                 setDrawAxisLine(true) // 축 그리기 설정
                 axisLineColor = ContextCompat.getColor(context, R.color.black) // 축 색깔 설정
-                gridColor = ContextCompat.getColor(context, R.color.purple_200) // 축 아닌 격자 색깔 설정
+                gridColor = ContextCompat.getColor(context, R.color.black) // 축 아닌 격자 색깔 설정
                 textColor = ContextCompat.getColor(context, R.color.black) // 라벨 텍스트 컬러 설정
                 textSize = 13f //라벨 텍스트 크기
             }
-            xAxis.run {
+            xAxis.apply {
                 isEnabled = true
                 position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
                 granularity = 1f // 1 단위만큼 간격 두기
@@ -152,43 +167,43 @@ class RepoContributorsActivity : AppCompatActivity() {
                 textSize = 12f // 텍스트 크기
                 valueFormatter = MyXAxisFormatter(contributors) // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
             }
-//            animateY(1000) // 밑에서부터 올라오는 애니매이션 적용
+            animateY(1000) // 밑에서부터 올라오는 애니매이션 적용
         }
 
-        var set = BarDataSet(entries,"DataSet").apply{
-            this.colors = colorsets
-            formSize = 15f
-//            valueTextSize = 12f
-//            setDrawValues(true)
-//            valueFormatter = ScoreCustomFormatter()
-            setDrawIcons(true)
-        }
-        val dataSet = mutableListOf<IBarDataSet>()
-        dataSet.add(set)
-        val data = BarData(dataSet)
+
+
         data.apply {
             setValueTextSize(12f)
             barWidth = 0.3f //막대 너비 설정
         }
-        binding.contributorsChart.run {
-            this.data = data //차트의 데이터를 data로 설정해줌.
+        binding.contributorsChart.data = data
+        binding.contributorsChart.invalidate()
+//        binding.contributorsChart.run {
+//            this.data = data //차트의 데이터를 data로 설정해줌.
 //            setFitBars(true)
-
-            invalidate()
-        }
+//
+//            invalidate()
+//        }
     }
 
-//    그래프 x축을 contributor의 이름으로 변경하는 코드
+    //    그래프 x축을 contributor의 이름으로 변경하는 코드
     class MyXAxisFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
         private val days = contributors.flatMap { arrayListOf(it.githubId) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString()
         }
+        override fun getFormattedValue(value: Float): String {
+            return "" + value.toInt()
+        }
     }
 
-    class ScoreCustomFormatter : ValueFormatter() {
+    class ScoreCustomFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
+        private val days = contributors.flatMap { arrayListOf(it.githubId) }
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            return days.getOrNull(value.toInt() - 1) ?: value.toString()
+        }
         override fun getFormattedValue(value: Float): String {
-           return "" + value.toInt()
+            return "" + value.toInt()
         }
     }
 
