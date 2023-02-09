@@ -9,6 +9,9 @@ import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMyRepoRankingBinding
 
+/*
+ 사용자의 repo들의 랭킹을 보여주는 actiivty
+ */
 class MyRepoRankingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyRepoRankingBinding
     override fun onCreate(savedInstanceState: Bundle?) {

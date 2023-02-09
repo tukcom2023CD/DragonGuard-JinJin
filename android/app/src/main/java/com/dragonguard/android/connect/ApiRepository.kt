@@ -9,7 +9,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
-//api들 호출부분
+/*
+ 서버에 요청하는 모든 api들의 호출부분
+ */
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.MINUTES)

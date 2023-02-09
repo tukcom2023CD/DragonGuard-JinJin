@@ -11,6 +11,9 @@ import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityCriterionBinding
 
+/*
+ 토큰 부여 기준을 보여주는 activity
+ */
 class CriterionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCriterionBinding
     override fun onCreate(savedInstanceState: Bundle?) {

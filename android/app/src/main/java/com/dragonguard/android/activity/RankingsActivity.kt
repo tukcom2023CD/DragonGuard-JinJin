@@ -9,6 +9,9 @@ import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityRankingsBinding
 
+/*
+ 보고싶은 랭킹을 보러 가기 위한 activity
+ */
 class RankingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRankingsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +24,7 @@ class RankingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
+//        각각 버튼을 누르면 원하는 랭킹을 보러 가게 화면 전환
         binding.myRepoRanking.setOnClickListener {
             val intent = Intent(applicationContext, MyRepoRankingActivity::class.java)
             startActivity(intent)

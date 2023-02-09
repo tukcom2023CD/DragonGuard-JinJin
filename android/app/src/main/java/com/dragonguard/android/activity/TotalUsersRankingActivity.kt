@@ -22,6 +22,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+/*
+ 가입한 모든 사용자들의 랭킹을 보여주는 activity
+ */
 class TotalUsersRankingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTotalUsersRankingBinding
     private lateinit var totalUserRankingAdapter: TotalUsersRankingAdapter
@@ -57,7 +60,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
     }
 
     private fun checkRankings(result: ArrayList<TotalUsersRankingModelItem>) {
-        Toast.makeText(applicationContext, "개수 : ${result.size}",Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "개수 : ${result.size}",Toast.LENGTH_SHORT).show()
         if(!result.isNullOrEmpty()) {
             if(usersRanking.isNullOrEmpty()) {
                 usersRanking = result
@@ -77,7 +80,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        Toast.makeText(applicationContext, "개수 : ${usersRanking.size}",Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "개수 : ${usersRanking.size}",Toast.LENGTH_SHORT).show()
         if(page == 0) {
             totalUserRankingAdapter = TotalUsersRankingAdapter(usersRanking, this)
             binding.totalUsersRankings.adapter = totalUserRankingAdapter

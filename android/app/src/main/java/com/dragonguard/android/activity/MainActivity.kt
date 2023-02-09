@@ -17,6 +17,9 @@ import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
 
+/*
+ 사용자의 정보나 검색, 랭킹등을 보러가는 화면으로 이동할 수 있는 메인 activity
+ */
 class MainActivity : AppCompatActivity() {
     companion object {
         lateinit var prefs: IdPreference
@@ -69,6 +72,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+//    등록되어있지 않을 경우 post 요청을 통해 가입하기
     private fun registerUser(githubId: String) {
         var body = RegisterGithubIdModel(githubId)
         val coroutine = CoroutineScope(Dispatchers.Main)
@@ -83,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-//  메인화면의 유저 정보 검색하기
+//  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
     private fun searchUser(id: Int){
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -116,6 +120,7 @@ class MainActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
+//    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
     override fun onBackPressed() {
 //        super.onBackPressed()
         if(System.currentTimeMillis() > backPressed + 2500) {

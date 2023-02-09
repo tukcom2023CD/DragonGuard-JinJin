@@ -25,6 +25,10 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import kotlinx.coroutines.*
 
+/*
+ 선택한 repo의 contributor들과 기여 정도를 보여주고
+ 막대그래프로 시각화해서 보여주는 activity
+ */
 class RepoContributorsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRepoContributorsBinding
     lateinit var contributorsAdapter: ContributorsAdapter
@@ -48,6 +52,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         repoContributors(repoName)
     }
 
+//    repo의 contributors 검색
     fun repoContributors(repoName: String) {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -60,6 +65,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
     }
 
+//    검색한 결과가 잘 왔는지 확인
     fun checkContributors(result: ArrayList<RepoContributorsItem>) {
         if (!result.isNullOrEmpty()) {
             if(result[0].additions == null) {
@@ -91,6 +97,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
     }
 
+//    리사이클러뷰 실행
     private fun initRecycler() {
 //        Toast.makeText(applicationContext, "리사이클러뷰 시작", Toast.LENGTH_SHORT).show()
 //        Toast.makeText(applicationContext, "contributors 수 : ${contributors.size}", Toast.LENGTH_SHORT).show()
@@ -103,6 +110,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         initGraph()
     }
 
+//    그래프 그리기
     private fun initGraph() {
 //        Toast.makeText(applicationContext,"그래프 그리기 시작", Toast.LENGTH_SHORT).show()
         val entries = mutableListOf<BarEntry>()
@@ -150,16 +158,16 @@ class RepoContributorsActivity : AppCompatActivity() {
         var set = BarDataSet(entries,"DataSet").apply{
             this.colors = colorsets
             formSize = 15f
-            valueTextSize = 12f
-            setDrawValues(true)
-            valueFormatter = ScoreCustomFormatter()
+//            valueTextSize = 12f
+//            setDrawValues(true)
+//            valueFormatter = ScoreCustomFormatter()
             setDrawIcons(true)
         }
         val dataSet = mutableListOf<IBarDataSet>()
         dataSet.add(set)
         val data = BarData(dataSet)
         data.apply {
-            setValueTextSize(10f)
+            setValueTextSize(12f)
             barWidth = 0.3f //막대 너비 설정
         }
         binding.contributorsChart.run {
@@ -170,6 +178,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
     }
 
+//    그래프 x축을 contributor의 이름으로 변경하는 코드
     class MyXAxisFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
         private val days = contributors.flatMap { arrayListOf(it.githubId) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {

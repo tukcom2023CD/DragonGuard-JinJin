@@ -9,6 +9,9 @@ import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityTotalUniversitiesRankingBinding
 
+/*
+ 모든 대학교들의 랭킹을 보여주는 activity
+ */
 class TotalUniversitiesRankingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTotalUniversitiesRankingBinding
     override fun onCreate(savedInstanceState: Bundle?) {

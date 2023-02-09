@@ -24,6 +24,8 @@ class LoginActivity : AppCompatActivity() {
     fun loginListener(){
         finish()
     }
+
+//    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
     override fun onBackPressed() {
 //        super.onBackPressed()
         if(System.currentTimeMillis() > backPressed + 2500) {

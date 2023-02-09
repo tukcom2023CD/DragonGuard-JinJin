@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import com.dragonguard.android.connect.ApiRepository
 import com.dragonguard.android.model.*
 
-
+/*
+ mvvm 구현을 위한 viewmodel
+ */
 class Viewmodel {
     private val repository = ApiRepository()
     var onSearchClickListener = MutableLiveData<Boolean>()
@@ -13,6 +15,7 @@ class Viewmodel {
     var onOptionListener = MutableLiveData<String>()
     var onSearchListener = MutableLiveData<String>()
 
+//
     fun getSearchTierResult(id: Int): UserInfoModel{
         return repository.getUserInfo(id)
     }

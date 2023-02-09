@@ -20,6 +20,9 @@ import com.dragonguard.android.recycleradapter.VerticalItemDecorator
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
 
+/*
+ repo를 이름으로 검색하는 activity
+ */
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     lateinit var repositoryProfileAdapter: RepositoryProfileAdapter

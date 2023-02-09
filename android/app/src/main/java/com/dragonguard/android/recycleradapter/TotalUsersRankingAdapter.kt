@@ -13,6 +13,9 @@ import com.dragonguard.android.R
 import com.dragonguard.android.model.RepoContributorsItem
 import com.dragonguard.android.model.TotalUsersRankingModelItem
 
+/*
+ 모든 사용자들을 랭킹 순서대로 나열하기 위한 recycleradapter
+ */
 class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankingModelItem>, private val context: Context) : RecyclerView.Adapter<TotalUsersRankingAdapter.ViewHolder>() {
     private var rank = 1
 
