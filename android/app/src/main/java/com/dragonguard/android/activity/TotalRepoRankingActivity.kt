@@ -9,6 +9,9 @@ import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityTotalRepoRankingBinding
 
+/*
+ 모든 repo들의 랭킹을 보여주는 activity
+ */
 class TotalRepoRankingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTotalRepoRankingBinding
     override fun onCreate(savedInstanceState: Bundle?) {

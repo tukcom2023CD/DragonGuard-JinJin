@@ -11,6 +11,9 @@ import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityFaqBinding
 
+/*
+ 자주 묻는 질문들과 답을 보여주는 activity
+ */
 class FaqActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFaqBinding
     override fun onCreate(savedInstanceState: Bundle?) {

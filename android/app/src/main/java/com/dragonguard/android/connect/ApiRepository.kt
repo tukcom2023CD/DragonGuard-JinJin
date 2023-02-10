@@ -2,17 +2,16 @@ package com.dragonguard.android.connect
 
 import android.util.Log
 import com.dragonguard.android.BuildConfig
-import com.dragonguard.android.model.RegisterGithubIdModel
-import com.dragonguard.android.model.RepoContributorsItem
-import com.dragonguard.android.model.RepoSearchResultModel
-import com.dragonguard.android.model.UserInfoModel
+import com.dragonguard.android.model.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
-//api들 호출부분
+/*
+ 서버에 요청하는 모든 api들의 호출부분
+ */
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.MINUTES)
@@ -27,7 +26,7 @@ class ApiRepository {
 
     private var api = retrofit.create(GitRankAPI::class.java)
 
-    fun searchApi(name: String, count: Int): ArrayList<RepoSearchResultModel> {
+    fun getRepositoryNames(name: String, count: Int): ArrayList<RepoSearchResultModel> {
         var repoNames : ArrayList<RepoSearchResultModel> = arrayListOf<RepoSearchResultModel>()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
@@ -78,7 +77,7 @@ class ApiRepository {
 
     fun getRepoContributors(repoName: String): ArrayList<RepoContributorsItem> {
         val repoContributors = api.getRepoContributors(repoName)
-        var repoContResult = ArrayList<RepoContributorsItem>()
+        var repoContResult = arrayListOf(RepoContributorsItem(null,null,null,null))
         try{
             val result = repoContributors.execute()
             if(result.isSuccessful) {
@@ -93,7 +92,23 @@ class ApiRepository {
     fun getUserCommits(id: Int) {
     }
 
-    fun getUserRankings(id: Int) {
+    fun getTotalUsersRankings(page: Int, size: Int): ArrayList<TotalUsersRankingModelItem> {
+        var rankingResult = ArrayList<TotalUsersRankingModelItem>()
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("page","${page}")
+        queryMap.put("size","$size")
+        queryMap.put("sort","commits,DESC")
+        val ranking = api.getTotalUsersRanking(queryMap)
+        try {
+            val result = ranking.execute()
+            if(result.isSuccessful) {
+                rankingResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            Log.d("error", "유저랭킹 api 에러 ${e.message}")
+            return rankingResult
+        }
+        return rankingResult
     }
 
     fun postRegister(body: RegisterGithubIdModel): Int {
@@ -106,7 +121,7 @@ class ApiRepository {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.d("error", "${e.message}")
+            Log.d("error", "유저 등록 에러 ${e.message}")
             return registerResult
         }
         return registerResult

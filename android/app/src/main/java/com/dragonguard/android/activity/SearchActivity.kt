@@ -17,9 +17,12 @@ import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
 import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
 import com.dragonguard.android.recycleradapter.VerticalItemDecorator
-import com.dragonguard.android.viewmodel.SearchViewModel
+import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
 
+/*
+ repo를 이름으로 검색하는 activity
+ */
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     lateinit var repositoryProfileAdapter: RepositoryProfileAdapter
@@ -28,7 +31,7 @@ class SearchActivity : AppCompatActivity() {
     private var count = 0
     private var changed = true
     private var lastSearch = ""
-    var viewmodel = SearchViewModel()
+    var viewmodel = Viewmodel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -158,27 +161,38 @@ class SearchActivity : AppCompatActivity() {
     //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
         binding.progressBar.visibility = View.VISIBLE
-        var result = arrayListOf<RepoSearchResultModel>()
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            var resultDeferred = coroutine.async(Dispatchers.IO) {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
                 viewmodel.getSearchRepoResult(name, count)
             }
-            result = resultDeferred.await()
-            delay(500)
-            checkSearchResult(result)
+            val result = resultDeferred.await()
+            delay(1000)
+            if(!checkSearchResult(result)) {
+                val secondDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getSearchRepoResult(name, count)
+                }
+                val second = secondDeferred.await()
+                if(checkSearchResult(second)) {
+                    initRecycler()
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                }
+            } else {
+                initRecycler()
+            }
         }
     }
 
     //    api 호출결과 판별 및 출력
-    private fun checkSearchResult(searchResult: ArrayList<RepoSearchResultModel>) {
+    private fun checkSearchResult(searchResult: ArrayList<RepoSearchResultModel>): Boolean {
         return when(searchResult.isNullOrEmpty() ){
             true ->{
                 if(changed) {
                     changed = false
-                    callSearchApi(viewmodel.onSearchListener.value!!)
+                    false
                 } else {
-                    initRecycler()
+                    true
                 }
             }
             false ->{
@@ -189,7 +203,7 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     repoNames.addAll(searchResult)
                 }
-                initRecycler()
+                true
             }
         }
 
@@ -208,8 +222,8 @@ class SearchActivity : AppCompatActivity() {
         }
         count++
         Log.d("api 횟수", "$count 페이지 검색")
-        initScrollListener()
         binding.progressBar.visibility = View.GONE
+        initScrollListener()
     }
 
 
@@ -222,7 +236,6 @@ class SearchActivity : AppCompatActivity() {
                 Log.d("api 시도", "callSearchApi 실행  load more")
                 callSearchApi(lastSearch)
             }
-
         }
     }
 

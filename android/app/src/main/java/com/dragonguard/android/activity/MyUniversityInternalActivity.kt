@@ -9,6 +9,9 @@ import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityMyUniversityInternalRankingBinding
 
+/*
+ 사용자의 대학교 내의 랭킹을 보여주는 activity
+ */
 class MyUniversityInternalActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyUniversityInternalRankingBinding
     override fun onCreate(savedInstanceState: Bundle?) {

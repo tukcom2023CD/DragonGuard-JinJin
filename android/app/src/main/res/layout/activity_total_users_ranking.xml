@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="repoContributorsViewmodel"
+            name="totalUsersRankingViewModel"
             type="com.dragonguard.android.viewmodel.Viewmodel" />
     </data>
 
@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="3.4"
-        tools:context=".activity.RepoContributorsActivity">
+        tools:context=".activity.TotalUsersRankingActivity"
+        android:weightSum="3.4">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -26,41 +26,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical"
             android:layout_weight="2.8"
-            android:weightSum="5">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.4"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Contributors"
-                    android:textSize="30dp"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:textColor="@color/black"
-                    android:gravity="center"/>
-
-
-
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:text="전체 User 랭킹"
+                android:textColor="@color/black"
+                android:fontFamily="@font/ibm_semibold"
+                android:gravity="center_horizontal"/>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_marginHorizontal="10dp"
+                android:layout_height="2.5dp"
+                android:layout_marginHorizontal="14dp"
                 android:background="#000000" />
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                android:layout_weight="2.3"
-                android:weightSum="7">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/repo_contributors"
+                    android:id="@+id/total_users_rankings"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="6"
@@ -70,23 +59,16 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:listitem="@layout/contributors_list" />
+                    tools:listitem="@layout/total_users_ranking_list" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
                     style="?android:attr/progressBarStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:layout_width="match_parent"
-                android:id="@+id/contributors_chart"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="2.2" />
 
 
         </LinearLayout>

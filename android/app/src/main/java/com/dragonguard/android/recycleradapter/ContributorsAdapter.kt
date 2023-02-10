@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.model.RepoContributorsItem
 
+/*
+ 선택한 repo의 contributor들의 정보를 나열하기 위한 recycleradapter
+ */
 class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, private val context: Context, private val colors: ArrayList<Int>) : RecyclerView.Adapter<ContributorsAdapter.ViewHolder>() {
     private var ranking  = 1
 
@@ -29,7 +32,6 @@ class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, 
         private val githubId : TextView = itemView.findViewById(R.id.contrubutor_id)
         private val color : ImageView = itemView.findViewById(R.id.contributor_color)
 
-        //클릭리스너 구현
         fun bind(data: RepoContributorsItem) {
             contRanking.text = ranking.toString()
             ranking++

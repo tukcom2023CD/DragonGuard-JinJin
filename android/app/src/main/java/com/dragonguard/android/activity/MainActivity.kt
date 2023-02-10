@@ -1,8 +1,6 @@
 package com.dragonguard.android.activity
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -16,15 +14,18 @@ import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.model.RegisterGithubIdModel
 import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.preferences.IdPreference
-import com.dragonguard.android.viewmodel.MainViewModel
+import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
 
+/*
+ 사용자의 정보나 검색, 랭킹등을 보러가는 화면으로 이동할 수 있는 메인 activity
+ */
 class MainActivity : AppCompatActivity() {
     companion object {
         lateinit var prefs: IdPreference
     }
     private lateinit var binding: ActivityMainBinding
-    private var viewmodel = MainViewModel()
+    private var viewmodel = Viewmodel()
     private var backPressed : Long = 0
     private var id = 0
     //    var count = 0
@@ -71,6 +72,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+//    등록되어있지 않을 경우 post 요청을 통해 가입하기
     private fun registerUser(githubId: String) {
         var body = RegisterGithubIdModel(githubId)
         val coroutine = CoroutineScope(Dispatchers.Main)
@@ -79,14 +81,13 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.postRegister(body)
             }
             id = resultDeferred.await()
-            delay(500)
             prefs.setId("id", id)
             searchUser(id)
         }
 
     }
 
-//  메인화면의 유저 정보 검색하기
+//  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
     private fun searchUser(id: Int){
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.getSearchTierResult(id)
             }
             val userInfo : UserInfoModel = resultDeferred.await()
-            if(userInfo.name == null) {
+            if(userInfo.githubId == null) {
                 Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
                 registerUser("posite")
             } else {
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
+//    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
     override fun onBackPressed() {
 //        super.onBackPressed()
         if(System.currentTimeMillis() > backPressed + 2500) {
