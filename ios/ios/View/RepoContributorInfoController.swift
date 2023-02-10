@@ -18,16 +18,17 @@ final class RepoContributorInfoController: UIViewController{
     let viewModel = RepoContributorInfoViewModel()
     let disposebag = DisposeBag()
     
-    var userCommit: [Int] = []
-    var userName: [String] = []
+    var userCommit: [Int] = []  // 사용자 커밋 횟수
+    var userName: [String] = [] // 사용자 깃허브 아이디
     var dataColor:[[UIColor]] = []  // 랜덤 색상 설정
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.userCommit = []
-        self.userName = []
-        self.dataColor = []
+        
+        
+        // api 호출
+        viewModel.getRepoContributorInfo()
         
         // 로딩화면 추가
         addIndicator()
@@ -35,11 +36,12 @@ final class RepoContributorInfoController: UIViewController{
         // 데이터가 들어왔는지 감시하는 함수
         keepWatchData()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        // api 호출
-        viewModel.getRepoContributorInfo()
+    override func viewWillDisappear(_ animated: Bool) {
+        self.userCommit = []
+        self.userName = []
+        self.dataColor = []
     }
+    
     
     /*
      UI 작성
@@ -56,6 +58,7 @@ final class RepoContributorInfoController: UIViewController{
         return indicator
     }()
     
+    // 차트 그리는 UI
     lazy var barChart: BarChartView = {
         let chart = BarChartView()
         chart.backgroundColor = .white
@@ -63,6 +66,7 @@ final class RepoContributorInfoController: UIViewController{
         return chart
     }()
     
+    // 사용자 정보 나타내는 UI
     lazy var userTableView: UITableView = {
         let tableview = UITableView()
         tableview.register(RepoContributorTableView.self, forCellReuseIdentifier: RepoContributorTableView.identifier)
@@ -75,7 +79,6 @@ final class RepoContributorInfoController: UIViewController{
      */
     
     private func addUItoView(){
-        
         self.barChart.delegate = self
         self.userTableView.delegate = self
         self.userTableView.dataSource = self
@@ -84,6 +87,7 @@ final class RepoContributorInfoController: UIViewController{
         
     }
     
+    // 로딩 UI 추가
     private func addIndicator(){
         self.view.addSubview(indicator)
         setIndicatorAutoLayout()
@@ -98,7 +102,7 @@ final class RepoContributorInfoController: UIViewController{
     private func setAutoLayout(){
         // Chart AutoLayout
         barChart.snp.makeConstraints({ make in
-            make.height.equalTo(deviceWidth)
+            make.top.equalTo(userTableView.snp.bottom)
             make.leading.equalTo(10)
             make.trailing.equalTo(-10)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -106,10 +110,10 @@ final class RepoContributorInfoController: UIViewController{
         
         //tableview Autolayout
         userTableView.snp.makeConstraints({ make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
-            make.bottom.equalTo(barChart.snp.top).offset(0)
+            make.height.equalTo(deviceHeight / 3)
         })
         
     }
@@ -132,24 +136,25 @@ final class RepoContributorInfoController: UIViewController{
     
     // 데이터가 들어왔는지 감시하는 함수
     private func keepWatchData(){
-        self.viewModel.serviceToView()
+        self.viewModel.serviceToView()  // timer thread를 돌리면서 데이터가 들어 왔는지 확인
+        
+        // 타이머 쓰레드를 이용하여 데이터 감지
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+            if self.viewModel.checkData {
+                self.indicator.stopAnimating()
+            }
+            
             if !self.indicator.isAnimating{
                 self.addUItoView()
                 self.setAutoLayout()
                 self.getUserInfoAutoThread()
                 timer.invalidate()
             }
-            
-            if self.viewModel.checkData {
-                self.indicator.stopAnimating()
-            }
-            
         })
     }
     
+    // 데이터 삽입하는 함수
     private func getUserInfoAutoThread(){
-        
         viewModel.repoResultBehaviorSubject.subscribe(onNext: {
             for data in $0{
                 self.userName.append(data.githubId)
@@ -157,7 +162,8 @@ final class RepoContributorInfoController: UIViewController{
             }
         })
         .disposed(by: disposebag)
-        
+        randomColor()
+        setchartOption()
     }
     
 }
@@ -169,15 +175,16 @@ extension RepoContributorInfoController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RepoContributorTableView.identifier, for: indexPath) as? RepoContributorTableView ?? RepoContributorTableView()
         
-        randomColor()
+        
         cell.setLabel(num: userCommit[indexPath.row], name: userName[indexPath.row], color: dataColor[indexPath.row][0])
-        setchartOption()
+        
         return cell
     }
     
     // 각 색션 내부 셀 개수
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return userName.count }
     
+    // cell 높이 설정
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return 60 }
     
 }
@@ -185,6 +192,7 @@ extension RepoContributorInfoController: UITableViewDelegate, UITableViewDataSou
 // Chart 설정
 extension RepoContributorInfoController: ChartViewDelegate {
     
+    // 차트 생성
     private func setchartOption(){
         
         var dataSet: [BarChartDataSet] = []
@@ -195,8 +203,8 @@ extension RepoContributorInfoController: ChartViewDelegate {
             let dataEntry = BarChartDataEntry(x: Double(i), y: Double(userCommit[i]))
             contributorInfo.append(dataEntry)
             
-            
             let set1 = BarChartDataSet(entries: contributorInfo, label: "\(userName[i])")
+            
             set1.colors = dataColor[i]
             dataSet.append(set1)
         }
@@ -207,9 +215,10 @@ extension RepoContributorInfoController: ChartViewDelegate {
         customChart()
     }
     
+    // 차트 옵션 설정
     private func customChart(){
         barChart.rightAxis.enabled = false
-        barChart.animate(xAxisDuration: 1, yAxisDuration: 2)
+        barChart.animate(xAxisDuration: 2, yAxisDuration: 2)
         barChart.leftAxis.enabled = true
         barChart.doubleTapToZoomEnabled = false
         barChart.xAxis.enabled = false
@@ -218,32 +227,7 @@ extension RepoContributorInfoController: ChartViewDelegate {
         barChart.noDataFont = .systemFont(ofSize: 30)
         barChart.noDataTextColor = .lightGray
         
+        
     }
     
-}
-
-
-
-/*
- SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
- 
- preview 실행이 안되는 경우 단축키
- Command + Option + Enter : preview 그리는 캠버스 띄우기
- Command + Option + p : preview 재실행
- */
-
-import SwiftUI
-
-struct VCPreViewRepoConriInfo:PreviewProvider {
-    static var previews: some View {
-        RepoContributorInfoController().toPreview().previewDevice("iPhone 14 pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-
-struct VCPreViewRepoConriInfo2:PreviewProvider {
-    static var previews: some View {
-        RepoContributorInfoController().toPreview().previewDevice("iPad (10th generation)")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
 }
