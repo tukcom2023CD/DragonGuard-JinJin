@@ -34,6 +34,14 @@ final class RepoContributorInfoService{
             }
             Thread.sleep(forTimeInterval: 1)
         })
-        
     }
+    
+    func testInput(){
+        resultData.append(RepoContributorInfoModel.init(githubId: "abc", commits: 100, additions: 200, deletions: 100))
+        resultData.append(RepoContributorInfoModel.init(githubId: "fe", commits: 120, additions: 200, deletions: 100))
+        resultData.append(RepoContributorInfoModel.init(githubId: "jj", commits: 130, additions: 200, deletions: 100))
+        resultData.append(RepoContributorInfoModel.init(githubId: "bb", commits: 140, additions: 200, deletions: 100))
+        self.checkData = true
+    }
+    
 }
