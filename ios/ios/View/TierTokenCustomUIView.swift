@@ -54,19 +54,56 @@ class TierTokenCustomUIView : UIView {
         return resultTokenLabel
     }()
     
+    // 티어 이미지 부분 (일단 포미 사진 넣음)
+    
+    lazy var tierImage : UIImageView = {
+        let tierImage = UIImageView()
+        tierImage.image = UIImage(named: "img1")
+        return tierImage
+    }()
+    
     // UI 등록 함수
     private func addUItoView(){
         addSubview(myTierLabel)
         addSubview(resultTierLabel)
         addSubview(myTokenLabel)
         addSubview(resultTokenLabel)
+        addSubview(tierImage)
     }
+    
     
     // UI AutoLayout
     private func settingAutoLayout(){
         
+        myTierLabel.snp.makeConstraints({ make in
+            make.top.equalTo(30)
+            make.leading.equalTo(50)
+            make.trailing.equalTo(resultTierLabel.snp.leading).offset(-10)
+            make.bottom.equalTo(myTokenLabel.snp.top).offset(-10)
+        })
         
+        resultTierLabel.snp.makeConstraints({ make in
+            make.top.equalTo(30)
+            make.trailing.equalTo(tierImage.snp.leading).offset(-30)
+            make.bottom.equalTo(resultTokenLabel.snp.top).offset(-10)
+        })
         
+        myTokenLabel.snp.makeConstraints({ make in
+            make.leading.equalTo(50)
+            make.trailing.equalTo(resultTokenLabel.snp.leading).offset(-10)
+            make.bottom.equalTo(-60)
+        })
+        
+        resultTokenLabel.snp.makeConstraints({ make in
+            make.trailing.equalTo(tierImage.snp.leading).offset(-30)
+            make.bottom.equalTo(-60)
+        })
+        
+        tierImage.snp.makeConstraints({ make in
+            make.top.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.bottom.equalTo(-80)
+        })
     }
     
 }
