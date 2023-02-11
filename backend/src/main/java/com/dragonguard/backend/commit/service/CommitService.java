@@ -1,11 +1,10 @@
 package com.dragonguard.backend.commit.service;
 
-import com.dragonguard.backend.commit.dto.request.CommitScrapingRequest;
 import com.dragonguard.backend.commit.dto.response.CommitScrapingResponse;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.mapper.CommitMapper;
+import com.dragonguard.backend.commit.messagequeue.KafkaCommitProducer;
 import com.dragonguard.backend.commit.repository.CommitRepository;
-import com.dragonguard.backend.global.webclient.ScrapingClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +17,10 @@ public class CommitService {
 
     private final CommitRepository commitRepository;
     private final CommitMapper commitMapper;
-    private final ScrapingClient<CommitScrapingRequest> scrapingClient;
+    private final KafkaCommitProducer kafkaCommitProducer;
 
     public void scrapingCommits(String githubId) {
-        scrapingClient.requestToScraping(commitMapper.toRequest(githubId));
+        kafkaCommitProducer.send(commitMapper.toRequest(githubId));
     }
 
     public void saveCommit(CommitScrapingResponse commitScrapingResponse) {

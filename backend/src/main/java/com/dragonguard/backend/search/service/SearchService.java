@@ -5,10 +5,10 @@ import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.result.entity.Result;
 import com.dragonguard.backend.result.mapper.ResultMapper;
 import com.dragonguard.backend.result.repository.ResultRepository;
-import com.dragonguard.backend.search.client.SearchClient;
 import com.dragonguard.backend.search.dto.request.SearchRequest;
 import com.dragonguard.backend.search.entity.Search;
 import com.dragonguard.backend.search.mapper.SearchMapper;
+import com.dragonguard.backend.search.messagequeue.KafkaSearchProducer;
 import com.dragonguard.backend.search.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class SearchService {
     private final SearchMapper searchMapper;
     private final ResultMapper resultMapper;
     private final ResultRepository resultRepository;
-    private final SearchClient searchClient;
+    private final KafkaSearchProducer kafkaSearchProducer;
 
     public List<ResultResponse> getSearchResult(SearchRequest searchRequest) {
         Search search = findOrSaveSearch(searchRequest);
@@ -51,6 +51,6 @@ public class SearchService {
     }
 
     private void requestScraping(SearchRequest searchRequest) {
-        searchClient.requestToScraping(searchRequest);
+        kafkaSearchProducer.send(searchRequest);
     }
 }

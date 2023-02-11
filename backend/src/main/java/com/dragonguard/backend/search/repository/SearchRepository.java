@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface SearchRepository extends CrudRepository<Search, Long> {
-    Optional<Search> findBySearchWordAndPageAndSearchType(String name, Integer page, SearchType type);
+    Optional<Search> findBySearchWordAndPageAndSearchType(String searchWord, Integer page, SearchType searchType);
 }

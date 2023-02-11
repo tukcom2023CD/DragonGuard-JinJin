@@ -1,10 +1,7 @@
 package com.dragonguard.backend.search.entity;
 
 import com.dragonguard.backend.global.BaseTime;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
@@ -15,8 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Builder
 @RedisHash(value = "search")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Search extends BaseTime implements Serializable {
 
     @Id
@@ -35,11 +34,4 @@ public class Search extends BaseTime implements Serializable {
 
     @Indexed
     private List<String> resultIds = new ArrayList<>();
-
-    @Builder
-    public Search(String searchWord, SearchType searchType, Integer page) {
-        this.searchWord = searchWord;
-        this.searchType = searchType;
-        this.page = page;
-    }
 }

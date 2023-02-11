@@ -1,9 +1,9 @@
 package com.dragonguard.backend.gitrepo.service;
 
-import com.dragonguard.backend.gitrepo.client.GitRepoClient;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.gitrepo.mapper.GitRepoMapper;
+import com.dragonguard.backend.gitrepo.messagequeue.KafkaGitRepoProducer;
 import com.dragonguard.backend.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.gitrepomember.dto.GitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.mapper.GitRepoMemberMapper;
@@ -22,8 +22,8 @@ public class GitRepoService {
     private final GitRepoMemberMapper gitRepoMemberMapper;
     private final GitRepoRepository gitRepoRepository;
     private final GitRepoMemberRepository gItRepoMemberRepository;
-    private final GitRepoClient gitRepoClient;
     private final GitRepoMapper gitRepoMapper;
+    private final KafkaGitRepoProducer kafkaGitRepoProducer;
 
     public List<GitRepoMemberResponse> findMembersByGitRepo(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
@@ -46,6 +46,6 @@ public class GitRepoService {
     }
 
     private void requestToScraping(GitRepoRequest gitRepoRequest) {
-        gitRepoClient.requestToScraping(gitRepoRequest);
+        kafkaGitRepoProducer.send(gitRepoRequest);
     }
 }

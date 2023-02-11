@@ -1,1 +1,0 @@
-KAFKA_BASE_URL='kafka:9092'
