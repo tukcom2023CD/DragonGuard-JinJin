@@ -46,13 +46,15 @@ class TierTokenCustomUIView : UIView {
     lazy var myTokenLabel : UILabel = {
         let myTokenLabel = UILabel()
         myTokenLabel.text = "내 토큰 : "
+        myTokenLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return myTokenLabel
     }()
     
     // 실제 토큰 결과값 부분
     lazy var resultTokenLabel : UILabel = {
         let resultTokenLabel = UILabel()
-        resultTokenLabel.text = "17 T"
+        resultTokenLabel.text = "28.7 T"
+        resultTokenLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return resultTokenLabel
     }()
     
@@ -60,7 +62,7 @@ class TierTokenCustomUIView : UIView {
     
     lazy var tierImage : UIImageView = {
         let tierImage = UIImageView()
-        tierImage.image = UIImage(named: "img1")
+        tierImage.image = UIImage(named: "img1")?.resize(newWidth: 60)
         return tierImage
     }()
     
@@ -79,26 +81,22 @@ class TierTokenCustomUIView : UIView {
         
         myTierLabel.snp.makeConstraints({ make in
             make.top.equalTo(30)
-            make.leading.equalTo(40)
-            make.trailing.equalTo(resultTierLabel.snp.leading).offset(-10)
-            make.bottom.equalTo(myTokenLabel.snp.top).offset(-10)
+            make.leading.equalTo(20)
         })
         
         resultTierLabel.snp.makeConstraints({ make in
             make.top.equalTo(30)
-            make.trailing.equalTo(tierImage.snp.leading).offset(-30)
-            make.bottom.equalTo(resultTokenLabel.snp.top).offset(-10)
+            make.leading.equalTo(myTierLabel.snp.trailing).offset(10)
         })
         
         myTokenLabel.snp.makeConstraints({ make in
-            make.leading.equalTo(40)
-            make.trailing.equalTo(resultTokenLabel.snp.leading).offset(-10)
-            make.bottom.equalTo(-60)
+            make.leading.equalTo(20)
+            make.bottom.equalTo(-30)
         })
         
         resultTokenLabel.snp.makeConstraints({ make in
-            make.trailing.equalTo(tierImage.snp.leading).offset(-30)
-            make.bottom.equalTo(-60)
+            make.leading.equalTo(myTokenLabel.snp.trailing).offset(10)
+            make.bottom.equalTo(-30)
         })
         
         tierImage.snp.makeConstraints({ make in
