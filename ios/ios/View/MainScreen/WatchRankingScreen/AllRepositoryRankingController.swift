@@ -76,7 +76,7 @@ final class AllRepositoryRankingController: UIViewController{
         
         let dataSource = RxTableViewSectionedAnimatedDataSource<rankingModel> { _, tableview, indexPath, item in
             let cell = tableview.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier,for: indexPath) as? WatchRankingTableView ?? WatchRankingTableView()
-            cell.prepare(text: item)
+//            cell.prepare(text: item)
             cell.layer.cornerRadius = 15
             cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
             

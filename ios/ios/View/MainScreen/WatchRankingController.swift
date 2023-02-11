@@ -148,7 +148,7 @@ import SwiftUI
 
 struct VCPreViewWatchRanking:PreviewProvider {
     static var previews: some View {
-        WatchRankingController().toPreview().previewDevice("iPhone 14 pro")
+        WatchRankingController().toPreview().previewDevice("iPhone 14 Pro")
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }

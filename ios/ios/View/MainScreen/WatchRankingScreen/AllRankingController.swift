@@ -19,13 +19,14 @@ final class AllRankingController: UIViewController{
     var resultData = [UserInfoModel]()
     var fetchingMore = false
     var checkData = false
+    var count = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "전체 랭킹"
-        
+        count = 1
         addUItoView()
         settingAutoLayout()
         
@@ -64,7 +65,6 @@ final class AllRankingController: UIViewController{
     }
     
     func getData(){
-        
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
                 self.userInfoViewModel.allRankingobservable
                     .observe(on: MainScheduler.instance)
@@ -80,11 +80,8 @@ final class AllRankingController: UIViewController{
                 self.checkData = true
                 if self.resultData.count > 0{
                     timer.invalidate()
-                    
                 }
             })
-        
-       
     }
     
     /*
@@ -115,7 +112,9 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier, for: indexPath) as? WatchRankingTableView ?? WatchRankingTableView()
         
-        cell.prepare(text: self.resultData[indexPath.section].githubId)
+        cell.prepare(rank: count, text: self.resultData[indexPath.section].githubId, count: self.resultData[indexPath.section].commits)
+        
+        count += 1
         cell.layer.cornerRadius = 15
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
         cell.layer.borderWidth = 1
@@ -154,5 +153,4 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
     // section 개수
     func numberOfSections(in tableView: UITableView) -> Int { return self.resultData.count }
 }
-
 

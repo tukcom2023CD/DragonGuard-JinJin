@@ -271,7 +271,7 @@ extension UIViewController {
 
 struct VCPreViewMain:PreviewProvider {
     static var previews: some View {
-        MainController().toPreview().previewDevice("iPhone 14 pro")
+        MainController().toPreview().previewDevice("iPhone 14 Pro")
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
