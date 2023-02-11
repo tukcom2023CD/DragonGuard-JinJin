@@ -13,7 +13,7 @@ import SwiftUI
 final class MainController: UIViewController {
     
     
-    let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교하기"]
+    let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
     
@@ -224,9 +224,9 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.row{
             
-        case 3:
+        case 2:
             self.navigationController?.pushViewController(WatchRankingController(), animated: true)
-        case 4:
+        case 3:
             self.navigationController?.pushViewController(CompareRepositoryController(), animated: true)
         default:
             print("aaa")

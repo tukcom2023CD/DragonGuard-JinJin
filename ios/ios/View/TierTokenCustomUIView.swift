@@ -30,6 +30,7 @@ class TierTokenCustomUIView : UIView {
     lazy var myTierLabel : UILabel = {
         let myTierLabel = UILabel()
         myTierLabel.text = "내 티어 : "
+        myTierLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return myTierLabel
     }()
     
@@ -37,6 +38,7 @@ class TierTokenCustomUIView : UIView {
     lazy var resultTierLabel : UILabel = {
         let resultTierLabel = UILabel()
         resultTierLabel.text = "루비"
+        resultTierLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return resultTierLabel
     }()
     

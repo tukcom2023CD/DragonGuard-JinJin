@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
-        UserInfoService.sharedData.getMemberInfo(page: 0, size: 20)
+//        UserInfoService.sharedData.getMemberInfo(page: 0, size: 20)
         
         return true
     }

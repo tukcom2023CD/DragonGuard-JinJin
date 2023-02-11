@@ -17,8 +17,8 @@ final class RepoContributorInfoViewModel{
     // API 호출
     func getRepoContributorInfo(){
         repoResultBehaviorSubject = BehaviorSubject(value: [])
-//        RepoContributorInfoService.repoShared.getRepoContriInfo()
-        RepoContributorInfoService.repoShared.testInput()
+        RepoContributorInfoService.repoShared.getRepoContriInfo()
+//        RepoContributorInfoService.repoShared.testInput()
     }
     
     // api 결과값을 view로 전달
