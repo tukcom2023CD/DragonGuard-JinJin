@@ -147,7 +147,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="2.1"
             android:orientation="vertical"
             android:weightSum="2">
 
@@ -328,11 +328,12 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_weight="0.4"
                 android:orientation="horizontal"
+                android:paddingVertical="5dp"
                 android:weightSum="2">
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
@@ -345,7 +346,7 @@
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
@@ -355,14 +356,16 @@
                     android:textSize="20dp"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.05"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
 
         </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:background="#777777" />
+
     </LinearLayout>
 </layout>

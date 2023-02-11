@@ -14,14 +14,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.SearchActivity"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="3.4">
 
         <!--     기존 타이틀바 제거하고 다는 툴바       -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.4"
+            android:layout_weight="0.3"
             android:background="@android:color/transparent"
             android:gravity="center_vertical" />
 
@@ -182,10 +183,6 @@
             </LinearLayout>
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="#777777"
-            android:layout_weight="0.4" />
+
     </LinearLayout>
 </layout>

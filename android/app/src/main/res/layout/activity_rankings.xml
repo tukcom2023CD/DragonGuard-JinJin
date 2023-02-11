@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2.8"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:orientation="vertical"
             android:weightSum="8">
 
@@ -184,11 +184,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:background="#777777" />
 
     </LinearLayout>
 </layout>

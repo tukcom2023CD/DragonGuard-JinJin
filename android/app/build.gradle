@@ -15,7 +15,6 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
-        buildConfigField("String", "server", properties.getProperty("ipScrap"))
         buildConfigField("String", "api", properties.getProperty("ipApi"))
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

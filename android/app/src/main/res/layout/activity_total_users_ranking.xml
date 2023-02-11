@@ -52,9 +52,9 @@
                     android:id="@+id/total_users_rankings"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_weight="6"
                     android:orientation="vertical"
-                    android:layout_gravity="center_horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -73,13 +73,6 @@
 
         </LinearLayout>
 
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:background="#777777"/>
 
     </LinearLayout>
 </layout>
