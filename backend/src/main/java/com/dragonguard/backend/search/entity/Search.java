@@ -12,12 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Builder
 @RedisHash(value = "search")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Search extends BaseTime implements Serializable {
-
     @Id
     private String id;
 
@@ -34,4 +31,11 @@ public class Search extends BaseTime implements Serializable {
 
     @Indexed
     private List<String> resultIds = new ArrayList<>();
+
+    @Builder
+    public Search(String searchWord, SearchType searchType, Integer page) {
+        this.searchWord = searchWord;
+        this.searchType = searchType;
+        this.page = page;
+    }
 }

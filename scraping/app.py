@@ -57,7 +57,6 @@ async def search(result):
             repo_list = soup.find('ul', attrs={"class" : 'repo-list'})
             tag_list = repo_list.find_all('a', attrs={"class" : "v-align-middle"})
         elif search_type == 'users':
-            user_list = soup.find_all('a', attrs={"class" : 'mr-1'})
             tag_list = soup.find_all('a', attrs={"class" : 'mr-1'})
             
         for tag in tag_list:

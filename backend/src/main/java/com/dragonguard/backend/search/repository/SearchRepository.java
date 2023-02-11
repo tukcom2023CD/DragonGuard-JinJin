@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface SearchRepository extends CrudRepository<Search, Long> {
+public interface SearchRepository extends CrudRepository<Search, String> {
     Optional<Search> findBySearchWordAndPageAndSearchType(String searchWord, Integer page, SearchType searchType);
 }
