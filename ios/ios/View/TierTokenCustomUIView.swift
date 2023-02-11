@@ -50,7 +50,7 @@ class TierTokenCustomUIView : UIView {
     // 실제 토큰 결과값 부분
     lazy var resultTokenLabel : UILabel = {
         let resultTokenLabel = UILabel()
-        resultTokenLabel.text = "28.7 T"
+        resultTokenLabel.text = "17 T"
         return resultTokenLabel
     }()
     
@@ -77,7 +77,7 @@ class TierTokenCustomUIView : UIView {
         
         myTierLabel.snp.makeConstraints({ make in
             make.top.equalTo(30)
-            make.leading.equalTo(50)
+            make.leading.equalTo(40)
             make.trailing.equalTo(resultTierLabel.snp.leading).offset(-10)
             make.bottom.equalTo(myTokenLabel.snp.top).offset(-10)
         })
@@ -89,7 +89,7 @@ class TierTokenCustomUIView : UIView {
         })
         
         myTokenLabel.snp.makeConstraints({ make in
-            make.leading.equalTo(50)
+            make.leading.equalTo(40)
             make.trailing.equalTo(resultTokenLabel.snp.leading).offset(-10)
             make.bottom.equalTo(-60)
         })
@@ -102,7 +102,7 @@ class TierTokenCustomUIView : UIView {
         tierImage.snp.makeConstraints({ make in
             make.top.equalTo(30)
             make.trailing.equalTo(-30)
-            make.bottom.equalTo(-80)
+            make.bottom.equalTo(-30)
         })
     }
     
