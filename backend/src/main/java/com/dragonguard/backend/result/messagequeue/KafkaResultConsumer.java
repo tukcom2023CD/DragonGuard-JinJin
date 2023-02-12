@@ -44,7 +44,8 @@ public class KafkaResultConsumer {
 
         Map<String, Object> getMap = (Map<String, Object>) map.get("search");
         SearchRequest searchRequest = new SearchRequest((String) getMap.get("name"),
-                SearchType.valueOf(((String) getMap.get("type")).toUpperCase()), Integer.parseInt((String) getMap.get("page")));
+                SearchType.valueOf(((String) getMap.get("type")).toUpperCase()),
+                (Integer) getMap.get("page"));
 
         resultService.saveAllResult(result, searchRequest);
     }

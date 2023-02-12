@@ -1,7 +1,6 @@
 package com.dragonguard.backend.gitrepo.messagequeue;
 
 import com.dragonguard.backend.gitrepomember.dto.GitRepoMemberResponse;
-import com.dragonguard.backend.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.gitrepomember.service.GitRepoMemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -40,6 +39,6 @@ public class KafkaGitRepoConsumer {
             list.add(new GitRepoMemberResponse((String)key, (Integer)resultMap.get("commits"), (Integer)resultMap.get("addition"), (Integer)resultMap.get("deletion")));
             gitRepo = (String)resultMap.get("gitRepo");
         }
-        gitRepoMemberService.saveAllDto(list, gitRepo);
+        gitRepoMemberService.updateOrSaveAllDto(list, gitRepo);
     }
 }

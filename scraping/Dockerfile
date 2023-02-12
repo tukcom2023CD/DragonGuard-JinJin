@@ -15,4 +15,4 @@ COPY wait-for-it.sh wait-for-it.sh
 RUN chmod +x wait-for-it.sh
 
 ENTRYPOINT [ "./wait-for-it.sh" ]
-CMD [ "-t", "50", "kafka:9092", "--", "gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--timeout", "70" , "--reload" ]
+CMD [ "-t", "200", "backend:8080", "--", "faust", "-A", "app", "worker", "-l", "info" ]

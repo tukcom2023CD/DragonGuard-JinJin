@@ -40,6 +40,14 @@ public class GitRepoMember extends BaseTime {
         this.deletions = deletions;
     }
 
+    public void update(GitRepoMember gitRepoMember) {
+        this.gitRepo = gitRepoMember.gitRepo;
+        this.member = gitRepoMember.member;
+        this.commits = gitRepoMember.commits;
+        this.additions = gitRepoMember.additions;
+        this.deletions = gitRepoMember.deletions;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

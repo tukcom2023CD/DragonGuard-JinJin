@@ -6,8 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
-public interface ResultRepository extends CrudRepository<Result, Long> {
+public interface ResultRepository extends CrudRepository<Result, String> {
     List<Result> findAllBySearchId(String searchId);
 }

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +25,7 @@ public class GitRepoMemberService {
     private final GitRepoService gitRepoService;
     private final GitRepoMemberMapper gitRepoMemberMapper;
 
-    public void saveAllDto(List<GitRepoMemberResponse> gitRepoResponses, String gitRepo) {
+    public void updateOrSaveAllDto(List<GitRepoMemberResponse> gitRepoResponses, String gitRepo) {
         List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepository -> {
             Member member = memberService.saveAndGetEntity(new MemberRequest(gitRepository.getGithubId()));
             GitRepo gitRepoEntity = gitRepoService.findGitRepoByName(gitRepo);
@@ -35,9 +36,14 @@ public class GitRepoMemberService {
                             .collect(Collectors.toList());
             if (duplicated.isEmpty()) return gitRepoMember;
             return null;
-        }).collect(Collectors.toList());
+        }).filter(Objects::nonNull).collect(Collectors.toList());
 
-        List<GitRepoMember> noneDuplicatedList = list.stream().filter(m -> m != null).collect(Collectors.toList());
-        gitRepoMemberRepository.saveAll(noneDuplicatedList);
+        list.stream()
+                .filter(m -> gitRepoMemberRepository.existsByGitRepoAndMember(m.getGitRepo(), m.getMember()))
+                .forEach(o -> gitRepoMemberRepository.findByGitRepoAndMember(o.getGitRepo(), o.getMember()).update(o));
+
+        list.stream()
+                .filter(m -> !gitRepoMemberRepository.existsByGitRepoAndMember(m.getGitRepo(), m.getMember()))
+                .forEach(gitRepoMemberRepository::save);
     }
 }

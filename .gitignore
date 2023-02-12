@@ -2,9 +2,6 @@
 .DS_Store
 __pycache__
 *.log
-
 android/.idea
-
-
 android/local.properties
 .gradle
