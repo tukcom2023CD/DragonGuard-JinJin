@@ -35,11 +35,11 @@ final class WatchRankingController: UIViewController{
      */
     
     // 버튼들 나열할 collectionView
-    lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .white
-        return cv
+    lazy var tableView: UITableView = {
+        let tv = UITableView()
+        
+        tv.backgroundColor = .white
+        return tv
     }()
     
     
@@ -53,14 +53,14 @@ final class WatchRankingController: UIViewController{
      */
     
     private func addUItoView(){
-        self.view.addSubview(collectionView)
+        self.view.addSubview(tableView)
     }
     
     // collectionView 설정
     private func configureCollectionView(){
-        collectionView.register(WatchRankingCollectionView.self, forCellWithReuseIdentifier: WatchRankingCollectionView.identifier)
-        collectionView.dataSource = self
-        collectionView.delegate = self
+        tableView.register(WatchRankingCollectionView.self, forCellReuseIdentifier: WatchRankingCollectionView.identifier)
+        tableView.dataSource = self
+        tableView.delegate = self
     }
     
     
@@ -73,11 +73,11 @@ final class WatchRankingController: UIViewController{
     //AutoLayout 설정
     private func settingAutoLayout(){
         
-        collectionView.snp.makeConstraints({ make in
-            make.top.equalTo(50)
+        tableView.snp.makeConstraints({ make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
-            make.bottom.equalTo(-30)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         })
         
     }
@@ -86,24 +86,20 @@ final class WatchRankingController: UIViewController{
 }
 
 // CollectionView DataSource, Delegate 설정
-extension WatchRankingController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WatchRankingCollectionView.identifier, for: indexPath) as? WatchRankingCollectionView ?? WatchRankingCollectionView()
+extension WatchRankingController: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: WatchRankingCollectionView.identifier, for: indexPath) as? WatchRankingCollectionView ?? WatchRankingCollectionView()
         
-        cell.customLabel.text = rankingBtns[indexPath.row]
+        cell.customLabel.text = rankingBtns[indexPath.section]
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
         cell.layer.cornerRadius = 20    //테두리 둥글게
         
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return rankingBtns.count
-    }
-    
     // cell 선택되었을 때
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch indexPath.row{
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section{
         case 0:
             self.navigationController?.pushViewController(MyRepositoryRankingController(), animated: true)
         case 1:
@@ -119,18 +115,22 @@ extension WatchRankingController: UICollectionViewDataSource, UICollectionViewDe
         default:
             return
         }
-        
+     
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    // collectionview 크기 지정
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.width / 2
-        let height = collectionView.bounds.height / 3
-        
-        let size = CGSize(width: width - 5 , height: height - 30)
-        return size
-    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return tableView.bounds.height / 10 }
     
+    // 섹션 당 셀 개수
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
+    
+    // 색션에 들어갈 문구
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return 2 }
+    
+    // 섹션 개수
+    func numberOfSections(in tableView: UITableView) -> Int { return rankingBtns.count }
     
 }
 

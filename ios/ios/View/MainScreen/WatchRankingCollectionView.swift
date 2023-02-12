@@ -8,22 +8,22 @@
 import Foundation
 import UIKit
 
-class WatchRankingCollectionView: UICollectionViewCell {
+class WatchRankingCollectionView: UITableViewCell {
     static let identifier = "watchRankingCollectionView"
     
-    override init(frame: CGRect) {
-          super.init(frame: frame)
-          self.cellSetting()
-      }
-      
-      required init?(coder: NSCoder) {
-          fatalError("init(coder:) has not been implemented")
-      }
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        cellSetting()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     func cellSetting() {
         self.backgroundColor = .white
         self.addSubview(customLabel)
-        
         setAutoLayout()
     }
     
