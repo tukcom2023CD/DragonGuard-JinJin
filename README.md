@@ -17,8 +17,6 @@
 
 ## API 명세
 <a href="https://ohksj77.github.io/DragonGuard-JinJin-API-Docs/">Backend API Docs</a>
-<br>
-<a href="https://github.com/tukcom2023CD/DragonGuard-JinJin/wiki/System#api-%EB%AA%85%EC%84%B8">Scraping API</a>
 
 ## 멤버 소개
 
