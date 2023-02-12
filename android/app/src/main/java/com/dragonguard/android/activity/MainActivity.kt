@@ -16,6 +16,8 @@ import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
 
 /*
  사용자의 정보나 검색, 랭킹등을 보러가는 화면으로 이동할 수 있는 메인 activity
@@ -27,26 +29,29 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var viewmodel = Viewmodel()
     private var backPressed : Long = 0
-    private var id = 0
+    private var userId = 0
     //    var count = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
         prefs = IdPreference(applicationContext)
-        id = prefs.getId("id", 0)
+        userId = prefs.getId("id", 0)
 
-        if(id == 0){
+        if(userId == 0){
             registerUser("posite")
         } else {
-            searchUser(id)
+            searchUser(userId)
         }
-
-
 
         //로그인 화면으로 넘어가기
         val intent = Intent(applicationContext, LoginActivity::class.java)
         startActivity(intent)
+        Timer().scheduleAtFixedRate(3000,3000){
+//            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
+            searchUser(userId)
+        }
 
 //        랭킹 보러가기 버튼 눌렀을 때 랭킹 화면으로 전환
         binding.lookRanking.setOnClickListener {
@@ -80,9 +85,9 @@ class MainActivity : AppCompatActivity() {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
                 viewmodel.postRegister(body)
             }
-            id = resultDeferred.await()
-            prefs.setId("id", id)
-            searchUser(id)
+            userId = resultDeferred.await()
+            prefs.setId("id", userId)
+            searchUser(userId)
         }
 
     }
@@ -99,10 +104,11 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
                 registerUser("posite")
             } else {
-                binding.userTier.append(userInfo.tier)
-                binding.userToken.append(userInfo.commits.toString())
+                binding.userTier.text = "내 티어 : ${userInfo.tier}"
+                binding.userToken.text = "내 기여도 : ${userInfo.commits}"
                 binding.userRanking.text = userInfo.rank
                 Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
+
             }
         }
     }
