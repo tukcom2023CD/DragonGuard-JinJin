@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainViewModel = viewmodel
         prefs = IdPreference(applicationContext)
         id = prefs.getId("id", 0)
-        
+
         if(id == 0){
             registerUser("posite")
         } else {
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.getSearchTierResult(id)
             }
             val userInfo : UserInfoModel = resultDeferred.await()
-            if(userInfo.githubId == null) {
+            if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null || userInfo.tier == null) {
                 Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
                 registerUser("posite")
             } else {

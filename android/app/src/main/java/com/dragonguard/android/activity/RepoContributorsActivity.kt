@@ -69,13 +69,8 @@ class RepoContributorsActivity : AppCompatActivity() {
     fun checkContributors(result: ArrayList<RepoContributorsItem>) {
         if (!result.isNullOrEmpty()) {
             if (result[0].additions == null) {
-                if (called) {
-                    called = false
-                    val handler = Handler()
-                    handler.postDelayed({ repoContributors(repoName) }, 7000)
-                } else {
-                    initRecycler()
-                }
+                val handler = Handler()
+                handler.postDelayed({ repoContributors(repoName) }, 8000)
 
             } else {
                 for (i in 0 until result.size) {
@@ -90,7 +85,7 @@ class RepoContributorsActivity : AppCompatActivity() {
             if (called) {
                 called = false
                 val handler = Handler()
-                handler.postDelayed({ repoContributors(repoName) }, 7000)
+                handler.postDelayed({ repoContributors(repoName) }, 8000)
             } else {
                 binding.progressBar.visibility = View.GONE
             }
