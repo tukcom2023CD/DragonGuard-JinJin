@@ -72,7 +72,7 @@ class RepoContributorsActivity : AppCompatActivity() {
                 if (called) {
                     called = false
                     val handler = Handler()
-                    handler.postDelayed({ repoContributors(repoName) }, 5000)
+                    handler.postDelayed({ repoContributors(repoName) }, 7000)
                 } else {
                     initRecycler()
                 }
@@ -90,7 +90,7 @@ class RepoContributorsActivity : AppCompatActivity() {
             if (called) {
                 called = false
                 val handler = Handler()
-                handler.postDelayed({ repoContributors(repoName) }, 5000)
+                handler.postDelayed({ repoContributors(repoName) }, 7000)
             } else {
                 binding.progressBar.visibility = View.GONE
             }
