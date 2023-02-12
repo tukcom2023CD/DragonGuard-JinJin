@@ -17,8 +17,11 @@ final class MainController: UIViewController {
     var myTier: String = "SPROUT"
     var myTokens: Int = 0
     var myId = 0
+    var myName = ""
+    var imgUrl = ""
     let viewModel = MainViewModel()
     let disposeBag = DisposeBag()
+    let img = UIImageView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,9 +96,10 @@ final class MainController: UIViewController {
     // 유지 이름 버튼 누르면 설정 화면으로 이동
     lazy var settingUI: UIButton = {
         let settingUI = UIButton()
-        settingUI.setImage(UIImage(named: "img1")?.resize(newWidth: 50),for: .normal)
+        
+        settingUI.setImage(img.image, for: .normal)
         settingUI.imageView?.layer.cornerRadius = 20
-        settingUI.setTitle("DragonGuard-JinJin", for: .normal)
+        settingUI.setTitle(myName, for: .normal)
         settingUI.setTitleColor(.black, for: .normal)
         settingUI.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         settingUI.addTarget(self, action: #selector(settingUIClicked), for: .touchUpInside)
@@ -195,11 +199,16 @@ final class MainController: UIViewController {
                 self.myId = $0.id
                 self.myTier = $0.tier
                 self.myTokens = $0.commits
+                self.myName = $0.githubId
+                self.imgUrl = $0.profileImage
             })
             .disposed(by: self.disposeBag)
             
             if self.myId != 0 {
                 self.tierTokenUI.inputText(myTier: self.myTier, tokens: self.myTokens)
+                let url = URL(string: self.imgUrl)!
+                self.img.load(img: self.img, url: url,btn: self.settingUI)
+                self.settingUI.setTitle(self.myName, for: .normal)
                 timer.invalidate()
             }
             
@@ -208,6 +217,22 @@ final class MainController: UIViewController {
         
     }
     
+}
+
+// 사용자 github 프로필 로딩
+extension UIImageView {
+    func load(img: UIImageView, url: URL, btn: UIButton){
+        DispatchQueue.global().async {
+            if let data = try? Data(contentsOf: url) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        img.image = image
+                        btn.setImage(img.image?.resize(newWidth: 50), for: .normal)
+                    }
+                }
+            }
+        }
+    }
 }
 
 extension UIImage {

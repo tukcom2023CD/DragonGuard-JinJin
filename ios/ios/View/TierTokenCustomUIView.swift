@@ -37,7 +37,7 @@ class TierTokenCustomUIView : UIView {
     // 실제 티어 결과값 부분
     lazy var resultTierLabel : UILabel = {
         let resultTierLabel = UILabel()
-        
+        resultTierLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return resultTierLabel
     }()
     
@@ -52,7 +52,7 @@ class TierTokenCustomUIView : UIView {
     // 실제 토큰 결과값 부분
     lazy var resultTokenLabel : UILabel = {
         let resultTokenLabel = UILabel()
-        
+        resultTokenLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return resultTokenLabel
     }()
     

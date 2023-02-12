@@ -15,7 +15,7 @@ class MainViewModel {
     
     // 서버로부터 api 데이터 받아옴
     func getMyInfo(){
-        MainService.mainService.getUserInfo(id: 1)
+        MainService.mainService.getUserInfo(id: 3)
     }
     
     // view에 적용
