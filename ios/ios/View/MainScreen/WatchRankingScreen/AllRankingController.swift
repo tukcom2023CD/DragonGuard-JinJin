@@ -65,7 +65,7 @@ final class AllRankingController: UIViewController{
     }
     
     func getData(){
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
                 self.userInfoViewModel.allRankingobservable
                     .observe(on: MainScheduler.instance)
                     .subscribe(onNext: {

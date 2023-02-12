@@ -7,23 +7,24 @@
 
 import UIKit
 import SnapKit
-import SwiftUI
-
+import RxSwift
 
 final class MainController: UIViewController {
-    
     
     let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
+    var myTier: String = "SPROUT"
+    var myTokens: Int = 0
+    var myId = 0
+    let viewModel = MainViewModel()
+    let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = true    // navigation bar 삭제
         self.navigationItem.backButtonTitle = "Home"    //다른 화면에서 BackBtn title 설정
-        
-        
         
         // UI view에 적용
         addUItoView()
@@ -43,6 +44,8 @@ final class MainController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        getMyData() // 내 토큰, 내 티어 데이터 불러오기
         self.navigationController?.navigationBar.isHidden = true // navigation bar 삭제
     }
     
@@ -60,7 +63,7 @@ final class MainController: UIViewController {
     
     // 소속 대학교 이름 label
     lazy var univNameLabel: UILabel = {
-       let univName = UILabel()
+        let univName = UILabel()
         univName.text = "한국공학대학교"
         univName.textColor = .black
         univName.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
@@ -81,13 +84,15 @@ final class MainController: UIViewController {
         let tierTokenUI = TierTokenCustomUIView()
         tierTokenUI.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
         tierTokenUI.layer.cornerRadius = 20
+        
+        // 티어, 토큰 개수 입력
+        tierTokenUI.inputText(myTier: myTier, tokens: myTokens)
         return tierTokenUI
     }()
     
     // 유지 이름 버튼 누르면 설정 화면으로 이동
     lazy var settingUI: UIButton = {
         let settingUI = UIButton()
-        
         settingUI.setImage(UIImage(named: "img1")?.resize(newWidth: 50),for: .normal)
         settingUI.imageView?.layer.cornerRadius = 20
         settingUI.setTitle("DragonGuard-JinJin", for: .normal)
@@ -149,7 +154,6 @@ final class MainController: UIViewController {
         
         // 검색 버튼 AutoLayout
         searchUI.snp.makeConstraints({ make in
-            make.top.equalTo(univNameLabel.snp.bottom)
             make.leading.equalTo(10)
             make.trailing.equalTo(-10)
         })
@@ -175,6 +179,31 @@ final class MainController: UIViewController {
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.bottom.equalTo(-30)
+        })
+        
+    }
+    
+    
+    // 내 티어, 내 토큰 가져오는 함수
+    private func getMyData(){
+        Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { timer in
+            self.viewModel.getMyInfo()
+            
+            self.viewModel.myInfoIntoObservable()
+            
+            self.viewModel.myInfoObservable.subscribe(onNext: {
+                self.myId = $0.id
+                self.myTier = $0.tier
+                self.myTokens = $0.commits
+            })
+            .disposed(by: self.disposeBag)
+            
+            if self.myId != 0 {
+                self.tierTokenUI.inputText(myTier: self.myTier, tokens: self.myTokens)
+                timer.invalidate()
+            }
+            
+            
         })
         
     }

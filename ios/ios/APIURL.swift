@@ -12,7 +12,7 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL() 
-    static var ip = ""
+    static var ip = "192.168.0.14"
     
     private init(){}
     
@@ -33,8 +33,13 @@ final class APIURL{
         /*
          입력 형태 JSON
          {
-             "name": "승진",
-             "githubId": "ohksj77"
+           "id" : 1,
+           "name" : "김승진",
+           "githubId" : "ohksj77",
+           "commits" : 100,
+           "tier" : "SILVER",
+           "authStep" : "NONE",
+           "profileImage" : "http://abcd.efgh"
          }
         */
         
@@ -61,9 +66,10 @@ final class APIURL{
     
     /// 멤버 정보 조회하는 함수
     /// - Parameter id:inputDBMembers 함수 return값, DB에 저장되는 Id
-    static  func getMembersInfo(id: Int){
-        let getMemberInfoUrl = "http://localhost/api/members/\(id)"
-        
+    /// - Returns: URL
+    func getMembersInfo(ip:String, id: Int) -> String{
+        let getMemberInfoUrl = "http://\(ip)/api/members/\(id)"
+        return getMemberInfoUrl
     }
     
     /// 유저 전체 랭킹 받는 함수
