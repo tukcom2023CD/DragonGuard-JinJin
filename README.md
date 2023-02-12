@@ -3,7 +3,7 @@
 깃허브를 개인별로 또는 대학별로 깃허브를 얼마나 활용하는지 경쟁하며 순위를 매기는 기능을 제공
 ## 시스템 아키텍처
 
-![image](https://user-images.githubusercontent.com/89020004/218308833-140c8373-421c-44a9-b275-56d8f290a9cc.png)
+![image](https://user-images.githubusercontent.com/89020004/218309062-310bbfa1-51a8-471e-a9f1-3da6700ad997.png)
 
 
 ## 사용 기술
