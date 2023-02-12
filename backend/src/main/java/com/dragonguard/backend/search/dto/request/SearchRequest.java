@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 public class SearchRequest {
     @NotBlank
     private String name;
-    @NotNull
+    @NotBlank
     private SearchType type;
     @NotNull
     private Integer page;

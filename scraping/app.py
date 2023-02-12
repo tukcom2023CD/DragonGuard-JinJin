@@ -9,34 +9,34 @@ import requests, selenium, faust
 
 app = faust.App('dragonguard-jinjin', broker='kafka://kafka:9092', key_serializer='raw')
 
-schema = faust.Schema(
+result_schema = faust.Schema(
     key_type=str,
     value_type=bytes,
 )
 
 result_topic = app.topic(
     'gitrank.to.scrape.result',
-    schema=schema
+    schema=result_schema
 )
 
-schema = faust.Schema(
+commit_chema = faust.Schema(
     key_type=str,
     value_type=bytes,
 )
 
 commit_topic = app.topic(
     'gitrank.to.scrape.commit',
-    schema=schema
+    schema=commit_chema
 )
 
-schema = faust.Schema(
+repo_schema = faust.Schema(
     key_type=str,
     value_type=bytes,
 )
 
 git_repos_topic = app.topic(
     'gitrank.to.scrape.git-repos',
-    schema=schema
+    schema=repo_schema
 )
 
 @app.agent(result_topic)
@@ -45,26 +45,30 @@ async def search(result):
 
         results = []
         
-        name = res['name']
-        search_type = res['type']
-        page = ['res.page']
+        name = str(res['name'])
+        search_type = str(res['type'])
+        page = str(res['page'])
+        
+        print(name, page, search_type)
         
         result = requests.get('https://github.com/search?q=' + name + '&type=' + search_type + '&p=' + page)
         result.raise_for_status()
         soup = BeautifulSoup(result.text, "lxml")
         
-        if search_type == 'repositories':
+        tag_list = []
+        
+        if search_type.upper() == 'REPOSITORIES':
             repo_list = soup.find('ul', attrs={"class" : 'repo-list'})
             tag_list = repo_list.find_all('a', attrs={"class" : "v-align-middle"})
-        elif search_type == 'users':
+        elif search_type.upper() == 'USERS':
             tag_list = soup.find_all('a', attrs={"class" : 'mr-1'})
             
         for tag in tag_list:
             results.append(tag.text)
 
         response = {}
-        response['result'] = [{'name' : result} for result in results]
-        response['search'] = {'name' : name, 'type' : search_type, 'page' : page}
+        response["result"] = [{"name" : result} for result in results]
+        response["search"] = {"name" : name, "type" : search_type, "page" : int(page)}
         sink = app.topic('gitrank.to.backend.result', value_type=dict)
         await sink.send(value=response)
 
@@ -123,10 +127,10 @@ async def git_repos(git_repos):
                 deletion = DRIVER.find_element(By.CSS_SELECTOR, 
                                                 '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-danger.text-normal')
                 
-                response[member_name.get_attribute('innerText')] = { 'commits' : int(commits.get_attribute('innerText').split(' ')[0]), 
-                                                                    'addition' : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
-                                                                    'deletion' : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', '')),
-                                                                    'gitRepo' : name}
+                response[member_name.get_attribute('innerText')] = { "commits" : int(commits.get_attribute('innerText').split(' ')[0]), 
+                                                                    "addition" : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
+                                                                    "deletion" : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', '')),
+                                                                    "gitRepo" : name}
                 
             except selenium.common.exceptions.NoSuchElementException as e:
                     break

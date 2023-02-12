@@ -5,17 +5,22 @@ import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.result.entity.Result;
 import com.dragonguard.backend.result.mapper.ResultMapper;
 import com.dragonguard.backend.result.repository.ResultRepository;
+import com.dragonguard.backend.search.dto.request.KafkaSearchRequest;
 import com.dragonguard.backend.search.dto.request.SearchRequest;
 import com.dragonguard.backend.search.entity.Search;
 import com.dragonguard.backend.search.mapper.SearchMapper;
 import com.dragonguard.backend.search.messagequeue.KafkaSearchProducer;
 import com.dragonguard.backend.search.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
+import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @Service
 @RequiredArgsConstructor
@@ -39,18 +44,36 @@ public class SearchService {
     }
 
     public Search findOrSaveSearch(SearchRequest searchRequest) {
-        Optional<Search> search = searchRepository
-                .findBySearchWordAndPageAndSearchType(searchRequest.getName(), searchRequest.getPage(), searchRequest.getType());
-        return search.orElseGet(() -> searchRepository.save(searchMapper.toEntity(searchRequest)));
+        Search search = searchMapper.toEntity(searchRequest);
+        ExampleMatcher exampleMatcher = matching()
+                .withIgnorePaths("id")
+                .withMatcher("name", exact())
+                .withMatcher("page", exact())
+                .withMatcher("type", exact().ignoreCase());
+
+        return searchRepository
+                .findOne(Example.of(search, exampleMatcher))
+                .orElseGet(() -> searchRepository.save(searchMapper.toEntity(searchRequest)));
     }
 
     public Search getEntityByRequest(SearchRequest searchRequest) {
+        Search search = searchMapper.toEntity(searchRequest);
+        ExampleMatcher exampleMatcher = matching()
+                .withIgnorePaths("id")
+                .withMatcher("name", exact())
+                .withMatcher("page", exact())
+                .withMatcher("type", exact().ignoreCase());
+
         return searchRepository
-                .findBySearchWordAndPageAndSearchType(searchRequest.getName(), searchRequest.getPage(), searchRequest.getType())
+                .findOne(Example.of(search, exampleMatcher))
                 .orElseThrow(EntityNotFoundException::new);
     }
 
     private void requestScraping(SearchRequest searchRequest) {
-        kafkaSearchProducer.send(searchRequest);
+        kafkaSearchProducer.send(
+                new KafkaSearchRequest(
+                        searchRequest.getName(),
+                        searchRequest.getType().toString(),
+                        searchRequest.getPage()));
     }
 }

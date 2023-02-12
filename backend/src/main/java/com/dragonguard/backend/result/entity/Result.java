@@ -1,6 +1,5 @@
 package com.dragonguard.backend.result.entity;
 
-import com.dragonguard.backend.global.BaseTime;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
@@ -9,10 +8,9 @@ import org.springframework.data.redis.core.index.Indexed;
 import javax.persistence.Column;
 import java.io.Serializable;
 
-@Getter
-@RedisHash(value = "result")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Result extends BaseTime implements Serializable {
+@Data
+@RedisHash("result")
+public class Result implements Serializable {
 
     @Id
     private String id;
@@ -24,7 +22,8 @@ public class Result extends BaseTime implements Serializable {
     private String searchId;
 
     @Builder
-    public Result(String name, String searchId) {
+    public Result(String id, String name, String searchId) {
+        this.id = id;
         this.name = name;
         this.searchId = searchId;
     }
