@@ -11,32 +11,33 @@ app = faust.App('dragonguard-jinjin', broker='kafka://kafka:9092', key_serialize
 
 result_schema = faust.Schema(
     key_type=str,
-    value_type=bytes,
+    value_type=bytes
 )
 
 result_topic = app.topic(
     'gitrank.to.scrape.result',
-    schema=result_schema
+    schema=result_schema,
 )
 
 commit_chema = faust.Schema(
     key_type=str,
-    value_type=bytes,
+    value_type=bytes
 )
 
 commit_topic = app.topic(
     'gitrank.to.scrape.commit',
-    schema=commit_chema
+    schema=commit_chema,
 )
 
 repo_schema = faust.Schema(
     key_type=str,
-    value_type=bytes,
+    value_type=bytes
 )
 
 git_repos_topic = app.topic(
     'gitrank.to.scrape.git-repos',
-    schema=repo_schema
+    schema=repo_schema,
+    retention=17
 )
 
 @app.agent(result_topic)
@@ -48,8 +49,6 @@ async def search(result):
         name = str(res['name'])
         search_type = str(res['type'])
         page = str(res['page'])
-        
-        print(name, page, search_type)
         
         result = requests.get('https://github.com/search?q=' + name + '&type=' + search_type + '&p=' + page)
         result.raise_for_status()
@@ -106,7 +105,7 @@ async def git_repos(git_repos):
         DRIVER.get('https://github.com/' + name + '/graphs/contributors?from=2023-01-01&to=' + year + '-12-31&type=c')
         
         try:
-            WebDriverWait(DRIVER, 7.5).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '#contributors > ol')))
+            WebDriverWait(DRIVER, 15).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '#contributors > ol')))
         except selenium.common.exceptions.TimeoutException as e:
             print('Error Occured')
         
