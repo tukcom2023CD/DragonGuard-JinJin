@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             }
             val userInfo : UserInfoModel = resultDeferred.await()
             if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null || userInfo.tier == null) {
-                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
                 registerUser("posite")
             } else {
                 binding.userTier.text = "내 티어 : ${userInfo.tier}"
