@@ -86,7 +86,7 @@ async def commits(member):
         h2 = soup.find('h2', attrs={"class" : "f4 text-normal mb-2"})
         name = soup.find('span', attrs={"class" : "p-name vcard-fullname d-block overflow-hidden"}).text.strip()
         image = soup.find('img', attrs={ "class" : "avatar avatar-user width-full border color-bg-default"})['src']
-        commit_num = int(h2.text.strip().split(' ')[0].rstrip())
+        commit_num = int(h2.text.strip().split(' ')[0].rstrip().replace(',', ''))
         
         response = { "name" : name, "commitNum" : commit_num, "githubId" : m, "profileImage" : image}
         
@@ -126,7 +126,7 @@ async def git_repos(git_repos):
                 deletion = DRIVER.find_element(By.CSS_SELECTOR, 
                                                 '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-danger.text-normal')
                 
-                response[member_name.get_attribute('innerText')] = { "commits" : int(commits.get_attribute('innerText').split(' ')[0]), 
+                response[member_name.get_attribute('innerText')] = { "commits" : int(commits.get_attribute('innerText').split(' ')[0].replace(',', '')), 
                                                                     "addition" : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
                                                                     "deletion" : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', '')),
                                                                     "gitRepo" : name}
