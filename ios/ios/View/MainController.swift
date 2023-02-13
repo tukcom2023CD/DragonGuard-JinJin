@@ -76,9 +76,16 @@ final class MainController: UIViewController {
     // 검색 버튼 UI
     lazy var searchUI: UIButton = {
         let searchUI = UIButton()
-        searchUI.setTitle("검색화면 이동", for: .normal)
-        searchUI.setTitleColor(.black, for: .normal)
+        searchUI.titleColor(for: .normal)
+        searchUI.tintColor = .black
+        searchUI.setImage(UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        searchUI.backgroundColor = .lightGray
+        searchUI.setTitle(" Repository or User ", for: .normal)
+        searchUI.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        searchUI.titleColor(for: .normal)
+        searchUI.setTitleColor(.gray, for: .normal)
         searchUI.addTarget(self, action: #selector(searchUIClicked), for: .touchUpInside)
+        searchUI.layer.cornerRadius = 10
         return searchUI
     }()
     
@@ -158,8 +165,8 @@ final class MainController: UIViewController {
         
         // 검색 버튼 AutoLayout
         searchUI.snp.makeConstraints({ make in
-            make.leading.equalTo(10)
-            make.trailing.equalTo(-10)
+            make.trailing.equalTo(-100)
+            make.leading.equalTo(100)
         })
         
         // 사용자 이름 버튼 AutoLayout
@@ -170,7 +177,7 @@ final class MainController: UIViewController {
         
         // 내 티어, 토큰 띄우는 UI AutoLayout
         tierTokenUI.snp.makeConstraints({ make in
-            make.top.equalTo(searchUI.snp.bottom)
+            make.top.equalTo(searchUI.snp.bottom).offset(10)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.height.equalTo(deviceHeight/6)
@@ -329,4 +336,9 @@ struct VCPreViewMain:PreviewProvider {
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
-
+struct VCPreViewMain2:PreviewProvider {
+    static var previews: some View {
+        MainController().toPreview().previewDevice("iPad (10th generation)")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
+}
