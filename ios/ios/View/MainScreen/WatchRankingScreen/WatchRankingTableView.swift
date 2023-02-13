@@ -23,25 +23,55 @@ final class WatchRankingTableView: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // Label UI
-    lazy var rankingLabel: UILabel = {
+    // Ranking Number UI
+    lazy var rankLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 23)
+        label.textColor = .black
+        contentView.addSubview(label)
+        
+        label.snp.makeConstraints({ make in
+            make.leading.equalTo(contentView.snp.leading).offset(20)
+            make.centerY.equalTo(contentView.center)
+        })
+        
+        return label
+    }()
+    
+    // User Name UI
+    lazy var userLabel: UILabel = {
         let rankingLabel = UILabel()
         rankingLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 23)
         rankingLabel.textColor = .black
         contentView.addSubview(rankingLabel)
         
         rankingLabel.snp.makeConstraints({ make in
-            make.top.bottom.equalTo(contentView)
-            make.centerX.equalTo(contentView)
+            make.center.equalTo(contentView.center)
         })
 
         return rankingLabel
     }()
     
+    // Commit, Token Count UI
+    lazy var dataLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
+        label.textColor = .black
+        contentView.addSubview(label)
+        
+        label.snp.makeConstraints({ make in
+            make.trailing.equalTo(contentView.snp.trailing).offset(-20)
+            make.centerY.equalTo(contentView.center)
+        })
+        
+        return label
+    }()
     
     // 데이터 삽입
-    func prepare(text: String){
-        rankingLabel.text = text
+    func prepare(rank: Int, text: String, count: Int){
+        rankLabel.text = String(rank)
+        userLabel.text = text
+        dataLabel.text = String(count)
     }
     
 }

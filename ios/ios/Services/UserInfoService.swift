@@ -21,17 +21,18 @@ class UserInfoService{
     func getMemberInfo(page: Int, size: Int){
         let url = APIURL.apiUrl.getUserInfo(ip: ip, page: page, size: size)
         self.resultArray = []
-        
-        AF.request(url)
-            .validate(statusCode: 200..<201)
-            .responseDecodable(of: [UserInfoDecodingData].self) { response in
-                guard let responseResult = response.value else {return}
-                if(responseResult.count != 0 && self.resultArray.count == 0){
-                    for data in responseResult {
-                        let dataBundle = UserInfoModel(id: data.id, name: data.name, githubId: data.githubId, commits: data.commits, tier: data.tier)
-                        self.resultArray.append(dataBundle)
+        DispatchQueue.main.async {
+            AF.request(url)
+                .validate(statusCode: 200..<201)
+                .responseDecodable(of: [UserInfoDecodingData].self) { response in
+                    guard let responseResult = response.value else {return}
+                    if(responseResult.count != 0 && self.resultArray.count == 0){
+                        for data in responseResult {
+                            let dataBundle = UserInfoModel(id: data.id, name: data.name, githubId: data.githubId, commits: data.commits, tier: data.tier)
+                            self.resultArray.append(dataBundle)
+                        }
                     }
                 }
-            }
+        }
     }
 }

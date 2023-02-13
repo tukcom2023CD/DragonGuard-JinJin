@@ -7,23 +7,27 @@
 
 import UIKit
 import SnapKit
-import SwiftUI
-
+import RxSwift
 
 final class MainController: UIViewController {
     
-    
-    let indexBtns = ["내 티어 : 루비", "전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교하기"]
+    let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
+    var myTier: String = "SPROUT"
+    var myTokens: Int = 0
+    var myId = 0
+    var myName = ""
+    var imgUrl = ""
+    let viewModel = MainViewModel()
+    let disposeBag = DisposeBag()
+    let img = UIImageView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = true    // navigation bar 삭제
         self.navigationItem.backButtonTitle = "Home"    //다른 화면에서 BackBtn title 설정
-        
-        
         
         // UI view에 적용
         addUItoView()
@@ -43,6 +47,8 @@ final class MainController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        getMyData() // 내 토큰, 내 티어 데이터 불러오기
         self.navigationController?.navigationBar.isHidden = true // navigation bar 삭제
     }
     
@@ -58,22 +64,49 @@ final class MainController: UIViewController {
         return cv
     }()
     
+    // 소속 대학교 이름 label
+    lazy var univNameLabel: UILabel = {
+        let univName = UILabel()
+        univName.text = "한국공학대학교"
+        univName.textColor = .black
+        univName.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
+        return univName
+    }()
+    
     // 검색 버튼 UI
     lazy var searchUI: UIButton = {
         let searchUI = UIButton()
-        searchUI.setTitle("검색화면 이동", for: .normal)
-        searchUI.setTitleColor(.black, for: .normal)
+        searchUI.titleColor(for: .normal)
+        searchUI.tintColor = .black
+        searchUI.setImage(UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        searchUI.backgroundColor = .lightGray
+        searchUI.setTitle(" Repository or User ", for: .normal)
+        searchUI.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        searchUI.titleColor(for: .normal)
+        searchUI.setTitleColor(.gray, for: .normal)
         searchUI.addTarget(self, action: #selector(searchUIClicked), for: .touchUpInside)
+        searchUI.layer.cornerRadius = 10
         return searchUI
+    }()
+    
+    // 내 티어, 토큰 띄우는 UI
+    lazy var tierTokenUI: TierTokenCustomUIView = {
+        let tierTokenUI = TierTokenCustomUIView()
+        tierTokenUI.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+        tierTokenUI.layer.cornerRadius = 20
+        
+        // 티어, 토큰 개수 입력
+        tierTokenUI.inputText(myTier: myTier, tokens: myTokens)
+        return tierTokenUI
     }()
     
     // 유지 이름 버튼 누르면 설정 화면으로 이동
     lazy var settingUI: UIButton = {
         let settingUI = UIButton()
         
-        settingUI.setImage(UIImage(named: "img1")?.resize(newWidth: 50),for: .normal)
+        settingUI.setImage(img.image, for: .normal)
         settingUI.imageView?.layer.cornerRadius = 20
-        settingUI.setTitle("DragonGuard-JinJin", for: .normal)
+        settingUI.setTitle(myName, for: .normal)
         settingUI.setTitleColor(.black, for: .normal)
         settingUI.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         settingUI.addTarget(self, action: #selector(settingUIClicked), for: .touchUpInside)
@@ -107,8 +140,10 @@ final class MainController: UIViewController {
     
     private func addUItoView(){
         self.view.addSubview(collectionView)
+        self.view.addSubview(univNameLabel)
         self.view.addSubview(searchUI)
         self.view.addSubview(settingUI)
+        self.view.addSubview(tierTokenUI)
         configureCollectionView()
     }
     
@@ -120,11 +155,18 @@ final class MainController: UIViewController {
     
     private func settingAutoLayout(){
         
+        // 소속 대학교 이름 AutoLayout
+        univNameLabel.snp.makeConstraints({ make in
+            make.top.equalTo(settingUI.snp.bottom).offset(30)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.bottom.equalTo(searchUI.snp.top).offset(-20)
+        })
+        
         // 검색 버튼 AutoLayout
         searchUI.snp.makeConstraints({ make in
-            make.top.equalTo(100)
-            make.leading.equalTo(10)
-            make.trailing.equalTo(-10)
+            make.trailing.equalTo(-100)
+            make.leading.equalTo(100)
         })
         
         // 사용자 이름 버튼 AutoLayout
@@ -133,9 +175,18 @@ final class MainController: UIViewController {
             make.leading.equalTo(10)
         })
         
+        // 내 티어, 토큰 띄우는 UI AutoLayout
+        tierTokenUI.snp.makeConstraints({ make in
+            make.top.equalTo(searchUI.snp.bottom).offset(10)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.height.equalTo(deviceHeight/6)
+            make.bottom.equalTo(collectionView.snp.top).offset(-10)
+        })
+        
+        
         // CollectionView AutoLayout
         collectionView.snp.makeConstraints({ make in
-            make.top.equalTo(120)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.bottom.equalTo(-30)
@@ -143,6 +194,52 @@ final class MainController: UIViewController {
         
     }
     
+    
+    // 내 티어, 내 토큰 가져오는 함수
+    private func getMyData(){
+        Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { timer in
+            self.viewModel.getMyInfo()
+            
+            self.viewModel.myInfoIntoObservable()
+            
+            self.viewModel.myInfoObservable.subscribe(onNext: {
+                self.myId = $0.id
+                self.myTier = $0.tier
+                self.myTokens = $0.commits
+                self.myName = $0.githubId
+                self.imgUrl = $0.profileImage
+            })
+            .disposed(by: self.disposeBag)
+            
+            if self.myId != 0 {
+                self.tierTokenUI.inputText(myTier: self.myTier, tokens: self.myTokens)
+                let url = URL(string: self.imgUrl)!
+                self.img.load(img: self.img, url: url,btn: self.settingUI)
+                self.settingUI.setTitle(self.myName, for: .normal)
+                timer.invalidate()
+            }
+            
+            
+        })
+        
+    }
+    
+}
+
+// 사용자 github 프로필 로딩
+extension UIImageView {
+    func load(img: UIImageView, url: URL, btn: UIButton){
+        DispatchQueue.global().async {
+            if let data = try? Data(contentsOf: url) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        img.image = image
+                        btn.setImage(img.image?.resize(newWidth: 50), for: .normal)
+                    }
+                }
+            }
+        }
+    }
 }
 
 extension UIImage {
@@ -178,8 +275,8 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellHeight = collectionView.bounds.height/3-30
-        let cellWidth = collectionView.bounds.width/2-5
+        let cellHeight = deviceHeight*24/100
+        let cellWidth = collectionView.bounds.width*48/100
         
         return CGSize(width: cellWidth, height: cellHeight)
     }
@@ -188,9 +285,9 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.row{
             
-        case 3:
+        case 2:
             self.navigationController?.pushViewController(WatchRankingController(), animated: true)
-        case 4:
+        case 3:
             self.navigationController?.pushViewController(CompareRepositoryController(), animated: true)
         default:
             print("aaa")
@@ -235,8 +332,13 @@ extension UIViewController {
 
 struct VCPreViewMain:PreviewProvider {
     static var previews: some View {
-        MainController().toPreview().previewDevice("iPhone 14 pro")
+        MainController().toPreview().previewDevice("iPhone 14 Pro")
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
-
+struct VCPreViewMain2:PreviewProvider {
+    static var previews: some View {
+        MainController().toPreview().previewDevice("iPad (10th generation)")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
+}
