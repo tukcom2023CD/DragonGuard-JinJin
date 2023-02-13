@@ -35,7 +35,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     private var contributors = ArrayList<RepoContributorsItem>()
     private var repoName = ""
     var viewmodel = Viewmodel()
-    private var called = true
+    private var count = 0
     private val colorsets = ArrayList<Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,8 +82,8 @@ class RepoContributorsActivity : AppCompatActivity() {
                 initRecycler()
             }
         } else {
-            if (called) {
-                called = false
+            if (count<5) {
+                count++
                 val handler = Handler()
                 handler.postDelayed({ repoContributors(repoName) }, 8000)
             } else {
@@ -101,7 +101,6 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.repoContributors.layoutManager = LinearLayoutManager(this)
         binding.repoContributors.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
-
         initGraph()
     }
 
@@ -179,6 +178,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 //
 //            invalidate()
 //        }
+        count = 0
     }
 
     //    그래프 x축을 contributor의 이름으로 변경하는 코드

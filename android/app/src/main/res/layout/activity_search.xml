@@ -89,7 +89,7 @@
                     android:layout_weight="0.6"
                     android:background="@drawable/search_border"
                     android:imeOptions="actionSearch"
-                    android:maxLines="1"
+                    android:inputType="text"
                     android:text="@={searchViewModel.onSearchListener}"
                     android:textColor="@color/black"
                     android:textSize="25dp" />
