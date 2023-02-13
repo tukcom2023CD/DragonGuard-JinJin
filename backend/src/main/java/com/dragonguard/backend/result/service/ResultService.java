@@ -22,9 +22,11 @@ public class ResultService {
 
     public void saveAllResult(List<ResultRequest> results, SearchRequest searchRequest) {
         Search search = searchService.getEntityByRequest(searchRequest);
-        List<Result> resultEntities = results.stream()
+        List<Result> resultList = resultRepository.findAllBySearchId(search.getId());
+
+        results.stream()
                 .map(result -> resultMapper.toEntity(result, search.getId()))
-                .collect(Collectors.toList());
-        resultRepository.saveAll(resultEntities);
+                .filter(r -> !resultList.contains(r))
+                .forEach(resultRepository::save);
     }
 }

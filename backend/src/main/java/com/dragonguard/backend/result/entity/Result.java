@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.Column;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Data
 @RedisHash("result")
@@ -26,5 +27,18 @@ public class Result implements Serializable {
         this.id = id;
         this.name = name;
         this.searchId = searchId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Result result = (Result) o;
+        return Objects.equals(name, result.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
