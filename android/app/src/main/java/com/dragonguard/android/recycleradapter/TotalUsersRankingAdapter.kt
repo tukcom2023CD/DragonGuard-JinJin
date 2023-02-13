@@ -32,15 +32,34 @@ class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankingM
         private val contribution : TextView = itemView.findViewById(R.id.ranker_contribution)
 
         fun bind(data: TotalUsersRankingModelItem) {
-            ranking.text = rank.toString()
-            rank++
+            if(ranking.text.isNullOrEmpty()) {
+                ranking.text = rank.toString()
+                rank++
+            }
             githubId.text = data.githubId
             contribution.text = data.commits.toString()
+        }
+        fun bind(data1: TotalUsersRankingModelItem, data2: TotalUsersRankingModelItem) {
+            if(ranking.text.isNullOrEmpty()) {
+                if(data1.commits == data2.commits) {
+                    ranking.text = (rank-1).toString()
+                } else {
+                    ranking.text = rank.toString()
+                }
+                rank++
+            }
+            githubId.text = data1.githubId
+            contribution.text = data1.commits.toString()
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(datas[position])
+        if(position != 0) {
+            holder.bind(datas[position], datas[position-1])
+        } else {
+            holder.bind(datas[position])
+        }
+
     }
 
 }
