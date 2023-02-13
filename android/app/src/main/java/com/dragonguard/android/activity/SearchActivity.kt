@@ -209,10 +209,11 @@ class SearchActivity : AppCompatActivity() {
             false -> {
                 changed = false
                 Log.d("api 시도", "api 성공$searchResult")
-                if (repoNames.isNullOrEmpty()) {
-                    repoNames = searchResult
-                } else {
-                    repoNames.addAll(searchResult)
+                for(i in 0 until searchResult.size) {
+                    val compare = repoNames.filter { it.name == searchResult[i].name }
+                    if(compare.isEmpty()) {
+                        repoNames.add(searchResult[i])
+                    }
                 }
                 true
             }
