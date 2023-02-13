@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         //로그인 화면으로 넘어가기
         val intent = Intent(applicationContext, LoginActivity::class.java)
         startActivity(intent)
-        Timer().scheduleAtFixedRate(3000,3000){
+        Timer().scheduleAtFixedRate(5000,5000){
 //            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
             searchUser(userId)
         }
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             }
             val userInfo : UserInfoModel = resultDeferred.await()
             if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null || userInfo.tier == null) {
-                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
                 registerUser("posite")
             } else {
                 binding.userTier.text = "내 티어 : ${userInfo.tier}"

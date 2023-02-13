@@ -35,7 +35,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     private var contributors = ArrayList<RepoContributorsItem>()
     private var repoName = ""
     var viewmodel = Viewmodel()
-    private var called = true
+    private var count = 0
     private val colorsets = ArrayList<Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +67,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    검색한 결과가 잘 왔는지 확인
     fun checkContributors(result: ArrayList<RepoContributorsItem>) {
-        if (!result.isNullOrEmpty()) {
+        if (result.isNotEmpty()) {
             if (result[0].additions == null) {
                 val handler = Handler()
                 handler.postDelayed({ repoContributors(repoName) }, 8000)
@@ -82,8 +82,8 @@ class RepoContributorsActivity : AppCompatActivity() {
                 initRecycler()
             }
         } else {
-            if (called) {
-                called = false
+            if (count<5) {
+                count++
                 val handler = Handler()
                 handler.postDelayed({ repoContributors(repoName) }, 8000)
             } else {
@@ -101,7 +101,6 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.repoContributors.layoutManager = LinearLayoutManager(this)
         binding.repoContributors.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
-
         initGraph()
     }
 
@@ -139,11 +138,11 @@ class RepoContributorsActivity : AppCompatActivity() {
             setPinchZoom(false) // 두손가락으로 줌 설정
             setDrawGridBackground(false) // 격자구조
             description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
-            legend.isEnabled = true // 차트 범례 설정(legend object chart)
+            legend.isEnabled = false // 차트 범례 설정(legend object chart)
             axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
             axisLeft.apply { //왼쪽 축. 즉 Y방향 축을 뜻한다.
                 axisMinimum = 0f // 최소값 0
-                granularity = 10f // 50 단위마다 선을 그리려고 설정.
+                granularity = 10f // 10 단위마다 선을 그리려고 설정.
                 setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
                 setDrawGridLines(true) //격자 라인 활용
                 setDrawAxisLine(true) // 축 그리기 설정
@@ -153,6 +152,7 @@ class RepoContributorsActivity : AppCompatActivity() {
                 textSize = 13f //라벨 텍스트 크기
             }
             xAxis.apply {
+                yOffset = 0f
                 isEnabled = true
                 position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
                 granularity = 1f // 1 단위만큼 간격 두기
@@ -162,10 +162,8 @@ class RepoContributorsActivity : AppCompatActivity() {
                 textSize = 12f // 텍스트 크기
                 valueFormatter = MyXAxisFormatter(contributors) // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
             }
-            animateY(1000) // 밑에서부터 올라오는 애니매이션 적용
+            animateY(500) // 밑에서부터 올라오는 애니매이션 적용
         }
-
-
 
         data.apply {
             setValueTextSize(12f)
@@ -173,12 +171,14 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
         binding.contributorsChart.data = data
         binding.contributorsChart.invalidate()
+        binding.contributorsChart.visibility = View.VISIBLE
 //        binding.contributorsChart.run {
 //            this.data = data //차트의 데이터를 data로 설정해줌.
 //            setFitBars(true)
 //
 //            invalidate()
 //        }
+        count = 0
     }
 
     //    그래프 x축을 contributor의 이름으로 변경하는 코드

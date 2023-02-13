@@ -3,9 +3,13 @@ package com.dragonguard.android.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextWatcher
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -67,7 +71,7 @@ class SearchActivity : AppCompatActivity() {
 //        검색 아이콘 눌렀을때 검색 구현
         binding.searchIcon.setOnClickListener {
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
-                if (lastSearch != viewmodel.onSearchListener.value!! && position != 0) {
+                if (lastSearch != viewmodel.onSearchListener.value!!) {
                     repoNames.clear()
                     binding.searchResult.visibility = View.GONE
                     count = 0
@@ -86,34 +90,41 @@ class SearchActivity : AppCompatActivity() {
         }
 
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
-        viewmodel.onSearchListener.observe(this, Observer {
-            if (!viewmodel.onSearchListener.value.isNullOrEmpty() && viewmodel.onSearchListener.value!!.last() == '\n') {
-                Log.d("enter click", "edittext 클릭함")
-                val search =
-                    binding.searchName.text!!.substring(0 until binding.searchName.text!!.length - 1)
-                binding.searchName.setText(search)
-                binding.searchName.setSelection(binding.searchName.length())
-                if (search.isNotEmpty()) {
-                    closeKeyboard()
-                    if (lastSearch != viewmodel.onSearchListener.value!! && position != 0) {
-                        repoNames.clear()
-                        binding.searchResult.visibility = View.GONE
-                        count = 0
-                        position = 0
+        binding.searchName.setOnEditorActionListener { textView, i, keyEvent ->
+            if (i == EditorInfo.IME_ACTION_SEARCH) {
+                if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
+                    Log.d("enter click", "edittext 클릭함")
+                    val search = binding.searchName.text!!
+                    binding.searchName.setText(search)
+                    binding.searchName.setSelection(binding.searchName.length())
+                    if (search.isNotEmpty()) {
+                        closeKeyboard()
+                        if (lastSearch != viewmodel.onSearchListener.value!!) {
+                            repoNames.clear()
+                            binding.searchResult.visibility = View.GONE
+                            count = 0
+                            position = 0
+                        }
+                        changed = true
+                        lastSearch = viewmodel.onSearchListener.value!!
+                        Log.d("api 시도", "callSearchApi 실행")
+                        callSearchApi(viewmodel.onSearchListener.value!!)
+                        binding.searchResult.visibility = View.VISIBLE
+                        binding.searchName.isFocusable = true
+                    } else {
+                        binding.searchName.setText("")
+                        Toast.makeText(
+                            applicationContext,
+                            "엔터 검색어를 입력하세요!!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        closeKeyboard()
                     }
-                    changed = true
-                    lastSearch = viewmodel.onSearchListener.value!!
-                    Log.d("api 시도", "callSearchApi 실행")
-                    callSearchApi(viewmodel.onSearchListener.value!!)
-                    binding.searchResult.visibility = View.VISIBLE
-                    binding.searchName.isFocusable = true
-                } else {
-                    binding.searchName.setText("")
-                    Toast.makeText(applicationContext, "엔터 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
-                    closeKeyboard()
+
                 }
             }
-        })
+            true
+        }
 
 
 
@@ -168,12 +179,12 @@ class SearchActivity : AppCompatActivity() {
             }
             val result = resultDeferred.await()
             delay(1000)
-            if(!checkSearchResult(result)) {
+            if (!checkSearchResult(result)) {
                 val secondDeferred = coroutine.async(Dispatchers.IO) {
                     viewmodel.getSearchRepoResult(name, count)
                 }
                 val second = secondDeferred.await()
-                if(checkSearchResult(second)) {
+                if (checkSearchResult(second)) {
                     initRecycler()
                 } else {
                     binding.progressBar.visibility = View.GONE
@@ -186,22 +197,23 @@ class SearchActivity : AppCompatActivity() {
 
     //    api 호출결과 판별 및 출력
     private fun checkSearchResult(searchResult: ArrayList<RepoSearchResultModel>): Boolean {
-        return when(searchResult.isNullOrEmpty() ){
-            true ->{
-                if(changed) {
+        return when (searchResult.isNullOrEmpty()) {
+            true -> {
+                if (changed) {
                     changed = false
                     false
                 } else {
                     true
                 }
             }
-            false ->{
+            false -> {
                 changed = false
                 Log.d("api 시도", "api 성공$searchResult")
-                if (repoNames.isNullOrEmpty()) {
-                    repoNames = searchResult
-                } else {
-                    repoNames.addAll(searchResult)
+                for(i in 0 until searchResult.size) {
+                    val compare = repoNames.filter { it.name == searchResult[i].name }
+                    if(compare.isEmpty()) {
+                        repoNames.add(searchResult[i])
+                    }
                 }
                 true
             }
