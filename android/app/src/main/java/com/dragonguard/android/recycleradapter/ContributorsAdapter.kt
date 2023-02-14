@@ -8,9 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.model.RepoContributorsItem
+import kotlin.math.absoluteValue
 
 /*
  선택한 repo의 contributor들의 정보를 나열하기 위한 recycleradapter
@@ -40,9 +44,20 @@ class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, 
                 ranking++
             }
             githubId.text = data1.githubId
-            val red = (Math.random()*255).toInt()
-            val green = (Math.random()*255).toInt()
-            val blue = (Math.random()*255).toInt()
+            var red = (Math.random()*255).toInt()
+            var green = (Math.random()*255).toInt()
+            var blue = (Math.random()*255).toInt()
+            while((colors.last().red - red).absoluteValue < 20 || (colors.last().blue - blue).absoluteValue < 20 || (colors.last().green - green).absoluteValue < 20 || colors.contains(Color.rgb(red,green,blue))) {
+                red = (Math.random()*255).toInt()
+                green = (Math.random()*255).toInt()
+                blue = (Math.random()*255).toInt()
+            }
+//            if((colors.last().red - red).absoluteValue < 20 || (colors.last().blue - blue).absoluteValue < 20 || (colors.last().green - green).absoluteValue < 20) {
+//                red = (Math.random()*255).toInt()
+//                green = (Math.random()*255).toInt()
+//                blue = (Math.random()*255).toInt()
+//
+//            }
             color.imageTintList = ColorStateList.valueOf(Color.rgb(red,green,blue))
             colors.add(Color.rgb(red,green,blue))
         }
