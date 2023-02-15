@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UserInfoService.sharedData.getMemberInfo(page: 0, size: 20)
         MainService.mainService.getUserInfo(id: APIURL.myDbId)
-        sleep(1)    // 로딩화면 대기
+//        Thread.sleep(forTimeInterval: 0.2)
         return true
     }
     

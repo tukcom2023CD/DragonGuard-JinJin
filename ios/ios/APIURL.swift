@@ -66,7 +66,6 @@ final class APIURL{
     }
     
     func getRepoContributorInfo(ip: String, name: String) -> String {
-        print("name = \(name)")
         let url = "http://\(ip)/api/git-repos?name=\(name)"
         return url
     }

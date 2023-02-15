@@ -93,7 +93,7 @@ extension WatchRankingController: UITableViewDelegate, UITableViewDataSource{
         cell.customLabel.text = rankingBtns[indexPath.section]
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
         cell.layer.cornerRadius = 20    //테두리 둥글게
-        
+        cell.layer.borderWidth = 1
         return cell
     }
     

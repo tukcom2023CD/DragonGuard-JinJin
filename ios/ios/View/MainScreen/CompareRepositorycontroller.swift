@@ -7,13 +7,14 @@
 
 import Foundation
 import UIKit
-import RxDataSources
-import RxCocoa
-import RxSwift
-import SwiftUI
 
 final class CompareRepositoryController: UIViewController{
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.navigationController?.navigationBar.isHidden = false
+        self.view.backgroundColor = .white
+    }
 }
 
 /*
@@ -23,6 +24,8 @@ final class CompareRepositoryController: UIViewController{
  Command + Option + Enter : preview 그리는 캠버스 띄우기
  Command + Option + p : preview 재실행
  */
+
+import SwiftUI
 
 struct VCPreViewCompareRepositoryController:PreviewProvider {
     static var previews: some View {
