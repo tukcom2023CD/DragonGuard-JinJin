@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Author {
     private String login;
-    private String avatarUrl;
+    private String avatar_url;
 }

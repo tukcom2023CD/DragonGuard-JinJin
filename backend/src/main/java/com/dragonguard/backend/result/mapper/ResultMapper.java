@@ -10,7 +10,7 @@ public class ResultMapper {
 
     public Result toEntity(ResultRequest resultRequest, String searchId) {
         return Result.builder()
-                .name(resultRequest.getName())
+                .name(resultRequest.getFull_name())
                 .searchId(searchId)
                 .build();
     }
