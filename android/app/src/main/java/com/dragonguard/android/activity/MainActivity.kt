@@ -2,6 +2,7 @@ package com.dragonguard.android.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -87,13 +88,17 @@ class MainActivity : AppCompatActivity() {
             }
             userId = resultDeferred.await()
             prefs.setId("id", userId)
+//            Toast.makeText(application, "id = $userId", Toast.LENGTH_SHORT).show()
             searchUser(userId)
         }
 
     }
 
-//  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
+/*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
+    무한히 요청을 보내는 버그 해결
+ */
     private fun searchUser(id: Int){
+//        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
@@ -102,7 +107,8 @@ class MainActivity : AppCompatActivity() {
             val userInfo : UserInfoModel = resultDeferred.await()
             if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null || userInfo.tier == null) {
 //                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
-                registerUser("posite")
+                val handler = Handler()
+                handler.postDelayed({registerUser("posite")}, 500)
             } else {
                 binding.userTier.text = "내 티어 : ${userInfo.tier}"
                 binding.userToken.text = "내 기여도 : ${userInfo.commits}"

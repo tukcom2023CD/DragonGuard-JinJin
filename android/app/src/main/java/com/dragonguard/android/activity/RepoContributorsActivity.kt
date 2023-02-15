@@ -182,7 +182,9 @@ class RepoContributorsActivity : AppCompatActivity() {
         count = 0
     }
 
-    //    그래프 x축을 contributor의 이름으로 변경하는 코드
+    /*    그래프 x축을 contributor의 이름으로 변경하는 코드
+          x축 label을 githubId의 앞의 4글자를 기입하여 곂치는 문제 해결
+     */
     class MyXAxisFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
         private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,4)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
@@ -193,6 +195,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
     }
 
+//    막대 위의 커밋수 정수로 변경
     class ScoreCustomFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
         private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,4)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
@@ -203,6 +206,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
     }
 
+//    뒤로가기 누르면 화면 전환하게 함
     override fun onBackPressed() {
         val intent = Intent(applicationContext, SearchActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -215,6 +219,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         return true
     }
 
+//    뒤로가기, 홈으로 화면전환 기능
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
