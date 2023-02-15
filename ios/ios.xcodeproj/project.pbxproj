@@ -61,6 +61,7 @@
 		A30BA47029841C97008B594E /* SearchPageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30BA46F29841C97008B594E /* SearchPageService.swift */; };
 		A30BA473298946F6008B594E /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = A30BA472298946F6008B594E /* SwiftyJSON */; };
 		A3754FA02995653B00A683A9 /* TierTokenCustomUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3754F9F2995653B00A683A9 /* TierTokenCustomUIView.swift */; };
+		A37AA6EA299D0BA8002812F6 /* MainRankingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6E9299D0BA8002812F6 /* MainRankingCollectionView.swift */; };
 		A3ADC9742990210E003D6483 /* MainCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ADC9732990210D003D6483 /* MainCollectionView.swift */; };
 		A3ADC97F29911B50003D6483 /* CompareRepositorycontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ADC97E29911B50003D6483 /* CompareRepositorycontroller.swift */; };
 		A3AEEB602975286C00004722 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB5F2975286C00004722 /* RxCocoa */; };
@@ -133,6 +134,7 @@
 		A30BA46C298415B8008B594E /* SearchPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageViewModel.swift; sourceTree = "<group>"; };
 		A30BA46F29841C97008B594E /* SearchPageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageService.swift; sourceTree = "<group>"; };
 		A3754F9F2995653B00A683A9 /* TierTokenCustomUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierTokenCustomUIView.swift; sourceTree = "<group>"; };
+		A37AA6E9299D0BA8002812F6 /* MainRankingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRankingCollectionView.swift; sourceTree = "<group>"; };
 		A3ADC9732990210D003D6483 /* MainCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionView.swift; sourceTree = "<group>"; };
 		A3ADC97E29911B50003D6483 /* CompareRepositorycontroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepositorycontroller.swift; sourceTree = "<group>"; };
 		A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageResultModel.swift; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 				3B1DB87B2963428A00308F43 /* MainController.swift */,
 				A3754F9F2995653B00A683A9 /* TierTokenCustomUIView.swift */,
 				A3ADC9732990210D003D6483 /* MainCollectionView.swift */,
+				A37AA6E9299D0BA8002812F6 /* MainRankingCollectionView.swift */,
 				A3ADC97729911357003D6483 /* MainScreen */,
 				3B00229C2987998B003FA5CC /* SettingController.swift */,
 				3B00229E29879F7D003FA5CC /* SettingTableView.swift */,
@@ -518,6 +521,7 @@
 				3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */,
 				3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */,
 				3B00229F29879F7D003FA5CC /* SettingTableView.swift in Sources */,
+				A37AA6EA299D0BA8002812F6 /* MainRankingCollectionView.swift in Sources */,
 				3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */,
 				3B1DB87C2963428A00308F43 /* MainController.swift in Sources */,
 				3B9CF3D6298FB5A700495D35 /* UserInfoViewModel.swift in Sources */,

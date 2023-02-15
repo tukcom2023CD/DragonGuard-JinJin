@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PostService.postService.postMyInfo()
         UserInfoService.sharedData.getMemberInfo(page: 0, size: 20)
         
-//        Thread.sleep(forTimeInterval: 0.2)
+        Thread.sleep(forTimeInterval: 0.2)
         return true
     }
     

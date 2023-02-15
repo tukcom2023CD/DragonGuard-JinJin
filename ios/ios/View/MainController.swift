@@ -46,8 +46,16 @@ final class MainController: UIViewController {
      UI 코드 작성
      */
     
-    // 버튼들 나열할 collectionView
+    // (전체 사용자 랭킹, 대학교 내부 랭킹)버튼들 나열할 collectionView
     lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .white
+        return cv
+    }()
+    
+    // (랭킹 보러가기, 레포지토리 비교하기)버튼들 나열할 collectionView
+    lazy var collectionView1: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .white
@@ -179,6 +187,13 @@ final class MainController: UIViewController {
         collectionView.snp.makeConstraints({ make in
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
+            make.bottom.equalTo(collectionView1.snp.top).offset(-10)
+        })
+        
+        // CollectionView1 AutoLayout
+        collectionView1.snp.makeConstraints({ make in
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
             make.bottom.equalTo(-30)
         })
         
@@ -251,6 +266,16 @@ extension UIImage {
 extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionView.identifier, for: indexPath) as? MainCollectionView ?? MainCollectionView()
+        let cell1 = collectionView.dequeueReusableCell(withReuseIdentifier: MainRankingCollectionView.identifier, for: indexPath) as? MainRankingCollectionView ?? MainRankingCollectionView()
+            cell1.labelText(rankingName: indexBtns[indexPath.row], rankingNum: 00, percent: 00)
+   
+        
+        if collectionView == self.collectionView {
+            
+        }
+        else if collectionView == self.collectionView1 {
+            
+        }
         
         cell.customLabel.text = indexBtns[indexPath.row]
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)

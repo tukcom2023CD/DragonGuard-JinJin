@@ -60,7 +60,7 @@ final class TierTokenCustomUIView : UIView {
     
     lazy var tierImage : UIImageView = {
         let tierImage = UIImageView()
-        tierImage.image = UIImage(named: "img1")?.resize(newWidth: 60)
+//        tierImage.image = UIImage(named: "img1")?.resize(newWidth: 60)
         return tierImage
     }()
     
