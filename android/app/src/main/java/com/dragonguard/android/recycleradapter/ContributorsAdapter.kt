@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
@@ -34,39 +35,9 @@ class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, 
         private val githubId : TextView = itemView.findViewById(R.id.contrubutor_id)
         private val color : ImageView = itemView.findViewById(R.id.contributor_color)
 
-        fun bind(data1: RepoContributorsItem, data2: RepoContributorsItem) {
-            if(contRanking.text.isNullOrEmpty()) {
-                if(data1.commits == data2.commits) {
-                    contRanking.text = (ranking -1).toString()
-                } else {
-                    contRanking.text = ranking.toString()
-                }
-                ranking++
-            }
-            githubId.text = data1.githubId
-            var red = (Math.random()*255).toInt()
-            var green = (Math.random()*255).toInt()
-            var blue = (Math.random()*255).toInt()
-            while((colors.last().red - red).absoluteValue < 50 || (colors.last().blue - blue).absoluteValue < 50 || (colors.last().green - green).absoluteValue < 50 || colors.contains(Color.rgb(red,green,blue))) {
-                red = (Math.random()*255).toInt()
-                green = (Math.random()*255).toInt()
-                blue = (Math.random()*255).toInt()
-            }
-//            if((colors.last().red - red).absoluteValue < 20 || (colors.last().blue - blue).absoluteValue < 20 || (colors.last().green - green).absoluteValue < 20) {
-//                red = (Math.random()*255).toInt()
-//                green = (Math.random()*255).toInt()
-//                blue = (Math.random()*255).toInt()
-//
-//            }
-            color.imageTintList = ColorStateList.valueOf(Color.rgb(red,green,blue))
-            colors.add(Color.rgb(red,green,blue))
-        }
 
         fun bind(data1: RepoContributorsItem) {
-            if(contRanking.text.isNullOrEmpty()) {
-                contRanking.text = ranking.toString()
-                ranking++
-            }
+            contRanking.text = data1.commits.toString()
             githubId.text = data1.githubId
             val red = (Math.random()*255).toInt()
             val green = (Math.random()*255).toInt()
@@ -77,12 +48,7 @@ class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(position != 0) {
-            holder.bind(datas[position], datas[(position-1)])
-        } else {
-            holder.bind(datas[position])
-        }
-
+        holder.bind(datas[position])
     }
 
 }

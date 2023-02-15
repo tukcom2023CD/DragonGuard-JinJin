@@ -17,6 +17,7 @@ import com.dragonguard.android.model.RepoContributorsItem
 import com.dragonguard.android.recycleradapter.ContributorsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -183,7 +184,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    그래프 x축을 contributor의 이름으로 변경하는 코드
     class MyXAxisFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
-        private val days = contributors.flatMap { arrayListOf(it.githubId) }
+        private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,4)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString()
         }
@@ -193,9 +194,9 @@ class RepoContributorsActivity : AppCompatActivity() {
     }
 
     class ScoreCustomFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
-        private val days = contributors.flatMap { arrayListOf(it.githubId) }
+        private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,4)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return days.getOrNull(value.toInt() - 1) ?: value.toString()
+            return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
         }
         override fun getFormattedValue(value: Float): String {
             return "" + value.toInt()
