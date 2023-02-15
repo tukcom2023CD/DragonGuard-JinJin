@@ -1,7 +1,7 @@
 package com.dragonguard.backend.gitrepo.controller;
 
 import com.dragonguard.backend.gitrepo.service.GitRepoService;
-import com.dragonguard.backend.gitrepomember.dto.GitRepoMemberResponse;
+import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

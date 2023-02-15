@@ -25,3 +25,6 @@ spring:
   redis:
     host: localhost
     port: 6379
+
+scrapping:
+  url: https://api.github.com/
