@@ -17,17 +17,15 @@ final class RepoContributorInfoViewModel{
     // API 호출
     func getRepoContributorInfo(){
         repoResultBehaviorSubject = BehaviorSubject(value: [])
-//        RepoContributorInfoService.repoShared.getRepoContriInfo()
-        RepoContributorInfoService.repoShared.testInput()
+        RepoContributorInfoService.repoShared.getRepoContriInfo()
     }
     
     // api 결과값을 view로 전달
     func serviceToView(){
-        repoResultBehaviorSubject.onNext(RepoContributorInfoService.repoShared.resultData)
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
             if RepoContributorInfoService.repoShared.checkData {
-                print("viewmodel 타이머 실행 중!")
+                self.repoResultBehaviorSubject.onNext(RepoContributorInfoService.repoShared.resultData)
                 self.checkData = true
                 timer.invalidate()
             }

@@ -12,8 +12,8 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL() 
-    static var ip = ""
-    static var myDbId = 2
+    static var ip = "192.168.0.11"
+    static var myDbId = 1
     
     private init(){}
     
@@ -83,7 +83,8 @@ final class APIURL{
         return url
     }
     
-    func getRepoContributorInfo(ip: String, name: String) -> String{
+    func getRepoContributorInfo(ip: String, name: String) -> String {
+        print("name = \(name)")
         let url = "http://\(ip)/api/git-repos?name=\(name)"
         return url
     }

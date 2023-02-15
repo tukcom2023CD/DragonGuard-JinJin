@@ -175,9 +175,7 @@ extension RepoContributorInfoController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RepoContributorTableView.identifier, for: indexPath) as? RepoContributorTableView ?? RepoContributorTableView()
         
-        
         cell.setLabel(num: userCommit[indexPath.row], name: userName[indexPath.row], color: dataColor[indexPath.row][0])
-        
         return cell
     }
     
@@ -186,6 +184,10 @@ extension RepoContributorInfoController: UITableViewDelegate, UITableViewDataSou
     
     // cell 높이 설정
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return 60 }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
 }
 
