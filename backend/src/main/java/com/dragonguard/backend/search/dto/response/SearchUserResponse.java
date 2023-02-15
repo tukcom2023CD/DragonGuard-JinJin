@@ -1,4 +1,4 @@
-package com.dragonguard.backend.gitrepomember.dto.response;
+package com.dragonguard.backend.search.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Author {
-    private String login;
-    private String avatar_url;
+public class SearchUserResponse {
+    private UserResponse[] items;
 }

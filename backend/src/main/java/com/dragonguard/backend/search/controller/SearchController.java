@@ -22,6 +22,6 @@ public class SearchController {
     @GetMapping
     public ResponseEntity<List<ResultResponse>> getSearchResult(
             @RequestParam String name, @RequestParam SearchType type, @RequestParam Integer page) {
-        return ResponseEntity.ok(searchService.getSearchResult(new SearchRequest(name, type, page)));
+        return ResponseEntity.ok(searchService.getSearchResultByClient(new SearchRequest(name, type, page)));
     }
 }
