@@ -12,7 +12,7 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL() 
-    static var ip = "192.168.0.11"
+    static var ip = ""
     static var myDbId = 1
     
     private init(){}
@@ -46,24 +46,6 @@ final class APIURL{
         
         return 0
     }
-    
-    
-    
-    /// 사용자 티어 정보를 얻는 함수
-    /// - Parameter id: inputDBMembers 함수 return값, DB에 저장되는 Id
-    static func getUserTier(id: Int){
-        let getTierUrl = "http://localhost/api/members/\(id)/tier"
-        
-    }
-    
-    
-    /// 사용자 커밋 정보를 얻는 함수
-    /// - Parameter id: inputDBMembers 함수 return값, DB에 저장되는 Id
-    static func getUserCommits(id: Int){
-        let getCommitUrl = "http://localhost/api/members/\(id)/commits"
-        
-    }
-    
     
     /// 멤버 정보 조회하는 함수
     /// - Parameter id:inputDBMembers 함수 return값, DB에 저장되는 Id
