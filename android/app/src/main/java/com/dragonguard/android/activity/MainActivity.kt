@@ -88,13 +88,15 @@ class MainActivity : AppCompatActivity() {
             }
             userId = resultDeferred.await()
             prefs.setId("id", userId)
-            Toast.makeText(application, "id = $userId", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(application, "id = $userId", Toast.LENGTH_SHORT).show()
             searchUser(userId)
         }
 
     }
 
-//  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
+/*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
+    무한히 요청을 보내는 버그 해결
+ */
     private fun searchUser(id: Int){
 //        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
         val coroutine = CoroutineScope(Dispatchers.Main)
