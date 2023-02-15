@@ -78,9 +78,9 @@ final class MainRankingCollectionView: UICollectionViewCell {
         
     }
     
-    func labelText(rankingName: String, rankingNum: Int, percent: Int) {
-        self.rankingNameLabel.text = rankingName
-        self.rankingNumLabel.text = String(rankingNum)
-        self.percentLabel.text = "상위 \(percent)%"
+    func labelText(_ rankingName: String?, rankingNum: String, _ percent: String?) {
+        self.rankingNameLabel.text = rankingName ?? ""
+        self.rankingNumLabel.text = rankingNum
+        self.percentLabel.text = percent ?? ""
     }
 }
