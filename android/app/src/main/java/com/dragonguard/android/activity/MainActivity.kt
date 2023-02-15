@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
 //  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
     private fun searchUser(id: Int){
-        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
