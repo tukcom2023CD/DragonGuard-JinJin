@@ -1,7 +1,7 @@
 package com.dragonguard.backend.gitrepomember.mapper;
 
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.gitrepomember.dto.GitRepoMemberResponse;
+import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.member.entity.Member;
 import org.springframework.stereotype.Component;

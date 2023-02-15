@@ -2,7 +2,7 @@ package com.dragonguard.backend.gitrepo.controller;
 
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.gitrepo.service.GitRepoService;
-import com.dragonguard.backend.gitrepomember.dto.GitRepoMemberResponse;
+import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +19,6 @@ public class GitRepoController {
 
     @GetMapping
     public ResponseEntity<List<GitRepoMemberResponse>> getRepoMembers(@RequestParam String name) {
-        return ResponseEntity.ok(gitRepoService.findMembersByGitRepo(new GitRepoRequest(name, LocalDate.now().getYear())));
+        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoWithClient(new GitRepoRequest(name, LocalDate.now().getYear())));
     }
 }

@@ -35,3 +35,6 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+scrapping:
+  url: https://api.github.com/
