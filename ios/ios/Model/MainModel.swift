@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MainModel{
+final class MainModel{
     var id: Int
     var name: String
     var githubId: String

@@ -15,7 +15,7 @@ struct RepoContriInfoDecodingModel: Codable{
 }
 
 
-class RepoContributorInfoModel{
+final class RepoContributorInfoModel{
     var githubId: String
     var commits: Int
     var additions: Int

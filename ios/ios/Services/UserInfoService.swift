@@ -10,7 +10,7 @@ import Alamofire
 
 
 // 유저 정보 통신
-class UserInfoService{
+final class UserInfoService{
     static let sharedData = UserInfoService()
     let ip = APIURL.ip
     var resultArray = [UserInfoModel]()

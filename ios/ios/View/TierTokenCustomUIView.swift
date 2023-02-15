@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class TierTokenCustomUIView : UIView {
+final class TierTokenCustomUIView : UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         // UI view에 적용

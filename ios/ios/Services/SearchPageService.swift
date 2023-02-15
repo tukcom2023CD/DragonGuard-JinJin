@@ -8,8 +8,7 @@
 import Foundation
 import Alamofire
 
-class SearchPageService {
-    
+final class SearchPageService {
     let ip = APIURL.ip
     var resultArray = [SearchPageResultModel]() // 결과 저장할 변수
     var timerThread: Timer?

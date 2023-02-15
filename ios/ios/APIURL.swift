@@ -30,7 +30,7 @@ final class APIURL{
     ///  DB에 User 정보 넣는 함수
     /// - Returns: DB에 저장된 Id 숫자
     static func inputDBMembers() -> Int{
-        let inputUserUrl = "http://localhost/api/members"
+//        let inputUserUrl = "http://localhost/api/members"
         /*
          입력 형태 JSON
          {
