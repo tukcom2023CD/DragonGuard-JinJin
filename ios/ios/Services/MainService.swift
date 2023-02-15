@@ -13,11 +13,12 @@ final class MainService{
     static let mainService = MainService()
     let ip = APIURL.ip
     var result: MainModel?
-    
+    var data = PostService.postService.data
     private init() {}
     
-    func getUserInfo(id: Int){
-        let url = APIURL.apiUrl.getMembersInfo(ip: ip, id: id)
+    
+    func getUserInfo(){
+        let url = APIURL.apiUrl.getMembersInfo(ip: ip, id: data)
         
         DispatchQueue.main.async {
             AF.request(url)
