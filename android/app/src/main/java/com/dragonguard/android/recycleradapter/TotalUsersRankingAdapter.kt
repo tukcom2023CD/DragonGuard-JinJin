@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.model.RepoContributorsItem
 import com.dragonguard.android.model.TotalUsersRankingModelItem
+import com.dragonguard.android.model.TotalUsersRankingsModel
 
 /*
  모든 사용자들을 랭킹 순서대로 나열하기 위한 recycleradapter
  */
-class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankingModelItem>, private val context: Context) : RecyclerView.Adapter<TotalUsersRankingAdapter.ViewHolder>() {
-    private var rank = 1
+class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankingsModel>, private val context: Context) : RecyclerView.Adapter<TotalUsersRankingAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.total_users_ranking_list,parent,false)
@@ -31,25 +31,23 @@ class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankingM
         private val githubId : TextView = itemView.findViewById(R.id.ranker_id)
         private val contribution : TextView = itemView.findViewById(R.id.ranker_contribution)
 
-        fun bind(data: TotalUsersRankingModelItem) {
-            if(ranking.text.isNullOrEmpty()) {
-                ranking.text = rank.toString()
-                rank++
+        fun bind(data: TotalUsersRankingsModel) {
+            if(ranking.text.isNullOrEmpty() && githubId.text.isNullOrEmpty() && contribution.text.isNullOrEmpty()) {
+                ranking.text = data.ranking.toString()
+                githubId.text = data.githubId
+                contribution.text = data.commits.toString()
             }
-            githubId.text = data.githubId
-            contribution.text = data.commits.toString()
         }
-        fun bind(data1: TotalUsersRankingModelItem, data2: TotalUsersRankingModelItem) {
-            if(ranking.text.isNullOrEmpty()) {
+        fun bind(data1: TotalUsersRankingsModel, data2: TotalUsersRankingsModel) {
+            if(ranking.text.isNullOrEmpty() && githubId.text.isNullOrEmpty() && contribution.text.isNullOrEmpty()) {
                 if(data1.commits == data2.commits) {
-                    ranking.text = (rank-1).toString()
+                    ranking.text = data2.ranking.toString()
                 } else {
-                    ranking.text = rank.toString()
+                    ranking.text = data1.ranking.toString()
                 }
-                rank++
+                githubId.text = data1.githubId
+                contribution.text = data1.commits.toString()
             }
-            githubId.text = data1.githubId
-            contribution.text = data1.commits.toString()
         }
     }
 
@@ -60,6 +58,13 @@ class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankingM
             holder.bind(datas[position])
         }
 
+    }
+
+    override fun getItemId(position: Int): Long {
+        return super.getItemId(position)
+    }
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position)
     }
 
 }
