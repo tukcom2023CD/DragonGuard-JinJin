@@ -27,9 +27,9 @@ struct UserInfoModel{
 
 struct UserInfoDecodingData: Codable{
     var id: Int
-    var name: String
+    var name: String?
     var githubId: String
-    var commits: Int
+    var commits: Int?
     var tier: String
     
 }

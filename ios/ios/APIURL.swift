@@ -13,6 +13,7 @@ final class APIURL{
     
     static let apiUrl = APIURL() 
     static var ip = ""
+    static var myDbId = 2
     
     private init(){}
     

@@ -40,9 +40,6 @@ class SearchPageService {
             }
             Thread.sleep(forTimeInterval: 1)
         })
-        
-        
-        
     }
     
 }
