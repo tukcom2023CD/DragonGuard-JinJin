@@ -34,7 +34,7 @@
 
         <TextView
             android:id="@+id/ranker_id"
-            android:text="id"
+            android:text=""
             android:textColor="#000000"
             android:textSize="20dp"
             android:fontFamily="@font/ibm_semibold"
@@ -52,7 +52,7 @@
             android:background="@color/black"/>
         <TextView
             android:id="@+id/ranker_contribution"
-            android:text="contribution"
+            android:text=""
             android:textColor="#000000"
             android:textSize="20dp"
             android:fontFamily="@font/ibm_semibold"

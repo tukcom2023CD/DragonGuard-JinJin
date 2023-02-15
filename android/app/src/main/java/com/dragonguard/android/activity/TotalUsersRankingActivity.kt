@@ -8,12 +8,12 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityTotalUsersRankingBinding
+import com.dragonguard.android.model.TotalUsersRankingsModel
 import com.dragonguard.android.model.TotalUsersRankingModelItem
 import com.dragonguard.android.recycleradapter.TotalUsersRankingAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
@@ -29,10 +29,11 @@ class TotalUsersRankingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTotalUsersRankingBinding
     private lateinit var totalUserRankingAdapter: TotalUsersRankingAdapter
     private var viewmodel = Viewmodel()
-    private val size = 10
+    private val size = 20
     private var page = 0
     private var position = 0
-    private var usersRanking = ArrayList<TotalUsersRankingModelItem>()
+    private var ranking = 0
+    private var usersRanking = ArrayList<TotalUsersRankingsModel>()
     private var changed = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,11 +62,11 @@ class TotalUsersRankingActivity : AppCompatActivity() {
 
     private fun checkRankings(result: ArrayList<TotalUsersRankingModelItem>) {
 //        Toast.makeText(applicationContext, "개수 : ${result.size}",Toast.LENGTH_SHORT).show()
-        if(!result.isNullOrEmpty()) {
-            if(usersRanking.isNullOrEmpty()) {
-                usersRanking = result
-            } else {
-                usersRanking.addAll(result)
+        if(result.isNotEmpty()) {
+            result.forEach {
+                usersRanking.add(TotalUsersRankingsModel(it.commits,it.githubId,it.id,it.name,it.tier,ranking+1))
+                Log.d("유져", "랭킹 ${ranking+1} 추가")
+                ranking++
             }
             initRecycler()
         } else {
@@ -80,12 +81,13 @@ class TotalUsersRankingActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
+        binding.totalUsersRankings.setItemViewCacheSize(usersRanking.size)
 //        Toast.makeText(applicationContext, "개수 : ${usersRanking.size}",Toast.LENGTH_SHORT).show()
         if(page == 0) {
             totalUserRankingAdapter = TotalUsersRankingAdapter(usersRanking, this)
             binding.totalUsersRankings.adapter = totalUserRankingAdapter
             binding.totalUsersRankings.layoutManager = LinearLayoutManager(this)
-            totalUserRankingAdapter.notifyDataSetChanged()
+//            totalUserRankingAdapter.notifyDataSetChanged()
             binding.totalUsersRankings.visibility = View.VISIBLE
         }
         page++
