@@ -67,6 +67,10 @@ public class GitRepoService {
 
     private List<GitRepoMemberResponse> requestToGithub(GitRepoRequest gitRepoRequest, GitRepo gitRepo) {
         GitRepoMemberClientResponse[] clientResponse = gitRepoClient.requestToGithub(gitRepoRequest);
+        if (clientResponse == null || clientResponse.length == 0) {
+            return List.of();
+        }
+
         List<GitRepoMemberClientResponse> gitRepoClientResponse = Arrays.asList(clientResponse);
 
         Map<GitRepoMemberClientResponse, Integer> additions = gitRepoClientResponse.stream()
