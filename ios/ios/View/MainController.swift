@@ -34,16 +34,6 @@ final class MainController: UIViewController {
         
         // UI AutoLayout 적용
         settingAutoLayout()
-        
-        //        // 폰트 체크 하기
-        //        UIFont.familyNames.sorted().forEach { familyName in
-        //            print("*** \(familyName) ***")
-        //            UIFont.fontNames(forFamilyName: familyName).forEach { fontName in
-        //                print("\(fontName)")
-        //            }
-        //            print("---------------------")
-        //        }
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -290,7 +280,7 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
         case 3:
             self.navigationController?.pushViewController(CompareRepositoryController(), animated: true)
         default:
-            print("aaa")
+            return
         }
     }
     

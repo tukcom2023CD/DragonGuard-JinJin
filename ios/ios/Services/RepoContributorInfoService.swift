@@ -18,36 +18,17 @@ final class RepoContributorInfoService{
     func getRepoContriInfo(){
         let url = APIURL.apiUrl.getRepoContributorInfo(ip: ip, name: selectedName)
         resultData = []
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
-            AF.request(url, method: .get)
-                .validate(statusCode: 200..<201)
-                .responseDecodable(of: [RepoContriInfoDecodingModel].self) { response in
-                    guard let responseResult = response.value else {return}
-                    if(responseResult.count != 0 && self.resultData.count == 0){
-                        self.checkData = true
-                        print("responseResult \(responseResult)" )
+        
+        AF.request(url, method: .get)
+            .validate(statusCode: 200..<201)
+            .responseDecodable(of: [RepoContriInfoDecodingModel].self) { response in
+                guard let responseResult = response.value else {return}
+                if(responseResult.count > 0 && self.resultData.count == 0){
+                    self.checkData = true
+                    for data in responseResult{
+                        self.resultData.append(RepoContributorInfoModel(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
                     }
                 }
-            
-            if self.checkData{
-                timer.invalidate()
             }
-            Thread.sleep(forTimeInterval: 1)
-        })
     }
-    
-    func testInput(){
-        resultData = []
-        resultData.append(RepoContributorInfoModel.init(githubId: "abc", commits: 100, additions: 200, deletions: 100))
-        resultData.append(RepoContributorInfoModel.init(githubId: "fe", commits: 120, additions: 200, deletions: 100))
-        resultData.append(RepoContributorInfoModel.init(githubId: "jj", commits: 130, additions: 200, deletions: 100))
-        resultData.append(RepoContributorInfoModel.init(githubId: "bb", commits: 140, additions: 200, deletions: 100))
-        resultData.append(RepoContributorInfoModel.init(githubId: "bb2", commits: 140, additions: 200, deletions: 100))
-        resultData.append(RepoContributorInfoModel.init(githubId: "bb3", commits: 10, additions: 200, deletions: 100))
-        resultData.append(RepoContributorInfoModel.init(githubId: "bb4", commits: 130, additions: 200, deletions: 100))
-        resultData.append(RepoContributorInfoModel.init(githubId: "bb5", commits: 120, additions: 200, deletions: 100))
-        resultData.append(RepoContributorInfoModel.init(githubId: "bb6", commits: 170, additions: 200, deletions: 100))
-        self.checkData = true
-    }
-    
 }

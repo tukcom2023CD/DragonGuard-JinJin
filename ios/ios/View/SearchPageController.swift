@@ -87,7 +87,7 @@ final class SearchPageController: UIViewController {
     
     // 검색 결과 데이터 자동 쓰레드
     private func searchResultAutoThread(){
-        timerThread = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+        timerThread = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { timer in
             self.searchViewModel.switchData()
             self.searchViewModel.searchResult
                 .observe(on: MainScheduler.instance)
@@ -213,7 +213,6 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("selected \(indexPath.section)")
         RepoContributorInfoService.repoShared.selectedName = resultData[indexPath.section]
         self.navigationController?.pushViewController(RepoContributorInfoController(), animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
