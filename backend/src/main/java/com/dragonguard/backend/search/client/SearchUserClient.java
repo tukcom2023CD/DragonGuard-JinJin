@@ -1,10 +1,10 @@
 package com.dragonguard.backend.search.client;
 
+import com.dragonguard.backend.config.github.GithubProperties;
 import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.global.webclient.GithubClient;
 import com.dragonguard.backend.search.dto.request.SearchRequest;
 import com.dragonguard.backend.search.dto.response.SearchUserResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -14,11 +14,14 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class SearchUserClient implements GithubClient<SearchRequest, SearchUserResponse> {
-    private static final String BASE_URL = "${scrapping.url}";
+    private final GithubProperties githubProperties;
     private final WebClient webClient;
+    private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";
+    private static final String USER_AGENT = "SPRING BOOT WEB CLIENT";
 
-    public SearchUserClient(@Value(BASE_URL) String baseUrl) {
-        webClient = generateWebClient(baseUrl);
+    public SearchUserClient(GithubProperties githubProperties) {
+        this.githubProperties = githubProperties;
+        this.webClient = generateWebClient();
     }
 
     @Override
@@ -32,6 +35,7 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
                                 .queryParam("per_page", 10)
                                 .queryParam("page", request.getPage())
                                 .build())
+                .headers(headers -> headers.setBasicAuth(githubProperties.getToken()))
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()
@@ -40,10 +44,11 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
                 .orElseThrow(WebClientException::new);
     }
 
-    private WebClient generateWebClient(String baseUrl) {
+    private WebClient generateWebClient() {
         return WebClient.builder()
-                .baseUrl(baseUrl)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .baseUrl(githubProperties.getUrl())
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)
+                .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
                 .build();
     }
 }

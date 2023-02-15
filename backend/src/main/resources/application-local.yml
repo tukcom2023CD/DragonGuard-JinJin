@@ -36,5 +36,6 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
 
-scrapping:
+github:
   url: https://api.github.com/
+  token: ${GITHUB_ACCESS_TOKEN}
