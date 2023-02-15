@@ -47,7 +47,7 @@ class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, 
             var red = (Math.random()*255).toInt()
             var green = (Math.random()*255).toInt()
             var blue = (Math.random()*255).toInt()
-            while((colors.last().red - red).absoluteValue < 20 || (colors.last().blue - blue).absoluteValue < 20 || (colors.last().green - green).absoluteValue < 20 || colors.contains(Color.rgb(red,green,blue))) {
+            while((colors.last().red - red).absoluteValue < 50 || (colors.last().blue - blue).absoluteValue < 50 || (colors.last().green - green).absoluteValue < 50 || colors.contains(Color.rgb(red,green,blue))) {
                 red = (Math.random()*255).toInt()
                 green = (Math.random()*255).toInt()
                 blue = (Math.random()*255).toInt()
