@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class MainCollectionView: UICollectionViewCell {
+final class MainCollectionView: UICollectionViewCell {
     static let identifier = "mainCollectionView"
     
     override init(frame: CGRect) {

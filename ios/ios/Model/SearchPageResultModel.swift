@@ -14,7 +14,7 @@ struct SearchPageDecodingData: Codable {
 }
 
 
-class SearchPageResultModel {
+final class SearchPageResultModel {
     var id: String
     var name: String
     

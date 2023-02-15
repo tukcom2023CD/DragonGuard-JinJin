@@ -14,9 +14,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
+        PostService.postService.postMyInfo()
         UserInfoService.sharedData.getMemberInfo(page: 0, size: 20)
-        MainService.mainService.getUserInfo(id: APIURL.myDbId)
-        sleep(1)    // 로딩화면 대기
+        
+        Thread.sleep(forTimeInterval: 0.2)
         return true
     }
     

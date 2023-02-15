@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class TierTokenCustomUIView : UIView {
+final class TierTokenCustomUIView : UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         // UI view에 적용
@@ -60,7 +60,7 @@ class TierTokenCustomUIView : UIView {
     
     lazy var tierImage : UIImageView = {
         let tierImage = UIImageView()
-        tierImage.image = UIImage(named: "img1")?.resize(newWidth: 60)
+//        tierImage.image = UIImage(named: "img1")?.resize(newWidth: 60)
         return tierImage
     }()
     

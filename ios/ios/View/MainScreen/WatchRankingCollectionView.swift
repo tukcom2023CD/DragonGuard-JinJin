@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class WatchRankingCollectionView: UITableViewCell {
+final class WatchRankingCollectionView: UITableViewCell {
     static let identifier = "watchRankingCollectionView"
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

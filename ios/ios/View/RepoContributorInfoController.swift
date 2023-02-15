@@ -156,6 +156,11 @@ final class RepoContributorInfoController: UIViewController{
     // 데이터 삽입하는 함수
     private func getUserInfoAutoThread(){
         viewModel.repoResultBehaviorSubject.subscribe(onNext: {
+            let arr = self.viewModel.selectTitle.components(separatedBy: "/")
+            self.navigationItem.title = arr[1]
+            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!]
+            
+            
             for data in $0{
                 self.userName.append(data.githubId)
                 self.userCommit.append(data.commits)

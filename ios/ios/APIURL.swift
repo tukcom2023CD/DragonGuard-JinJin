@@ -13,7 +13,6 @@ final class APIURL{
     
     static let apiUrl = APIURL() 
     static var ip = ""
-    static var myDbId = 1
     
     private init(){}
     
@@ -29,8 +28,8 @@ final class APIURL{
     
     ///  DB에 User 정보 넣는 함수
     /// - Returns: DB에 저장된 Id 숫자
-    static func inputDBMembers() -> Int{
-        let inputUserUrl = "http://localhost/api/members"
+    static func inputDBMembers() -> String{
+        let inputUserUrl = "http://\(ip)/api/members"
         /*
          입력 형태 JSON
          {
@@ -44,7 +43,7 @@ final class APIURL{
          }
         */
         
-        return 0
+        return inputUserUrl
     }
     
     /// 멤버 정보 조회하는 함수
@@ -66,7 +65,6 @@ final class APIURL{
     }
     
     func getRepoContributorInfo(ip: String, name: String) -> String {
-        print("name = \(name)")
         let url = "http://\(ip)/api/git-repos?name=\(name)"
         return url
     }

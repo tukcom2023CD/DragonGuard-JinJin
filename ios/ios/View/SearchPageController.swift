@@ -78,16 +78,11 @@ final class SearchPageController: UIViewController {
         resultTableView.refreshControl = refreshTable
     }
     
-    @objc func refreshing(refresh: UIRefreshControl){
-//        DispatchQueue.main.asyncAfter(deadline: .now()) {
-//            self.resultTableView.reloadData()
-//            refresh.endRefreshing()
-//        }
-    }
+    @objc func refreshing(refresh: UIRefreshControl){ }
     
     // 검색 결과 데이터 자동 쓰레드
     private func searchResultAutoThread(){
-        timerThread = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { timer in
+        timerThread = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
             self.searchViewModel.switchData()
             self.searchViewModel.searchResult
                 .observe(on: MainScheduler.instance)
