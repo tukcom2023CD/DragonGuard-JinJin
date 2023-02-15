@@ -28,7 +28,7 @@ class UserInfoService{
                     guard let responseResult = response.value else {return}
                     if(responseResult.count != 0 && self.resultArray.count == 0){
                         for data in responseResult {
-                            let dataBundle = UserInfoModel(id: data.id, name: data.name, githubId: data.githubId, commits: data.commits, tier: data.tier)
+                            let dataBundle = UserInfoModel(id: data.id, name: data.name ?? "unknown", githubId: data.githubId, commits: data.commits ?? 0, tier: data.tier)
                             self.resultArray.append(dataBundle)
                         }
                     }

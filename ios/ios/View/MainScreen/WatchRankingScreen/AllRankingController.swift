@@ -19,14 +19,12 @@ final class AllRankingController: UIViewController{
     var resultData = [UserInfoModel]()
     var fetchingMore = false
     var checkData = false
-    var count = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "전체 랭킹"
-        count = 1
         addUItoView()
         settingAutoLayout()
         
@@ -66,7 +64,8 @@ final class AllRankingController: UIViewController{
     
     func getData(){
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
-                self.userInfoViewModel.allRankingobservable
+            
+            self.userInfoViewModel.allRankingobservable
                     .observe(on: MainScheduler.instance)
                     .subscribe(onNext: {
                         for data in $0{
@@ -91,7 +90,6 @@ final class AllRankingController: UIViewController{
      */
     
     private func settingAutoLayout(){
-        
         repoTableView.snp.makeConstraints({ make in
             make.top.equalTo(60)
             make.leading.equalTo(20)
@@ -100,21 +98,15 @@ final class AllRankingController: UIViewController{
         })
         
     }
-    
-
-    
 }
 
-
 extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
-    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier, for: indexPath) as? WatchRankingTableView ?? WatchRankingTableView()
         
-        cell.prepare(rank: count, text: self.resultData[indexPath.section].githubId, count: self.resultData[indexPath.section].commits)
+        cell.prepare(rank: indexPath.section + 1, text: self.resultData[indexPath.section].githubId, count: self.resultData[indexPath.section].commits)
         
-        count += 1
         cell.layer.cornerRadius = 15
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
         cell.layer.borderWidth = 1
@@ -124,7 +116,6 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
     
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("selected \(indexPath.section)")
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -132,10 +123,13 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
         let position = scrollView.contentOffset.y
         
         if position > (repoTableView.contentSize.height - scrollView.frame.size.height){
-            if !fetchingMore && checkData{
-                fetchingMore = true
-                self.userInfoViewModel.getDataRanking()
-                self.getData()
+            if self.resultData.count % 20 == 0{
+                if !fetchingMore && checkData{
+                    fetchingMore = true
+                    self.userInfoViewModel.getDataRanking()
+                    self.getData()
+                }
+                
             }
         }
     }

@@ -31,11 +31,11 @@ class MainModel{
 
 struct MainDecodingModel: Codable{
     var id: Int
-    var name: String
+    var name: String?
     var githubId: String
-    var commits: Int
+    var commits: Int?
     var tier: String
     var authStep: String
-    var profileImage: String
+    var profileImage: String?
     var rank: Int
 }
