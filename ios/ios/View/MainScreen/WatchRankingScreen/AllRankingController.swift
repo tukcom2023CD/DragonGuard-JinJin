@@ -25,6 +25,7 @@ final class AllRankingController: UIViewController{
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "전체 랭킹"
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!]
         addUItoView()
         settingAutoLayout()
         
