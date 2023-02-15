@@ -18,6 +18,7 @@ final class MainController: UIViewController {
     var myTokens: Int = 0
     var myId = 0
     var myName = ""
+    var rank = 0
     var imgUrl = ""
     let viewModel = MainViewModel()
     let disposeBag = DisposeBag()
@@ -200,6 +201,7 @@ final class MainController: UIViewController {
                 self.myTokens = $0.commits
                 self.myName = $0.githubId
                 self.imgUrl = $0.profileImage
+                self.rank = $0.rank
             })
             .disposed(by: self.disposeBag)
             
@@ -208,6 +210,7 @@ final class MainController: UIViewController {
                 let url = URL(string: self.imgUrl)!
                 self.img.load(img: self.img, url: url,btn: self.settingUI)
                 self.settingUI.setTitle(self.myName, for: .normal)
+                self.collectionView.reloadData()
                 timer.invalidate()
             }
             
@@ -253,8 +256,11 @@ extension UIImage {
 extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainRankingCollectionView.identifier, for: indexPath) as! MainRankingCollectionView
-        print(indexPath.row)
-        if indexPath.row == 0 || indexPath.row == 1 {
+        
+        if indexPath.row == 0 {
+            cell.labelText(indexBtns[indexPath.row], rankingNum: "\(self.rank)", "상위 0%")
+        }
+        else if indexPath.row == 1 {
             cell.labelText(indexBtns[indexPath.row], rankingNum: "00", "상위 0%")
         }
         else {
