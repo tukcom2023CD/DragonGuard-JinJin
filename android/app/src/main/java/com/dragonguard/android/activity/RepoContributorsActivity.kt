@@ -71,7 +71,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         if (result.isNotEmpty()) {
             if (result[0].additions == null) {
                 val handler = Handler()
-                handler.postDelayed({ repoContributors(repoName) }, 7000)
+                handler.postDelayed({ repoContributors(repoName) }, 3000)
 
             } else {
                 for (i in 0 until result.size) {
@@ -83,10 +83,10 @@ class RepoContributorsActivity : AppCompatActivity() {
                 initRecycler()
             }
         } else {
-            if (count<5) {
+            if (count<10) {
                 count++
                 val handler = Handler()
-                handler.postDelayed({ repoContributors(repoName) }, 7000)
+                handler.postDelayed({ repoContributors(repoName) }, 3000)
             } else {
                 binding.progressBar.visibility = View.GONE
             }
