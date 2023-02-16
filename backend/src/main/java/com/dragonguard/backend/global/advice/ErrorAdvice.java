@@ -8,14 +8,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
 public class ErrorAdvice {
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> entityNotFound(EntityExistsException e) {
+    public ResponseEntity<String> entityNotFound(EntityNotFoundException e) {
         log.info("entity not found exception occured");
         return ResponseEntity.ok("엔티티를 찾을 수 없습니다.");
     }
