@@ -64,7 +64,15 @@ class TotalUsersRankingActivity : AppCompatActivity() {
 //        Toast.makeText(applicationContext, "개수 : ${result.size}",Toast.LENGTH_SHORT).show()
         if(result.isNotEmpty()) {
             result.forEach {
-                usersRanking.add(TotalUsersRankingsModel(it.commits,it.githubId,it.id,it.name,it.tier,ranking+1))
+                if(ranking != 0) {
+                    if(usersRanking[ranking-1].commits == it.commits) {
+                        usersRanking.add(TotalUsersRankingsModel(it.commits,it.githubId,it.id,it.name,it.tier,usersRanking[ranking-1].ranking))
+                    } else {
+                        usersRanking.add(TotalUsersRankingsModel(it.commits,it.githubId,it.id,it.name,it.tier,ranking+1))
+                    }
+                } else {
+                    usersRanking.add(TotalUsersRankingsModel(it.commits,it.githubId,it.id,it.name,it.tier,ranking+1))
+                }
                 Log.d("유져", "랭킹 ${ranking+1} 추가")
                 ranking++
             }
