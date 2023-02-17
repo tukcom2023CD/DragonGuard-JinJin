@@ -95,6 +95,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    리사이클러뷰 실행
     private fun initRecycler() {
+        binding.repoContributors.setItemViewCacheSize(contributors.size)
 //        Toast.makeText(applicationContext, "리사이클러뷰 시작", Toast.LENGTH_SHORT).show()
 //        Toast.makeText(applicationContext, "contributors 수 : ${contributors.size}", Toast.LENGTH_SHORT).show()
         contributorsAdapter = ContributorsAdapter(contributors, this, colorsets)
