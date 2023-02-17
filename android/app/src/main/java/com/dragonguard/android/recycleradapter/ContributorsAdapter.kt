@@ -50,5 +50,11 @@ class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(datas[position])
     }
+    override fun getItemId(position: Int): Long {
+        return super.getItemId(position)
+    }
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position)
+    }
 
 }
