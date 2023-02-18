@@ -21,7 +21,8 @@ import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
 /*
- 사용자의 정보나 검색, 랭킹등을 보러가는 화면으로 이동할 수 있는 메인 activity
+ 사용자의 정보를 보여주고 검색, 랭킹등을
+ 보러가는 화면으로 이동할 수 있는 메인 activity
  */
 class MainActivity : AppCompatActivity() {
     companion object {
