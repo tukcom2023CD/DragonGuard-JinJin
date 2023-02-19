@@ -1,6 +1,7 @@
 package com.dragonguard.android.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -76,6 +77,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         })
+
+        binding.repoCompare.setOnClickListener {
+//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://klipwallet.com/?target=/a2a?request_key=9de032df-1e4c-4411-8ca7-5101908f0e32"))
+//            startActivity(intent)
+        }
 
     }
 
