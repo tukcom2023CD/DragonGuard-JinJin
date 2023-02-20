@@ -26,6 +26,8 @@ final class SearchPageController: UIViewController {
     var fetchingMore = false    // 무한 스크롤 감지
     var startSearch = false
     var sectionCount = 0        // 결과물 개수 저장
+    var beforePage: String = ""
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -208,8 +210,28 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        RepoContributorInfoService.repoShared.selectedName = resultData[indexPath.section]
-        self.navigationController?.pushViewController(RepoContributorInfoController(), animated: true)
+        let comparePage = CompareRepositoryController()
+
+        if beforePage == "Main"{
+            RepoContributorInfoService.repoShared.selectedName = resultData[indexPath.section]
+            self.navigationController?.pushViewController(RepoContributorInfoController(), animated: true)
+        }
+        else if beforePage == "CompareRepo1"{
+            comparePage.repository1 = resultData[indexPath.section]
+            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 1, NotificationKey.repository: resultData[indexPath.section]])
+            
+            self.navigationController?.popViewController(animated: true)
+        }
+        else if beforePage == "CompareRepo2"{
+            comparePage.repository2 = resultData[indexPath.section]
+            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 2, NotificationKey.repository: resultData[indexPath.section]])
+            self.navigationController?.popViewController(animated: true)
+        }
+        
+        searchUI.text = ""
+        resultData = []
+        data = []
+        tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -242,4 +264,12 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     // 섹션 높이 지정
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
     
+}
+
+extension Notification.Name{
+    static let data = Notification.Name("")
+}
+enum NotificationKey{
+    case choiceId
+    case repository
 }
