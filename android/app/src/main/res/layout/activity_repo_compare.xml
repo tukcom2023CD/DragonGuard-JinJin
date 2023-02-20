@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="repoCompareViewModel"
+            type="com.dragonguard.android.viewmodel.Viewmodel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".activity.FaqActivity"
+        android:weightSum="3.4">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:background="@android:color/transparent"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="3.1"
+            android:weightSum="5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"
+                android:weightSum="5">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Repository 1"
+                        android:gravity="center_horizontal"
+                        android:layout_gravity="bottom"
+                        android:textAllCaps="false"
+                        android:id="@+id/repo_compare1"
+                        android:textSize="25dp"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:layout_weight="3"/>
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="0dp"
+                android:layout_weight="2.5"
+                android:weightSum="5">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="3"
+                    android:weightSum="5">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4">
+                        <Button
+                            android:id="@+id/repo_compare2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Repository 1"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_horizontal"
+                            android:textAllCaps="false"
+                            android:textSize="25dp"
+                            android:fontFamily="@font/ibm_semibold"
+
+                            />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/repo_choose"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="선택 완료"
+                        android:textAllCaps="false"
+                        android:textSize="25dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>
