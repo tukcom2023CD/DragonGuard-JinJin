@@ -26,9 +26,6 @@ final class CompareRepositoryController: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(notificationData(notification:)), name: Notification.Name.data, object: nil)
-        
-        print("repo1: \(repository1)")
-        print("repo2: \(repository2)")
     }
     /*
      UI 코드 작성
@@ -139,7 +136,7 @@ final class CompareRepositoryController: UIViewController{
         })
         
         searchBtn1.snp.makeConstraints({ make in
-            make.top.equalTo(self.view.snp.centerY).offset(-50)
+            make.top.equalTo(self.view.snp.centerY).offset(-100)
             make.height.equalTo(deviceHeight/18)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
@@ -178,6 +175,13 @@ import SwiftUI
 struct VCPreViewCompareRepositoryController:PreviewProvider {
     static var previews: some View {
         CompareRepositoryController().toPreview().previewDevice("iPhone 14 pro")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
+}
+
+struct VCPreViewCompareRepositoryController2:PreviewProvider {
+    static var previews: some View {
+        CompareRepositoryController().toPreview().previewDevice("iPad (10th generation)")
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
