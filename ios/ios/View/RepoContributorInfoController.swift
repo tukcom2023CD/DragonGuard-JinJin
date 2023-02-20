@@ -160,13 +160,13 @@ final class RepoContributorInfoController: UIViewController{
             self.navigationItem.title = arr[1]
             self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!]
             
-            
             for data in $0{
                 self.userName.append(data.githubId)
                 self.userCommit.append(data.commits)
             }
         })
         .disposed(by: disposebag)
+        
         randomColor()
         setchartOption()
     }
@@ -233,7 +233,6 @@ extension RepoContributorInfoController: ChartViewDelegate {
         barChart.noDataText = "출력 데이터가 없습니다."
         barChart.noDataFont = .systemFont(ofSize: 30)
         barChart.noDataTextColor = .lightGray
-        
         
     }
     

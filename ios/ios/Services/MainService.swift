@@ -18,6 +18,7 @@ final class MainService{
     
     
     func getUserInfo(){
+        
         let url = APIURL.apiUrl.getMembersInfo(ip: ip, id: data)
         
         DispatchQueue.main.async {

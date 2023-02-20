@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-class PostService{
+class PostService {
     static let postService = PostService()
     let url = APIURL.inputDBMembers()
     let myGithubId = ["githubId" : "HJ39"] as Dictionary
@@ -22,7 +22,6 @@ class PostService{
                    encoding: JSONEncoding(options: []),
                    headers: ["Content-type": "application/json"])
         .responseString{ response in
-            
             switch response.result{
             case .success(let data):
                 self.data = Int(data) ?? 0
