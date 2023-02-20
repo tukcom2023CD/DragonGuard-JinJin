@@ -1,30 +1,68 @@
 package com.dragonguard.android.activity
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityLoginBinding
+import com.dragonguard.android.model.Bapp
+import com.dragonguard.android.viewmodel.Viewmodel
+import com.dragonguard.android.model.WalletAuthRequestModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private var backPressed : Long = 0
     private lateinit var binding :ActivityLoginBinding
+    private var viewmodel = Viewmodel()
+    private val body = WalletAuthRequestModel(Bapp("GitRank"), "auth")
+    private var key = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-        binding.loginActivity = this
+        binding.loginViewmodel = viewmodel
 
 
+        binding.walletAuth.setOnClickListener{
+            walletAuthRequest()
+        }
+        binding.walletFinish.setOnClickListener {
+            if(key.isNotBlank()) {
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                intent.putExtra("key", key)
+                setResult(0, intent)
+                finish()
+            } else {
+                Toast.makeText(applicationContext, "wallet 인증 후 완료를 눌러주세요!!", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
-    /*
-    로그인 버튼 listener 구현
-     */
-    fun loginListener(){
-        finish()
-    }
 
+    private fun walletAuthRequest() {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val authResponseDeffered = coroutine.async(Dispatchers.IO) {
+                viewmodel.postWalletAuth(body)
+            }
+            val authResponse = authResponseDeffered.await()
+            if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "prepared" ) {
+                val handler = Handler()
+                handler.postDelayed({walletAuthRequest()}, 1000)
+            } else {
+                key = authResponse.request_key
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://klipwallet.com/?target=/a2a?request_key=${authResponse.request_key}"))
+                startActivity(intent)
+            }
+        }
+    }
 //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
     override fun onBackPressed() {
 //        super.onBackPressed()

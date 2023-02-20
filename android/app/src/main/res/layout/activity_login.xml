@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="loginActivity"
-            type="com.dragonguard.android.activity.LoginActivity" />
+            name="loginViewmodel"
+            type="com.dragonguard.android.viewmodel.Viewmodel" />
     </data>
 
     <LinearLayout
@@ -28,7 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3.1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="1.1">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -39,10 +40,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.1"
-                android:text="메인화면으로"
-                android:id="@+id/login"
+                android:text="Wallet 인증"
+                android:id="@+id/wallet_auth"
                 android:textColor="@color/white"
-                android:onClick="@{()->loginActivity.loginListener()}"
+                android:textAllCaps="false"
+                android:fontFamily="@font/ibm_semibold"
+                android:backgroundTint="#222222" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:text="Wallet 인증 완료"
+                android:id="@+id/wallet_finish"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:fontFamily="@font/ibm_semibold"
                 android:backgroundTint="#222222" />
 
             <LinearLayout

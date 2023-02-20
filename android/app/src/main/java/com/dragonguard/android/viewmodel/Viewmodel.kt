@@ -53,4 +53,12 @@ class Viewmodel {
         return repository.getTotalUsersRankings(page, size)
     }
 
+    fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel {
+        return repository.postWalletAuth(body)
+    }
+
+    fun getWalletAuthResult(key: String): WalletAuthResultModel {
+        return repository.getAuthResult(key)
+    }
+
 }
