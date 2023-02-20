@@ -16,6 +16,7 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField("String", "api", properties.getProperty("ipApi"))
+        buildConfigField("String", "prepare", properties.getProperty("walletPrepare"))
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

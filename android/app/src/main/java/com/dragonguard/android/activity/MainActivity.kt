@@ -4,9 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -26,6 +29,14 @@ import kotlin.concurrent.scheduleAtFixedRate
  보러가는 화면으로 이동할 수 있는 메인 activity
  */
 class MainActivity : AppCompatActivity() {
+    private val activityResultLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == 0 ) {
+            val walletIntent = it.data
+            val requestKey = walletIntent!!.getStringExtra("key")
+//            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
+            authRequestResult(requestKey!!)
+        }
+    }
     companion object {
         lateinit var prefs: IdPreference
     }
@@ -50,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
         //로그인 화면으로 넘어가기
         val intent = Intent(applicationContext, LoginActivity::class.java)
-        startActivity(intent)
+        activityResultLauncher.launch(intent)
         Timer().scheduleAtFixedRate(2000,2000){
 //            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
             searchUser(userId)
@@ -79,8 +90,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.repoCompare.setOnClickListener {
-//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://klipwallet.com/?target=/a2a?request_key=9de032df-1e4c-4411-8ca7-5101908f0e32"))
-//            startActivity(intent)
+
         }
 
     }
@@ -122,6 +132,23 @@ class MainActivity : AppCompatActivity() {
                 binding.userRanking.text = userInfo.rank
                 Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
 
+            }
+        }
+    }
+
+    private fun authRequestResult(key: String) {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val authResponseDeferred = coroutine.async(Dispatchers.IO) {
+                viewmodel.getWalletAuthResult(key)
+            }
+            val authResponse = authResponseDeferred.await()
+            if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
+                val handler = Handler()
+                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
+                handler.postDelayed({authRequestResult(key)},1000)
+            } else {
+                Toast.makeText(applicationContext, "wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
             }
         }
     }

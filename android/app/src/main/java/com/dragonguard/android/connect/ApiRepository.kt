@@ -125,6 +125,43 @@ class ApiRepository {
             return registerResult
         }
         return registerResult
+    }
 
+    fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel  {
+        var authResult = WalletAuthResponseModel(null, null,null)
+        val retrofitWallet = Retrofit.Builder().baseUrl(BuildConfig.prepare)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val apiWallet = retrofitWallet.create(GitRankAPI::class.java)
+        val authWallet = apiWallet.postWalletAuth(body)
+        try{
+            val result = authWallet.execute()
+            if(result.isSuccessful) {
+                authResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return authResult
+        }
+        return authResult
+    }
+
+    fun getAuthResult(key: String): WalletAuthResultModel {
+        var authResult = WalletAuthResultModel(null, null,null,null)
+        val retrofitWallet = Retrofit.Builder().baseUrl(BuildConfig.prepare)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val apiWallet = retrofitWallet.create(GitRankAPI::class.java)
+        val authWallet = apiWallet.getAuthResult(key)
+        try{
+            val result = authWallet.execute()
+            if(result.isSuccessful) {
+                authResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return authResult
+        }
+        return authResult
     }
 }
