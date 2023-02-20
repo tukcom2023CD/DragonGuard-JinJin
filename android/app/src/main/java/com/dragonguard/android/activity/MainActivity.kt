@@ -96,7 +96,8 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.repoCompare.setOnClickListener {
-
+            val intent = Intent(applicationContext, RepoCompareActivity::class.java)
+            startActivity(intent)
         }
 
     }
@@ -137,7 +138,6 @@ class MainActivity : AppCompatActivity() {
                 binding.userToken.text = "내 기여도 : ${userInfo.commits}"
                 binding.userRanking.text = userInfo.rank
                 Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
-
             }
         }
     }
