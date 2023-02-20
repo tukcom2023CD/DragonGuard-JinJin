@@ -12,6 +12,9 @@ import SnapKit
 // Repository 비교
 final class CompareRepositoryController: UIViewController{
     let deviceHeight = UIScreen.main.bounds.height
+    let searchPage = SearchPageController()
+    var repository1: String = ""
+    var repository2: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +24,12 @@ final class CompareRepositoryController: UIViewController{
         addToView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationData(notification:)), name: Notification.Name.data, object: nil)
+        
+        print("repo1: \(repository1)")
+        print("repo2: \(repository2)")
+    }
     /*
      UI 코드 작성
      */
@@ -37,11 +46,12 @@ final class CompareRepositoryController: UIViewController{
         let btn = UIButton()
         btn.titleColor(for: .normal)
         btn.tintColor = .black
-        btn.setTitle("ChooseRepository1 ", for: .normal)
+        btn.setTitle("Choose Repository1", for: .normal)
         btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.setTitleColor(.black, for: .normal)
         btn.layer.cornerRadius = 20
         btn.layer.borderWidth = 2
+        btn.addTarget(self, action: #selector(clickedSearchBtn1), for: .touchUpInside)
         return btn
     }()
     
@@ -53,6 +63,7 @@ final class CompareRepositoryController: UIViewController{
         btn.setTitleColor(.black, for: .normal)
         btn.layer.cornerRadius = 20
         btn.layer.borderWidth = 2
+        btn.addTarget(self, action: #selector(clickedSearchBtn2), for: .touchUpInside)
         return btn
     }()
     
@@ -60,11 +71,12 @@ final class CompareRepositoryController: UIViewController{
         let btn = UIButton()
         btn.titleColor(for: .normal)
         btn.setTitle("다음", for: .normal)
-        btn.backgroundColor = UIColor(red: 48/255, green: 151/255, blue: 255/255, alpha: 1.0) /* #3097ff */
+        btn.backgroundColor = UIColor(red: 15/255, green: 135/255, blue: 255/255, alpha: 1.0) /* #0f87ff */
         btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.setTitleColor(.black, for: .normal)
         btn.layer.cornerRadius = 20
         btn.layer.borderWidth = 2
+        btn.addTarget(self, action: #selector(clickedNextBtn), for: .touchUpInside)
         return btn
     }()
     
@@ -81,6 +93,38 @@ final class CompareRepositoryController: UIViewController{
         
         setAutoLayout()
     }
+    
+    @objc func clickedSearchBtn1(){
+        searchPage.beforePage = "CompareRepo1"
+        self.navigationController?.pushViewController(searchPage, animated: true)
+    }
+    
+    @objc func clickedSearchBtn2(){
+        searchPage.beforePage = "CompareRepo2"
+        self.navigationController?.pushViewController(searchPage, animated: true)
+    }
+    
+    @objc func clickedNextBtn(){
+        if !repository1.isEmpty && !repository2.isEmpty{
+            // 다음 화면 연동
+        }
+    }
+    
+    @objc func notificationData(notification: Notification){
+        guard let id = notification.userInfo?[NotificationKey.choiceId] as? Int else {return}
+        guard let data = notification.userInfo?[NotificationKey.repository] as? String else {return}
+        
+        if id  == 1{
+            repository1 = data
+            searchBtn1.setTitle(data, for: .normal)
+        }
+        else if id == 2{
+            repository2 = data
+            searchBtn2.setTitle(data, for: .normal)
+        }
+        
+    }
+    
     
     /*
      UI AutoLayout 코드 작성
