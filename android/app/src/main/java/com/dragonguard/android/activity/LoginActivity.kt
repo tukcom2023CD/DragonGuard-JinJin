@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,6 +15,7 @@ import com.dragonguard.android.databinding.ActivityLoginBinding
 import com.dragonguard.android.model.Bapp
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.dragonguard.android.model.WalletAuthRequestModel
+import com.dragonguard.android.preferences.IdPreference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -24,13 +26,20 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding :ActivityLoginBinding
     private var viewmodel = Viewmodel()
     private val body = WalletAuthRequestModel(Bapp("GitRank"), "auth")
+    private var walletAddress = ""
     private var key = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.loginViewmodel = viewmodel
 
-
+        val intent = getIntent()
+        walletAddress = intent.getStringExtra("wallet_address")!!
+        if(walletAddress.isNotBlank()) {
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            setResult(1, intent)
+            val handler = Handler(Looper.getMainLooper()).postDelayed({finish()},500)
+        }
         binding.walletAuth.setOnClickListener{
             walletAuthRequest()
         }
@@ -54,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
             }
             val authResponse = authResponseDeffered.await()
             if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "prepared" ) {
-                val handler = Handler()
+                val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({walletAuthRequest()}, 1000)
             } else {
                 key = authResponse.request_key
