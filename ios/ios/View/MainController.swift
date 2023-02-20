@@ -35,6 +35,7 @@ final class MainController: UIViewController {
         
         // UI AutoLayout 적용
         settingAutoLayout()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,7 +74,6 @@ final class MainController: UIViewController {
         searchUI.backgroundColor = .lightGray
         searchUI.setTitle(" Repository or User ", for: .normal)
         searchUI.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-        searchUI.titleColor(for: .normal)
         searchUI.setTitleColor(.gray, for: .normal)
         searchUI.addTarget(self, action: #selector(searchUIClicked), for: .touchUpInside)
         searchUI.layer.cornerRadius = 10
@@ -104,9 +104,11 @@ final class MainController: UIViewController {
         return settingUI
     }()
     
+    
     /*
      UI Action 작성
      */
+    
     // collectionView 설정
     private func configureCollectionView(){
         collectionView.register(MainCollectionView.self, forCellWithReuseIdentifier: MainCollectionView.identifier)
@@ -204,7 +206,6 @@ final class MainController: UIViewController {
                 self.rank = $0.rank
             })
             .disposed(by: self.disposeBag)
-            
             if self.myId != 0 {
                 self.tierTokenUI.inputText(myTier: self.myTier, tokens: self.myTokens)
                 let url = URL(string: self.imgUrl)!

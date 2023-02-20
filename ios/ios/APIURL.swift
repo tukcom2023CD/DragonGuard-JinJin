@@ -12,7 +12,7 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL() 
-    static var ip = ""
+    static var ip = "192.168.0.16"
     
     private init(){}
     
@@ -30,19 +30,6 @@ final class APIURL{
     /// - Returns: DB에 저장된 Id 숫자
     static func inputDBMembers() -> String{
         let inputUserUrl = "http://\(ip)/api/members"
-        /*
-         입력 형태 JSON
-         {
-           "id" : 1,
-           "name" : "김승진",
-           "githubId" : "ohksj77",
-           "commits" : 100,
-           "tier" : "SILVER",
-           "authStep" : "NONE",
-           "profileImage" : "http://abcd.efgh"
-         }
-        */
-        
         return inputUserUrl
     }
     
