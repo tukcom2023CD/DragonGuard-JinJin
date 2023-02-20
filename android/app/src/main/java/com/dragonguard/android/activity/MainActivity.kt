@@ -1,7 +1,6 @@
 package com.dragonguard.android.activity
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -35,6 +34,8 @@ class MainActivity : AppCompatActivity() {
             val requestKey = walletIntent!!.getStringExtra("key")
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
             authRequestResult(requestKey!!)
+        } else if(it.resultCode == 1) {
+            Toast.makeText(applicationContext, "skip 주소 : $walletAddress", Toast.LENGTH_SHORT).show()
         }
     }
     companion object {
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private var viewmodel = Viewmodel()
     private var backPressed : Long = 0
     private var userId = 0
+    private var walletAddress = ""
     //    var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,10 +60,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             searchUser(userId)
         }
-
         //로그인 화면으로 넘어가기
+        walletAddress = prefs.getWalletAddress("wallet_address", "")
+//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
         val intent = Intent(applicationContext, LoginActivity::class.java)
+        intent.putExtra("wallet_address", walletAddress)
         activityResultLauncher.launch(intent)
+
+
         Timer().scheduleAtFixedRate(2000,2000){
 //            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
             searchUser(userId)
@@ -124,7 +130,7 @@ class MainActivity : AppCompatActivity() {
             val userInfo : UserInfoModel = resultDeferred.await()
             if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null || userInfo.tier == null) {
 //                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
-                val handler = Handler()
+                val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({registerUser("posite")}, 500)
             } else {
                 binding.userTier.text = "내 티어 : ${userInfo.tier}"
@@ -144,11 +150,12 @@ class MainActivity : AppCompatActivity() {
             }
             val authResponse = authResponseDeferred.await()
             if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
-                val handler = Handler()
+                val handler = Handler(Looper.getMainLooper())
                 Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
                 handler.postDelayed({authRequestResult(key)},1000)
             } else {
                 Toast.makeText(applicationContext, "wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
+                prefs.setWalletAddress("wallet_address", authResponse.result.klaytn_address)
             }
         }
     }

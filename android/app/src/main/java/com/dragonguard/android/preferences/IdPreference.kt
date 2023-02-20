@@ -14,4 +14,11 @@ class IdPreference (context: Context) {
     fun setId(key: String, id: Int) {
         prefs.edit().putInt(key, id).apply()
     }
+
+    fun getWalletAddress(key:String, defValue: String): String {
+        return prefs.getString(key, defValue)!!
+    }
+    fun setWalletAddress(key: String, address: String) {
+        prefs.edit().putString(key, address).apply()
+    }
 }

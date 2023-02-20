@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -80,7 +81,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
         } else {
             if(changed) {
                 changed = false
-                val handler = Handler()
+                val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({getTotalUsersRanking(page, size)}, 4000)
             } else {
                 binding.progressBar.visibility = View.GONE
