@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.repoCompare.setOnClickListener {
-            val intent = Intent(applicationContext, RepoCompareActivity::class.java)
+            val intent = Intent(applicationContext, RepoChooseActivity::class.java)
             startActivity(intent)
         }
 
@@ -158,19 +158,6 @@ class MainActivity : AppCompatActivity() {
                 prefs.setWalletAddress("wallet_address", authResponse.result.klaytn_address)
             }
         }
-    }
-
-
-    //    edittext 키보드 제거
-    private fun closeKeyboard() {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
-    }
-
-//    화면을 눌렀을때 키보드 제거
-    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        closeKeyboard()
-        return super.dispatchTouchEvent(ev)
     }
 
 //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
