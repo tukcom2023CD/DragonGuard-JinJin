@@ -150,9 +150,11 @@ class MainActivity : AppCompatActivity() {
             }
             val authResponse = authResponseDeferred.await()
             if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
-                val handler = Handler(Looper.getMainLooper())
                 Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
-                handler.postDelayed({authRequestResult(key)},1000)
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                intent.putExtra("wallet_address", walletAddress)
+                activityResultLauncher.launch(intent)
+
             } else {
                 Toast.makeText(applicationContext, "wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
                 prefs.setWalletAddress("wallet_address", authResponse.result.klaytn_address)
