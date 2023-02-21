@@ -3,51 +3,111 @@ package com.dragonguard.android.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.R
-import com.dragonguard.android.databinding.ActivityRepoCompareBinding
 import com.dragonguard.android.viewmodel.Viewmodel
+import com.dragonguard.android.databinding.ActivityRepoCompareBinding
+import com.dragonguard.android.fragment.CompareRepoFragment
+import com.dragonguard.android.fragment.CompareUserFragment
+import com.dragonguard.android.model.RepoContributorsItem
+import com.dragonguard.android.recycleradapter.ContributorsAdapter
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class RepoCompareActivity : AppCompatActivity() {
-    private val activityResultLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()) {
-        val compareRepo = it.data
-        val compareRepoName = compareRepo!!.getStringExtra("repo_name")
-        if(it.resultCode == 0 ) {
-            binding.repoCompare1.text = compareRepoName
-
-        } else if (it.resultCode == 1) {
-            binding.repoCompare2.text = compareRepoName
-        }
-    }
     private lateinit var binding: ActivityRepoCompareBinding
-    private var viewmodel = Viewmodel()
+    var viewmodel = Viewmodel()
+    private lateinit var contributorsAdapter: ContributorsAdapter
+    private var contributors = ArrayList<RepoContributorsItem>()
+    private var repo1 = ""
+    private var repo2 = ""
+    private var count = 0
+    private val colorsets = ArrayList<Int>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_compare)
         binding.repoCompareViewModel = viewmodel
+        val transaction = supportFragmentManager.beginTransaction()
 
-        binding.repoCompare1.setOnClickListener {
-            val intent = Intent(applicationContext, CompareSearchActivity::class.java)
-            intent.putExtra("count", 0)
-            activityResultLauncher.launch(intent)
+        transaction.add(R.id.compare_frame, CompareRepoFragment()).commit()
+        binding.bottomNavigation.setOnItemSelectedListener {
+            when(it.itemId) {
+                R.id.compare_repo -> {
+                    val transactionN = supportFragmentManager.beginTransaction()
+                    transactionN.replace(R.id.compare_frame, CompareRepoFragment())
+                    transactionN.addToBackStack(null)
+                    transactionN.commit()
+                }
+                R.id.compare_user -> {
+                    val transactionN = supportFragmentManager.beginTransaction()
+                    transactionN.replace(R.id.compare_frame, CompareUserFragment())
+                    transactionN.addToBackStack(null)
+                    transactionN.commit()
+                }
+            }
+            true
         }
 
-        binding.repoCompare2.setOnClickListener {
-            val intent = Intent(applicationContext, CompareSearchActivity::class.java)
-            intent.putExtra("count", 1)
-            activityResultLauncher.launch(intent)
-        }
+        setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
-        binding.repoChoose.setOnClickListener {
-            if(binding.repoCompare1.text.isNullOrBlank() || binding.repoCompare2.text.isNullOrBlank()) {
+        val intent = getIntent()
+        repo1 = intent.getStringExtra("repo1")!!
+        repo2 = intent.getStringExtra("repo2")!!
+        Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()
 
-            } else {
-//                val intent = Intent(applicationContext, ::class.java)
+    }
+
+
+
+
+    //    뒤로가기 누르면 화면 전환하게 함
+    override fun onBackPressed() {
+        val intent = Intent(applicationContext, RepoChooseActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(intent)
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+            R.id.home_menu -> {
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                startActivity(intent)
             }
         }
+        return super.onOptionsItemSelected(item)
     }
 }

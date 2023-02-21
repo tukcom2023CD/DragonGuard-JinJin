@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.dragonguard.android">
+    package="com.dragonguard.android" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,15 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true" >
         <activity
             android:name=".activity.RepoCompareActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.RepoChooseActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.CompareSearchActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.RepoContributorsActivity"
             android:exported="false"
@@ -79,7 +82,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
