@@ -38,7 +38,7 @@ final class CompareGraphController : UIViewController {
     lazy var repo1ColorButton : UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .red
-        btn.layer.cornerRadius = deviceWidth/20
+        btn.layer.cornerRadius = deviceWidth/24
         btn.isEnabled = false
         return btn
     }()
@@ -57,7 +57,7 @@ final class CompareGraphController : UIViewController {
     lazy var repo2ColorButton : UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .blue
-        btn.layer.cornerRadius = deviceWidth/20
+        btn.layer.cornerRadius = deviceWidth/24
         btn.isEnabled = false
         return btn
     }()
@@ -89,24 +89,25 @@ final class CompareGraphController : UIViewController {
         })
         
         repo1ColorButton.snp.makeConstraints ({ make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+//            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.centerY.equalTo(repo1Label)
             make.trailing.equalTo(-30)
-            make.width.equalTo(deviceWidth/10)
-            make.height.equalTo(deviceWidth/10)
+            make.width.equalTo(deviceWidth/12)
+            make.height.equalTo(deviceWidth/12)
         })
         
         repo2Label.snp.makeConstraints ({ make in
             make.top.equalTo(repo1Label.snp.bottom).offset(10)
             make.leading.equalTo(30)
-            make.trailing.equalTo(repo1ColorButton.snp.leading).offset(-10)
             make.height.equalTo(deviceWidth/10)
         })
         
         repo2ColorButton.snp.makeConstraints ({ make in
-            make.top.equalTo(repo1ColorButton.snp.bottom).offset(10)
+            make.centerY.equalTo(repo2Label)
+            make.leading.equalTo(repo2Label.snp.trailing).offset(10)
             make.trailing.equalTo(-30)
-            make.width.equalTo(deviceWidth/10)
-            make.height.equalTo(deviceWidth/10)
+            make.width.equalTo(deviceWidth/12)
+            make.height.equalTo(deviceWidth/12)
         })
     }
 

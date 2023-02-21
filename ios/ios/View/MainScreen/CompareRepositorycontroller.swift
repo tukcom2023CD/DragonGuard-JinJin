@@ -104,7 +104,7 @@ final class CompareRepositoryController: UIViewController{
     @objc func clickedNextBtn(){
         if !repository1.isEmpty && !repository2.isEmpty{
             // 다음 화면 연동
-            self.navigationController?.pushViewController(CompareGraphController(), animated: true)
+            self.navigationController?.pushViewController(TabBarController(), animated: true)
         }
     }
     
