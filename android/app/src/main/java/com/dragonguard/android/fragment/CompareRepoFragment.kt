@@ -5,7 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
+import com.dragonguard.android.databinding.FragmentCompareRepoBinding
+import com.dragonguard.android.viewmodel.Viewmodel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +24,8 @@ class CompareRepoFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var viewmodel = Viewmodel()
+    private lateinit var binding : FragmentCompareRepoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +40,9 @@ class CompareRepoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_compare_repo, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_compare_repo, container, false)
+        binding.compareRepoViewmodel = viewmodel
+        return binding.root
     }
 
     companion object {

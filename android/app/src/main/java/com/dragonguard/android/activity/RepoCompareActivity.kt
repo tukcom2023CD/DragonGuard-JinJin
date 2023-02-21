@@ -35,31 +35,29 @@ import kotlinx.coroutines.launch
 class RepoCompareActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRepoCompareBinding
     var viewmodel = Viewmodel()
-    private lateinit var contributorsAdapter: ContributorsAdapter
-    private var contributors = ArrayList<RepoContributorsItem>()
     private var repo1 = ""
     private var repo2 = ""
-    private var count = 0
-    private val colorsets = ArrayList<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_compare)
         binding.repoCompareViewModel = viewmodel
         val transaction = supportFragmentManager.beginTransaction()
+        val compareRepoFragment = CompareRepoFragment()
+        val compareUserFragment = CompareUserFragment()
 
         transaction.add(R.id.compare_frame, CompareRepoFragment()).commit()
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.compare_repo -> {
                     val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.replace(R.id.compare_frame, CompareRepoFragment())
+                    transactionN.replace(R.id.compare_frame, compareRepoFragment)
                     transactionN.addToBackStack(null)
                     transactionN.commit()
                 }
                 R.id.compare_user -> {
                     val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.replace(R.id.compare_frame, CompareUserFragment())
+                    transactionN.replace(R.id.compare_frame, compareUserFragment)
                     transactionN.addToBackStack(null)
                     transactionN.commit()
                 }
