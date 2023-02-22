@@ -49,6 +49,7 @@
 		3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD21298129B8008C05B2 /* SearchPageController.swift */; };
 		3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */; };
 		3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDF0FA429A619F900816837 /* LoginViewModel.swift */; };
+		3BDF0FA729A61A4E00816837 /* LoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDF0FA629A61A4E00816837 /* LoginService.swift */; };
 		3BE3F7D2297060DC0005B640 /* iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7D1297060DC0005B640 /* iosTests.swift */; };
 		3BE3F7DF297064340005B640 /* iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7DE297064340005B640 /* iosUITests.swift */; };
 		3BE3F7E1297064340005B640 /* iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7E0297064340005B640 /* iosUITestsLaunchTests.swift */; };
@@ -128,6 +129,7 @@
 		3BD6DD21298129B8008C05B2 /* SearchPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageController.swift; sourceTree = "<group>"; };
 		3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageTableView.swift; sourceTree = "<group>"; };
 		3BDF0FA429A619F900816837 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		3BDF0FA629A61A4E00816837 /* LoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginService.swift; sourceTree = "<group>"; };
 		3BE3F7CF297060DC0005B640 /* iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BE3F7D1297060DC0005B640 /* iosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosTests.swift; sourceTree = "<group>"; };
 		3BE3F7DC297064340005B640 /* iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -344,6 +346,7 @@
 				3BE6AD2E2993C6D300B22EBD /* RepoContributorInfoService.swift */,
 				3BA2013829980661008978A5 /* MainService.swift */,
 				3BAEA776299CFD090054DC5D /* PostService.swift */,
+				3BDF0FA629A61A4E00816837 /* LoginService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -533,6 +536,7 @@
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,
 				3B9756F1298A32C700F27094 /* WatchRankingTableView.swift in Sources */,
 				3B0022A32987A9B0003FA5CC /* TierTypes.swift in Sources */,
+				3BDF0FA729A61A4E00816837 /* LoginService.swift in Sources */,
 				3BAEA777299CFD090054DC5D /* PostService.swift in Sources */,
 				3BE6AD332993D0D800B22EBD /* RepoContributorInfoModel.swift in Sources */,
 				3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */,

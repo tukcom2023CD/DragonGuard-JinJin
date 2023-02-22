@@ -63,4 +63,11 @@ final class APIURL{
         return url
     }
     
+    // KLIP post API
+    func klipPostAPI() -> String{
+        let url = "https://a2a-api.klipwallet.com/v2/a2a/prepare"
+        return url
+    }
+    
+    
 }

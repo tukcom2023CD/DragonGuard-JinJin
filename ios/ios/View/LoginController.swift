@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class LoginController: UIViewController{
+final class LoginController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +24,7 @@ class LoginController: UIViewController{
     
     lazy var klipLoginBtn: UIButton = {
         let btn = UIButton()
-        btn.setTitle("Go Main", for: .normal)
+        btn.setTitle("Go KLIP", for: .normal)
         btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.setTitleColor(.black, for: .normal)
         btn.layer.borderWidth = 2
@@ -47,7 +47,7 @@ class LoginController: UIViewController{
      */
     
     @objc func clickedKlipLoginBtn(){
-        
+        LoginService().postToKlip()
     }
     
     @objc func clickedGoMainBtn(){
