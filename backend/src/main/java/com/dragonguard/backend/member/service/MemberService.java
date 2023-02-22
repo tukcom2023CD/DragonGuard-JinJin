@@ -1,9 +1,11 @@
 package com.dragonguard.backend.member.service;
 
+import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
+import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Member;
@@ -24,6 +26,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
     private final CommitService commitService;
+    private final BlockchainService blockchainService;
 
     public Tier getTier(Long id) {
         return getEntity(id).getTier();
@@ -83,6 +86,10 @@ public class MemberService {
 
     public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
         return memberRepository.findRanking(pageable);
+    }
+
+    public void updateWalletAddress(WalletRequest walletRequest) {
+        getEntity(walletRequest.getId()).updateWalletAddress(walletRequest.getWalletAddress());
     }
 
     private Member getEntity(Long id) {
