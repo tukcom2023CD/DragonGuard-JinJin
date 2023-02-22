@@ -40,8 +40,12 @@ public class MemberService {
     }
 
     public Long scrapeAndSave(MemberRequest memberRequest) {
-        getCommitByScraping(memberRequest.getGithubId()); // TODO 이 라인 제외시킬지 논의 필요
-        return saveAndGet(memberRequest).getId();
+        return scrape(memberRequest).getId();
+    }
+
+    private Member scrape(MemberRequest memberRequest) {
+        getCommitByScraping(memberRequest.getGithubId());
+        return saveAndGet(memberRequest);
     }
 
     public Member saveAndGet(MemberRequest memberRequest) {
@@ -101,7 +105,7 @@ public class MemberService {
 
     public Member findMemberByGithubId(String githubId) {
         return memberRepository.findMemberByGithubId(githubId)
-                .orElseGet(() -> scrapeAndSave(new MemberRequest(githubId)));
+                .orElseGet(() -> scrape(new MemberRequest(githubId)));
     }
 
     public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
