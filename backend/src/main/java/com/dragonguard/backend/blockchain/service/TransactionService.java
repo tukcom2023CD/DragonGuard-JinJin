@@ -8,33 +8,54 @@ import com.klaytn.caver.Caver;
 import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.contract.SendOptions;
+import com.klaytn.caver.wallet.keyring.KeyringFactory;
 import com.klaytn.caver.wallet.keyring.SingleKeyring;
-import lombok.RequiredArgsConstructor;
+import kotlin.text.Charsets;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.exceptions.TransactionException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.klaytn.caver.kct.kip7.KIP7ConstantData.ABI;
 
 @Service
-@RequiredArgsConstructor
 public class TransactionService {
     private final BlockChainProperties properties;
-    private final SingleKeyring deployer;
     private final String abiJson;
     private final Caver caver;
+    private final SingleKeyring singleKeyring;
+
+    public TransactionService(BlockChainProperties properties, Caver caver) {
+        Path path = Paths.get(Paths.get("src/main/resources/").toAbsolutePath().normalize()
+                .resolve("DragonContract.json")
+                .normalize()
+                .toString());
+        String json;
+        try {
+            json = Files.readAllLines(path, Charsets.UTF_8).stream().collect(Collectors.joining());
+        } catch (IOException e) {
+            throw new BlockchainException();
+        }
+        this.properties = properties;
+        this.abiJson = json;
+        this.caver = caver;
+        this.singleKeyring = KeyringFactory.generate();
+    }
 
     public void deploy() {
-        caver.wallet.add(deployer);
+        caver.wallet.add(singleKeyring);
 
         try {
             Contract contract = caver.contract.create(abiJson);
             SendOptions sendOptions = new SendOptions();
-            sendOptions.setFrom(deployer.getAddress());
+            sendOptions.setFrom(singleKeyring.getAddress());
             sendOptions.setGas(BigInteger.valueOf(4000000));
 
             contract.deploy(sendOptions, properties.getByteCode());
@@ -74,7 +95,7 @@ public class TransactionService {
 
     public Contract load() {
         try {
-            return new Contract(caver, ABI, properties.getUrl());
+            return new Contract(caver, ABI, singleKeyring.getAddress());
         } catch (IOException e) {
             throw new BlockchainException();
         }

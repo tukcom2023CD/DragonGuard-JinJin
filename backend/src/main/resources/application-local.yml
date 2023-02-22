@@ -39,3 +39,8 @@ logging:
 github:
   url: https://api.github.com/
   token: ${GITHUB_ACCESS_TOKEN}
+
+blockchain:
+  private-key: ${PRIVATE_KEY}
+  byte-code: ${BYTE_CODE}
+  password: ${PASSWORD}

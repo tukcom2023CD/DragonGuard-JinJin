@@ -5,3 +5,4 @@ __pycache__
 android/.idea
 android/local.properties
 .gradle
+backend/src/main/resources/kaikas.json

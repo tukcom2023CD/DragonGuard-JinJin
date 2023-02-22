@@ -42,5 +42,6 @@ github:
 
 blockchain:
   private-key: ${PRIVATE_KEY}
-  byte-code:
-  url: ${KLAYTN_URL}
+  byte-code: ${BYTE_CODE}
+  password: ${PASSWORD}
+  wallet-key: ${KLAYTN_WALLET_KEY}

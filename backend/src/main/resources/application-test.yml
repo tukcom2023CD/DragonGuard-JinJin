@@ -4,6 +4,8 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+  main:
+    allow-bean-definition-overriding: true
 spring:
   jpa:
     show-sql: true
@@ -29,3 +31,8 @@ spring:
 github:
   url: https://api.github.com/
   token: ${GITHUB_ACCESS_TOKEN}
+
+blockchain:
+  private-key: ${PRIVATE_KEY}
+  byte-code: ${BYTE_CODE}
+  password: ${PASSWORD}

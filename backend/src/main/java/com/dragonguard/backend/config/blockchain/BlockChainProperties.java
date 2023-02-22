@@ -12,5 +12,6 @@ import org.springframework.stereotype.Component;
 public class BlockChainProperties {
     private String privateKey;
     private String byteCode;
-    private String url;
+    private String password;
+    private String walletKey;
 }
