@@ -2,7 +2,6 @@ package com.dragonguard.backend.config.blockchain;
 
 import com.dragonguard.backend.global.exception.BlockchainException;
 import com.klaytn.caver.Caver;
-import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.kct.kip7.KIP7;
 import com.klaytn.caver.wallet.keyring.KeyringFactory;
 import com.klaytn.caver.wallet.keyring.SingleKeyring;
@@ -25,7 +24,7 @@ public class BlockChainConfig {
 
     @Bean
     public Caver caver() {
-        return new Caver(Caver.DEFAULT_URL);
+        return new Caver();
     }
 
     @Bean
@@ -35,7 +34,7 @@ public class BlockChainConfig {
                 .normalize()
                 .toString());
         try {
-            return Files.readAllLines(path, Charsets.UTF_8).stream().collect(Collectors.joining("\n"));
+            return Files.readAllLines(path, Charsets.UTF_8).stream().collect(Collectors.joining());
         } catch (IOException e) {
             throw new BlockchainException();
         }

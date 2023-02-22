@@ -69,7 +69,7 @@ public class MemberService {
         commits.forEach(member::addCommit);
         updateTier(member);
         commitService.saveAllCommits(commits);
-        if (member.getWalletAddress().isEmpty() || member.getPrivateKey().isEmpty()) {
+        if (member.getWalletAddress().isEmpty()) {
             return;
         }
         setTransaction(commits.size(), member);
