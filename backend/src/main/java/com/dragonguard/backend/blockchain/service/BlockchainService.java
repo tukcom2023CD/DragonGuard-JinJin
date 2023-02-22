@@ -21,9 +21,9 @@ public class BlockchainService {
     private final BlockchainMapper blockchainMapper;
     private final MemberService memberService;
 
-    public void setTransaction(String privateKey, ContractRequest request) {
-        transactionService.set(privateKey, request);
-        ContractResponse info = transactionService.getInfo(privateKey, request.getAddress());
+    public void setTransaction(ContractRequest request) {
+        transactionService.set(request);
+        ContractResponse info = transactionService.getInfo(request.getAddress());
         Member member = memberService.findMemberByGithubId(request.getName());
         blockchainRepository.save(blockchainMapper.toEntity(info, member, request.getAddress()));
     }

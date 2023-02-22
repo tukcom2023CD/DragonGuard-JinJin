@@ -69,7 +69,7 @@ public class MemberService {
         commits.forEach(member::addCommit);
         updateTier(member);
         commitService.saveAllCommits(commits);
-        if (member.getWalletAddress().isEmpty()) {
+        if (member.getWalletAddress().isEmpty() || member.getPrivateKey().isEmpty()) {
             return;
         }
         setTransaction(commits.size(), member);
@@ -77,7 +77,6 @@ public class MemberService {
 
     private void setTransaction(Integer size, Member member) {
         blockchainService.setTransaction(
-                member.getPrivateKey(),
                 new ContractRequest(member.getWalletAddress(),
                         ContributeType.COMMIT.toString(),
                         BigInteger.valueOf(size),

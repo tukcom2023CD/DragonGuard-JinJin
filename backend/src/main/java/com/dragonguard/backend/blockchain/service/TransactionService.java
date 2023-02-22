@@ -8,7 +8,6 @@ import com.klaytn.caver.Caver;
 import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.contract.SendOptions;
-import com.klaytn.caver.wallet.keyring.KeyringFactory;
 import com.klaytn.caver.wallet.keyring.SingleKeyring;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,9 +44,7 @@ public class TransactionService {
         }
     }
 
-    public void set(String privateKey, ContractRequest request) {
-        SingleKeyring executor = KeyringFactory.createFromPrivateKey(privateKey);
-        caver.wallet.add(executor);
+    public void set(ContractRequest request) {
         try {
             Contract contract = load();
 
@@ -60,9 +57,7 @@ public class TransactionService {
         }
     }
 
-    public ContractResponse getInfo(String privateKey, String address) {
-        SingleKeyring executor = KeyringFactory.createFromPrivateKey(privateKey);
-        caver.wallet.add(executor);
+    public ContractResponse getInfo(String address) {
         try {
             Contract contract = load();
 
