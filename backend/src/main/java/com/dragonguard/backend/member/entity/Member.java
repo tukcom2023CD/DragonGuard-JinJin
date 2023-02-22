@@ -44,14 +44,17 @@ public class Member extends BaseTime {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String privateKey;
+
     @OneToMany(mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
 
     @Builder
-    public Member(String name, String githubId, Commit commit, String walletAddress) {
+    public Member(String name, String githubId, Commit commit, String walletAddress, String privateKey) {
         this.name = name;
         this.githubId = githubId;
         this.walletAddress = walletAddress;
+        this.privateKey = privateKey;
         this.tier = Tier.SPROUT;
         this.authStep = AuthStep.NONE;
         this.role = Role.ROLE_USER;

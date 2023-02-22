@@ -1,5 +1,7 @@
 package com.dragonguard.backend.member.service;
 
+import com.dragonguard.backend.blockchain.dto.request.ContractRequest;
+import com.dragonguard.backend.blockchain.entity.ContributeType;
 import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -33,11 +36,15 @@ public class MemberService {
     }
 
     public Long saveMember(MemberRequest memberRequest) {
-        return saveAndGetEntity(memberRequest).getId();
+        return scrapeAndSave(memberRequest);
     }
 
-    public Member saveAndGetEntity(MemberRequest memberRequest) {
+    public Long scrapeAndSave(MemberRequest memberRequest) {
         getCommitByScraping(memberRequest.getGithubId()); // TODO 이 라인 제외시킬지 논의 필요
+        return saveAndGet(memberRequest).getId();
+    }
+
+    public Member saveAndGet(MemberRequest memberRequest) {
         if (memberRepository.existsByGithubId(memberRequest.getGithubId())) {
             return memberRepository.findMemberByGithubId(memberRequest.getGithubId())
                     .orElseThrow(EntityNotFoundException::new);
@@ -58,6 +65,19 @@ public class MemberService {
         commits.forEach(member::addCommit);
         updateTier(member);
         commitService.saveAllCommits(commits);
+        if (member.getWalletAddress().isEmpty()) {
+            return;
+        }
+        setTransaction(commits.size(), member);
+    }
+
+    private void setTransaction(Integer size, Member member) {
+        blockchainService.setTransaction(
+                member.getPrivateKey(),
+                new ContractRequest(member.getWalletAddress(),
+                        ContributeType.COMMIT.toString(),
+                        BigInteger.valueOf(size),
+                        member.getName()));
     }
 
     @Transactional
@@ -81,7 +101,7 @@ public class MemberService {
 
     public Member findMemberByGithubId(String githubId) {
         return memberRepository.findMemberByGithubId(githubId)
-                .orElseGet(() -> saveAndGetEntity(new MemberRequest(githubId)));
+                .orElseGet(() -> scrapeAndSave(new MemberRequest(githubId)));
     }
 
     public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
