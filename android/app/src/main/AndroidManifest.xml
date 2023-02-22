@@ -14,7 +14,8 @@
         android:usesCleartextTraffic="true" >
         <activity
             android:name=".activity.RepoCompareActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.RepoChooseActivity"
             android:exported="false"

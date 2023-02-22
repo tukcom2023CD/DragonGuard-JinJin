@@ -23,6 +23,41 @@
             android:weightSum="3.4">
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2" />
+
+                <ImageView
+                    android:id="@+id/user_color1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.2"
+                    android:src="@drawable/ic_baseline_circle_24"
+                    app:tint="#99ff33" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2" />
+
+                <ImageView
+                    android:id="@+id/user_color2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.2"
+                    android:src="@drawable/ic_baseline_circle_24"
+                    app:tint="#000000" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/compare_user_linear"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -40,8 +75,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2.2"
-                    android:dropDownWidth="wrap_content"
-                    android:overlapAnchor="false"
+                    android:dropDownWidth="wrap_content"                  
                     android:spinnerMode="dropdown" />
 
                 <View
@@ -54,8 +88,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2.2"
-                    android:dropDownWidth="wrap_content"
-                    android:overlapAnchor="false"
+                    android:dropDownWidth="wrap_content"                    
                     android:spinnerMode="dropdown" />
 
             </LinearLayout>
@@ -149,6 +182,26 @@
                 android:layout_height="2dp"
                 android:layout_marginHorizontal="10dp"
                 android:background="#000000" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2.3"
+                android:orientation="vertical">
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal" />
+
+                <com.github.mikephil.charting.charts.RadarChart
+                    android:id="@+id/user_chart"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 </layout>

@@ -17,12 +17,16 @@ class RepoChooseActivity : AppCompatActivity() {
     private val activityResultLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) {
         val compareRepo = it.data
-        val compareRepoName = compareRepo!!.getStringExtra("repo_name")
-        if(it.resultCode == 0 ) {
-            binding.repoCompare1.text = compareRepoName
+        try {
+            val compareRepoName = compareRepo!!.getStringExtra("repo_name")
+            if(it.resultCode == 0 ) {
+                binding.repoCompare1.text = compareRepoName
 
-        } else if (it.resultCode == 1) {
-            binding.repoCompare2.text = compareRepoName
+            } else if (it.resultCode == 1) {
+                binding.repoCompare2.text = compareRepoName
+            }
+        } catch (e: Exception) {
+
         }
     }
     private lateinit var binding: ActivityRepoChooseBinding

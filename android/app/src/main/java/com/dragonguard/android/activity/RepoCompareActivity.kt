@@ -37,6 +37,8 @@ class RepoCompareActivity : AppCompatActivity() {
     var viewmodel = Viewmodel()
     private var repo1 = ""
     private var repo2 = ""
+    private lateinit var compareUserFragment: CompareUserFragment
+    private lateinit var compareRepoFragment: CompareRepoFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,23 +50,22 @@ class RepoCompareActivity : AppCompatActivity() {
         repo2 = intent.getStringExtra("repo2")!!
         Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()
 
+//        val myFragment = supportFragmentManager.findFragmentById(R.id.compare_frame) as CompareUserFragment
+        compareRepoFragment = CompareRepoFragment()
+        compareUserFragment = CompareUserFragment(repo1, repo2)
         val transaction = supportFragmentManager.beginTransaction()
-        val compareRepoFragment = CompareRepoFragment()
-        val compareUserFragment = CompareUserFragment(repo1, repo2)
+        transaction.add(R.id.compare_frame, compareRepoFragment).commit()
 
-        transaction.add(R.id.compare_frame, CompareRepoFragment()).commit()
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.compare_repo -> {
                     val transactionN = supportFragmentManager.beginTransaction()
                     transactionN.replace(R.id.compare_frame, compareRepoFragment)
-                    transactionN.addToBackStack(null)
                     transactionN.commit()
                 }
                 R.id.compare_user -> {
                     val transactionN = supportFragmentManager.beginTransaction()
                     transactionN.replace(R.id.compare_frame, compareUserFragment)
-                    transactionN.addToBackStack(null)
                     transactionN.commit()
                 }
             }
@@ -77,8 +78,6 @@ class RepoCompareActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
     }
-
-
 
 
     //    뒤로가기 누르면 화면 전환하게 함

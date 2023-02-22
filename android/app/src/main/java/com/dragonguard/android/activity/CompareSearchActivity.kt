@@ -39,13 +39,18 @@ class CompareSearchActivity : AppCompatActivity() {
         binding.searchViewModel = viewmodel
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
         val intent = getIntent()
         repoCount = intent.getIntExtra("count", 0)
-        Toast.makeText(this, "$repoCount", Toast.LENGTH_SHORT).show()
+        if(repoCount == 0) {
+            supportActionBar?.setTitle("첫번째 Repository")
+        } else {
+            supportActionBar?.setTitle("두번째 Repository")
+        }
+//        Toast.makeText(this, "$repoCount", Toast.LENGTH_SHORT).show()
 
         viewmodel.onOptionListener.observe(this, Observer {
 
