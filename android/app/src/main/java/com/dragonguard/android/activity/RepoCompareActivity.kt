@@ -42,9 +42,15 @@ class RepoCompareActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_compare)
         binding.repoCompareViewModel = viewmodel
+
+        val intent = getIntent()
+        repo1 = intent.getStringExtra("repo1")!!
+        repo2 = intent.getStringExtra("repo2")!!
+        Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()
+
         val transaction = supportFragmentManager.beginTransaction()
         val compareRepoFragment = CompareRepoFragment()
-        val compareUserFragment = CompareUserFragment()
+        val compareUserFragment = CompareUserFragment(repo1, repo2)
 
         transaction.add(R.id.compare_frame, CompareRepoFragment()).commit()
         binding.bottomNavigation.setOnItemSelectedListener {
@@ -69,11 +75,6 @@ class RepoCompareActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
-
-        val intent = getIntent()
-        repo1 = intent.getStringExtra("repo1")!!
-        repo2 = intent.getStringExtra("repo2")!!
-        Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()
 
     }
 
