@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SnapKit
+import Charts
 
 
 final class CompareGraphController : UIViewController {
@@ -62,6 +63,12 @@ final class CompareGraphController : UIViewController {
         return btn
     }()
     
+    lazy var chart : RadarChartView = {
+        let chart1 = RadarChartView()
+        chart1.backgroundColor = .white
+        return chart1
+    }()
+    
     /*
      UI Action 작성
      */
@@ -71,6 +78,7 @@ final class CompareGraphController : UIViewController {
         self.view.addSubview(repo1ColorButton)
         self.view.addSubview(repo2Label)
         self.view.addSubview(repo2ColorButton)
+        self.view.addSubview(chart)
         setAutoLayout()
     }
     
@@ -109,14 +117,60 @@ final class CompareGraphController : UIViewController {
             make.width.equalTo(deviceWidth/12)
             make.height.equalTo(deviceWidth/12)
         })
+        
+        chart.snp.makeConstraints ({ make in
+            make.top.equalTo(repo2Label.snp.bottom).offset(20)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        })
+        setChartOption()
     }
 
     
 }
 
+extension CompareGraphController : ChartViewDelegate {
+    private func setChartOption() {
+//        var dataSet : [RadarChartDataSet] = []
+        let redDataSet = RadarChartDataSet(
+            entries: [
+                RadarChartDataEntry(value: 210),
+                RadarChartDataEntry(value: 120.0),
+                RadarChartDataEntry(value: 90.0),
+                RadarChartDataEntry(value: 150.0),
+            ]
+        )
+        redDataSet.lineWidth = 3
+        redDataSet.fillColor = UIColor(red: 255/255, green: 0, blue: 0, alpha: 1)
+        redDataSet.drawFilledEnabled = true
+        redDataSet.colors = [UIColor(red: 255/255, green: 0, blue: 0, alpha: 0.3)]
+        
+        let blueDataSet = RadarChartDataSet(
+            entries: [
+                RadarChartDataEntry(value: 120.0),
+                RadarChartDataEntry(value: 160.0),
+                RadarChartDataEntry(value: 210.0),
+                RadarChartDataEntry(value: 110.0)
+            ]
+        )
+        blueDataSet.lineWidth = 3
+        blueDataSet.fillColor = UIColor(red: 0, green: 0, blue: 255/255, alpha: 1)
+        blueDataSet.drawFilledEnabled = true
+        blueDataSet.colors = [UIColor(red: 0, green: 0, blue: 255/255, alpha: 0.3)]
+        
+        let data = RadarChartData(dataSets: [redDataSet, blueDataSet])
+        chart.data = data
+    }
+    
+    private func chartAttribute(){
+//        self.chart.yAxis.labelFont = .systemFont(ofSize: 30)
+//        self.chart.yAxis.valueFormatter = yaxisfomatter
+    }
+}
+
 /*
  SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
- 
  preview 실행이 안되는 경우 단축키
  Command + Option + Enter : preview 그리는 캠버스 띄우기
  Command + Option + p : preview 재실행
