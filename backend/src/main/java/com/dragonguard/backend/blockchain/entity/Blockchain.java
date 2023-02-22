@@ -1,5 +1,6 @@
 package com.dragonguard.backend.blockchain.entity;
 
+import com.dragonguard.backend.global.BaseTime;
 import com.dragonguard.backend.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,26 +8,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Blockchain {
+public class Blockchain extends BaseTime {
     @Id @GeneratedValue
     private Long id;
 
     @Enumerated(EnumType.STRING)
     private ContributeType contributeType;
 
-    private Integer amount;
+    private BigInteger amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
+    private String address;
+
     @Builder
-    public Blockchain(ContributeType contributeType, Integer amount, Member member) {
+    public Blockchain(ContributeType contributeType, BigInteger amount, Member member, String address) {
         this.contributeType = contributeType;
         this.amount = amount;
         this.member = member;
+        this.address = address;
     }
 }

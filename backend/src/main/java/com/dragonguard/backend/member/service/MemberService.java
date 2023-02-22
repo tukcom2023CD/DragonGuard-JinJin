@@ -2,6 +2,7 @@ package com.dragonguard.backend.member.service;
 
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
@@ -9,7 +10,6 @@ import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.mapper.MemberMapper;
 import com.dragonguard.backend.member.repository.MemberRepository;
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

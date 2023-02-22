@@ -1,8 +1,11 @@
 package com.dragonguard.backend.blockchain.service;
 
+import com.dragonguard.backend.blockchain.dto.request.ContractRequest;
+import com.dragonguard.backend.blockchain.dto.response.ContractResponse;
 import com.dragonguard.backend.config.blockchain.BlockChainProperties;
 import com.dragonguard.backend.global.exception.BlockchainException;
 import com.klaytn.caver.Caver;
+import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.contract.SendOptions;
 import com.klaytn.caver.wallet.keyring.KeyringFactory;
@@ -14,14 +17,13 @@ import org.web3j.protocol.exceptions.TransactionException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
-import java.util.Arrays;
+import java.util.List;
 
 import static com.klaytn.caver.kct.kip7.KIP7ConstantData.ABI;
 
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
-
     private final BlockChainProperties properties;
     private final SingleKeyring deployer;
     private final String abiJson;
@@ -43,18 +45,33 @@ public class TransactionService {
         }
     }
 
-    public void transact(String privateKey, BigInteger amount) {
-        SingleKeyring executor = KeyringFactory.createFromPrivateKey("0x{private key}");
+    public void set(String privateKey, ContractRequest request) {
+        SingleKeyring executor = KeyringFactory.createFromPrivateKey(privateKey);
         caver.wallet.add(executor);
         try {
             Contract contract = load();
 
-            SendOptions sendOptions = new SendOptions();
-            sendOptions.setFrom(executor.getAddress());
-            sendOptions.setGas(amount);
-            contract.getMethod("set").send(Arrays.asList("testValue"), sendOptions);
+            contract.call("set", request.getAddress(),
+                    request.getContributeType(), request.getAmount(), request.getName());
 
-        } catch (IOException | TransactionException | ClassNotFoundException | NoSuchMethodException |
+        } catch (IOException | ClassNotFoundException | NoSuchMethodException |
+                    InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new BlockchainException();
+        }
+    }
+
+    public ContractResponse getInfo(String privateKey, String address) {
+        SingleKeyring executor = KeyringFactory.createFromPrivateKey(privateKey);
+        caver.wallet.add(executor);
+        try {
+            Contract contract = load();
+
+            List<Type> info = contract.call("getInfo", address);
+
+            return new ContractResponse((String) info.get(0).getValue(),
+                    (BigInteger) info.get(1).getValue(), (String) info.get(2).getValue());
+
+        } catch (IOException | ClassNotFoundException | NoSuchMethodException |
                     InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new BlockchainException();
         }

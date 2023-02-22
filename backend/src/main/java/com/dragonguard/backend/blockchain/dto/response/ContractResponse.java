@@ -1,6 +1,5 @@
 package com.dragonguard.backend.blockchain.dto.response;
 
-import com.dragonguard.backend.blockchain.entity.ContributeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,10 +11,8 @@ import java.math.BigInteger;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BlockchainResponse {
-    private Long id;
-    private ContributeType contributeType;
+public class ContractResponse {
+    private String ContributeType;
     private BigInteger amount;
     private String name;
-    private Long memberId;
 }

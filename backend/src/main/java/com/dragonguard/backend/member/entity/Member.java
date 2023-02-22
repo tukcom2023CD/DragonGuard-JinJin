@@ -1,5 +1,6 @@
 package com.dragonguard.backend.member.entity;
 
+import com.dragonguard.backend.blockchain.entity.Blockchain;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.global.BaseTime;
 import lombok.AccessLevel;
@@ -40,6 +41,9 @@ public class Member extends BaseTime {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "member")
+    private List<Blockchain> blockchains = new ArrayList<>();
 
     @Builder
     public Member(String name, String githubId, Commit commit) {
