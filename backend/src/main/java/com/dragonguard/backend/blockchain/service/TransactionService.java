@@ -8,10 +8,12 @@ import com.klaytn.caver.Caver;
 import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.contract.SendOptions;
+import com.klaytn.caver.wallet.keyring.AbstractKeyring;
 import com.klaytn.caver.wallet.keyring.KeyringFactory;
-import com.klaytn.caver.wallet.keyring.SingleKeyring;
-import kotlin.text.Charsets;
+import io.ipfs.multibase.Charsets;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.web3j.crypto.CipherException;
 import org.web3j.protocol.exceptions.TransactionException;
 
 import java.io.IOException;
@@ -25,42 +27,53 @@ import java.util.stream.Collectors;
 
 import static com.klaytn.caver.kct.kip7.KIP7ConstantData.ABI;
 
+@Slf4j
 @Service
 public class TransactionService {
     private final BlockChainProperties properties;
-    private final String abiJson;
     private final Caver caver;
-    private final SingleKeyring singleKeyring;
-
+    private final AbstractKeyring keyring;
+    private static String abiJson;
+    private static String keyRingJson;
     public TransactionService(BlockChainProperties properties, Caver caver) {
-        Path path = Paths.get(Paths.get("src/main/resources/").toAbsolutePath().normalize()
-                .resolve("DragonContract.json")
+        this.properties = properties;
+        this.caver = caver;
+        Path abiPath = Paths.get(Paths.get("src/main/resources/").toAbsolutePath().normalize()
+                .resolve("abi.json")
                 .normalize()
                 .toString());
-        String json;
+        Path keyringPath = Paths.get(Paths.get("src/main/resources/").toAbsolutePath().normalize()
+                .resolve("keyring.json")
+                .normalize()
+                .toString());
+
         try {
-            json = Files.readAllLines(path, Charsets.UTF_8).stream().collect(Collectors.joining());
-        } catch (IOException e) {
+            this.abiJson = Files.readAllLines(abiPath, Charsets.UTF_8).stream().collect(Collectors.joining());
+            this.keyRingJson = Files.readAllLines(keyringPath, Charsets.UTF_8).stream().collect(Collectors.joining());
+            this.keyring = KeyringFactory.decrypt(keyRingJson, properties.getPassword());
+        } catch (CipherException | IOException e) {
             throw new BlockchainException();
         }
-        this.properties = properties;
-        this.abiJson = json;
-        this.caver = caver;
-        this.singleKeyring = KeyringFactory.generate();
     }
 
     public void deploy() {
-        caver.wallet.add(singleKeyring);
+        caver.wallet.add(keyring);
 
         try {
+            log.info("=========11111===========");
             Contract contract = caver.contract.create(abiJson);
+            log.info("=========22222===========");
             SendOptions sendOptions = new SendOptions();
-            sendOptions.setFrom(singleKeyring.getAddress());
-            sendOptions.setGas(BigInteger.valueOf(4000000));
-
+            log.info("=========33333===========");
+            sendOptions.setFrom(keyring.getAddress());
+            log.info("=========44444===========");
+            sendOptions.setGas(BigInteger.valueOf(3000000));
+            log.info("=========55555===========");
             contract.deploy(sendOptions, properties.getByteCode());
+            log.info("=========66666===========");
         } catch (IOException | TransactionException | ClassNotFoundException | NoSuchMethodException |
                     InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
             throw new BlockchainException();
         }
     }
@@ -95,7 +108,7 @@ public class TransactionService {
 
     public Contract load() {
         try {
-            return new Contract(caver, ABI, singleKeyring.getAddress());
+            return new Contract(caver, ABI, keyring.getAddress());
         } catch (IOException e) {
             throw new BlockchainException();
         }

@@ -69,7 +69,7 @@ public class MemberService {
         commits.forEach(member::addCommit);
         updateTier(member);
         commitService.saveAllCommits(commits);
-        if (member.getWalletAddress().isEmpty()) {
+        if (member.getWalletAddress() == null || member.getWalletAddress().isEmpty()) {
             return;
         }
         setTransaction(commits.size(), member);
@@ -91,9 +91,9 @@ public class MemberService {
 
     @Transactional
     public void updateCommits(Long id) {
-        String githubId = memberRepository.findGithubIdById(id);
-        getCommitByScraping(githubId);
-        updateTier(getEntity(id));
+        Member member = getEntity(id);
+        getCommitByScraping(member.getGithubId());
+        updateTier(member);
     }
 
     public MemberResponse getMember(Long id) {

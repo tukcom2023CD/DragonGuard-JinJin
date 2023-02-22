@@ -4,6 +4,9 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+  config:
+    import:
+      - classpath:env.yml
   main:
     allow-bean-definition-overriding: true
 spring:
@@ -28,11 +31,3 @@ spring:
     host: localhost
     port: 6379
 
-github:
-  url: https://api.github.com/
-  token: ${GITHUB_ACCESS_TOKEN}
-
-blockchain:
-  private-key: ${PRIVATE_KEY}
-  byte-code: ${BYTE_CODE}
-  password: ${PASSWORD}

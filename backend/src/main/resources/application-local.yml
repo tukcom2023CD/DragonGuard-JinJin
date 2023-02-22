@@ -5,6 +5,10 @@ spring:
     username: root
     password: 1234
 
+  config:
+    import:
+      - classpath:env.yml
+
   main:
     allow-bean-definition-overriding: true
 
@@ -35,12 +39,3 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
-
-github:
-  url: https://api.github.com/
-  token: ${GITHUB_ACCESS_TOKEN}
-
-blockchain:
-  private-key: ${PRIVATE_KEY}
-  byte-code: ${BYTE_CODE}
-  password: ${PASSWORD}
