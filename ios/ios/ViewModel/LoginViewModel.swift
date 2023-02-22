@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import Alamofire
 
-class LoginViewModel {
+
+final class LoginViewModel {
     
     
     
