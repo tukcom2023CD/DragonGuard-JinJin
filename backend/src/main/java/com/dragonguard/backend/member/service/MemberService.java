@@ -111,8 +111,11 @@ public class MemberService {
         return memberRepository.findRanking(pageable);
     }
 
+    @Transactional
     public void updateWalletAddress(WalletRequest walletRequest) {
-        getEntity(walletRequest.getId()).updateWalletAddress(walletRequest.getWalletAddress());
+        Member member = getEntity(walletRequest.getId());
+        member.updateWalletAddress(walletRequest.getWalletAddress());
+        setTransaction(member.getCommitsSum(), member);
     }
 
     private Member getEntity(Long id) {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @ConfigurationProperties(prefix = "blockchain")
 @Component
-public class BlockChainProperties {
+public class BlockchainProperties {
     private String privateKey;
     private String byteCode;
     private String password;
