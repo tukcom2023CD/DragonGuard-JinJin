@@ -6,7 +6,6 @@ import com.dragonguard.backend.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.dto.response.TwoGitRepoMemberResponse;
-import com.dragonguard.backend.member.dto.response.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
