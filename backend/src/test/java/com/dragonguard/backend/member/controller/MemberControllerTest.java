@@ -127,11 +127,11 @@ class MemberControllerTest extends RestDocumentTest {
     void getRanking() throws Exception {
         // given
         List<MemberRankResponse> expected = List.of(
-                new MemberRankResponse(1L, "Kim", "ohksj77", 10000, Tier.MASTER),
-                new MemberRankResponse(2L, "Seung", "ohksj", 5000, Tier.RUBY),
-                new MemberRankResponse(3L, "Jin", "ohksj777", 3000, Tier.DIAMOND),
-                new MemberRankResponse(4L, "Lee", "ohksjj", 1000, Tier.PLATINUM),
-                new MemberRankResponse(5L, "Da", "ohksjksj", 500, Tier.GOLD));
+                new MemberRankResponse(1L, "Kim", "ohksj77", 10000L, Tier.MASTER),
+                new MemberRankResponse(2L, "Seung", "ohksj", 5000L, Tier.RUBY),
+                new MemberRankResponse(3L, "Jin", "ohksj777", 3000L, Tier.DIAMOND),
+                new MemberRankResponse(4L, "Lee", "ohksjj", 1000L, Tier.PLATINUM),
+                new MemberRankResponse(5L, "Da", "ohksjksj", 500L, Tier.GOLD));
         given(memberService.getMemberRanking(any())).willReturn(expected);
 
         // when

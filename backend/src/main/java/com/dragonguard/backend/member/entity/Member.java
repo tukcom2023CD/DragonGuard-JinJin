@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ public class Member extends BaseTime {
 
     @OneToMany(mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
+
+    @Formula("(SELECT sum(b.amount) FROM blockchain b WHERE b.member_id = id)")
+    private Long sumOfTokens;
 
     @Builder
     public Member(String name, String githubId, Commit commit, String walletAddress) {

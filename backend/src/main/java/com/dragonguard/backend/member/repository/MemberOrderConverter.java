@@ -22,6 +22,7 @@ public class MemberOrderConverter implements OrderConverter {
 
     private void initializeMap() {
         keywordMap.put("commits", member.commitsSum);
+        keywordMap.put("tokens", member.sumOfTokens);
     }
 
     @Override

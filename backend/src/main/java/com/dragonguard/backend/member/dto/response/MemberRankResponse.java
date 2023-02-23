@@ -9,15 +9,15 @@ public class MemberRankResponse {
     private Long id;
     private String name;
     private String githubId;
-    private Integer commits;
+    private Long tokens;
     private Tier tier;
 
     @QueryProjection
-    public MemberRankResponse(Long id, String name, String githubId, Integer commits, Tier tier) {
+    public MemberRankResponse(Long id, String name, String githubId, Long tokens, Tier tier) {
         this.id = id;
         this.name = name;
         this.githubId = githubId;
-        this.commits = commits;
+        this.tokens = tokens;
         this.tier = tier;
     }
 }
