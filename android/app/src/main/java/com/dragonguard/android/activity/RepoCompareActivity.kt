@@ -56,22 +56,18 @@ class RepoCompareActivity : AppCompatActivity() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.compare_frame, compareRepoFragment)
             .add(R.id.compare_frame, compareUserFragment)
-            .show(compareRepoFragment)
-            .hide(compareUserFragment)
             .commit()
 
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.compare_repo -> {
                     val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.hide(compareUserFragment)
-                        .show(compareRepoFragment)
+                    transactionN.replace(binding.compareFrame.id, compareRepoFragment)
                         .commit()
                 }
                 R.id.compare_user -> {
                     val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.hide(compareRepoFragment)
-                        .show(compareUserFragment)
+                    transactionN.replace(binding.compareFrame.id, compareUserFragment)
                         .commit()
                 }
             }

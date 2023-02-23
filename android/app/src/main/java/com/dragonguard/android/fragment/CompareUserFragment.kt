@@ -202,18 +202,18 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         entries2.add(RadarEntry(user2Cont.commits!!.toFloat()))
         entries2.add(RadarEntry(user2Cont.additions!!.toFloat()))
         entries2.add(RadarEntry(user2Cont.deletions!!.toFloat()))
-//        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
 
-        val set1 = RadarDataSet(entries1,"DataSet1")
-        set1.color= Color.rgb(0,255,0)
+        val set1 = RadarDataSet(entries1,user1)
+        set1.color= Color.rgb(153,255,119)
         set1.apply{
             valueTextSize = 12f
             setDrawValues(true)
             valueFormatter = ScoreCustomFormatter()
         }
 
-        val set2 = RadarDataSet(entries1,"DataSet2")
-        set2.color = Color.rgb(0, 0, 0)
+        val set2 = RadarDataSet(entries2,user2)
+        set2.color = Color.BLACK
         set2.apply{
             valueTextSize = 12f
             setDrawValues(true)
@@ -233,6 +233,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
             xAxis.apply {
                 isEnabled = true
                 position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
+                granularity = 1f
                 setDrawAxisLine(true) // 축 그림
                 setDrawGridLines(false)
                 valueFormatter = MyXAxisFormatter()
@@ -243,7 +244,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
 //        binding.userChart.invalidate()
         binding.userChart.data = data
 //        binding.userChart.data.addDataSet(set2)
-        binding.userChart.invalidate()
+//        binding.userChart.invalidate()
         binding.progressBar.visibility = View.GONE
         binding.userChart.visibility = View.VISIBLE
 
@@ -262,6 +263,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
      */
     class MyXAxisFormatter() : ValueFormatter() {
         private val days = listOf("commits", "additions", "deletions")
+//        private val days = listOf( "additions", "deletions")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt()) ?: value.toString()
         }
@@ -273,6 +275,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
     //    막대 위의 커밋수 정수로 변경
     class ScoreCustomFormatter() : ValueFormatter() {
         private val days = listOf("commits", "additions", "deletions")
+//        private val days = listOf( "additions", "deletions")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
         }
