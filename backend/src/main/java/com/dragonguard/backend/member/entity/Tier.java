@@ -20,9 +20,9 @@ public enum Tier {
     private final Integer maxCommits;
     private final String korean;
 
-    public static Tier checkTier(Integer commitNum) {
+    public static Tier checkTier(Long amount) {
         return Arrays.stream(values())
-                .filter(i -> i.getMaxCommits() >= commitNum)
+                .filter(i -> i.getMaxCommits() >= amount)
                 .findFirst()
                 .orElseThrow(TierNoneMatchException::new);
     }

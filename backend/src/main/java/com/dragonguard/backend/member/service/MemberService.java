@@ -87,7 +87,7 @@ public class MemberService {
 
     @Transactional
     public void updateTier(Member member) {
-        Tier tier = Tier.checkTier(member.evaluateCommitsSum());
+        Tier tier = Tier.checkTier(member.getSumOfTokens());
         member.updateTier(tier);
     }
 
