@@ -10,7 +10,6 @@ import com.klaytn.caver.Caver;
 import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.contract.SendOptions;
-import com.klaytn.caver.methods.response.TransactionReceipt;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

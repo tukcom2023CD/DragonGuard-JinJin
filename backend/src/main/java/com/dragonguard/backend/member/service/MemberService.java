@@ -1,6 +1,8 @@
 package com.dragonguard.backend.member.service;
 
 import com.dragonguard.backend.blockchain.dto.request.ContractRequest;
+import com.dragonguard.backend.blockchain.dto.response.BlockchainResponse;
+import com.dragonguard.backend.blockchain.entity.Blockchain;
 import com.dragonguard.backend.blockchain.entity.ContributeType;
 import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.commit.entity.Commit;
@@ -99,7 +101,12 @@ public class MemberService {
     public MemberResponse getMember(Long id) {
         Member member = getEntity(id);
         Integer rank = memberRepository.findRankingById(id);
-        return memberMapper.toResponse(member, member.getCommitsSum(), rank);
+        Long amount = blockchainService.getBlockchainList(id).stream()
+                .map(BlockchainResponse::getAmount)
+                .mapToLong(i -> Long.valueOf(String.valueOf(i)))
+                .sum();
+
+        return memberMapper.toResponse(member, member.getCommitsSum(), rank, amount);
     }
 
     public Member findMemberByGithubId(String githubId) {
