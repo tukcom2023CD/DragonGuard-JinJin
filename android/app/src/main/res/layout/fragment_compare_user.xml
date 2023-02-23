@@ -40,7 +40,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2.2"
                     android:src="@drawable/ic_baseline_circle_24"
-                    app:tint="#99ff33" />
+                    app:tint="#00ff00" />
 
                 <View
                     android:layout_width="0dp"

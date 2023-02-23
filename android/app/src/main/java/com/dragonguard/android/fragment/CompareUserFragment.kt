@@ -205,7 +205,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
 //        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
 
         val set1 = RadarDataSet(entries1,"DataSet1")
-        set1.color= Color.rgb(153,255,51)
+        set1.color= Color.rgb(0,255,0)
         set1.apply{
             valueTextSize = 12f
             setDrawValues(true)
