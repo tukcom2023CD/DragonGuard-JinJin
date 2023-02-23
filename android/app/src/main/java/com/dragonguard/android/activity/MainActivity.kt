@@ -3,9 +3,12 @@ package com.dragonguard.android.activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -21,9 +24,20 @@ import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
 /*
- 사용자의 정보나 검색, 랭킹등을 보러가는 화면으로 이동할 수 있는 메인 activity
+ 사용자의 정보를 보여주고 검색, 랭킹등을
+ 보러가는 화면으로 이동할 수 있는 메인 activity
  */
 class MainActivity : AppCompatActivity() {
+    private val activityResultLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == 0 ) {
+            val walletIntent = it.data
+            val requestKey = walletIntent!!.getStringExtra("key")
+//            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
+            authRequestResult(requestKey!!)
+        } else if(it.resultCode == 1) {
+            Toast.makeText(applicationContext, "skip 주소 : $walletAddress", Toast.LENGTH_SHORT).show()
+        }
+    }
     companion object {
         lateinit var prefs: IdPreference
     }
@@ -31,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private var viewmodel = Viewmodel()
     private var backPressed : Long = 0
     private var userId = 0
+    private var walletAddress = ""
     //    var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,10 +60,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             searchUser(userId)
         }
-
         //로그인 화면으로 넘어가기
+        walletAddress = prefs.getWalletAddress("wallet_address", "")
+//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
         val intent = Intent(applicationContext, LoginActivity::class.java)
-        startActivity(intent)
+        intent.putExtra("wallet_address", walletAddress)
+        activityResultLauncher.launch(intent)
+
+
         Timer().scheduleAtFixedRate(2000,2000){
 //            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
             searchUser(userId)
@@ -75,6 +94,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         })
+
+        binding.repoCompare.setOnClickListener {
+            val intent = Intent(applicationContext, RepoChooseActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 
@@ -107,29 +131,35 @@ class MainActivity : AppCompatActivity() {
             val userInfo : UserInfoModel = resultDeferred.await()
             if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null || userInfo.tier == null) {
 //                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
-                val handler = Handler()
+                val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({registerUser("posite")}, 500)
             } else {
                 binding.userTier.text = "내 티어 : ${userInfo.tier}"
                 binding.userToken.text = "내 기여도 : ${userInfo.commits}"
                 binding.userRanking.text = userInfo.rank
                 Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
-
             }
         }
     }
 
+    private fun authRequestResult(key: String) {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val authResponseDeferred = coroutine.async(Dispatchers.IO) {
+                viewmodel.getWalletAuthResult(key)
+            }
+            val authResponse = authResponseDeferred.await()
+            if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
+                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                intent.putExtra("wallet_address", walletAddress)
+                activityResultLauncher.launch(intent)
 
-    //    edittext 키보드 제거
-    private fun closeKeyboard() {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
-    }
-
-//    화면을 눌렀을때 키보드 제거
-    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        closeKeyboard()
-        return super.dispatchTouchEvent(ev)
+            } else {
+                Toast.makeText(applicationContext, "wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
+                prefs.setWalletAddress("wallet_address", authResponse.result.klaytn_address)
+            }
+        }
     }
 
 //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료

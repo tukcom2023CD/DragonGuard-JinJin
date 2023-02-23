@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -70,7 +71,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     fun checkContributors(result: ArrayList<RepoContributorsItem>) {
         if (result.isNotEmpty()) {
             if (result[0].additions == null) {
-                val handler = Handler()
+                val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({ repoContributors(repoName) }, 3000)
 
             } else {
@@ -85,7 +86,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         } else {
             if (count<10) {
                 count++
-                val handler = Handler()
+                val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({ repoContributors(repoName) }, 3000)
             } else {
                 binding.progressBar.visibility = View.GONE

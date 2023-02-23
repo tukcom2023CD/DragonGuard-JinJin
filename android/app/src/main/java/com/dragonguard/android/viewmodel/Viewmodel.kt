@@ -53,4 +53,21 @@ class Viewmodel {
         return repository.getTotalUsersRankings(page, size)
     }
 
+    fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel {
+        return repository.postWalletAuth(body)
+    }
+
+    fun getWalletAuthResult(key: String): WalletAuthResultModel {
+        return repository.getAuthResult(key)
+    }
+
+    fun getTokenHistory(id: Int): ArrayList<TokenHistoryModelItem> {
+        return repository.getTokenHistory(id)
+    }
+
+    fun postWalletAddress(id: Int, walletAddress: String): Boolean {
+        val body = WalletAddressModel(id.toString(), walletAddress)
+        return repository.postWalletAddress(body)
+    }
+
 }

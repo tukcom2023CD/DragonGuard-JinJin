@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item
+                android:drawable="@drawable/search_border"/>
+            <item
+                android:drawable="@drawable/ic_baseline_arrow_drop_down_24"
+                android:gravity="center|end"
+                android:width="10dp"
+                android:right="10dp"
+                android:height="10dp"/>
+        </layer-list>
+    </item>
+</selector>

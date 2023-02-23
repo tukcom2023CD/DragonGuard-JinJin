@@ -33,4 +33,18 @@ interface GitRankAPI {
     @POST("members")
     @Headers("accept: application/json", "content-type: application/json")
     fun postGithubId(@Body register: RegisterGithubIdModel) : Call<Int>
+
+    @POST("prepare")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postWalletAuth(@Body auth : WalletAuthRequestModel) : Call<WalletAuthResponseModel>
+
+    @GET("result")
+    fun getAuthResult(@Query("request_key") key: String) : Call<WalletAuthResultModel>
+
+    @GET("blockchain/{id}")
+    fun getTokenHistory(@Path("id") userId: Int) : Call<TokenHistoryModel>
+
+    @POST("members/wallet-address")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postWalletAddress(@Body walletAddress : WalletAddressModel) : Call<Unit>
 }

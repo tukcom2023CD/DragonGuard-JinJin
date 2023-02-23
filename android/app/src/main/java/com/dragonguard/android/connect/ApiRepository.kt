@@ -125,6 +125,67 @@ class ApiRepository {
             return registerResult
         }
         return registerResult
+    }
 
+    fun getTokenHistory(id: Int): ArrayList<TokenHistoryModelItem> {
+        val tokenHistory = api.getTokenHistory(id)
+        var tokenHistoryResult = arrayListOf(TokenHistoryModelItem(null,null,null,null, null))
+        try {
+            val result = tokenHistory.execute()
+            if(result.isSuccessful) {
+                tokenHistoryResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return tokenHistoryResult
+        }
+        return tokenHistoryResult
+    }
+
+    fun postWalletAddress(body: WalletAddressModel): Boolean {
+        val walletAddress = api.postWalletAddress(body)
+        try{
+            val result = walletAddress.execute()
+            return result.isSuccessful
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+    fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel  {
+        var authResult = WalletAuthResponseModel(null, null,null)
+        val retrofitWallet = Retrofit.Builder().baseUrl(BuildConfig.prepare)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val apiWallet = retrofitWallet.create(GitRankAPI::class.java)
+        val authWallet = apiWallet.postWalletAuth(body)
+        try{
+            val result = authWallet.execute()
+            if(result.isSuccessful) {
+                authResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return authResult
+        }
+        return authResult
+    }
+
+    fun getAuthResult(key: String): WalletAuthResultModel {
+        var authResult = WalletAuthResultModel(null, null,null,null)
+        val retrofitWallet = Retrofit.Builder().baseUrl(BuildConfig.prepare)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val apiWallet = retrofitWallet.create(GitRankAPI::class.java)
+        val authWallet = apiWallet.getAuthResult(key)
+        try{
+            val result = authWallet.execute()
+            if(result.isSuccessful) {
+                authResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return authResult
+        }
+        return authResult
     }
 }
