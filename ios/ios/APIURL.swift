@@ -63,11 +63,23 @@ final class APIURL{
         return url
     }
     
-    // KLIP post API
-    func klipPostAPI() -> String{
+    // KLIP prepare post API
+    func klipPreparePostAPI() -> String{
         let url = "https://a2a-api.klipwallet.com/v2/a2a/prepare"
         return url
     }
     
+    // KLIP DeepLink API
+    func klipDeepLinkAPI(requestKey: String) -> String{
+        let url = "https://klipwallet.com/?target=/a2a?request_key=\(requestKey)"
+        return url
+    }
+    
+
+    // KLIP result get API
+    func klipResultGetAPI(requestKey: String) -> String{
+        let url = "https://a2a-api.klipwallet.com/v2/a2a/result?request_key=\(requestKey)"
+        return url
+    }
     
 }

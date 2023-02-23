@@ -47,7 +47,7 @@ final class LoginController: UIViewController{
      */
     
     @objc func clickedKlipLoginBtn(){
-        LoginService().postToKlip()
+        LoginService().klipPrepare()
     }
     
     @objc func clickedGoMainBtn(){

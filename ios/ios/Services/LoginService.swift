@@ -12,9 +12,11 @@ final class LoginService {
     static let loginService = LoginService()
     let ip = APIURL.ip
     var requestKey = ""
+    var walletAddress = ""
     
-    func postToKlip(){
-        let url = APIURL.apiUrl.klipPostAPI()
+    // KLIP Prepare post 하는 중
+    func klipPrepare(){
+        let url = APIURL.apiUrl.klipPreparePostAPI()
         let body = ["bapp": ["name" :  "GitRank"],"type": "auth"] as [String : Any]
         
         AF.request(url,
@@ -33,6 +35,22 @@ final class LoginService {
         }
     }
     
+    
+    // KLIP Result get하는 함수
+    func klipResult(){
+        let url = APIURL.apiUrl.klipResultGetAPI(requestKey: requestKey)
+        
+        AF.request(url)
+            .validate(statusCode: 200..<201)
+            .responseDecodable(of: KlipResultModel.self) { response in
+                switch response.result{
+                case .success(let data):
+                    self.walletAddress = data.result.klaytn_address
+                case .failure(let error):
+                    print("error!! \(error)")
+                }
+            }
+    }
     
     
     

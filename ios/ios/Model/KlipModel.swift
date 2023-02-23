@@ -12,3 +12,14 @@ struct KlipDecodingModel: Codable{
     let status: String
     let expiration_time: String
 }
+
+struct KlipResultModel: Codable{
+    let request_key: String
+    let status: String
+    let expiration_time: String
+    let result: KlipKlaytnAddr
+}
+
+struct KlipKlaytnAddr: Codable{
+    let klaytn_address: String
+}
