@@ -127,6 +127,30 @@ class ApiRepository {
         return registerResult
     }
 
+    fun getTokenHistory(id: Int): ArrayList<TokenHistoryModelItem> {
+        val tokenHistory = api.getTokenHistory(id)
+        var tokenHistoryResult = arrayListOf(TokenHistoryModelItem(null,null,null,null, null))
+        try {
+            val result = tokenHistory.execute()
+            if(result.isSuccessful) {
+                tokenHistoryResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return tokenHistoryResult
+        }
+        return tokenHistoryResult
+    }
+
+    fun postWalletAddress(body: WalletAddressModel): Boolean {
+        val walletAddress = api.postWalletAddress(body)
+        try{
+            val result = walletAddress.execute()
+            return result.isSuccessful
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
     fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel  {
         var authResult = WalletAuthResponseModel(null, null,null)
         val retrofitWallet = Retrofit.Builder().baseUrl(BuildConfig.prepare)
