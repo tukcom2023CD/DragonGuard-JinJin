@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
@@ -29,7 +30,7 @@ class GitRepoControllerTest extends RestDocumentTest {
 
     @Test
     void getRepoMembers() throws Exception {
-        List<GitRepoMemberResponse> expected = List.of(
+        List<GitRepoMemberResponse> expected = new AsyncResult<>(List.of(
                 new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
                 new GitRepoMemberResponse("HJ39", 101, 999, 500),
                 new GitRepoMemberResponse("posite", 99, 1001, 500),

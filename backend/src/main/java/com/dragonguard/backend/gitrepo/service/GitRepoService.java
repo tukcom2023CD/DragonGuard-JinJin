@@ -1,23 +1,25 @@
 package com.dragonguard.backend.gitrepo.service;
 
 import com.dragonguard.backend.gitrepo.client.GitRepoClient;
+import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.gitrepo.messagequeue.KafkaGitRepoProducer;
 import com.dragonguard.backend.gitrepo.repository.GitRepoRepository;
+import com.dragonguard.backend.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberClientResponse;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
+import com.dragonguard.backend.gitrepomember.dto.response.TwoGitRepoMemberResponse;
+import com.dragonguard.backend.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.gitrepomember.service.GitRepoMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -51,20 +53,28 @@ public class GitRepoService {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
         if (gitRepo.isEmpty()) {
             GitRepo findGitRepo = gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
-            return requestToGithub(gitRepoRequest, findGitRepo);
+            return requestToGithub(gitRepoRequest);
         } else if (gitRepo.get().getGitRepoMember().isEmpty()) {
-            return requestToGithub(gitRepoRequest, gitRepo.get());
+            return requestToGithub(gitRepoRequest);
         }
         return gitRepoMemberRepository.findAllByGitRepo(gitRepo.get()).stream()
                 .map(gitRepoMemberMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
+    public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(GitRepoCompareRequest request) {
+        Integer year = LocalDate.now().getYear();
+        List<GitRepoMemberResponse> firstResult = findMembersByGitRepoWithClient(new GitRepoRequest(request.getFirstRepo(), year));
+        List<GitRepoMemberResponse> secondResult = findMembersByGitRepoWithClient(new GitRepoRequest(request.getSecondRepo(), year));
+
+        return new TwoGitRepoMemberResponse(firstResult, secondResult);
+    }
+
     private void requestToScraping(GitRepoRequest gitRepoRequest) {
         kafkaGitRepoProducer.send(gitRepoRequest);
     }
 
-    private List<GitRepoMemberResponse> requestToGithub(GitRepoRequest gitRepoRequest, GitRepo gitRepo) {
+    private List<GitRepoMemberResponse> requestToGithub(GitRepoRequest gitRepoRequest) {
         GitRepoMemberClientResponse[] clientResponse = gitRepoClient.requestToGithub(gitRepoRequest);
         if (clientResponse == null || clientResponse.length == 0) {
             return List.of();
@@ -88,5 +98,12 @@ public class GitRepoService {
         gitRepoMemberService.saveAll(result, gitRepoRequest.getName());
 
         return result;
+    }
+
+    public List<GitRepoMemberResponse> findTwoGitRepoMember(GitRepoMemberCompareRequest request) {
+        GitRepoMember first = gitRepoMemberRepository.findByNameAndMemberName(request.getFirstRepo(), request.getFirstName());
+        GitRepoMember second = gitRepoMemberRepository.findByNameAndMemberName(request.getSecondRepo(), request.getSecondName());
+
+        return List.of(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
     }
 }
