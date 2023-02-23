@@ -35,7 +35,7 @@ public class GitRepoClient implements GithubClient<GitRepoRequest, GitRepoMember
                                 .path("/stats")
                                 .path("/contributors")
                                 .build())
-                .headers(headers -> headers.setBasicAuth(githubProperties.getToken()))
+                .headers(headers -> headers.setBearerAuth(githubProperties.getToken()))
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()

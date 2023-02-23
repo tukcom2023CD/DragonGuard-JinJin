@@ -1,5 +1,6 @@
 package com.dragonguard.backend.member.entity;
 
+import com.dragonguard.backend.blockchain.entity.Blockchain;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.global.BaseTime;
 import lombok.AccessLevel;
@@ -32,6 +33,8 @@ public class Member extends BaseTime {
 
     private Integer commitsSum;
 
+    private String walletAddress;
+
     @Enumerated(EnumType.STRING)
     private Tier tier;
 
@@ -41,10 +44,14 @@ public class Member extends BaseTime {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "member")
+    private List<Blockchain> blockchains = new ArrayList<>();
+
     @Builder
-    public Member(String name, String githubId, Commit commit) {
+    public Member(String name, String githubId, Commit commit, String walletAddress) {
         this.name = name;
         this.githubId = githubId;
+        this.walletAddress = walletAddress;
         this.tier = Tier.SPROUT;
         this.authStep = AuthStep.NONE;
         this.role = Role.ROLE_USER;
@@ -70,5 +77,9 @@ public class Member extends BaseTime {
 
     public void updateTier(Tier tier) {
         this.tier = tier;
+    }
+
+    public void updateWalletAddress(String walletAddress) {
+        this.walletAddress = walletAddress;
     }
 }

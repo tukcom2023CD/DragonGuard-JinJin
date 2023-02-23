@@ -6,7 +6,6 @@ import com.dragonguard.backend.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.gitrepo.messagequeue.KafkaGitRepoProducer;
 import com.dragonguard.backend.gitrepo.repository.GitRepoRepository;
-import com.dragonguard.backend.gitrepomember.dto.response.GitRepoClientResponse;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberClientResponse;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.mapper.GitRepoMemberMapper;
