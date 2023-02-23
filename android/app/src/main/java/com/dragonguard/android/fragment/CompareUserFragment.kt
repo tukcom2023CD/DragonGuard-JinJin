@@ -62,15 +62,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_compare_user, container, false)
         binding.compareUserViewmodel = viewmodel
 
-        binding.userCompareChoice.setOnClickListener {
-            Log.d("tag", "제발")
-        }
-
-        repoContributors(repo1, 1)
-        repoContributors(repo2, 2)
-
-        getActivity()?.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-        return inflater.inflate(R.layout.fragment_compare_user, container, false)
+        return binding.root
     }
 
     fun repoContributors(repoName: String, order: Int) {
@@ -124,18 +116,18 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
     private fun initRecycler() {
         if(contributors1.isNotEmpty() && contributors2.isNotEmpty()) {
             val arr1 : MutableList<String> = mutableListOf("선택하세요")
-            val arr2 : MutableList<String> = mutableListOf("선택하세요")
+            val arr2 : MutableList<String> = mutableListOf()
             arr1.addAll(contributors1.flatMap { listOf(it.githubId!!) }.toMutableList())
             arr2.addAll(contributors2.flatMap { listOf(it.githubId!!) }.toMutableList())
-            Toast.makeText(requireContext(), "$arr1", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireContext(), "$arr1", Toast.LENGTH_SHORT).show()
             val spinnerAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, arr1)
 //            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//            spinnerAdapter.addAll(arr2)
+            spinnerAdapter.addAll(arr2)
             binding.compareUserSpinner1.adapter = spinnerAdapter
             binding.compareUserSpinner1.setSelection(0)
 
-//            binding.compareUserSpinner2.adapter = spinnerAdapter
-//            binding.compareUserSpinner2.setSelection(0)
+            binding.compareUserSpinner2.adapter = spinnerAdapter
+            binding.compareUserSpinner2.setSelection(0)
 //            binding.compareUserSpinner2.invalidate()
             binding.compareUserSpinner1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -144,53 +136,73 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    if(position >= contributors1.size) {
-                        val name = contributors2[position-contributors1.size].githubId
+                    if(position > contributors1.size) {
+//                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
+                        val name = contributors2[position-contributors1.size-1].githubId
                         binding.compareUser1.text = name
                     } else {
-                        val name = contributors1[position].githubId
-                        binding.compareUser1.text = name
+                        if(position > 0) {
+//                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
+                            val name = contributors1[position-1].githubId
+                            binding.compareUser1.text = name
+                        }
                     }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                 }
             }
-//            binding.compareUserSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//                override fun onItemSelected(
-//                    parent: AdapterView<*>?,
-//                    view: View?,
-//                    position: Int,
-//                    id: Long
-//                ) {
-//                    if(position >= contributors1.size) {
-//                        val name = contributors2[position-contributors1.size].githubId
-//                        binding.compareUser2.text = name
-//                    } else {
-//                        val name = contributors1[position].githubId
-//                        binding.compareUser2.text = name
-//                    }
-//                }
-//
-//                override fun onNothingSelected(parent: AdapterView<*>?) {
-//                }
-//            }
-            initGraph()
+            binding.compareUserSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if(position > contributors1.size) {
+//                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
+                        val name = contributors2[position-contributors1.size-1].githubId
+                        binding.compareUser2.text = name
+                    } else {
+                        if(position > 0) {
+//                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
+                            val name = contributors1[position-1].githubId
+                            binding.compareUser2.text = name
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
         }
 
     }
 
-    private fun initGraph() {
+    private fun initGraph(user1: String, user2: String) {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.userChart.visibility = View.GONE
 //        Toast.makeText(requireContext(), "initGraph()", Toast.LENGTH_SHORT).show()
+        var user1Cont = contributors1.find { it.githubId == user1 }
+        var user2Cont = contributors1.find { it.githubId == user2 }
+        if(user1Cont == null) {
+            user1Cont = contributors2.find { it.githubId == user1 }
+        }
+        if(user2Cont == null) {
+            user2Cont = contributors2.find { it.githubId == user2 }
+        }
+        user1Cont!!
+        user2Cont!!
         val entries1 = ArrayList<RadarEntry>()
         val entries2 = ArrayList<RadarEntry>()
-        entries1.add(RadarEntry(contributors1[0].commits!!.toFloat()))
-        entries1.add(RadarEntry(contributors1[0].additions!!.toFloat()))
-        entries1.add(RadarEntry(contributors1[0].deletions!!.toFloat()))
-        entries2.add(RadarEntry(contributors2[0].commits!!.toFloat()))
-        entries2.add(RadarEntry(contributors2[0].additions!!.toFloat()))
-        entries2.add(RadarEntry(contributors2[0].deletions!!.toFloat()))
-        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "${user2Cont.commits} ${user2Cont.additions}  ${user2Cont.deletions}", Toast.LENGTH_SHORT).show()
+        entries1.add(RadarEntry(user1Cont.commits!!.toFloat()))
+        entries1.add(RadarEntry(user1Cont.additions!!.toFloat()))
+        entries1.add(RadarEntry(user1Cont.deletions!!.toFloat()))
+        entries2.add(RadarEntry(user2Cont.commits!!.toFloat()))
+        entries2.add(RadarEntry(user2Cont.additions!!.toFloat()))
+        entries2.add(RadarEntry(user2Cont.deletions!!.toFloat()))
+//        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
 
         val set1 = RadarDataSet(entries1,"DataSet1")
         set1.color= Color.rgb(153,255,51)
@@ -209,6 +221,8 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         }
         val dataSet1 = ArrayList<IRadarDataSet>()
         dataSet1.add(set1)
+        val dataSet2 = ArrayList<IRadarDataSet>()
+        dataSet2.add(set2)
         val data = RadarData(dataSet1)
         data.addDataSet(set2)
 
@@ -219,8 +233,8 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
             xAxis.apply {
                 isEnabled = true
                 position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
-                granularity = 1f // 1 단위만큼 간격 두기
                 setDrawAxisLine(true) // 축 그림
+                setDrawGridLines(false)
                 valueFormatter = MyXAxisFormatter()
                 textColor = ContextCompat.getColor(context, R.color.black) //라벨 색상
                 textSize = 12f // 텍스트 크기
@@ -228,6 +242,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         }
 //        binding.userChart.invalidate()
         binding.userChart.data = data
+//        binding.userChart.data.addDataSet(set2)
         binding.userChart.invalidate()
         binding.progressBar.visibility = View.GONE
         binding.userChart.visibility = View.VISIBLE
@@ -248,7 +263,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
     class MyXAxisFormatter() : ValueFormatter() {
         private val days = listOf("commits", "additions", "deletions")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return days.getOrNull(value.toInt() - 1) ?: value.toString()
+            return days.getOrNull(value.toInt()) ?: value.toString()
         }
         override fun getFormattedValue(value: Float): String {
             return "" + value.toInt()
@@ -266,18 +281,24 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         updateUI()
     }
-
      fun updateUI() {
-        binding.userCompareChoice.setOnClickListener {
-            Log.d("tag", "제발")
-        }
 
-        repoContributors(repo1, 1)
-        repoContributors(repo2, 2)
+         binding.userCompareChoice.setOnClickListener {
+             if(binding.compareUser1.text == binding.compareUser2.text || binding.compareUser2.text.isNullOrBlank() ||binding.compareUser1.text.isNullOrBlank()) {
+                 Toast.makeText(context, "서로 다른 사용자를 선택하세요!!", Toast.LENGTH_SHORT).show()
+             } else {
+                 initGraph(binding.compareUser1.text.toString(), binding.compareUser2.text.toString())
+             }
+         }
+
+         repoContributors(repo1, 1)
+         repoContributors(repo2, 2)
+
+         getActivity()?.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     }
 
 }

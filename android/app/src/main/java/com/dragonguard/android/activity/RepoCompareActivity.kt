@@ -54,19 +54,25 @@ class RepoCompareActivity : AppCompatActivity() {
         compareRepoFragment = CompareRepoFragment()
         compareUserFragment = CompareUserFragment(repo1, repo2)
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.compare_frame, compareRepoFragment).commit()
+        transaction.add(R.id.compare_frame, compareRepoFragment)
+            .add(R.id.compare_frame, compareUserFragment)
+            .show(compareRepoFragment)
+            .hide(compareUserFragment)
+            .commit()
 
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.compare_repo -> {
                     val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.replace(R.id.compare_frame, compareRepoFragment)
-                    transactionN.commit()
+                    transactionN.hide(compareUserFragment)
+                        .show(compareRepoFragment)
+                        .commit()
                 }
                 R.id.compare_user -> {
                     val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.replace(R.id.compare_frame, compareUserFragment)
-                    transactionN.commit()
+                    transactionN.hide(compareRepoFragment)
+                        .show(compareUserFragment)
+                        .commit()
                 }
             }
             true
