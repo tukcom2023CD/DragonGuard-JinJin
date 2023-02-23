@@ -10,6 +10,7 @@ import com.klaytn.caver.Caver;
 import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.contract.SendOptions;
+import com.klaytn.caver.methods.response.TransactionReceipt;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,14 +34,14 @@ public class TransactionService {
             options.setGas(BigInteger.valueOf(3000000));
             options.setFeeDelegation(true);
             options.setFeePayer(keyring.getAddress());
-            contract.deploy(options, properties.getByteCode(), "DragonGuard", "dra", new BigInteger("1000000000000"), "COMMIT");
+            contract.deploy(options, properties.getByteCode(), "DragonGuard", "dra", new BigInteger("10000000000000"));
         } catch (Exception e) {
             e.printStackTrace();
             throw new BlockchainException();
         }
     }
 
-    public void set(ContractRequest request) {
+    public void transfer(ContractRequest request) {
         SendOptions options = new SendOptions();
         options.setFrom(keyring.getAddress());
         options.setGas(BigInteger.valueOf(3000000));
@@ -48,14 +49,14 @@ public class TransactionService {
         options.setFeePayer(keyring.getAddress());
 
         try {
-            contract.send(options, "transfer", request.getAddress(), request.getAmount());
+            contract.send(options, "set", request.getAddress(), request.getAmount(), request.getContributeType().toString());
         } catch (Exception e) {
             e.printStackTrace();
             throw new BlockchainException();
         }
     }
 
-    public BigInteger getInfo(String address) {
+    public BigInteger balanceOf(String address) {
         try {
             List<Type> info = contract.call("balanceOf", address);
 

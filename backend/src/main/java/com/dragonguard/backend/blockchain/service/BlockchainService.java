@@ -23,8 +23,8 @@ public class BlockchainService {
     private final MemberRepository memberRepository;
 
     public void setTransaction(ContractRequest request) {
-        transactionService.set(request);
-        BigInteger amount = transactionService.getInfo(request.getAddress());
+        transactionService.transfer(request);
+        BigInteger amount = transactionService.balanceOf(request.getAddress());
         Member member = memberRepository.findMemberByGithubId(request.getGithubId())
                 .orElseThrow(EntityNotFoundException::new);
 
