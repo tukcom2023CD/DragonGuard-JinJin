@@ -266,10 +266,4 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     
 }
 
-extension Notification.Name{
-    static let data = Notification.Name("")
-}
-enum NotificationKey{
-    case choiceId
-    case repository
-}
+

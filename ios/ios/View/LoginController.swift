@@ -8,14 +8,17 @@
 import Foundation
 import UIKit
 import SnapKit
+import SafariServices
 
 final class LoginController: UIViewController{
+    let viewModel = LoginViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
         addUItoView()
+        
     }
     
     /*
@@ -47,11 +50,20 @@ final class LoginController: UIViewController{
      */
     
     @objc func clickedKlipLoginBtn(){
-        LoginService().klipPrepare()
+        viewModel.goKlip()
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationData(notification: )), name: Notification.Name.deepLink, object: nil)
     }
     
     @objc func clickedGoMainBtn(){
         self.navigationController?.pushViewController(MainController(), animated: true)
+    }
+    
+    @objc func notificationData(notification: Notification){
+        guard let url = notification.userInfo?[NotificationDeepLinkKey.link] as? URL else {return}
+        let deepLinkView = SFSafariViewController(url: url)
+        self.present(deepLinkView, animated: true)
+        
+        viewModel.getWallet()
     }
     
     /*

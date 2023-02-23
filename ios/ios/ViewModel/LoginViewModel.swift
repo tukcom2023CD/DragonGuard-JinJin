@@ -6,10 +6,18 @@
 //
 
 import Foundation
-
+import UIKit
+import RxCocoa
+import RxSwift
 
 final class LoginViewModel {
+    func goKlip(){
+        LoginService.loginService.klipPrepare()
+    }
     
+    func getWallet(){
+        LoginService.loginService.klipResult()
+    }
     
     
 }

@@ -10,13 +10,13 @@ import Foundation
 struct KlipDecodingModel: Codable{
     let request_key: String
     let status: String
-    let expiration_time: String
+    let expiration_time: Int
 }
 
 struct KlipResultModel: Codable{
     let request_key: String
     let status: String
-    let expiration_time: String
+    let expiration_time: Int
     let result: KlipKlaytnAddr
 }
 

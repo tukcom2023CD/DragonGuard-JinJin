@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import SafariServices
 
 final class LoginService {
     static let loginService = LoginService()
@@ -18,6 +19,8 @@ final class LoginService {
     func klipPrepare(){
         let url = APIURL.apiUrl.klipPreparePostAPI()
         let body = ["bapp": ["name" :  "GitRank"],"type": "auth"] as [String : Any]
+        walletAddress = ""
+        requestKey = ""
         
         AF.request(url,
                    method: .post,
@@ -33,8 +36,22 @@ final class LoginService {
                 print("error! \(error)")
             }
         }
+        
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
+            if !self.requestKey.isEmpty{
+                self.klipDeepLink()
+                timer.invalidate()
+            }
+        })
+        
     }
     
+    // KLIP DeepLink 함수
+    func klipDeepLink() {
+        let url = URL(string: APIURL.apiUrl.klipDeepLinkAPI(requestKey: self.requestKey))!
+        NotificationCenter.default.post(name: Notification.Name.deepLink,object: nil,userInfo: [NotificationDeepLinkKey.link : url])
+        
+    }
     
     // KLIP Result get하는 함수
     func klipResult(){

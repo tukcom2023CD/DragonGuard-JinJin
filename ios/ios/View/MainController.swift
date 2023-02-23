@@ -83,7 +83,7 @@ final class MainController: UIViewController {
     // 내 티어, 토큰 띄우는 UI
     lazy var tierTokenUI: TierTokenCustomUIView = {
         let tierTokenUI = TierTokenCustomUIView()
-        tierTokenUI.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+        tierTokenUI.backgroundColor  = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
         tierTokenUI.layer.cornerRadius = 20
         
         // 티어, 토큰 개수 입력
@@ -270,7 +270,9 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
             cell.labelText("", rankingNum: indexBtns[indexPath.row], "")
         }
         
-        cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+        cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+
+
         cell.layer.cornerRadius = 20    //테두리 둥글게
         return cell
     }
