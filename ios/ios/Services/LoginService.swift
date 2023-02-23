@@ -23,19 +23,17 @@ final class LoginService {
                    encoding: JSONEncoding(options: []),
                    headers: ["Content-type": "application/json"])
         .validate(statusCode: 200..<201)
-        .responseString { response in
+        .responseDecodable(of: KlipDecodingModel.self){ response in
             switch response.result{
             case .success(let data):
-                print(response)
-                print(response.result)
-                
+                self.requestKey = data.request_key
             case .failure(let error):
-                print("Error Code \(error)")
-            
+                print("error! \(error)")
             }
         }
-        
-        
     }
+    
+    
+    
     
 }
