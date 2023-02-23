@@ -13,5 +13,5 @@ public class ContractRequest {
     private String address;
     private String contributeType;
     private BigInteger amount;
-    private String name;
+    private String githubId;
 }

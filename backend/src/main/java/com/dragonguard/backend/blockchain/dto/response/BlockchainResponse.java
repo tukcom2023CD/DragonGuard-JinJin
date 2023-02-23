@@ -16,6 +16,6 @@ public class BlockchainResponse {
     private Long id;
     private ContributeType contributeType;
     private BigInteger amount;
-    private String name;
+    private String githubId;
     private Long memberId;
 }

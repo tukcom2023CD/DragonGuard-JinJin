@@ -35,7 +35,7 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
                                 .queryParam("per_page", 10)
                                 .queryParam("page", request.getPage())
                                 .build())
-                .headers(headers -> headers.setBasicAuth(githubProperties.getToken()))
+                .headers(headers -> headers.setBearerAuth(githubProperties.getToken()))
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()

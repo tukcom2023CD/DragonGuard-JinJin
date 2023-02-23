@@ -14,4 +14,5 @@ public class BlockchainProperties {
     private String byteCode;
     private String password;
     private String walletKey;
+    private String contractAddress;
 }

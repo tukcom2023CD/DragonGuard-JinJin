@@ -80,7 +80,7 @@ public class MemberService {
                 new ContractRequest(member.getWalletAddress(),
                         ContributeType.COMMIT.toString(),
                         BigInteger.valueOf(size),
-                        member.getName()));
+                        member.getGithubId()));
     }
 
     @Transactional
