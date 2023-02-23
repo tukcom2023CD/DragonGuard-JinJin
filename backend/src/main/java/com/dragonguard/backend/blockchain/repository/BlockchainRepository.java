@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface BlockchainRepository extends JpaRepository<Blockchain, Long> {
     List<Blockchain> findByMemberId(Long memberId);
+
+    boolean existsByMemberId(Long memberId);
 }

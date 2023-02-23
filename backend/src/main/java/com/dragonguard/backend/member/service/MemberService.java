@@ -101,10 +101,7 @@ public class MemberService {
     public MemberResponse getMember(Long id) {
         Member member = getEntity(id);
         Integer rank = memberRepository.findRankingById(id);
-        Long amount = blockchainService.getBlockchainList(id).stream()
-                .map(BlockchainResponse::getAmount)
-                .mapToLong(i -> Long.valueOf(String.valueOf(i)))
-                .sum();
+        Long amount = member.getSumOfTokens();
 
         return memberMapper.toResponse(member, member.getCommitsSum(), rank, amount);
     }

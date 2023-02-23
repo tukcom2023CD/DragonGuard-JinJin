@@ -15,7 +15,7 @@ public class MemberQDtoFactory {
                 member.id,
                 member.name,
                 member.githubId,
-                member.commitsSum,
+                member.sumOfTokens,
                 member.tier);
     }
 }

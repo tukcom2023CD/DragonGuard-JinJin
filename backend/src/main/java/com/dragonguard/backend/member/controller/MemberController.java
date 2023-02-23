@@ -45,7 +45,7 @@ public class MemberController {
 
     @GetMapping("/ranking")
     public ResponseEntity<List<MemberRankResponse>> getTier(
-            @PageableDefault(sort = "commits", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(memberService.getMemberRanking(pageable));
     }
 
