@@ -70,8 +70,13 @@ class Viewmodel {
         return repository.postWalletAddress(body)
     }
 
-    fun postCompareRepoMembersRequest(firstRepo: String, secondRepo: String): CompareRepoResponseModel {
+    fun postCompareRepoMembersRequest(firstRepo: String, secondRepo: String): CompareRepoMembersResponseModel {
         val body = CompareRepoRequestModel(firstRepo, secondRepo)
         return repository.postCompareRepoMembersRequest(body)
+    }
+
+    fun postCompareRepoRequest(firstRepo: String, secondRepo: String): CompareRepoResponseModel {
+        val body = CompareRepoRequestModel(firstRepo, secondRepo)
+        return repository.postCompareRepoRequest(body)
     }
 }

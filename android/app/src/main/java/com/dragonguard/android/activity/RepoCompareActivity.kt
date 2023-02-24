@@ -51,7 +51,7 @@ class RepoCompareActivity : AppCompatActivity() {
 //        Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()
 
 //        val myFragment = supportFragmentManager.findFragmentById(R.id.compare_frame) as CompareUserFragment
-        compareRepoFragment = CompareRepoFragment()
+        compareRepoFragment = CompareRepoFragment(repo1, repo2)
         compareUserFragment = CompareUserFragment(repo1, repo2)
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.compare_frame, compareRepoFragment)
