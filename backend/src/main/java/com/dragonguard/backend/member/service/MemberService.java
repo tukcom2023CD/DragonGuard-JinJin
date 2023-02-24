@@ -100,6 +100,7 @@ public class MemberService {
         Member member = getEntity(id);
         Integer rank = memberRepository.findRankingById(id);
         Long amount = member.getSumOfTokens();
+        updateTier(member);
 
         return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount);
     }
