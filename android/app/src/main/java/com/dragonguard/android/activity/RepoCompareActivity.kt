@@ -48,7 +48,7 @@ class RepoCompareActivity : AppCompatActivity() {
         val intent = getIntent()
         repo1 = intent.getStringExtra("repo1")!!
         repo2 = intent.getStringExtra("repo2")!!
-        Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()
 
 //        val myFragment = supportFragmentManager.findFragmentById(R.id.compare_frame) as CompareUserFragment
         compareRepoFragment = CompareRepoFragment()
@@ -56,6 +56,7 @@ class RepoCompareActivity : AppCompatActivity() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.compare_frame, compareRepoFragment)
             .add(R.id.compare_frame, compareUserFragment)
+            .replace(R.id.compare_frame, compareRepoFragment)
             .commit()
 
         binding.bottomNavigation.setOnItemSelectedListener {

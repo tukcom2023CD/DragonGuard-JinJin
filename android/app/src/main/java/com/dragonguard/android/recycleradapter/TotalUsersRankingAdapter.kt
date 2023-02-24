@@ -35,7 +35,11 @@ class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankings
             if(ranking.text.isNullOrEmpty() && githubId.text.isNullOrEmpty() && contribution.text.isNullOrEmpty()) {
                 ranking.text = data.ranking.toString()
                 githubId.text = data.githubId
-                contribution.text = data.commits.toString()
+                if(data.tokens == null) {
+                    contribution.text = "NONE"
+                } else {
+                    contribution.text = data.tokens.toString()
+                }
             }
         }
 //        fun bind(data1: TotalUsersRankingsModel, data2: TotalUsersRankingsModel) {

@@ -66,13 +66,13 @@ class TotalUsersRankingActivity : AppCompatActivity() {
         if(result.isNotEmpty()) {
             result.forEach {
                 if(ranking != 0) {
-                    if(usersRanking[ranking-1].commits == it.commits) {
-                        usersRanking.add(TotalUsersRankingsModel(it.commits,it.githubId,it.id,it.name,it.tier,usersRanking[ranking-1].ranking))
+                    if(usersRanking[ranking-1].tokens == it.tokens) {
+                        usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,usersRanking[ranking-1].ranking))
                     } else {
-                        usersRanking.add(TotalUsersRankingsModel(it.commits,it.githubId,it.id,it.name,it.tier,ranking+1))
+                        usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,ranking+1))
                     }
                 } else {
-                    usersRanking.add(TotalUsersRankingsModel(it.commits,it.githubId,it.id,it.name,it.tier,ranking+1))
+                    usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,ranking+1))
                 }
                 Log.d("유져", "랭킹 ${ranking+1} 추가")
                 ranking++
