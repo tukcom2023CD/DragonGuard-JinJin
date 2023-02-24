@@ -12,11 +12,11 @@ import RxSwift
 
 final class LoginViewModel {
     func goKlip(){
-        LoginService.loginService.klipPrepare()
+        KlipLoginService.klipLoginService.klipPrepare()
     }
     
     func getWallet(){
-        LoginService.loginService.klipResult()
+        KlipLoginService.klipLoginService.klipResult()
     }
     
     

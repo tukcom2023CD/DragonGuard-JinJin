@@ -12,6 +12,11 @@ import Foundation
 extension Notification.Name{
     static let data = Notification.Name("")
     static let deepLink = Notification.Name("")
+    static let walletAddress = Notification.Name("")
+}
+
+enum NotificationWalletAddress{
+    case walletAddress
 }
 
 enum NotificationDeepLinkKey{

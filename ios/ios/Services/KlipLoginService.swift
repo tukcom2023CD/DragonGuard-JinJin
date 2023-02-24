@@ -7,10 +7,9 @@
 
 import Foundation
 import Alamofire
-import SafariServices
 
-final class LoginService {
-    static let loginService = LoginService()
+final class KlipLoginService {
+    static let klipLoginService = KlipLoginService()
     let ip = APIURL.ip
     var requestKey = ""
     var walletAddress = ""
@@ -48,7 +47,7 @@ final class LoginService {
     
     // KLIP DeepLink 함수
     func klipDeepLink() {
-        let url = URL(string: APIURL.apiUrl.klipDeepLinkAPI(requestKey: self.requestKey))!
+        let url = APIURL.apiUrl.klipDeepLinkAPI(requestKey: self.requestKey)
         NotificationCenter.default.post(name: Notification.Name.deepLink,object: nil,userInfo: [NotificationDeepLinkKey.link : url])
         
     }
@@ -56,13 +55,13 @@ final class LoginService {
     // KLIP Result get하는 함수
     func klipResult(){
         let url = APIURL.apiUrl.klipResultGetAPI(requestKey: requestKey)
-        
         AF.request(url)
             .validate(statusCode: 200..<201)
             .responseDecodable(of: KlipResultModel.self) { response in
                 switch response.result{
                 case .success(let data):
-                    self.walletAddress = data.result.klaytn_address
+                    NotificationCenter.default.post(name: Notification.Name.walletAddress,object: nil,userInfo: [NotificationWalletAddress.walletAddress : data.result.klaytn_address])
+                    print("address \(data.result.klaytn_address)")
                 case .failure(let error):
                     print("error!! \(error)")
                 }
