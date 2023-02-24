@@ -10,6 +10,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GitRepoClientResponse {
+public class GitRepoMemberListClientResponse {
     List<GitRepoMemberClientResponse> members = new ArrayList<>();
 }
