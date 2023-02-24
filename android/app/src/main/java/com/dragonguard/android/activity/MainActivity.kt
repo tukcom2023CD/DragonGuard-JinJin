@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
             authRequestResult(requestKey!!)
         } else if(it.resultCode == 1) {
-            Toast.makeText(applicationContext, "skip 주소 : $walletAddress", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(applicationContext, "skip 주소 : $walletAddress", Toast.LENGTH_SHORT).show()
         }
     }
     companion object {
@@ -134,7 +134,6 @@ class MainActivity : AppCompatActivity() {
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({registerUser("posite")}, 500)
             } else {
-                postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
                 binding.userTier.text = "내 티어 : ${userInfo.tier}"
                 if(userInfo.tokenAmount == null) {
                     binding.userToken.text = "내 기여도 : ${userInfo.commits}"
@@ -163,6 +162,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(applicationContext, "wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
                 prefs.setWalletAddress("wallet_address", authResponse.result.klaytn_address)
+                postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
             }
         }
     }
@@ -176,6 +176,8 @@ class MainActivity : AppCompatActivity() {
             val postWalletResponse = postwalletDeferred.await()
             if(!postWalletResponse) {
                 postWalletAddress(id, address)
+            } else {
+//                Toast.makeText(applicationContext, "wallet post : 성공!", Toast.LENGTH_SHORT).show()
             }
         }
     }

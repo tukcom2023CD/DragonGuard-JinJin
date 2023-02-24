@@ -72,7 +72,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.postCompareRepoRequest(repoName1, repoName2)
+                viewmodel.postCompareRepoMembersRequest(repoName1, repoName2)
             }
             val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()

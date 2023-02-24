@@ -187,9 +187,9 @@ class ApiRepository {
         return authResult
     }
 
-    fun postCompareRepoRequest(body: CompareRepoRequestModel): CompareRepoResponseModel {
+    fun postCompareRepoMembersRequest(body: CompareRepoRequestModel): CompareRepoResponseModel {
         var compareRepoResult = CompareRepoResponseModel(null, null)
-        val compareRepo = api.postCompare(body)
+        val compareRepo = api.postCompareRepoMembers(body)
         try{
             val result = compareRepo.execute()
             if(result.isSuccessful) {
@@ -201,17 +201,4 @@ class ApiRepository {
         return compareRepoResult
     }
 
-    fun postCompareMembers(body: CompareMembersRequestModel): CompareMembersResponseModel {
-        var compareMembersResult = CompareMembersResponseModel()
-        val compareMembers = api.postCompareMembers(body)
-        try{
-            val result = compareMembers.execute()
-            if(result.isSuccessful) {
-                compareMembersResult = result.body()!!
-            }
-        } catch (e: Exception) {
-            return compareMembersResult
-        }
-        return compareMembersResult
-    }
 }
