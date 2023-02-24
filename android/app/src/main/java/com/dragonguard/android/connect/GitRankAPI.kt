@@ -47,4 +47,10 @@ interface GitRankAPI {
     @POST("members/wallet-address")
     @Headers("accept: application/json", "content-type: application/json")
     fun postWalletAddress(@Body walletAddress : WalletAddressModel) : Call<Unit>
+
+    @POST("git-repos/compare/git-repos-members")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postCompareRepoMembers(@Body compare : CompareRepoRequestModel) : Call<CompareRepoResponseModel>
+
+
 }

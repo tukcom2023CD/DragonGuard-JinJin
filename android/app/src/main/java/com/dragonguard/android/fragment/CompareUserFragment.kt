@@ -20,7 +20,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.FragmentCompareUserBinding
+import com.dragonguard.android.model.CompareRepoResponseModel
+import com.dragonguard.android.model.FirstResult
 import com.dragonguard.android.model.RepoContributorsItem
+import com.dragonguard.android.model.SecondResult
 import com.dragonguard.android.recycleradapter.ContributorsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
@@ -65,53 +68,54 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         return binding.root
     }
 
-    fun repoContributors(repoName: String, order: Int) {
+    fun repoContributors(repoName1: String, repoName2: String) {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getRepoContributors(repoName)
+                viewmodel.postCompareRepoMembersRequest(repoName1, repoName2)
             }
             val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()
-            checkContributors(result, repoName, order)
+            checkContributors(result)
         }
     }
 
     //    검색한 결과가 잘 왔는지 확인
-    fun checkContributors(result: ArrayList<RepoContributorsItem>, repoName: String, order: Int) {
-        if (result.isNotEmpty()) {
-            if (result[0].additions == null) {
-                val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ repoContributors(repoName, order) }, 3000)
-
-            } else {
-                if(order == 1) {
-                    for (i in 0 until result.size) {
-                        val compare = contributors1.filter { it.githubId == result[i].githubId }
-                        if (compare.isEmpty()) {
-                            contributors1.add(result[i])
-                        }
-                    }
-                } else if (order == 2) {
-                    for (i in 0 until result.size) {
-                        val compare = contributors2.filter { it.githubId == result[i].githubId }
-                        if (compare.isEmpty()) {
-                            contributors2.add(result[i])
-                        }
-                    }
-                    initRecycler()
-                }
-            }
-        } else {
-            if (count<10) {
+    fun checkContributors(result: CompareRepoResponseModel) {
+        if ((result.firstResult != null) && (result.secondResult != null)) {
+            if (result.firstResult.isEmpty()) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ repoContributors(repoName, order) }, 3000)
+                handler.postDelayed({repoContributors(repo1, repo2)}, 5000)
             } else {
-//                binding.progressBar.visibility = View.GONE
+                var compare1 = mutableListOf<RepoContributorsItem>()
+                for (i in 0 until result.firstResult.size) {
+                    compare1 = contributors1.filter { it.githubId == result.firstResult[i].githubId }.toMutableList()
+                    if (compare1.isEmpty()) {
+                        contributors1.add(RepoContributorsItem(result.firstResult[i].additions,result.firstResult[i].commits,result.firstResult[i].deletions, result.firstResult[i].githubId))
+                    } else {
+                        compare1.clear()
+                    }
+                }
+                var compare2 = mutableListOf<RepoContributorsItem>()
+                for (i in 0 until result.secondResult.size) {
+                    compare2 = contributors2.filter { it.githubId == result.secondResult[i].githubId }.toMutableList()
+                    if (compare2.isEmpty()) {
+                        contributors2.add(RepoContributorsItem(result.secondResult[i].additions,result.secondResult[i].commits,result.secondResult[i].deletions, result.secondResult[i].githubId))
+                    } else {
+                        compare2.clear()
+                    }
+                }
+                initRecycler()
+            }
+        } else {
+            if(count<10) {
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({repoContributors(repo1, repo2)}, 5000)
             }
         }
     }
+
 
     private fun initRecycler() {
         if(contributors1.isNotEmpty() && contributors2.isNotEmpty()) {
@@ -195,14 +199,14 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         user2Cont!!
         val entries1 = ArrayList<RadarEntry>()
         val entries2 = ArrayList<RadarEntry>()
-        Toast.makeText(requireContext(), "${user2Cont.commits} ${user2Cont.additions}  ${user2Cont.deletions}", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(requireContext(), "${user2Cont.commits} ${user2Cont.additions}  ${user2Cont.deletions}", Toast.LENGTH_SHORT).show()
         entries1.add(RadarEntry(user1Cont.commits!!.toFloat()))
         entries1.add(RadarEntry(user1Cont.additions!!.toFloat()))
         entries1.add(RadarEntry(user1Cont.deletions!!.toFloat()))
         entries2.add(RadarEntry(user2Cont.commits!!.toFloat()))
         entries2.add(RadarEntry(user2Cont.additions!!.toFloat()))
         entries2.add(RadarEntry(user2Cont.deletions!!.toFloat()))
-        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
 
         val set1 = RadarDataSet(entries1,user1)
         set1.color= Color.rgb(153,255,119)
@@ -298,8 +302,8 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
              }
          }
 
-         repoContributors(repo1, 1)
-         repoContributors(repo2, 2)
+         repoContributors(repo1, repo2)
+
 
          getActivity()?.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     }

@@ -63,7 +63,7 @@ class ApiRepository {
 
     fun getUserInfo(id: Int): UserInfoModel {
         val userInfo = api.getUserInfo(id)
-        var userResult = UserInfoModel(null, null, null, null, null, null, null, null)
+        var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null)
         try {
             val result = userInfo.execute()
             if (result.isSuccessful) {
@@ -89,15 +89,13 @@ class ApiRepository {
         return repoContResult
     }
 
-    fun getUserCommits(id: Int) {
-    }
 
     fun getTotalUsersRankings(page: Int, size: Int): ArrayList<TotalUsersRankingModelItem> {
         var rankingResult = ArrayList<TotalUsersRankingModelItem>()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${page}")
         queryMap.put("size","$size")
-        queryMap.put("sort","commits,DESC")
+        queryMap.put("sort","tokens,DESC")
         val ranking = api.getTotalUsersRanking(queryMap)
         try {
             val result = ranking.execute()
@@ -188,4 +186,19 @@ class ApiRepository {
         }
         return authResult
     }
+
+    fun postCompareRepoMembersRequest(body: CompareRepoRequestModel): CompareRepoResponseModel {
+        var compareRepoResult = CompareRepoResponseModel(null, null)
+        val compareRepo = api.postCompareRepoMembers(body)
+        try{
+            val result = compareRepo.execute()
+            if(result.isSuccessful) {
+                compareRepoResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return compareRepoResult
+        }
+        return compareRepoResult
+    }
+
 }
