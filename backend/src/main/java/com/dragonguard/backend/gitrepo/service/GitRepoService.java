@@ -1,6 +1,7 @@
 package com.dragonguard.backend.gitrepo.service;
 
 import com.dragonguard.backend.gitrepo.client.GitRepoClient;
+import com.dragonguard.backend.gitrepo.client.GitRepoLanguageClient;
 import com.dragonguard.backend.gitrepo.client.GitRepoMemberClient;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
@@ -40,6 +41,7 @@ public class GitRepoService {
     private final KafkaGitRepoProducer kafkaGitRepoProducer;
     private final GitRepoMemberClient gitRepoMemberClient;
     private final GitRepoClient gitRepoClient;
+    private final GitRepoLanguageClient gitRepoLanguageClient;
 
     public List<GitRepoMemberResponse> findMembersByGitRepo(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
@@ -87,8 +89,10 @@ public class GitRepoService {
     public TwoGitRepoResponse findTwoGitRepos(GitRepoCompareRequest request) {
         GitRepoClientResponse first = gitRepoClient.requestToGithub(request.getFirstRepo());
         GitRepoClientResponse second = gitRepoClient.requestToGithub(request.getSecondRepo());
-        GitRepoResponse firstResponse = new GitRepoResponse(first, getStatistics(request.getFirstRepo()));
-        GitRepoResponse secondResponse = new GitRepoResponse(second, getStatistics(request.getSecondRepo()));
+        Map<String, Integer> firstLanguages = gitRepoLanguageClient.requestToGithub(request.getFirstRepo());
+        Map<String, Integer> secondLanguages = gitRepoLanguageClient.requestToGithub(request.getSecondRepo());
+        GitRepoResponse firstResponse = new GitRepoResponse(first, getStatistics(request.getFirstRepo()), firstLanguages);
+        GitRepoResponse secondResponse = new GitRepoResponse(second, getStatistics(request.getSecondRepo()), secondLanguages);
 
         return new TwoGitRepoResponse(firstResponse, secondResponse);
     }

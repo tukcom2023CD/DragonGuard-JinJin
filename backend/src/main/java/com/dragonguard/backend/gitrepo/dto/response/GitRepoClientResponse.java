@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GitRepoClientResponse {
     private String full_name;
-    private String language;
     private Integer forks_count;
     private Integer stargazers_count;
     private Integer watchers_count;

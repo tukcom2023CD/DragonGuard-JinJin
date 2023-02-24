@@ -32,12 +32,12 @@ public class GitRepoController {
     }
 
     @PostMapping("/compare/git-repos-members")
-    public ResponseEntity<TwoGitRepoMemberResponse> getRepoMembersForCompare(@RequestBody GitRepoCompareRequest request) {
+    public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(@RequestBody GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompare(request));
     }
 
     @PostMapping("/compare/members")
-    public ResponseEntity<List<GitRepoMemberResponse>> getTwoRepoMember(@RequestBody GitRepoMemberCompareRequest request) {
+    public ResponseEntity<List<GitRepoMemberResponse>> getTwoGitRepoMember(@RequestBody GitRepoMemberCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findTwoGitRepoMember(request));
     }
 }
