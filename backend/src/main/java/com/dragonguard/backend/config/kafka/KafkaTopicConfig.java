@@ -28,4 +28,11 @@ public class KafkaTopicConfig {
                 .name("gitrank.to.scrape.git-repos")
                 .build();
     }
+
+    @Bean
+    public NewTopic issueTopic() {
+        return TopicBuilder
+                .name("gitrank.to.scrape.issues")
+                .build();
+    }
 }
