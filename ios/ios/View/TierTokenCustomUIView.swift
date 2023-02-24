@@ -30,6 +30,7 @@ final class TierTokenCustomUIView : UIView {
     lazy var myTierLabel : UILabel = {
         let myTierLabel = UILabel()
         myTierLabel.text = "내 티어 : "
+        myTierLabel.textColor = .black
         myTierLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return myTierLabel
     }()
@@ -37,6 +38,7 @@ final class TierTokenCustomUIView : UIView {
     // 실제 티어 결과값 부분
     lazy var resultTierLabel : UILabel = {
         let resultTierLabel = UILabel()
+        resultTierLabel.textColor = .black
         resultTierLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return resultTierLabel
     }()
@@ -44,6 +46,7 @@ final class TierTokenCustomUIView : UIView {
     // "내 토큰" 부분
     lazy var myTokenLabel : UILabel = {
         let myTokenLabel = UILabel()
+        myTokenLabel.textColor = .black
         myTokenLabel.text = "내 토큰 : "
         myTokenLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return myTokenLabel
@@ -52,6 +55,7 @@ final class TierTokenCustomUIView : UIView {
     // 실제 토큰 결과값 부분
     lazy var resultTokenLabel : UILabel = {
         let resultTokenLabel = UILabel()
+        resultTokenLabel.textColor = .black
         resultTokenLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return resultTokenLabel
     }()
