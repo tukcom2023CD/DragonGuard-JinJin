@@ -72,7 +72,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
                         usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,ranking+1))
                     }
                 } else {
-                    usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,ranking+1))
+                    usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,1))
                 }
                 Log.d("유져", "랭킹 ${ranking+1} 추가")
                 ranking++

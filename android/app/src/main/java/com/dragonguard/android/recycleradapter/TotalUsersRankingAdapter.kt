@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.model.RepoContributorsItem
@@ -35,6 +36,7 @@ class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankings
             if(ranking.text.isNullOrEmpty() && githubId.text.isNullOrEmpty() && contribution.text.isNullOrEmpty()) {
                 ranking.text = data.ranking.toString()
                 githubId.text = data.githubId
+//                Toast.makeText(context, "${data.tokens}", Toast.LENGTH_SHORT).show()
                 if(data.tokens == null) {
                     contribution.text = "NONE"
                 } else {

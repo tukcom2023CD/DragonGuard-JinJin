@@ -14,10 +14,15 @@
         tools:context=".fragment.CompareRepoFragment">
 
         <!-- TODO: Update blank fragment layout -->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="compare repo fragment" />
+            android:weightSum="5"
+            android:orientation="vertical">
+
+
+
+        </LinearLayout>
 
     </FrameLayout>
 </layout>

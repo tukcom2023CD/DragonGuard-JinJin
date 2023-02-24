@@ -1,12 +1,10 @@
 package com.dragonguard.android.fragment
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -14,39 +12,21 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.FragmentCompareUserBinding
-import com.dragonguard.android.model.CompareRepoResponseModel
-import com.dragonguard.android.model.FirstResult
+import com.dragonguard.android.model.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.RepoContributorsItem
-import com.dragonguard.android.model.SecondResult
-import com.dragonguard.android.recycleradapter.ContributorsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CompareUserFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
 
     private var repo1 = repoName1
@@ -81,7 +61,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
     }
 
     //    검색한 결과가 잘 왔는지 확인
-    fun checkContributors(result: CompareRepoResponseModel) {
+    fun checkContributors(result: CompareRepoMembersResponseModel) {
         if ((result.firstResult != null) && (result.secondResult != null)) {
             if (result.firstResult.isEmpty()) {
                 count++
@@ -292,7 +272,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         updateUI()
     }
-     fun updateUI() {
+     private fun updateUI() {
 
          binding.userCompareChoice.setOnClickListener {
              if(binding.compareUser1.text == binding.compareUser2.text || binding.compareUser2.text.isNullOrBlank() ||binding.compareUser1.text.isNullOrBlank()) {
