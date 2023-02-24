@@ -12,5 +12,6 @@ data class UserInfoModel(
     val name: String?,
     val profileImage: String?,
     val tier: String?,
-    val rank: String?
+    val rank: String?,
+    val tokenAmount: Int?
 )
