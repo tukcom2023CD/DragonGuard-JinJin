@@ -47,19 +47,6 @@ class ApiRepository {
         return repoNames
     }
 
-    fun getTier(id: Int): String {
-        val tier = api.getUserTier(id)
-        var tierResult = ""
-        try{
-            val result = tier.execute()
-            if(result.isSuccessful){
-                tierResult = result.body()!!
-            }
-        }catch (e : SocketTimeoutException){
-            return tierResult
-        }
-        return tierResult
-    }
 
     fun getUserInfo(id: Int): UserInfoModel {
         val userInfo = api.getUserInfo(id)

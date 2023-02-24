@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
             authRequestResult(requestKey!!)
         } else if(it.resultCode == 1) {
+            postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
 //            Toast.makeText(applicationContext, "skip 주소 : $walletAddress", Toast.LENGTH_SHORT).show()
         }
     }

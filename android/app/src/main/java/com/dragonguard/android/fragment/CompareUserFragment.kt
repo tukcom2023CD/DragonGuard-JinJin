@@ -90,6 +90,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
             }
         } else {
             if(count<10) {
+                count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors(repo1, repo2)}, 5000)
             }
