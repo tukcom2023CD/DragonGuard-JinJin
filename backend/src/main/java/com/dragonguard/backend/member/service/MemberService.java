@@ -1,8 +1,6 @@
 package com.dragonguard.backend.member.service;
 
 import com.dragonguard.backend.blockchain.dto.request.ContractRequest;
-import com.dragonguard.backend.blockchain.dto.response.BlockchainResponse;
-import com.dragonguard.backend.blockchain.entity.Blockchain;
 import com.dragonguard.backend.blockchain.entity.ContributeType;
 import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.commit.entity.Commit;
@@ -71,9 +69,7 @@ public class MemberService {
         commits.forEach(member::addCommit);
         updateTier(member);
         commitService.saveAllCommits(commits);
-        if (member.getWalletAddress() == null || member.getWalletAddress().isEmpty()) {
-            return;
-        }
+        if (checkWallet(member)) return;
         setTransaction(commits.size(), member);
     }
 
@@ -87,6 +83,7 @@ public class MemberService {
 
     @Transactional
     public void updateTier(Member member) {
+        if (checkWallet(member)) return;
         Tier tier = Tier.checkTier(member.getSumOfTokens());
         member.updateTier(tier);
     }
@@ -95,6 +92,7 @@ public class MemberService {
     public void updateCommits(Long id) {
         Member member = getEntity(id);
         getCommitByScraping(member.getGithubId());
+        if(checkWallet(member)) return;
         updateTier(member);
     }
 
@@ -103,7 +101,7 @@ public class MemberService {
         Integer rank = memberRepository.findRankingById(id);
         Long amount = member.getSumOfTokens();
 
-        return memberMapper.toResponse(member, member.getCommitsSum(), rank, amount);
+        return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount);
     }
 
     public Member findMemberByGithubId(String githubId) {
@@ -119,7 +117,7 @@ public class MemberService {
     public void updateWalletAddress(WalletRequest walletRequest) {
         Member member = getEntity(walletRequest.getId());
         member.updateWalletAddress(walletRequest.getWalletAddress());
-        setTransaction(member.getCommitsSum(), member);
+        setTransaction(member.getSumOfCommits(), member);
     }
 
     private Member getEntity(Long id) {
@@ -129,5 +127,12 @@ public class MemberService {
 
     private void getCommitByScraping(String githubId) {
         commitService.scrapingCommits(githubId);
+    }
+
+    private boolean checkWallet(Member member) {
+        if (member.getWalletAddress() == null || member.getWalletAddress().isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }

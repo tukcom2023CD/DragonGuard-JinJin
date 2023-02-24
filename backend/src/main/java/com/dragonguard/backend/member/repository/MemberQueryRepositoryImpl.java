@@ -35,9 +35,9 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
         return jpaQueryFactory
                 .select(member)
                 .from(member)
-                .where(member.commitsSum.gt(
+                .where(member.sumOfTokens.gt(
                         JPAExpressions
-                        .select(member.commitsSum).from(member).where(member.id.eq(id))))
+                        .select(member.sumOfTokens).from(member).where(member.id.eq(id))))
                 .fetch().size() + 1;
     }
 

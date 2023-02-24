@@ -34,7 +34,6 @@ public class Member extends BaseTime {
     @JoinColumn(name = "member_id")
     private List<Commit> commits = new ArrayList<>();
 
-    private Integer commitsSum;
 
     private String walletAddress;
 
@@ -49,6 +48,8 @@ public class Member extends BaseTime {
 
     @OneToMany(mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
+    @Formula("(SELECT sum(c.commit_num) FROM commit c WHERE c.member_id = id)")
+    private Integer sumOfCommits;
 
     @Formula("(SELECT sum(b.amount) FROM blockchain b WHERE b.member_id = id)")
     private Long sumOfTokens;
@@ -72,10 +73,6 @@ public class Member extends BaseTime {
         this.commits.add(commit);
     }
 
-    public Integer evaluateCommitsSum() {
-        this. commitsSum = this.commits.stream().mapToInt(Commit::getCommitNum).sum();
-        return commitsSum;
-    }
     public void updateNameAndImage(String name, String profileImage) {
         this.name = name;
         this.profileImage = profileImage;
