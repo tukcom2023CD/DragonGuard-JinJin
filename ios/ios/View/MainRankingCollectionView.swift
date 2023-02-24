@@ -26,7 +26,7 @@ final class MainRankingCollectionView: UICollectionViewCell {
         self.addSubview(rankingNumLabel)
         self.addSubview(percentLabel)
         
-                setAutoLayout()
+        setAutoLayout()
     }
     
     
@@ -54,7 +54,7 @@ final class MainRankingCollectionView: UICollectionViewCell {
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
     }()
-    
+
     /*
      UI AutoLayout 코드 작성
      

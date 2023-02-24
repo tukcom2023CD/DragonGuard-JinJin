@@ -30,19 +30,6 @@ final class APIURL{
     /// - Returns: DB에 저장된 Id 숫자
     static func inputDBMembers() -> String{
         let inputUserUrl = "http://\(ip)/api/members"
-        /*
-         입력 형태 JSON
-         {
-           "id" : 1,
-           "name" : "김승진",
-           "githubId" : "ohksj77",
-           "commits" : 100,
-           "tier" : "SILVER",
-           "authStep" : "NONE",
-           "profileImage" : "http://abcd.efgh"
-         }
-        */
-        
         return inputUserUrl
     }
     
@@ -73,6 +60,25 @@ final class APIURL{
     // 검색 필터링 추가할 때 변경해야함
     static func testUrl(ip: String, page:Int, searchWord: String) -> String {
         let url = "http://\(ip)/api/search?page=\(page)&name=\(searchWord)&type=repositories"
+        return url
+    }
+    
+    // KLIP prepare post API
+    func klipPreparePostAPI() -> String{
+        let url = "https://a2a-api.klipwallet.com/v2/a2a/prepare"
+        return url
+    }
+    
+    // KLIP DeepLink API
+    func klipDeepLinkAPI(requestKey: String) -> String{
+        let url = "https://klipwallet.com/?target=/a2a?request_key=\(requestKey)"
+        return url
+    }
+    
+
+    // KLIP result get API
+    func klipResultGetAPI(requestKey: String) -> String{
+        let url = "https://a2a-api.klipwallet.com/v2/a2a/result?request_key=\(requestKey)"
         return url
     }
     

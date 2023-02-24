@@ -35,6 +35,7 @@ final class MainController: UIViewController {
         
         // UI AutoLayout 적용
         settingAutoLayout()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,7 +74,6 @@ final class MainController: UIViewController {
         searchUI.backgroundColor = .lightGray
         searchUI.setTitle(" Repository or User ", for: .normal)
         searchUI.titleLabel?.font = UIFont.systemFont(ofSize: 20)
-        searchUI.titleColor(for: .normal)
         searchUI.setTitleColor(.gray, for: .normal)
         searchUI.addTarget(self, action: #selector(searchUIClicked), for: .touchUpInside)
         searchUI.layer.cornerRadius = 10
@@ -83,7 +83,7 @@ final class MainController: UIViewController {
     // 내 티어, 토큰 띄우는 UI
     lazy var tierTokenUI: TierTokenCustomUIView = {
         let tierTokenUI = TierTokenCustomUIView()
-        tierTokenUI.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+        tierTokenUI.backgroundColor  = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
         tierTokenUI.layer.cornerRadius = 20
         
         // 티어, 토큰 개수 입력
@@ -104,9 +104,11 @@ final class MainController: UIViewController {
         return settingUI
     }()
     
+    
     /*
      UI Action 작성
      */
+    
     // collectionView 설정
     private func configureCollectionView(){
         collectionView.register(MainCollectionView.self, forCellWithReuseIdentifier: MainCollectionView.identifier)
@@ -117,8 +119,10 @@ final class MainController: UIViewController {
     
     // 검색 버튼 누르는 경우 네비게이션 뷰 방식으로 이동
     @objc func searchUIClicked(){
+        let searchPage = SearchPageController()
+        searchPage.beforePage = "Main"
         self.navigationItem.backButtonTitle = " "    //다른 화면에서 BackBtn title 설정
-        self.navigationController?.pushViewController(SearchPageController(), animated: true)
+        self.navigationController?.pushViewController(searchPage, animated: true)
     }
     
     // 유저 이름 누르는 경우 네비게이션 뷰 방식으로 이동
@@ -204,7 +208,6 @@ final class MainController: UIViewController {
                 self.rank = $0.rank
             })
             .disposed(by: self.disposeBag)
-            
             if self.myId != 0 {
                 self.tierTokenUI.inputText(myTier: self.myTier, tokens: self.myTokens)
                 let url = URL(string: self.imgUrl)!
@@ -267,7 +270,9 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
             cell.labelText("", rankingNum: indexBtns[indexPath.row], "")
         }
         
-        cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+        cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+
+
         cell.layer.cornerRadius = 20    //테두리 둥글게
         return cell
     }
