@@ -68,10 +68,10 @@ class MainActivity : AppCompatActivity() {
         activityResultLauncher.launch(intent)
 
 
-//        Timer().scheduleAtFixedRate(2000,2000){
-////            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
-//            searchUser(userId)
-//        }
+        Timer().scheduleAtFixedRate(2000,2000){
+//            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
+            searchUser(userId)
+        }
 
 //        랭킹 보러가기 버튼 눌렀을 때 랭킹 화면으로 전환
         binding.lookRanking.setOnClickListener {
@@ -135,7 +135,11 @@ class MainActivity : AppCompatActivity() {
                 handler.postDelayed({registerUser("posite")}, 500)
             } else {
                 binding.userTier.text = "내 티어 : ${userInfo.tier}"
-                binding.userToken.text = "내 기여도 : ${userInfo.tokenAmount}"
+                if(userInfo.tokenAmount == null) {
+                    binding.userToken.text = "내 기여도 : ${userInfo.commits}"
+                } else {
+                    binding.userToken.text = "내 기여도 : ${userInfo.tokenAmount}"
+                }
                 binding.userRanking.text = userInfo.rank
                 Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
             }
