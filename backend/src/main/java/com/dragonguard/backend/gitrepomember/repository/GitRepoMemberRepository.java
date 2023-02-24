@@ -14,6 +14,6 @@ public interface GitRepoMemberRepository extends JpaRepository<GitRepoMember, Lo
     List<GitRepoMember> findAllByGitRepo(GitRepo gitRepo);
     boolean existsByGitRepoAndMember(GitRepo gitRepo, Member member);
     GitRepoMember findByGitRepoAndMember(GitRepo gitRepo, Member member);
-    @Query(value = "SELECT grm FROM GitRepoMember grm, GitRepo gr WHERE gr.name = :gitRepo AND grm.member.name = :member")
+    @Query(value = "SELECT grm FROM GitRepoMember grm, GitRepo gr WHERE gr.name = :gitRepo AND grm.member.githubId = :member")
     GitRepoMember findByNameAndMemberName(String gitRepo, String member);
 }

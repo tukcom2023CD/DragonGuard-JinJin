@@ -69,7 +69,7 @@ public class MemberService {
         commits.forEach(member::addCommit);
         updateTier(member);
         commitService.saveAllCommits(commits);
-        if (checkWallet(member)) return;
+        if (!isWalletAddressExist(member)) return;
         setTransaction(commits.size(), member);
     }
 
@@ -83,7 +83,7 @@ public class MemberService {
 
     @Transactional
     public void updateTier(Member member) {
-        if (checkWallet(member)) return;
+        if (!isWalletAddressExist(member)) return;
         Tier tier = Tier.checkTier(member.getSumOfTokens());
         member.updateTier(tier);
     }
@@ -92,7 +92,7 @@ public class MemberService {
     public void updateCommits(Long id) {
         Member member = getEntity(id);
         getCommitByScraping(member.getGithubId());
-        if(checkWallet(member)) return;
+        if(!isWalletAddressExist(member)) return;
         updateTier(member);
     }
 
@@ -130,10 +130,7 @@ public class MemberService {
         commitService.scrapingCommits(githubId);
     }
 
-    private boolean checkWallet(Member member) {
-        if (member.getWalletAddress() == null || member.getWalletAddress().isEmpty()) {
-            return true;
-        }
-        return false;
+    private boolean isWalletAddressExist(Member member) {
+        return member.getWalletAddress() != null && !member.getWalletAddress().isEmpty();
     }
 }
