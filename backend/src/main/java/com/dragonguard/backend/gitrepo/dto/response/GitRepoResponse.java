@@ -15,5 +15,5 @@ public class GitRepoResponse {
     private GitRepoClientResponse gitRepo;
     private StatisticsResponse statistics;
     private Map<String, Integer> languages = new HashMap<>();
-    private IntSummaryStatistics languagesStat;
+    private IntSummaryStatistics languagesStats;
 }
