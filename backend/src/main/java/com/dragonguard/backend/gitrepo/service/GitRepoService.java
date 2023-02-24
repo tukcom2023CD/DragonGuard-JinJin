@@ -89,10 +89,15 @@ public class GitRepoService {
     public TwoGitRepoResponse findTwoGitRepos(GitRepoCompareRequest request) {
         GitRepoClientResponse first = gitRepoClient.requestToGithub(request.getFirstRepo());
         GitRepoClientResponse second = gitRepoClient.requestToGithub(request.getSecondRepo());
+
         Map<String, Integer> firstLanguages = gitRepoLanguageClient.requestToGithub(request.getFirstRepo());
         Map<String, Integer> secondLanguages = gitRepoLanguageClient.requestToGithub(request.getSecondRepo());
-        GitRepoResponse firstResponse = new GitRepoResponse(first, getStatistics(request.getFirstRepo()), firstLanguages);
-        GitRepoResponse secondResponse = new GitRepoResponse(second, getStatistics(request.getSecondRepo()), secondLanguages);
+
+        IntSummaryStatistics firstLangStat = firstLanguages.keySet().stream().mapToInt(firstLanguages::get).summaryStatistics();
+        IntSummaryStatistics secondLangStat = secondLanguages.keySet().stream().mapToInt(secondLanguages::get).summaryStatistics();
+
+        GitRepoResponse firstResponse = new GitRepoResponse(first, getStatistics(request.getFirstRepo()), firstLanguages, firstLangStat);
+        GitRepoResponse secondResponse = new GitRepoResponse(second, getStatistics(request.getSecondRepo()), secondLanguages, secondLangStat);
 
         return new TwoGitRepoResponse(firstResponse, secondResponse);
     }

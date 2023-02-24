@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
+import java.util.IntSummaryStatistics;
 import java.util.Map;
 
 @Getter
@@ -14,4 +15,5 @@ public class GitRepoResponse {
     private GitRepoClientResponse gitRepo;
     private StatisticsResponse statistics;
     private Map<String, Integer> languages = new HashMap<>();
+    private IntSummaryStatistics languagesStat;
 }
