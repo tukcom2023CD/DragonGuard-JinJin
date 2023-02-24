@@ -1,8 +1,13 @@
 package com.dragonguard.backend.gitrepo.service;
 
 import com.dragonguard.backend.gitrepo.client.GitRepoClient;
+import com.dragonguard.backend.gitrepo.client.GitRepoMemberClient;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
+import com.dragonguard.backend.gitrepo.dto.response.GitRepoClientResponse;
+import com.dragonguard.backend.gitrepo.dto.response.GitRepoResponse;
+import com.dragonguard.backend.gitrepo.dto.response.StatisticsResponse;
+import com.dragonguard.backend.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.gitrepo.messagequeue.KafkaGitRepoProducer;
@@ -15,6 +20,7 @@ import com.dragonguard.backend.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.gitrepomember.service.GitRepoMemberService;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +38,7 @@ public class GitRepoService {
     private final GitRepoMemberService gitRepoMemberService;
     private final GitRepoMapper gitRepoMapper;
     private final KafkaGitRepoProducer kafkaGitRepoProducer;
+    private final GitRepoMemberClient gitRepoMemberClient;
     private final GitRepoClient gitRepoClient;
 
     public List<GitRepoMemberResponse> findMembersByGitRepo(GitRepoRequest gitRepoRequest) {
@@ -70,12 +77,44 @@ public class GitRepoService {
         return new TwoGitRepoMemberResponse(firstResult, secondResult);
     }
 
+    public List<GitRepoMemberResponse> findTwoGitRepoMember(GitRepoMemberCompareRequest request) {
+        GitRepoMember first = gitRepoMemberRepository.findByNameAndMemberName(request.getFirstRepo(), request.getFirstName());
+        GitRepoMember second = gitRepoMemberRepository.findByNameAndMemberName(request.getSecondRepo(), request.getSecondName());
+
+        return List.of(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
+    }
+
+    public TwoGitRepoResponse findTwoGitRepos(GitRepoCompareRequest request) {
+        GitRepoClientResponse first = gitRepoClient.requestToGithub(request.getFirstRepo());
+        GitRepoClientResponse second = gitRepoClient.requestToGithub(request.getSecondRepo());
+        GitRepoResponse firstResponse = new GitRepoResponse(first, getStatistics(request.getFirstRepo()));
+        GitRepoResponse secondResponse = new GitRepoResponse(second, getStatistics(request.getSecondRepo()));
+
+        return new TwoGitRepoResponse(firstResponse, secondResponse);
+    }
+
+    private StatisticsResponse getStatistics(String name) {
+        GitRepo gitRepo = getEntityByName(name);
+        IntSummaryStatistics commitStats =
+                gitRepo.getGitRepoMember().stream().mapToInt(GitRepoMember::getCommits).summaryStatistics();
+        IntSummaryStatistics additionStats =
+                gitRepo.getGitRepoMember().stream().mapToInt(GitRepoMember::getAdditions).summaryStatistics();
+        IntSummaryStatistics deletionStats =
+                gitRepo.getGitRepoMember().stream().mapToInt(GitRepoMember::getDeletions).summaryStatistics();
+
+        return new StatisticsResponse(commitStats, additionStats, deletionStats);
+    }
+
+    private GitRepo getEntityByName(String name) {
+        return gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
+    }
+
     private void requestToScraping(GitRepoRequest gitRepoRequest) {
         kafkaGitRepoProducer.send(gitRepoRequest);
     }
 
     private List<GitRepoMemberResponse> requestToGithub(GitRepoRequest gitRepoRequest) {
-        GitRepoMemberClientResponse[] clientResponse = gitRepoClient.requestToGithub(gitRepoRequest);
+        GitRepoMemberClientResponse[] clientResponse = gitRepoMemberClient.requestToGithub(gitRepoRequest);
         if (clientResponse == null || clientResponse.length == 0) {
             return List.of();
         }
@@ -98,12 +137,5 @@ public class GitRepoService {
         gitRepoMemberService.saveAll(result, gitRepoRequest.getName());
 
         return result;
-    }
-
-    public List<GitRepoMemberResponse> findTwoGitRepoMember(GitRepoMemberCompareRequest request) {
-        GitRepoMember first = gitRepoMemberRepository.findByNameAndMemberName(request.getFirstRepo(), request.getFirstName());
-        GitRepoMember second = gitRepoMemberRepository.findByNameAndMemberName(request.getSecondRepo(), request.getSecondName());
-
-        return List.of(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
     }
 }
