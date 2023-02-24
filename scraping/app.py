@@ -40,6 +40,16 @@ git_repos_topic = app.topic(
     retention=17
 )
 
+issue_schema = faust.Schema(
+    key_type=str,
+    value_type=bytes
+)
+
+issue_topic = app.topic(
+    'gitrank.to.scrape.issues',
+    schema=issue_schema,
+)
+
 @app.agent(result_topic)
 async def search(result):
     async for res in result:
@@ -94,6 +104,23 @@ async def commits(member):
         await sink.send(value=response)
         
 
+@app.agent(issue_topic)
+async def issues(issues):
+    async for issue in issues:
+        name = str(issue['name'])
+        
+        result = requests.get('https://github.com/' + name + '/issues')
+        result.raise_for_status()
+        
+        soup = BeautifulSoup(result.text, "lxml")
+        issue_result = int(soup.find('a', attrs={"data-ga-click" : "Issues, Table state, Closed"}).text.strip().split(" ")[0].strip())
+        
+        response = { "name" : name, "closedIssue" : issue_result}
+        
+        sink = app.topic('gitrank.to.backend.issues', value_type=dict)
+        await sink.send(value=response)
+
+
 @app.agent(git_repos_topic)
 async def git_repos(git_repos):
     async for repo in git_repos:
@@ -140,7 +167,7 @@ async def git_repos(git_repos):
         
         sink = app.topic('gitrank.to.backend.git-repos', value_type=dict)
         await sink.send(value=response)
-        
+
 
 if __name__ == "__main__":
     app.main()

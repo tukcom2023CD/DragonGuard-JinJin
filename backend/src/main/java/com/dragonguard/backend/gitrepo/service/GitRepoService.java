@@ -4,6 +4,7 @@ import com.dragonguard.backend.gitrepo.client.GitRepoClient;
 import com.dragonguard.backend.gitrepo.client.GitRepoLanguageClient;
 import com.dragonguard.backend.gitrepo.client.GitRepoMemberClient;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
+import com.dragonguard.backend.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.gitrepo.dto.response.GitRepoClientResponse;
 import com.dragonguard.backend.gitrepo.dto.response.GitRepoResponse;
@@ -12,6 +13,7 @@ import com.dragonguard.backend.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.gitrepo.messagequeue.KafkaGitRepoProducer;
+import com.dragonguard.backend.gitrepo.messagequeue.KafkaIssueProducer;
 import com.dragonguard.backend.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberClientResponse;
@@ -24,6 +26,7 @@ import com.dragonguard.backend.gitrepomember.service.GitRepoMemberService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -39,6 +42,7 @@ public class GitRepoService {
     private final GitRepoMemberService gitRepoMemberService;
     private final GitRepoMapper gitRepoMapper;
     private final KafkaGitRepoProducer kafkaGitRepoProducer;
+    private final KafkaIssueProducer kafkaIssueProducer;
     private final GitRepoMemberClient gitRepoMemberClient;
     private final GitRepoClient gitRepoClient;
     private final GitRepoLanguageClient gitRepoLanguageClient;
@@ -47,10 +51,10 @@ public class GitRepoService {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
         if (gitRepo.isEmpty()) {
             gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
-            requestToScraping(gitRepoRequest);
+            requestGitRepoToScraping(gitRepoRequest);
             return List.of();
         } else if (gitRepo.get().getGitRepoMember().isEmpty()) {
-            requestToScraping(gitRepoRequest);
+            requestGitRepoToScraping(gitRepoRequest);
             return List.of();
         }
         return gitRepoMemberRepository.findAllByGitRepo(gitRepo.get()).stream()
@@ -75,6 +79,8 @@ public class GitRepoService {
         Integer year = LocalDate.now().getYear();
         List<GitRepoMemberResponse> firstResult = findMembersByGitRepoWithClient(new GitRepoRequest(request.getFirstRepo(), year));
         List<GitRepoMemberResponse> secondResult = findMembersByGitRepoWithClient(new GitRepoRequest(request.getSecondRepo(), year));
+        requestIssueToScraping(new GitRepoNameRequest(request.getFirstRepo()));
+        requestIssueToScraping(new GitRepoNameRequest(request.getSecondRepo()));
 
         return new TwoGitRepoMemberResponse(firstResult, secondResult);
     }
@@ -90,6 +96,12 @@ public class GitRepoService {
         GitRepoClientResponse first = gitRepoClient.requestToGithub(request.getFirstRepo());
         GitRepoClientResponse second = gitRepoClient.requestToGithub(request.getSecondRepo());
 
+        GitRepo firstRepo = gitRepoRepository.findByName(request.getFirstRepo()).orElseThrow(EntityNotFoundException::new);
+        GitRepo secondRepo = gitRepoRepository.findByName(request.getSecondRepo()).orElseThrow(EntityNotFoundException::new);
+
+        if(firstRepo.getClosedIssues() != null) first.setClosed_issues_count(firstRepo.getClosedIssues());
+        if(secondRepo.getClosedIssues() != null) second.setClosed_issues_count(secondRepo.getClosedIssues());
+
         Map<String, Integer> firstLanguages = gitRepoLanguageClient.requestToGithub(request.getFirstRepo());
         Map<String, Integer> secondLanguages = gitRepoLanguageClient.requestToGithub(request.getSecondRepo());
 
@@ -100,6 +112,12 @@ public class GitRepoService {
         GitRepoResponse secondResponse = new GitRepoResponse(second, getStatistics(request.getSecondRepo()), secondLanguages, secondLangStat);
 
         return new TwoGitRepoResponse(firstResponse, secondResponse);
+    }
+
+    @Transactional
+    public void updateClosedIssues(String name, Integer closedIssue) {
+        GitRepo gitRepo = gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
+        gitRepo.updateClosedIssues(closedIssue);
     }
 
     private StatisticsResponse getStatistics(String name) {
@@ -118,8 +136,12 @@ public class GitRepoService {
         return gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
     }
 
-    private void requestToScraping(GitRepoRequest gitRepoRequest) {
+    private void requestGitRepoToScraping(GitRepoRequest gitRepoRequest) {
         kafkaGitRepoProducer.send(gitRepoRequest);
+    }
+
+    private void requestIssueToScraping(GitRepoNameRequest gitRepoNameRequest) {
+        kafkaIssueProducer.send(gitRepoNameRequest);
     }
 
     private List<GitRepoMemberResponse> requestToGithub(GitRepoRequest gitRepoRequest) {

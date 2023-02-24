@@ -12,11 +12,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class KafkaGitRepoConsumer {
-
     private final GitRepoMemberService gitRepoMemberService;
 
     @KafkaListener(topics = "gitrank.to.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
