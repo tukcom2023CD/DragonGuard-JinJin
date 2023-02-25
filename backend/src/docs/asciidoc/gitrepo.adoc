@@ -23,7 +23,7 @@ include::../../../build/generated-snippets/get comparing two members contributio
 ==== HTTP response
 include::../../../build/generated-snippets/get comparing two members contribution/http-response.adoc[]
 
-=== 두 레포 비교
+=== 두 레포 비교 조회
 ==== HTTP request
 include::../../../build/generated-snippets/get comparing two git-repos/http-request.adoc[]
 ==== HTTP response
