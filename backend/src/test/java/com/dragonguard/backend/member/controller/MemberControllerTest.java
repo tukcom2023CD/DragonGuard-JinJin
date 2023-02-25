@@ -1,5 +1,6 @@
 package com.dragonguard.backend.member.controller;
 
+import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.AuthStep;
@@ -20,6 +21,7 @@ import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentR
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -82,7 +84,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회")
     void getmember() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(1L, "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000);
+        MemberResponse expected = new MemberResponse(1L, "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L);
         given(memberService.getMember(any())).willReturn(expected);
 
         // when
@@ -147,5 +149,28 @@ class MemberControllerTest extends RestDocumentTest {
         // docs
         perform.andDo(print())
                 .andDo(document("get member ranking", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("멤버 지갑 주소 갱신")
+    void updateWalletAddress() throws Exception {
+        // given
+        willDoNothing().given(memberService).updateWalletAddress(any());
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        post("/api/members/wallet-address")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        toRequestBody(
+                                                new WalletRequest(1L, "asdfasdf12341234"))));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("update member wallet", getDocumentRequest(), getDocumentResponse()));
     }
 }

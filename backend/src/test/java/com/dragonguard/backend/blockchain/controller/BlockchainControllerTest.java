@@ -1,10 +1,9 @@
-package com.dragonguard.backend.search.controller;
+package com.dragonguard.backend.blockchain.controller;
 
-import com.dragonguard.backend.member.dto.response.MemberResponse;
-import com.dragonguard.backend.member.entity.AuthStep;
-import com.dragonguard.backend.member.entity.Tier;
-import com.dragonguard.backend.result.dto.response.ResultResponse;
-import com.dragonguard.backend.search.service.SearchService;
+import com.dragonguard.backend.blockchain.dto.response.BlockchainResponse;
+import com.dragonguard.backend.blockchain.entity.ContributeType;
+import com.dragonguard.backend.blockchain.service.BlockchainService;
+import com.dragonguard.backend.blockchain.service.TransactionService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,12 +12,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.math.BigInteger;
 import java.util.List;
 
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -27,39 +26,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-@WebMvcTest(SearchController.class)
-class SearchControllerTest extends RestDocumentTest {
-
-    @MockBean private SearchService searchService;
-
+@WebMvcTest(BlockchainController.class)
+class BlockchainControllerTest extends RestDocumentTest {
+    @MockBean
+    private BlockchainService blockchainService;
+    @MockBean
+    private TransactionService transactionService;
     @Test
-    @DisplayName("검색 결과 조회")
-    void getsearchresult() throws Exception {
-        // given
-        List<ResultResponse> expected = Arrays.asList(
-                new ResultResponse("1234", "ohksj77"),
-                new ResultResponse("5678", "HJ39"),
-                new ResultResponse("8765", "posite"),
-                new ResultResponse("aaaa", "Sammuelwoojae"),
-                new ResultResponse("bbbb", "And"),
-                new ResultResponse("cccc", "DragonGuard-JinJin")
+    @DisplayName("블록체인 부여 기록 리스트 조회")
+    void getBlockchainInfo() throws Exception {
+        List<BlockchainResponse> expected = List.of(
+                new BlockchainResponse(1L, ContributeType.COMMIT, new BigInteger("10"), "ohksj77", 1L),
+                new BlockchainResponse(2L, ContributeType.COMMIT, new BigInteger("5"), "ohksj77", 1L));
+        given(blockchainService.getBlockchainList(any())).willReturn(expected);
 
-        );
-        given(searchService.getSearchResultByClient(any())).willReturn(expected);
-
-        // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/search?page=1&name=gitrank&type=repositories")
+                        get("/api/blockchain/1")
                                 .contentType(MediaType.APPLICATION_JSON));
 
-        // then
         perform.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
 
-        // docs
         perform.andDo(print())
-                .andDo(document("get search result", getDocumentRequest(), getDocumentResponse()));
+                .andDo(document("get blockchain list", getDocumentRequest(), getDocumentResponse()));
     }
 }
