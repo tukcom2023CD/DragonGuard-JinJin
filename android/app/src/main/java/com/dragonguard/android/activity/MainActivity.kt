@@ -163,7 +163,12 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(applicationContext, "wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
                 prefs.setWalletAddress("wallet_address", authResponse.result.klaytn_address)
-                postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
+                if(binding.lookRanking.text.isNotBlank()) {
+                    postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
+                } else {
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({ postWalletAddress(userId, prefs.getWalletAddress("wallet_address", "")) }, 3000)
+                }
             }
         }
     }

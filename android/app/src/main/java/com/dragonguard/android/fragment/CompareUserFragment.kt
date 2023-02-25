@@ -21,7 +21,7 @@ import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -166,7 +166,8 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
 
     private fun initGraph(user1: String, user2: String) {
         binding.progressBar.visibility = View.VISIBLE
-        binding.userChart.visibility = View.GONE
+        binding.userCommitChart.visibility = View.GONE
+        binding.userCodeChart.visibility = View.GONE
 //        Toast.makeText(requireContext(), "initGraph()", Toast.LENGTH_SHORT).show()
         var user1Cont = contributors1.find { it.githubId == user1 }
         var user2Cont = contributors1.find { it.githubId == user2 }
@@ -178,60 +179,141 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         }
         user1Cont!!
         user2Cont!!
-        val entries1 = ArrayList<RadarEntry>()
-        val entries2 = ArrayList<RadarEntry>()
+        val commitEntries1 = ArrayList<BarEntry>()
+        val commitEntries2 = ArrayList<BarEntry>()
+        val codeEntries1 = ArrayList<BarEntry>()
+        val codeEntries2 = ArrayList<BarEntry>()
 //        Toast.makeText(requireContext(), "${user2Cont.commits} ${user2Cont.additions}  ${user2Cont.deletions}", Toast.LENGTH_SHORT).show()
-        entries1.add(RadarEntry(user1Cont.commits!!.toFloat()))
-        entries1.add(RadarEntry(user1Cont.additions!!.toFloat()))
-        entries1.add(RadarEntry(user1Cont.deletions!!.toFloat()))
-        entries2.add(RadarEntry(user2Cont.commits!!.toFloat()))
-        entries2.add(RadarEntry(user2Cont.additions!!.toFloat()))
-        entries2.add(RadarEntry(user2Cont.deletions!!.toFloat()))
+        commitEntries1.add(BarEntry(1.toFloat(), user1Cont.commits!!.toFloat()))
+        codeEntries1.add(BarEntry(1.toFloat(), user1Cont.additions!!.toFloat()))
+        codeEntries1.add(BarEntry(2.toFloat(), user1Cont.deletions!!.toFloat()))
+        commitEntries2.add(BarEntry(1.toFloat(), user2Cont.commits!!.toFloat()))
+        codeEntries2.add(BarEntry(1.toFloat(), user2Cont.additions!!.toFloat()))
+        codeEntries2.add(BarEntry(2.toFloat(), user2Cont.deletions!!.toFloat()))
 //        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
 
-        val set1 = RadarDataSet(entries1,user1)
-        set1.color= Color.rgb(153,255,119)
-        set1.apply{
+        val commitSet1 = BarDataSet(commitEntries1,user1)
+        commitSet1.color= Color.rgb(153,255,119)
+        commitSet1.apply{
             valueTextSize = 12f
             setDrawValues(true)
             valueFormatter = ScoreCustomFormatter()
         }
 
-        val set2 = RadarDataSet(entries2,user2)
-        set2.color = Color.BLACK
-        set2.apply{
+        val commitSet2 = BarDataSet(commitEntries2,user2)
+        commitSet2.color = Color.BLACK
+        commitSet2.apply{
             valueTextSize = 12f
             setDrawValues(true)
             valueFormatter = ScoreCustomFormatter()
         }
-        val dataSet1 = ArrayList<IRadarDataSet>()
-        dataSet1.add(set1)
-        val dataSet2 = ArrayList<IRadarDataSet>()
-        dataSet2.add(set2)
-        val data = RadarData(dataSet1)
-        data.addDataSet(set2)
+        val commitDataSet1 = ArrayList<IBarDataSet>()
+        commitDataSet1.add(commitSet1)
+        commitDataSet1.add(commitSet2)
+        val dataSet2 = ArrayList<IBarDataSet>()
+        dataSet2.add(commitSet2)
+        val commitData = BarData(commitDataSet1)
+        commitData.barWidth = 0.4f
+        commitData.groupBars(0.5f, 0.2f, 0f)
 
-        binding.userChart.apply {
+        val codeSet1 = BarDataSet(codeEntries1,user1)
+        codeSet1.color= Color.rgb(153,255,119)
+        codeSet1.apply{
+            valueTextSize = 12f
+            setDrawValues(true)
+            valueFormatter = ScoreCustomFormatter()
+        }
+
+        val codeSet2 = BarDataSet(codeEntries2,user2)
+        codeSet2.color = Color.BLACK
+        codeSet2.apply{
+            valueTextSize = 12f
+            setDrawValues(true)
+            valueFormatter = ScoreCustomFormatter()
+        }
+        val codeDataSet1 = ArrayList<IBarDataSet>()
+        codeDataSet1.add(codeSet1)
+        codeDataSet1.add(codeSet2)
+
+        val codeData = BarData(codeDataSet1)
+        codeData.barWidth = 0.4f
+        codeData.groupBars(0.5f, 0.2f, 0f)
+
+        binding.userCommitChart.apply {
+            setFitBars(true)
+            setDrawBarShadow(false) // 그래프 그림자
             setTouchEnabled(false) // 차트 터치 막기
+            setPinchZoom(false) // 두손가락으로 줌 설정
+            setDrawGridBackground(false) // 격자구조
             description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
-            legend.isEnabled = true // 차트 범례 설정(legend object chart)
+            legend.isEnabled = false // 차트 범례 설정(legend object chart)
+            axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
+            axisLeft.apply { //왼쪽 축. 즉 Y방향 축을 뜻한다.
+                axisMinimum = 0f // 최소값 0
+                granularity = 10f // 10 단위마다 선을 그리려고 설정.
+                setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
+                setDrawGridLines(true) //격자 라인 활용
+                setDrawAxisLine(true) // 축 그리기 설정
+                axisLineColor = ContextCompat.getColor(context, R.color.black) // 축 색깔 설정
+                gridColor = ContextCompat.getColor(context, R.color.black) // 축 아닌 격자 색깔 설정
+                textColor = ContextCompat.getColor(context, R.color.black) // 라벨 텍스트 컬러 설정
+                textSize = 13f //라벨 텍스트 크기
+            }
             xAxis.apply {
+                yOffset = 0f
                 isEnabled = true
                 position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
-                granularity = 1f
+                granularity = 1f // 1 단위만큼 간격 두기
                 setDrawAxisLine(true) // 축 그림
-                setDrawGridLines(false)
-                valueFormatter = MyXAxisFormatter()
+                setDrawGridLines(false) // 격자
                 textColor = ContextCompat.getColor(context, R.color.black) //라벨 색상
                 textSize = 12f // 텍스트 크기
+                valueFormatter = CommitsFormatter() // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
             }
+            animateY(500) // 밑에서부터 올라오는 애니매이션 적용
+        }
+
+        binding.userCodeChart.apply {
+            setFitBars(true)
+            setDrawBarShadow(false) // 그래프 그림자
+            setTouchEnabled(false) // 차트 터치 막기
+            setPinchZoom(false) // 두손가락으로 줌 설정
+            setDrawGridBackground(false) // 격자구조
+            description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
+            legend.isEnabled = false // 차트 범례 설정(legend object chart)
+            axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
+            axisLeft.apply { //왼쪽 축. 즉 Y방향 축을 뜻한다.
+                axisMinimum = 0f // 최소값 0
+                granularity = 10f // 10 단위마다 선을 그리려고 설정.
+                setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
+                setDrawGridLines(true) //격자 라인 활용
+                setDrawAxisLine(true) // 축 그리기 설정
+                axisLineColor = ContextCompat.getColor(context, R.color.black) // 축 색깔 설정
+                gridColor = ContextCompat.getColor(context, R.color.black) // 축 아닌 격자 색깔 설정
+                textColor = ContextCompat.getColor(context, R.color.black) // 라벨 텍스트 컬러 설정
+                textSize = 13f //라벨 텍스트 크기
+            }
+            xAxis.apply {
+                yOffset = 0f
+                isEnabled = true
+                position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
+                granularity = 1f // 1 단위만큼 간격 두기
+                setDrawAxisLine(true) // 축 그림
+                setDrawGridLines(false) // 격자
+                textColor = ContextCompat.getColor(context, R.color.black) //라벨 색상
+                textSize = 12f // 텍스트 크기
+                valueFormatter = CodeFormatter() // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
+            }
+            animateY(500) // 밑에서부터 올라오는 애니매이션 적용
         }
 //        binding.userChart.invalidate()
-        binding.userChart.data = data
+        binding.userCommitChart.data = commitData
+        binding.userCodeChart.data = codeData
 //        binding.userChart.data.addDataSet(set2)
 //        binding.userChart.invalidate()
         binding.progressBar.visibility = View.GONE
-        binding.userChart.visibility = View.VISIBLE
+        binding.userCommitChart.visibility = View.VISIBLE
+        binding.userCodeChart.visibility = View.VISIBLE
 
 
 //        binding.contributorsChart.run {
@@ -246,11 +328,22 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
     /*    그래프 x축을 contributor의 이름으로 변경하는 코드
           x축 label을 githubId의 앞의 4글자를 기입하여 곂치는 문제 해결
      */
-    class MyXAxisFormatter() : ValueFormatter() {
-        private val days = listOf("commits", "additions", "deletions")
+    class CommitsFormatter() : ValueFormatter() {
+        private val days = listOf("commits")
 //        private val days = listOf( "additions", "deletions")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return days.getOrNull(value.toInt()) ?: value.toString()
+            return days.getOrNull(value.toInt() - 1) ?: value.toString()
+        }
+        override fun getFormattedValue(value: Float): String {
+            return "" + value.toInt()
+        }
+    }
+
+    class CodeFormatter() : ValueFormatter() {
+        private val days = listOf("additions", "deletions")
+        //        private val days = listOf( "additions", "deletions")
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            return days.getOrNull(value.toInt() - 1) ?: value.toString()
         }
         override fun getFormattedValue(value: Float): String {
             return "" + value.toInt()
