@@ -8,30 +8,36 @@
 == Member 멤버
 === 멤버 생성
 ==== HTTP request
-// include::../../../build/generated-snippets/create member/http-request.adoc[]
+include::../../../build/generated-snippets/create member/http-request.adoc[]
 ==== HTTP response
-// include::../../../build/generated-snippets/create member/http-response.adoc[]
+include::../../../build/generated-snippets/create member/http-response.adoc[]
 
 === 멤버 조회
 ==== HTTP request
-// include::../../../build/generated-snippets/get member/http-request.adoc[]
+include::../../../build/generated-snippets/get member/http-request.adoc[]
 ==== HTTP response
-// include::../../../build/generated-snippets/get member/http-response.adoc[]
+include::../../../build/generated-snippets/get member/http-response.adoc[]
 
 === 멤버 티어 조회
 ==== HTTP request
-// include::../../../build/generated-snippets/get member tier/http-request.adoc[]
+include::../../../build/generated-snippets/get member tier/http-request.adoc[]
 ==== HTTP response
-// include::../../../build/generated-snippets/get member tier/http-response.adoc[]
+include::../../../build/generated-snippets/get member tier/http-response.adoc[]
 
 === 멤버 커밋 내역 업데이트
 ==== HTTP request
-// include::../../../build/generated-snippets/update member commits/http-request.adoc[]
+include::../../../build/generated-snippets/update member commits/http-request.adoc[]
 ==== HTTP response
-// include::../../../build/generated-snippets/update member commits/http-response.adoc[]
+include::../../../build/generated-snippets/update member commits/http-response.adoc[]
 
 === 멤버 전체 랭킹 조회
 ==== HTTP request
-// include::../../../build/generated-snippets/get member ranking/http-request.adoc[]
+include::../../../build/generated-snippets/get member ranking/http-request.adoc[]
 ==== HTTP response
-// include::../../../build/generated-snippets/get member ranking/http-response.adoc[]
+include::../../../build/generated-snippets/get member ranking/http-response.adoc[]
+
+=== 멤버 지갑 주소 갱신
+==== HTTP request
+include::../../../build/generated-snippets/update member wallet/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/update member wallet/http-response.adoc[]
