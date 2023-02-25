@@ -6,10 +6,7 @@ import com.dragonguard.backend.gitrepo.client.GitRepoMemberClient;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
-import com.dragonguard.backend.gitrepo.dto.response.GitRepoClientResponse;
-import com.dragonguard.backend.gitrepo.dto.response.GitRepoResponse;
-import com.dragonguard.backend.gitrepo.dto.response.StatisticsResponse;
-import com.dragonguard.backend.gitrepo.dto.response.TwoGitRepoResponse;
+import com.dragonguard.backend.gitrepo.dto.response.*;
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.gitrepo.messagequeue.KafkaGitRepoProducer;
@@ -85,11 +82,11 @@ public class GitRepoService {
         return new TwoGitRepoMemberResponse(firstResult, secondResult);
     }
 
-    public List<GitRepoMemberResponse> findTwoGitRepoMember(GitRepoMemberCompareRequest request) {
+    public GirRepoMemberCompareResponse findTwoGitRepoMember(GitRepoMemberCompareRequest request) {
         GitRepoMember first = gitRepoMemberRepository.findByNameAndMemberName(request.getFirstRepo(), request.getFirstName());
         GitRepoMember second = gitRepoMemberRepository.findByNameAndMemberName(request.getSecondRepo(), request.getSecondName());
 
-        return List.of(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
+        return new GirRepoMemberCompareResponse(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
     }
 
     public TwoGitRepoResponse findTwoGitRepos(GitRepoCompareRequest request) {
