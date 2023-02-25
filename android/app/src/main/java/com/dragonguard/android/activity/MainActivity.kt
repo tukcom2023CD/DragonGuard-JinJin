@@ -135,7 +135,11 @@ class MainActivity : AppCompatActivity() {
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({registerUser("posite")}, 500)
             } else {
-                binding.userTier.text = "내 티어 : ${userInfo.tier}"
+                if(userInfo.commits != 0 && userInfo.tier == "SPROUT") {
+                    postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
+                } else {
+                    binding.userTier.text = "내 티어 : ${userInfo.tier}"
+                }
                 if(userInfo.tokenAmount == null) {
                     binding.userToken.text = "내 기여도 : ${userInfo.commits}"
                 } else {
@@ -163,12 +167,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(applicationContext, "wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
                 prefs.setWalletAddress("wallet_address", authResponse.result.klaytn_address)
-                if(binding.lookRanking.text.isNotBlank()) {
-                    postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
-                } else {
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.postDelayed({ postWalletAddress(userId, prefs.getWalletAddress("wallet_address", "")) }, 3000)
-                }
             }
         }
     }

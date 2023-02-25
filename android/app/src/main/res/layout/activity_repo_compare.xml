@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="repoCompareViewModel"
             type="com.dragonguard.android.viewmodel.Viewmodel" />
@@ -34,17 +35,19 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5" />
+
             <TextView
+                android:id="@+id/compare_title"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="4"
                 android:fontFamily="@font/ibm_semibold"
-                android:textSize="25dp"
                 android:gravity="center"
+                android:text="Repository 비교"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
-                android:text="Repository 구성원 비교"
-                android:layout_weight="4"/>
+                android:textSize="25dp" />
 
         </LinearLayout>
 
@@ -57,20 +60,20 @@
             android:weightSum="5">
 
             <FrameLayout
+                android:id="@+id/compare_frame"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:id="@+id/compare_frame"
-                android:layout_weight="4.5"/>
+                android:layout_weight="4.5" />
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_weight="0.5"
                 android:background="@color/white"
                 android:elevation="10dp"
-                android:id="@+id/bottom_navigation"
-                app:menu="@menu/repo_compare_menu"
                 app:itemTextColor="@drawable/compare_menu_selector"
-                android:layout_weight="0.5"/>
+                app:menu="@menu/repo_compare_menu" />
 
         </LinearLayout>
 

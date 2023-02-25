@@ -72,7 +72,8 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
                 for (i in 0 until result.firstResult.size) {
                     compare1 = contributors1.filter { it.githubId == result.firstResult[i].githubId }.toMutableList()
                     if (compare1.isEmpty()) {
-                        contributors1.add(RepoContributorsItem(result.firstResult[i].additions,result.firstResult[i].commits,result.firstResult[i].deletions, result.firstResult[i].githubId))
+                        contributors1.add(RepoContributorsItem(result.firstResult[i].additions,result.firstResult[i].commits,
+                            result.firstResult[i].deletions, result.firstResult[i].githubId))
                     } else {
                         compare1.clear()
                     }
@@ -81,7 +82,8 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
                 for (i in 0 until result.secondResult.size) {
                     compare2 = contributors2.filter { it.githubId == result.secondResult[i].githubId }.toMutableList()
                     if (compare2.isEmpty()) {
-                        contributors2.add(RepoContributorsItem(result.secondResult[i].additions,result.secondResult[i].commits,result.secondResult[i].deletions, result.secondResult[i].githubId))
+                        contributors2.add(RepoContributorsItem(result.secondResult[i].additions,result.secondResult[i].commits,
+                            result.secondResult[i].deletions, result.secondResult[i].githubId))
                     } else {
                         compare2.clear()
                     }
@@ -121,17 +123,17 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    if(position > contributors1.size) {
-//                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
-                        val name = contributors2[position-contributors1.size-1].githubId
-                        binding.compareUser1.text = name
-                    } else {
-                        if(position > 0) {
-//                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
-                            val name = contributors1[position-1].githubId
-                            binding.compareUser1.text = name
-                        }
-                    }
+//                    if(position > contributors1.size) {
+////                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
+//                        val name = contributors2[position-contributors1.size-1].githubId
+//                        binding.compareUser1.text = name
+//                    } else {
+//                        if(position > 0) {
+////                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
+//                            val name = contributors1[position-1].githubId
+//                            binding.compareUser1.text = name
+//                        }
+//                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -144,17 +146,17 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    if(position > contributors1.size) {
-//                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
-                        val name = contributors2[position-contributors1.size-1].githubId
-                        binding.compareUser2.text = name
-                    } else {
-                        if(position > 0) {
-//                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
-                            val name = contributors1[position-1].githubId
-                            binding.compareUser2.text = name
-                        }
-                    }
+//                    if(position > contributors1.size) {
+////                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
+//                        val name = contributors2[position-contributors1.size-1].githubId
+//                        binding.compareUser2.text = name
+//                    } else {
+//                        if(position > 0) {
+////                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
+//                            val name = contributors1[position-1].githubId
+//                            binding.compareUser2.text = name
+//                        }
+//                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -369,10 +371,11 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
      private fun updateUI() {
 
          binding.userCompareChoice.setOnClickListener {
-             if(binding.compareUser1.text == binding.compareUser2.text || binding.compareUser2.text.isNullOrBlank() ||binding.compareUser1.text.isNullOrBlank()) {
+             if(binding.compareUserSpinner1.selectedItem.toString() == binding.compareUserSpinner2.selectedItem.toString() ||
+                 binding.compareUserSpinner1.selectedItem.toString() == "선택하세요" ||binding.compareUserSpinner2.selectedItem.toString() == "선택하세요") {
                  Toast.makeText(context, "서로 다른 사용자를 선택하세요!!", Toast.LENGTH_SHORT).show()
              } else {
-                 initGraph(binding.compareUser1.text.toString(), binding.compareUser2.text.toString())
+                 initGraph(binding.compareUserSpinner1.selectedItem.toString(), binding.compareUserSpinner2.selectedItem.toString())
              }
          }
 

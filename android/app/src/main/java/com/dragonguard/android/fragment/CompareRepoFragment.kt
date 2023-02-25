@@ -12,7 +12,9 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentCompareRepoBinding
+import com.dragonguard.android.model.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.CompareRepoResponseModel
+import com.dragonguard.android.model.RepoContributorsItem
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,10 +47,42 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
     }
 
     private fun updateUI() {
-        repoCompare(repo1, repo2)
+        repoContributors()
     }
 
-    private fun repoCompare(repo1: String, repo2: String) {
+    fun repoContributors() {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                viewmodel.postCompareRepoMembersRequest(repo1, repo2)
+            }
+            val result = resultDeferred.await()
+//            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()
+            checkContributors(result)
+        }
+    }
+
+    fun checkContributors(result: CompareRepoMembersResponseModel) {
+        if ((result.firstResult != null) && (result.secondResult != null)) {
+            if (result.firstResult.isEmpty()) {
+                count++
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({repoContributors()}, 5000)
+            } else {
+                binding.compareRepo1.text = repo1.split("/").last()
+                binding.compareRepo2.text = repo2.split("/").last()
+                repoCompare()
+            }
+        } else {
+            if(count<10) {
+                count++
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({repoContributors()}, 5000)
+            }
+        }
+    }
+
+    private fun repoCompare() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
@@ -68,7 +102,7 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
                 if(count<10) {
                     count++
                     val handler = Handler(Looper.getMainLooper())
-                    handler.postDelayed({repoCompare(repo1, repo2)}, 5000)
+                    handler.postDelayed({repoCompare()}, 5000)
                 }
             } else {
                 Toast.makeText(requireContext(), "${result.secondRepo.languagesStat.average}", Toast.LENGTH_SHORT).show()
@@ -78,7 +112,7 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
             if(count<10) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({repoCompare(repo1, repo2)}, 5000)
+                handler.postDelayed({repoCompare()}, 5000)
             }
         }
     }

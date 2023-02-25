@@ -62,11 +62,13 @@ class RepoCompareActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.compare_repo -> {
+                    binding.compareTitle.text = "Repository 비교"
                     val transactionN = supportFragmentManager.beginTransaction()
                     transactionN.replace(binding.compareFrame.id, compareRepoFragment)
                         .commit()
                 }
                 R.id.compare_user -> {
+                    binding.compareTitle.text = "Repository 구성원 비교"
                     val transactionN = supportFragmentManager.beginTransaction()
                     transactionN.replace(binding.compareFrame.id, compareUserFragment)
                         .commit()
