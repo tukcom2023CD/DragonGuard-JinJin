@@ -46,7 +46,7 @@ class SearchControllerTest extends RestDocumentTest {
                 new ResultResponse("cccc", "DragonGuard-JinJin")
 
         );
-        given(searchService.getSearchResult(any())).willReturn(expected);
+        given(searchService.getSearchResultByClient(any())).willReturn(expected);
 
         // when
         ResultActions perform =
