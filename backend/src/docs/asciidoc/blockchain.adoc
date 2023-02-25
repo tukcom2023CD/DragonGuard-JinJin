@@ -4,8 +4,8 @@
 :toc: left
 :toclevels: 4
 
-== Github Repository
-=== 레포 구성원 기여정도 조회
+== Blockchain
+=== 블록체인 부여 기록 리스트 조회
 ==== HTTP request
 include::../../../build/generated-snippets/get blockchain list/http-request.adoc[]
 ==== HTTP response

@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Arrays;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                 new GitRepoMemberResponse("HJ39", 101, 999, 500),
                 new GitRepoMemberResponse("posite", 99, 1001, 500),
                 new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499));
-        given(gitRepoService.findMembersByGitRepo(any())).willReturn(expected);
+        given(gitRepoService.findMembersByGitRepoWithClient(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -122,7 +123,9 @@ class GitRepoControllerTest extends RestDocumentTest {
     @Test
     @DisplayName("두 멤버의 레포 기여도 비교")
     void getTwoGitRepoMember() throws Exception {
-        GirRepoMemberCompareResponse expected = new GirRepoMemberCompareResponse();
+        GirRepoMemberCompareResponse expected = new GirRepoMemberCompareResponse(
+                new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
+                new GitRepoMemberResponse("ohksj", 101, 1001, 501));
         given(gitRepoService.findTwoGitRepoMember(any())).willReturn(expected);
 
         ResultActions perform =
