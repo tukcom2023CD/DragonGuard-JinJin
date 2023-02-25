@@ -32,26 +32,22 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5" />
+                    android:layout_weight="1" />
 
                 <ImageView
                     android:id="@+id/user_color1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.9"
+                    android:layout_weight="2"
                     android:src="@drawable/ic_baseline_circle_24"
                     app:tint="#00ff00" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2" />
 
                 <ImageView
                     android:id="@+id/user_color2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.9"
+                    android:layout_weight="2"
                     android:src="@drawable/ic_baseline_circle_24"
                     app:tint="#000000" />
 
@@ -60,41 +56,56 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.45"
+                android:layout_weight="0.85"
                 android:orientation="horizontal"
                 android:weightSum="5">
+
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5" />
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/compare_repo1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.9"
+                    android:layout_weight="2"
+                    android:ellipsize="end"
                     android:fontFamily="@font/ibm_semibold"
                     android:gravity="center"
+                    android:maxLines="2"
                     android:textColor="@color/black"
-                    android:textSize="25dp" />
+                    android:textSize="20dp" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2" />
 
                 <TextView
                     android:id="@+id/compare_repo2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.9"
+                    android:layout_weight="2"
+                    android:ellipsize="end"
                     android:fontFamily="@font/ibm_semibold"
                     android:gravity="center"
+                    android:maxLines="2"
                     android:textColor="@color/black"
-                    android:textSize="25dp" />
+                    android:textSize="20dp" />
 
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/repo_compare_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2.19"
+                android:orientation="vertical"
+                tools:listitem="@layout/repo_compare_list"/>
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/repo_compare_chart_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5" />
 
 
         </LinearLayout>
