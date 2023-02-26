@@ -120,11 +120,20 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
 
     private fun checkRepos(result: CompareRepoResponseModel) {
         if(result.firstRepo != null && result.secondRepo != null) {
-            if(result.firstRepo.languages != null && result.secondRepo.languages!= null) {
-//                Toast.makeText(requireContext(), "${result.firstRepo.gitRepo.full_name}", Toast.LENGTH_SHORT).show()
-//                Log.d("firstRepo.gitRepo", "first language : ${"${result.firstRepo.languages}"}")
-//                Log.d("second.gitRepo", "second language : ${"${result.secondRepo.languages}"}")
+            try {
+                result.firstRepo.gitRepo!!
+                result.firstRepo.statistics!!
+                result.firstRepo.languagesStats!!
+                result.firstRepo.languages!!
+                result.secondRepo.gitRepo!!
+                result.secondRepo.statistics!!
+                result.secondRepo.languagesStats!!
+                result.secondRepo.languages!!
                 initRecycler(result)
+
+            } catch (e: Exception) {
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({repoCompare()}, 5000)
             }
         } else {
             if(count<10) {
@@ -153,7 +162,7 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
     }
 
     private fun initGraph(result: CompareRepoResponseModel) {
-        binding.repoCompareChartViewpager.adapter = RepoCompareChartAdapter(result.firstRepo!!, result.secondRepo!!)
+        binding.repoCompareChartViewpager.adapter = RepoCompareChartAdapter(result.firstRepo!!, result.secondRepo!!, requireContext())
         binding.repoCompareChartViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.repoCompareChartViewpager.setPageTransformer(ZoomOutPageTransformer())
         binding.repoCompareChartViewpager.isUserInputEnabled = true

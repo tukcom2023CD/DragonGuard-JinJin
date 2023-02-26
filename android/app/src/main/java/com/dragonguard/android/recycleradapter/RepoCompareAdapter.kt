@@ -80,8 +80,8 @@ class RepoCompareAdapter(private val data1 : FirstRepo, private val data2 : Seco
                     repo2Value.text = data2.statistics.commitStats.count.toString()
                 }
                 10->{
-                    repo1Value.text = (round(data1.statistics.commitStats.average)/100).toString()
-                    repo2Value.text = (round(data2.statistics.commitStats.average)/100).toString()
+                    repo1Value.text = ((round(data1.statistics.commitStats.average*100.0))/100.0).toString()
+                    repo2Value.text = ((round(data2.statistics.commitStats.average*100.0))/100.0).toString()
                 }
                 11->{
                     repo1Value.text = data1.statistics.additionStats.sum.toString()
@@ -100,8 +100,8 @@ class RepoCompareAdapter(private val data1 : FirstRepo, private val data2 : Seco
                     repo2Value.text = data2.statistics.additionStats.count.toString()
                 }
                 15->{
-                    repo1Value.text = (round(data1.statistics.additionStats.average)/100).toString()
-                    repo2Value.text = (round(data2.statistics.additionStats.average)/100).toString()
+                    repo1Value.text = ((round(data1.statistics.additionStats.average*100.0))/100.0).toString()
+                    repo2Value.text = ((round(data2.statistics.additionStats.average*100.0))/100.0).toString()
                 }
                 16->{
                     repo1Value.text = data1.statistics.deletionStats.sum.toString()
@@ -120,16 +120,16 @@ class RepoCompareAdapter(private val data1 : FirstRepo, private val data2 : Seco
                     repo2Value.text = data2.statistics.deletionStats.count.toString()
                 }
                 20->{
-                    repo1Value.text = (round(data1.statistics.deletionStats.average)/100).toString()
-                    repo2Value.text = (round(data2.statistics.deletionStats.average)/100).toString()
+                    repo1Value.text = ((round(data1.statistics.deletionStats.average*100.0))/100.0).toString()
+                    repo2Value.text = ((round(data2.statistics.deletionStats.average*100.0))/100.0).toString()
                 }
                 21->{
                     repo1Value.text = data1.languagesStats.count.toString()
                     repo2Value.text = data2.languagesStats.count.toString()
                 }
                 22->{
-                    repo1Value.text = (round(data1.languagesStats.average)/100).toString()
-                    repo2Value.text = (round(data2.languagesStats.average)/100).toString()
+                    repo1Value.text = ((round(data1.languagesStats.average*100.0))/100.0).toString()
+                    repo2Value.text = ((round(data2.languagesStats.average*100.0))/100.0).toString()
                 }
             }
         }

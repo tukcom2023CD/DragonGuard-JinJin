@@ -58,10 +58,14 @@ class RepoChooseActivity : AppCompatActivity() {
                 binding.repoCompare1.text == "Repository 1" || binding.repoCompare2.text == "Repository 2") {
                 Toast.makeText(applicationContext, "비교할 Repository를 선택해 주세요!!", Toast.LENGTH_SHORT).show()
             } else {
-                val intent = Intent(applicationContext, RepoCompareActivity::class.java)
-                intent.putExtra("repo1", binding.repoCompare1.text.toString())
-                intent.putExtra("repo2", binding.repoCompare2.text.toString())
-                startActivity(intent)
+                if(binding.repoCompare1.text.toString() != binding.repoCompare2.text.toString()) {
+                    val intent = Intent(applicationContext, RepoCompareActivity::class.java)
+                    intent.putExtra("repo1", binding.repoCompare1.text.toString())
+                    intent.putExtra("repo2", binding.repoCompare2.text.toString())
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(applicationContext,"서로 다른 Repository를 선택해 주세요!!", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
