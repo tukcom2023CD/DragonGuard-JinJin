@@ -103,6 +103,12 @@ final class CompareRepositoryController: UIViewController{
     
     @objc func clickedNextBtn(){
         if !repository1.isEmpty && !repository2.isEmpty{
+            
+            NotificationCenter.default.post(name: Notification.Name.compareRepo,object: nil,userInfo: [NotificationRepos.repo1: self.repository1, NotificationRepos.repo2: self.repository2])
+            
+            CompareService.compareService.firstRepo = self.repository1
+            CompareService.compareService.secondRepo = self.repository2
+            CompareService.compareService.getCompareInfo()
             // 다음 화면 연동
             self.navigationController?.pushViewController(TabBarController(), animated: true)
         }
@@ -120,6 +126,8 @@ final class CompareRepositoryController: UIViewController{
             repository2 = data
             searchBtn2.setTitle(data, for: .normal)
         }
+        
+        
         
     }
     

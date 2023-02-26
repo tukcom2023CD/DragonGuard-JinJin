@@ -22,6 +22,8 @@
 		3B1DB8812963428B00308F43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DB8802963428B00308F43 /* Assets.xcassets */; };
 		3B1DB8842963428B00308F43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */; };
 		3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */; };
+		3B3B563429A8DA12005034FC /* CompareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563329A8DA12005034FC /* CompareService.swift */; };
+		3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */; };
 		3B58A18F29A6164D006A1817 /* KlipLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B58A18E29A6164D006A1817 /* KlipLoginController.swift */; };
 		3B7B1D2E298404AE0038BD67 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 3B7B1D2D298404AE0038BD67 /* RxCocoa */; settings = {ATTRIBUTES = (Required, ); }; };
 		3B7B1D30298404B20038BD67 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3B7B1D2F298404B20038BD67 /* RxSwift */; };
@@ -113,6 +115,8 @@
 		3B1DB8832963428B00308F43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3B1DB8852963428B00308F43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipLoginCheckview.swift; sourceTree = "<group>"; };
+		3B3B563329A8DA12005034FC /* CompareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareService.swift; sourceTree = "<group>"; };
+		3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoModel.swift; sourceTree = "<group>"; };
 		3B58A18E29A6164D006A1817 /* KlipLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipLoginController.swift; sourceTree = "<group>"; };
 		3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansKR-SemiBold.otf"; sourceTree = "<group>"; };
 		3B88801F2992881200680F1A /* RepoContributorInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoController.swift; sourceTree = "<group>"; };
@@ -326,6 +330,7 @@
 				3B9CF3D1298F997B00495D35 /* UserInfoModel.swift */,
 				3BE6AD322993D0D800B22EBD /* RepoContributorInfoModel.swift */,
 				3BA20136299805AE008978A5 /* MainModel.swift */,
+				3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -356,6 +361,7 @@
 				3BA2013829980661008978A5 /* MainService.swift */,
 				3BAEA776299CFD090054DC5D /* PostService.swift */,
 				3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */,
+				3B3B563329A8DA12005034FC /* CompareService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -365,11 +371,11 @@
 			children = (
 				A3ADC97E29911B50003D6483 /* CompareRepositorycontroller.swift */,
 				A37AA6EB29A50F7C002812F6 /* CompareGraphController.swift */,
+				A37AA6EF29A528FD002812F6 /* CompareUserController.swift */,
 				A37AA6ED29A525C5002812F6 /* TabBarController.swift */,
 				3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */,
 				3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */,
 				3B9756E9298A16B200F27094 /* WatchRankingScreen */,
-				A37AA6EF29A528FD002812F6 /* CompareUserController.swift */,
 			);
 			path = MainScreen;
 			sourceTree = "<group>";
@@ -535,6 +541,7 @@
 				3B9CF3D2298F997B00495D35 /* UserInfoModel.swift in Sources */,
 				A37AA6EC29A50F7C002812F6 /* CompareGraphController.swift in Sources */,
 				A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */,
+				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
 				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
 				A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */,
 				3BE6AD2D2993904D00B22EBD /* RepoContributorTableView.swift in Sources */,
@@ -576,6 +583,7 @@
 				3BF2B31329890F1900F20841 /* WatchRankingCollectionView.swift in Sources */,
 				3B9756EF298A171300F27094 /* AllUnivRankingController.swift in Sources */,
 				A3754FA02995653B00A683A9 /* TierTokenCustomUIView.swift in Sources */,
+				3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */,
 				3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */,
 				3B00229D2987998B003FA5CC /* SettingController.swift in Sources */,
 				A37AA6EE29A525C5002812F6 /* TabBarController.swift in Sources */,
