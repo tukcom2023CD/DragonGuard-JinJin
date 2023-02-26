@@ -14,7 +14,7 @@ final class RepoContributorInfoService{
     var selectedName = ""
     var checkData = false
     var resultData = [RepoContributorInfoModel]()
-    
+
     func getRepoContriInfo(){
         let url = APIURL.apiUrl.getRepoContributorInfo(ip: ip, name: selectedName)
         resultData = []

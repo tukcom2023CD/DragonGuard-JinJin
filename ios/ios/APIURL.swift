@@ -63,6 +63,20 @@ final class APIURL{
         return url
     }
     
+    
+    // 비교하기 -> 유저비교
+    func compareUserAPI(ip: String) -> String{
+        let url = "http://\(ip)/api/git-repos/compare/members"
+        return url
+    }
+    
+    // 비교하기 -> 레포지토리 비교
+    func compareRepoAPI(ip: String) -> String{
+        let url = "http://\(ip)/api/git-repos/compare"
+        return url
+    }
+    
+    
     // KLIP prepare post API
     func klipPreparePostAPI() -> String{
         let url = "https://a2a-api.klipwallet.com/v2/a2a/prepare"
