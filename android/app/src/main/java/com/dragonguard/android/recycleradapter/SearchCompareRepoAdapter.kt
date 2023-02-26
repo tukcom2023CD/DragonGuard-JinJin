@@ -11,10 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.CompareSearchActivity
 import com.dragonguard.android.activity.MainActivity
-import com.dragonguard.android.activity.RepoContributorsActivity
 import com.dragonguard.android.model.RepoSearchResultModel
 
-class CompareRepositoryAdapter (private val datas : ArrayList<RepoSearchResultModel>, private val context: Context, count: Int) : RecyclerView.Adapter<CompareRepositoryAdapter.ViewHolder>() {
+class SearchCompareRepoAdapter (private val datas : ArrayList<RepoSearchResultModel>, private val context: Context, count: Int) : RecyclerView.Adapter<SearchCompareRepoAdapter.ViewHolder>() {
     private var repoCount = count
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.repository_list,parent,false)

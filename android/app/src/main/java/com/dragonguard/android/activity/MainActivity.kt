@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         activityResultLauncher.launch(intent)
 
 
-        Timer().scheduleAtFixedRate(2000,2000){
+        Timer().scheduleAtFixedRate(10000,2000){
 //            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
             searchUser(userId)
         }
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
             if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null) {
 //                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({registerUser("posite")}, 500)
+                handler.postDelayed({registerUser("posite")}, 1000)
             } else {
                 if(userInfo.commits != 0 && userInfo.tier == "SPROUT") {
                     postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))

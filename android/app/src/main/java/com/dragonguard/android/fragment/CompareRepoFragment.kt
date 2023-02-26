@@ -12,13 +12,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentCompareRepoBinding
 import com.dragonguard.android.model.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.CompareRepoResponseModel
 import com.dragonguard.android.model.RepoContributorsItem
+import com.dragonguard.android.recycleradapter.RepoCompareAdapter
 import com.dragonguard.android.recycleradapter.RepoCompareChartAdapter
+import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +39,9 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
     private var count = 0
     private val MIN_SCALE = 0.85f
     private val MIN_ALPHA = 0.5f
+    private val compareItems = arrayListOf("forks", "close된\n 이슈 수", "open된\n이슈 수", "스타 수", "구독자 수", "watchers 수", "총 커밋 수",
+    "최대 커밋수", "최소 커밋 수", "커밋\n기여자 수", "평균 커밋 수", "총\naddtions", "최대\naddtions", "최소\nadditions", "additions\n기여자 수",
+    "평균\naddtions", "총\ndeletions", "최대\ndeletions", "최소\ndeletions", "deletions\n기여자 수", "평균\ndeletions", "사용된\n언어 수", "평균 코드 수")
 
 
     override fun onCreateView(
@@ -116,9 +122,9 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
         if(result.firstRepo != null && result.secondRepo != null) {
             if(result.firstRepo.languages != null && result.secondRepo.languages!= null) {
 //                Toast.makeText(requireContext(), "${result.firstRepo.gitRepo.full_name}", Toast.LENGTH_SHORT).show()
-                Log.d("firstRepo.gitRepo", "first language : ${"${result.firstRepo.languages}"}")
-                Log.d("second.gitRepo", "second language : ${"${result.secondRepo.languages}"}")
-                initGraph(result)
+//                Log.d("firstRepo.gitRepo", "first language : ${"${result.firstRepo.languages}"}")
+//                Log.d("second.gitRepo", "second language : ${"${result.secondRepo.languages}"}")
+                initRecycler(result)
             }
         } else {
             if(count<10) {
@@ -126,6 +132,23 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoCompare()}, 5000)
             }
+        }
+    }
+
+    private fun initRecycler(result: CompareRepoResponseModel) {
+        Log.d("initRecycler()", "리사이클러뷰 구현 시작")
+        if(result.firstRepo!!.languagesStats == null || result.secondRepo!!.languagesStats == null) {
+            Log.d("initRecycler()", "${result.firstRepo.languagesStats} 혹은 ${result.secondRepo!!.languagesStats}이 널입니다.")
+            count++
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({repoCompare()}, 5000)
+        } else {
+            val repoCompareAdapter = RepoCompareAdapter(result.firstRepo!!, result.secondRepo!!, compareItems)
+            binding.repoCompareList.adapter = repoCompareAdapter
+            binding.repoCompareList.layoutManager = LinearLayoutManager(requireContext())
+            repoCompareAdapter.notifyDataSetChanged()
+            binding.repoCompareList.visibility = View.VISIBLE
+            initGraph(result)
         }
     }
 
