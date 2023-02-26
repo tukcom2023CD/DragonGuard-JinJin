@@ -7,6 +7,11 @@
 
 import Foundation
 
+
+/*
+ Decoding Model
+ */
+
 struct CompareRepoModel: Decodable{
     var firstRepo: FirstRepo
     var secondRepo: SecondRepo
@@ -15,7 +20,7 @@ struct CompareRepoModel: Decodable{
 struct FirstRepo: Decodable{
     var gitRepo: GitRepo
     var statistics: Statistics
-//    var languages: Languages
+    var languages: Languages
     var languagesStat: StatisticsStats
     
 }
@@ -23,15 +28,15 @@ struct FirstRepo: Decodable{
 struct SecondRepo: Decodable{
     let gitRepo: GitRepo
     let statistics: Statistics
-//    var languages: Languages
+    var languages: Languages
     let languagesStat: StatisticsStats
     
 }
 
 struct GitRepo: Codable{
-    let full_Name: String
-    let forks_Count, stargazers_Count, watchers_Count, open_Issues_Count: Int
-    let subscribers_Count: Int
+    let full_name: String
+    let forks_count, stargazers_count, watchers_count, open_issues_count: Int
+    let subscribers_count: Int
     
 }
 
@@ -42,11 +47,11 @@ struct Statistics: Codable{
 }
 
 struct StatisticsStats: Codable{
-    let count: Int
-    let sum: Int
-    let min: Int
-    let max: Int
-    let average: Double
+    let count: Int?
+    let sum: Int?
+    let min: Int?
+    let max: Int?
+    let average: Double?
 }
 
 struct Languages: Decodable{

@@ -108,7 +108,7 @@ final class CompareRepositoryController: UIViewController{
             
             CompareService.compareService.firstRepo = self.repository1
             CompareService.compareService.secondRepo = self.repository2
-            CompareService.compareService.getCompareInfo()
+            CompareService.compareService.beforeSendingInfo()
             // 다음 화면 연동
             self.navigationController?.pushViewController(TabBarController(), animated: true)
         }
