@@ -90,30 +90,19 @@ public class GitRepoService {
     }
 
     public TwoGitRepoResponse findTwoGitRepos(GitRepoCompareRequest request) {
-        GitRepoClientResponse first = gitRepoClient.requestToGithub(request.getFirstRepo());
-        GitRepoClientResponse second = gitRepoClient.requestToGithub(request.getSecondRepo());
+        return new TwoGitRepoResponse(getOneRepoResponse(request.getFirstRepo()), getOneRepoResponse(request.getSecondRepo()));
+    }
 
-        GitRepo firstRepo = gitRepoRepository.findByName(request.getFirstRepo()).orElseThrow(EntityNotFoundException::new);
-        GitRepo secondRepo = gitRepoRepository.findByName(request.getSecondRepo()).orElseThrow(EntityNotFoundException::new);
+    private GitRepoResponse getOneRepoResponse(String repoName) {
+        GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(new GitRepoRequest(repoName, null))));
+        GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(repoName);
+        if(repo.getClosedIssues() != null) repoResponse.setClosed_issues_count(repo.getClosedIssues());
+        Map<String, Integer> languages = gitRepoLanguageClient.requestToGithub(repoName);
+        IntSummaryStatistics langStats =
+                languages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
+                        : languages.keySet().stream().mapToInt(languages::get).summaryStatistics();
 
-        if(firstRepo.getClosedIssues() != null) first.setClosed_issues_count(firstRepo.getClosedIssues());
-        if(secondRepo.getClosedIssues() != null) second.setClosed_issues_count(secondRepo.getClosedIssues());
-
-        Map<String, Integer> firstLanguages = gitRepoLanguageClient.requestToGithub(request.getFirstRepo());
-        Map<String, Integer> secondLanguages = gitRepoLanguageClient.requestToGithub(request.getSecondRepo());
-
-        IntSummaryStatistics firstLangStat =
-                firstLanguages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
-                        : firstLanguages.keySet().stream().mapToInt(firstLanguages::get).summaryStatistics();
-
-        IntSummaryStatistics secondLangStat =
-                secondLanguages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
-                        : secondLanguages.keySet().stream().mapToInt(secondLanguages::get).summaryStatistics();
-
-        GitRepoResponse firstResponse = new GitRepoResponse(first, getStatistics(request.getFirstRepo()), firstLanguages, firstLangStat);
-        GitRepoResponse secondResponse = new GitRepoResponse(second, getStatistics(request.getSecondRepo()), secondLanguages, secondLangStat);
-
-        return new TwoGitRepoResponse(firstResponse, secondResponse);
+        return new GitRepoResponse(repoResponse, getStatistics(repoName), languages, langStats);
     }
 
     @Transactional
