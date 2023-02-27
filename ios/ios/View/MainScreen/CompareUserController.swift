@@ -167,7 +167,6 @@ final class CompareUserController : UIViewController, SendingProtocol {
     }
     
     func dataSend(index: Int, user: String) {
-        print(self.chooseArray)
         if user == "user1"{
             self.user1Index = index
             self.user1Button.setTitle(self.chooseArray[index], for: .normal)
@@ -432,28 +431,6 @@ extension CompareUserController : ChartViewDelegate {
         chartCommit.noDataText = "출력 데이터가 없습니다."
         chartCommit.noDataFont = .systemFont(ofSize: 30)
         chartCommit.noDataTextColor = .lightGray
-    }
-}
-
-/*
- SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
- preview 실행이 안되는 경우 단축키
- Command + Option + Enter : preview 그리는 캠버스 띄우기
- Command + Option + p : preview 재실행
- */
-
-import SwiftUI
-
-struct VCPreViewCompareUserGraphController:PreviewProvider {
-    static var previews: some View {
-        CompareUserController().toPreview().previewDevice("iPhone 14 pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-
-struct VCPreViewCompareUserGraphController2:PreviewProvider {
-    static var previews: some View {
-        CompareUserController().toPreview().previewDevice("iPad (10th generation)")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
+        
     }
 }
