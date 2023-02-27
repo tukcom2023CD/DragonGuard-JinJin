@@ -253,7 +253,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
             axisLeft.apply { //왼쪽 축. 즉 Y방향 축을 뜻한다.
                 axisMinimum = 0f // 최소값 0
                 granularity = 10f // 10 단위마다 선을 그리려고 설정.
-                setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
+                //setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
                 setDrawGridLines(true) //격자 라인 활용
                 setDrawAxisLine(true) // 축 그리기 설정
                 axisLineColor = ContextCompat.getColor(context, R.color.black) // 축 색깔 설정

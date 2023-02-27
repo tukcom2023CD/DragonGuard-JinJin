@@ -82,15 +82,15 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors()}, 2000)
             } else {
-                val name1 = repo1.split("/","_","-")
-                val name2 = repo2.split("/","_","-")
+                val name1 = repo1.split("/")
+                val name2 = repo2.split("/")
                 if(name1.size > 2) {
-                    binding.compareRepo1.text = "${name1[name1.lastIndex-1]}\n${name1.last()}"
+                    binding.compareRepo1.text = "${name1.last()}"
                 } else {
                     binding.compareRepo1.text = name1.last()
                 }
                 if(name2.size > 2) {
-                    binding.compareRepo2.text = "${name2[name2.lastIndex-1]}\n${name2.last()}"
+                    binding.compareRepo2.text = "${name2.last()}"
                 } else {
                     binding.compareRepo2.text = name2.last()
                 }
