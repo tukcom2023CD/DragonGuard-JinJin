@@ -18,6 +18,7 @@ import com.dragonguard.android.viewmodel.Viewmodel
 import com.dragonguard.android.databinding.ActivityRepoCompareBinding
 import com.dragonguard.android.fragment.CompareRepoFragment
 import com.dragonguard.android.fragment.CompareUserFragment
+import com.dragonguard.android.model.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.RepoContributorsItem
 import com.dragonguard.android.recycleradapter.ContributorsAdapter
 import com.github.mikephil.charting.components.AxisBase
@@ -37,6 +38,7 @@ class RepoCompareActivity : AppCompatActivity() {
     var viewmodel = Viewmodel()
     private var repo1 = ""
     private var repo2 = ""
+    private var count = 0
     private lateinit var compareUserFragment: CompareUserFragment
     private lateinit var compareRepoFragment: CompareRepoFragment
 
@@ -48,9 +50,51 @@ class RepoCompareActivity : AppCompatActivity() {
         val intent = getIntent()
         repo1 = intent.getStringExtra("repo1")!!
         repo2 = intent.getStringExtra("repo2")!!
+        repoContributors()
+
 //        Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()
 
 //        val myFragment = supportFragmentManager.findFragmentById(R.id.compare_frame) as CompareUserFragment
+
+
+        setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+
+    }
+
+    fun repoContributors() {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                viewmodel.postCompareRepoMembersRequest(repo1, repo2)
+            }
+            val result = resultDeferred.await()
+//            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()
+            checkContributors(result)
+        }
+    }
+
+    fun checkContributors(result: CompareRepoMembersResponseModel) {
+        if ((result.firstResult != null) && (result.secondResult != null)) {
+            if (result.firstResult.isEmpty()) {
+                count++
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({repoContributors()}, 2000)
+            } else {
+                startFragment()
+            }
+        } else {
+            if(count<10) {
+                count++
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({repoContributors()}, 2000)
+            }
+        }
+    }
+
+    private fun startFragment() {
         compareRepoFragment = CompareRepoFragment(repo1, repo2)
         compareUserFragment = CompareUserFragment(repo1, repo2)
         val transaction = supportFragmentManager.beginTransaction()
@@ -78,12 +122,6 @@ class RepoCompareActivity : AppCompatActivity() {
             }
             true
         }
-
-        setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
-
     }
 
 

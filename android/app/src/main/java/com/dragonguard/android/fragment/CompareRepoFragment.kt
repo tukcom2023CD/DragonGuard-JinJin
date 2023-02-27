@@ -80,7 +80,7 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
             if (result.firstResult.isEmpty()) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({repoContributors()}, 5000)
+                handler.postDelayed({repoContributors()}, 2000)
             } else {
                 val name1 = repo1.split("/","_","-")
                 val name2 = repo2.split("/","_","-")
@@ -101,7 +101,7 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
             if(count<10) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({repoContributors()}, 5000)
+                handler.postDelayed({repoContributors()}, 2000)
             }
         }
     }
