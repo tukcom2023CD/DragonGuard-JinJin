@@ -7,12 +7,57 @@
 
 import Foundation
 
+struct CompareRepoModel{
+    var firstRepo: FirstRepoModel
+    var secondRepo: secondRepoModel
+}
+
+struct FirstRepoModel{
+    var gitRepo: GitRepoModel
+    var statistics: StatisticsModel
+    var languages: LanguagesModel
+    var languagesStats: StatisticsStatsModel
+}
+
+struct secondRepoModel{
+    var gitRepo: GitRepoModel
+    var statistics: StatisticsModel
+    var languages: LanguagesModel
+    var languagesStats: StatisticsStatsModel
+}
+
+struct GitRepoModel{
+    var full_name: String
+    var forks_count, stargazers_count, watchers_count, open_issues_count: Int
+    var subscribers_count: Int
+}
+
+struct StatisticsModel{
+    let commitStats: StatisticsStatsModel
+    let additionStats: StatisticsStatsModel
+    let deletionStats: StatisticsStatsModel
+}
+
+struct LanguagesModel{
+    var language: [String]
+    var count: [Int]
+}
+
+struct StatisticsStatsModel{
+    var count: Int
+    var sum: Int
+    var min: Int
+    var max: Int
+    var average: Double
+}
+
+
 
 /*
  Decoding Model
  */
 
-struct CompareRepoModel: Decodable{
+struct CompareRepoDecodingModel: Decodable{
     var firstRepo: FirstRepo
     var secondRepo: SecondRepo
 }
@@ -21,15 +66,14 @@ struct FirstRepo: Decodable{
     var gitRepo: GitRepo
     var statistics: Statistics
     var languages: Languages
-    var languagesStat: StatisticsStats
-    
+    var languagesStats: StatisticsStats
 }
 
 struct SecondRepo: Decodable{
     let gitRepo: GitRepo
     let statistics: Statistics
     var languages: Languages
-    let languagesStat: StatisticsStats
+    let languagesStats: StatisticsStats
     
 }
 
@@ -55,7 +99,9 @@ struct StatisticsStats: Codable{
 }
 
 struct Languages: Decodable{
-    var lang: [String : Any] = [:]
+//    var lang: [String : Any] = [:]
+    var language: [String] = []
+    var count: [Int] = []
     
     struct CustomCodingKeys: CodingKey {
         var stringValue: String
@@ -70,10 +116,11 @@ struct Languages: Decodable{
         let extraContainer = try decoder.container(keyedBy: CustomCodingKeys.self)
         
         for key in extraContainer.allKeys {
-            print("key1: \(key)")
             
             let value =  try extraContainer.decode(Int.self, forKey: CustomCodingKeys(stringValue: key.stringValue)!)
-            self.lang[key.stringValue] = value
+            self.language.append(key.stringValue)
+            self.count.append(value)
+//            self.lang[key.stringValue] = value
             
         }
     }

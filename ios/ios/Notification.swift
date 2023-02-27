@@ -13,12 +13,6 @@ extension Notification.Name{
     static let data = Notification.Name("")
     static let deepLink = Notification.Name("")
     static let walletAddress = Notification.Name("")
-    static let compareRepo = Notification.Name("")
-}
-
-enum NotificationRepos{
-    case repo1
-    case repo2
 }
 
 // KLIP 지갑 주소
