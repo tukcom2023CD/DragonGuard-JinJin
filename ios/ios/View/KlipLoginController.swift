@@ -10,17 +10,17 @@ import UIKit
 import SnapKit
 import SafariServices
 
-final class LoginController: UIViewController{
+final class KlipLoginController: UIViewController{
     let viewModel = LoginViewModel()
+    var walletAddress: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
         addUItoView()
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(finishedWalletAddress(notification: )), name: Notification.Name.walletAddress, object: nil)
     }
-    
     /*
      UI 코드 작성
      */
@@ -58,13 +58,45 @@ final class LoginController: UIViewController{
         self.navigationController?.pushViewController(MainController(), animated: true)
     }
     
+    
+    // KLIP deep link 이동
     @objc func notificationData(notification: Notification){
-        guard let url = notification.userInfo?[NotificationDeepLinkKey.link] as? URL else {return}
-        let deepLinkView = SFSafariViewController(url: url)
-        self.present(deepLinkView, animated: true)
+        guard let url = notification.userInfo?[NotificationDeepLinkKey.link] as? String else {return}
         
-        viewModel.getWallet()
+        // Klip 앱 이동 후 다른 화면 출력
+        let klipCheck = KlipLoginCheckView()
+        klipCheck.viewModel = viewModel
+        self.present(klipCheck, animated: true)
+        
+        // 사용자 기본 브라우저에서 deeplink 주소 열 수 있는지 확인 후 열기
+        if let url = URL(string: url) {
+            // 사용자의 기본 브라우저에서 url 확인
+            if UIApplication.shared.canOpenURL(url) {
+                // 사용자 기본 브라우저에서 url 열기
+                UIApplication.shared.open(url, options: [:]){ handler in
+                    let configuration = SFSafariViewController.Configuration()
+                    configuration.entersReaderIfAvailable = false
+                    let deepLinkView = SFSafariViewController(url: url,configuration: configuration)
+                    self.present(deepLinkView, animated: true)
+                }
+            } else {
+                print("기본 브라우저를 열 수 없습니다.")
+            }
+        }
+        
     }
+    
+    @objc func finishedWalletAddress(notification: Notification){
+        guard let address = notification.userInfo?[NotificationWalletAddress.walletAddress] as? String else {return}
+        self.walletAddress = address
+        
+        guard let wa = self.walletAddress else { return }
+        if !wa.isEmpty{
+            self.navigationController?.pushViewController(MainController(), animated: true)
+        }
+        
+    }
+    
     
     /*
      UI 추가할 때 작성하는 함수

@@ -13,6 +13,7 @@ import SnapKit
 final class CompareRepositoryController: UIViewController{
     let deviceHeight = UIScreen.main.bounds.height
     let searchPage = SearchPageController()
+    let viewModel = CompareViewModel()
     var repository1: String = ""
     var repository2: String = ""
     
@@ -103,6 +104,10 @@ final class CompareRepositoryController: UIViewController{
     
     @objc func clickedNextBtn(){
         if !repository1.isEmpty && !repository2.isEmpty{
+            
+            viewModel.repositryInfo.onNext([self.repository1,self.repository2])
+            viewModel.callAPI()
+            
             // 다음 화면 연동
             self.navigationController?.pushViewController(TabBarController(), animated: true)
         }
@@ -120,6 +125,8 @@ final class CompareRepositoryController: UIViewController{
             repository2 = data
             searchBtn2.setTitle(data, for: .normal)
         }
+        
+        
         
     }
     

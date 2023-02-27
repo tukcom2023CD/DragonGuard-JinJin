@@ -19,8 +19,13 @@ final class CompareGraphController : UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         addToView()
+//        CompareService.compareService.getCompareInfo()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        
+    }
     /*
      UI 코드 작성
      */
