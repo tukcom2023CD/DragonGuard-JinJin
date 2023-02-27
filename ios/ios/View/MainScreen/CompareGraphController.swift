@@ -9,23 +9,30 @@ import Foundation
 import UIKit
 import SnapKit
 import Charts
+import RxSwift
 
 
 final class CompareGraphController : UIViewController {
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
+    let viewModel = CompareViewModel()
+    let disposebag = DisposeBag()
+    var nameLabel : [String] = ["forks", "closed\nissues", "open\nissues", "stars", "contributers", "deletions\naverage", "languages", "codes\naverage"]
+    var repo1 : [FirstRepoModel] = []
+    var repo2 : [secondRepoModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         addToView()
-//        CompareService.compareService.getCompareInfo()
+        getData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         
         
     }
+    
     /*
      UI 코드 작성
      */
@@ -68,12 +75,23 @@ final class CompareGraphController : UIViewController {
         return btn
     }()
     
+    lazy var repoTableView : UITableView = {
+        let repoTable = UITableView()
+        repoTable.backgroundColor = .white
+        return repoTable
+    }()
+    
     lazy var chart : RadarChartView = {
         let chart1 = RadarChartView()
         chart1.backgroundColor = .white
         return chart1
     }()
     
+//    lazy var repoCollectionView : UICollectionView = {
+//        let repoCollection = UICollectionView()
+//        repoCollection.backgroundColor = .white
+//        return repoCollection
+//    }()
     /*
      UI Action 작성
      */
@@ -83,7 +101,14 @@ final class CompareGraphController : UIViewController {
         self.view.addSubview(repo1ColorButton)
         self.view.addSubview(repo2Label)
         self.view.addSubview(repo2ColorButton)
-        self.view.addSubview(chart)
+        
+//        self.view.addSubview(chart)
+//        self.view.addSubview(repoCollectionView)
+        repoTableView.delegate = self
+        repoTableView.dataSource = self
+//        repoCollectionView.delegate = self
+//        repoCollectionView.dataSource = self
+        repoTableView.register(CompareRepoTableView.self, forCellReuseIdentifier: CompareRepoTableView.identifier)
         setAutoLayout()
     }
     
@@ -123,17 +148,110 @@ final class CompareGraphController : UIViewController {
             make.height.equalTo(deviceWidth/12)
         })
         
-        chart.snp.makeConstraints ({ make in
-            make.top.equalTo(repo2Label.snp.bottom).offset(20)
+        
+//        chart.snp.makeConstraints ({ make in
+//            make.top.equalTo(repoTableView.snp.bottom).offset(20)
+//            make.leading.equalTo(30)
+//            make.trailing.equalTo(-30)
+//            make.bottom.equalTo(view.safeAreaLayoutGuide)
+//        })
+        
+        
+        
+        
+        
+//        repoCollectionView.snp.makeConstraints( { make in
+//            make.top.equalTo(repoTableView.snp.bottom).offset(10)
+//            make.leading.equalTo(30)
+//            make.trailing.equalTo(-30)
+//            make.bottom.equalTo(view.safeAreaLayoutGuide)
+//        })
+//        setChartOption()
+    }
+    
+    
+    private func viewAutoLayout(){
+        repoTableView.snp.makeConstraints({ make in
+            make.top.equalTo(repo2ColorButton.snp.bottom).offset(10)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         })
-        setChartOption()
     }
-
+    
+    func getData(){
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
+            self.viewModel.bringRepoInfo()
+            self.viewModel.repo1Info.subscribe(onNext: {
+                self.repo1 = $0
+            }).disposed(by: self.disposebag)
+            self.viewModel.repo2Info.subscribe(onNext: {
+                self.repo2 = $0
+            }).disposed(by: self.disposebag)
+            
+            if self.repo1.count != 0 && self.repo2.count != 0 {
+                timer.invalidate()
+                self.repo1Label.text = self.repo1[0].gitRepo.full_name
+                self.repo2Label.text = self.repo2[0].gitRepo.full_name
+                self.view.addSubview(self.repoTableView)
+                self.viewAutoLayout()
+                self.repoTableView.reloadData()
+            }
+            
+        })
+    }
     
 }
+
+extension CompareGraphController : UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 8
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: CompareRepoTableView.identifier, for: indexPath) as? CompareRepoTableView ?? CompareRepoTableView()
+        
+        switch indexPath.row {
+        case 0 :
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.forks_count), repo2Label: String(repo2[0].gitRepo.forks_count))
+        case 1 :
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.closed_issues_count), repo2Label: String(repo2[0].gitRepo.closed_issues_count))
+        case 2 :
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.open_issues_count), repo2Label: String(repo2[0].gitRepo.open_issues_count))
+        case 3 :
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.stargazers_count), repo2Label: String(repo2[0].gitRepo.stargazers_count))
+        case 4 :
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.watchers_count), repo2Label: String(repo2[0].gitRepo.watchers_count))
+        case 5 :
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].statistics.deletionStats.average), repo2Label: String(repo2[0].statistics.deletionStats.average))
+        case 6 :
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].languagesStats.count), repo2Label: String(repo2[0].languagesStats.count))
+        case 7 :
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].languagesStats.average), repo2Label: String(repo2[0].languagesStats.average))
+            
+        default :
+            print("error")
+        }
+        
+        return cell
+    }
+    
+    
+}
+
+//extension CompareGraphController : UICollectionViewDelegate, UICollectionViewDataSource {
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        <#code#>
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        <#code#>
+//    }
+//
+//
+//}
+
+
 
 extension CompareGraphController : ChartViewDelegate {
     private func setChartOption() {

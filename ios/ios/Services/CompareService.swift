@@ -51,7 +51,6 @@ final class CompareService{
                     }
                     self.repoUserInfo?.firstResult = self.firstRepoUserInfo
                     self.repoUserInfo?.secondResult = self.secondRepoUserInfo
-//                    self.repoUserInfo.append(CompareUserModel(firstResult: self.firstRepoUserInfo, secondResult: self.secondRepoUserInfo))
                     self.getCompareInfo()
                 }
             }
@@ -92,6 +91,7 @@ final class CompareService{
                                                          stargazers_count: responseResult.firstRepo.gitRepo.stargazers_count,
                                                          watchers_count: responseResult.firstRepo.gitRepo.watchers_count,
                                                          open_issues_count: responseResult.firstRepo.gitRepo.open_issues_count,
+                                                         closed_issues_count: responseResult.firstRepo.gitRepo.closed_issues_count,
                                                          subscribers_count: responseResult.firstRepo.gitRepo.subscribers_count),
                                    statistics: StatisticsModel(commitStats: StatisticsStatsModel(count: responseResult.firstRepo.statistics.commitStats.count ?? 0,
                                                                                                  sum: responseResult.firstRepo.statistics.commitStats.sum ?? 0,
@@ -133,6 +133,7 @@ final class CompareService{
                                                           stargazers_count: responseResult.secondRepo.gitRepo.stargazers_count,
                                                           watchers_count: responseResult.secondRepo.gitRepo.watchers_count,
                                                           open_issues_count: responseResult.secondRepo.gitRepo.open_issues_count,
+                                                          closed_issues_count: responseResult.secondRepo.gitRepo.closed_issues_count,
                                                           subscribers_count: responseResult.secondRepo.gitRepo.subscribers_count),
                                     statistics: StatisticsModel(commitStats: StatisticsStatsModel(count: responseResult.secondRepo.statistics.commitStats.count ?? 0,
                                                                                                   sum: responseResult.secondRepo.statistics.commitStats.sum ?? 0,
