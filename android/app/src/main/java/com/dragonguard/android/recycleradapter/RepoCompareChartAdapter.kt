@@ -113,7 +113,7 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
                 entries1.add(RadarEntry(data1.statistics.additionStats.average.toFloat()))
                 entries1.add(RadarEntry(data1.statistics.deletionStats.average.toFloat()))
 //                entries1.add(RadarEntry(data1.statistics.additionStats.max.toFloat()))
-                entries1.add(RadarEntry(data1.languagesStats.min.toFloat()))
+                entries1.add(RadarEntry(data1.languagesStats.average.toFloat()))
 //                Toast.makeText(context, "${data1.statistics.additionStats.average.toFloat()}, ${data1.statistics.deletionStats.average.toFloat()}, ${data1.languagesStats.min}",Toast.LENGTH_SHORT).show()
                 val entries2 = ArrayList<RadarEntry>()
                 entries2.add(RadarEntry(data2.statistics.additionStats.average.toFloat()))
@@ -141,6 +141,8 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
                 set1.color = Color.GREEN
                 set1.fillColor = Color.GREEN
                 set1.fillAlpha = 50
+                set1.lineWidth = 2f
+                set1.isDrawHighlightCircleEnabled = true
                 set1.setDrawValues(false)
                 val set2 = RadarDataSet(entries2, short2)
 //                set2.label = null
@@ -149,20 +151,35 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
                 set2.color = Color.BLACK
                 set2.fillColor = Color.BLACK
                 set2.fillAlpha = 50
+                set2.lineWidth = 2f
                 set2.setDrawValues(false)
+                set2.isDrawHighlightCircleEnabled = true
                 val dataSets1: ArrayList<IRadarDataSet> = ArrayList()
                 dataSets1.add(set1)
                 val data1 = RadarData(dataSets1)
                 data1.addDataSet(set2)
-                radar.setPadding(0, 0, 0, 0)
                 radar.setExtraOffsets(0f, 0f, 0f, 0f)
+                radar.animateY(500)
+
+                radar.xAxis.setAvoidFirstLastClipping(true)
+                radar.scaleX = 1.15f
+                radar.scaleY = 1.15f
                 radar.apply {
                     setTouchEnabled(false) // 차트 터치 막기
                     description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
                     legend.isEnabled = false // 차트 범례 설정(legend object chart)
-//                    legend.yOffset = 5f
-//                    legend.xOffset = 5f
+                    //legend.yOffset = 0f
+                    //legend.xOffset = 0f
+                    yAxis.apply {
+                        isEnabled = true
+                        axisMinimum = 0f
+                        yOffset = 0f
+                        textSize = 0f
+                        setDrawLabels(false)
+                    }
                     xAxis.apply {
+                        axisMinimum = 0f
+                        yOffset = 0f
                         isEnabled = true
                         position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
                         setDrawAxisLine(true) // 축 그림
@@ -170,7 +187,7 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
                         textColor = ContextCompat.getColor(context, R.color.black) //라벨 색상
                         valueFormatter = MyXAxisFormatter()
                         textSize = 10f // 텍스트 크기
-                        setCenterAxisLabels(true)
+                        setDrawLabels(true)
                     }
                 }
                 radar.rotation = 0f

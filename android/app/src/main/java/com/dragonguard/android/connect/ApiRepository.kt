@@ -17,6 +17,7 @@ class ApiRepository {
         .connectTimeout(1, TimeUnit.MINUTES)
         .readTimeout(15, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(false)
         .build()
 
     private val retrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
