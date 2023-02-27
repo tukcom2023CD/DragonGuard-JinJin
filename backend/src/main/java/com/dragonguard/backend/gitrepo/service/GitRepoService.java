@@ -50,7 +50,7 @@ public class GitRepoService {
             gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
             requestGitRepoToScraping(gitRepoRequest);
             return List.of();
-        } else if (gitRepo.get().getGitRepoMember().isEmpty()) {
+        } else if (gitRepo.get().getGitRepoMembers().isEmpty()) {
             requestGitRepoToScraping(gitRepoRequest);
             return List.of();
         }
@@ -62,9 +62,9 @@ public class GitRepoService {
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
         if (gitRepo.isEmpty()) {
-            GitRepo findGitRepo = gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
+            gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
             return requestToGithub(gitRepoRequest);
-        } else if (gitRepo.get().getGitRepoMember().isEmpty()) {
+        } else if (gitRepo.get().getGitRepoMembers().isEmpty()) {
             return requestToGithub(gitRepoRequest);
         }
         return gitRepoMemberRepository.findAllByGitRepo(gitRepo.get()).stream()
@@ -102,8 +102,13 @@ public class GitRepoService {
         Map<String, Integer> firstLanguages = gitRepoLanguageClient.requestToGithub(request.getFirstRepo());
         Map<String, Integer> secondLanguages = gitRepoLanguageClient.requestToGithub(request.getSecondRepo());
 
-        IntSummaryStatistics firstLangStat = firstLanguages.keySet().stream().mapToInt(firstLanguages::get).summaryStatistics();
-        IntSummaryStatistics secondLangStat = secondLanguages.keySet().stream().mapToInt(secondLanguages::get).summaryStatistics();
+        IntSummaryStatistics firstLangStat =
+                firstLanguages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
+                        : firstLanguages.keySet().stream().mapToInt(firstLanguages::get).summaryStatistics();
+
+        IntSummaryStatistics secondLangStat =
+                secondLanguages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
+                        : secondLanguages.keySet().stream().mapToInt(secondLanguages::get).summaryStatistics();
 
         GitRepoResponse firstResponse = new GitRepoResponse(first, getStatistics(request.getFirstRepo()), firstLanguages, firstLangStat);
         GitRepoResponse secondResponse = new GitRepoResponse(second, getStatistics(request.getSecondRepo()), secondLanguages, secondLangStat);
@@ -119,14 +124,14 @@ public class GitRepoService {
 
     private StatisticsResponse getStatistics(String name) {
         GitRepo gitRepo = getEntityByName(name);
-        IntSummaryStatistics commitStats =
-                gitRepo.getGitRepoMember().stream().mapToInt(GitRepoMember::getCommits).summaryStatistics();
-        IntSummaryStatistics additionStats =
-                gitRepo.getGitRepoMember().stream().mapToInt(GitRepoMember::getAdditions).summaryStatistics();
-        IntSummaryStatistics deletionStats =
-                gitRepo.getGitRepoMember().stream().mapToInt(GitRepoMember::getDeletions).summaryStatistics();
+        List<Integer> commits = gitRepo.getGitRepoMembers().stream().map(GitRepoMember::getCommits).collect(Collectors.toList());
+        List<Integer> additions = gitRepo.getGitRepoMembers().stream().map(GitRepoMember::getAdditions).collect(Collectors.toList());
+        List<Integer> deletions = gitRepo.getGitRepoMembers().stream().map(GitRepoMember::getDeletions).collect(Collectors.toList());
 
-        return new StatisticsResponse(commitStats, additionStats, deletionStats);
+        return new StatisticsResponse(
+                commits.isEmpty() ? new IntSummaryStatistics(0, 0, 0 ,0 ) : commits.stream().mapToInt(Integer::intValue).summaryStatistics(),
+                additions.isEmpty() ? new IntSummaryStatistics(0, 0, 0 ,0 ) : additions.stream().mapToInt(Integer::intValue).summaryStatistics(),
+                deletions.isEmpty() ? new IntSummaryStatistics(0, 0, 0 ,0 ) : deletions.stream().mapToInt(Integer::intValue).summaryStatistics());
     }
 
     private GitRepo getEntityByName(String name) {
