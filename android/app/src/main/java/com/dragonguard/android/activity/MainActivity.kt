@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
             authRequestResult(requestKey!!)
         } else if(it.resultCode == 1) {
-            postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
+//            postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
 //            Toast.makeText(applicationContext, "skip 주소 : $walletAddress", Toast.LENGTH_SHORT).show()
         }
     }
@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private var userId = 0
     private var walletAddress = ""
     private var registered = false
+    private var address = false
     //    var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,7 +140,8 @@ class MainActivity : AppCompatActivity() {
                     handler.postDelayed({registerUser("posite")}, 4000)
                 }
             } else {
-                if(userInfo.commits != 0 && userInfo.tier == "SPROUT") {
+                if(userInfo.commits != 0 && userInfo.tier == "SPROUT" && !address) {
+                    address = true
                     postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
                 } else {
                     binding.userTier.text = "내 티어 : ${userInfo.tier}"
@@ -182,11 +184,11 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.postWalletAddress(id, address)
             }
             val postWalletResponse = postwalletDeferred.await()
-            if(!postWalletResponse) {
-                postWalletAddress(id, address)
-            } else {
-//                Toast.makeText(applicationContext, "wallet post : 성공!", Toast.LENGTH_SHORT).show()
-            }
+//            if(!postWalletResponse) {
+//                postWalletAddress(userId, address)
+//            } else {
+////                Toast.makeText(applicationContext, "wallet post : 성공!", Toast.LENGTH_SHORT).show()
+//            }
         }
     }
 

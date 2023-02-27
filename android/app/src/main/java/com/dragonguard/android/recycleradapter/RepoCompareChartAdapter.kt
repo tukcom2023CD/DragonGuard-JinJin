@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.blue
@@ -139,7 +140,7 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
                 set1.setDrawFilled(true)
                 set1.color = Color.GREEN
                 set1.fillColor = Color.GREEN
-                set1.fillAlpha = 80
+                set1.fillAlpha = 50
                 set1.setDrawValues(false)
                 val set2 = RadarDataSet(entries2, short2)
 //                set2.label = null
@@ -147,25 +148,29 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
                 set2.setDrawFilled(true)
                 set2.color = Color.BLACK
                 set2.fillColor = Color.BLACK
-                set2.fillAlpha = 80
-//                set2.setDrawValues(false)
+                set2.fillAlpha = 50
+                set2.setDrawValues(false)
                 val dataSets1: ArrayList<IRadarDataSet> = ArrayList()
                 dataSets1.add(set1)
                 val data1 = RadarData(dataSets1)
                 data1.addDataSet(set2)
+                radar.setPadding(0, 0, 0, 0)
+                radar.setExtraOffsets(0f, 0f, 0f, 0f)
                 radar.apply {
                     setTouchEnabled(false) // 차트 터치 막기
                     description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
-                    legend.isEnabled = true // 차트 범례 설정(legend object chart)
+                    legend.isEnabled = false // 차트 범례 설정(legend object chart)
+//                    legend.yOffset = 5f
+//                    legend.xOffset = 5f
                     xAxis.apply {
                         isEnabled = true
                         position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
-                        granularity = 1f // 1 단위만큼 간격 두기
                         setDrawAxisLine(true) // 축 그림
                         setDrawGridLines(false) // 격자
                         textColor = ContextCompat.getColor(context, R.color.black) //라벨 색상
                         valueFormatter = MyXAxisFormatter()
-                        textSize = 12f // 텍스트 크기
+                        textSize = 10f // 텍스트 크기
+                        setCenterAxisLabels(true)
                     }
                 }
                 radar.rotation = 0f
@@ -178,14 +183,14 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
     }
 
     class MyXAxisFormatter() : ValueFormatter() {
-        private val days = listOf("addition average", "deletion average", "language average")
+        private val days = listOf("addition average", "deletion average", "language minimum")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt()) ?: value.toString()
         }
     }
 
     class ScoreCustomFormatter() : ValueFormatter() {
-        private val days = listOf("addition average", "deletion average", "language average")
+        private val days = listOf("addition average", "deletion average", "language minimum")
 
         //        private val days = listOf( "additions", "deletions")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
