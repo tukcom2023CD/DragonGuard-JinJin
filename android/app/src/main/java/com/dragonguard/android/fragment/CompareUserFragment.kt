@@ -1,12 +1,10 @@
 package com.dragonguard.android.fragment
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -14,39 +12,21 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.FragmentCompareUserBinding
-import com.dragonguard.android.model.CompareRepoResponseModel
-import com.dragonguard.android.model.FirstResult
+import com.dragonguard.android.model.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.RepoContributorsItem
-import com.dragonguard.android.model.SecondResult
-import com.dragonguard.android.recycleradapter.ContributorsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CompareUserFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
 
     private var repo1 = repoName1
@@ -81,7 +61,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
     }
 
     //    검색한 결과가 잘 왔는지 확인
-    fun checkContributors(result: CompareRepoResponseModel) {
+    fun checkContributors(result: CompareRepoMembersResponseModel) {
         if ((result.firstResult != null) && (result.secondResult != null)) {
             if (result.firstResult.isEmpty()) {
                 count++
@@ -92,7 +72,8 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
                 for (i in 0 until result.firstResult.size) {
                     compare1 = contributors1.filter { it.githubId == result.firstResult[i].githubId }.toMutableList()
                     if (compare1.isEmpty()) {
-                        contributors1.add(RepoContributorsItem(result.firstResult[i].additions,result.firstResult[i].commits,result.firstResult[i].deletions, result.firstResult[i].githubId))
+                        contributors1.add(RepoContributorsItem(result.firstResult[i].additions,result.firstResult[i].commits,
+                            result.firstResult[i].deletions, result.firstResult[i].githubId))
                     } else {
                         compare1.clear()
                     }
@@ -101,7 +82,8 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
                 for (i in 0 until result.secondResult.size) {
                     compare2 = contributors2.filter { it.githubId == result.secondResult[i].githubId }.toMutableList()
                     if (compare2.isEmpty()) {
-                        contributors2.add(RepoContributorsItem(result.secondResult[i].additions,result.secondResult[i].commits,result.secondResult[i].deletions, result.secondResult[i].githubId))
+                        contributors2.add(RepoContributorsItem(result.secondResult[i].additions,result.secondResult[i].commits,
+                            result.secondResult[i].deletions, result.secondResult[i].githubId))
                     } else {
                         compare2.clear()
                     }
@@ -110,6 +92,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
             }
         } else {
             if(count<10) {
+                count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors(repo1, repo2)}, 5000)
             }
@@ -140,17 +123,17 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    if(position > contributors1.size) {
-//                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
-                        val name = contributors2[position-contributors1.size-1].githubId
-                        binding.compareUser1.text = name
-                    } else {
-                        if(position > 0) {
-//                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
-                            val name = contributors1[position-1].githubId
-                            binding.compareUser1.text = name
-                        }
-                    }
+//                    if(position > contributors1.size) {
+////                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
+//                        val name = contributors2[position-contributors1.size-1].githubId
+//                        binding.compareUser1.text = name
+//                    } else {
+//                        if(position > 0) {
+////                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
+//                            val name = contributors1[position-1].githubId
+//                            binding.compareUser1.text = name
+//                        }
+//                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -163,17 +146,17 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    if(position > contributors1.size) {
-//                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
-                        val name = contributors2[position-contributors1.size-1].githubId
-                        binding.compareUser2.text = name
-                    } else {
-                        if(position > 0) {
-//                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
-                            val name = contributors1[position-1].githubId
-                            binding.compareUser2.text = name
-                        }
-                    }
+//                    if(position > contributors1.size) {
+////                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
+//                        val name = contributors2[position-contributors1.size-1].githubId
+//                        binding.compareUser2.text = name
+//                    } else {
+//                        if(position > 0) {
+////                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
+//                            val name = contributors1[position-1].githubId
+//                            binding.compareUser2.text = name
+//                        }
+//                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -185,7 +168,8 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
 
     private fun initGraph(user1: String, user2: String) {
         binding.progressBar.visibility = View.VISIBLE
-        binding.userChart.visibility = View.GONE
+        binding.userCommitChart.visibility = View.GONE
+        binding.userCodeChart.visibility = View.GONE
 //        Toast.makeText(requireContext(), "initGraph()", Toast.LENGTH_SHORT).show()
         var user1Cont = contributors1.find { it.githubId == user1 }
         var user2Cont = contributors1.find { it.githubId == user2 }
@@ -197,60 +181,141 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         }
         user1Cont!!
         user2Cont!!
-        val entries1 = ArrayList<RadarEntry>()
-        val entries2 = ArrayList<RadarEntry>()
+        val commitEntries1 = ArrayList<BarEntry>()
+        val commitEntries2 = ArrayList<BarEntry>()
+        val codeEntries1 = ArrayList<BarEntry>()
+        val codeEntries2 = ArrayList<BarEntry>()
 //        Toast.makeText(requireContext(), "${user2Cont.commits} ${user2Cont.additions}  ${user2Cont.deletions}", Toast.LENGTH_SHORT).show()
-        entries1.add(RadarEntry(user1Cont.commits!!.toFloat()))
-        entries1.add(RadarEntry(user1Cont.additions!!.toFloat()))
-        entries1.add(RadarEntry(user1Cont.deletions!!.toFloat()))
-        entries2.add(RadarEntry(user2Cont.commits!!.toFloat()))
-        entries2.add(RadarEntry(user2Cont.additions!!.toFloat()))
-        entries2.add(RadarEntry(user2Cont.deletions!!.toFloat()))
+        commitEntries1.add(BarEntry(1.toFloat(), user1Cont.commits!!.toFloat()))
+        codeEntries1.add(BarEntry(1.toFloat(), user1Cont.additions!!.toFloat()))
+        codeEntries1.add(BarEntry(2.toFloat(), user1Cont.deletions!!.toFloat()))
+        commitEntries2.add(BarEntry(1.toFloat(), user2Cont.commits!!.toFloat()))
+        codeEntries2.add(BarEntry(1.toFloat(), user2Cont.additions!!.toFloat()))
+        codeEntries2.add(BarEntry(2.toFloat(), user2Cont.deletions!!.toFloat()))
 //        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
 
-        val set1 = RadarDataSet(entries1,user1)
-        set1.color= Color.rgb(153,255,119)
-        set1.apply{
+        val commitSet1 = BarDataSet(commitEntries1,user1)
+        commitSet1.color= Color.rgb(153,255,119)
+        commitSet1.apply{
             valueTextSize = 12f
             setDrawValues(true)
             valueFormatter = ScoreCustomFormatter()
         }
 
-        val set2 = RadarDataSet(entries2,user2)
-        set2.color = Color.BLACK
-        set2.apply{
+        val commitSet2 = BarDataSet(commitEntries2,user2)
+        commitSet2.color = Color.BLACK
+        commitSet2.apply{
             valueTextSize = 12f
             setDrawValues(true)
             valueFormatter = ScoreCustomFormatter()
         }
-        val dataSet1 = ArrayList<IRadarDataSet>()
-        dataSet1.add(set1)
-        val dataSet2 = ArrayList<IRadarDataSet>()
-        dataSet2.add(set2)
-        val data = RadarData(dataSet1)
-        data.addDataSet(set2)
+        val commitDataSet1 = ArrayList<IBarDataSet>()
+        commitDataSet1.add(commitSet1)
+        commitDataSet1.add(commitSet2)
+        val dataSet2 = ArrayList<IBarDataSet>()
+        dataSet2.add(commitSet2)
+        val commitData = BarData(commitDataSet1)
+        commitData.barWidth = 0.4f
+        commitData.groupBars(0.5f, 0.2f, 0f)
 
-        binding.userChart.apply {
+        val codeSet1 = BarDataSet(codeEntries1,user1)
+        codeSet1.color= Color.rgb(153,255,119)
+        codeSet1.apply{
+            valueTextSize = 12f
+            setDrawValues(true)
+            valueFormatter = ScoreCustomFormatter()
+        }
+
+        val codeSet2 = BarDataSet(codeEntries2,user2)
+        codeSet2.color = Color.BLACK
+        codeSet2.apply{
+            valueTextSize = 12f
+            setDrawValues(true)
+            valueFormatter = ScoreCustomFormatter()
+        }
+        val codeDataSet1 = ArrayList<IBarDataSet>()
+        codeDataSet1.add(codeSet1)
+        codeDataSet1.add(codeSet2)
+
+        val codeData = BarData(codeDataSet1)
+        codeData.barWidth = 0.4f
+        codeData.groupBars(0.5f, 0.2f, 0f)
+
+        binding.userCommitChart.apply {
+            setFitBars(true)
+            setDrawBarShadow(false) // 그래프 그림자
             setTouchEnabled(false) // 차트 터치 막기
+            setPinchZoom(false) // 두손가락으로 줌 설정
+            setDrawGridBackground(false) // 격자구조
             description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
-            legend.isEnabled = true // 차트 범례 설정(legend object chart)
+            legend.isEnabled = false // 차트 범례 설정(legend object chart)
+            axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
+            axisLeft.apply { //왼쪽 축. 즉 Y방향 축을 뜻한다.
+                axisMinimum = 0f // 최소값 0
+                granularity = 10f // 10 단위마다 선을 그리려고 설정.
+                setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
+                setDrawGridLines(true) //격자 라인 활용
+                setDrawAxisLine(true) // 축 그리기 설정
+                axisLineColor = ContextCompat.getColor(context, R.color.black) // 축 색깔 설정
+                gridColor = ContextCompat.getColor(context, R.color.black) // 축 아닌 격자 색깔 설정
+                textColor = ContextCompat.getColor(context, R.color.black) // 라벨 텍스트 컬러 설정
+                textSize = 13f //라벨 텍스트 크기
+            }
             xAxis.apply {
+                yOffset = 0f
                 isEnabled = true
                 position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
-                granularity = 1f
+                granularity = 1f // 1 단위만큼 간격 두기
                 setDrawAxisLine(true) // 축 그림
-                setDrawGridLines(false)
-                valueFormatter = MyXAxisFormatter()
+                setDrawGridLines(false) // 격자
                 textColor = ContextCompat.getColor(context, R.color.black) //라벨 색상
                 textSize = 12f // 텍스트 크기
+                valueFormatter = CommitsFormatter() // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
             }
+            animateY(500) // 밑에서부터 올라오는 애니매이션 적용
+        }
+
+        binding.userCodeChart.apply {
+            setFitBars(true)
+            setDrawBarShadow(false) // 그래프 그림자
+            setTouchEnabled(false) // 차트 터치 막기
+            setPinchZoom(false) // 두손가락으로 줌 설정
+            setDrawGridBackground(false) // 격자구조
+            description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
+            legend.isEnabled = false // 차트 범례 설정(legend object chart)
+            axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
+            axisLeft.apply { //왼쪽 축. 즉 Y방향 축을 뜻한다.
+                axisMinimum = 0f // 최소값 0
+                granularity = 10f // 10 단위마다 선을 그리려고 설정.
+                setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
+                setDrawGridLines(true) //격자 라인 활용
+                setDrawAxisLine(true) // 축 그리기 설정
+                axisLineColor = ContextCompat.getColor(context, R.color.black) // 축 색깔 설정
+                gridColor = ContextCompat.getColor(context, R.color.black) // 축 아닌 격자 색깔 설정
+                textColor = ContextCompat.getColor(context, R.color.black) // 라벨 텍스트 컬러 설정
+                textSize = 13f //라벨 텍스트 크기
+            }
+            xAxis.apply {
+                yOffset = 0f
+                isEnabled = true
+                position = XAxis.XAxisPosition.BOTTOM //X축을 아래에다가 둔다.
+                granularity = 1f // 1 단위만큼 간격 두기
+                setDrawAxisLine(true) // 축 그림
+                setDrawGridLines(false) // 격자
+                textColor = ContextCompat.getColor(context, R.color.black) //라벨 색상
+                textSize = 12f // 텍스트 크기
+                valueFormatter = CodeFormatter() // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
+            }
+            animateY(500) // 밑에서부터 올라오는 애니매이션 적용
         }
 //        binding.userChart.invalidate()
-        binding.userChart.data = data
+        binding.userCommitChart.data = commitData
+        binding.userCodeChart.data = codeData
 //        binding.userChart.data.addDataSet(set2)
 //        binding.userChart.invalidate()
         binding.progressBar.visibility = View.GONE
-        binding.userChart.visibility = View.VISIBLE
+        binding.userCommitChart.visibility = View.VISIBLE
+        binding.userCodeChart.visibility = View.VISIBLE
 
 
 //        binding.contributorsChart.run {
@@ -265,11 +330,22 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
     /*    그래프 x축을 contributor의 이름으로 변경하는 코드
           x축 label을 githubId의 앞의 4글자를 기입하여 곂치는 문제 해결
      */
-    class MyXAxisFormatter() : ValueFormatter() {
-        private val days = listOf("commits", "additions", "deletions")
+    class CommitsFormatter() : ValueFormatter() {
+        private val days = listOf("commits")
 //        private val days = listOf( "additions", "deletions")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return days.getOrNull(value.toInt()) ?: value.toString()
+            return days.getOrNull(value.toInt() - 1) ?: value.toString()
+        }
+        override fun getFormattedValue(value: Float): String {
+            return "" + value.toInt()
+        }
+    }
+
+    class CodeFormatter() : ValueFormatter() {
+        private val days = listOf("additions", "deletions")
+        //        private val days = listOf( "additions", "deletions")
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            return days.getOrNull(value.toInt() - 1) ?: value.toString()
         }
         override fun getFormattedValue(value: Float): String {
             return "" + value.toInt()
@@ -292,13 +368,14 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         updateUI()
     }
-     fun updateUI() {
+     private fun updateUI() {
 
          binding.userCompareChoice.setOnClickListener {
-             if(binding.compareUser1.text == binding.compareUser2.text || binding.compareUser2.text.isNullOrBlank() ||binding.compareUser1.text.isNullOrBlank()) {
+             if(binding.compareUserSpinner1.selectedItem.toString() == binding.compareUserSpinner2.selectedItem.toString() ||
+                 binding.compareUserSpinner1.selectedItem.toString() == "선택하세요" ||binding.compareUserSpinner2.selectedItem.toString() == "선택하세요") {
                  Toast.makeText(context, "서로 다른 사용자를 선택하세요!!", Toast.LENGTH_SHORT).show()
              } else {
-                 initGraph(binding.compareUser1.text.toString(), binding.compareUser2.text.toString())
+                 initGraph(binding.compareUserSpinner1.selectedItem.toString(), binding.compareUserSpinner2.selectedItem.toString())
              }
          }
 

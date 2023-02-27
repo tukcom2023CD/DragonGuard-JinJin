@@ -50,7 +50,10 @@ interface GitRankAPI {
 
     @POST("git-repos/compare/git-repos-members")
     @Headers("accept: application/json", "content-type: application/json")
-    fun postCompareRepoMembers(@Body compare : CompareRepoRequestModel) : Call<CompareRepoResponseModel>
+    fun postCompareRepoMembers(@Body compare : CompareRepoRequestModel) : Call<CompareRepoMembersResponseModel>
 
+    @POST("git-repos/compare")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postCompareRepo(@Body compare: CompareRepoRequestModel) : Call<CompareRepoResponseModel>
 
 }

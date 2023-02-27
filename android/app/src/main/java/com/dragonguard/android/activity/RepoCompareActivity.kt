@@ -51,24 +51,28 @@ class RepoCompareActivity : AppCompatActivity() {
 //        Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()
 
 //        val myFragment = supportFragmentManager.findFragmentById(R.id.compare_frame) as CompareUserFragment
-        compareRepoFragment = CompareRepoFragment()
+        compareRepoFragment = CompareRepoFragment(repo1, repo2)
         compareUserFragment = CompareUserFragment(repo1, repo2)
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.compare_frame, compareRepoFragment)
             .add(R.id.compare_frame, compareUserFragment)
-            .replace(R.id.compare_frame, compareRepoFragment)
+            .hide(compareUserFragment)
             .commit()
 
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.compare_repo -> {
+                    binding.compareTitle.text = "Repository 비교"
                     val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.replace(binding.compareFrame.id, compareRepoFragment)
+                    transactionN.hide(compareUserFragment)
+                        .show(compareRepoFragment)
                         .commit()
                 }
                 R.id.compare_user -> {
+                    binding.compareTitle.text = "Repository 구성원 비교"
                     val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.replace(binding.compareFrame.id, compareUserFragment)
+                    transactionN.show(compareUserFragment)
+                        .hide(compareRepoFragment)
                         .commit()
                 }
             }

@@ -18,13 +18,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.model.RepoSearchResultModel
-import com.dragonguard.android.recycleradapter.CompareRepositoryAdapter
-import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
+import com.dragonguard.android.recycleradapter.SearchCompareRepoAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
 
 class CompareSearchActivity : AppCompatActivity() {
-    private lateinit var compareRepositoryAdapter: CompareRepositoryAdapter
+    private lateinit var compareRepositoryAdapter: SearchCompareRepoAdapter
     private lateinit var binding : ActivitySearchBinding
     var viewmodel = Viewmodel()
     private var position = 0
@@ -218,7 +217,7 @@ class CompareSearchActivity : AppCompatActivity() {
     private fun initRecycler() {
         Log.d("count", "count: $count")
         if (count == 0) {
-            compareRepositoryAdapter = CompareRepositoryAdapter(repoNames, this, repoCount)
+            compareRepositoryAdapter = SearchCompareRepoAdapter(repoNames, this, repoCount)
             binding.searchResult.adapter = compareRepositoryAdapter
             binding.searchResult.layoutManager = LinearLayoutManager(this)
             compareRepositoryAdapter.notifyDataSetChanged()

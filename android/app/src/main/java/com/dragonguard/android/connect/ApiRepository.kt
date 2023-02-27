@@ -47,19 +47,6 @@ class ApiRepository {
         return repoNames
     }
 
-    fun getTier(id: Int): String {
-        val tier = api.getUserTier(id)
-        var tierResult = ""
-        try{
-            val result = tier.execute()
-            if(result.isSuccessful){
-                tierResult = result.body()!!
-            }
-        }catch (e : SocketTimeoutException){
-            return tierResult
-        }
-        return tierResult
-    }
 
     fun getUserInfo(id: Int): UserInfoModel {
         val userInfo = api.getUserInfo(id)
@@ -187,9 +174,23 @@ class ApiRepository {
         return authResult
     }
 
-    fun postCompareRepoMembersRequest(body: CompareRepoRequestModel): CompareRepoResponseModel {
+    fun postCompareRepoMembersRequest(body: CompareRepoRequestModel): CompareRepoMembersResponseModel {
+        var compareRepoResult = CompareRepoMembersResponseModel(null, null)
+        val compareRepoMembers = api.postCompareRepoMembers(body)
+        try{
+            val result = compareRepoMembers.execute()
+            if(result.isSuccessful) {
+                compareRepoResult = result.body()!!
+            }
+        } catch (e: Exception) {
+            return compareRepoResult
+        }
+        return compareRepoResult
+    }
+
+    fun postCompareRepoRequest(body: CompareRepoRequestModel): CompareRepoResponseModel {
         var compareRepoResult = CompareRepoResponseModel(null, null)
-        val compareRepo = api.postCompareRepoMembers(body)
+        val compareRepo = api.postCompareRepo(body)
         try{
             val result = compareRepo.execute()
             if(result.isSuccessful) {
@@ -200,5 +201,4 @@ class ApiRepository {
         }
         return compareRepoResult
     }
-
 }
