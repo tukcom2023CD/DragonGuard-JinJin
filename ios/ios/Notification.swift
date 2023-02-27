@@ -13,6 +13,7 @@ extension Notification.Name{
     static let data = Notification.Name("")
     static let deepLink = Notification.Name("")
     static let walletAddress = Notification.Name("")
+    static let clickedRepo = Notification.Name("")
 }
 
 // KLIP 지갑 주소
@@ -29,5 +30,9 @@ enum NotificationDeepLinkKey{
 enum NotificationKey{
     case choiceId
     case repository
+}
+
+enum NotificationUsers{
+    case repo
 }
 

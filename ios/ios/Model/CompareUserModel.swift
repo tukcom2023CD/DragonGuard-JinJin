@@ -11,8 +11,8 @@ import Foundation
  Model
  */
 struct CompareUserModel{
-    var firstResult: FirstRepoResult
-    var secondResult: SecondRepoResult
+    var firstResult: [FirstRepoResult]
+    var secondResult: [SecondRepoResult]
 }
 
 struct FirstRepoResult{

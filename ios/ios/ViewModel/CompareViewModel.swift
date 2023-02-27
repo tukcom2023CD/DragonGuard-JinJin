@@ -13,8 +13,7 @@ final class CompareViewModel{
     var firstRepo = ""
     var secondRepo = ""
     var repositryInfo: BehaviorSubject<[String]> = BehaviorSubject(value: [])
-    var firstUserInfo: BehaviorSubject<[FirstRepoResult]> = BehaviorSubject(value: [])
-    var secondUserInfo: BehaviorSubject<[SecondRepoResult]> = BehaviorSubject(value: [])
+    var repoUserInfo: BehaviorSubject<CompareUserModel> = BehaviorSubject(value: CompareUserModel(firstResult: [], secondResult: []))
     let disposeBag = DisposeBag()
     
     func callAPI(){
@@ -23,15 +22,12 @@ final class CompareViewModel{
             self.secondRepo = $0[1]
         })
         .disposed(by: disposeBag)
-        print(self.firstRepo)
-        print(self.secondRepo)
         CompareService.compareService.beforeSendingInfo(firstRepo: self.firstRepo, secondRepo: self.secondRepo)
     }
     
     func bringUserInfo(){
-        if CompareService.compareService.firstRepoUserInfo.count != 0 && CompareService.compareService.secondRepoUserInfo.count != 0 {
-            self.firstUserInfo.onNext(CompareService.compareService.firstRepoUserInfo)
-            self.secondUserInfo.onNext(CompareService.compareService.secondRepoUserInfo)
+        if CompareService.compareService.repoUserInfo?.firstResult.count != 0{
+            self.repoUserInfo.onNext(CompareUserModel(firstResult: CompareService.compareService.firstRepoUserInfo, secondResult: CompareService.compareService.secondRepoUserInfo))
         }
     }
 }
