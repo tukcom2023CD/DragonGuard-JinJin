@@ -25,12 +25,12 @@ public class GitRepo extends BaseTime {
     private Integer closedIssues;
 
     @OneToMany(mappedBy = "gitRepo")
-    private Set<GitRepoMember> gitRepoMember = new HashSet<>();
+    private Set<GitRepoMember> gitRepoMembers = new HashSet<>();
 
     @Builder
-    public GitRepo(String name, Set<GitRepoMember> gitRepoMember) {
+    public GitRepo(String name, Set<GitRepoMember> gitRepoMembers) {
         this.name = name;
-        this.gitRepoMember = gitRepoMember;
+        this.gitRepoMembers = gitRepoMembers;
     }
 
     public void updateClosedIssues(Integer closedIssues) {

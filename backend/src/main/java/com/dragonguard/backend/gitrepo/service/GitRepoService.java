@@ -50,7 +50,7 @@ public class GitRepoService {
             gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
             requestGitRepoToScraping(gitRepoRequest);
             return List.of();
-        } else if (gitRepo.get().getGitRepoMember().isEmpty()) {
+        } else if (gitRepo.get().getGitRepoMembers().isEmpty()) {
             requestGitRepoToScraping(gitRepoRequest);
             return List.of();
         }
@@ -62,9 +62,9 @@ public class GitRepoService {
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
         if (gitRepo.isEmpty()) {
-            GitRepo findGitRepo = gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
+            gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
             return requestToGithub(gitRepoRequest);
-        } else if (gitRepo.get().getGitRepoMember().isEmpty()) {
+        } else if (gitRepo.get().getGitRepoMembers().isEmpty()) {
             return requestToGithub(gitRepoRequest);
         }
         return gitRepoMemberRepository.findAllByGitRepo(gitRepo.get()).stream()
@@ -124,9 +124,9 @@ public class GitRepoService {
 
     private StatisticsResponse getStatistics(String name) {
         GitRepo gitRepo = getEntityByName(name);
-        List<Integer> commits = gitRepo.getGitRepoMember().stream().map(GitRepoMember::getCommits).collect(Collectors.toList());
-        List<Integer> additions = gitRepo.getGitRepoMember().stream().map(GitRepoMember::getAdditions).collect(Collectors.toList());
-        List<Integer> deletions = gitRepo.getGitRepoMember().stream().map(GitRepoMember::getDeletions).collect(Collectors.toList());
+        List<Integer> commits = gitRepo.getGitRepoMembers().stream().map(GitRepoMember::getCommits).collect(Collectors.toList());
+        List<Integer> additions = gitRepo.getGitRepoMembers().stream().map(GitRepoMember::getAdditions).collect(Collectors.toList());
+        List<Integer> deletions = gitRepo.getGitRepoMembers().stream().map(GitRepoMember::getDeletions).collect(Collectors.toList());
 
         return new StatisticsResponse(
                 commits.isEmpty() ? new IntSummaryStatistics(0, 0, 0 ,0 ) : commits.stream().mapToInt(Integer::intValue).summaryStatistics(),
