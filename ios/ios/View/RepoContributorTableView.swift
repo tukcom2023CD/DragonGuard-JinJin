@@ -33,6 +33,8 @@ final class RepoContributorTableView: UITableViewCell{
         let label = UILabel()
         
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        label.backgroundColor = .white
+        label.textColor = .black
 //        label.layer.borderWidth = 1
         return label
     }()
@@ -40,7 +42,8 @@ final class RepoContributorTableView: UITableViewCell{
     // 사용자 이름
     lazy var nameLabel: UILabel = {
         let label = UILabel()
-        
+        label.backgroundColor = .white
+        label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
     }()

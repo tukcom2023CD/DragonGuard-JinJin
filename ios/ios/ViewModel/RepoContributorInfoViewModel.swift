@@ -22,8 +22,8 @@ final class RepoContributorInfoViewModel{
     
     // api 결과값을 view로 전달
     func serviceToView(){
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
-            if RepoContributorInfoService.repoShared.checkData {
+        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true, block: { timer in
+            if RepoContributorInfoService.repoShared.checkData &&  RepoContributorInfoService.repoShared.resultData.count > 0{
                 self.repoResultBehaviorSubject.onNext(RepoContributorInfoService.repoShared.resultData)
                 self.selectTitle = RepoContributorInfoService.repoShared.selectedName
                 self.checkData = true
