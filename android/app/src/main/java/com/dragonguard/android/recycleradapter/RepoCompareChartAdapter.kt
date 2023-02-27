@@ -135,6 +135,7 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
                 }
                 val set1 = RadarDataSet(entries1, short1)
 //                set1.label = null
+                set1.valueFormatter = ScoreCustomFormatter()
                 set1.setDrawFilled(true)
                 set1.color = Color.GREEN
                 set1.fillColor = Color.GREEN
@@ -142,14 +143,15 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
                 set1.setDrawValues(false)
                 val set2 = RadarDataSet(entries2, short2)
 //                set2.label = null
+                set2.valueFormatter = ScoreCustomFormatter()
                 set2.setDrawFilled(true)
                 set2.color = Color.BLACK
                 set2.fillColor = Color.BLACK
                 set2.fillAlpha = 80
-                set2.setDrawValues(false)
-//                val dataSets1: ArrayList<IRadarDataSet> = ArrayList()
-//                dataSets1.add(set1)
-                val data1 = RadarData(set1)
+//                set2.setDrawValues(false)
+                val dataSets1: ArrayList<IRadarDataSet> = ArrayList()
+                dataSets1.add(set1)
+                val data1 = RadarData(dataSets1)
                 data1.addDataSet(set2)
                 radar.apply {
                     setTouchEnabled(false) // 차트 터치 막기
@@ -179,9 +181,6 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
         private val days = listOf("addition average", "deletion average", "language average")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt()) ?: value.toString()
-        }
-        override fun getFormattedValue(value: Float): String {
-            return "" + value.toInt()
         }
     }
 

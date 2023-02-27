@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private var backPressed : Long = 0
     private var userId = 0
     private var walletAddress = ""
+    private var registered = false
     //    var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,8 +133,11 @@ class MainActivity : AppCompatActivity() {
             val userInfo : UserInfoModel = resultDeferred.await()
             if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null) {
 //                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
-                val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({registerUser("posite")}, 1000)
+                if(!registered) {
+                    registered = true
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({registerUser("posite")}, 4000)
+                }
             } else {
                 if(userInfo.commits != 0 && userInfo.tier == "SPROUT") {
                     postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
