@@ -1,80 +1,105 @@
 //
-//  CompareRepositorycontroller.swift
+//  CompareGraphController.swift
 //  ios
 //
-//  Created by 홍길동 on 2023/02/06.
+//  Created by 홍길동 on 2023/02/21.
 //
 
 import Foundation
 import UIKit
 import SnapKit
+import RxCocoa
+import RxSwift
+import Charts
 
-// Repository 비교
-final class CompareUserController: UIViewController{
+
+final class CompareUserController : UIViewController {
+    let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
-    let searchPage = SearchPageController()
-    var user1: String = ""
-    var user2: String = ""
+    var firstUserInfo : [FirstRepoResult] = []
+    var secondUserInfo : [SecondRepoResult] = []
+    let viewModel = CompareViewModel()
+    let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.isHidden = false
         self.view.backgroundColor = .white
-        
         addToView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self, selector: #selector(notificationData(notification:)), name: Notification.Name.data, object: nil)
+        firstUserInfo = []
+        secondUserInfo = []
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
+            self.viewModel.bringUserInfo()
+            self.viewModel.firstUserInfo.subscribe(onNext: {
+                self.firstUserInfo = $0
+            })
+            .disposed(by: self.disposeBag)
+            self.viewModel.secondUserInfo.subscribe(onNext: {
+                self.secondUserInfo = $0
+            })
+            .disposed(by: self.disposeBag)
+            if self.firstUserInfo.count != 0 && self.secondUserInfo.count != 0 {
+                timer.invalidate()
+                print(self.firstUserInfo)
+                print(self.secondUserInfo)
+            }
+        })
     }
+    
     /*
      UI 코드 작성
      */
     
-    lazy var searchLabel: UILabel = {
+    lazy var user1Label : UILabel = {
         let label = UILabel()
-        label.text = "유저 선택하기"
-        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
+        label.text = "test1"
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         label.textColor = .black
+        label.textAlignment = .center
+        label.layer.borderWidth = 2
+        label.layer.cornerRadius = 20
         return label
     }()
     
-    lazy var searchBtn1: UIButton = {
+    lazy var user1ColorButton : UIButton = {
         let btn = UIButton()
-        btn.titleColor(for: .normal)
-        btn.tintColor = .black
-        btn.setTitle("Choose User1", for: .normal)
-        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        btn.setTitleColor(.black, for: .normal)
-        btn.layer.cornerRadius = 20
-        btn.layer.borderWidth = 2
-        btn.addTarget(self, action: #selector(clickedSearchBtn1), for: .touchUpInside)
+        btn.backgroundColor = .red
+        btn.layer.cornerRadius = deviceWidth/24
+        btn.isEnabled = false
         return btn
     }()
     
-    lazy var searchBtn2: UIButton = {
+    lazy var user2Label : UILabel = {
+        let label = UILabel()
+        label.text = "test2"
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        label.textColor = .black
+        label.textAlignment = .center
+        label.layer.borderWidth = 2
+        label.layer.cornerRadius = 20
+        return label
+    }()
+    
+    lazy var user2ColorButton : UIButton = {
         let btn = UIButton()
-        btn.titleColor(for: .normal)
-        btn.setTitle("Choose User2", for: .normal)
-        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        btn.setTitleColor(.black, for: .normal)
-        btn.layer.cornerRadius = 20
-        btn.layer.borderWidth = 2
-        btn.addTarget(self, action: #selector(clickedSearchBtn2), for: .touchUpInside)
+        btn.backgroundColor = .blue
+        btn.layer.cornerRadius = deviceWidth/24
+        btn.isEnabled = false
         return btn
     }()
     
-    lazy var nextBtn: UIButton = {
-        let btn = UIButton()
-        btn.titleColor(for: .normal)
-        btn.setTitle("다음", for: .normal)
-        btn.backgroundColor = UIColor(red: 15/255, green: 135/255, blue: 255/255, alpha: 1.0) /* #0f87ff */
-        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        btn.setTitleColor(.black, for: .normal)
-        btn.layer.cornerRadius = 20
-        btn.layer.borderWidth = 2
-        btn.addTarget(self, action: #selector(clickedNextBtn), for: .touchUpInside)
-        return btn
+    lazy var chartCommit : BarChartView = {
+        let chart1 = BarChartView()
+        chart1.backgroundColor = .white
+        return chart1
+    }()
+    
+    lazy var chartAddDel : BarChartView = {
+        let chart1 = BarChartView()
+        chart1.backgroundColor = .white
+        return chart1
     }()
     
     /*
@@ -82,47 +107,14 @@ final class CompareUserController: UIViewController{
      */
     
     private func addToView(){
-        self.view.addSubview(searchLabel)
-        
-        self.view.addSubview(searchBtn1)
-        self.view.addSubview(searchBtn2)
-        self.view.addSubview(nextBtn)
-        
+        self.view.addSubview(user1Label)
+        self.view.addSubview(user1ColorButton)
+        self.view.addSubview(user2Label)
+        self.view.addSubview(user2ColorButton)
+        self.view.addSubview(chartCommit)
+        self.view.addSubview(chartAddDel)
         setAutoLayout()
     }
-    
-    @objc func clickedSearchBtn1(){
-        searchPage.beforePage = "CompareUser1"
-        self.navigationController?.pushViewController(searchPage, animated: true)
-    }
-    
-    @objc func clickedSearchBtn2(){
-        searchPage.beforePage = "CompareUser2"
-        self.navigationController?.pushViewController(searchPage, animated: true)
-    }
-    
-    @objc func clickedNextBtn(){
-        if !user1.isEmpty && !user2.isEmpty{
-            // 다음 화면 연동
-            self.navigationController?.pushViewController(TabBarController(), animated: true)
-        }
-    }
-    
-    @objc func notificationData(notification: Notification){
-        guard let id = notification.userInfo?[NotificationKey.choiceId] as? Int else {return}
-        guard let data = notification.userInfo?[NotificationKey.repository] as? String else {return}
-        
-        if id  == 1{
-            user1 = data
-            searchBtn1.setTitle(data, for: .normal)
-        }
-        else if id == 2{
-            user2 = data
-            searchBtn2.setTitle(data, for: .normal)
-        }
-        
-    }
-    
     
     /*
      UI AutoLayout 코드 작성
@@ -131,41 +123,101 @@ final class CompareUserController: UIViewController{
      */
     
     private func setAutoLayout(){
-        searchLabel.snp.makeConstraints({ make in
+        user1Label.snp.makeConstraints ({ make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.centerX.equalToSuperview()
+            make.leading.equalTo(30)
+            make.trailing.equalTo(user1ColorButton.snp.leading).offset(-10)
+            make.height.equalTo(deviceWidth/10)
         })
         
-        searchBtn1.snp.makeConstraints({ make in
-            make.top.equalTo(self.view.snp.centerY).offset(-100)
-            make.height.equalTo(deviceHeight/18)
-            make.leading.equalTo(30)
+        user1ColorButton.snp.makeConstraints ({ make in
+//            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.centerY.equalTo(user1Label)
             make.trailing.equalTo(-30)
+            make.width.equalTo(deviceWidth/12)
+            make.height.equalTo(deviceWidth/12)
         })
         
-        searchBtn2.snp.makeConstraints({ make in
-            make.top.equalTo(searchBtn1.snp.bottom).offset(20)
-            make.height.equalTo(deviceHeight/18)
+        user2Label.snp.makeConstraints ({ make in
+            make.top.equalTo(user1Label.snp.bottom).offset(10)
             make.leading.equalTo(30)
-            make.trailing.equalTo(-30)
+            make.height.equalTo(deviceWidth/10)
         })
         
-        nextBtn.snp.makeConstraints({ make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
+        user2ColorButton.snp.makeConstraints ({ make in
+            make.centerY.equalTo(user2Label)
+            make.leading.equalTo(user2Label.snp.trailing).offset(10)
+            make.trailing.equalTo(-30)
+            make.width.equalTo(deviceWidth/12)
+            make.height.equalTo(deviceWidth/12)
+        })
+        
+        chartCommit.snp.makeConstraints ({ make in
+            make.top.equalTo(user2Label.snp.bottom).offset(20)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
+            make.height.equalTo(deviceHeight/3)
         })
+        
+        chartAddDel.snp.makeConstraints ({ make in
+            make.top.equalTo(chartCommit.snp.bottom).offset(10)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        })
+        setChartCommit()
+        setChartAddDel()
     }
+
     
 }
 
-
-
-
+extension CompareUserController : ChartViewDelegate {
+    private func setChartCommit() {
+//        var dataSet : [BarChartDataSet] = []
+        let commitDataSet = BarChartDataSet(
+            entries: [
+                BarChartDataEntry(x: 2, y: 110),
+                BarChartDataEntry(x: 3, y: 120),
+            ]
+        )
+        commitDataSet.colors = [UIColor(red: 255/255, green: 0, blue: 0, alpha: 0.3)]
+        
+        
+        let data = BarChartData(dataSets: [commitDataSet])
+        chartCommit.data = data
+        chartCommitAttribute()
+    }
+    
+    private func chartCommitAttribute(){
+        chartCommit.xAxis.enabled = false
+        
+    }
+    
+    private func setChartAddDel() {
+//        var dataSet : [BarChartDataSet] = []
+        let AddDelDataSet = BarChartDataSet(
+            entries: [
+                BarChartDataEntry(x: 2, y: 110),
+                BarChartDataEntry(x: 3, y: 120),
+            ]
+        )
+        AddDelDataSet.colors = [UIColor(red: 255/255, green: 0, blue: 0, alpha: 0.3)]
+        
+        
+        let data = BarChartData(dataSets: [AddDelDataSet])
+        chartAddDel.data = data
+        chartAddDelAttribute()
+    }
+    
+    private func chartAddDelAttribute(){
+        chartAddDel.xAxis.enabled = false
+        
+    }
+}
 
 /*
  SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
- 
  preview 실행이 안되는 경우 단축키
  Command + Option + Enter : preview 그리는 캠버스 띄우기
  Command + Option + p : preview 재실행
@@ -173,14 +225,14 @@ final class CompareUserController: UIViewController{
 
 import SwiftUI
 
-struct VCPreViewCompareUserController:PreviewProvider {
+struct VCPreViewCompareUserGraphController:PreviewProvider {
     static var previews: some View {
         CompareUserController().toPreview().previewDevice("iPhone 14 pro")
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
 
-struct VCPreViewCompareUserController2:PreviewProvider {
+struct VCPreViewCompareUserGraphController2:PreviewProvider {
     static var previews: some View {
         CompareUserController().toPreview().previewDevice("iPad (10th generation)")
         // 실행할 ViewController이름 구분해서 잘 지정하기
