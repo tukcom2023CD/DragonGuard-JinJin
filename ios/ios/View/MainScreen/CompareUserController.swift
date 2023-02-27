@@ -78,10 +78,30 @@ final class CompareUserController : UIViewController, SendingProtocol {
         return btn
     }()
     
+    lazy var commitLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Commits"
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        label.backgroundColor = .white
+        label.textColor = .black
+        label.textAlignment = .center
+        return label
+    }()
+    
     lazy var chartCommit : BarChartView = {
         let chart1 = BarChartView()
         chart1.backgroundColor = .white
         return chart1
+    }()
+    
+    lazy var addDelLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Additions & Deletions"
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        label.backgroundColor = .white
+        label.textColor = .black
+        label.textAlignment = .center
+        return label
     }()
     
     lazy var chartAddDel : BarChartView = {
@@ -101,6 +121,8 @@ final class CompareUserController : UIViewController, SendingProtocol {
         self.view.addSubview(user2ColorButton)
         self.view.addSubview(chartCommit)
         self.view.addSubview(chartAddDel)
+        self.view.addSubview(commitLabel)
+        self.view.addSubview(addDelLabel)
         setAutoLayout()
     }
     
@@ -155,7 +177,7 @@ final class CompareUserController : UIViewController, SendingProtocol {
             self.user2Button.setTitle(self.chooseArray[index], for: .normal)
         }
         
-        if self.user1Index != 0 && self.user2Index != 0 && self.user1Index != nil && self.user2Index != nil{
+        if self.user1Index != nil && self.user2Index != nil{
             self.setChartCommit()
             self.setChartAddDel()
         }
@@ -176,7 +198,6 @@ final class CompareUserController : UIViewController, SendingProtocol {
         })
         
         user1ColorButton.snp.makeConstraints ({ make in
-            //            make.top.equalTo(view.safeAreaLayoutGuide)
             make.centerY.equalTo(user1Button)
             make.trailing.equalTo(-30)
             make.width.equalTo(deviceWidth/12)
@@ -197,15 +218,27 @@ final class CompareUserController : UIViewController, SendingProtocol {
             make.height.equalTo(deviceWidth/12)
         })
         
-        chartCommit.snp.makeConstraints ({ make in
-            make.top.equalTo(user2Button.snp.bottom).offset(20)
+        commitLabel.snp.makeConstraints({ make in
+            make.top.equalTo(user2Button.snp.bottom).offset(10)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
-            make.height.equalTo(deviceHeight/3)
+        })
+        
+        chartCommit.snp.makeConstraints ({ make in
+            make.top.equalTo(commitLabel.snp.bottom).offset(10)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.height.equalTo(deviceHeight/4)
+        })
+        
+        addDelLabel.snp.makeConstraints({ make in
+            make.top.equalTo(chartCommit.snp.bottom).offset(10)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
         })
         
         chartAddDel.snp.makeConstraints ({ make in
-            make.top.equalTo(chartCommit.snp.bottom).offset(10)
+            make.top.equalTo(addDelLabel.snp.bottom).offset(10)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -263,7 +296,7 @@ extension CompareUserController : ChartViewDelegate {
             userInfo.append(dataEntry1)
             set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.secondResult[newUser1Index].githubId)
         }
-        
+        set1.colors = [.red]
         dataSet.append(set1)
         
         
@@ -293,12 +326,8 @@ extension CompareUserController : ChartViewDelegate {
             set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.secondResult[newUser2Index].githubId)
         }
         
+        set2.colors = [.blue]
         dataSet.append(set2)
-        
-        
-        //        commitDataSet.colors = [UIColor(red: 255/255, green: 0, blue: 0, alpha: 0.3)]
-        
-        
         let data = BarChartData(dataSets: dataSet)
         chartCommit.data = data
         chartCommitAttribute()
@@ -306,28 +335,103 @@ extension CompareUserController : ChartViewDelegate {
     
     private func chartCommitAttribute(){
         chartCommit.xAxis.enabled = false
-        
+        chartCommit.animate(xAxisDuration: 2, yAxisDuration: 2)
+        chartCommit.leftAxis.enabled = true
+        chartCommit.doubleTapToZoomEnabled = false
+        chartCommit.leftAxis.labelFont = .systemFont(ofSize: 15)
+        chartCommit.noDataText = "출력 데이터가 없습니다."
+        chartCommit.noDataFont = .systemFont(ofSize: 30)
+        chartCommit.noDataTextColor = .lightGray
     }
     
+    
     private func setChartAddDel() {
-        //        var dataSet : [BarChartDataSet] = []
-        let AddDelDataSet = BarChartDataSet(
-            entries: [
-                BarChartDataEntry(x: 2, y: 110),
-                BarChartDataEntry(x: 3, y: 120),
-            ]
-        )
-        AddDelDataSet.colors = [UIColor(red: 255/255, green: 0, blue: 0, alpha: 0.3)]
+        var dataSet : [BarChartDataSet] = []
+        guard let lastIndexOfFisrtArray = self.lastIndexOfFisrtArray else {return}
+        
+        // data set 1
+        var userInfo = [ChartDataEntry]()
+        guard let user1Index = self.user1Index else {return}
+        var set1 = BarChartDataSet()
+        var repo = ""
+        var newUser1Index = 0
+        
+        if lastIndexOfFisrtArray > user1Index{  // 첫 번째 유저 선택이 첫번쨰 배열 안에 있는 경우
+            newUser1Index = user1Index
+            repo = "first"
+        }
+        else if lastIndexOfFisrtArray <= user1Index{ // 첫 번째 유저 선택이 두 번째 배열 안에 있는 경우
+            newUser1Index = user1Index - lastIndexOfFisrtArray
+            repo = "second"
+        }
+        
+        if repo == "first"{
+            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.repoUserInfo.firstResult[newUser1Index].additions))
+            let dataEntry2 = BarChartDataEntry(x: 2, y: Double(self.repoUserInfo.firstResult[newUser1Index].deletions))
+            userInfo.append(dataEntry1)
+            userInfo.append(dataEntry2)
+            set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.firstResult[newUser1Index].githubId)
+        }
+        else if repo == "second"{
+            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.repoUserInfo.secondResult[newUser1Index].additions))
+            let dataEntry2 = BarChartDataEntry(x: 2, y: Double(self.repoUserInfo.secondResult[newUser1Index].deletions))
+            userInfo.append(dataEntry1)
+            userInfo.append(dataEntry2)
+            set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.secondResult[newUser1Index].githubId)
+        }
+        set1.colors = [.red]
+        dataSet.append(set1)
         
         
-        let data = BarChartData(dataSets: [AddDelDataSet])
+        // data set 2
+        guard let user2Index = self.user2Index else {return}
+        var newUser2Index = 0
+        var set2 = BarChartDataSet()
+        var userInfo2 = [ChartDataEntry]()
+        repo = ""
+        if lastIndexOfFisrtArray > user2Index{  // 두 번째 유저 선택이 첫번째 배열 안에 있는 경우
+            newUser2Index = user2Index
+            repo = "first"
+        }
+        else if lastIndexOfFisrtArray <= user2Index{ // 두 번째 유저 선택이 두 번째 배열 안에 있는 경우
+            newUser2Index = user2Index - lastIndexOfFisrtArray
+            repo = "second"
+        }
+        
+        if repo == "first"{
+            let dataEntry1 = BarChartDataEntry(x: 1, y: Double(self.repoUserInfo.firstResult[newUser2Index].additions))
+            let dataEntry2 = BarChartDataEntry(x: 3, y: Double(self.repoUserInfo.firstResult[newUser2Index].deletions))
+            userInfo2.append(dataEntry1)
+            userInfo2.append(dataEntry2)
+            set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.firstResult[newUser2Index].githubId)
+        }
+        else if repo == "second"{
+            let dataEntry1 = BarChartDataEntry(x: 1, y: Double(self.repoUserInfo.secondResult[newUser2Index].additions))
+            let dataEntry2 = BarChartDataEntry(x: 3, y: Double(self.repoUserInfo.secondResult[newUser2Index].deletions))
+            userInfo2.append(dataEntry1)
+            userInfo2.append(dataEntry2)
+            set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.secondResult[newUser2Index].githubId)
+        }
+        
+        set2.colors = [.blue]
+        dataSet.append(set2)
+        
+        
+        
+        let data = BarChartData(dataSets: dataSet)
         chartAddDel.data = data
         chartAddDelAttribute()
     }
     
     private func chartAddDelAttribute(){
         chartAddDel.xAxis.enabled = false
-        
+        chartCommit.animate(xAxisDuration: 2, yAxisDuration: 2)
+        chartCommit.leftAxis.enabled = true
+        chartCommit.doubleTapToZoomEnabled = false
+        chartCommit.leftAxis.labelFont = .systemFont(ofSize: 15)
+        chartCommit.noDataText = "출력 데이터가 없습니다."
+        chartCommit.noDataFont = .systemFont(ofSize: 30)
+        chartCommit.noDataTextColor = .lightGray
     }
 }
 
