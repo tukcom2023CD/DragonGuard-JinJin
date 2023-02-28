@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         activityResultLauncher.launch(intent)
 
 
-        Timer().scheduleAtFixedRate(10000,2000){
+        Timer().scheduleAtFixedRate(3000,2000){
 //            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
             searchUser(userId)
         }
