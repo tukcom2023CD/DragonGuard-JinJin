@@ -12,13 +12,14 @@ import RxCocoa
 final class UserInfoViewModel{
     
     // UserInfoService 통신 데이터
-    var userInfoArray = UserInfoService.sharedData.resultArray
+    
     var sortedDoneUserArray: [UserInfoModel]?
     var allRankingobservable: BehaviorSubject<[UserInfoModel]> = BehaviorSubject(value: [])
     var pageCount = 0
     // 커밋에 대해서 내림차순 정렬
     private func sortedAboutCommits(){
-        sortedDoneUserArray = userInfoArray.sorted { return $0.commits > $1.commits }
+        var userInfoArray = UserInfoService.sharedData.resultArray
+        sortedDoneUserArray = userInfoArray.sorted { return $0.tokens > $1.tokens }
     }
     
     func getDataRanking(){
@@ -27,6 +28,7 @@ final class UserInfoViewModel{
     }
     
     func userInfoIntoObeservable(){
+        allRankingobservable = BehaviorSubject(value: [])
         sortedAboutCommits()
         guard let sortedDoneUserArray = sortedDoneUserArray else { return }
         allRankingobservable.onNext(sortedDoneUserArray)

@@ -8,11 +8,16 @@
 import Foundation
 import UIKit
 import SnapKit
+import RxSwift
 import SafariServices
 
 final class KlipLoginController: UIViewController{
+    
     let viewModel = LoginViewModel()
+    let disposeBag = DisposeBag()
     var walletAddress: String?
+    var id: Int? // user DB Id
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +25,10 @@ final class KlipLoginController: UIViewController{
         
         addUItoView()
         NotificationCenter.default.addObserver(self, selector: #selector(finishedWalletAddress(notification: )), name: Notification.Name.walletAddress, object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        viewModel.sendUserGithubId()
     }
     /*
      UI 코드 작성
@@ -90,8 +99,8 @@ final class KlipLoginController: UIViewController{
         guard let address = notification.userInfo?[NotificationWalletAddress.walletAddress] as? String else {return}
         self.walletAddress = address
         
-        guard let wa = self.walletAddress else { return }
-        if !wa.isEmpty{
+        guard let address = self.walletAddress else { return }
+        if !address.isEmpty{
             self.navigationController?.pushViewController(MainController(), animated: true)
         }
         

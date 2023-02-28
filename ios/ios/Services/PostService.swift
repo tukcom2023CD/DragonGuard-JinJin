@@ -10,27 +10,52 @@ import Alamofire
 
 class PostService {
     static let postService = PostService()
-    let url = APIURL.inputDBMembers()
-    let myGithubId = ["githubId" : "HJ39"] as Dictionary
+    let ip = APIURL.ip
     var data = 0
     private init(){}
     
-    func postMyInfo(){
+    func postMyGithubId(){
+        let url = APIURL.apiUrl.inputDBMembers(ip: ip)
+        let myGithubId = ["githubId" : "HJ39"]
+        
         AF.request(url,
                    method: .post,
                    parameters: myGithubId,
                    encoding: JSONEncoding(options: []),
                    headers: ["Content-type": "application/json"])
-        .responseString{ response in
+        .responseDecodable(of: Int.self){ response in
             switch response.result{
             case .success(let data):
-                self.data = Int(data) ?? 0
+                self.data = data
             case .failure(let error):
                 print("삐리삐리 에러발생 \(error)")
-                
+
             }
-            
         }
+        
+    }
+    
+    func sendMyWalletAddress(walletAddress: String){
+        let url = APIURL.apiUrl.inputWalletAddress(ip: ip)
+        let body: Parameters = [
+            "id": self.data,
+            "walletAddress" : "\(walletAddress)"
+        ]
+        Thread.sleep(forTimeInterval: 0.5)
+        print("body \(body)")
+        AF.request(url,
+                   method: .post,
+                   parameters: body,
+                   encoding: JSONEncoding.default,
+                   headers: ["Content-type": "application/json"])
+        .validate(statusCode: 200..<404)
+        .responseData { response in
+            print("walletPost \(response)")
+        }
+        
+        
+        
+        
     }
     
 }

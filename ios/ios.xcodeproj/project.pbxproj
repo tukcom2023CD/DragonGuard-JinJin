@@ -58,7 +58,7 @@
 		3BAEA777299CFD090054DC5D /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAEA776299CFD090054DC5D /* PostService.swift */; };
 		3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD21298129B8008C05B2 /* SearchPageController.swift */; };
 		3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */; };
-		3BDF0FA529A619F900816837 /* KlipLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDF0FA429A619F900816837 /* KlipLoginViewModel.swift */; };
+		3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDF0FA429A619F900816837 /* LoginViewModel.swift */; };
 		3BDF0FA729A61A4E00816837 /* KlipLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */; };
 		3BE3F7D2297060DC0005B640 /* iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7D1297060DC0005B640 /* iosTests.swift */; };
 		3BE3F7DF297064340005B640 /* iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7DE297064340005B640 /* iosUITests.swift */; };
@@ -150,7 +150,7 @@
 		3BAEA776299CFD090054DC5D /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
 		3BD6DD21298129B8008C05B2 /* SearchPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageController.swift; sourceTree = "<group>"; };
 		3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageTableView.swift; sourceTree = "<group>"; };
-		3BDF0FA429A619F900816837 /* KlipLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipLoginViewModel.swift; sourceTree = "<group>"; };
+		3BDF0FA429A619F900816837 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipLoginService.swift; sourceTree = "<group>"; };
 		3BE3F7CF297060DC0005B640 /* iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BE3F7D1297060DC0005B640 /* iosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosTests.swift; sourceTree = "<group>"; };
@@ -330,7 +330,7 @@
 				3B9CF3D5298FB5A700495D35 /* UserInfoViewModel.swift */,
 				3B060FD529911158000B2518 /* MainViewModel.swift */,
 				3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */,
-				3BDF0FA429A619F900816837 /* KlipLoginViewModel.swift */,
+				3BDF0FA429A619F900816837 /* LoginViewModel.swift */,
 				3B29804429AC85A800967B6E /* CompareViewModel.swift */,
 			);
 			path = ViewModel;
@@ -571,7 +571,7 @@
 				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
 				3B9756F4298A639000F27094 /* WatchRankingModel.swift in Sources */,
 				3B29804729ACCCA000967B6E /* CompareSelectedUserView.swift in Sources */,
-				3BDF0FA529A619F900816837 /* KlipLoginViewModel.swift in Sources */,
+				3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
 				3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */,
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,

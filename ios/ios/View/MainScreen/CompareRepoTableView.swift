@@ -34,6 +34,8 @@ final class CompareRepoTableView : UITableViewCell {
         name.numberOfLines = 2
         // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(name)
+        name.backgroundColor = .white
+        name.textColor = .black
         name.textAlignment = .left
         name.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
@@ -49,6 +51,8 @@ final class CompareRepoTableView : UITableViewCell {
         contentView.addSubview(name)
         name.textAlignment = .center
         name.numberOfLines = 2
+        name.backgroundColor = .white
+        name.textColor = .black
         name.preferredMaxLayoutWidth = deviceWidth/5
         name.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
@@ -64,6 +68,8 @@ final class CompareRepoTableView : UITableViewCell {
         contentView.addSubview(name)
         name.textAlignment = .right
         name.numberOfLines = 2
+        name.backgroundColor = .white
+        name.textColor = .black
         name.preferredMaxLayoutWidth = deviceWidth/5
         name.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)

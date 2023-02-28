@@ -293,9 +293,11 @@ final class CompareUserController : UIViewController, SendingProtocol {
 }
 
 extension CompareUserController : ChartViewDelegate {
+    
     private func setChartCommit() {
         var dataSet : [BarChartDataSet] = []
         guard let lastIndexOfFisrtArray = self.lastIndexOfFisrtArray else {return}
+        guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 14) else {return}
         
         // data set 1
         var userInfo = [ChartDataEntry]()
@@ -323,6 +325,8 @@ extension CompareUserController : ChartViewDelegate {
             userInfo.append(dataEntry1)
             set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.secondResult[newUser1Index].githubId)
         }
+        set1.valueTextColor = .black
+        set1.valueFont = font
         set1.colors = [.red]
         dataSet.append(set1)
         
@@ -353,6 +357,9 @@ extension CompareUserController : ChartViewDelegate {
             set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.secondResult[newUser2Index].githubId)
         }
         
+        
+        set2.valueTextColor = .black
+        set2.valueFont = font
         set2.colors = [.blue]
         dataSet.append(set2)
         let data = BarChartData(dataSets: dataSet)
@@ -361,20 +368,25 @@ extension CompareUserController : ChartViewDelegate {
     }
     
     private func chartCommitAttribute(){
+        guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15) else {return}
         chartCommit.xAxis.enabled = false
         chartCommit.animate(xAxisDuration: 1, yAxisDuration: 2)
         chartCommit.leftAxis.enabled = true
+        chartCommit.leftAxis.labelTextColor = .black
         chartCommit.doubleTapToZoomEnabled = false
-        chartCommit.leftAxis.labelFont = .systemFont(ofSize: 15)
+        chartCommit.leftAxis.labelFont = font
         chartCommit.noDataText = "출력 데이터가 없습니다."
         chartCommit.noDataFont = .systemFont(ofSize: 30)
         chartCommit.noDataTextColor = .lightGray
+        chartCommit.legend.textColor = .black
+        chartCommit.legend.font = font
     }
     
     
     private func setChartAddDel() {
         var dataSet : [BarChartDataSet] = []
         guard let lastIndexOfFisrtArray = self.lastIndexOfFisrtArray else {return}
+        guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 14) else {return}
         
         // data set 1
         var userInfo = [ChartDataEntry]()
@@ -406,12 +418,14 @@ extension CompareUserController : ChartViewDelegate {
             userInfo.append(dataEntry2)
             set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.secondResult[newUser1Index].githubId)
         }
+        set1.valueTextColor = .black
+        set1.valueFont = font
         set1.colors = [.red]
         dataSet.append(set1)
         
         
         // data set 2
-        guard let user2Index = self.user2Index else {return}
+        guard let user2Index = self.user2Index else { return }
         var newUser2Index = 0
         var set2 = BarChartDataSet()
         var userInfo2 = [ChartDataEntry]()
@@ -439,26 +453,33 @@ extension CompareUserController : ChartViewDelegate {
             userInfo2.append(dataEntry2)
             set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.secondResult[newUser2Index].githubId)
         }
-        
+        set2.valueTextColor = .black
+        set2.valueFont = font
         set2.colors = [.blue]
         dataSet.append(set2)
         
         
         
         let data = BarChartData(dataSets: dataSet)
+        
         chartAddDel.data = data
+        
         chartAddDelAttribute()
     }
     
     private func chartAddDelAttribute(){
-        chartAddDel.xAxis.enabled = false
-        chartCommit.animate(xAxisDuration: 1, yAxisDuration: 2)
-        chartCommit.leftAxis.enabled = true
-        chartCommit.doubleTapToZoomEnabled = false
-        chartCommit.leftAxis.labelFont = .systemFont(ofSize: 15)
-        chartCommit.noDataText = "출력 데이터가 없습니다."
-        chartCommit.noDataFont = .systemFont(ofSize: 30)
-        chartCommit.noDataTextColor = .lightGray
+        guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15) else {return}
         
+        chartAddDel.xAxis.enabled = false
+        chartAddDel.animate(xAxisDuration: 1, yAxisDuration: 2)
+        chartAddDel.leftAxis.enabled = true
+        chartAddDel.leftAxis.labelTextColor = .black
+        chartAddDel.doubleTapToZoomEnabled = false
+        chartAddDel.leftAxis.labelFont = font
+        chartAddDel.noDataText = "출력 데이터가 없습니다."
+        chartAddDel.noDataFont = .systemFont(ofSize: 30)
+        chartAddDel.noDataTextColor = .lightGray
+        chartAddDel.legend.textColor = .black
+        chartAddDel.legend.font = font
     }
 }

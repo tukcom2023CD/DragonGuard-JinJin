@@ -232,7 +232,7 @@ final class CompareGraphController : UIViewController {
 extension CompareGraphController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CompareRepoTableView.identifier, for: indexPath) as? CompareRepoTableView ?? CompareRepoTableView()
-        
+        cell.backgroundColor = .white
         switch indexPath.row {
         case 0 :
             cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.forks_count), repo2Label: String(repo2[0].gitRepo.forks_count))
@@ -255,6 +255,10 @@ extension CompareGraphController : UITableViewDelegate, UITableViewDataSource {
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

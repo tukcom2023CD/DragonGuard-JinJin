@@ -13,10 +13,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool { return true }
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        
-        PostService.postService.postMyInfo()
-        UserInfoService.sharedData.getMemberInfo(page: 0, size: 20)
-        
         Thread.sleep(forTimeInterval: 0.5)
         return true
     }

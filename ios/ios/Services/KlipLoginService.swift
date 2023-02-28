@@ -62,6 +62,8 @@ final class KlipLoginService {
                 case .success(let data):
                     NotificationCenter.default.post(name: Notification.Name.walletAddress,object: nil,userInfo: [NotificationWalletAddress.walletAddress : data.result.klaytn_address])
                     print("address \(data.result.klaytn_address)")
+                    PostService.postService.sendMyWalletAddress(walletAddress: data.result.klaytn_address)
+                    print("finish klipResult")
                 case .failure(let error):
                     print("error!! \(error)")
                 }

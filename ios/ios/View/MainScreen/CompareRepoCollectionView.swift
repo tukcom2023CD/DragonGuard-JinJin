@@ -81,6 +81,8 @@ extension CompareRepoCollectionView : ChartViewDelegate {
     // Radar Chart
     private func setRadarChartOptions(repo1: [Double?], repo2: [Double?], values: [String]?, repoList: [String]?){
         guard let repoList = repoList else { return }
+        guard let xAxisFont = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15) else {return}
+        guard let yAxisFont = UIFont(name: "IBMPlexSansKR-SemiBold", size: 12) else {return}
         
         // red chart
         let redDataSet = RadarChartDataSet()
@@ -96,9 +98,6 @@ extension CompareRepoCollectionView : ChartViewDelegate {
             let entry = RadarChartDataEntry(value: data)
             redDataSet.append(entry)
         }
-        
-        
-        // DragonGuard
         
         // blue chart
         let blueDataSet = RadarChartDataSet()
@@ -120,18 +119,24 @@ extension CompareRepoCollectionView : ChartViewDelegate {
         guard let values = values else { return }
         
         radarChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: values)
-//        radarChart.yAxis.enabled = false
+        radarChart.xAxis.labelTextColor = .black
+        radarChart.xAxis.labelFont = xAxisFont
+        radarChart.yAxis.enabled = true
+        radarChart.yAxis.labelTextColor = .black
+        radarChart.yAxis.labelFont = yAxisFont
         radarChart.data = data
         radarChart.isMultipleTouchEnabled = false
         radarChart.rotationEnabled = false
         radarChart.highlightPerTapEnabled = false
-
+        radarChart.legend.textColor = .black
+        radarChart.legend.font = xAxisFont
     }
     
     // Repository 1 Pie Chart
     private func setRepo1PieChartOptions(repo1: [Double?], values: [String]?){
         var dataEntries: [PieChartDataEntry] = []
         guard let values = values else {return}
+        guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15) else {return}
         
         for dataCount in 0..<values.count{
             guard let data = repo1[dataCount] else {return}
@@ -141,24 +146,24 @@ extension CompareRepoCollectionView : ChartViewDelegate {
         
         let pieChartDataSet = PieChartDataSet(entries: dataEntries, label: " ")
         pieChartDataSet.colors = colorsOfCharts(numbersOfColor: repo1.count)
+        pieChartDataSet.valueFont = font
         
         let pieChartData = PieChartData(dataSet: pieChartDataSet)
         let format = NumberFormatter()
         format.numberStyle = .none
-//        let formatter = DefaultValueFormatter(formatter: format)
-//        pieChartData.setValueFormatter(formatter)
         
         repo1PieChart.data = pieChartData
         repo1PieChart.isMultipleTouchEnabled = false
         repo1PieChart.rotationEnabled = false
-        
-        
+        repo1PieChart.legend.textColor = .black
+        repo1PieChart.legend.font = font
     }
     
     // Repository 2 Pie Chart
     private func setRepo2PieChartOptions(repo2: [Double?], values: [String]?){
         var dataEntries: [PieChartDataEntry] = []
         guard let values = values else {return}
+        guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15) else {return}
         
         for dataCount in 0..<values.count{
             guard let data = repo2[dataCount] else {return}
@@ -168,17 +173,17 @@ extension CompareRepoCollectionView : ChartViewDelegate {
         
         let pieChartDataSet = PieChartDataSet(entries: dataEntries,label: " ")
         pieChartDataSet.colors = colorsOfCharts(numbersOfColor: repo2.count)
+        pieChartDataSet.valueFont = font
         
         let pieChartData = PieChartData(dataSet: pieChartDataSet)
         let format = NumberFormatter()
         format.numberStyle = .none
-        let formatter = DefaultValueFormatter(formatter: format)
-        pieChartData.setValueFormatter(formatter)
         
         repo2PieChart.data = pieChartData
         repo2PieChart.isMultipleTouchEnabled = false
         repo2PieChart.rotationEnabled = false
-        
+        repo2PieChart.legend.textColor = .black
+        repo2PieChart.legend.font = font
     }
     
     private func colorsOfCharts(numbersOfColor: Int) -> [UIColor] {
