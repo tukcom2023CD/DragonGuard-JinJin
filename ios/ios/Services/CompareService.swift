@@ -35,7 +35,7 @@ final class CompareService{
                        headers: ["Content-type": "application/json"])
             .validate(statusCode: 200..<201)
             .responseDecodable(of: CompareUserDecodingModel.self) { response in
-                print("response USER: \(response)")
+//                print("response USER: \(response)")
                 guard let responseResult = response.value else {return}
                 if responseResult.firstResult.count > 0 || responseResult.secondResult.count > 0 {
                     timer.invalidate()
@@ -68,7 +68,7 @@ final class CompareService{
                    headers: ["Content-type": "application/json"])
         .validate(statusCode: 200..<201)
         .responseDecodable(of: CompareRepoDecodingModel.self) { response in
-            print("response REPO: \(response)")
+//            print("response REPO: \(response)")
             guard let responseResult = response.value else {return}
             if self.firstRepoInfo.count == 0{
                 var language: [String] = []

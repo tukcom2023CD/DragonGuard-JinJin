@@ -45,7 +45,7 @@ final class CompareRepoCollectionView: UICollectionViewCell{
     func settingRepo1Chart(repo1: [Double?], values: [String]?){
         self.addSubview(repo1PieChart)
         repo1PieChart.snp.makeConstraints({ make in
-            make.center.equalToSuperview()
+            make.top.bottom.leading.trailing.equalTo(0)
         })
         setRepo1PieChartOptions(repo1: repo1, values: values)
     }
@@ -53,13 +53,12 @@ final class CompareRepoCollectionView: UICollectionViewCell{
     func settingRepo2Chart(repo2: [Double?], values: [String]?){
         self.addSubview(repo2PieChart)
         repo2PieChart.snp.makeConstraints({ make in
-            make.center.equalToSuperview()
+            make.top.bottom.leading.trailing.equalTo(0)
         })
         setRepo2PieChartOptions(repo2: repo2, values: values)
     }
     
     func setChartsInDiffCell(index: Int, repo1: [Double?], repo2: [Double?], values: [String]? ){
-        print(index)
         switch index{
         case 0:
             settingRadarChart(repo1: repo1, repo2: repo2, values: values)
@@ -109,16 +108,74 @@ extension CompareRepoCollectionView : ChartViewDelegate {
         }
         
         let data = RadarChartData(dataSets: [redDataSet, blueDataSet])
-        data.labels = values ?? []
-        radarChart.data = data
+        guard let values = values else { return }
+        for label in values{
+            data.setLabels(label)
+        }
         
+//        data.labels = values
+        radarChart.data = data
+        radarChart.isMultipleTouchEnabled = false
     }
     
     private func setRepo1PieChartOptions(repo1: [Double?], values: [String]?){
+        var dataEntries: [PieChartDataEntry] = []
+        guard let values = values else {return}
+        
+        for dataCount in 0..<values.count{
+            guard let data = repo1[dataCount] else {return}
+            let dataEntry = PieChartDataEntry(value: data, label: values[dataCount])
+            dataEntries.append(dataEntry)
+        }
+        
+        let pieChartDataSet = PieChartDataSet(entries: dataEntries)
+        pieChartDataSet.colors = colorsOfCharts(numbersOfColor: repo1.count)
+        
+        let pieChartData = PieChartData(dataSet: pieChartDataSet)
+        let format = NumberFormatter()
+        format.numberStyle = .none
+//        let formatter = DefaultValueFormatter(formatter: format)
+//        pieChartData.setValueFormatter(formatter)
+        
+        repo1PieChart.data = pieChartData
+        repo1PieChart.isMultipleTouchEnabled = false
         
     }
     
     private func setRepo2PieChartOptions(repo2: [Double?], values: [String]?){
+        var dataEntries: [PieChartDataEntry] = []
+        guard let values = values else {return}
         
+        for dataCount in 0..<values.count{
+            guard let data = repo2[dataCount] else {return}
+            let dataEntry = PieChartDataEntry(value: data, label: values[dataCount])
+            dataEntries.append(dataEntry)
+        }
+        
+        let pieChartDataSet = PieChartDataSet(entries: dataEntries,label: "Repository 2")
+        pieChartDataSet.colors = colorsOfCharts(numbersOfColor: repo2.count)
+        
+        let pieChartData = PieChartData(dataSet: pieChartDataSet)
+        let format = NumberFormatter()
+        format.numberStyle = .none
+        let formatter = DefaultValueFormatter(formatter: format)
+        pieChartData.setValueFormatter(formatter)
+        
+        repo2PieChart.data = pieChartData
+        repo2PieChart.isMultipleTouchEnabled = false
+        
+        
+    }
+    
+    private func colorsOfCharts(numbersOfColor: Int) -> [UIColor] {
+      var colors: [UIColor] = []
+      for _ in 0..<numbersOfColor {
+        let red = Double(arc4random_uniform(256))
+        let green = Double(arc4random_uniform(256))
+        let blue = Double(arc4random_uniform(256))
+        let color = UIColor(red: CGFloat(red/255), green: CGFloat(green/255), blue: CGFloat(blue/255), alpha: 1)
+        colors.append(color)
+      }
+        return colors
     }
 }
