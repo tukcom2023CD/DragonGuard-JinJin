@@ -28,11 +28,6 @@ final class CompareGraphController : UIViewController {
         getData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-        
-    }
-    
     /*
      UI 코드 작성
      */
@@ -101,8 +96,6 @@ final class CompareGraphController : UIViewController {
         self.view.addSubview(repo1ColorButton)
         self.view.addSubview(repo2Label)
         self.view.addSubview(repo2ColorButton)
-        
-//        self.view.addSubview(chart)
 //        self.view.addSubview(repoCollectionView)
         repoTableView.delegate = self
         repoTableView.dataSource = self
@@ -147,26 +140,7 @@ final class CompareGraphController : UIViewController {
             make.width.equalTo(deviceWidth/12)
             make.height.equalTo(deviceWidth/12)
         })
-        
-        
-//        chart.snp.makeConstraints ({ make in
-//            make.top.equalTo(repoTableView.snp.bottom).offset(20)
-//            make.leading.equalTo(30)
-//            make.trailing.equalTo(-30)
-//            make.bottom.equalTo(view.safeAreaLayoutGuide)
-//        })
-        
-        
-        
-        
-        
-//        repoCollectionView.snp.makeConstraints( { make in
-//            make.top.equalTo(repoTableView.snp.bottom).offset(10)
-//            make.leading.equalTo(30)
-//            make.trailing.equalTo(-30)
-//            make.bottom.equalTo(view.safeAreaLayoutGuide)
-//        })
-//        setChartOption()
+ 
     }
     
     
@@ -175,8 +149,16 @@ final class CompareGraphController : UIViewController {
             make.top.equalTo(repo2ColorButton.snp.bottom).offset(10)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(deviceHeight*30/100)
+//            make.bottom.equalTo(view.safeAreaLayoutGuide)
         })
+        
+//        repoCollectionView.snp.makeConstraints( { make in
+//            make.top.equalTo(repoTableView.snp.bottom).offset(10)
+//            make.leading.equalTo(30)
+//            make.trailing.equalTo(-30)
+//            make.bottom.equalTo(view.safeAreaLayoutGuide)
+//        })
     }
     
     func getData(){
@@ -204,10 +186,6 @@ final class CompareGraphController : UIViewController {
 }
 
 extension CompareGraphController : UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 8
-    }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CompareRepoTableView.identifier, for: indexPath) as? CompareRepoTableView ?? CompareRepoTableView()
         
@@ -228,7 +206,6 @@ extension CompareGraphController : UITableViewDelegate, UITableViewDataSource {
             cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].languagesStats.count), repo2Label: String(repo2[0].languagesStats.count))
         case 7 :
             cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].languagesStats.average), repo2Label: String(repo2[0].languagesStats.average))
-            
         default :
             print("error")
         }
@@ -236,6 +213,10 @@ extension CompareGraphController : UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return tableView.frame.height/3
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 8 }
     
 }
 

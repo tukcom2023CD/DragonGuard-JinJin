@@ -79,8 +79,8 @@ struct SecondRepo: Decodable{
 
 struct GitRepo: Codable{
     let full_name: String
-    let forks_count, stargazers_count, watchers_count, open_issues_count, closed_issues_count: Int
-    let subscribers_count: Int
+    let forks_count, stargazers_count, watchers_count, open_issues_count, closed_issues_count: Int?
+    let subscribers_count: Int?
     
 }
 

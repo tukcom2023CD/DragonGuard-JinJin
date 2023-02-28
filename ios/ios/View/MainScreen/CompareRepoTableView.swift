@@ -34,7 +34,7 @@ final class CompareRepoTableView : UITableViewCell {
         name.numberOfLines = 2
         // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(name)
-        
+        name.textAlignment = .left
         name.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
             make.leading.equalTo(contentView).offset(20)
@@ -47,7 +47,9 @@ final class CompareRepoTableView : UITableViewCell {
         name.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(name)
-        
+        name.textAlignment = .center
+        name.numberOfLines = 2
+        name.preferredMaxLayoutWidth = deviceWidth/5
         name.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
             make.centerX.equalToSuperview()
@@ -60,7 +62,9 @@ final class CompareRepoTableView : UITableViewCell {
         name.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(name)
-        
+        name.textAlignment = .right
+        name.numberOfLines = 2
+        name.preferredMaxLayoutWidth = deviceWidth/5
         name.snp.makeConstraints({ make in
             make.top.bottom.equalTo(contentView)
             make.trailing.equalTo(contentView).offset(-20)

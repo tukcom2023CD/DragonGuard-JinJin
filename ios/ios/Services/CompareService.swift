@@ -11,8 +11,6 @@ import Alamofire
 final class CompareService{
     static let compareService = CompareService()
     let ip = APIURL.ip
-    var firstRepo: String?
-    var secondRepo: String?
     var firstRepoUserInfo: [FirstRepoResult] = []   // 첫 번째 레포 내부 유저 리스트
     var secondRepoUserInfo: [SecondRepoResult] = []  // 두 번째 레포 내부 유저 리스트
     var repoUserInfo: CompareUserModel?
@@ -24,8 +22,6 @@ final class CompareService{
     func beforeSendingInfo(firstRepo: String, secondRepo: String){
         firstRepoUserInfo = []
         secondRepoUserInfo = []
-        self.firstRepo = firstRepo
-        self.secondRepo = secondRepo
         let url = APIURL.apiUrl.compareBeforeAPI(ip: ip)
         let body = ["firstRepo": firstRepo, "secondRepo": secondRepo]
         
@@ -37,9 +33,9 @@ final class CompareService{
                        headers: ["Content-type": "application/json"])
             .validate(statusCode: 200..<201)
             .responseDecodable(of: CompareUserDecodingModel.self) { response in
+                print("response USER: \(response)")
                 guard let responseResult = response.value else {return}
-                print("response \(responseResult)")
-                if responseResult.firstResult.count > 0 && responseResult.secondResult.count > 0 {
+                if responseResult.firstResult.count > 0 || responseResult.secondResult.count > 0 {
                     timer.invalidate()
                     
                     for data in responseResult.firstResult{
@@ -51,16 +47,13 @@ final class CompareService{
                     }
                     self.repoUserInfo?.firstResult = self.firstRepoUserInfo
                     self.repoUserInfo?.secondResult = self.secondRepoUserInfo
-                    self.getCompareInfo()
+                    self.getCompareInfo(firstRepo: firstRepo, secondRepo: secondRepo)
                 }
             }
         })
     }
     
-    func getCompareInfo(){
-        guard let firstRepo = self.firstRepo else {return}
-        guard let secondRepo = self.secondRepo else {return}
-        
+    func getCompareInfo(firstRepo: String, secondRepo: String){
         firstRepoInfo = []
         secondRepoInfo = []
         let url = APIURL.apiUrl.compareRepoAPI(ip: ip)
@@ -73,8 +66,8 @@ final class CompareService{
                    headers: ["Content-type": "application/json"])
         .validate(statusCode: 200..<201)
         .responseDecodable(of: CompareRepoDecodingModel.self) { response in
+            print("response REPO: \(response)")
             guard let responseResult = response.value else {return}
-            print("response: \(response)")
             if self.firstRepoInfo.count == 0{
                 var language: [String] = []
                 var count: [Int] = []
@@ -87,12 +80,12 @@ final class CompareService{
                 
                 self.firstRepoInfo.append(
                     FirstRepoModel(gitRepo: GitRepoModel(full_name: responseResult.firstRepo.gitRepo.full_name,
-                                                         forks_count: responseResult.firstRepo.gitRepo.forks_count,
-                                                         stargazers_count: responseResult.firstRepo.gitRepo.stargazers_count,
-                                                         watchers_count: responseResult.firstRepo.gitRepo.watchers_count,
-                                                         open_issues_count: responseResult.firstRepo.gitRepo.open_issues_count,
-                                                         closed_issues_count: responseResult.firstRepo.gitRepo.closed_issues_count,
-                                                         subscribers_count: responseResult.firstRepo.gitRepo.subscribers_count),
+                                                         forks_count: responseResult.firstRepo.gitRepo.forks_count ?? 0,
+                                                         stargazers_count: responseResult.firstRepo.gitRepo.stargazers_count ?? 0,
+                                                         watchers_count: responseResult.firstRepo.gitRepo.watchers_count ?? 0,
+                                                         open_issues_count: responseResult.firstRepo.gitRepo.open_issues_count ?? 0,
+                                                         closed_issues_count: responseResult.firstRepo.gitRepo.closed_issues_count ?? 0,
+                                                         subscribers_count: responseResult.firstRepo.gitRepo.subscribers_count ?? 0),
                                    statistics: StatisticsModel(commitStats: StatisticsStatsModel(count: responseResult.firstRepo.statistics.commitStats.count ?? 0,
                                                                                                  sum: responseResult.firstRepo.statistics.commitStats.sum ?? 0,
                                                                                                  min: responseResult.firstRepo.statistics.commitStats.min ?? 0,
@@ -129,12 +122,12 @@ final class CompareService{
                 
                 self.secondRepoInfo.append(
                     secondRepoModel(gitRepo: GitRepoModel(full_name: responseResult.secondRepo.gitRepo.full_name,
-                                                          forks_count: responseResult.secondRepo.gitRepo.forks_count,
-                                                          stargazers_count: responseResult.secondRepo.gitRepo.stargazers_count,
-                                                          watchers_count: responseResult.secondRepo.gitRepo.watchers_count,
-                                                          open_issues_count: responseResult.secondRepo.gitRepo.open_issues_count,
-                                                          closed_issues_count: responseResult.secondRepo.gitRepo.closed_issues_count,
-                                                          subscribers_count: responseResult.secondRepo.gitRepo.subscribers_count),
+                                                          forks_count: responseResult.secondRepo.gitRepo.forks_count ?? 0,
+                                                          stargazers_count: responseResult.secondRepo.gitRepo.stargazers_count ?? 0,
+                                                          watchers_count: responseResult.secondRepo.gitRepo.watchers_count ?? 0,
+                                                          open_issues_count: responseResult.secondRepo.gitRepo.open_issues_count ?? 0,
+                                                          closed_issues_count: responseResult.secondRepo.gitRepo.closed_issues_count ?? 0,
+                                                          subscribers_count: responseResult.secondRepo.gitRepo.subscribers_count ?? 0),
                                     statistics: StatisticsModel(commitStats: StatisticsStatsModel(count: responseResult.secondRepo.statistics.commitStats.count ?? 0,
                                                                                                   sum: responseResult.secondRepo.statistics.commitStats.sum ?? 0,
                                                                                                   min: responseResult.secondRepo.statistics.commitStats.min ?? 0,
