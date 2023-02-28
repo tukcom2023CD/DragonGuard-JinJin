@@ -25,6 +25,10 @@ final class CompareGraphController : UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         addToView()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         getData()
     }
     
@@ -34,7 +38,7 @@ final class CompareGraphController : UIViewController {
     
     lazy var repo1Label : UILabel = {
         let label = UILabel()
-        label.text = "test1"
+        label.text = "Repository 1"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         label.textColor = .black
         label.textAlignment = .center
@@ -53,7 +57,7 @@ final class CompareGraphController : UIViewController {
     
     lazy var repo2Label : UILabel = {
         let label = UILabel()
-        label.text = "test2"
+        label.text = "Repository 2"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         label.textColor = .black
         label.textAlignment = .center
@@ -82,11 +86,15 @@ final class CompareGraphController : UIViewController {
         return chart1
     }()
     
-//    lazy var repoCollectionView : UICollectionView = {
-//        let repoCollection = UICollectionView()
-//        repoCollection.backgroundColor = .white
-//        return repoCollection
-//    }()
+    lazy var repoCollectionView : UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .white
+        
+        return cv
+    }()
+    
     /*
      UI Action 작성
      */
@@ -96,11 +104,11 @@ final class CompareGraphController : UIViewController {
         self.view.addSubview(repo1ColorButton)
         self.view.addSubview(repo2Label)
         self.view.addSubview(repo2ColorButton)
-//        self.view.addSubview(repoCollectionView)
         repoTableView.delegate = self
         repoTableView.dataSource = self
-//        repoCollectionView.delegate = self
-//        repoCollectionView.dataSource = self
+        repoCollectionView.delegate = self
+        repoCollectionView.dataSource = self
+        repoCollectionView.register(CompareRepoCollectionView.self, forCellWithReuseIdentifier: CompareRepoCollectionView.identifier)
         repoTableView.register(CompareRepoTableView.self, forCellReuseIdentifier: CompareRepoTableView.identifier)
         setAutoLayout()
     }
@@ -120,7 +128,6 @@ final class CompareGraphController : UIViewController {
         })
         
         repo1ColorButton.snp.makeConstraints ({ make in
-//            make.top.equalTo(view.safeAreaLayoutGuide)
             make.centerY.equalTo(repo1Label)
             make.trailing.equalTo(-30)
             make.width.equalTo(deviceWidth/12)
@@ -150,19 +157,20 @@ final class CompareGraphController : UIViewController {
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.height.equalTo(deviceHeight*30/100)
-//            make.bottom.equalTo(view.safeAreaLayoutGuide)
         })
         
-//        repoCollectionView.snp.makeConstraints( { make in
-//            make.top.equalTo(repoTableView.snp.bottom).offset(10)
-//            make.leading.equalTo(30)
-//            make.trailing.equalTo(-30)
-//            make.bottom.equalTo(view.safeAreaLayoutGuide)
-//        })
+        repoCollectionView.snp.makeConstraints( { make in
+            make.top.equalTo(repoTableView.snp.bottom).offset(10)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        })
     }
     
     func getData(){
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
+            self.repo1 = []
+            self.repo2 = []
             self.viewModel.bringRepoInfo()
             self.viewModel.repo1Info.subscribe(onNext: {
                 self.repo1 = $0
@@ -173,11 +181,17 @@ final class CompareGraphController : UIViewController {
             
             if self.repo1.count != 0 && self.repo2.count != 0 {
                 timer.invalidate()
+                // label 이름 변경
                 self.repo1Label.text = self.repo1[0].gitRepo.full_name
                 self.repo2Label.text = self.repo2[0].gitRepo.full_name
+                
+                // tableview collectionview 등록
                 self.view.addSubview(self.repoTableView)
+                self.view.addSubview(self.repoCollectionView)
+                
                 self.viewAutoLayout()
                 self.repoTableView.reloadData()
+                self.repoCollectionView.reloadData()
             }
             
         })
@@ -220,78 +234,42 @@ extension CompareGraphController : UITableViewDelegate, UITableViewDataSource {
     
 }
 
-//extension CompareGraphController : UICollectionViewDelegate, UICollectionViewDataSource {
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        <#code#>
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        <#code#>
-//    }
-//
-//
-//}
-
-
-
-extension CompareGraphController : ChartViewDelegate {
-    private func setChartOption() {
-//        var dataSet : [RadarChartDataSet] = []
-        let redDataSet = RadarChartDataSet(
-            entries: [
-                RadarChartDataEntry(value: 210),
-                RadarChartDataEntry(value: 120.0),
-                RadarChartDataEntry(value: 90.0),
-                RadarChartDataEntry(value: 150.0),
-            ]
-        )
-        redDataSet.lineWidth = 3
-        redDataSet.fillColor = UIColor(red: 255/255, green: 0, blue: 0, alpha: 1)
-        redDataSet.drawFilledEnabled = true
-        redDataSet.colors = [UIColor(red: 255/255, green: 0, blue: 0, alpha: 0.3)]
+extension CompareGraphController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompareRepoCollectionView.identifier, for: indexPath) as? CompareRepoCollectionView ?? CompareRepoCollectionView()
         
-        let blueDataSet = RadarChartDataSet(
-            entries: [
-                RadarChartDataEntry(value: 120.0),
-                RadarChartDataEntry(value: 160.0),
-                RadarChartDataEntry(value: 210.0),
-                RadarChartDataEntry(value: 110.0)
-            ]
-        )
-        blueDataSet.lineWidth = 3
-        blueDataSet.fillColor = UIColor(red: 0, green: 0, blue: 255/255, alpha: 1)
-        blueDataSet.drawFilledEnabled = true
-        blueDataSet.colors = [UIColor(red: 0, green: 0, blue: 255/255, alpha: 0.3)]
+        let repo1Info: [Double] = [self.repo1[0].statistics.additionStats.average, Double(self.repo1[0].languagesStats.min), self.repo1[0].statistics.deletionStats.average]
+        let repo2Info: [Double] = [self.repo2[0].statistics.additionStats.average, Double(self.repo2[0].languagesStats.min), self.repo2[0].statistics.deletionStats.average]
+        let repo1Language: [String] = self.repo1[0].languages.language
+        var repo1LanguagesCount: [Double] = []
+        for count in self.repo1[0].languages.count{
+            repo1LanguagesCount.append(Double(count))
+        }
         
-        let data = RadarChartData(dataSets: [redDataSet, blueDataSet])
-        chart.data = data
+        let repo2Language: [String] = self.repo2[0].languages.language
+        var repo2LanguagesCount: [Double] = []
+        for count in self.repo2[0].languages.count{
+            repo2LanguagesCount.append(Double(count))
+        }
+        
+        
+        switch indexPath.row{
+        case 0:
+            cell.setChartsInDiffCell(index: indexPath.row,repo1: repo1Info, repo2: repo2Info, values: ["addtion average", "language minumum", "deletion average"])
+        case 1:
+            cell.setChartsInDiffCell(index: indexPath.row,repo1: repo1LanguagesCount, repo2: [nil], values: repo1Language)
+        case 2:
+            cell.setChartsInDiffCell(index: indexPath.row, repo1: [nil], repo2: repo2LanguagesCount, values: repo2Language)
+        default:
+            print("error!!")
+        }
+        
+        return cell
     }
     
-    private func chartAttribute(){
-//        self.chart.yAxis.labelFont = .systemFont(ofSize: 30)
-//        self.chart.yAxis.valueFormatter = yaxisfomatter
-    }
-}
-
-/*
- SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
- preview 실행이 안되는 경우 단축키
- Command + Option + Enter : preview 그리는 캠버스 띄우기
- Command + Option + p : preview 재실행
- */
-
-import SwiftUI
-
-struct VCPreViewCompareGraphController:PreviewProvider {
-    static var previews: some View {
-        CompareGraphController().toPreview().previewDevice("iPhone 14 pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-
-struct VCPreViewCompareGraphController2:PreviewProvider {
-    static var previews: some View {
-        CompareGraphController().toPreview().previewDevice("iPad (10th generation)")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+        }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return 3 }
 }

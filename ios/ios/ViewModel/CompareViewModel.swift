@@ -34,6 +34,8 @@ final class CompareViewModel{
     }
     
     func bringRepoInfo(){
+        repo1Info = BehaviorSubject(value: [])
+        repo2Info = BehaviorSubject(value: [])
         if CompareService.compareService.firstRepoInfo.count != 0 && CompareService.compareService.secondRepoInfo.count != 0{
             self.repo1Info.onNext(CompareService.compareService.firstRepoInfo)
             self.repo2Info.onNext(CompareService.compareService.secondRepoInfo)

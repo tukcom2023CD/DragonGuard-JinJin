@@ -16,6 +16,7 @@
 		3B15C596296FB673004AE007 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 3B15C595296FB673004AE007 /* Alamofire */; };
 		3B18AA1E29A7B1E90051C086 /* KlipModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18AA1D29A7B1E90051C086 /* KlipModel.swift */; };
 		3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18AA1F29A7BD0E0051C086 /* Notification.swift */; };
+		3B18C44029ADD69D00E58303 /* CompareRepoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18C43F29ADD69D00E58303 /* CompareRepoCollectionView.swift */; };
 		3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DB8772963428A00308F43 /* AppDelegate.swift */; };
 		3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DB8792963428A00308F43 /* SceneDelegate.swift */; };
 		3B1DB87C2963428A00308F43 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DB87B2963428A00308F43 /* MainController.swift */; };
@@ -113,6 +114,7 @@
 		3B060FD529911158000B2518 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		3B18AA1D29A7B1E90051C086 /* KlipModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipModel.swift; sourceTree = "<group>"; };
 		3B18AA1F29A7BD0E0051C086 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		3B18C43F29ADD69D00E58303 /* CompareRepoCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoCollectionView.swift; sourceTree = "<group>"; };
 		3B1DB8742963428A00308F43 /* ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B1DB8772963428A00308F43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3B1DB8792963428A00308F43 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 				A3ADC97E29911B50003D6483 /* CompareRepositorycontroller.swift */,
 				A37AA6EB29A50F7C002812F6 /* CompareGraphController.swift */,
 				A37AA6F729AD0D95002812F6 /* CompareRepoTableView.swift */,
+				3B18C43F29ADD69D00E58303 /* CompareRepoCollectionView.swift */,
 				A37AA6ED29A525C5002812F6 /* TabBarController.swift */,
 				3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */,
 				3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */,
@@ -594,6 +597,7 @@
 				3B9756ED298A16FF00F27094 /* AllRepositoryRankingController.swift in Sources */,
 				3B29804929ACCDC800967B6E /* CompareSelectedUserTableView.swift in Sources */,
 				A30BA47029841C97008B594E /* SearchPageService.swift in Sources */,
+				3B18C44029ADD69D00E58303 /* CompareRepoCollectionView.swift in Sources */,
 				3BE6AD312993CF8500B22EBD /* RepoContributorInfoViewModel.swift in Sources */,
 				3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */,
 				3BA2013929980661008978A5 /* MainService.swift in Sources */,

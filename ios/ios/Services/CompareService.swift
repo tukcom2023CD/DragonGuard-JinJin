@@ -20,6 +20,8 @@ final class CompareService{
     private init(){ }
     
     func beforeSendingInfo(firstRepo: String, secondRepo: String){
+        firstRepoInfo = []
+        secondRepoInfo = []
         firstRepoUserInfo = []
         secondRepoUserInfo = []
         let url = APIURL.apiUrl.compareBeforeAPI(ip: ip)
