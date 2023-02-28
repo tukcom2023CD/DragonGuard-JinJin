@@ -24,8 +24,8 @@ final class CompareGraphController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        addToView()
-        
+//        addToView()
+        addIndicator()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -95,6 +95,17 @@ final class CompareGraphController : UIViewController {
         return cv
     }()
     
+    // 로딩 UI
+    lazy var indicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.color = .gray
+        indicator.isHidden = false
+        indicator.startAnimating()
+        indicator.style = .large
+        
+        return indicator
+    }()
+    
     /*
      UI Action 작성
      */
@@ -111,6 +122,12 @@ final class CompareGraphController : UIViewController {
         repoCollectionView.register(CompareRepoCollectionView.self, forCellWithReuseIdentifier: CompareRepoCollectionView.identifier)
         repoTableView.register(CompareRepoTableView.self, forCellReuseIdentifier: CompareRepoTableView.identifier)
         setAutoLayout()
+    }
+    
+    // 로딩 UI 추가
+    private func addIndicator(){
+        self.view.addSubview(indicator)
+        setIndicatorAutoLayout()
     }
     
     /*
@@ -156,14 +173,20 @@ final class CompareGraphController : UIViewController {
             make.top.equalTo(repo2ColorButton.snp.bottom).offset(10)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
-            make.height.equalTo(deviceHeight*30/100)
+            make.height.equalTo(deviceHeight/4)
         })
         
         repoCollectionView.snp.makeConstraints( { make in
-            make.top.equalTo(repoTableView.snp.bottom).offset(10)
+            make.top.equalTo(repoTableView.snp.bottom).offset(5)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
+        })
+    }
+    
+    private func setIndicatorAutoLayout(){
+        indicator.snp.makeConstraints({ make in
+            make.center.equalToSuperview()
         })
     }
     
@@ -181,17 +204,24 @@ final class CompareGraphController : UIViewController {
             
             if self.repo1.count != 0 && self.repo2.count != 0 {
                 timer.invalidate()
-                // label 이름 변경
-                self.repo1Label.text = self.repo1[0].gitRepo.full_name
-                self.repo2Label.text = self.repo2[0].gitRepo.full_name
                 
-                // tableview collectionview 등록
-                self.view.addSubview(self.repoTableView)
-                self.view.addSubview(self.repoCollectionView)
+                self.indicator.stopAnimating()
                 
-                self.viewAutoLayout()
-                self.repoTableView.reloadData()
-                self.repoCollectionView.reloadData()
+                if !self.indicator.isAnimating{
+                    self.addToView()
+                    // label 이름 변경
+                    self.repo1Label.text = self.repo1[0].gitRepo.full_name
+                    self.repo2Label.text = self.repo2[0].gitRepo.full_name
+                    
+                    // tableview collectionview 등록
+                    self.view.addSubview(self.repoTableView)
+                    self.view.addSubview(self.repoCollectionView)
+                    
+                    self.viewAutoLayout()
+                    self.repoTableView.reloadData()
+                    self.repoCollectionView.reloadData()
+                }
+               
             }
             
         })
@@ -228,7 +258,7 @@ extension CompareGraphController : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return tableView.frame.height/3
+        return tableView.frame.height/4
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 8 }
     
@@ -251,15 +281,15 @@ extension CompareGraphController : UICollectionViewDelegate, UICollectionViewDat
         for count in self.repo2[0].languages.count{
             repo2LanguagesCount.append(Double(count))
         }
-        
+        let repoNameList: [String] = [self.repo1[0].gitRepo.full_name, self.repo2[0].gitRepo.full_name]
         
         switch indexPath.row{
         case 0:
-            cell.setChartsInDiffCell(index: indexPath.row,repo1: repo1Info, repo2: repo2Info, values: ["addtion average", "language minumum", "deletion average"])
+            cell.setChartsInDiffCell(index: indexPath.row,repo1: repo1Info, repo2: repo2Info, values: ["addtion", "language", "deletion"], repoList: repoNameList)
         case 1:
-            cell.setChartsInDiffCell(index: indexPath.row,repo1: repo1LanguagesCount, repo2: [nil], values: repo1Language)
+            cell.setChartsInDiffCell(index: indexPath.row,repo1: repo1LanguagesCount, repo2: [nil], values: repo1Language, repoList: nil)
         case 2:
-            cell.setChartsInDiffCell(index: indexPath.row, repo1: [nil], repo2: repo2LanguagesCount, values: repo2Language)
+            cell.setChartsInDiffCell(index: indexPath.row, repo1: [nil], repo2: repo2LanguagesCount, values: repo2Language, repoList: nil)
         default:
             print("error!!")
         }
@@ -270,6 +300,10 @@ extension CompareGraphController : UICollectionViewDelegate, UICollectionViewDat
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
             return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
         }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return 3 }
 }

@@ -34,12 +34,12 @@ final class CompareRepoCollectionView: UICollectionViewCell{
         return chart
     }()
     
-    func settingRadarChart(repo1: [Double?], repo2: [Double?], values: [String]?){
+    func settingRadarChart(repo1: [Double?], repo2: [Double?], values: [String]?, repoList: [String]?){
         self.addSubview(radarChart)
         radarChart.snp.makeConstraints({ make in
             make.top.bottom.leading.trailing.equalTo(0)
         })
-        setRadarChartOptions(repo1: repo1, repo2: repo2, values: values)
+        setRadarChartOptions(repo1: repo1, repo2: repo2, values: values, repoList: repoList)
     }
     
     func settingRepo1Chart(repo1: [Double?], values: [String]?){
@@ -58,10 +58,10 @@ final class CompareRepoCollectionView: UICollectionViewCell{
         setRepo2PieChartOptions(repo2: repo2, values: values)
     }
     
-    func setChartsInDiffCell(index: Int, repo1: [Double?], repo2: [Double?], values: [String]? ){
+    func setChartsInDiffCell(index: Int, repo1: [Double?], repo2: [Double?], values: [String]?, repoList: [String]?){
         switch index{
         case 0:
-            settingRadarChart(repo1: repo1, repo2: repo2, values: values)
+            settingRadarChart(repo1: repo1, repo2: repo2, values: values, repoList: repoList)
         case 1:
             settingRepo1Chart(repo1: repo1, values: values)
         case 2:
@@ -78,14 +78,18 @@ final class CompareRepoCollectionView: UICollectionViewCell{
 
 extension CompareRepoCollectionView : ChartViewDelegate {
     
-    private func setRadarChartOptions(repo1: [Double?], repo2: [Double?], values: [String]?){
+    // Radar Chart
+    private func setRadarChartOptions(repo1: [Double?], repo2: [Double?], values: [String]?, repoList: [String]?){
+        guard let repoList = repoList else { return }
         
         // red chart
         let redDataSet = RadarChartDataSet()
         redDataSet.lineWidth = 3
         redDataSet.fillColor = UIColor(red: 255/255, green: 0, blue: 0, alpha: 1)
         redDataSet.drawFilledEnabled = true
-        redDataSet.colors = [UIColor(red: 255/255, green: 0, blue: 0, alpha: 0.3)]
+        redDataSet.colors = [.red]
+        redDataSet.label = repoList[0]
+        redDataSet.drawValuesEnabled = false
         
         for data in repo1{
             guard let data = data else {return}
@@ -93,14 +97,19 @@ extension CompareRepoCollectionView : ChartViewDelegate {
             redDataSet.append(entry)
         }
         
+        
+        // DragonGuard
+        
         // blue chart
         let blueDataSet = RadarChartDataSet()
         blueDataSet.lineWidth = 3
-        blueDataSet.fillColor = UIColor(red: 0, green: 0, blue: 255/255, alpha: 1)
+        blueDataSet.fillColor = .blue
         blueDataSet.drawFilledEnabled = true
-        blueDataSet.colors = [UIColor(red: 0, green: 0, blue: 255/255, alpha: 0.3)]
+        blueDataSet.colors = [.blue]
+        blueDataSet.label = repoList[1]
+        blueDataSet.drawValuesEnabled = false
         
-        for data in repo1{
+        for data in repo2{
             guard let data = data else {return}
             
             let entry = RadarChartDataEntry(value: data)
@@ -109,15 +118,17 @@ extension CompareRepoCollectionView : ChartViewDelegate {
         
         let data = RadarChartData(dataSets: [redDataSet, blueDataSet])
         guard let values = values else { return }
-        for label in values{
-            data.setLabels(label)
-        }
         
-//        data.labels = values
+        radarChart.xAxis.valueFormatter = IndexAxisValueFormatter(values: values)
+//        radarChart.yAxis.enabled = false
         radarChart.data = data
         radarChart.isMultipleTouchEnabled = false
+        radarChart.rotationEnabled = false
+        radarChart.highlightPerTapEnabled = false
+
     }
     
+    // Repository 1 Pie Chart
     private func setRepo1PieChartOptions(repo1: [Double?], values: [String]?){
         var dataEntries: [PieChartDataEntry] = []
         guard let values = values else {return}
@@ -128,7 +139,7 @@ extension CompareRepoCollectionView : ChartViewDelegate {
             dataEntries.append(dataEntry)
         }
         
-        let pieChartDataSet = PieChartDataSet(entries: dataEntries)
+        let pieChartDataSet = PieChartDataSet(entries: dataEntries, label: " ")
         pieChartDataSet.colors = colorsOfCharts(numbersOfColor: repo1.count)
         
         let pieChartData = PieChartData(dataSet: pieChartDataSet)
@@ -139,9 +150,12 @@ extension CompareRepoCollectionView : ChartViewDelegate {
         
         repo1PieChart.data = pieChartData
         repo1PieChart.isMultipleTouchEnabled = false
+        repo1PieChart.rotationEnabled = false
+        
         
     }
     
+    // Repository 2 Pie Chart
     private func setRepo2PieChartOptions(repo2: [Double?], values: [String]?){
         var dataEntries: [PieChartDataEntry] = []
         guard let values = values else {return}
@@ -152,7 +166,7 @@ extension CompareRepoCollectionView : ChartViewDelegate {
             dataEntries.append(dataEntry)
         }
         
-        let pieChartDataSet = PieChartDataSet(entries: dataEntries,label: "Repository 2")
+        let pieChartDataSet = PieChartDataSet(entries: dataEntries,label: " ")
         pieChartDataSet.colors = colorsOfCharts(numbersOfColor: repo2.count)
         
         let pieChartData = PieChartData(dataSet: pieChartDataSet)
@@ -163,7 +177,7 @@ extension CompareRepoCollectionView : ChartViewDelegate {
         
         repo2PieChart.data = pieChartData
         repo2PieChart.isMultipleTouchEnabled = false
-        
+        repo2PieChart.rotationEnabled = false
         
     }
     

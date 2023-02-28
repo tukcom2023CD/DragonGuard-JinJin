@@ -30,7 +30,7 @@ final class CompareRepoTableView : UITableViewCell {
     
     lazy var nameLabel : UILabel = {
         let name = UILabel()
-        name.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        name.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15)
         name.numberOfLines = 2
         // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(name)
@@ -44,7 +44,7 @@ final class CompareRepoTableView : UITableViewCell {
     
     lazy var repo1Label : UILabel = {
         let name = UILabel()
-        name.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        name.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15)
         // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(name)
         name.textAlignment = .center
@@ -59,7 +59,7 @@ final class CompareRepoTableView : UITableViewCell {
     
     lazy var repo2Label : UILabel = {
         let name = UILabel()
-        name.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        name.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15)
         // contentview(테이블 뷰)에 라벨 추가,
         contentView.addSubview(name)
         name.textAlignment = .right

@@ -27,7 +27,7 @@ final class CompareUserController : UIViewController, SendingProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        addToView()
+        addIndicator()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -110,6 +110,17 @@ final class CompareUserController : UIViewController, SendingProtocol {
         return chart1
     }()
     
+    // 로딩 UI
+    lazy var indicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.color = .gray
+        indicator.isHidden = false
+        indicator.startAnimating()
+        indicator.style = .large
+        
+        return indicator
+    }()
+    
     /*
      UI Action 작성
      */
@@ -124,6 +135,12 @@ final class CompareUserController : UIViewController, SendingProtocol {
         self.view.addSubview(commitLabel)
         self.view.addSubview(addDelLabel)
         setAutoLayout()
+    }
+    
+    // 로딩 UI 추가
+    private func addIndicator(){
+        self.view.addSubview(indicator)
+        setIndicatorAutoLayout()
     }
     
     @objc func clickedChooseUser1(){
@@ -242,7 +259,12 @@ final class CompareUserController : UIViewController, SendingProtocol {
             make.trailing.equalTo(-30)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         })
-        
+    }
+    
+    private func setIndicatorAutoLayout(){
+        indicator.snp.makeConstraints({ make in
+            make.center.equalToSuperview()
+        })
     }
     
     func getUserInfo(){
@@ -254,8 +276,14 @@ final class CompareUserController : UIViewController, SendingProtocol {
                 self.repoUserInfo = $0
             })
             .disposed(by: self.disposeBag)
+            
             if self.repoUserInfo.firstResult.count != 0{
                 timer.invalidate()
+                self.indicator.stopAnimating()
+                
+                if !self.indicator.isAnimating{
+                    self.addToView()
+                }
                 
             }
         })
@@ -334,7 +362,7 @@ extension CompareUserController : ChartViewDelegate {
     
     private func chartCommitAttribute(){
         chartCommit.xAxis.enabled = false
-        chartCommit.animate(xAxisDuration: 2, yAxisDuration: 2)
+        chartCommit.animate(xAxisDuration: 1, yAxisDuration: 2)
         chartCommit.leftAxis.enabled = true
         chartCommit.doubleTapToZoomEnabled = false
         chartCommit.leftAxis.labelFont = .systemFont(ofSize: 15)
@@ -424,7 +452,7 @@ extension CompareUserController : ChartViewDelegate {
     
     private func chartAddDelAttribute(){
         chartAddDel.xAxis.enabled = false
-        chartCommit.animate(xAxisDuration: 2, yAxisDuration: 2)
+        chartCommit.animate(xAxisDuration: 1, yAxisDuration: 2)
         chartCommit.leftAxis.enabled = true
         chartCommit.doubleTapToZoomEnabled = false
         chartCommit.leftAxis.labelFont = .systemFont(ofSize: 15)
