@@ -12,7 +12,7 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL() 
-    static var ip = ""
+    static let ip = ""
     
     private init(){}
     
@@ -28,10 +28,16 @@ final class APIURL{
     
     ///  DB에 User 정보 넣는 함수
     /// - Returns: DB에 저장된 Id 숫자
-    static func inputDBMembers() -> String{
+    func inputDBMembers(ip: String) -> String{
         let inputUserUrl = "http://\(ip)/api/members"
         return inputUserUrl
     }
+    
+    func inputWalletAddress(ip: String) -> String{
+        let inputUserUrl = "http://\(ip)/api/members/wallet-address"
+        return inputUserUrl
+    }
+    
     
     /// 멤버 정보 조회하는 함수
     /// - Parameter id:inputDBMembers 함수 return값, DB에 저장되는 Id

@@ -12,9 +12,9 @@ final class TabBarController : UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tabBar.tintColor = .black
-        let firstView = UINavigationController(rootViewController: CompareGraphController())
+        let firstView = CompareGraphController()
         firstView.tabBarItem.image = UIImage(systemName: "book.closed")
-        let secondView = UINavigationController(rootViewController: CompareUSerController())
+        let secondView = CompareUserController()
         secondView.tabBarItem.image = UIImage(systemName: "person.3.fill")
         let viewController = [firstView, secondView]
         self.setViewControllers(viewController, animated: true)
