@@ -197,14 +197,14 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
     }
 
     class MyXAxisFormatter() : ValueFormatter() {
-        private val days = listOf("addition average", "deletion average", "language minimum")
+        private val days = listOf("addition average", "deletion average", "language average")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt()) ?: value.toString()
         }
     }
 
     class ScoreCustomFormatter() : ValueFormatter() {
-        private val days = listOf("addition average", "deletion average", "language minimum")
+        private val days = listOf("addition average", "deletion average", "language average")
 
         //        private val days = listOf( "additions", "deletions")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
