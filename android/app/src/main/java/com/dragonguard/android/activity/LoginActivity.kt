@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
+import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityLoginBinding
 import com.dragonguard.android.model.Bapp
 import com.dragonguard.android.viewmodel.Viewmodel
@@ -41,7 +42,9 @@ class LoginActivity : AppCompatActivity() {
             val handler = Handler(Looper.getMainLooper()).postDelayed({finish()},500)
         }
         binding.walletAuth.setOnClickListener{
-            walletAuthRequest()
+            if(NetworkCheck.checkNetworkState(this)) {
+                walletAuthRequest()
+            }
         }
         binding.walletFinish.setOnClickListener {
             if(key.isNotBlank()) {
