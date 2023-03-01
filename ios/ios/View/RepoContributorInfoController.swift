@@ -50,7 +50,7 @@ final class RepoContributorInfoController: UIViewController{
     // 로딩 UI
     lazy var indicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
-        
+        indicator.color = .gray
         indicator.isHidden = false
         indicator.startAnimating()
         indicator.style = .large
@@ -62,7 +62,6 @@ final class RepoContributorInfoController: UIViewController{
     lazy var barChart: BarChartView = {
         let chart = BarChartView()
         chart.backgroundColor = .white
-        
         return chart
     }()
     
@@ -70,7 +69,7 @@ final class RepoContributorInfoController: UIViewController{
     lazy var userTableView: UITableView = {
         let tableview = UITableView()
         tableview.register(RepoContributorTableView.self, forCellReuseIdentifier: RepoContributorTableView.identifier)
-        
+        tableview.backgroundColor = .white
         return tableview
     }()
     
@@ -181,6 +180,7 @@ extension RepoContributorInfoController: UITableViewDelegate, UITableViewDataSou
         let cell = tableView.dequeueReusableCell(withIdentifier: RepoContributorTableView.identifier, for: indexPath) as? RepoContributorTableView ?? RepoContributorTableView()
         
         cell.setLabel(num: userCommit[indexPath.row], name: userName[indexPath.row], color: dataColor[indexPath.row][0])
+        cell.backgroundColor = .white
         return cell
     }
     
@@ -210,9 +210,11 @@ extension RepoContributorInfoController: ChartViewDelegate {
             let dataEntry = BarChartDataEntry(x: Double(i), y: Double(userCommit[i]))
             contributorInfo.append(dataEntry)
             
-            let set1 = BarChartDataSet(entries: contributorInfo, label: "\(userName[i])")
+            let set1 = BarChartDataSet(entries: contributorInfo, label: userName[i])
             
             set1.colors = dataColor[i]
+            set1.valueTextColor = .black
+            set1.valueColors = [.black]
             dataSet.append(set1)
         }
 
@@ -230,6 +232,7 @@ extension RepoContributorInfoController: ChartViewDelegate {
         barChart.doubleTapToZoomEnabled = false
         barChart.xAxis.enabled = false
         barChart.leftAxis.labelFont = .systemFont(ofSize: 15)
+        
         barChart.noDataText = "출력 데이터가 없습니다."
         barChart.noDataFont = .systemFont(ofSize: 30)
         barChart.noDataTextColor = .lightGray

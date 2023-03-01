@@ -12,7 +12,6 @@ import SnapKit
 final class KlipLoginCheckView: UIViewController{
     var viewModel: LoginViewModel?
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,6 +45,5 @@ final class KlipLoginCheckView: UIViewController{
         self.dismiss(animated: true)
     }
     
-    
-    
 }
+

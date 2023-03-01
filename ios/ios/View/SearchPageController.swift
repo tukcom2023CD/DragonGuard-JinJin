@@ -50,6 +50,7 @@ final class SearchPageController: UIViewController {
     lazy var searchUI: UISearchBar = {
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: deviceWidth, height: 0))
         searchBar.searchTextField.textColor = .black
+        searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "Repository or User", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         searchBar.searchTextField.backgroundColor = .white
         searchBar.searchBarStyle = .minimal
         searchBar.layer.cornerRadius = 10

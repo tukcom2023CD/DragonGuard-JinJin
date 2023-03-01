@@ -21,7 +21,7 @@ final class CompareRepositoryController: UIViewController{
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
         self.view.backgroundColor = .white
-        
+        self.navigationItem.backButtonTitle = ""
         addToView()
     }
     

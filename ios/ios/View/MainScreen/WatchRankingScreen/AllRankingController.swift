@@ -26,13 +26,12 @@ final class AllRankingController: UIViewController{
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "전체 랭킹"
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!]
-        addUItoView()
-        settingAutoLayout()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.userInfoViewModel.userInfoIntoObeservable()
+        resultData = []
+        userInfoViewModel.getDataRanking()
         self.getData()
     }
     
@@ -65,6 +64,7 @@ final class AllRankingController: UIViewController{
     
     func getData(){
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
+            self.userInfoViewModel.userInfoIntoObeservable()
             
             self.userInfoViewModel.allRankingobservable
                     .observe(on: MainScheduler.instance)
@@ -75,11 +75,12 @@ final class AllRankingController: UIViewController{
                     })
                     .disposed(by: self.disposeBag)
                 
-                self.repoTableView.reloadData()
                 self.fetchingMore = false
                 self.checkData = true
                 if self.resultData.count > 0{
                     timer.invalidate()
+                    self.addUItoView()
+                    self.settingAutoLayout()
                 }
             })
     }
@@ -106,7 +107,7 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier, for: indexPath) as? WatchRankingTableView ?? WatchRankingTableView()
         
-        cell.prepare(rank: indexPath.section + 1, text: self.resultData[indexPath.section].githubId, count: self.resultData[indexPath.section].commits)
+        cell.prepare(rank: indexPath.section + 1, text: self.resultData[indexPath.section].githubId, count: self.resultData[indexPath.section].tokens)
         
         cell.layer.cornerRadius = 15
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)

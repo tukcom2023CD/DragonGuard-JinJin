@@ -19,16 +19,20 @@ final class RepoContributorInfoService{
         let url = APIURL.apiUrl.getRepoContributorInfo(ip: ip, name: selectedName)
         resultData = []
         
-        AF.request(url, method: .get)
-            .validate(statusCode: 200..<201)
-            .responseDecodable(of: [RepoContriInfoDecodingModel].self) { response in
-                guard let responseResult = response.value else {return}
-                if(responseResult.count > 0 && self.resultData.count == 0){
-                    self.checkData = true
-                    for data in responseResult{
-                        self.resultData.append(RepoContributorInfoModel(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+            AF.request(url, method: .get)
+                .validate(statusCode: 200..<201)
+                .responseDecodable(of: [RepoContriInfoDecodingModel].self) { response in
+                    guard let responseResult = response.value else {return}
+                    if(responseResult.count > 0 && self.resultData.count == 0){
+                        self.checkData = true
+                        timer.invalidate()
+                        for data in responseResult{
+                            self.resultData.append(RepoContributorInfoModel(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+                        }
                     }
                 }
-            }
+        })
+       
     }
 }
