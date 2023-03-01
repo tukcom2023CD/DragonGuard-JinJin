@@ -1,6 +1,6 @@
 package com.dragonguard.android.model
 
 data class CompareRepoMembersResponseModel(
-    val firstResult: List<FirstResult>?,
-    val secondResult: List<SecondResult>?
+    val firstResult: List<RepoMembersResult>?,
+    val secondResult: List<RepoMembersResult>?
 )

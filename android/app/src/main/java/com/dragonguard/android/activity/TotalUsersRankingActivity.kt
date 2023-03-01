@@ -65,17 +65,19 @@ class TotalUsersRankingActivity : AppCompatActivity() {
 //        Toast.makeText(applicationContext, "개수 : ${result.size}",Toast.LENGTH_SHORT).show()
         if(result.isNotEmpty()) {
             result.forEach {
-                if(ranking != 0) {
-                    if(usersRanking[ranking-1].tokens == it.tokens) {
-                        usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,usersRanking[ranking-1].ranking))
+                if(it.tokens != null) {
+                    if(ranking != 0) {
+                        if(usersRanking[ranking-1].tokens == it.tokens) {
+                            usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,usersRanking[ranking-1].ranking))
+                        } else {
+                            usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,ranking+1))
+                        }
                     } else {
-                        usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,ranking+1))
+                        usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,1))
                     }
-                } else {
-                    usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,1))
+//                Log.d("유져", "랭킹 ${ranking+1} 추가")
+                    ranking++
                 }
-                Log.d("유져", "랭킹 ${ranking+1} 추가")
-                ranking++
             }
             initRecycler()
         } else {

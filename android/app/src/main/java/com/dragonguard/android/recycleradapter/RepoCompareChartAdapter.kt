@@ -14,10 +14,7 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.model.FirstRepo
-import com.dragonguard.android.model.FirstResult
-import com.dragonguard.android.model.SecondRepo
-import com.dragonguard.android.model.SecondResult
+import com.dragonguard.android.model.*
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.components.AxisBase
@@ -30,7 +27,7 @@ import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 import kotlin.math.absoluteValue
 
 
-class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: SecondRepo, private val context: Context) :
+class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: RepoStats, private val context: Context) :
     RecyclerView.Adapter<RepoCompareChartAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -45,7 +42,7 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val radar: RadarChart = itemView.findViewById(R.id.repo_compare_chart)
         private val pie: PieChart = itemView.findViewById(R.id.repo_compare_language)
-        fun bind(data1: FirstRepo, data2: SecondRepo, position1: Int, context: Context) {
+        fun bind(data1: RepoStats, data2: RepoStats, position1: Int, context: Context) {
             data1.languages!!
             data1.gitRepo!!
             data1.statistics!!
@@ -162,8 +159,8 @@ class RepoCompareChartAdapter(private val data1: FirstRepo, private val data2: S
                 radar.animateY(500)
 
                 radar.xAxis.setAvoidFirstLastClipping(true)
-                radar.scaleX = 1.15f
-                radar.scaleY = 1.15f
+                radar.scaleX = 1.3f
+                radar.scaleY = 1.3f
                 radar.apply {
                     setTouchEnabled(false) // 차트 터치 막기
                     description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시

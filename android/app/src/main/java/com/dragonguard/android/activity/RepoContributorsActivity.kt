@@ -71,9 +71,9 @@ class RepoContributorsActivity : AppCompatActivity() {
     fun checkContributors(result: ArrayList<RepoContributorsItem>) {
         if (result.isNotEmpty()) {
             if (result[0].additions == null) {
+                count++
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ repoContributors(repoName) }, 3000)
-
+                handler.postDelayed({ repoContributors(repoName) }, 2000)
             } else {
                 for (i in 0 until result.size) {
                     val compare = contributors.filter { it.githubId == result[i].githubId }
@@ -87,7 +87,7 @@ class RepoContributorsActivity : AppCompatActivity() {
             if (count<10) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ repoContributors(repoName) }, 3000)
+                handler.postDelayed({ repoContributors(repoName) }, 2000)
             } else {
                 binding.progressBar.visibility = View.GONE
             }

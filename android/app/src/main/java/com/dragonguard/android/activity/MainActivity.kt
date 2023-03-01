@@ -14,12 +14,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
+import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.model.RegisterGithubIdModel
 import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
+import okhttp3.internal.wait
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
@@ -33,7 +35,12 @@ class MainActivity : AppCompatActivity() {
             val walletIntent = it.data
             val requestKey = walletIntent!!.getStringExtra("key")
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
-            authRequestResult(requestKey!!)
+            if(!NetworkCheck.checkNetworkState(this)) {
+                Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
+            } else {
+                authRequestResult(requestKey!!)
+            }
+
         } else if(it.resultCode == 1) {
 //            postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
 //            Toast.makeText(applicationContext, "skip 주소 : $walletAddress", Toast.LENGTH_SHORT).show()
@@ -59,9 +66,13 @@ class MainActivity : AppCompatActivity() {
         userId = prefs.getId("id", 0)
 
         if(userId == 0){
-            registerUser("posite")
+            if(NetworkCheck.checkNetworkState(this)) {
+                registerUser("posite")
+            }
         } else {
-            searchUser(userId)
+            if(NetworkCheck.checkNetworkState(this)) {
+                searchUser(userId)
+            }
         }
         //로그인 화면으로 넘어가기
         walletAddress = prefs.getWalletAddress("wallet_address", "")
@@ -71,9 +82,11 @@ class MainActivity : AppCompatActivity() {
         activityResultLauncher.launch(intent)
 
 
-        Timer().scheduleAtFixedRate(10000,2000){
+        Timer().scheduleAtFixedRate(3000,2000){
 //            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
-            searchUser(userId)
+            if(NetworkCheck.checkNetworkState(applicationContext)) {
+                searchUser(userId)
+            }
         }
 
 //        랭킹 보러가기 버튼 눌렀을 때 랭킹 화면으로 전환
@@ -141,8 +154,10 @@ class MainActivity : AppCompatActivity() {
                 }
             } else {
                 if(userInfo.commits != 0 && userInfo.tier == "SPROUT" && !address) {
-                    address = true
-                    postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
+                    if(prefs.getWalletAddress("wallet_address", "") != "") {
+                        address = true
+                        postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
+                    }
                 } else {
                     binding.userTier.text = "내 티어 : ${userInfo.tier}"
                 }
@@ -165,13 +180,13 @@ class MainActivity : AppCompatActivity() {
             }
             val authResponse = authResponseDeferred.await()
             if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
-                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
                 val intent = Intent(applicationContext, LoginActivity::class.java)
                 intent.putExtra("wallet_address", walletAddress)
                 activityResultLauncher.launch(intent)
 
             } else {
-                Toast.makeText(applicationContext, "wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
                 prefs.setWalletAddress("wallet_address", authResponse.result.klaytn_address)
             }
         }

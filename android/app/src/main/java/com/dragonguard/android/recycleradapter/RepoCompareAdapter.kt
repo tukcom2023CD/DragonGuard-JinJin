@@ -1,22 +1,15 @@
 package com.dragonguard.android.recycleradapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.model.FirstRepo
-import com.dragonguard.android.model.SecondRepo
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.charts.RadarChart
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
+import com.dragonguard.android.model.RepoStats
 import kotlin.math.round
 
-class RepoCompareAdapter(private val data1 : FirstRepo, private val data2 : SecondRepo, private val compareItems: ArrayList<String>) : RecyclerView.Adapter<RepoCompareAdapter.ViewHolder>() {
+class RepoCompareAdapter(private val data1 : RepoStats, private val data2 : RepoStats, private val compareItems: ArrayList<String>) : RecyclerView.Adapter<RepoCompareAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.repo_compare_list,parent,false)
@@ -30,7 +23,7 @@ class RepoCompareAdapter(private val data1 : FirstRepo, private val data2 : Seco
         private val repo1Value = view.findViewById<TextView>(R.id.repo1_value)
         private val repo2Value = view.findViewById<TextView>(R.id.repo2_value)
 
-        fun bind(data1 : FirstRepo, data2 : SecondRepo, position: Int) {
+        fun bind(data1 : RepoStats, data2 : RepoStats, position: Int) {
             data1.gitRepo!!
             data2.gitRepo!!
             data1.statistics!!

@@ -1,7 +1,7 @@
 package com.dragonguard.android.model
 
 data class Statistics(
-    val additionStats: AdditionStats,
-    val commitStats: CommitStats,
-    val deletionStats: DeletionStats
+    val additionStats: RepoContributionStats,
+    val commitStats: RepoContributionStats,
+    val deletionStats: RepoContributionStats
 )

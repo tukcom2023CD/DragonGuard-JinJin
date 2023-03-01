@@ -1,6 +1,6 @@
 package com.dragonguard.android.model
 
-data class AdditionStats(
+data class RepoContributionStats (
     val average: Double,
     val count: Int,
     val max: Int,
