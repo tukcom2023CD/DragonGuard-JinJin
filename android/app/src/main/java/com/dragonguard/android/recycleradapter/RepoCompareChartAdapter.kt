@@ -159,8 +159,8 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
                 radar.animateY(500)
 
                 radar.xAxis.setAvoidFirstLastClipping(true)
-                radar.scaleX = 1.15f
-                radar.scaleY = 1.15f
+                radar.scaleX = 1.3f
+                radar.scaleY = 1.3f
                 radar.apply {
                     setTouchEnabled(false) // 차트 터치 막기
                     description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
