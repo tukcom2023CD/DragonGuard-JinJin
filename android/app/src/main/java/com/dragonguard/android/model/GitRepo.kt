@@ -1,5 +1,6 @@
 package com.dragonguard.android.model
 
+//Repository의 fork수 등을 담기 위한 모델
 data class GitRepo(
     val forks_count: Int,
     val full_name: String,

@@ -1,5 +1,6 @@
 package com.dragonguard.android.model
 
+//Repository의 정보를 담기 위함 모델
 data class RepoStats(
     val gitRepo: GitRepo?,
     val statistics: Statistics?,

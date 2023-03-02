@@ -1,5 +1,6 @@
 package com.dragonguard.android.model
 
+//addition, deletion, language의 stat을 담기 위한 모델
 data class RepoContributionStats (
     val average: Double,
     val count: Int,

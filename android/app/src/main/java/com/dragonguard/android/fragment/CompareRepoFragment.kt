@@ -29,7 +29,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.lang.invoke.ConstantCallSite
 
-
+//선택한 두 Repository를 비교하기 위한 fragment
 class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
     // TODO: Rename and change types of parameters
     private var repo1 = repoName1
@@ -59,10 +59,14 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
         updateUI()
     }
 
+    //activity 구성 이후 화면을 초기화하는 함수
     private fun updateUI() {
         repoContributors()
     }
 
+    /*비교 전에 멤버를 불러오는 함수
+    호출 후 이상유무를 확인하는 함수 호출
+     */
     fun repoContributors() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -74,6 +78,11 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
             checkContributors(result)
         }
     }
+
+    /*
+    멤버를 불러오는 함수의 결과의 이상 유뮤 확인 함수
+    이상없으면 비교하는 함수 호출
+     */
 
     fun checkContributors(result: CompareRepoMembersResponseModel) {
         if ((result.firstResult != null) && (result.secondResult != null)) {
@@ -106,6 +115,10 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
         }
     }
 
+    /*
+    두 Repository를 비교하는 API를 호출하는 함수
+    호출 후 이상유무를 확인하는 함수 호출
+     */
     private fun repoCompare() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -118,6 +131,10 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
         }
     }
 
+    /*
+    비교하는 API의 결과의 이상유뮤 확인 후
+    recyclerview 그리는 함수 호출
+     */
     private fun checkRepos(result: CompareRepoResponseModel) {
         if(result.firstRepo != null && result.secondRepo != null) {
             try {
@@ -144,6 +161,10 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
         }
     }
 
+    /*
+    두 Repository를 비교하기 위한 표를 그리는 recyclerview
+    결과에 문제 없으면 다 그리고 그래프를 그리는 함수 호출
+     */
     private fun initRecycler(result: CompareRepoResponseModel) {
         Log.d("initRecycler()", "리사이클러뷰 구현 시작")
         if(result.firstRepo!!.languagesStats == null || result.secondRepo!!.languagesStats == null) {
@@ -161,6 +182,10 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
         }
     }
 
+    /*
+    두 Repository를 비교하기 위한 그래프를 그리는 함수
+    가로로 슬라이딩하며 애니메이션 적용함
+     */
     private fun initGraph(result: CompareRepoResponseModel) {
         binding.repoCompareChartViewpager.adapter = RepoCompareChartAdapter(result.firstRepo!!, result.secondRepo!!, requireContext())
         binding.repoCompareChartViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
@@ -168,6 +193,8 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
         binding.repoCompareChartViewpager.isUserInputEnabled = true
 
     }
+
+    //viewpager의 슬라이딩 애니메이션을 넣는 클래스
     inner class ZoomOutPageTransformer : ViewPager2.PageTransformer {
         override fun transformPage(view: View, position: Float) {
             view.apply {
