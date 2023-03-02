@@ -13,6 +13,7 @@ import com.dragonguard.android.activity.CompareSearchActivity
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.model.RepoSearchResultModel
 
+//비교할 Repository를 나열하기 위한 recyclerview의 adapter
 class SearchCompareRepoAdapter (private val datas : ArrayList<RepoSearchResultModel>, private val context: Context, count: Int) : RecyclerView.Adapter<SearchCompareRepoAdapter.ViewHolder>() {
     private var repoCount = count
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

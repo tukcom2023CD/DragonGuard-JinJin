@@ -27,6 +27,7 @@ import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 import kotlin.math.absoluteValue
 
 
+//viewpager의 슬라이딩 구현을 위한 adapter
 class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: RepoStats, private val context: Context) :
     RecyclerView.Adapter<RepoCompareChartAdapter.ViewHolder>() {
 
@@ -57,6 +58,12 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
             var red = 0
             var green = 0
             var blue = 0
+
+            /*
+            position ==1 -> 첫번째 Repository의 언어들의 비중을 보여주는 pie chart 그리기
+            position ==2 -> 두번째 Repository의 언어들의 비중을 보여주는 pie chart 그리기
+            position ==0 -> 두 Repository의 addition average, deletion average, language average를 비교하는 radar chart 그리기
+             */
             if (position1 % 3 == 1) {
                 val entries = ArrayList<PieEntry>()
                 data1.languages.forEach {
@@ -196,6 +203,7 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
         }
     }
 
+    //x축 label을 수정하기 위한 valueformatter
     class MyXAxisFormatter() : ValueFormatter() {
         private val days = listOf("addition average", "deletion average", "language average")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {

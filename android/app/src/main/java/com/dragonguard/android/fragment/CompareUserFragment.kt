@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+//선택한 두 Repository의 member들을 비교하기 위한 fragment
 class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
 
     private var repo1 = repoName1
@@ -48,6 +49,10 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         return binding.root
     }
 
+    /*
+    두 Repository의 멤버를 비교하는 API를 호출하는 함수
+    호출 후 이상유무를 확인하는 함수 호출
+     */
     fun repoContributors(repoName1: String, repoName2: String) {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -60,7 +65,10 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         }
     }
 
-    //    검색한 결과가 잘 왔는지 확인
+    /*
+    검색한 결과가 잘 왔는지 확인하는 함수
+    이상없으면 spinner에 두 Repository의 github id 리스트 넣는 함수 호출
+     */
     fun checkContributors(result: CompareRepoMembersResponseModel) {
         if ((result.firstResult != null) && (result.secondResult != null)) {
             if (result.firstResult.isEmpty()) {
@@ -88,7 +96,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
                         compare2.clear()
                     }
                 }
-                initRecycler()
+                initSpinner()
             }
         } else {
             if(count<10) {
@@ -99,8 +107,10 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         }
     }
 
-
-    private fun initRecycler() {
+    /*
+    spinner에 두 Repository의 github id 리스트 넣는 함수
+     */
+    private fun initSpinner() {
         if(contributors1.isNotEmpty() && contributors2.isNotEmpty()) {
             val arr1 : MutableList<String> = mutableListOf("선택하세요")
             val arr2 : MutableList<String> = mutableListOf()
@@ -166,6 +176,9 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
 
     }
 
+    /*
+    spinner에 선택된 user들을 비교하는 그래프를 그리는 함수
+     */
     private fun initGraph(user1: String, user2: String) {
         binding.progressBar.visibility = View.VISIBLE
         binding.userCommitChart.visibility = View.GONE
@@ -368,6 +381,8 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         updateUI()
     }
+
+    //activity 구성 이후 화면을 초기화하는 함수
      private fun updateUI() {
 
          binding.userCompareChoice.setOnClickListener {

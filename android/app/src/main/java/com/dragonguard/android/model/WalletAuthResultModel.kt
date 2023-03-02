@@ -1,5 +1,6 @@
 package com.dragonguard.android.model
 
+//KLIP에서 지갑주소를 받아오는 모델
 data class WalletAuthResultModel(
     val expiration_time: Int?,
     val request_key: String?,
