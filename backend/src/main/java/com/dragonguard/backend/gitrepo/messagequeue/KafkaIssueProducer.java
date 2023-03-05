@@ -6,6 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 김승진
+ * @description 깃허브 Repository issue 정보를 스크래핑하기 위해 kafka로 요청하는 Producer
+ */
+
 @Component
 @RequiredArgsConstructor
 public class KafkaIssueProducer implements KafkaProducer<GitRepoNameRequest> {

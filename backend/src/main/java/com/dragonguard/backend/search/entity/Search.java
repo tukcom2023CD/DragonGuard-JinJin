@@ -8,6 +8,11 @@ import org.springframework.data.redis.core.index.Indexed;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * @author 김승진
+ * @description 검색 정보를 담는 Redis Entity
+ */
+
 @Data
 @RedisHash("search")
 public class Search implements Serializable {

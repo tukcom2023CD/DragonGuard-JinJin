@@ -11,6 +11,11 @@ import java.util.Map;
 
 import static com.dragonguard.backend.member.entity.QMember.member;
 
+/**
+ * @author 김승진
+ * @description 멤버 정렬 조건을 설정하는 클래스
+ */
+
 @Component
 public class MemberOrderConverter implements OrderConverter {
 

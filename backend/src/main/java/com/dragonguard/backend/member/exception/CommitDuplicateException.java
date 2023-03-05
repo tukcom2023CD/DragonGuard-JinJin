@@ -1,5 +1,9 @@
-package com.dragonguard.backend.member.entity;
+package com.dragonguard.backend.member.exception;
 
+/**
+ * @author 김승진
+ * @description 멤버 커밋 중복 저장시 나타나는 예외
+ */
 
 public class CommitDuplicateException extends IllegalArgumentException {
 

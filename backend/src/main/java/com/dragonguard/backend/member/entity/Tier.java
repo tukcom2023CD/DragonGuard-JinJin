@@ -1,9 +1,15 @@
 package com.dragonguard.backend.member.entity;
 
+import com.dragonguard.backend.member.exception.TierNoneMatchException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
+
+/**
+ * @author 김승진
+ * @description 멤버 티어를 구분 및 계산하는 enum
+ */
 
 @Getter
 @AllArgsConstructor

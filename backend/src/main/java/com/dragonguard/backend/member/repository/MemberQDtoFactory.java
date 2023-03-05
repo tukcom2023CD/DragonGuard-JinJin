@@ -6,6 +6,11 @@ import org.springframework.stereotype.Component;
 
 import static com.dragonguard.backend.member.entity.QMember.member;
 
+/**
+ * @author 김승진
+ * @description 멤버 프로젝션 적용을 위한 클래스
+ */
+
 @Component
 public class MemberQDtoFactory {
 

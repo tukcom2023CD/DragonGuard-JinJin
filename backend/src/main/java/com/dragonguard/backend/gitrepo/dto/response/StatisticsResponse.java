@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.IntSummaryStatistics;
 
+/**
+ * @author 김승진
+ * @description 깃허브 Repository 관련 통계에 대한 응답 정보를 담는 dto
+ */
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * @author 김승진
+ * @description 커밋 정보를 담는 DB Entity
+ */
+
 @Getter
 @Entity
 @SoftDelete

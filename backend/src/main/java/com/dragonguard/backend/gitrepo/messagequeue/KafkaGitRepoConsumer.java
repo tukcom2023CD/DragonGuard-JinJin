@@ -6,11 +6,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+
+/**
+ * @author 김승진
+ * @description 깃허브 Repository 정보를 kafka로 부터 받아와 처리하는 consumer
+ */
 
 @Component
 @RequiredArgsConstructor

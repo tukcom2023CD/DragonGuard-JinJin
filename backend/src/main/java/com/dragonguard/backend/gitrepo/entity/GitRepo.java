@@ -12,6 +12,11 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author 김승진
+ * @description 깃허브 Repository 정보를 담는 DB Entity
+ */
+
 @Getter
 @Entity
 @SoftDelete
@@ -22,7 +27,7 @@ public class GitRepo extends BaseTime {
 
     private String name;
 
-    private Integer closedIssues;
+    private Integer closedIssues; // todo 추후 추가할 Statistics 도메인으로 이동 필요
 
     @OneToMany(mappedBy = "gitRepo")
     private Set<GitRepoMember> gitRepoMembers = new HashSet<>();

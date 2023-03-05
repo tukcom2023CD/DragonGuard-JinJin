@@ -16,6 +16,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description 블록체인 스마트 컨트랙트로의 접근을 수행하는 클래스
+ */
+
 @Service
 @RequiredArgsConstructor
 public class TransactionService {

@@ -1,6 +1,6 @@
 package com.dragonguard.backend.result.service;
 
-import com.dragonguard.backend.result.dto.request.ResultRequest;
+import com.dragonguard.backend.result.dto.response.ClientResultResponse;
 import com.dragonguard.backend.result.entity.Result;
 import com.dragonguard.backend.result.mapper.ResultMapper;
 import com.dragonguard.backend.result.repository.ResultRepository;
@@ -11,7 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+/**
+ * @author 김승진
+ * @description 검색 결과에 대한 서비스 로직을 수행하는 클래스
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +24,7 @@ public class ResultService {
     private final ResultMapper resultMapper;
     private final SearchService searchService;
 
-    public void saveAllResult(List<ResultRequest> results, SearchRequest searchRequest) {
+    public void saveAllResult(List<ClientResultResponse> results, SearchRequest searchRequest) {
         Search search = searchService.getEntityByRequest(searchRequest);
         List<Result> resultList = resultRepository.findAllBySearchId(search.getId());
 

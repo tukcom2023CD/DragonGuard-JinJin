@@ -11,6 +11,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.math.BigInteger;
 
+/**
+ * @author 김승진
+ * @description 블록체인 정보를 담는 DB Entity
+ */
+
 @Getter
 @Entity
 @SoftDelete

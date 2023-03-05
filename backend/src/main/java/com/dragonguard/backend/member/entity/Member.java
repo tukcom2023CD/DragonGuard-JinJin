@@ -14,6 +14,11 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description 멤버 정보를 담는 DB Entity
+ */
+
 @Getter
 @Entity
 @SoftDelete

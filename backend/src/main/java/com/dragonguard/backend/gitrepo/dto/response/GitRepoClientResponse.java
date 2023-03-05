@@ -5,6 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author 김승진
+ * @description 깃허브 Repository 관련 Github REST API의 응답 정보를 담는 dto
+ */
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

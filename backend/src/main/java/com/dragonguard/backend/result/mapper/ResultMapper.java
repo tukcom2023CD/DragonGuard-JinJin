@@ -1,17 +1,22 @@
 package com.dragonguard.backend.result.mapper;
 
-import com.dragonguard.backend.result.dto.request.ResultRequest;
+import com.dragonguard.backend.result.dto.response.ClientResultResponse;
 import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.result.entity.Result;
 import com.dragonguard.backend.search.dto.response.UserResponse;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 김승진
+ * @description 검색 결과 Entity와 dto 사이의 변환을 도와주는 클래스
+ */
+
 @Component
 public class ResultMapper {
 
-    public Result toEntity(ResultRequest resultRequest, String searchId) {
+    public Result toEntity(ClientResultResponse clientResultResponse, String searchId) {
         return Result.builder()
-                .name(resultRequest.getFull_name())
+                .name(clientResultResponse.getFull_name())
                 .searchId(searchId)
                 .build();
     }

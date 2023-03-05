@@ -1,6 +1,6 @@
 package com.dragonguard.backend.result.messagequeue;
 
-import com.dragonguard.backend.result.dto.request.ResultRequest;
+import com.dragonguard.backend.result.dto.response.ClientResultResponse;
 import com.dragonguard.backend.result.service.ResultService;
 import com.dragonguard.backend.search.dto.request.SearchRequest;
 import com.dragonguard.backend.search.entity.SearchType;
@@ -17,7 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Slf4j
+/**
+ * @author 김승진
+ * @description 검색 결과를 처리하는 kafka consumer 클래스
+ */
+
 @Component
 @RequiredArgsConstructor
 public class KafkaResultConsumer {
@@ -38,8 +42,8 @@ public class KafkaResultConsumer {
         }
 
         List<Map<String, String>> results = (List<Map<String, String>>) map.get("result");
-        List<ResultRequest> result = results.stream()
-                .map(o -> new ResultRequest(o.get("name")))
+        List<ClientResultResponse> result = results.stream()
+                .map(o -> new ClientResultResponse(o.get("name")))
                 .collect(Collectors.toList());
 
         Map<String, Object> getMap = (Map<String, Object>) map.get("search");

@@ -13,10 +13,14 @@ import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+/**
+ * @author 김승진
+ * @description GitRepoMember 관련 서비스로직을 담당하는 클래스
+ */
 
 @Service
 @RequiredArgsConstructor

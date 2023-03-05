@@ -26,6 +26,11 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * @author 김승진
+ * @description 깃허브 Repository 관련 서비스 로직을 처리하는 클래스
+ */
+
 @Service
 @RequiredArgsConstructor
 public class GitRepoService {

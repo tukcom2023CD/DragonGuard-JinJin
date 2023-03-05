@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 
+/**
+ * @author 김승진
+ * @description 블록체인 Entity와 dto의 변환을 돕는 클래스
+ */
+
 @Component
 public class BlockchainMapper {
 

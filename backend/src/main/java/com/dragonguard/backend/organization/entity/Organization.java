@@ -6,6 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * @author 김승진
+ * @description 조직(회사, 대학교) 정보를 담는 DB Entity
+ */
+
 @Entity
 @SoftDelete
 public class Organization {

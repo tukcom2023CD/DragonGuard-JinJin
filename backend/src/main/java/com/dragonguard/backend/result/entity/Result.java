@@ -9,6 +9,11 @@ import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * @author 김승진
+ * @description 검색 결과를 담는 Redis Entity
+ */
+
 @Data
 @RedisHash("result")
 public class Result implements Serializable {

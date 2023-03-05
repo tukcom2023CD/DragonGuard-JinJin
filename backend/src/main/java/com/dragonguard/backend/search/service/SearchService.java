@@ -28,6 +28,11 @@ import java.util.stream.Collectors;
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
+/**
+ * @author 김승진
+ * @description 검색 관련 서비스 로직을 처리하는 클래스
+ */
+
 @Service
 @RequiredArgsConstructor
 public class SearchService {

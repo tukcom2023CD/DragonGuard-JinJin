@@ -9,6 +9,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+
+/**
+ * @author 김승진
+ * @description Redis 캐쉬를 사용하기 위한 설정을 등록하는 클래스
+ */
+
 @Configuration
 @EnableRedisRepositories
 @RequiredArgsConstructor

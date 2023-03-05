@@ -22,6 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description 멤버관련 서비스 로직을 담당하는 클래스
+ */
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {

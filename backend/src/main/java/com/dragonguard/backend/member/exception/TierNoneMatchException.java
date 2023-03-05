@@ -1,5 +1,9 @@
-package com.dragonguard.backend.member.entity;
+package com.dragonguard.backend.member.exception;
 
+/**
+ * @author 김승진
+ * @description 멤버 티어가 잘못되었거나 계산할 수 없을 때 나타나는 예외
+ */
 
 public class TierNoneMatchException extends IllegalArgumentException {
 

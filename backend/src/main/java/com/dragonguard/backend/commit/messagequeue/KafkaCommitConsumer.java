@@ -14,6 +14,11 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author 김승진
+ * @description 커밋 정보를 카프카로부터 받아오는 consumer
+ */
+
 @Slf4j
 @Component
 @RequiredArgsConstructor

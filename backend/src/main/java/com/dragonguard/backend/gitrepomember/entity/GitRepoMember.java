@@ -12,6 +12,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * @author 김승진
+ * @description 깃허브 Repository 구성원 정보를 담는 DB Entity
+ */
+
 @Getter
 @Entity
 @SoftDelete
