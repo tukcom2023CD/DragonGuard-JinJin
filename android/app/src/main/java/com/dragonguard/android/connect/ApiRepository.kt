@@ -32,7 +32,7 @@ class ApiRepository {
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
         queryMap.put("name",name)
-        queryMap.put("type","repositories")
+        queryMap.put("type","REPOSITORIES")
 
         Log.d("api 호출", "$count 페이지 검색")
 
