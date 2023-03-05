@@ -17,7 +17,7 @@ final class SettingController: UIViewController{
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false   // navigation bar 생성
         self.navigationItem.title = "설정"
-        
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         // UI view에 추가
         addUIToView()
         
