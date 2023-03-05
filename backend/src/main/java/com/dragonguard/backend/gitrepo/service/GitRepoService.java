@@ -1,16 +1,11 @@
 package com.dragonguard.backend.gitrepo.service;
 
-import com.dragonguard.backend.gitrepo.client.GitRepoClient;
-import com.dragonguard.backend.gitrepo.client.GitRepoLanguageClient;
-import com.dragonguard.backend.gitrepo.client.GitRepoMemberClient;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.gitrepo.dto.response.*;
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.gitrepo.mapper.GitRepoMapper;
-import com.dragonguard.backend.gitrepo.messagequeue.KafkaGitRepoProducer;
-import com.dragonguard.backend.gitrepo.messagequeue.KafkaIssueProducer;
 import com.dragonguard.backend.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberClientResponse;
@@ -18,9 +13,10 @@ import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.dto.response.TwoGitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.gitrepomember.mapper.GitRepoMemberMapper;
-import com.dragonguard.backend.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.gitrepomember.service.GitRepoMemberService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.kafka.KafkaProducer;
+import com.dragonguard.backend.global.webclient.GithubClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,11 +33,11 @@ public class GitRepoService {
     private final GitRepoRepository gitRepoRepository;
     private final GitRepoMemberService gitRepoMemberService;
     private final GitRepoMapper gitRepoMapper;
-    private final KafkaGitRepoProducer kafkaGitRepoProducer;
-    private final KafkaIssueProducer kafkaIssueProducer;
-    private final GitRepoMemberClient gitRepoMemberClient;
-    private final GitRepoClient gitRepoClient;
-    private final GitRepoLanguageClient gitRepoLanguageClient;
+    private final KafkaProducer<GitRepoRequest> kafkaGitRepoProducer;
+    private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
+    private final GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
+    private final GithubClient<String, GitRepoClientResponse> gitRepoClient;
+    private final GithubClient<String, Map<String, Integer>> gitRepoLanguageClient;
 
     public List<GitRepoMemberResponse> findMembersByGitRepo(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());

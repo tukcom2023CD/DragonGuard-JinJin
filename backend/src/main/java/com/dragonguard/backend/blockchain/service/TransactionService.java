@@ -2,7 +2,7 @@ package com.dragonguard.backend.blockchain.service;
 
 import com.dragonguard.backend.blockchain.dto.request.ContractRequest;
 import com.dragonguard.backend.config.blockchain.BlockchainProperties;
-import com.dragonguard.backend.global.exception.BlockchainException;
+import com.dragonguard.backend.blockchain.exception.BlockchainException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;

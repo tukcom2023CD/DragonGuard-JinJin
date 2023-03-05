@@ -1,6 +1,6 @@
 package com.dragonguard.backend.config.blockchain;
 
-import com.dragonguard.backend.global.exception.BlockchainException;
+import com.dragonguard.backend.blockchain.exception.BlockchainException;
 import com.klaytn.caver.Caver;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;
