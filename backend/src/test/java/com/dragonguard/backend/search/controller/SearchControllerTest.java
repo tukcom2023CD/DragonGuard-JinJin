@@ -51,7 +51,7 @@ class SearchControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/search?page=1&name=gitrank&type=repositories")
+                        get("/api/search?page=1&name=gitrank&type=REPOSITORIES")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
