@@ -1,7 +1,6 @@
 package com.dragonguard.backend.member.repository;
 
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
-import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +10,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.dragonguard.backend.member.entity.QMember.member;
+
+/**
+ * @author 김승진
+ * @description 멤버 DB 조회 접근에 대한 구현체
+ */
 
 @Repository
 @RequiredArgsConstructor

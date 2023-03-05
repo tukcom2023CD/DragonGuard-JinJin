@@ -11,6 +11,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+/**
+ * @author 김승진
+ * @description 깃허브 Repository 사용 언어 정보를 Github REST API에 요청하는 클래스
+ */
+
 @Component
 public class GitRepoLanguageClient implements GithubClient<String, Map<String, Integer>> {
     private final GithubProperties githubProperties;

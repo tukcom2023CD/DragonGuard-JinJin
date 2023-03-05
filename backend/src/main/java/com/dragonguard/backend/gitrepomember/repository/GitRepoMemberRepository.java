@@ -9,6 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description GitRepoMember 관련 DB와의 CRUD를 담당하는 클래스
+ */
+
 @Repository
 public interface GitRepoMemberRepository extends JpaRepository<GitRepoMember, Long> {
     List<GitRepoMember> findAllByGitRepo(GitRepo gitRepo);

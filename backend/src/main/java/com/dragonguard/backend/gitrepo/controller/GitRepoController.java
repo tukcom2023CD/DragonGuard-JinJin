@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description 깃허브 Repository 관련 요청을 처리하는 컨트롤러
+ */
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/git-repos")
 public class GitRepoController {
-
     private final GitRepoService gitRepoService;
 
     @GetMapping

@@ -6,6 +6,11 @@ import com.dragonguard.backend.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.member.entity.Member;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 김승진
+ * @description GitRepoMember Entity 와 dto 사이의 변환을 도와주는 클래스
+ */
+
 @Component
 public class GitRepoMemberMapper {
 

@@ -9,6 +9,11 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
+/**
+ * @author 김승진
+ * @description 생성, 수정, 삭제 시간을 저장할 엔티티에 들어갈 공통 상위 클래스
+ */
+
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)

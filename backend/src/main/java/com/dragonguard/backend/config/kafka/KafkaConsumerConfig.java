@@ -14,6 +14,11 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author 김승진
+ * @description Kafka의 Consumer들을 위한 설정 클래스
+ */
+
 @EnableKafka
 @Configuration
 @PropertySource("classpath:application-dev.yml")

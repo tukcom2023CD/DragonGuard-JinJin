@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description 블록체인 관련 요청을 처리하는 컨트롤러
+ */
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/blockchain")

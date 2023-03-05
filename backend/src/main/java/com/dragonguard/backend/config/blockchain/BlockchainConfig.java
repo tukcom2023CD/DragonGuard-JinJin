@@ -1,6 +1,6 @@
 package com.dragonguard.backend.config.blockchain;
 
-import com.dragonguard.backend.global.exception.BlockchainException;
+import com.dragonguard.backend.blockchain.exception.BlockchainException;
 import com.klaytn.caver.Caver;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;
@@ -17,6 +17,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
+/**
+ * @author 김승진
+ * @description 블록체인 관련 라이브러리 Caver-java 관련 클래스들을 Spring Bean으로 등록하는 설정 클래스
+ */
+
 @Configuration
 @RequiredArgsConstructor
 public class BlockchainConfig {
@@ -24,7 +29,7 @@ public class BlockchainConfig {
     private final static String BAOBAB_TESTNET = "https://api.baobab.klaytn.net:8651";
 
     @Bean
-    public BlockchainString blockchainString() {
+    public BlockchainJson blockchainJson() {
         Path path = Paths.get("src/main/resources/");
         Path abiPath = Paths.get(path.toAbsolutePath().normalize()
                 .resolve("abi.json")
@@ -38,7 +43,7 @@ public class BlockchainConfig {
         try {
             String abiJson = Files.readAllLines(abiPath, Charsets.UTF_8).stream().collect(Collectors.joining());
             String keyRingJson = Files.readAllLines(keyringPath, Charsets.UTF_8).stream().collect(Collectors.joining());
-            return new BlockchainString(abiJson, keyRingJson);
+            return new BlockchainJson(abiJson, keyRingJson);
         } catch (IOException e) {
             throw new BlockchainException();
         }
@@ -47,7 +52,7 @@ public class BlockchainConfig {
     @Bean
     public AbstractKeyring keyring() {
         try {
-            return KeyringFactory.decrypt(blockchainString().getKeyRingJson(), properties.getPassword());
+            return KeyringFactory.decrypt(blockchainJson().getKeyRingJson(), properties.getPassword());
         } catch (CipherException | IOException e) {
             throw new BlockchainException();
         }
@@ -61,7 +66,7 @@ public class BlockchainConfig {
     @Bean
     public Contract contract() {
         try {
-            return caver().contract.create(blockchainString().getAbiJson());
+            return caver().contract.create(blockchainJson().getAbiJson());
         } catch (IOException e) {
             throw new BlockchainException();
         }

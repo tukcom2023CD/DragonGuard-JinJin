@@ -12,6 +12,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author 김승진
+ * @description 유저 검색에 대한 Github REST API 요청을 수행하는 클래스
+ */
+
 @Component
 public class SearchUserClient implements GithubClient<SearchRequest, SearchUserResponse> {
     private final GithubProperties githubProperties;

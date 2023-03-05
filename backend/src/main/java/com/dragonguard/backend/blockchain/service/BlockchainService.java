@@ -14,6 +14,11 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author 김승진
+ * @description 블록체인 관련 DB 요청 및 TrasactionService의 함수들의 호출을 담당하는 클래스
+ */
+
 @Service
 @RequiredArgsConstructor
 public class BlockchainService {

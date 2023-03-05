@@ -2,7 +2,7 @@ package com.dragonguard.backend.blockchain.service;
 
 import com.dragonguard.backend.blockchain.dto.request.ContractRequest;
 import com.dragonguard.backend.config.blockchain.BlockchainProperties;
-import com.dragonguard.backend.global.exception.BlockchainException;
+import com.dragonguard.backend.blockchain.exception.BlockchainException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -15,6 +15,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.List;
+
+/**
+ * @author 김승진
+ * @description 블록체인 스마트 컨트랙트로의 접근을 수행하는 클래스
+ */
 
 @Service
 @RequiredArgsConstructor

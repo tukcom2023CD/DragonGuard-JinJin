@@ -6,6 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description 검색 결과를 Redis에 저장 및 조회 요청을 하는 클래스
+ */
+
 @Repository
 public interface ResultRepository extends CrudRepository<Result, String> {
     List<Result> findAllBySearchId(String searchId);

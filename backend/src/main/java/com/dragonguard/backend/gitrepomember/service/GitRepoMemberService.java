@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * @author 김승진
+ * @description GitRepoMember 관련 서비스로직을 담당하는 클래스
+ */
+
 @Service
 @RequiredArgsConstructor
 public class GitRepoMemberService {
@@ -61,5 +66,13 @@ public class GitRepoMemberService {
             return gitRepoMemberMapper.toEntity(gitRepository, member, gitRepoEntity);
         }).collect(Collectors.toList());
         gitRepoMemberRepository.saveAll(list);
+    }
+
+    public List<GitRepoMember> findAllByGitRepo(GitRepo gitRepo) {
+        return gitRepoMemberRepository.findAllByGitRepo(gitRepo);
+    }
+
+    public GitRepoMember findByNameAndMemberName(String repoName, String memberName) {
+        return gitRepoMemberRepository.findByNameAndMemberName(repoName, memberName);
     }
 }

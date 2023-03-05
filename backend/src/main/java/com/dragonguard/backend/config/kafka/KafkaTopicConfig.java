@@ -5,6 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
+
+/**
+ * @author 김승진
+ * @description Kafka의 토픽을 생성해주는 클래스
+ */
+
 @Configuration
 public class KafkaTopicConfig {
 

@@ -1,6 +1,7 @@
 package com.dragonguard.backend.search.service;
 
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.webclient.GithubClient;
 import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.result.entity.Result;
@@ -13,7 +14,6 @@ import com.dragonguard.backend.search.dto.response.SearchUserResponse;
 import com.dragonguard.backend.search.entity.Search;
 import com.dragonguard.backend.search.entity.SearchType;
 import com.dragonguard.backend.search.mapper.SearchMapper;
-import com.dragonguard.backend.search.messagequeue.KafkaSearchProducer;
 import com.dragonguard.backend.search.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -28,6 +28,11 @@ import java.util.stream.Collectors;
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
 import static org.springframework.data.domain.ExampleMatcher.matching;
 
+/**
+ * @author 김승진
+ * @description 검색 관련 서비스 로직을 처리하는 클래스
+ */
+
 @Service
 @RequiredArgsConstructor
 public class SearchService {
@@ -35,7 +40,7 @@ public class SearchService {
     private final SearchMapper searchMapper;
     private final ResultMapper resultMapper;
     private final ResultRepository resultRepository;
-    private final KafkaSearchProducer kafkaSearchProducer;
+    private final KafkaProducer<KafkaSearchRequest> kafkaSearchProducer;
     private final GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     private final GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
 

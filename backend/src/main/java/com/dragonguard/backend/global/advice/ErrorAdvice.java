@@ -10,6 +10,11 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description API 요청을 받아 로직 수행중 나타날 에러에 대한 처리를 담당하는 클래스
+ */
+
 @Slf4j
 @RestControllerAdvice
 public class ErrorAdvice {

@@ -5,6 +5,11 @@ import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Member;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 김승진
+ * @description 멤버 Entity와 dto 사이의 변환을 도와주는 클래스
+ */
+
 @Component
 public class MemberMapper {
     public Member toEntity(MemberRequest memberRequest) {

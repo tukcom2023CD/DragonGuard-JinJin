@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author 김승진
+ * @description 검색 결과 응답 정보를 담는 dto
+ */
+
 @Getter
 @Builder
 @NoArgsConstructor

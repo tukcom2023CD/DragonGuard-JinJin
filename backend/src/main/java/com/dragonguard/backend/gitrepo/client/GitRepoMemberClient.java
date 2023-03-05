@@ -12,6 +12,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author 김승진
+ * @description 깃허브 Repository 멤버의 기여도 정보를 Github REST API에 요청하는 클래스
+ */
+
 @Component
 public class GitRepoMemberClient implements GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> {
 

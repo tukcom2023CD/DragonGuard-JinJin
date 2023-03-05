@@ -12,7 +12,11 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
+/**
+ * @author 김승진
+ * @description 깃허브 Repository issue 정보를 kafka로 부터 받아와 처리하는 consumer
+ */
+
 @Component
 @RequiredArgsConstructor
 public class KafkaIssueConsumer {
