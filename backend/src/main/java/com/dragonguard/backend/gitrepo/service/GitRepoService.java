@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 public class GitRepoService {
     private final GitRepoMemberMapper gitRepoMemberMapper;
     private final GitRepoRepository gitRepoRepository;
-    private final GitRepoMemberRepository gitRepoMemberRepository;
     private final GitRepoMemberService gitRepoMemberService;
     private final GitRepoMapper gitRepoMapper;
     private final KafkaGitRepoProducer kafkaGitRepoProducer;
@@ -54,7 +53,7 @@ public class GitRepoService {
             requestGitRepoToScraping(gitRepoRequest);
             return List.of();
         }
-        return gitRepoMemberRepository.findAllByGitRepo(gitRepo.get()).stream()
+        return gitRepoMemberService.findAllByGitRepo(gitRepo.get()).stream()
                 .map(gitRepoMemberMapper::toResponse)
                 .collect(Collectors.toList());
     }
@@ -67,7 +66,7 @@ public class GitRepoService {
         } else if (gitRepo.get().getGitRepoMembers().isEmpty()) {
             return requestToGithub(gitRepoRequest);
         }
-        return gitRepoMemberRepository.findAllByGitRepo(gitRepo.get()).stream()
+        return gitRepoMemberService.findAllByGitRepo(gitRepo.get()).stream()
                 .map(gitRepoMemberMapper::toResponse)
                 .collect(Collectors.toList());
     }
@@ -83,8 +82,8 @@ public class GitRepoService {
     }
 
     public GirRepoMemberCompareResponse findTwoGitRepoMember(GitRepoMemberCompareRequest request) {
-        GitRepoMember first = gitRepoMemberRepository.findByNameAndMemberName(request.getFirstRepo(), request.getFirstName());
-        GitRepoMember second = gitRepoMemberRepository.findByNameAndMemberName(request.getSecondRepo(), request.getSecondName());
+        GitRepoMember first = gitRepoMemberService.findByNameAndMemberName(request.getFirstRepo(), request.getFirstName());
+        GitRepoMember second = gitRepoMemberService.findByNameAndMemberName(request.getSecondRepo(), request.getSecondName());
 
         return new GirRepoMemberCompareResponse(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
     }

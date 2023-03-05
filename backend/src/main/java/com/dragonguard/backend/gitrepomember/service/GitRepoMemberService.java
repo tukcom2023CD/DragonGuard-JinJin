@@ -13,6 +13,7 @@ import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -61,5 +62,13 @@ public class GitRepoMemberService {
             return gitRepoMemberMapper.toEntity(gitRepository, member, gitRepoEntity);
         }).collect(Collectors.toList());
         gitRepoMemberRepository.saveAll(list);
+    }
+
+    public List<GitRepoMember> findAllByGitRepo(GitRepo gitRepo) {
+        return gitRepoMemberRepository.findAllByGitRepo(gitRepo);
+    }
+
+    public GitRepoMember findByNameAndMemberName(String repoName, String memberName) {
+        return gitRepoMemberRepository.findByNameAndMemberName(repoName, memberName);
     }
 }
