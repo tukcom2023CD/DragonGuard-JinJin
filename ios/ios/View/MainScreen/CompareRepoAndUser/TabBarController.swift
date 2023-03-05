@@ -11,8 +11,9 @@ import UIKit
 final class TabBarController : UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.tabBar.tintColor = .black
-        let firstView = CompareGraphController()
+        let firstView = CompareRepositoryController()
         firstView.tabBarItem.image = UIImage(systemName: "book.closed")
         let secondView = CompareUserController()
         secondView.tabBarItem.image = UIImage(systemName: "person.3.fill")

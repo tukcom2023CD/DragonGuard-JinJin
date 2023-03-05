@@ -15,7 +15,7 @@ final class AllRankingController: UIViewController{
     
     let deviceHeight = UIScreen.main.bounds.height
     let disposeBag = DisposeBag()
-    let userInfoViewModel = UserInfoViewModel()
+    let userInfoViewModel = ALLUserInfoViewModel()
     var resultData = [UserInfoModel]()
     var fetchingMore = false
     var checkData = false

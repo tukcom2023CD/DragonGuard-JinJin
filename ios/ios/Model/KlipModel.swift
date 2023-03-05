@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 struct KlipDecodingModel: Codable{
     let request_key: String
     let status: String

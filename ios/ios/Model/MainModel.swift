@@ -16,8 +16,9 @@ final class MainModel{
     var authStep: String
     var profileImage: String
     var rank: Int
+    var tokenAmount: Int
     
-    init(id: Int, name: String, githubId: String, commits: Int, tier: String, authStep: String, profileImage: String,rank: Int) {
+    init(id: Int, name: String, githubId: String, commits: Int, tier: String, authStep: String, profileImage: String,rank: Int, tokenAmount: Int ) {
         self.id = id
         self.name = name
         self.githubId = githubId
@@ -26,6 +27,7 @@ final class MainModel{
         self.authStep = authStep
         self.profileImage = profileImage
         self.rank = rank
+        self.tokenAmount = tokenAmount
     }
 }
 
@@ -38,4 +40,5 @@ struct MainDecodingModel: Codable{
     var authStep: String
     var profileImage: String?
     var rank: Int
+    var tokenAmount: Int?
 }

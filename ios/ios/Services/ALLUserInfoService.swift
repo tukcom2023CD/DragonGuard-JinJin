@@ -9,15 +9,19 @@ import Foundation
 import Alamofire
 
 
-// 유저 정보 통신
-final class UserInfoService{
-    static let sharedData = UserInfoService()
+// 전체 유저 정보 통신
+final class ALLUserInfoService{
+    static let sharedData = ALLUserInfoService()
     let ip = APIURL.ip
     var resultArray = [UserInfoModel]()
     
     
     private init() { }
     
+    /// 전체 랭킹 API 통신
+    /// - Parameters:
+    ///   - page: 유저 리스트 페이지
+    ///   - size: 한번에 받아올 버퍼 크기
     func getMemberInfo(page: Int, size: Int){
         let url = APIURL.apiUrl.getUserInfo(ip: ip, page: page, size: size)
         self.resultArray = []

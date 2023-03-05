@@ -14,7 +14,8 @@ final class RepoContributorInfoService{
     var selectedName = ""
     var checkData = false
     var resultData = [RepoContributorInfoModel]()
-
+    
+    /// 레포지토리 내부 Contributor 정보
     func getRepoContriInfo(){
         let url = APIURL.apiUrl.getRepoContributorInfo(ip: ip, name: selectedName)
         resultData = []

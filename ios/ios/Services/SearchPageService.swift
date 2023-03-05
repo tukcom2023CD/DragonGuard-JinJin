@@ -13,7 +13,11 @@ final class SearchPageService {
     var resultArray = [SearchPageResultModel]() // 결과 저장할 변수
     var timerThread: Timer?
     var checkData:Bool = false
-
+    
+    /// 검색 API 통신하는 함수
+    /// - Parameters:
+    ///   - searchWord: 사용자가 검색한 단어
+    ///   - page: 검색 결과 페이지
     func getSearchResult(searchWord: String,page: Int) {
         resultArray = []
         let url = APIURL.testUrl(ip: ip, page: page, searchWord: searchWord)

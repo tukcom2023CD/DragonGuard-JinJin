@@ -211,7 +211,7 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let comparePage = CompareRepositoryController()
+        let comparePage = CompareController()
 
         if beforePage == "Main"{
             RepoContributorInfoService.repoShared.selectedName = resultData[indexPath.section]

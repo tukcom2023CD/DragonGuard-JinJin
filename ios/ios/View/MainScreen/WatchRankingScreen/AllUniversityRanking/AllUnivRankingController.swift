@@ -1,5 +1,5 @@
 //
-//  UnivInRanking.swift
+//  AllUnivRankingController.swift
 //  ios
 //
 //  Created by 정호진 on 2023/02/01.
@@ -7,11 +7,10 @@
 
 import Foundation
 import UIKit
-import RxDataSources
 import RxCocoa
 import RxSwift
 
-final class UnivInRankingController: UIViewController{
+final class AllUnivRankingController: UIViewController{
     
     let disposeBag = DisposeBag()
     
@@ -20,11 +19,10 @@ final class UnivInRankingController: UIViewController{
         self.view.backgroundColor = .white
         
         self.navigationController?.navigationBar.isHidden = false
-        self.navigationItem.title = "대학교 내부 랭킹"
+        self.navigationItem.title = "전체 대학교 랭킹"
         
         addUItoView()
         settingAutoLayout()
-        setTableViewDataSource()
     }
     
     /*
@@ -71,39 +69,12 @@ final class UnivInRankingController: UIViewController{
         })
         
     }
-    
-    func setTableViewDataSource() {
-        
-        let dataSource = RxTableViewSectionedAnimatedDataSource<rankingModel> { _, tableview, indexPath, item in
-            let cell = tableview.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier,for: indexPath) as? WatchRankingTableView ?? WatchRankingTableView()
-//            cell.prepare(text: item)
-            cell.layer.cornerRadius = 15
-            cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
-            cell.layer.borderWidth = 1
-            return cell
-        } titleForHeaderInSection: { dataSource, sectionIndex in
-            return dataSource[sectionIndex].header
-        }
-        
-        // 데이터 테스트
-        let sections = [
-            rankingModel(header: " ", items: ["1"]),
-            rankingModel(header: " ", items: ["2"]),
-            rankingModel(header: " ", items: ["3"]),
-            rankingModel(header: " ", items: ["4"])
-        ]
-        
-        // 데이터 삽입
-        Observable.just(sections)
-            .bind(to: repoTableView.rx.items(dataSource: dataSource))
-            .disposed(by: disposeBag)
-        
-    }
+
     
 }
 
 
-extension UnivInRankingController: UITableViewDelegate {
+extension AllUnivRankingController: UITableViewDelegate {
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected \(indexPath.section)")
@@ -115,21 +86,3 @@ extension UnivInRankingController: UITableViewDelegate {
     
 }
 
-
-
-/*
- SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
- 
- preview 실행이 안되는 경우 단축키
- Command + Option + Enter : preview 그리는 캠버스 띄우기
- Command + Option + p : preview 재실행
- */
-
-import SwiftUI
-
-struct VCPreViewUnivInRanking:PreviewProvider {
-    static var previews: some View {
-        UnivInRankingController().toPreview().previewDevice("iPhone 14 pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}

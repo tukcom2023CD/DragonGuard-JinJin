@@ -1,5 +1,5 @@
 //
-//  MyOrganizationList.swift
+//  UnivInRanking.swift
 //  ios
 //
 //  Created by 정호진 on 2023/02/01.
@@ -7,11 +7,10 @@
 
 import Foundation
 import UIKit
-import RxDataSources
 import RxCocoa
 import RxSwift
 
-final class MyOraganizationListController: UIViewController{
+final class UnivInRankingController: UIViewController{
     
     let disposeBag = DisposeBag()
     
@@ -20,12 +19,10 @@ final class MyOraganizationListController: UIViewController{
         self.view.backgroundColor = .white
         
         self.navigationController?.navigationBar.isHidden = false
-        self.navigationItem.title = "내 Organization 랭킹"
+        self.navigationItem.title = "대학교 내부 랭킹"
         
         addUItoView()
         settingAutoLayout()
-        setTableViewDataSource()
-        
     }
     
     /*
@@ -73,38 +70,10 @@ final class MyOraganizationListController: UIViewController{
         
     }
     
-    func setTableViewDataSource() {
-        
-        let dataSource = RxTableViewSectionedAnimatedDataSource<rankingModel> { _, tableview, indexPath, item in
-            let cell = tableview.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier,for: indexPath) as? WatchRankingTableView ?? WatchRankingTableView()
-//            cell.prepare(text: item)
-            cell.layer.cornerRadius = 15
-            cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
-            cell.layer.borderWidth = 1
-            return cell
-        } titleForHeaderInSection: { dataSource, sectionIndex in
-            return dataSource[sectionIndex].header
-        }
-        
-        // 데이터 테스트
-        let sections = [
-            rankingModel(header: " ", items: ["5"]),
-            rankingModel(header: " ", items: ["6"]),
-            rankingModel(header: " ", items: ["7"]),
-            rankingModel(header: " ", items: ["8"])
-        ]
-        
-        // 데이터 삽입
-        Observable.just(sections)
-            .bind(to: repoTableView.rx.items(dataSource: dataSource))
-            .disposed(by: disposeBag)
-        
-    }
-    
 }
 
 
-extension MyOraganizationListController: UITableViewDelegate {
+extension UnivInRankingController: UITableViewDelegate {
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("selected \(indexPath.section)")
@@ -128,13 +97,9 @@ extension MyOraganizationListController: UITableViewDelegate {
 
 import SwiftUI
 
-struct VCPreViewOrganiRanking:PreviewProvider {
+struct VCPreViewUnivInRanking:PreviewProvider {
     static var previews: some View {
-        MyOraganizationListController().toPreview().previewDevice("iPhone 14 pro")
+        UnivInRankingController().toPreview().previewDevice("iPhone 14 pro")
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }
-
-
-
-

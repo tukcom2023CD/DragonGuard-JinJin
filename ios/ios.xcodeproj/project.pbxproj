@@ -16,7 +16,7 @@
 		3B15C596296FB673004AE007 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 3B15C595296FB673004AE007 /* Alamofire */; };
 		3B18AA1E29A7B1E90051C086 /* KlipModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18AA1D29A7B1E90051C086 /* KlipModel.swift */; };
 		3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18AA1F29A7BD0E0051C086 /* Notification.swift */; };
-		3B18C44029ADD69D00E58303 /* CompareRepoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18C43F29ADD69D00E58303 /* CompareRepoCollectionView.swift */; };
+		3B18C44029ADD69D00E58303 /* CompareRepoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18C43F29ADD69D00E58303 /* CompareRepoCollectionViewCell.swift */; };
 		3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DB8772963428A00308F43 /* AppDelegate.swift */; };
 		3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DB8792963428A00308F43 /* SceneDelegate.swift */; };
 		3B1DB87C2963428A00308F43 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DB87B2963428A00308F43 /* MainController.swift */; };
@@ -46,12 +46,10 @@
 		3B9756ED298A16FF00F27094 /* AllRepositoryRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756EC298A16FF00F27094 /* AllRepositoryRankingController.swift */; };
 		3B9756EF298A171300F27094 /* AllUnivRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756EE298A171300F27094 /* AllUnivRankingController.swift */; };
 		3B9756F1298A32C700F27094 /* WatchRankingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F0298A32C700F27094 /* WatchRankingTableView.swift */; };
-		3B9756F4298A639000F27094 /* WatchRankingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F3298A639000F27094 /* WatchRankingModel.swift */; };
-		3B9756F6298A63F600F27094 /* SearchPageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F5298A63F600F27094 /* SearchPageModel.swift */; };
 		3B9756F9298A775900F27094 /* APIURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F8298A775900F27094 /* APIURL.swift */; };
 		3B9CF3D2298F997B00495D35 /* UserInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9CF3D1298F997B00495D35 /* UserInfoModel.swift */; };
-		3B9CF3D4298F9B8C00495D35 /* UserInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9CF3D3298F9B8C00495D35 /* UserInfoService.swift */; };
-		3B9CF3D6298FB5A700495D35 /* UserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9CF3D5298FB5A700495D35 /* UserInfoViewModel.swift */; };
+		3B9CF3D4298F9B8C00495D35 /* ALLUserInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9CF3D3298F9B8C00495D35 /* ALLUserInfoService.swift */; };
+		3B9CF3D6298FB5A700495D35 /* ALLUserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9CF3D5298FB5A700495D35 /* ALLUserInfoViewModel.swift */; };
 		3BA0EEE62979A16700B9E952 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 3BA0EEE52979A16700B9E952 /* Charts */; };
 		3BA20137299805AE008978A5 /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA20136299805AE008978A5 /* MainModel.swift */; };
 		3BA2013929980661008978A5 /* MainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA2013829980661008978A5 /* MainService.swift */; };
@@ -68,20 +66,16 @@
 		3BE6AD312993CF8500B22EBD /* RepoContributorInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */; };
 		3BE6AD332993D0D800B22EBD /* RepoContributorInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6AD322993D0D800B22EBD /* RepoContributorInfoModel.swift */; };
 		3BF2B31329890F1900F20841 /* WatchRankingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */; };
-		3BF2B31629892D7200F20841 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 3BF2B31529892D7200F20841 /* RxDataSources */; };
-		3BF2B31829892D8200F20841 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 3BF2B31729892D8200F20841 /* RxDataSources */; };
 		A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30BA46C298415B8008B594E /* SearchPageViewModel.swift */; };
 		A30BA47029841C97008B594E /* SearchPageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30BA46F29841C97008B594E /* SearchPageService.swift */; };
-		A30BA473298946F6008B594E /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = A30BA472298946F6008B594E /* SwiftyJSON */; };
 		A3754FA02995653B00A683A9 /* TierTokenCustomUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3754F9F2995653B00A683A9 /* TierTokenCustomUIView.swift */; };
 		A37AA6EA299D0BA8002812F6 /* MainRankingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6E9299D0BA8002812F6 /* MainRankingCollectionView.swift */; };
-		A37AA6EC29A50F7C002812F6 /* CompareGraphController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6EB29A50F7C002812F6 /* CompareGraphController.swift */; };
+		A37AA6EC29A50F7C002812F6 /* CompareRepositoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6EB29A50F7C002812F6 /* CompareRepositoryController.swift */; };
 		A37AA6EE29A525C5002812F6 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6ED29A525C5002812F6 /* TabBarController.swift */; };
-		A37AA6F229AC754E002812F6 /* AllRepositoryRankingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6F129AC754E002812F6 /* AllRepositoryRankingCollectionView.swift */; };
 		A37AA6F629AC988E002812F6 /* CompareUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6F529AC988E002812F6 /* CompareUserController.swift */; };
-		A37AA6F829AD0D95002812F6 /* CompareRepoTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6F729AD0D95002812F6 /* CompareRepoTableView.swift */; };
+		A37AA6F829AD0D95002812F6 /* CompareRepoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6F729AD0D95002812F6 /* CompareRepoTableViewCell.swift */; };
 		A3ADC9742990210E003D6483 /* MainCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ADC9732990210D003D6483 /* MainCollectionView.swift */; };
-		A3ADC97F29911B50003D6483 /* CompareRepositorycontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ADC97E29911B50003D6483 /* CompareRepositorycontroller.swift */; };
+		A3ADC97F29911B50003D6483 /* CompareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ADC97E29911B50003D6483 /* CompareController.swift */; };
 		A3AEEB602975286C00004722 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB5F2975286C00004722 /* RxCocoa */; };
 		A3AEEB622975286C00004722 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB612975286C00004722 /* RxSwift */; };
 		A3AEEB652975311400004722 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB642975311400004722 /* SnapKit */; };
@@ -114,7 +108,7 @@
 		3B060FD529911158000B2518 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		3B18AA1D29A7B1E90051C086 /* KlipModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipModel.swift; sourceTree = "<group>"; };
 		3B18AA1F29A7BD0E0051C086 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
-		3B18C43F29ADD69D00E58303 /* CompareRepoCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoCollectionView.swift; sourceTree = "<group>"; };
+		3B18C43F29ADD69D00E58303 /* CompareRepoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoCollectionViewCell.swift; sourceTree = "<group>"; };
 		3B1DB8742963428A00308F43 /* ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B1DB8772963428A00308F43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3B1DB8792963428A00308F43 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -139,12 +133,10 @@
 		3B9756EC298A16FF00F27094 /* AllRepositoryRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRepositoryRankingController.swift; sourceTree = "<group>"; };
 		3B9756EE298A171300F27094 /* AllUnivRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUnivRankingController.swift; sourceTree = "<group>"; };
 		3B9756F0298A32C700F27094 /* WatchRankingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingTableView.swift; sourceTree = "<group>"; };
-		3B9756F3298A639000F27094 /* WatchRankingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingModel.swift; sourceTree = "<group>"; };
-		3B9756F5298A63F600F27094 /* SearchPageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageModel.swift; sourceTree = "<group>"; };
 		3B9756F8298A775900F27094 /* APIURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIURL.swift; sourceTree = "<group>"; };
 		3B9CF3D1298F997B00495D35 /* UserInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoModel.swift; sourceTree = "<group>"; };
-		3B9CF3D3298F9B8C00495D35 /* UserInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoService.swift; sourceTree = "<group>"; };
-		3B9CF3D5298FB5A700495D35 /* UserInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewModel.swift; sourceTree = "<group>"; };
+		3B9CF3D3298F9B8C00495D35 /* ALLUserInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALLUserInfoService.swift; sourceTree = "<group>"; };
+		3B9CF3D5298FB5A700495D35 /* ALLUserInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALLUserInfoViewModel.swift; sourceTree = "<group>"; };
 		3BA20136299805AE008978A5 /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
 		3BA2013829980661008978A5 /* MainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainService.swift; sourceTree = "<group>"; };
 		3BAEA776299CFD090054DC5D /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
@@ -166,13 +158,12 @@
 		A30BA46F29841C97008B594E /* SearchPageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageService.swift; sourceTree = "<group>"; };
 		A3754F9F2995653B00A683A9 /* TierTokenCustomUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierTokenCustomUIView.swift; sourceTree = "<group>"; };
 		A37AA6E9299D0BA8002812F6 /* MainRankingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRankingCollectionView.swift; sourceTree = "<group>"; };
-		A37AA6EB29A50F7C002812F6 /* CompareGraphController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareGraphController.swift; sourceTree = "<group>"; };
+		A37AA6EB29A50F7C002812F6 /* CompareRepositoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepositoryController.swift; sourceTree = "<group>"; };
 		A37AA6ED29A525C5002812F6 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
-		A37AA6F129AC754E002812F6 /* AllRepositoryRankingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRepositoryRankingCollectionView.swift; sourceTree = "<group>"; };
 		A37AA6F529AC988E002812F6 /* CompareUserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareUserController.swift; sourceTree = "<group>"; };
-		A37AA6F729AD0D95002812F6 /* CompareRepoTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoTableView.swift; sourceTree = "<group>"; };
+		A37AA6F729AD0D95002812F6 /* CompareRepoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoTableViewCell.swift; sourceTree = "<group>"; };
 		A3ADC9732990210D003D6483 /* MainCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionView.swift; sourceTree = "<group>"; };
-		A3ADC97E29911B50003D6483 /* CompareRepositorycontroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepositorycontroller.swift; sourceTree = "<group>"; };
+		A3ADC97E29911B50003D6483 /* CompareController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareController.swift; sourceTree = "<group>"; };
 		A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageResultModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -181,11 +172,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A30BA473298946F6008B594E /* SwiftyJSON in Frameworks */,
 				3BA0EEE62979A16700B9E952 /* Charts in Frameworks */,
 				A3AEEB622975286C00004722 /* RxSwift in Frameworks */,
 				A3AEEB652975311400004722 /* SnapKit in Frameworks */,
-				3BF2B31629892D7200F20841 /* RxDataSources in Frameworks */,
 				A3AEEB602975286C00004722 /* RxCocoa in Frameworks */,
 				3B15C596296FB673004AE007 /* Alamofire in Frameworks */,
 			);
@@ -199,7 +188,6 @@
 				3B7B1D32298404B60038BD67 /* Alamofire in Frameworks */,
 				3B7B1D34298404B90038BD67 /* SnapKit in Frameworks */,
 				3B7B1D30298404B20038BD67 /* RxSwift in Frameworks */,
-				3BF2B31829892D8200F20841 /* RxDataSources in Frameworks */,
 				3B7B1D38298404C70038BD67 /* RxTest in Frameworks */,
 				3B7B1D2E298404AE0038BD67 /* RxCocoa in Frameworks */,
 			);
@@ -253,6 +241,113 @@
 			path = ios;
 			sourceTree = "<group>";
 		};
+		3B3CE9CE29B4680D00B2594B /* CompareRepoAndUser */ = {
+			isa = PBXGroup;
+			children = (
+				A3ADC97E29911B50003D6483 /* CompareController.swift */,
+				A37AA6ED29A525C5002812F6 /* TabBarController.swift */,
+				3B3CE9D029B4696100B2594B /* CompareUser */,
+				3B3CE9CF29B4694E00B2594B /* CompareRepository */,
+			);
+			path = CompareRepoAndUser;
+			sourceTree = "<group>";
+		};
+		3B3CE9CF29B4694E00B2594B /* CompareRepository */ = {
+			isa = PBXGroup;
+			children = (
+				A37AA6EB29A50F7C002812F6 /* CompareRepositoryController.swift */,
+				A37AA6F729AD0D95002812F6 /* CompareRepoTableViewCell.swift */,
+				3B18C43F29ADD69D00E58303 /* CompareRepoCollectionViewCell.swift */,
+			);
+			path = CompareRepository;
+			sourceTree = "<group>";
+		};
+		3B3CE9D029B4696100B2594B /* CompareUser */ = {
+			isa = PBXGroup;
+			children = (
+				A37AA6F529AC988E002812F6 /* CompareUserController.swift */,
+				3B29804629ACCCA000967B6E /* CompareSelectedUserView.swift */,
+				3B29804829ACCDC800967B6E /* CompareSelectedUserTableView.swift */,
+			);
+			path = CompareUser;
+			sourceTree = "<group>";
+		};
+		3B3CE9D129B469BE00B2594B /* MyRepositoryRanking */ = {
+			isa = PBXGroup;
+			children = (
+				3B9756E3298A15BB00F27094 /* MyRepositoryRankingController.swift */,
+			);
+			path = MyRepositoryRanking;
+			sourceTree = "<group>";
+		};
+		3B3CE9D229B469DE00B2594B /* MyOragnaiztionRanking */ = {
+			isa = PBXGroup;
+			children = (
+				3B9756E5298A162200F27094 /* MyOrganizationListController.swift */,
+			);
+			path = MyOragnaiztionRanking;
+			sourceTree = "<group>";
+		};
+		3B3CE9D329B469FB00B2594B /* UniversityRanking */ = {
+			isa = PBXGroup;
+			children = (
+				3B9756E7298A166300F27094 /* UnivInRankingController.swift */,
+			);
+			path = UniversityRanking;
+			sourceTree = "<group>";
+		};
+		3B3CE9D429B46A0B00B2594B /* AllUniversityRanking */ = {
+			isa = PBXGroup;
+			children = (
+				3B9756EE298A171300F27094 /* AllUnivRankingController.swift */,
+			);
+			path = AllUniversityRanking;
+			sourceTree = "<group>";
+		};
+		3B3CE9D529B46A1C00B2594B /* AllRanking */ = {
+			isa = PBXGroup;
+			children = (
+				3B9756EA298A16D900F27094 /* AllRankingController.swift */,
+			);
+			path = AllRanking;
+			sourceTree = "<group>";
+		};
+		3B3CE9D629B46A3700B2594B /* AllRepositoryRanking */ = {
+			isa = PBXGroup;
+			children = (
+				3B9756EC298A16FF00F27094 /* AllRepositoryRankingController.swift */,
+			);
+			path = AllRepositoryRanking;
+			sourceTree = "<group>";
+		};
+		3B3CE9D829B46A7300B2594B /* SearchController */ = {
+			isa = PBXGroup;
+			children = (
+				3BD6DD21298129B8008C05B2 /* SearchPageController.swift */,
+				3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */,
+				3B3CE9D929B46A7E00B2594B /* RepositoryContritubutorInfo */,
+			);
+			path = SearchController;
+			sourceTree = "<group>";
+		};
+		3B3CE9D929B46A7E00B2594B /* RepositoryContritubutorInfo */ = {
+			isa = PBXGroup;
+			children = (
+				3B88801F2992881200680F1A /* RepoContributorInfoController.swift */,
+				3BE6AD2C2993904D00B22EBD /* RepoContributorTableView.swift */,
+			);
+			path = RepositoryContritubutorInfo;
+			sourceTree = "<group>";
+		};
+		3B3CE9DA29B46AA700B2594B /* KLIPController */ = {
+			isa = PBXGroup;
+			children = (
+				3B58A18E29A6164D006A1817 /* KlipLoginController.swift */,
+				3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */,
+			);
+			path = KLIPController;
+			sourceTree = "<group>";
+		};
 		3B7B1D2C298404AE0038BD67 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -271,14 +366,15 @@
 		3B9756E9298A16B200F27094 /* WatchRankingScreen */ = {
 			isa = PBXGroup;
 			children = (
-				3B9756E3298A15BB00F27094 /* MyRepositoryRankingController.swift */,
-				3B9756E5298A162200F27094 /* MyOrganizationListController.swift */,
-				3B9756E7298A166300F27094 /* UnivInRankingController.swift */,
-				3B9756EE298A171300F27094 /* AllUnivRankingController.swift */,
-				3B9756EA298A16D900F27094 /* AllRankingController.swift */,
-				3B9756EC298A16FF00F27094 /* AllRepositoryRankingController.swift */,
+				3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */,
+				3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */,
 				3B9756F0298A32C700F27094 /* WatchRankingTableView.swift */,
-				A37AA6F129AC754E002812F6 /* AllRepositoryRankingCollectionView.swift */,
+				3B3CE9D129B469BE00B2594B /* MyRepositoryRanking */,
+				3B3CE9D229B469DE00B2594B /* MyOragnaiztionRanking */,
+				3B3CE9D329B469FB00B2594B /* UniversityRanking */,
+				3B3CE9D429B46A0B00B2594B /* AllUniversityRanking */,
+				3B3CE9D529B46A1C00B2594B /* AllRanking */,
+				3B3CE9D629B46A3700B2594B /* AllRepositoryRanking */,
 			);
 			path = WatchRankingScreen;
 			sourceTree = "<group>";
@@ -286,6 +382,8 @@
 		3B9756F2298A33E900F27094 /* SettingScreen */ = {
 			isa = PBXGroup;
 			children = (
+				3B00229C2987998B003FA5CC /* SettingController.swift */,
+				3B00229E29879F7D003FA5CC /* SettingTableView.swift */,
 				3B0022A22987A9B0003FA5CC /* TierTypes.swift */,
 				3B0022A42987ABA1003FA5CC /* FAQPage.swift */,
 			);
@@ -305,20 +403,10 @@
 			isa = PBXGroup;
 			children = (
 				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
-				3B58A18E29A6164D006A1817 /* KlipLoginController.swift */,
-				3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */,
-				3B1DB87B2963428A00308F43 /* MainController.swift */,
-				A3754F9F2995653B00A683A9 /* TierTokenCustomUIView.swift */,
-				A3ADC9732990210D003D6483 /* MainCollectionView.swift */,
-				A37AA6E9299D0BA8002812F6 /* MainRankingCollectionView.swift */,
+				3B3CE9DA29B46AA700B2594B /* KLIPController */,
 				A3ADC97729911357003D6483 /* MainScreen */,
-				3B00229C2987998B003FA5CC /* SettingController.swift */,
-				3B00229E29879F7D003FA5CC /* SettingTableView.swift */,
 				3B9756F2298A33E900F27094 /* SettingScreen */,
-				3BD6DD21298129B8008C05B2 /* SearchPageController.swift */,
-				3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */,
-				3B88801F2992881200680F1A /* RepoContributorInfoController.swift */,
-				3BE6AD2C2993904D00B22EBD /* RepoContributorTableView.swift */,
+				3B3CE9D829B46A7300B2594B /* SearchController */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -327,7 +415,7 @@
 			isa = PBXGroup;
 			children = (
 				A30BA46C298415B8008B594E /* SearchPageViewModel.swift */,
-				3B9CF3D5298FB5A700495D35 /* UserInfoViewModel.swift */,
+				3B9CF3D5298FB5A700495D35 /* ALLUserInfoViewModel.swift */,
 				3B060FD529911158000B2518 /* MainViewModel.swift */,
 				3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */,
 				3BDF0FA429A619F900816837 /* LoginViewModel.swift */,
@@ -340,8 +428,6 @@
 			isa = PBXGroup;
 			children = (
 				3B18AA1D29A7B1E90051C086 /* KlipModel.swift */,
-				3B9756F3298A639000F27094 /* WatchRankingModel.swift */,
-				3B9756F5298A63F600F27094 /* SearchPageModel.swift */,
 				A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */,
 				3B9CF3D1298F997B00495D35 /* UserInfoModel.swift */,
 				3BE6AD322993D0D800B22EBD /* RepoContributorInfoModel.swift */,
@@ -373,7 +459,7 @@
 			isa = PBXGroup;
 			children = (
 				A30BA46F29841C97008B594E /* SearchPageService.swift */,
-				3B9CF3D3298F9B8C00495D35 /* UserInfoService.swift */,
+				3B9CF3D3298F9B8C00495D35 /* ALLUserInfoService.swift */,
 				3BE6AD2E2993C6D300B22EBD /* RepoContributorInfoService.swift */,
 				3BA2013829980661008978A5 /* MainService.swift */,
 				3BAEA776299CFD090054DC5D /* PostService.swift */,
@@ -386,16 +472,11 @@
 		A3ADC97729911357003D6483 /* MainScreen */ = {
 			isa = PBXGroup;
 			children = (
-				A3ADC97E29911B50003D6483 /* CompareRepositorycontroller.swift */,
-				A37AA6EB29A50F7C002812F6 /* CompareGraphController.swift */,
-				A37AA6F729AD0D95002812F6 /* CompareRepoTableView.swift */,
-				3B18C43F29ADD69D00E58303 /* CompareRepoCollectionView.swift */,
-				A37AA6ED29A525C5002812F6 /* TabBarController.swift */,
-				3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */,
-				3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */,
-				A37AA6F529AC988E002812F6 /* CompareUserController.swift */,
-				3B29804629ACCCA000967B6E /* CompareSelectedUserView.swift */,
-				3B29804829ACCDC800967B6E /* CompareSelectedUserTableView.swift */,
+				3B1DB87B2963428A00308F43 /* MainController.swift */,
+				A3754F9F2995653B00A683A9 /* TierTokenCustomUIView.swift */,
+				A3ADC9732990210D003D6483 /* MainCollectionView.swift */,
+				A37AA6E9299D0BA8002812F6 /* MainRankingCollectionView.swift */,
+				3B3CE9CE29B4680D00B2594B /* CompareRepoAndUser */,
 				3B9756E9298A16B200F27094 /* WatchRankingScreen */,
 			);
 			path = MainScreen;
@@ -423,8 +504,6 @@
 				A3AEEB612975286C00004722 /* RxSwift */,
 				A3AEEB642975311400004722 /* SnapKit */,
 				3BA0EEE52979A16700B9E952 /* Charts */,
-				A30BA472298946F6008B594E /* SwiftyJSON */,
-				3BF2B31529892D7200F20841 /* RxDataSources */,
 			);
 			productName = ios;
 			productReference = 3B1DB8742963428A00308F43 /* ios.app */;
@@ -451,7 +530,6 @@
 				3B7B1D33298404B90038BD67 /* SnapKit */,
 				3B7B1D35298404BD0038BD67 /* Charts */,
 				3B7B1D37298404C70038BD67 /* RxTest */,
-				3BF2B31729892D8200F20841 /* RxDataSources */,
 			);
 			productName = iosTests;
 			productReference = 3BE3F7CF297060DC0005B640 /* iosTests.xctest */;
@@ -512,8 +590,6 @@
 				A3AEEB5E2975286C00004722 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				A3AEEB632975311400004722 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				3BA0EEE42979A16700B9E952 /* XCRemoteSwiftPackageReference "Charts" */,
-				3BF2B31429892D7200F20841 /* XCRemoteSwiftPackageReference "RxDataSources" */,
-				A30BA471298946F6008B594E /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = 3B1DB8752963428A00308F43 /* Products */;
 			projectDirPath = "";
@@ -561,15 +637,14 @@
 			files = (
 				3B6E075A29ABBD64002676DF /* CompareUserModel.swift in Sources */,
 				3B9CF3D2298F997B00495D35 /* UserInfoModel.swift in Sources */,
-				A37AA6EC29A50F7C002812F6 /* CompareGraphController.swift in Sources */,
+				A37AA6EC29A50F7C002812F6 /* CompareRepositoryController.swift in Sources */,
 				A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */,
 				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
 				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
 				A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */,
 				3BE6AD2D2993904D00B22EBD /* RepoContributorTableView.swift in Sources */,
-				A37AA6F829AD0D95002812F6 /* CompareRepoTableView.swift in Sources */,
+				A37AA6F829AD0D95002812F6 /* CompareRepoTableViewCell.swift in Sources */,
 				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
-				3B9756F4298A639000F27094 /* WatchRankingModel.swift in Sources */,
 				3B29804729ACCCA000967B6E /* CompareSelectedUserView.swift in Sources */,
 				3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
@@ -589,22 +664,20 @@
 				3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */,
 				3B18AA1E29A7B1E90051C086 /* KlipModel.swift in Sources */,
 				3B1DB87C2963428A00308F43 /* MainController.swift in Sources */,
-				3B9CF3D6298FB5A700495D35 /* UserInfoViewModel.swift in Sources */,
+				3B9CF3D6298FB5A700495D35 /* ALLUserInfoViewModel.swift in Sources */,
 				A3ADC9742990210E003D6483 /* MainCollectionView.swift in Sources */,
-				3B9CF3D4298F9B8C00495D35 /* UserInfoService.swift in Sources */,
+				3B9CF3D4298F9B8C00495D35 /* ALLUserInfoService.swift in Sources */,
 				3B9756E8298A166300F27094 /* UnivInRankingController.swift in Sources */,
 				3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */,
 				3B9756ED298A16FF00F27094 /* AllRepositoryRankingController.swift in Sources */,
 				3B29804929ACCDC800967B6E /* CompareSelectedUserTableView.swift in Sources */,
 				A30BA47029841C97008B594E /* SearchPageService.swift in Sources */,
-				3B18C44029ADD69D00E58303 /* CompareRepoCollectionView.swift in Sources */,
+				3B18C44029ADD69D00E58303 /* CompareRepoCollectionViewCell.swift in Sources */,
 				3BE6AD312993CF8500B22EBD /* RepoContributorInfoViewModel.swift in Sources */,
 				3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */,
 				3BA2013929980661008978A5 /* MainService.swift in Sources */,
-				3B9756F6298A63F600F27094 /* SearchPageModel.swift in Sources */,
 				3BA20137299805AE008978A5 /* MainModel.swift in Sources */,
 				3B58A18F29A6164D006A1817 /* KlipLoginController.swift in Sources */,
-				A37AA6F229AC754E002812F6 /* AllRepositoryRankingCollectionView.swift in Sources */,
 				3B9756EB298A16D900F27094 /* AllRankingController.swift in Sources */,
 				3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */,
 				3BF2B31329890F1900F20841 /* WatchRankingCollectionView.swift in Sources */,
@@ -615,7 +688,7 @@
 				3B00229D2987998B003FA5CC /* SettingController.swift in Sources */,
 				A37AA6EE29A525C5002812F6 /* TabBarController.swift in Sources */,
 				3B060FD629911158000B2518 /* MainViewModel.swift in Sources */,
-				A3ADC97F29911B50003D6483 /* CompareRepositorycontroller.swift in Sources */,
+				A3ADC97F29911B50003D6483 /* CompareController.swift in Sources */,
 				A37AA6F629AC988E002812F6 /* CompareUserController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -964,22 +1037,6 @@
 				minimumVersion = 4.1.0;
 			};
 		};
-		3BF2B31429892D7200F20841 /* XCRemoteSwiftPackageReference "RxDataSources" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RxSwiftCommunity/RxDataSources.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
-		A30BA471298946F6008B594E /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
 		A3AEEB5E2975286C00004722 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
@@ -1038,21 +1095,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3BA0EEE42979A16700B9E952 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
-		};
-		3BF2B31529892D7200F20841 /* RxDataSources */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3BF2B31429892D7200F20841 /* XCRemoteSwiftPackageReference "RxDataSources" */;
-			productName = RxDataSources;
-		};
-		3BF2B31729892D8200F20841 /* RxDataSources */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3BF2B31429892D7200F20841 /* XCRemoteSwiftPackageReference "RxDataSources" */;
-			productName = RxDataSources;
-		};
-		A30BA472298946F6008B594E /* SwiftyJSON */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A30BA471298946F6008B594E /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
-			productName = SwiftyJSON;
 		};
 		A3AEEB5F2975286C00004722 /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -19,6 +19,10 @@ final class CompareService{
     
     private init(){ }
     
+    /// 선택된 레포지토리들을 보내 유저 정보들을 받아오는 함수
+    /// - Parameters:
+    ///   - firstRepo: 첫 번째 선택된 레포지토리
+    ///   - secondRepo: 두 번째 선택된 레포지토리
     func beforeSendingInfo(firstRepo: String, secondRepo: String){
         firstRepoInfo = []
         secondRepoInfo = []
@@ -55,6 +59,10 @@ final class CompareService{
         })
     }
     
+    /// 레포지토리 상세 정보를 요청하는 함수
+    /// - Parameters:
+    ///   - firstRepo: 첫 번쨰 선택된 레포 이름
+    ///   - secondRepo: 두 번쨰 선택된 레포 이름
     func getCompareInfo(firstRepo: String, secondRepo: String){
         firstRepoInfo = []
         secondRepoInfo = []

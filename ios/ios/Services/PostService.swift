@@ -8,12 +8,14 @@
 import Foundation
 import Alamofire
 
+///  Main화면 로딩되기 전에 통신해야되는 Service
 class PostService {
     static let postService = PostService()
     let ip = APIURL.ip
     var data = 0
     private init(){}
     
+    /// githubID를 backend로 보냄
     func postMyGithubId(){
         let url = APIURL.apiUrl.inputDBMembers(ip: ip)
         let myGithubId = ["githubId" : "HJ39"]
@@ -35,6 +37,8 @@ class PostService {
         
     }
     
+    /// KLIP 지갑 주소를 backend로 전송
+    /// - Parameter walletAddress: 사용자 Klip 지갑 주소
     func sendMyWalletAddress(walletAddress: String){
         let url = APIURL.apiUrl.inputWalletAddress(ip: ip)
         let body: Parameters = [
@@ -52,10 +56,6 @@ class PostService {
         .responseData { response in
             print("walletPost \(response)")
         }
-        
-        
-        
-        
     }
     
 }

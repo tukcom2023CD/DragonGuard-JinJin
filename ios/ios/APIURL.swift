@@ -65,7 +65,7 @@ final class APIURL{
     
     // 검색 필터링 추가할 때 변경해야함
     static func testUrl(ip: String, page:Int, searchWord: String) -> String {
-        let url = "http://\(ip)/api/search?page=\(page)&name=\(searchWord)&type=repositories"
+        let url = "http://\(ip)/api/search?page=\(page)&name=\(searchWord)&type=REPOSITORIES"
         return url
     }
     

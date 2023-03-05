@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class UserInfoViewModel{
+final class ALLUserInfoViewModel{
     
     // UserInfoService 통신 데이터
     
@@ -18,12 +18,12 @@ final class UserInfoViewModel{
     var pageCount = 0
     // 커밋에 대해서 내림차순 정렬
     private func sortedAboutCommits(){
-        var userInfoArray = UserInfoService.sharedData.resultArray
+        var userInfoArray = ALLUserInfoService.sharedData.resultArray
         sortedDoneUserArray = userInfoArray.sorted { return $0.tokens > $1.tokens }
     }
     
     func getDataRanking(){
-        UserInfoService.sharedData.getMemberInfo(page: pageCount, size: 20)
+        ALLUserInfoService.sharedData.getMemberInfo(page: pageCount, size: 20)
         pageCount += 1
     }
     

@@ -108,6 +108,10 @@ final class TierTokenCustomUIView : UIView {
         })
     }
     
+    /// 텍스트 입력하는 함수
+    /// - Parameters:
+    ///   - myTier: 내 티어
+    ///   - tokens: 토큰 개수
     func inputText(myTier: String, tokens: Int){
         resultTierLabel.text = myTier
         resultTokenLabel.text = "\(tokens)"

@@ -13,6 +13,7 @@ import RxSwift
 import Charts
 
 
+/// 유저 비교하는 화면
 final class CompareUserController : UIViewController, SendingProtocol {
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
@@ -143,6 +144,7 @@ final class CompareUserController : UIViewController, SendingProtocol {
         setIndicatorAutoLayout()
     }
     
+    /// 첫 번째 유저 선택하는 버튼 누른 경우
     @objc func clickedChooseUser1(){
         
         let mvNext = CompareSelectedUserView()
@@ -164,6 +166,7 @@ final class CompareUserController : UIViewController, SendingProtocol {
         
     }
     
+    /// 두 번째 유저 선택하는 버튼 누른 경우
     @objc func clickedChooseUser2(){
         let mvNext = CompareSelectedUserView()
         
@@ -183,6 +186,11 @@ final class CompareUserController : UIViewController, SendingProtocol {
         self.present(mvNext, animated: true)
     }
     
+    
+    ///  Modal 뷰에서 유저를 선택했을 떄 데이터를 받아오는 부분
+    /// - Parameters:
+    ///   - index: 선택한 유저의 인덱스
+    ///   - user: 첫 번쨰 유저인지 두 번쨰 유저인지 구분, user1 & user2 존재
     func dataSend(index: Int, user: String) {
         if user == "user1"{
             self.user1Index = index
@@ -261,14 +269,17 @@ final class CompareUserController : UIViewController, SendingProtocol {
         })
     }
     
+    /// 데이터가 들어오기 전에 로딩화면 구성하는 부분
     private func setIndicatorAutoLayout(){
         indicator.snp.makeConstraints({ make in
             make.center.equalToSuperview()
         })
     }
     
+    
+    
+    /// API 통신을 한 부분을 viewModel을 통해 데이터를 받아오는 부분
     func getUserInfo(){
-        
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
             self.viewModel.bringUserInfo()
           
@@ -294,6 +305,8 @@ final class CompareUserController : UIViewController, SendingProtocol {
 
 extension CompareUserController : ChartViewDelegate {
     
+    /// Commit 차트를 그리는 부분
+    /// BarChart 사용
     private func setChartCommit() {
         var dataSet : [BarChartDataSet] = []
         guard let lastIndexOfFisrtArray = self.lastIndexOfFisrtArray else {return}
@@ -347,12 +360,12 @@ extension CompareUserController : ChartViewDelegate {
         }
         
         if repo == "first"{
-            let dataEntry2 = BarChartDataEntry(x: 1, y: Double(self.repoUserInfo.firstResult[newUser2Index].commits))
+            let dataEntry2 = BarChartDataEntry(x: 1, y: floor(Double(self.repoUserInfo.firstResult[newUser2Index].commits)))
             userInfo2.append(dataEntry2)
             set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.firstResult[newUser2Index].githubId)
         }
         else if repo == "second"{
-            let dataEntry2 = BarChartDataEntry(x: 1, y: Double(self.repoUserInfo.secondResult[newUser2Index].commits))
+            let dataEntry2 = BarChartDataEntry(x: 1, y: floor(Double(self.repoUserInfo.secondResult[newUser2Index].commits)))
             userInfo2.append(dataEntry2)
             set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.secondResult[newUser2Index].githubId)
         }
@@ -367,6 +380,8 @@ extension CompareUserController : ChartViewDelegate {
         chartCommitAttribute()
     }
     
+    
+    ///  Commit 차트 속성을 설정하는 부분
     private func chartCommitAttribute(){
         guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15) else {return}
         chartCommit.xAxis.enabled = false
@@ -383,6 +398,8 @@ extension CompareUserController : ChartViewDelegate {
     }
     
     
+    ///  Addtion, Deletion 차트를 그리는 부분
+    ///  BarChart 사용
     private func setChartAddDel() {
         var dataSet : [BarChartDataSet] = []
         guard let lastIndexOfFisrtArray = self.lastIndexOfFisrtArray else {return}
@@ -467,6 +484,7 @@ extension CompareUserController : ChartViewDelegate {
         chartAddDelAttribute()
     }
     
+    /// Addtion Deletion 그리는 차트 속성
     private func chartAddDelAttribute(){
         guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15) else {return}
         

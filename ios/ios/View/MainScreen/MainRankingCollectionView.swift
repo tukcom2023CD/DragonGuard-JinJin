@@ -78,6 +78,11 @@ final class MainRankingCollectionView: UICollectionViewCell {
         
     }
     
+    /// 버튼 이름을 입력하는 함수
+    /// - Parameters:
+    ///   - rankingName: 랭킹 종류
+    ///   - rankingNum: 랭킹 순위
+    ///   - percent: 유저 퍼센트
     func labelText(_ rankingName: String?, rankingNum: String, _ percent: String?) {
         self.rankingNameLabel.text = rankingName ?? ""
         self.rankingNumLabel.text = rankingNum

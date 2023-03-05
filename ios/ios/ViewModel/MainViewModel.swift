@@ -11,7 +11,15 @@ import RxCocoa
 
 // 메인에 사용되는 자신의 랭킹, 커밋 개수, 이슈 개수,
 final class MainViewModel {
-    var myInfoObservable = BehaviorSubject(value: MainModel(id: 0, name: "", githubId: "", commits: 0, tier: "", authStep: "", profileImage: "",rank: 0))
+    var myInfoObservable = BehaviorSubject(value: MainModel(id: 0,
+                                                            name: "",
+                                                            githubId: "",
+                                                            commits: 0,
+                                                            tier: "",
+                                                            authStep: "",
+                                                            profileImage: "",
+                                                            rank: 0,
+                                                            tokenAmount: 0))
     
     // 서버로부터 api 데이터 받아옴
     func getMyInfo(){

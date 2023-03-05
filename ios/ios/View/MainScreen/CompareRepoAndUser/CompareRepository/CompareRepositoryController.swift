@@ -12,7 +12,7 @@ import Charts
 import RxSwift
 
 
-final class CompareGraphController : UIViewController {
+final class CompareRepositoryController : UIViewController {
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
     let viewModel = CompareViewModel()
@@ -24,7 +24,6 @@ final class CompareGraphController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-//        addToView()
         addIndicator()
     }
     
@@ -115,12 +114,17 @@ final class CompareGraphController : UIViewController {
         self.view.addSubview(repo1ColorButton)
         self.view.addSubview(repo2Label)
         self.view.addSubview(repo2ColorButton)
+        self.view.addSubview(self.repoTableView)
+        self.view.addSubview(self.repoCollectionView)
+        
         repoTableView.delegate = self
         repoTableView.dataSource = self
         repoCollectionView.delegate = self
         repoCollectionView.dataSource = self
-        repoCollectionView.register(CompareRepoCollectionView.self, forCellWithReuseIdentifier: CompareRepoCollectionView.identifier)
-        repoTableView.register(CompareRepoTableView.self, forCellReuseIdentifier: CompareRepoTableView.identifier)
+        
+        repoCollectionView.register(CompareRepoCollectionViewCell.self, forCellWithReuseIdentifier: CompareRepoCollectionViewCell.identifier)
+        repoTableView.register(CompareRepositoryTableViewCell.self, forCellReuseIdentifier: CompareRepositoryTableViewCell.identifier)
+        
         setAutoLayout()
     }
     
@@ -165,10 +169,6 @@ final class CompareGraphController : UIViewController {
             make.height.equalTo(deviceWidth/12)
         })
  
-    }
-    
-    
-    private func viewAutoLayout(){
         repoTableView.snp.makeConstraints({ make in
             make.top.equalTo(repo2ColorButton.snp.bottom).offset(10)
             make.leading.equalTo(30)
@@ -182,14 +182,17 @@ final class CompareGraphController : UIViewController {
             make.trailing.equalTo(-30)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         })
+        
     }
     
+    /// 데이터가 로드 되기 전에 로딩화면 AutoLayout
     private func setIndicatorAutoLayout(){
         indicator.snp.makeConstraints({ make in
             make.center.equalToSuperview()
         })
     }
     
+    /// ViewModel을 통해 API 통신 후 데이터를 가져오는 함수
     func getData(){
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
             self.repo1 = []
@@ -208,18 +211,12 @@ final class CompareGraphController : UIViewController {
                 self.indicator.stopAnimating()
                 
                 if !self.indicator.isAnimating{
-                    self.addToView()
+                    self.addToView()    // 로딩화면이 사라지고 정보를 보는 데이터 로드
+                        
                     // label 이름 변경
                     self.repo1Label.text = self.repo1[0].gitRepo.full_name
                     self.repo2Label.text = self.repo2[0].gitRepo.full_name
                     
-                    // tableview collectionview 등록
-                    self.view.addSubview(self.repoTableView)
-                    self.view.addSubview(self.repoCollectionView)
-                    
-                    self.viewAutoLayout()
-                    self.repoTableView.reloadData()
-                    self.repoCollectionView.reloadData()
                 }
                
             }
@@ -229,9 +226,14 @@ final class CompareGraphController : UIViewController {
     
 }
 
-extension CompareGraphController : UITableViewDelegate, UITableViewDataSource {
+extension CompareRepositoryController : UITableViewDelegate, UITableViewDataSource {
+    /// tableview 생성하는 함수
+    /// - Parameters:
+    ///   - tableView: 유저 정보를 불러오는 함수
+    ///   - indexPath: 셀의 인덱스
+    /// - Returns: 생성된 셀
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CompareRepoTableView.identifier, for: indexPath) as? CompareRepoTableView ?? CompareRepoTableView()
+        let cell = tableView.dequeueReusableCell(withIdentifier: CompareRepositoryTableViewCell.identifier, for: indexPath) as? CompareRepositoryTableViewCell ?? CompareRepositoryTableViewCell()
         cell.backgroundColor = .white
         switch indexPath.row {
         case 0 :
@@ -268,9 +270,9 @@ extension CompareGraphController : UITableViewDelegate, UITableViewDataSource {
     
 }
 
-extension CompareGraphController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension CompareRepositoryController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompareRepoCollectionView.identifier, for: indexPath) as? CompareRepoCollectionView ?? CompareRepoCollectionView()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompareRepoCollectionViewCell.identifier, for: indexPath) as? CompareRepoCollectionViewCell ?? CompareRepoCollectionViewCell()
         
         let repo1Info: [Double] = [self.repo1[0].statistics.additionStats.average, Double(self.repo1[0].languagesStats.min), self.repo1[0].statistics.deletionStats.average]
         let repo2Info: [Double] = [self.repo2[0].statistics.additionStats.average, Double(self.repo2[0].languagesStats.min), self.repo2[0].statistics.deletionStats.average]

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-final class CompareRepoTableView : UITableViewCell {
+final class CompareRepositoryTableViewCell : UITableViewCell {
     static let identifier = "CompareRepoIdentifier"
     let deviceWidth = UIScreen.main.bounds.width
     

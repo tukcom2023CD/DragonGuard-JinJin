@@ -10,7 +10,7 @@ import UIKit
 import Charts
 import SnapKit
 
-final class CompareRepoCollectionView: UICollectionViewCell{
+final class CompareRepoCollectionViewCell : UICollectionViewCell{
     static let identifier = "CompareRepoCollectionView"
     
     // 레이더 차트
@@ -76,7 +76,7 @@ final class CompareRepoCollectionView: UICollectionViewCell{
 }
 
 
-extension CompareRepoCollectionView : ChartViewDelegate {
+extension CompareRepoCollectionViewCell : ChartViewDelegate {
     
     // Radar Chart
     private func setRadarChartOptions(repo1: [Double?], repo2: [Double?], values: [String]?, repoList: [String]?){

@@ -202,7 +202,7 @@ final class MainController: UIViewController {
             self.viewModel.myInfoObservable.subscribe(onNext: {
                 self.myId = $0.id
                 self.myTier = $0.tier
-                self.myTokens = $0.commits
+                self.myTokens = $0.tokenAmount
                 self.myName = $0.githubId
                 self.imgUrl = $0.profileImage
                 self.rank = $0.rank
@@ -296,7 +296,7 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
         case 2:
             self.navigationController?.pushViewController(WatchRankingController(), animated: true)
         case 3:
-            self.navigationController?.pushViewController(CompareRepositoryController(), animated: true)
+            self.navigationController?.pushViewController(CompareController(), animated: true)
         default:
             return
         }
