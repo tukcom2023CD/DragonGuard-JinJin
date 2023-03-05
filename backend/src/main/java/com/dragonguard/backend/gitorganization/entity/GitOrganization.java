@@ -1,14 +1,11 @@
-package com.dragonguard.backend.university.entity;
-
-import com.dragonguard.backend.global.SoftDelete;
+package com.dragonguard.backend.gitorganization.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-@SoftDelete
-public class University {
+public class GitOrganization {
     @Id @GeneratedValue
     private Long id;
 }
