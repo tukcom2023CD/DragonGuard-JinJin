@@ -15,10 +15,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let lc = KlipLoginController()
-        let nc = UINavigationController(rootViewController: lc)
-        window?.rootViewController = nc
-        window?.makeKeyAndVisible()
+        
+        if let savedData = UserDefaults.standard.object(forKey: "UserDBId") as? Data{
+            if let savedObject = try? JSONDecoder().decode(UserDBId.self, from: savedData){
+                print("before Root View")
+                print(savedObject)
+                if savedObject.id != 0 && savedObject.address != ""{
+                    let rootView = MainController()
+                    let nc = UINavigationController(rootViewController: rootView)
+                    window?.rootViewController = nc
+                    window?.makeKeyAndVisible()
+                }
+                else{
+                    let rootView = KlipLoginController()
+                    let nc = UINavigationController(rootViewController: rootView)
+                    window?.rootViewController = nc
+                    window?.makeKeyAndVisible()
+                }
+            }
+        }
+        
+        
      
     }
 

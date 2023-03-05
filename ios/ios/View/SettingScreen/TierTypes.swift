@@ -13,5 +13,6 @@ final class TierTypes: UIViewController{
         super.viewDidLoad()
         self.view.backgroundColor = .orange
         self.navigationItem.title = "Tier 종류"
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
 }

@@ -25,7 +25,7 @@ final class RepoContributorInfoController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         
         // api 호출
         viewModel.getRepoContributorInfo()

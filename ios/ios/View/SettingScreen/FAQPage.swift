@@ -13,6 +13,7 @@ class FAQPage: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .red
         self.navigationItem.title = "FAQ"
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     

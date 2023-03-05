@@ -45,7 +45,13 @@ class PostService {
             "id": self.data,
             "walletAddress" : "\(walletAddress)"
         ]
-        Thread.sleep(forTimeInterval: 0.5)
+        let savedId = UserDBId(id: self.data, address: walletAddress)
+        if let encoded = try? JSONEncoder().encode(savedId){
+            UserDefaults.standard.setValue(encoded, forKey: "UserDBId")
+            print(self.data)
+            print(walletAddress)
+        }
+        
         print("body \(body)")
         AF.request(url,
                    method: .post,

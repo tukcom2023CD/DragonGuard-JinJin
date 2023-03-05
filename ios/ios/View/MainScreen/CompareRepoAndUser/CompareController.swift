@@ -22,6 +22,7 @@ final class CompareController: UIViewController{
         self.navigationController?.navigationBar.isHidden = false
         self.view.backgroundColor = .white
         self.navigationItem.backButtonTitle = ""
+        
         addToView()
     }
     

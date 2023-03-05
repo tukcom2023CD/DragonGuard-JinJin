@@ -20,7 +20,6 @@ final class WatchRankingController: UIViewController{
         self.navigationItem.backButtonTitle = "랭킹 보러가기"
         self.view.backgroundColor = .white
         
-        
         addUItoView()
         settingAutoLayout()
         configureCollectionView()

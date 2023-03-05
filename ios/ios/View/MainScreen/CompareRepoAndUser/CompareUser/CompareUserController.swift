@@ -28,6 +28,7 @@ final class CompareUserController : UIViewController, SendingProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        
         addIndicator()
     }
     

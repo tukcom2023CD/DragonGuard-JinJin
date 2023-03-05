@@ -13,13 +13,19 @@ final class MainService{
     static let mainService = MainService()
     let ip = APIURL.ip
     var result: MainModel?
-    var data = PostService.postService.data
+    var data = 0
     private init() {}
     
     
     /// 사용자 정보 받아옴
     func getUserInfo(){
         let url = APIURL.apiUrl.getMembersInfo(ip: ip, id: data)
+        
+        if let savedData = UserDefaults.standard.object(forKey: "UserDBId") as? Data{
+            if let savedObject = try? JSONDecoder().decode(UserDBId.self, from: savedData){
+                self.data = savedObject.id ?? 0
+            }
+        }
         
         AF.request(url)
             .validate(statusCode: 200..<201)
@@ -35,6 +41,9 @@ final class MainService{
                                         profileImage: data.profileImage ?? "",
                                         rank: data.rank,
                                         tokenAmount: data.tokenAmount ?? 0)
+                
+               
+                
             }
     }
 }
