@@ -27,6 +27,7 @@ class ApiRepository {
 
     private var api = retrofit.create(GitRankAPI::class.java)
 
+    //Repository 검색을 위한 함수
     fun getRepositoryNames(name: String, count: Int): ArrayList<RepoSearchResultModel> {
         var repoNames : ArrayList<RepoSearchResultModel> = arrayListOf<RepoSearchResultModel>()
         val queryMap = mutableMapOf<String, String>()
@@ -48,7 +49,7 @@ class ApiRepository {
         return repoNames
     }
 
-
+    //사용자의 정보를 받아오기 위한 함수
     fun getUserInfo(id: Int): UserInfoModel {
         val userInfo = api.getUserInfo(id)
         var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null)
@@ -63,6 +64,7 @@ class ApiRepository {
         return userResult
     }
 
+    //Repository의 기여자들의 정보를 받아오기 위한 함수
     fun getRepoContributors(repoName: String): ArrayList<RepoContributorsItem> {
         val repoContributors = api.getRepoContributors(repoName)
         var repoContResult = arrayListOf(RepoContributorsItem(null,null,null,null))
@@ -77,7 +79,7 @@ class ApiRepository {
         return repoContResult
     }
 
-
+    //klip wallet을 등록한 모든 사용자의 토큰에 따른 등수를 받아오는 함수
     fun getTotalUsersRankings(page: Int, size: Int): ArrayList<TotalUsersRankingModelItem> {
         var rankingResult = ArrayList<TotalUsersRankingModelItem>()
         val queryMap = mutableMapOf<String, String>()
@@ -97,6 +99,7 @@ class ApiRepository {
         return rankingResult
     }
 
+    //사용자의 githubid를 등록하는 함수
     fun postRegister(body: RegisterGithubIdModel): Int {
         val register = api.postGithubId(body)
         var registerResult = 0
@@ -113,6 +116,7 @@ class ApiRepository {
         return registerResult
     }
 
+    //사용자의 토큰 부여 내역을 확인하기 위한 함수
     fun getTokenHistory(id: Int): ArrayList<TokenHistoryModelItem> {
         val tokenHistory = api.getTokenHistory(id)
         var tokenHistoryResult = arrayListOf(TokenHistoryModelItem(null,null,null,null, null))
@@ -127,6 +131,7 @@ class ApiRepository {
         return tokenHistoryResult
     }
 
+    //klip wallet address를 서버에 등록하기 위한 함수
     fun postWalletAddress(body: WalletAddressModel): Boolean {
         val walletAddress = api.postWalletAddress(body)
         try{
@@ -137,6 +142,7 @@ class ApiRepository {
         }
     }
 
+    //kilp wallet address의 정보제공을 위한 함수
     fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel  {
         var authResult = WalletAuthResponseModel(null, null,null)
         val retrofitWallet = Retrofit.Builder().baseUrl(BuildConfig.prepare)
@@ -156,6 +162,7 @@ class ApiRepository {
         return authResult
     }
 
+    //klip wallet address 정보제공동의 결과를 받아오는 함수
     fun getAuthResult(key: String): WalletAuthResultModel {
         var authResult = WalletAuthResultModel(null, null,null,null)
         val retrofitWallet = Retrofit.Builder().baseUrl(BuildConfig.prepare)
@@ -175,6 +182,7 @@ class ApiRepository {
         return authResult
     }
 
+    //두 Repository의 구성원들의 기여도를 받아오기 위한 함수
     fun postCompareRepoMembersRequest(body: CompareRepoRequestModel): CompareRepoMembersResponseModel {
         var compareRepoResult = CompareRepoMembersResponseModel(null, null)
         val compareRepoMembers = api.postCompareRepoMembers(body)
@@ -189,6 +197,7 @@ class ApiRepository {
         return compareRepoResult
     }
 
+    //두 Repository의 정보를 받아오기 위한 함수
     fun postCompareRepoRequest(body: CompareRepoRequestModel): CompareRepoResponseModel {
         var compareRepoResult = CompareRepoResponseModel(null, null)
         val compareRepo = api.postCompareRepo(body)

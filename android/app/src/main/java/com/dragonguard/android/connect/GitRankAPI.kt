@@ -34,24 +34,30 @@ interface GitRankAPI {
     @Headers("accept: application/json", "content-type: application/json")
     fun postGithubId(@Body register: RegisterGithubIdModel) : Call<Int>
 
+//
     @POST("prepare")
     @Headers("accept: application/json", "content-type: application/json")
     fun postWalletAuth(@Body auth : WalletAuthRequestModel) : Call<WalletAuthResponseModel>
 
+//    klip wallet address 정보제공동의 후 wallet address를 받아오는 함수
     @GET("result")
     fun getAuthResult(@Query("request_key") key: String) : Call<WalletAuthResultModel>
 
+//    사용자의 토큰부여 내역을 가져오기 위한 함수
     @GET("blockchain/{id}")
     fun getTokenHistory(@Path("id") userId: Int) : Call<TokenHistoryModel>
 
+//    klip wallet address를 서버로 보내는 함수
     @POST("members/wallet-address")
     @Headers("accept: application/json", "content-type: application/json")
     fun postWalletAddress(@Body walletAddress : WalletAddressModel) : Call<Unit>
 
+//    두 Repository의 구성원들의 정보를 받아오기 위한 함수
     @POST("git-repos/compare/git-repos-members")
     @Headers("accept: application/json", "content-type: application/json")
     fun postCompareRepoMembers(@Body compare : CompareRepoRequestModel) : Call<CompareRepoMembersResponseModel>
 
+//    두 Repository의 정보를 받아오기 위한 함수
     @POST("git-repos/compare")
     @Headers("accept: application/json", "content-type: application/json")
     fun postCompareRepo(@Body compare: CompareRepoRequestModel) : Call<CompareRepoResponseModel>
