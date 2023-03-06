@@ -19,10 +19,10 @@ final class APIURL{
     /// repository, user 검색 url
     /// - Parameters:
     ///   - title: Repository, Github userName
-    ///   - type: repositories, users 두가지 타입
+    ///   - type: REPOSITORIES, USERS 두가지 타입
     /// - Returns: 검색 결과
-    static func getSearchResult(title: String, type: String) -> String {
-        let searchUrl = "http://localhost/api/search?page=1&name=\(title)&type=\(type)"
+    func getSearchResult(ip: String, title: String, page: Int, type: String) -> String {
+        let searchUrl = "http://\(ip)/api/search?page=\(page)&name=\(title)&type=\(type)"
         return searchUrl
     }
     
@@ -61,14 +61,6 @@ final class APIURL{
         let url = "http://\(ip)/api/git-repos?name=\(name)"
         return url
     }
-    
-    
-    // 검색 필터링 추가할 때 변경해야함
-    static func testUrl(ip: String, page:Int, searchWord: String) -> String {
-        let url = "http://\(ip)/api/search?page=\(page)&name=\(searchWord)&type=REPOSITORIES"
-        return url
-    }
-    
     
     // 비교하기 -> 유저비교
     func compareUserAPI(ip: String) -> String{
