@@ -16,14 +16,16 @@ final class RepoContributorInfoService{
     func getRepoContriInfo(selectedName: String) -> Observable<[RepoContributorInfoModel]> {
         let url = APIURL.apiUrl.getRepoContributorInfo(ip: ip, name: selectedName)
         var resultData = [RepoContributorInfoModel]()
-
+        
         return Observable.create(){ observer in
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+                print("adfjlsfjdslf")
                 AF.request(url, method: .get)
-                    .validate(statusCode: 200..<201)
+                    .validate(statusCode: 200..<501)
                     .responseDecodable(of: [RepoContriInfoDecodingModel].self) { response in
-                        print(response)
+                        print("repoContributor \(response)")
                         guard let responseResult = response.value else {return}
+
                         if responseResult.count > 0 && resultData.count == 0 {
                             timer.invalidate()
                             for data in responseResult{

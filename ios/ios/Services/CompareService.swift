@@ -24,6 +24,7 @@ final class CompareService{
         print(body)
         return Observable.create(){ observer in
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+                
                 AF.request(url,
                            method: .post,
                            parameters: body,
@@ -35,6 +36,7 @@ final class CompareService{
                     guard let responseResult = response.value else {return}
                     
                     if responseResult.firstResult.count > 0 || responseResult.secondResult.count > 0 {
+                        print("????")
                         timer.invalidate()
                         for data in responseResult.firstResult{
                             firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
@@ -46,6 +48,7 @@ final class CompareService{
                         observer.onNext(compareUser)
                     }
                 }
+                
             })
             return Disposables.create()
         }
