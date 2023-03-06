@@ -12,24 +12,25 @@ import RxSwift
 import SafariServices
 
 final class KlipLoginController: UIViewController{
-    
     let viewModel = LoginViewModel()
     let disposeBag = DisposeBag()
-    var walletAddress: String?
-    var id: Int? // user DB Id
-    
+    var id = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
         addUItoView()
-        NotificationCenter.default.addObserver(self, selector: #selector(finishedWalletAddress(notification: )), name: Notification.Name.walletAddress, object: nil)
+            
+        // github Id 서버에 전송한 후 DB id 받음
+        viewModel.userGithubId()
+            .subscribe(onNext: { id in
+                print("DB Id: \(id)")
+                self.id = id
+            })
+            .disposed(by: disposeBag)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        viewModel.sendUserGithubId()
-    }
     /*
      UI 코드 작성
      */
@@ -59,22 +60,18 @@ final class KlipLoginController: UIViewController{
      */
     
     @objc func clickedKlipLoginBtn(){
-        viewModel.goKlip()
-        NotificationCenter.default.addObserver(self, selector: #selector(notificationData(notification: )), name: Notification.Name.deepLink, object: nil)
+        self.viewModel.prepareKlip()
+            .subscribe(onNext: { url in
+                self.moveToDeepLink(url)
+            })
+            .disposed(by: disposeBag)
     }
     
-    @objc func clickedGoMainBtn(){
-        self.navigationController?.pushViewController(MainController(), animated: true)
-    }
-    
-    
-    // KLIP deep link 이동
-    @objc func notificationData(notification: Notification){
-        guard let url = notification.userInfo?[NotificationDeepLinkKey.link] as? String else {return}
-        
+    // DeepLink 이동하는 함수
+    private func moveToDeepLink(_ url: String){
         // Klip 앱 이동 후 다른 화면 출력
         let klipCheck = KlipLoginCheckView()
-        klipCheck.viewModel = viewModel
+        klipCheck.viewModel = self.viewModel
         self.present(klipCheck, animated: true)
         
         // 사용자 기본 브라우저에서 deeplink 주소 열 수 있는지 확인 후 열기
@@ -92,20 +89,13 @@ final class KlipLoginController: UIViewController{
                 print("기본 브라우저를 열 수 없습니다.")
             }
         }
-        
     }
     
-    @objc func finishedWalletAddress(notification: Notification){
-        guard let address = notification.userInfo?[NotificationWalletAddress.walletAddress] as? String else {return}
-        self.walletAddress = address
-        
-        guard let address = self.walletAddress else { return }
-        if !address.isEmpty{
-            self.navigationController?.pushViewController(MainController(), animated: true)
-        }
-        
+    @objc func clickedGoMainBtn(){
+        let nextPage = MainController()
+        nextPage.id = self.id
+        self.navigationController?.pushViewController(nextPage, animated: true)
     }
-    
     
     /*
      UI 추가할 때 작성하는 함수
@@ -140,4 +130,3 @@ final class KlipLoginController: UIViewController{
     }
     
 }
-
