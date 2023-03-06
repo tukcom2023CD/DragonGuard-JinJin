@@ -10,19 +10,14 @@ import SnapKit
 import RxSwift
 
 final class MainController: UIViewController {
-    
     let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
-    var myTier: String = "SPROUT"
-    var myTokens: Int = 0
-    var myId = 0
-    var myName = ""
-    var rank = 0
-    var imgUrl = ""
     let viewModel = MainViewModel()
     let disposeBag = DisposeBag()
     let img = UIImageView()
+    var id: Int?
+    var rank = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +30,6 @@ final class MainController: UIViewController {
         
         // UI AutoLayout 적용
         settingAutoLayout()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -87,7 +81,7 @@ final class MainController: UIViewController {
         tierTokenUI.layer.cornerRadius = 20
         
         // 티어, 토큰 개수 입력
-        tierTokenUI.inputText(myTier: myTier, tokens: myTokens)
+        tierTokenUI.inputText(myTier: "SPROUT", tokens: 0)
         return tierTokenUI
     }()
     
@@ -97,7 +91,7 @@ final class MainController: UIViewController {
         
         settingUI.setImage(img.image, for: .normal)
         settingUI.imageView?.layer.cornerRadius = 20
-        settingUI.setTitle(myName, for: .normal)
+        settingUI.setTitle("unknown", for: .normal)
         settingUI.setTitleColor(.black, for: .normal)
         settingUI.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         settingUI.addTarget(self, action: #selector(settingUIClicked), for: .touchUpInside)
@@ -191,69 +185,23 @@ final class MainController: UIViewController {
         
     }
     
-    
     // 내 티어, 내 토큰 가져오는 함수
     private func getMyData(){
-        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true, block: { timer in
-            self.viewModel.getMyInfo()
-            
-            self.viewModel.myInfoIntoObservable()
-            
-            self.viewModel.myInfoObservable.subscribe(onNext: {
-                self.myId = $0.id
-                self.myTier = $0.tier
-                self.myTokens = $0.tokenAmount
-                self.myName = $0.githubId
-                self.imgUrl = $0.profileImage
-                self.rank = $0.rank
-            })
-            .disposed(by: self.disposeBag)
-            if self.myId != 0 {
-                self.tierTokenUI.inputText(myTier: self.myTier, tokens: self.myTokens)
-                let url = URL(string: self.imgUrl)!
+        guard let id = self.id else {return}
+        self.viewModel.getMyInformation(id: id)
+            .subscribe(onNext: { data in
+                self.rank = data.rank
+                self.tierTokenUI.inputText(myTier: data.tier, tokens: data.tokenAmount)
+                let url = URL(string: data.profileImage)!
                 self.img.load(img: self.img, url: url,btn: self.settingUI)
-                self.settingUI.setTitle(self.myName, for: .normal)
+                self.settingUI.setTitle(data.githubId, for: .normal)
                 self.collectionView.reloadData()
-                timer.invalidate()
-            }
-            
-            
-        })
-        
+            })
+            .disposed(by: disposeBag)
     }
     
 }
 
-// 사용자 github 프로필 로딩
-extension UIImageView {
-    func load(img: UIImageView, url: URL, btn: UIButton){
-        DispatchQueue.global().async {
-            if let data = try? Data(contentsOf: url) {
-                if let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        img.image = image
-                        btn.setImage(img.image?.resize(newWidth: 50), for: .normal)
-                    }
-                }
-            }
-        }
-    }
-}
-
-extension UIImage {
-    //이미지 크기 재배치 하는 함수
-    func resize(newWidth: CGFloat) -> UIImage {
-        let scale = newWidth / self.size.width
-        let newHeight = self.size.height * scale
-        
-        let size = CGSize(width: newWidth, height: newHeight)
-        let render = UIGraphicsImageRenderer(size: size)
-        let renderImage = render.image { context in
-            self.draw(in: CGRect(origin: .zero, size: size))
-        }
-        return renderImage
-    }
-}
 
 // CollectionView DataSouce, Delegate 설정
 extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
@@ -303,6 +251,37 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
     }
     
     
+}
+
+// 사용자 github 프로필 로딩
+extension UIImageView {
+    func load(img: UIImageView, url: URL, btn: UIButton){
+        DispatchQueue.global().async {
+            if let data = try? Data(contentsOf: url) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        img.image = image
+                        btn.setImage(img.image?.resize(newWidth: 50), for: .normal)
+                    }
+                }
+            }
+        }
+    }
+}
+
+extension UIImage {
+    //이미지 크기 재배치 하는 함수
+    func resize(newWidth: CGFloat) -> UIImage {
+        let scale = newWidth / self.size.width
+        let newHeight = self.size.height * scale
+        
+        let size = CGSize(width: newWidth, height: newHeight)
+        let render = UIGraphicsImageRenderer(size: size)
+        let renderImage = render.image { context in
+            self.draw(in: CGRect(origin: .zero, size: size))
+        }
+        return renderImage
+    }
 }
 
 

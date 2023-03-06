@@ -8,16 +8,17 @@
 import Foundation
 import UIKit
 import SnapKit
+import RxSwift
 
 final class KlipLoginCheckView: UIViewController{
     var viewModel: LoginViewModel?
+    let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.view.backgroundColor = .white
-        addToView()
         
+        addToView()
     }
     
     lazy var checkBtn: UIButton = {
@@ -40,8 +41,15 @@ final class KlipLoginCheckView: UIViewController{
         })
     }
     
+    // 지갑 주소 받아오는 구문
     @objc func clickedCheckBtn(){
-        viewModel?.getWallet()
+        guard let viewModel = self.viewModel else { return }
+        viewModel.getWallet()
+            .subscribe(onNext: { address in
+                print(address)
+            })
+            .disposed(by: disposeBag)
+        
         self.dismiss(animated: true)
     }
     
