@@ -10,24 +10,17 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-
 // 검색창
 final class SearchPageController: UIViewController {
-    
-    private let disposeBag = DisposeBag()
-    private let searchViewModel = SearchPageViewModel()
     let deviceWidth = UIScreen.main.bounds.width    // 각 장치들의 가로 길이
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
     let refreshTable = UIRefreshControl()   //새로 고침 사용
-    var resultData = [String]() // 결과 데이터 저장하는 배열
-    var data = [SearchPageResultModel]()
-    var timerThread: Timer?     //일정 시간동안 API 호출되는 응답 감시하는 타이머
-    var searchText = ""         //검색하는 단어
-    var fetchingMore = false    // 무한 스크롤 감지
-    var startSearch = false
-    var sectionCount = 0        // 결과물 개수 저장
-    var beforePage: String = ""
-    
+    private let disposeBag = DisposeBag()
+    private let searchViewModel = SearchPageViewModel()
+    var searchResultList = [SearchPageResultModel]()
+    var searchText = ""         // 검색하는 단어
+    var beforePage: String = "" // 이전 View 이름
+    var isInfiniteScroll = true // 무한 스크롤 1번만 로딩되게 확인하는 변수
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,30 +77,16 @@ final class SearchPageController: UIViewController {
     
     @objc func refreshing(refresh: UIRefreshControl){ }
     
-    // 검색 결과 데이터 자동 쓰레드
-    private func searchResultAutoThread(){
-        timerThread = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
-            self.searchViewModel.switchData()
-            self.searchViewModel.searchResult
-                .observe(on: MainScheduler.instance)
-                .subscribe(onNext: {
-                    self.data = $0
-                })
-                .disposed(by: self.disposeBag)
-            
-            for i in self.data{
-                self.resultData.append(i.name)
-            }
-            
-            self.resultTableView.reloadData()
-            self.fetchingMore = false
-            
-            if self.resultData.count > 0 {
-                timer.invalidate()
-            }
-        })
-        
-        
+    private func getData(searchWord: String, type: String){
+        self.searchViewModel.getSearchData(searchWord: searchWord, type: type)
+            .subscribe(onNext: { searchList in
+                for data in searchList{
+                    self.searchResultList.append(data)
+                }
+                self.isInfiniteScroll = true
+                self.resultTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
     
     
@@ -157,8 +136,7 @@ extension SearchPageController: UISearchBarDelegate{
     
     // 검색 바 검색하기 시작할 때
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        resultData = []
-        data = []
+        searchResultList = []
     }
     
     // Cancel 취소 버튼 눌렀을 때
@@ -173,21 +151,7 @@ extension SearchPageController: UISearchBarDelegate{
         
         guard let searchText = searchUI.text else{ return }
         self.searchText = searchText
-        
-        startSearch = true
-        searchViewModel.pageCount = 0
-        callAPI(searchText: searchText)
-        resultTableView.reloadData()
-        
-        searchResultAutoThread()    // API 감지 스레드
-    }
-    
-    // API 호출
-    func callAPI(searchText: String?){
-        searchViewModel.searchInput.onNext(searchText ?? "")
-        searchViewModel.pageCount += 1
-        searchViewModel.getAPIData()
-        
+        getData(searchWord: searchText, type: "REPOSITORIES")    // API 감지 스레드
     }
     
 }
@@ -200,12 +164,10 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath ) as! SearchPageTableView
         
-        cell.prepare(text: resultData[indexPath.section])
+        cell.prepare(text: searchResultList[indexPath.section].name)
         cell.layer.cornerRadius = 15
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
         cell.layer.borderWidth = 1
-        
-        sectionCount = indexPath.section
         
         return cell
     }
@@ -215,24 +177,22 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         let comparePage = CompareController()
 
         if beforePage == "Main"{
-            RepoContributorInfoService.repoShared.selectedName = resultData[indexPath.section]
+            RepoContributorInfoService.repoShared.selectedName = searchResultList[indexPath.section].name
             self.navigationController?.pushViewController(RepoContributorInfoController(), animated: true)
         }
         else if beforePage == "CompareRepo1"{
-            comparePage.repository1 = resultData[indexPath.section]
-            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 1, NotificationKey.repository: resultData[indexPath.section]])
+            comparePage.repository1 = searchResultList[indexPath.section].name
+            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 1, NotificationKey.repository: searchResultList[indexPath.section].name])
             
             self.navigationController?.popViewController(animated: true)
         }
         else if beforePage == "CompareRepo2"{
-            comparePage.repository2 = resultData[indexPath.section]
-            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 2, NotificationKey.repository: resultData[indexPath.section]])
+            comparePage.repository2 = searchResultList[indexPath.section].name
+            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 2, NotificationKey.repository: searchResultList[indexPath.section].name])
             self.navigationController?.popViewController(animated: true)
         }
         
         searchUI.text = ""
-        resultData = []
-        data = []
         tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -242,10 +202,9 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         let position = scrollView.contentOffset.y
         
         if position > (resultTableView.contentSize.height - scrollView.frame.size.height){
-            if !fetchingMore && startSearch{
-                fetchingMore = true
-                callAPI(searchText: self.searchText)
-                searchResultAutoThread()    // API 감지 스레드
+            if self.isInfiniteScroll{
+                getData(searchWord: self.searchText, type: "REPOSITORIES")
+                self.isInfiniteScroll = false
             }
         }
         
@@ -261,7 +220,7 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
     
     // 색션 개수
-    func numberOfSections(in tableView: UITableView) -> Int { resultData.count }
+    func numberOfSections(in tableView: UITableView) -> Int { searchResultList.count }
     
     // 섹션 높이 지정
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
