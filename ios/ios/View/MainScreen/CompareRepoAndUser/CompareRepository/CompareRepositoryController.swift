@@ -15,11 +15,12 @@ import RxSwift
 final class CompareRepositoryController : UIViewController {
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
-    let viewModel = CompareViewModel()
     let disposebag = DisposeBag()
     var nameLabel : [String] = ["forks", "closed\nissues", "open\nissues", "stars", "contributers", "deletions\naverage", "languages", "codes\naverage"]
     var repo1 : [FirstRepoModel] = []
     var repo2 : [secondRepoModel] = []
+    var firstRepo: FirstRepoModel?
+    var secondRepo: secondRepoModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -193,37 +194,60 @@ final class CompareRepositoryController : UIViewController {
         })
     }
     
-    /// ViewModel을 통해 API 통신 후 데이터를 가져오는 함수
+//    /// ViewModel을 통해 API 통신 후 데이터를 가져오는 함수
+//    func getData(){
+//        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
+//            self.repo1 = []
+//            self.repo2 = []
+////            self.viewModel.bringRepoInfo()
+//            self.viewModel.repo1Info.subscribe(onNext: {
+//                self.repo1 = $0
+//            }).disposed(by: self.disposebag)
+//            self.viewModel.repo2Info.subscribe(onNext: {
+//                self.repo2 = $0
+//            }).disposed(by: self.disposebag)
+//
+//            if self.repo1.count != 0 && self.repo2.count != 0 {
+//                timer.invalidate()
+//
+//                self.indicator.stopAnimating()
+//
+//                if !self.indicator.isAnimating{
+//                    self.addToView()    // 로딩화면이 사라지고 정보를 보는 데이터 로드
+//
+//                    // label 이름 변경
+//                    self.repo1Label.text = self.repo1[0].gitRepo.full_name
+//                    self.repo2Label.text = self.repo2[0].gitRepo.full_name
+//
+//                }
+//
+//            }
+//
+//        })
+//    }
+    
     func getData(){
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
-            self.repo1 = []
-            self.repo2 = []
-//            self.viewModel.bringRepoInfo()
-            self.viewModel.repo1Info.subscribe(onNext: {
-                self.repo1 = $0
-            }).disposed(by: self.disposebag)
-            self.viewModel.repo2Info.subscribe(onNext: {
-                self.repo2 = $0
-            }).disposed(by: self.disposebag)
-            
-            if self.repo1.count != 0 && self.repo2.count != 0 {
-                timer.invalidate()
-                
+        
+        CompareViewModel.viewModel.getRepoInfo()
+            .subscribe(onNext: { infomation in
                 self.indicator.stopAnimating()
                 
                 if !self.indicator.isAnimating{
-                    self.addToView()    // 로딩화면이 사라지고 정보를 보는 데이터 로드
-                        
-                    // label 이름 변경
-                    self.repo1Label.text = self.repo1[0].gitRepo.full_name
-                    self.repo2Label.text = self.repo2[0].gitRepo.full_name
+                    self.firstRepo = infomation.firstRepo
+                    self.secondRepo = infomation.secondRepo
                     
+                    self.addToView()    // 로딩화면이 사라지고 정보를 보는 데이터 로드
+
+                    // label 이름 변경
+                    self.repo1Label.text = self.firstRepo?.gitRepo.full_name
+                    self.repo2Label.text = self.secondRepo?.gitRepo.full_name
                 }
-               
-            }
-            
-        })
+            })
+            .disposed(by: self.disposebag)
+        
+        
     }
+    
     
 }
 
@@ -238,21 +262,21 @@ extension CompareRepositoryController : UITableViewDelegate, UITableViewDataSour
         cell.backgroundColor = .white
         switch indexPath.row {
         case 0 :
-            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.forks_count), repo2Label: String(repo2[0].gitRepo.forks_count))
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(self.firstRepo?.gitRepo.forks_count ?? 0), repo2Label: String(self.secondRepo?.gitRepo.forks_count ?? 0))
         case 1 :
-            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.closed_issues_count), repo2Label: String(repo2[0].gitRepo.closed_issues_count))
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(self.firstRepo?.gitRepo.closed_issues_count ?? 0), repo2Label: String(self.secondRepo?.gitRepo.closed_issues_count ?? 0))
         case 2 :
-            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.open_issues_count), repo2Label: String(repo2[0].gitRepo.open_issues_count))
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(self.firstRepo?.gitRepo.open_issues_count ?? 0), repo2Label: String(self.secondRepo?.gitRepo.open_issues_count ?? 0))
         case 3 :
-            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.stargazers_count), repo2Label: String(repo2[0].gitRepo.stargazers_count))
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(self.firstRepo?.gitRepo.stargazers_count ?? 0), repo2Label: String(self.secondRepo?.gitRepo.stargazers_count ?? 0))
         case 4 :
-            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].gitRepo.watchers_count), repo2Label: String(repo2[0].gitRepo.watchers_count))
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(self.firstRepo?.gitRepo.watchers_count ?? 0), repo2Label: String(self.secondRepo?.gitRepo.watchers_count ?? 0))
         case 5 :
-            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].statistics.deletionStats.average), repo2Label: String(repo2[0].statistics.deletionStats.average))
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(self.firstRepo?.statistics.deletionStats.average ?? 0), repo2Label: String(self.secondRepo?.statistics.deletionStats.average ?? 0))
         case 6 :
-            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].languagesStats.count), repo2Label: String(repo2[0].languagesStats.count))
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(self.firstRepo?.languagesStats.count ?? 0), repo2Label: String(self.secondRepo?.languagesStats.count ?? 0))
         case 7 :
-            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(repo1[0].languagesStats.average), repo2Label: String(repo2[0].languagesStats.average))
+            cell.prepare(nameLabel: nameLabel[indexPath.row], repo1Label: String(self.firstRepo?.languagesStats.average ?? 0), repo2Label: String(self.secondRepo?.languagesStats.average ?? 0))
         default :
             print("error")
         }
@@ -275,20 +299,20 @@ extension CompareRepositoryController : UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompareRepoCollectionViewCell.identifier, for: indexPath) as? CompareRepoCollectionViewCell ?? CompareRepoCollectionViewCell()
         
-        let repo1Info: [Double] = [self.repo1[0].statistics.additionStats.average, Double(self.repo1[0].languagesStats.min), self.repo1[0].statistics.deletionStats.average]
-        let repo2Info: [Double] = [self.repo2[0].statistics.additionStats.average, Double(self.repo2[0].languagesStats.min), self.repo2[0].statistics.deletionStats.average]
-        let repo1Language: [String] = self.repo1[0].languages.language
+        let repo1Info: [Double] = [self.firstRepo?.statistics.additionStats.average ?? 0, Double(self.firstRepo?.languagesStats.min ?? 0), self.firstRepo?.statistics.deletionStats.average ?? 0]
+        let repo2Info: [Double] = [self.secondRepo?.statistics.additionStats.average ?? 0, Double(self.secondRepo?.languagesStats.min ?? 0), self.secondRepo?.statistics.deletionStats.average ?? 0]
+        let repo1Language: [String] = self.firstRepo?.languages.language ?? []
         var repo1LanguagesCount: [Double] = []
-        for count in self.repo1[0].languages.count{
+        for count in self.firstRepo?.languages.count ?? []{
             repo1LanguagesCount.append(Double(count))
         }
         
-        let repo2Language: [String] = self.repo2[0].languages.language
+        let repo2Language: [String] = self.secondRepo?.languages.language ?? []
         var repo2LanguagesCount: [Double] = []
-        for count in self.repo2[0].languages.count{
+        for count in self.secondRepo?.languages.count ?? []{
             repo2LanguagesCount.append(Double(count))
         }
-        let repoNameList: [String] = [self.repo1[0].gitRepo.full_name, self.repo2[0].gitRepo.full_name]
+        let repoNameList: [String] = [self.firstRepo?.gitRepo.full_name ?? "", self.secondRepo?.gitRepo.full_name ?? ""]
         
         switch indexPath.row{
         case 0:

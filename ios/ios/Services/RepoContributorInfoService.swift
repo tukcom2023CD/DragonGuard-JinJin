@@ -22,6 +22,7 @@ final class RepoContributorInfoService{
                 AF.request(url, method: .get)
                     .validate(statusCode: 200..<201)
                     .responseDecodable(of: [RepoContriInfoDecodingModel].self) { response in
+                        print(response)
                         guard let responseResult = response.value else {return}
                         if responseResult.count > 0 && resultData.count == 0 {
                             timer.invalidate()

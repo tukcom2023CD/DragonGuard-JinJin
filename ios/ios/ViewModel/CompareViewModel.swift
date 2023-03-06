@@ -17,6 +17,7 @@ final class CompareViewModel{
     var repoUserInfo: BehaviorSubject<CompareUserModel> = BehaviorSubject(value: CompareUserModel(firstResult: [], secondResult: []))
     var repo1Info: BehaviorSubject<[FirstRepoModel]> = BehaviorSubject(value: [])
     var repo2Info: BehaviorSubject<[secondRepoModel]> = BehaviorSubject(value: [])
+    
     let service = CompareService()
     let disposeBag = DisposeBag()
     var sendData: BehaviorSubject<CompareUserModel> = BehaviorSubject(value: CompareUserModel(firstResult: [], secondResult: []))
@@ -47,8 +48,10 @@ final class CompareViewModel{
 //    }
 //
     
+    // 유저 정보 가져오는 함수
     func getContributorInfo(firstRepoName: String, secondRepoName: String) -> Observable<CompareUserModel>{
-        
+        self.firstRepo = firstRepoName
+        self.secondRepo = secondRepoName
         return Observable.create(){ observer in
             self.service.beforeSendingInfo(firstRepo: firstRepoName, secondRepo: secondRepoName)
                 .subscribe(onNext: { contributorInfo in
@@ -61,20 +64,32 @@ final class CompareViewModel{
         }
     }
     
+    // 받아온 유저 정보를 CompareUserController 파일로 보냄
     func getUserInfo() -> Observable<CompareUserModel> {
-        
         return Observable.create(){ observer in
-//            guard let compareUser = self.compareUser else {return}
-//            observer.onNext(compareUser)
-            
             self.sendData.subscribe(onNext: { data in
-                print("Called")
-                print(data)
                 observer.onNext(data)
             }).disposed(by: self.disposeBag)
             
             return Disposables.create()
         }
     }
+    
+    func getRepoInfo() -> Observable<CompareRepoModel>{
+        
+        return Observable.create(){ observer in
+            self.service.getCompareInfo(firstRepo: self.firstRepo, secondRepo: self.secondRepo)
+                .subscribe(onNext: { repoInfo in
+                    print("called")
+                    print(repoInfo)
+                    observer.onNext(repoInfo)
+                })
+                .disposed(by: self.disposeBag)
+            
+            
+            return Disposables.create()
+        }
+    }
+    
     
 }

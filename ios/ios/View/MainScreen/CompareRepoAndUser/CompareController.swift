@@ -107,7 +107,6 @@ final class CompareController: UIViewController{
     @objc func clickedNextBtn(){
         if !repository1.isEmpty && !repository2.isEmpty{
             let tabBar = TabBarController()
-            
             CompareViewModel.viewModel.getContributorInfo(firstRepoName: self.repository1, secondRepoName: self.repository2)
                 .subscribe(onNext: { contributorInfo in
                     print(contributorInfo)
