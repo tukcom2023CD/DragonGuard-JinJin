@@ -61,11 +61,8 @@ final class LoginViewModel {
     
     // 사용자 지갑 주소 서버로 전송
     func userWalletAddress(){
-        print("id \(self.id), address \(self.walletAddress)")
         post.sendMyWalletAddress(id: self.id, walletAddress: self.walletAddress)
-            .subscribe(onNext: { id in
-                
-            })
+            .subscribe(onNext: { id in })
             .disposed(by: disposeBag)
     }
     
