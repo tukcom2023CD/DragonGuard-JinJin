@@ -25,37 +25,12 @@
             android:layout_weight="0.3"
             android:background="@android:color/transparent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.25"
-            android:orientation="horizontal"
-            android:weightSum="5">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5" />
-
-            <TextView
-                android:id="@+id/compare_title"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:fontFamily="@font/ibm_semibold"
-                android:gravity="center"
-                android:text="Repository 비교"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="25dp" />
-
-        </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2.85"
+            android:layout_weight="3.1"
             android:orientation="vertical"
             android:weightSum="5">
 

@@ -115,7 +115,7 @@
                     android:onClick="@{()->searchViewModel.clickSearchOption()}"
                     android:adjustViewBounds="true"
                     android:tag="@{searchViewModel.onOptionListener}"
-                    android:src="@drawable/ic_baseline_arrow_drop_up_24" />
+                    android:src="@drawable/ic_baseline_arrow_drop_down_24" />
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

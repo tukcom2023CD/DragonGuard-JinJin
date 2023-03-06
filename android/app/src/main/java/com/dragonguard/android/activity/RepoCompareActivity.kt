@@ -58,9 +58,10 @@ class RepoCompareActivity : AppCompatActivity() {
 
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.title = "Repository 비교"
 
     }
 
@@ -106,14 +107,14 @@ class RepoCompareActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.compare_repo -> {
-                    binding.compareTitle.text = "Repository 비교"
+                    supportActionBar?.title = "Repository 비교"
                     val transactionN = supportFragmentManager.beginTransaction()
                     transactionN.hide(compareUserFragment)
                         .show(compareRepoFragment)
                         .commit()
                 }
                 R.id.compare_user -> {
-                    binding.compareTitle.text = "Repository 구성원 비교"
+                    supportActionBar?.title = "Repository 구성원 비교"
                     val transactionN = supportFragmentManager.beginTransaction()
                     transactionN.show(compareUserFragment)
                         .hide(compareRepoFragment)

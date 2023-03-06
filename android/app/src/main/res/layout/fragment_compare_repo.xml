@@ -86,14 +86,38 @@
                         app:tint="#000000" />
                 </LinearLayout>
 
-
-
-
-
-
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.36"
+                android:weightSum="5"
+                android:orientation="horizontal">
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.44" />
+
+                <ImageView
+                    android:id="@+id/repo_color1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.8"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_baseline_circle_24"
+                    app:tint="#00ff00" />
+
+                <ImageView
+                    android:id="@+id/repo_color2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.8"
+                    android:src="@drawable/ic_baseline_circle_24"
+                    app:tint="#000000" />
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -105,7 +129,7 @@
                 android:id="@+id/repo_compare_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_weight="1.8"
                 android:orientation="vertical"
                 tools:listitem="@layout/repo_compare_list" />
 
@@ -121,7 +145,7 @@
                 android:orientation="vertical"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:layout_weight="2.16">
+                android:layout_weight="2">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/repo_compare_chart_viewpager"
