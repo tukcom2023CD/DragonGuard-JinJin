@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,7 +29,8 @@ public class SearchController {
 
     @GetMapping
     public ResponseEntity<List<ResultResponse>> getSearchResult(
+            @RequestParam(value = "filters", required = false) List<String> filters,
             @RequestParam String name, @RequestParam SearchType type, @RequestParam Integer page) {
-        return ResponseEntity.ok(searchService.getSearchResultByClient(new SearchRequest(name, type, page)));
+        return ResponseEntity.ok(searchService.getSearchResultByClient(new SearchRequest(name, type, page, filters)));
     }
 }

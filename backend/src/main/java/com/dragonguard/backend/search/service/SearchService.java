@@ -84,6 +84,10 @@ public class SearchService {
                 .withMatcher("page", exact())
                 .withMatcher("type", exact().ignoreCase());
 
+        if (!search.getFilters().isEmpty()) {
+            exampleMatcher = exampleMatcher.withMatcher("filters", exact());
+        }
+
         return searchRepository
                 .findOne(Example.of(search, exampleMatcher))
                 .orElseGet(() -> searchRepository.save(searchMapper.toEntity(searchRequest)));
@@ -115,6 +119,6 @@ public class SearchService {
     }
 
     private Function<SearchRequest, Object> getSearchComponent(SearchType searchType) {
-        return searchType == SearchType.REPOSITORIES ? githubRepoClient::requestToGithub : githubUserClient::requestToGithub;
+        return searchType.equals(SearchType.REPOSITORIES) ? githubRepoClient::requestToGithub : githubUserClient::requestToGithub;
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author 김승진
@@ -30,11 +32,14 @@ public class Search implements Serializable {
     @Indexed
     private Integer page;
 
+    private List<String> filters = new ArrayList<>();
+
     @Builder
-    public Search(String id, String searchWord, SearchType searchType, Integer page) {
+    public Search(String id, String searchWord, SearchType searchType, Integer page, List<String> filters) {
         this.id = id;
         this.searchWord = searchWord;
         this.searchType = searchType;
         this.page = page;
+        this.filters = filters;
     }
 }

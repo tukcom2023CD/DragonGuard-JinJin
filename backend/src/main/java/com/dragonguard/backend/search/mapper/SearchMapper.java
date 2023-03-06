@@ -16,6 +16,7 @@ public class SearchMapper {
                 .searchWord(searchRequest.getName())
                 .searchType(searchRequest.getType())
                 .page(searchRequest.getPage())
+                .filters(searchRequest.getFilters())
                 .build();
     }
 }

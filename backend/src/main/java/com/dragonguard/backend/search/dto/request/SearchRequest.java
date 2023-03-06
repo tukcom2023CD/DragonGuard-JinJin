@@ -7,11 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-/**
- * @author 김승진
- * @description 검색에 대한 요청 정보를 담는 dto
- */
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -19,8 +15,15 @@ import javax.validation.constraints.NotNull;
 public class SearchRequest {
     @NotBlank
     private String name;
-    @NotBlank
+    @NotNull
     private SearchType type;
     @NotNull
     private Integer page;
+    private List<String> filters;
+
+    public SearchRequest(String name, SearchType type, Integer page) {
+        this.name = name;
+        this.type = type;
+        this.page = page;
+    }
 }
