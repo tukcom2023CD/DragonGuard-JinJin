@@ -85,6 +85,7 @@ class SearchActivity : AppCompatActivity() {
 
 //        검색 아이콘 눌렀을때 검색 구현
         binding.searchIcon.setOnClickListener {
+            checkLanguage()
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
                 if (lastSearch != viewmodel.onSearchListener.value!!) {
                     repoNames.clear()
@@ -140,16 +141,16 @@ class SearchActivity : AppCompatActivity() {
             }
             true
         }
+    }
 
-
-
-
-        viewmodel.onUserIconSelected.observe(this, Observer {
-            if (viewmodel.onUserIconSelected.value == true) {
-                val intent = Intent(applicationContext, MenuActivity::class.java)
-                startActivity(intent)
+    private fun checkLanguage() {
+        val checked = arrayListOf<String>()
+        languagesCheckBox.forEachIndexed { index, b ->
+            if(languagesCheckBox[index]){
+                checked.add(popularLanguages[index])
             }
-        })
+        }
+        Toast.makeText(applicationContext, "index : $checked", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
