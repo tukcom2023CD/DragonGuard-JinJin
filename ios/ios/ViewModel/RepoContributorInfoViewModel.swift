@@ -10,26 +10,18 @@ import RxCocoa
 import RxSwift
 
 final class RepoContributorInfoViewModel{
-    var checkData = false
-    var repoResultBehaviorSubject: BehaviorSubject<[RepoContributorInfoModel]> = BehaviorSubject(value: [])
-    var selectTitle = ""
+    let service = RepoContributorInfoService()
+    let disposeBag = DisposeBag()
     
-    // API 호출
-    func getRepoContributorInfo(){
-        repoResultBehaviorSubject = BehaviorSubject(value: [])
-        RepoContributorInfoService.repoShared.getRepoContriInfo()
+    // Repository 상세 정보 가져오는 함수
+    func getContributorInfo(selectName: String) -> Observable<[RepoContributorInfoModel]> {
+        return Observable.create(){ observer in
+            self.service.getRepoContriInfo(selectedName: selectName)
+                .subscribe(onNext: { contributorInfo in
+                    observer.onNext(contributorInfo)
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
     }
-    
-    // api 결과값을 view로 전달
-    func serviceToView(){
-        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true, block: { timer in
-            if RepoContributorInfoService.repoShared.checkData &&  RepoContributorInfoService.repoShared.resultData.count > 0{
-                self.repoResultBehaviorSubject.onNext(RepoContributorInfoService.repoShared.resultData)
-                self.selectTitle = RepoContributorInfoService.repoShared.selectedName
-                self.checkData = true
-                timer.invalidate()
-            }
-        })
-    }
-    
 }

@@ -15,7 +15,10 @@ final class SearchPageViewModel {
     var pageCount = 0   //페이지 수
     
     // 검색 결과를 가져오는 함수
-    func getSearchData(searchWord: String, type: String) -> Observable<[SearchPageResultModel]>{
+    func getSearchData(searchWord: String, type: String, change: Bool) -> Observable<[SearchPageResultModel]>{
+        if change{
+            self.pageCount = 0
+        }
         return Observable.create(){ observer in
             self.searchPageService.getSearchResult(searchWord: searchWord, page: self.pageCount, type: type)
                 .subscribe(onNext: { searchResultList in
@@ -23,6 +26,7 @@ final class SearchPageViewModel {
                 })
                 .disposed(by: self.disposeBag)
             self.pageCount += 1
+            
             return Disposables.create()
         }
     }

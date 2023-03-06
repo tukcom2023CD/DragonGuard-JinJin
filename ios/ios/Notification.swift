@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 extension Notification.Name{
     static let data = Notification.Name("")
     static let deepLink = Notification.Name("")

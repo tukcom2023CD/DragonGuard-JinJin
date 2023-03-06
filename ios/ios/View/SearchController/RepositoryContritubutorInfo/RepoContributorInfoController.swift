@@ -17,7 +17,8 @@ final class RepoContributorInfoController: UIViewController{
     let deviceHeight = UIScreen.main.bounds.height
     let viewModel = RepoContributorInfoViewModel()
     let disposebag = DisposeBag()
-    
+    var selectedTitle: String?
+    var contributorlist: [RepoContributorInfoModel] = []
     var userCommit: [Int] = []  // 사용자 커밋 횟수
     var userName: [String] = [] // 사용자 깃허브 아이디
     var dataColor:[[UIColor]] = []  // 랜덤 색상 설정
@@ -25,21 +26,16 @@ final class RepoContributorInfoController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         
-        // api 호출
-        viewModel.getRepoContributorInfo()
         
         // 로딩화면 추가
         addIndicator()
-        
-        // 데이터가 들어왔는지 감시하는 함수
-        keepWatchData()
+        getData()
     }
     override func viewWillDisappear(_ animated: Bool) {
-        self.userCommit = []
-        self.userName = []
-        self.dataColor = []
+        userCommit = []
+        userName = []
+        dataColor = []
     }
     
     
@@ -133,41 +129,34 @@ final class RepoContributorInfoController: UIViewController{
         }
     }
     
-    // 데이터가 들어왔는지 감시하는 함수
-    private func keepWatchData(){
-        self.viewModel.serviceToView()  // timer thread를 돌리면서 데이터가 들어 왔는지 확인
+    private func getData(){
+        guard let selectedTitle = self.selectedTitle else {return}
         
-        // 타이머 쓰레드를 이용하여 데이터 감지
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
-            if self.viewModel.checkData {
+        self.viewModel.getContributorInfo(selectName: selectedTitle)
+            .subscribe(onNext: { contributorList in
                 self.indicator.stopAnimating()
-            }
-            
-            if !self.indicator.isAnimating{
-                self.addUItoView()
-                self.setAutoLayout()
-                self.getUserInfoAutoThread()
-                timer.invalidate()
-            }
-        })
-    }
-    
-    // 데이터 삽입하는 함수
-    private func getUserInfoAutoThread(){
-        viewModel.repoResultBehaviorSubject.subscribe(onNext: {
-            let arr = self.viewModel.selectTitle.components(separatedBy: "/")
-            self.navigationItem.title = arr[1]
-            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!]
-            
-            for data in $0{
-                self.userName.append(data.githubId)
-                self.userCommit.append(data.commits)
-            }
-        })
-        .disposed(by: disposebag)
-        
-        randomColor()
-        setchartOption()
+                
+                if !self.indicator.isAnimating{
+                    self.addUItoView()
+                    self.setAutoLayout()
+                    
+                    self.userCommit = []
+                    self.userName = []
+                    self.dataColor = []
+                    
+                    let name = selectedTitle.components(separatedBy: "/")
+                    self.navigationItem.title = name[1]
+                    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!,.foregroundColor: UIColor.black]
+                    
+                    for data in contributorList{
+                        self.userName.append(data.githubId)
+                        self.userCommit.append(data.commits)
+                    }
+                    self.randomColor()
+                    self.setchartOption()
+                }
+            })
+            .disposed(by: disposebag)
     }
     
 }
@@ -232,6 +221,7 @@ extension RepoContributorInfoController: ChartViewDelegate {
         barChart.doubleTapToZoomEnabled = false
         barChart.xAxis.enabled = false
         barChart.leftAxis.labelFont = .systemFont(ofSize: 15)
+        barChart.legend.textColor = .black
         
         barChart.noDataText = "출력 데이터가 없습니다."
         barChart.noDataFont = .systemFont(ofSize: 30)

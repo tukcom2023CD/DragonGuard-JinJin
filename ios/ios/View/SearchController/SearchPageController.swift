@@ -28,14 +28,16 @@ final class SearchPageController: UIViewController {
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.backButtonTitle = "검색"
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-        
+        searchResultList = []
         addUItoView()   //View에 적용할 UI 작성
         resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
         initRefreshTable()  //새로고침 함수
         
     }
     
-    
+    override func viewWillAppear(_ animated: Bool) {
+//        searchResultList = []
+    }
     /*
      UI 작성
      */
@@ -77,8 +79,8 @@ final class SearchPageController: UIViewController {
     
     @objc func refreshing(refresh: UIRefreshControl){ }
     
-    private func getData(searchWord: String, type: String){
-        self.searchViewModel.getSearchData(searchWord: searchWord, type: type)
+    private func getData(searchWord: String, type: String, change: Bool){
+        self.searchViewModel.getSearchData(searchWord: searchWord, type: type, change: change)
             .subscribe(onNext: { searchList in
                 for data in searchList{
                     self.searchResultList.append(data)
@@ -151,7 +153,7 @@ extension SearchPageController: UISearchBarDelegate{
         
         guard let searchText = searchUI.text else{ return }
         self.searchText = searchText
-        getData(searchWord: searchText, type: "REPOSITORIES")    // API 감지 스레드
+        getData(searchWord: searchText, type: "REPOSITORIES", change: true)    // API 감지 스레드
     }
     
 }
@@ -177,8 +179,9 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         let comparePage = CompareController()
 
         if beforePage == "Main"{
-            RepoContributorInfoService.repoShared.selectedName = searchResultList[indexPath.section].name
-            self.navigationController?.pushViewController(RepoContributorInfoController(), animated: true)
+            let nextPage = RepoContributorInfoController()
+            nextPage.selectedTitle = searchResultList[indexPath.section].name
+            self.navigationController?.pushViewController(nextPage, animated: true)
         }
         else if beforePage == "CompareRepo1"{
             comparePage.repository1 = searchResultList[indexPath.section].name
@@ -203,7 +206,7 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         
         if position > (resultTableView.contentSize.height - scrollView.frame.size.height){
             if self.isInfiniteScroll{
-                getData(searchWord: self.searchText, type: "REPOSITORIES")
+                getData(searchWord: self.searchText, type: "REPOSITORIES", change: false)
                 self.isInfiniteScroll = false
             }
         }
