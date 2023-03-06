@@ -12,13 +12,11 @@ import RxCocoa
 import RxSwift
 import Charts
 
-
 /// 유저 비교하는 화면
 final class CompareUserController : UIViewController, SendingProtocol {
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
     var repoUserInfo: CompareUserModel = CompareUserModel(firstResult: [], secondResult: [])
-    let viewModel = CompareViewModel()
     let disposeBag = DisposeBag()
     var chooseArray: [String] = []
     var user1Index: Int?
@@ -276,31 +274,24 @@ final class CompareUserController : UIViewController, SendingProtocol {
             make.center.equalToSuperview()
         })
     }
-    
-    
-    
+
     /// API 통신을 한 부분을 viewModel을 통해 데이터를 받아오는 부분
     func getUserInfo(){
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
-            self.viewModel.bringUserInfo()
-          
-            self.viewModel.repoUserInfo.subscribe(onNext: {
-                self.repoUserInfo = $0
-            })
-            .disposed(by: self.disposeBag)
-            
-            if self.repoUserInfo.firstResult.count != 0{
-                timer.invalidate()
+        CompareViewModel.viewModel.getUserInfo()
+            .subscribe(onNext: { userInfo in
+                print(userInfo)
+                self.repoUserInfo = userInfo
                 self.indicator.stopAnimating()
                 
                 if !self.indicator.isAnimating{
                     self.addToView()
                 }
-                
-            }
-        })
+            })
+            .disposed(by: disposeBag)
+      
+        
     }
-
+    
     
 }
 
