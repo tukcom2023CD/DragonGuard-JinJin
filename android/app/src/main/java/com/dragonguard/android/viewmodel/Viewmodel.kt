@@ -42,10 +42,10 @@ class Viewmodel {
     }
 
     fun clickSearchOption(){
-        if(onOptionListener.value == "down"){
-            onOptionListener.value = "up"
-        }else{
+        if(onOptionListener.value == "up"){
             onOptionListener.value = "down"
+        }else{
+            onOptionListener.value = "up"
         }
     }
 

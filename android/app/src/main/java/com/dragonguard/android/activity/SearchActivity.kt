@@ -1,5 +1,7 @@
 package com.dragonguard.android.activity
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.model.RepoSearchResultModel
 import com.dragonguard.android.databinding.ActivitySearchBinding
+import com.dragonguard.android.dialog.FilterDialog
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
 import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
 import com.dragonguard.android.recycleradapter.VerticalItemDecorator
@@ -35,11 +38,15 @@ class SearchActivity : AppCompatActivity() {
     private var count = 0
     private var changed = true
     private var lastSearch = ""
+    private var popularLanguages = ArrayList<String>()
+    private lateinit var languagesCheckBox: ArrayList<Boolean>
     var viewmodel = Viewmodel()
+    private lateinit var filterDialog : FilterDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
         binding.searchViewModel = viewmodel
+
 
         binding.searchResult.addItemDecoration(VerticalItemDecorator(20))
         binding.searchResult.addItemDecoration(HorizontalItemDecorator(10))
@@ -48,8 +55,15 @@ class SearchActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
-
-
+        popularLanguages = arrayListOf("C", "C#", "C++", "CoffeeScript ", "CSS", "Dart", "DM", "Elixir", "Go", "Groovy", "HTML", "Java", "JavaScript",
+            "Kotlin", "Objective-C", "Perl", "PHP", "PowerShell", "Python", "Ruby", "Rust", "Scala", "Shell", "Swift", "TypeScript")
+        languagesCheckBox = ArrayList<Boolean>()
+        for(i in 0 until popularLanguages.size) {
+            languagesCheckBox.add(false)
+        }
+//        Toast.makeText(applicationContext, "크기 : ${popularLanguages.size}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "checkbox : ${languagesCheckBox.size}", Toast.LENGTH_SHORT).show()
+        filterDialog = FilterDialog(popularLanguages, languagesCheckBox)
 //        검색 옵션 구현
         viewmodel.onOptionListener.observe(this, Observer {
 
@@ -65,6 +79,7 @@ class SearchActivity : AppCompatActivity() {
             } else {
                 binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
                 Log.d("option", "up")
+                filterDialog.show(supportFragmentManager, "filtering")
             }
         })
 
