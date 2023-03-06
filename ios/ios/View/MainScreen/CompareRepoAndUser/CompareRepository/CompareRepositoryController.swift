@@ -198,7 +198,7 @@ final class CompareRepositoryController : UIViewController {
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
             self.repo1 = []
             self.repo2 = []
-            self.viewModel.bringRepoInfo()
+//            self.viewModel.bringRepoInfo()
             self.viewModel.repo1Info.subscribe(onNext: {
                 self.repo1 = $0
             }).disposed(by: self.disposebag)

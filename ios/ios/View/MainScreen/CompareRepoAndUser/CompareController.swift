@@ -8,14 +8,15 @@
 import Foundation
 import UIKit
 import SnapKit
+import RxSwift
 
 // Repository 비교
 final class CompareController: UIViewController{
     let deviceHeight = UIScreen.main.bounds.height
     let searchPage = SearchPageController()
-    let viewModel = CompareViewModel()
     var repository1: String = ""
     var repository2: String = ""
+    let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,12 +106,16 @@ final class CompareController: UIViewController{
     
     @objc func clickedNextBtn(){
         if !repository1.isEmpty && !repository2.isEmpty{
+            let tabBar = TabBarController()
             
-            viewModel.repositryInfo.onNext([self.repository1,self.repository2])
-            viewModel.callAPI()
+            CompareViewModel.viewModel.getContributorInfo(firstRepoName: self.repository1, secondRepoName: self.repository2)
+                .subscribe(onNext: { contributorInfo in
+                    print(contributorInfo)
+                })
+                .disposed(by: self.disposeBag)
             
             // 다음 화면 연동
-            self.navigationController?.pushViewController(TabBarController(), animated: true)
+            self.navigationController?.pushViewController(tabBar, animated: true)
         }
     }
     

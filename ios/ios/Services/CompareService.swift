@@ -7,31 +7,25 @@
 
 import Foundation
 import Alamofire
+import RxSwift
 
 final class CompareService{
-    static let compareService = CompareService()
     let ip = APIURL.ip
-    var firstRepoUserInfo: [FirstRepoResult] = []   // 첫 번째 레포 내부 유저 리스트
-    var secondRepoUserInfo: [SecondRepoResult] = []  // 두 번째 레포 내부 유저 리스트
     var repoUserInfo: CompareUserModel?
     var firstRepoInfo: [FirstRepoModel] = []     // 첫 번째 레포 정보 리스트
     var secondRepoInfo: [secondRepoModel] = []  // 첫 번째 레포 정보 리스트
-    
-    private init(){ }
     
     /// 선택된 레포지토리들을 보내 유저 정보들을 받아오는 함수
     /// - Parameters:
     ///   - firstRepo: 첫 번째 선택된 레포지토리
     ///   - secondRepo: 두 번째 선택된 레포지토리
-    func beforeSendingInfo(firstRepo: String, secondRepo: String){
-        firstRepoInfo = []
-        secondRepoInfo = []
-        firstRepoUserInfo = []
-        secondRepoUserInfo = []
+    func beforeSendingInfo(firstRepo: String, secondRepo: String) -> Observable<CompareUserModel> {
         let url = APIURL.apiUrl.compareBeforeAPI(ip: ip)
         let body = ["firstRepo": firstRepo, "secondRepo": secondRepo]
+        var firstRepoUserInfo: [FirstRepoResult] = []   // 첫 번째 레포 내부 유저 리스트
+        var secondRepoUserInfo: [SecondRepoResult] = []  // 두 번째 레포 내부 유저 리스트
         
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+        return Observable.create(){ observer in
             AF.request(url,
                        method: .post,
                        parameters: body,
@@ -39,25 +33,31 @@ final class CompareService{
                        headers: ["Content-type": "application/json"])
             .validate(statusCode: 200..<201)
             .responseDecodable(of: CompareUserDecodingModel.self) { response in
-//                print("response USER: \(response)")
+                print("response USER: \(response)")
                 guard let responseResult = response.value else {return}
+                
                 if responseResult.firstResult.count > 0 || responseResult.secondResult.count > 0 {
-                    timer.invalidate()
-                    
                     for data in responseResult.firstResult{
-                        self.firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+                        firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
                     }
-                    
                     for data in responseResult.secondResult{
-                        self.secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+                        secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
                     }
-                    self.repoUserInfo?.firstResult = self.firstRepoUserInfo
-                    self.repoUserInfo?.secondResult = self.secondRepoUserInfo
-                    self.getCompareInfo(firstRepo: firstRepo, secondRepo: secondRepo)
+                    let compareUser = CompareUserModel(firstResult: firstRepoUserInfo, secondResult: secondRepoUserInfo)
+                    observer.onNext(compareUser)
+//                    self.getCompareInfo(firstRepo: firstRepo, secondRepo: secondRepo)
                 }
             }
-        })
+            return Disposables.create()
+        }
+        
     }
+    
+    
+    
+    
+    
+    
     
     /// 레포지토리 상세 정보를 요청하는 함수
     /// - Parameters:
