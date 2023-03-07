@@ -47,7 +47,7 @@
                 android:text="Wallet 인증"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/wallet_finish"
@@ -59,7 +59,7 @@
                 android:text="Wallet 인증 완료"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
