@@ -10,30 +10,19 @@ import RxSwift
 import RxCocoa
 
 final class ALLUserInfoViewModel{
-    
-    // UserInfoService 통신 데이터
-    
-    var sortedDoneUserArray: [UserInfoModel]?
-    var allRankingobservable: BehaviorSubject<[UserInfoModel]> = BehaviorSubject(value: [])
+    let service = ALLUserInfoService()
+    let disposeBag = DisposeBag()
     var pageCount = 0
-    // 커밋에 대해서 내림차순 정렬
-    private func sortedAboutCommits(){
-        var userInfoArray = ALLUserInfoService.sharedData.resultArray
-        sortedDoneUserArray = userInfoArray.sorted { return $0.tokens > $1.tokens }
+    
+    func getAllRanking() -> Observable<[UserInfoModel]>{
+        return Observable.create(){ observer in
+            self.service.getMemberInfo(page: self.pageCount, size: 30)
+                .subscribe(onNext: { rankingList in
+                    observer.onNext(rankingList)
+                })
+                .disposed(by: self.disposeBag)
+            self.pageCount += 1
+            return Disposables.create()
+        }
     }
-    
-    func getDataRanking(){
-        ALLUserInfoService.sharedData.getMemberInfo(page: pageCount, size: 20)
-        pageCount += 1
-    }
-    
-    func userInfoIntoObeservable(){
-        allRankingobservable = BehaviorSubject(value: [])
-        sortedAboutCommits()
-        guard let sortedDoneUserArray = sortedDoneUserArray else { return }
-        allRankingobservable.onNext(sortedDoneUserArray)
-    }
-    
-    
-    
 }

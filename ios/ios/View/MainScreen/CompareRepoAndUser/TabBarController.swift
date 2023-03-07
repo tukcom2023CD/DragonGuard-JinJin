@@ -9,9 +9,9 @@ import Foundation
 import UIKit
 
 final class TabBarController : UITabBarController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.tabBar.tintColor = .black
         let firstView = CompareRepositoryController()
         firstView.tabBarItem.image = UIImage(systemName: "book.closed")

@@ -11,26 +11,20 @@ import RxCocoa
 
 // 메인에 사용되는 자신의 랭킹, 커밋 개수, 이슈 개수,
 final class MainViewModel {
-    var myInfoObservable = BehaviorSubject(value: MainModel(id: 0,
-                                                            name: "",
-                                                            githubId: "",
-                                                            commits: 0,
-                                                            tier: "",
-                                                            authStep: "",
-                                                            profileImage: "",
-                                                            rank: 0,
-                                                            tokenAmount: 0))
+    let service = MainService()
+    let disposeBag = DisposeBag()
     
-    // 서버로부터 api 데이터 받아옴
-    func getMyInfo(){
-        MainService.mainService.getUserInfo()
-    }
-    
-    // view에 적용
-    func myInfoIntoObservable(){
-        let resultArray = MainService.mainService.result
-        guard let result = resultArray else { return }
-        self.myInfoObservable.onNext(result)
+    func getMyInformation(id: Int) -> Observable<MainModel>{
+        return Observable<MainModel>.create(){ observer in
+            
+            self.service.getUserInfo(id: id)
+                .subscribe(onNext: { info in
+                    observer.onNext(info)
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
     }
     
 }

@@ -16,9 +16,7 @@ final class AllRankingController: UIViewController{
     let deviceHeight = UIScreen.main.bounds.height
     let disposeBag = DisposeBag()
     let userInfoViewModel = ALLUserInfoViewModel()
-    var resultData = [UserInfoModel]()
-    var fetchingMore = false
-    var checkData = false
+    var rankingList = [UserInfoModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +28,6 @@ final class AllRankingController: UIViewController{
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        resultData = []
-        userInfoViewModel.getDataRanking()
         self.getData()
     }
     
@@ -60,29 +56,19 @@ final class AllRankingController: UIViewController{
         
         // tableview 설치
         self.repoTableView.register(WatchRankingTableView.self, forCellReuseIdentifier: WatchRankingTableView.identifier)
+        settingAutoLayout()
     }
     
-    func getData(){
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
-            self.userInfoViewModel.userInfoIntoObeservable()
-            
-            self.userInfoViewModel.allRankingobservable
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: {
-                        for data in $0{
-                            self.resultData.append(data)
-                        }
-                    })
-                    .disposed(by: self.disposeBag)
-                
-                self.fetchingMore = false
-                self.checkData = true
-                if self.resultData.count > 0{
-                    timer.invalidate()
-                    self.addUItoView()
-                    self.settingAutoLayout()
+    private func getData(){
+        self.rankingList = []
+        self.userInfoViewModel.getAllRanking()
+            .subscribe(onNext: { rankingList in
+                for info in rankingList{
+                    self.rankingList.append(info)
                 }
+                self.addUItoView()
             })
+            .disposed(by: self.disposeBag)
     }
     
     /*
@@ -107,7 +93,7 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier, for: indexPath) as? WatchRankingTableView ?? WatchRankingTableView()
         
-        cell.prepare(rank: indexPath.section + 1, text: self.resultData[indexPath.section].githubId, count: self.resultData[indexPath.section].tokens)
+        cell.prepare(rank: indexPath.section + 1, text: self.rankingList[indexPath.section].githubId, count: self.rankingList[indexPath.section].tokens)
         
         cell.layer.cornerRadius = 15
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
@@ -125,13 +111,8 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
         let position = scrollView.contentOffset.y
         
         if position > (repoTableView.contentSize.height - scrollView.frame.size.height){
-            if self.resultData.count % 20 == 0{
-                if !fetchingMore && checkData{
-                    fetchingMore = true
-                    self.userInfoViewModel.getDataRanking()
-                    self.getData()
-                }
-                
+            if self.rankingList.count % 30 == 0{
+                self.getData()
             }
         }
     }
@@ -147,6 +128,6 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
     
     // section 개수
-    func numberOfSections(in tableView: UITableView) -> Int { return self.resultData.count }
+    func numberOfSections(in tableView: UITableView) -> Int { return self.rankingList.count }
 }
 

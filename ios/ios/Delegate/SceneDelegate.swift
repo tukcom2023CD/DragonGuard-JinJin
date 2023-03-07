@@ -14,26 +14,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        
-        if let savedData = UserDefaults.standard.object(forKey: "UserDBId") as? Data{
-            if let savedObject = try? JSONDecoder().decode(UserDBId.self, from: savedData){
-                print("before Root View")
-                print(savedObject)
-                if savedObject.id != 0 && savedObject.address != ""{
-                    let rootView = MainController()
-                    let nc = UINavigationController(rootViewController: rootView)
-                    window?.rootViewController = nc
-                    window?.makeKeyAndVisible()
-                }
-            }
-        }
-        else{
-            let rootView = KlipLoginController()
-            let nc = UINavigationController(rootViewController: rootView)
-            window?.rootViewController = nc
-            window?.makeKeyAndVisible()
-        }
-        
+//
+//        if let savedData = UserDefaults.standard.object(forKey: "UserDBId") as? Data{
+//            if let savedObject = try? JSONDecoder().decode(UserDBId.self, from: savedData){
+//                print("before Root View")
+//                print(savedObject)
+//                if savedObject.id != 0 && savedObject.address != ""{
+//                    let rootView = MainController()
+//                    let nc = UINavigationController(rootViewController: rootView)
+//                    window?.rootViewController = nc
+//                    window?.makeKeyAndVisible()
+//                }
+//            }
+//        }
+//        else{
+//            let rootView = KlipLoginController()
+//            let nc = UINavigationController(rootViewController: rootView)
+//            window?.rootViewController = nc
+//            window?.makeKeyAndVisible()
+//        }
+        let rootView = KlipLoginController()
+        let nc = UINavigationController(rootViewController: rootView)
+        window?.rootViewController = nc
+        window?.makeKeyAndVisible()
  
      
     }

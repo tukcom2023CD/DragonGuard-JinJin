@@ -7,34 +7,35 @@
 
 import Foundation
 import Alamofire
+import RxSwift
 
 final class SearchPageService {
     let ip = APIURL.ip
-    var resultArray = [SearchPageResultModel]() // 결과 저장할 변수
-    var timerThread: Timer?
-    var checkData:Bool = false
     
     /// 검색 API 통신하는 함수
     /// - Parameters:
     ///   - searchWord: 사용자가 검색한 단어
     ///   - page: 검색 결과 페이지
-    func getSearchResult(searchWord: String,page: Int) {
-        resultArray = []
-        let url = APIURL.testUrl(ip: ip, page: page, searchWord: searchWord)
-        checkData = false
+    func getSearchResult(searchWord: String,page: Int, type: String) -> Observable<[SearchPageResultModel]>{
+        let url = APIURL.apiUrl.getSearchResult(ip: ip, title: searchWord,page: page, type: type)
         
-        AF.request(url, method: .get)
-            .validate(statusCode: 200..<201)
-            .responseDecodable(of: [SearchPageDecodingData].self) { response in
-                guard let responseResult = response.value else {return}
-                if(responseResult.count != 0 && self.resultArray.count == 0){
-                    self.checkData = true
-                    for data in responseResult {
-                        let dataBundle = SearchPageResultModel(name: data.name,id: data.id)
-                        self.resultArray.append(dataBundle)
+        return Observable.create(){ observer in
+            AF.request(url, method: .get)
+                .validate(statusCode: 200..<201)
+                .responseDecodable(of: [SearchPageDecodingData].self) { response in
+                    guard let responseResult = response.value else {return}
+                    var resultArray = [SearchPageResultModel]() // 결과 저장할 변수
+                    
+                    if(responseResult.count != 0 && resultArray.count == 0){
+                        for data in responseResult {
+                            let dataBundle = SearchPageResultModel(name: data.name,id: data.id)
+                            resultArray.append(dataBundle)
+                        }
+                        observer.onNext(resultArray)
                     }
                 }
-            }
+            
+            return Disposables.create()
+        }
     }
-    
 }
