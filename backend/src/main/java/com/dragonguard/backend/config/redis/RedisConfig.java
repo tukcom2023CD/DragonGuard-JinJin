@@ -55,7 +55,7 @@ public class RedisConfig {
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(cf).cacheDefaults(redisCacheConfiguration).build();
     }
 
-    @Scheduled(fixedRate = 10 * 60 * 3)
+    @Scheduled(fixedRate = 1000 * 60 * 60 * 3) // 3시간
     public void evictAll() {
         cacheManager(redisConnectionFactory()).getCacheNames().stream()
                 .forEach(cacheName -> cacheManager(redisConnectionFactory()).getCache(cacheName).clear());
