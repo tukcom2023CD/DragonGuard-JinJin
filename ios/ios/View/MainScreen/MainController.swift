@@ -122,6 +122,7 @@ final class MainController: UIViewController {
     // 유저 이름 누르는 경우 네비게이션 뷰 방식으로 이동
     @objc func settingUIClicked(){
         self.navigationController?.pushViewController(SettingController(), animated: true)
+//        self.navigationController?.pushViewController(LanguageFillteringTableView(), animated: true)
     }
     
     /*

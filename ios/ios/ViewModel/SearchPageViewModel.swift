@@ -10,6 +10,7 @@ import RxSwift
 import Foundation
 
 final class SearchPageViewModel {
+    static let viewModel = SearchPageViewModel()
     let searchPageService = SearchPageService()
     let disposeBag = DisposeBag()
     var pageCount = 1   //페이지 수

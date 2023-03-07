@@ -16,7 +16,6 @@ final class SearchPageController: UIViewController {
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
     let refreshTable = UIRefreshControl()   //새로 고침 사용
     private let disposeBag = DisposeBag()
-    private let searchViewModel = SearchPageViewModel()
     var searchResultList = [SearchPageResultModel]()
     var searchText = ""         // 검색하는 단어
     var beforePage: String = "" // 이전 View 이름
@@ -80,7 +79,7 @@ final class SearchPageController: UIViewController {
     @objc func refreshing(refresh: UIRefreshControl){ }
     
     private func getData(searchWord: String, type: String, change: Bool){
-        self.searchViewModel.getSearchData(searchWord: searchWord, type: type, change: change)
+        SearchPageViewModel.viewModel.getSearchData(searchWord: searchWord, type: type, change: change)
             .subscribe(onNext: { searchList in
                 for data in searchList{
                     self.searchResultList.append(data)

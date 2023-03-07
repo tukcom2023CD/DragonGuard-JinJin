@@ -40,6 +40,8 @@
 		3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
 		3B80B6DC298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
 		3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B88801F2992881200680F1A /* RepoContributorInfoController.swift */; };
+		3B8C165629B7824A00B881F4 /* LanguageFillteringTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8C165529B7824A00B881F4 /* LanguageFillteringTableView.swift */; };
+		3B8C165829B782CD00B881F4 /* LanguageFillteringTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8C165729B782CD00B881F4 /* LanguageFillteringTableViewCell.swift */; };
 		3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756E3298A15BB00F27094 /* MyRepositoryRankingController.swift */; };
 		3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756E5298A162200F27094 /* MyOrganizationListController.swift */; };
 		3B9756E8298A166300F27094 /* UnivInRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756E7298A166300F27094 /* UnivInRankingController.swift */; };
@@ -128,6 +130,8 @@
 		3B6E075929ABBD64002676DF /* CompareUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareUserModel.swift; sourceTree = "<group>"; };
 		3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansKR-SemiBold.otf"; sourceTree = "<group>"; };
 		3B88801F2992881200680F1A /* RepoContributorInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoController.swift; sourceTree = "<group>"; };
+		3B8C165529B7824A00B881F4 /* LanguageFillteringTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageFillteringTableView.swift; sourceTree = "<group>"; };
+		3B8C165729B782CD00B881F4 /* LanguageFillteringTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageFillteringTableViewCell.swift; sourceTree = "<group>"; };
 		3B9756E3298A15BB00F27094 /* MyRepositoryRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRepositoryRankingController.swift; sourceTree = "<group>"; };
 		3B9756E5298A162200F27094 /* MyOrganizationListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOrganizationListController.swift; sourceTree = "<group>"; };
 		3B9756E7298A166300F27094 /* UnivInRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnivInRankingController.swift; sourceTree = "<group>"; };
@@ -327,6 +331,7 @@
 			children = (
 				3BD6DD21298129B8008C05B2 /* SearchPageController.swift */,
 				3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */,
+				3B8C165429B7821100B881F4 /* Filltering */,
 				3B3CE9D929B46A7E00B2594B /* RepositoryContritubutorInfo */,
 			);
 			path = SearchController;
@@ -363,6 +368,15 @@
 				3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		3B8C165429B7821100B881F4 /* Filltering */ = {
+			isa = PBXGroup;
+			children = (
+				3B8C165529B7824A00B881F4 /* LanguageFillteringTableView.swift */,
+				3B8C165729B782CD00B881F4 /* LanguageFillteringTableViewCell.swift */,
+			);
+			path = Filltering;
 			sourceTree = "<group>";
 		};
 		3B9756E9298A16B200F27094 /* WatchRankingScreen */ = {
@@ -639,6 +653,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B6E075A29ABBD64002676DF /* CompareUserModel.swift in Sources */,
+				3B8C165829B782CD00B881F4 /* LanguageFillteringTableViewCell.swift in Sources */,
 				3B9CF3D2298F997B00495D35 /* UserInfoModel.swift in Sources */,
 				A37AA6EC29A50F7C002812F6 /* CompareRepositoryController.swift in Sources */,
 				3B3CE9DC29B47EDF00B2594B /* UserDBId.swift in Sources */,
@@ -647,6 +662,7 @@
 				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
 				A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */,
 				3BE6AD2D2993904D00B22EBD /* RepoContributorTableView.swift in Sources */,
+				3B8C165629B7824A00B881F4 /* LanguageFillteringTableView.swift in Sources */,
 				A37AA6F829AD0D95002812F6 /* CompareRepoTableViewCell.swift in Sources */,
 				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
 				3B29804729ACCCA000967B6E /* CompareSelectedUserView.swift in Sources */,
