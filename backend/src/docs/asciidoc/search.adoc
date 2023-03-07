@@ -11,3 +11,9 @@
 include::../../../build/generated-snippets/get search result/http-request.adoc[]
 ==== HTTP response
 include::../../../build/generated-snippets/get search result/http-response.adoc[]
+
+=== 필터링을 통한 검색에 대한 결과 조회
+==== HTTP request
+include::../../../build/generated-snippets/get search result by filtering/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/get search result by filtering/http-response.adoc[]

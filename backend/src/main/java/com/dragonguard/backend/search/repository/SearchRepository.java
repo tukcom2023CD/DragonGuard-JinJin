@@ -1,15 +1,18 @@
 package com.dragonguard.backend.search.repository;
 
 import com.dragonguard.backend.search.entity.Search;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.QueryByExampleExecutor;
+import com.dragonguard.backend.search.entity.SearchType;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author 김승진
- * @description 검색 정보를 Redis에 저장 및 조회를 요청하는 클래스
+ * @description 검색 정보를 DB에 CRUD를 요청하는 클래스
  */
 
 @Repository
-public interface SearchRepository extends CrudRepository<Search, String>, QueryByExampleExecutor<Search> {
+public interface SearchRepository extends JpaRepository<Search, Long> {
+    List<Search> findByNameAndTypeAndPage(String name, SearchType type, Integer page);
 }

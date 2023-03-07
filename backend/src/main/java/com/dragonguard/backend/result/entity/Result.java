@@ -1,12 +1,14 @@
 package com.dragonguard.backend.result.entity;
 
+import com.dragonguard.backend.global.BaseTime;
+import com.dragonguard.backend.global.SoftDelete;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.Column;
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
 
 /**
@@ -14,24 +16,29 @@ import java.util.Objects;
  * @description 검색 결과를 담는 Redis Entity
  */
 
-@Data
-@RedisHash("result")
-public class Result implements Serializable {
+@Getter
+@Entity
+@SoftDelete
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Result extends BaseTime {
 
-    @Id
-    private String id;
+    @Id @GeneratedValue
+    private Long id;
 
     @Column(nullable = false)
     private String name;
 
-    @Indexed
-    private String searchId;
+    private Long searchId;
 
     @Builder
-    public Result(String id, String name, String searchId) {
-        this.id = id;
+    public Result(String name, Long searchId) {
         this.name = name;
         this.searchId = searchId;
+    }
+
+    public void update(Result result) {
+        this.name = result.getName();
+        this.searchId = result.getSearchId();
     }
 
     @Override

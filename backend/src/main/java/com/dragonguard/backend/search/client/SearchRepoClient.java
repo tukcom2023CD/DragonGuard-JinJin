@@ -9,8 +9,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriBuilder;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -32,14 +38,7 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
     @Override
     public SearchRepoResponse requestToGithub(SearchRequest request) {
         return webClient.get()
-                .uri(
-                        uriBuilder -> uriBuilder
-                                .path("search")
-                                .path("/" + request.getType().toString().toLowerCase())
-                                .queryParam("q", request.getName())
-                                .queryParam("per_page", 10)
-                                .queryParam("page", request.getPage())
-                                .build())
+                .uri(getUriBuilder(request))
                 .headers(headers -> headers.setBearerAuth(githubProperties.getToken()))
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
@@ -47,6 +46,29 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
                 .bodyToMono(SearchRepoResponse.class)
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
+    }
+
+    private Function<UriBuilder, URI> getUriBuilder(SearchRequest request) {
+        List<String> filters = request.getFilters();
+
+        if(filters == null || filters.isEmpty()) {
+            return uriBuilder -> uriBuilder
+                    .path("search")
+                    .path("/" + request.getType().toString().toLowerCase())
+                    .queryParam("q", request.getName())
+                    .queryParam("per_page", 10)
+                    .queryParam("page", request.getPage())
+                    .build();
+        }
+        String query = filters.stream().collect(Collectors.joining(" "));
+
+        return uriBuilder -> uriBuilder
+                .path("search")
+                .path("/" + request.getType().toString().toLowerCase())
+                .queryParam("q", request.getName().concat(" " + query))
+                .queryParam("per_page", 10)
+                .queryParam("page", request.getPage())
+                .build();
     }
 
     private WebClient generateWebClient() {

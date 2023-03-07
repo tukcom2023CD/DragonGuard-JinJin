@@ -1,8 +1,12 @@
 package com.dragonguard.backend.search.mapper;
 
 import com.dragonguard.backend.search.dto.request.SearchRequest;
+import com.dragonguard.backend.search.entity.Filter;
 import com.dragonguard.backend.search.entity.Search;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -13,9 +17,22 @@ import org.springframework.stereotype.Component;
 public class SearchMapper {
     public Search toEntity(SearchRequest searchRequest) {
         return Search.builder()
-                .searchWord(searchRequest.getName())
-                .searchType(searchRequest.getType())
+                .name(searchRequest.getName())
+                .type(searchRequest.getType())
                 .page(searchRequest.getPage())
+                .filters(toFilterList(searchRequest.getFilters()))
+                .build();
+    }
+
+    private List<Filter> toFilterList(List<String> filters) {
+        return filters.stream()
+                .map(this::toFilterEntity)
+                .collect(Collectors.toList());
+    }
+
+    private Filter toFilterEntity(String filter) {
+        return Filter.builder()
+                .filter(filter)
                 .build();
     }
 }
