@@ -76,7 +76,7 @@ public class SearchService {
     }
 
     public Search findOrSaveSearch(SearchRequest searchRequest) {
-        if (searchRequest.getFilters().isEmpty()) {
+        if (searchRequest.getFilters() == null || searchRequest.getFilters().isEmpty()) {
             return searchRepository
                     .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
                     .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
@@ -96,7 +96,7 @@ public class SearchService {
     }
 
     public Search getEntityByRequest(SearchRequest searchRequest) {
-        if (searchRequest.getFilters().isEmpty()) {
+        if (searchRequest.getFilters() == null || searchRequest.getFilters().isEmpty()) {
             return searchRepository
                     .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
                     .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
@@ -112,7 +112,7 @@ public class SearchService {
                 return search;
             }
         }
-        
+
         throw new EntityNotFoundException();
     }
 
