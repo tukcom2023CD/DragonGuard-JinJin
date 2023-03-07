@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 @Component
 public class SearchMapper {
     public Search toEntity(SearchRequest searchRequest) {
+        List<String> filters = searchRequest.getFilters();
         return Search.builder()
                 .name(searchRequest.getName())
                 .type(searchRequest.getType())
                 .page(searchRequest.getPage())
-                .filters(toFilterList(searchRequest.getFilters()))
+                .filters(filters == null || filters.isEmpty() ? List.of() : toFilterList(filters))
                 .build();
     }
 
