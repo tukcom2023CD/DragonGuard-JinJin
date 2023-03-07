@@ -9,17 +9,17 @@ import Foundation
 
 
 struct SearchPageDecodingData: Codable {
-    var id: String
+    var id: Int
     var name: String
 }
 
 
 final class SearchPageResultModel {
-    var id: String
+    var id: Int
     var name: String
     
-    init(name: String,id: String) {
+    init(name: String,id: Int) {
         self.id = id
         self.name = name
-    }
+    } 
 }

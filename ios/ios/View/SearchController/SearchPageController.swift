@@ -20,7 +20,7 @@ final class SearchPageController: UIViewController {
     var searchResultList = [SearchPageResultModel]()
     var searchText = ""         // 검색하는 단어
     var beforePage: String = "" // 이전 View 이름
-    var isInfiniteScroll = true // 무한 스크롤 1번만 로딩되게 확인하는 변수
+    var isInfiniteScroll = false // 무한 스크롤 1번만 로딩되게 확인하는 변수
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +30,7 @@ final class SearchPageController: UIViewController {
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         searchResultList = []
         addUItoView()   //View에 적용할 UI 작성
-        resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
+        
         initRefreshTable()  //새로고침 함수
         
     }
@@ -101,11 +101,6 @@ final class SearchPageController: UIViewController {
     private func addUItoView(){
         
         self.navigationItem.titleView = searchUI
-        self.view.addSubview(resultTableView)   //tableview 적용
-        
-        // 결과 출력하는 테이블 뷰 적용
-        self.resultTableView.dataSource = self
-        self.resultTableView.delegate = self
         
         // searchControllerDelegate
         self.searchUI.delegate = self
@@ -113,6 +108,14 @@ final class SearchPageController: UIViewController {
         // tableview 설치
         self.resultTableView.register(SearchPageTableView.self, forCellReuseIdentifier: SearchPageTableView.identifier)
         
+    }
+    private func addTableView(){
+        self.view.addSubview(resultTableView)   //tableview 적용
+        
+        // 결과 출력하는 테이블 뷰 적용
+        self.resultTableView.dataSource = self
+        self.resultTableView.delegate = self
+        resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
     }
     
     /*
@@ -152,6 +155,8 @@ extension SearchPageController: UISearchBarDelegate{
         searchUI.resignFirstResponder()
         
         guard let searchText = searchUI.text else{ return }
+        addTableView()
+        
         self.searchText = searchText
         getData(searchWord: searchText, type: "REPOSITORIES", change: true)    // API 감지 스레드
     }
@@ -165,7 +170,7 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
     // tableview cell 구성
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SearchPageTableView.identifier,for: indexPath ) as! SearchPageTableView
-        
+        self.isInfiniteScroll = true
         cell.prepare(text: searchResultList[indexPath.section].name)
         cell.layer.cornerRadius = 15
         cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
