@@ -114,9 +114,15 @@ class FilterDialog(private val languages: ArrayList<String>,
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        filterMap["stars"] = star
-        filterMap["forks"] = fork
-        filterMap["topics"] = topic
+        if(star != "") {
+            filterMap["stars"] = star
+        }
+        if(fork != "") {
+            filterMap["forks"] = fork
+        }
+        if(topic != "") {
+            filterMap["topics"] = topic
+        }
         option.performClick()
 //        Toast.makeText(requireContext(), "star : $star, fork : $fork topics : $topic", Toast.LENGTH_SHORT).show()
     }

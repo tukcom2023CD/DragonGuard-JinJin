@@ -90,7 +90,7 @@ class SearchActivity : AppCompatActivity() {
         binding.searchIcon.setOnClickListener {
             checkLanguage()
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
-                if (lastSearch != viewmodel.onSearchListener.value!!) {
+                if (lastSearch != viewmodel.onSearchListener.value!! || filterLanguage.isNotEmpty() || filterOptions.isNotEmpty()) {
                     repoNames.clear()
                     binding.searchResult.visibility = View.GONE
                     count = 0
@@ -103,13 +103,14 @@ class SearchActivity : AppCompatActivity() {
                 binding.searchResult.visibility = View.VISIBLE
                 binding.searchName.isFocusable = true
             } else {
-                Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
                 closeKeyboard()
             }
         }
 
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
         binding.searchName.setOnEditorActionListener { textView, i, keyEvent ->
+            checkLanguage()
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
                     Log.d("enter click", "edittext 클릭함")
@@ -118,7 +119,7 @@ class SearchActivity : AppCompatActivity() {
                     binding.searchName.setSelection(binding.searchName.length())
                     if (search.isNotEmpty()) {
                         closeKeyboard()
-                        if (lastSearch != viewmodel.onSearchListener.value!!) {
+                        if (lastSearch != viewmodel.onSearchListener.value!! || filterLanguage.isNotEmpty() || filterOptions.isNotEmpty()) {
                             repoNames.clear()
                             binding.searchResult.visibility = View.GONE
                             count = 0
@@ -147,6 +148,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun checkLanguage() {
+        filterLanguage = StringBuilder()
+        filterOptions = StringBuilder()
         val checked = arrayListOf<String>()
         languagesCheckBox.forEachIndexed { index, b ->
             if(languagesCheckBox[index]){
@@ -174,8 +177,6 @@ class SearchActivity : AppCompatActivity() {
 //        count = 0
         Toast.makeText(applicationContext, "filters:$filterOptions", Toast.LENGTH_SHORT).show()
         Toast.makeText(applicationContext, "filters:$filterLanguage", Toast.LENGTH_SHORT).show()
-        filterOptions = StringBuilder()
-        filterLanguage = StringBuilder()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -215,23 +216,89 @@ class SearchActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getSearchRepoResult(name, count)
-            }
-            val result = resultDeferred.await()
-            delay(1000)
-            if (!checkSearchResult(result)) {
-                val secondDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getSearchRepoResult(name, count)
-                }
-                val second = secondDeferred.await()
-                if (checkSearchResult(second)) {
-                    initRecycler()
+            if(filterLanguage.isNotEmpty()) {
+                if(filterOptions.isNotEmpty()){
+                    filterLanguage.append(",")
+                    filterLanguage.append(filterOptions)
+                    val resultDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getRepositoryNamesWithFilters(name, count, filterLanguage.toString())
+                    }
+                    val result = resultDeferred.await()
+                    delay(1000)
+                    if (!checkSearchResult(result)) {
+                        val secondDeferred = coroutine.async(Dispatchers.IO) {
+                            viewmodel.getRepositoryNamesWithFilters(name, count, filterLanguage.toString())
+                        }
+                        val second = secondDeferred.await()
+                        if (checkSearchResult(second)) {
+                            initRecycler()
+                        } else {
+                            binding.progressBar.visibility = View.GONE
+                        }
+                    } else {
+                        initRecycler()
+                    }
                 } else {
-                    binding.progressBar.visibility = View.GONE
+                    val resultDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getRepositoryNamesWithFilters(name, count, filterLanguage.toString())
+                    }
+                    val result = resultDeferred.await()
+                    delay(1000)
+                    if (!checkSearchResult(result)) {
+                        val secondDeferred = coroutine.async(Dispatchers.IO) {
+                            viewmodel.getRepositoryNamesWithFilters(name, count, filterLanguage.toString())
+                        }
+                        val second = secondDeferred.await()
+                        if (checkSearchResult(second)) {
+                            initRecycler()
+                        } else {
+                            binding.progressBar.visibility = View.GONE
+                        }
+                    } else {
+                        initRecycler()
+                    }
                 }
             } else {
-                initRecycler()
+                if(filterOptions.isNotEmpty()) {
+                    val resultDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getRepositoryNamesWithFilters(name, count, filterOptions.toString())
+                    }
+                    val result = resultDeferred.await()
+                    delay(1000)
+                    if (!checkSearchResult(result)) {
+                        val secondDeferred = coroutine.async(Dispatchers.IO) {
+                            viewmodel.getRepositoryNamesWithFilters(name, count, filterOptions.toString())
+                        }
+                        val second = secondDeferred.await()
+                        if (checkSearchResult(second)) {
+                            initRecycler()
+                        } else {
+                            binding.progressBar.visibility = View.GONE
+                        }
+                    } else {
+                        initRecycler()
+                    }
+
+                } else {
+                    val resultDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getSearchRepoResult(name, count)
+                    }
+                    val result = resultDeferred.await()
+                    delay(1000)
+                    if (!checkSearchResult(result)) {
+                        val secondDeferred = coroutine.async(Dispatchers.IO) {
+                            viewmodel.getSearchRepoResult(name, count)
+                        }
+                        val second = secondDeferred.await()
+                        if (checkSearchResult(second)) {
+                            initRecycler()
+                        } else {
+                            binding.progressBar.visibility = View.GONE
+                        }
+                    } else {
+                        initRecycler()
+                    }
+                }
             }
         }
     }
