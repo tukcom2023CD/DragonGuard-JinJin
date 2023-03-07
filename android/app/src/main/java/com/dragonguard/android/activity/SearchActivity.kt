@@ -44,6 +44,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var filterDialog : FilterDialog
     private var filterMap = mutableMapOf<String,String>()
     private var filterLanguage = StringBuilder()
+    private var filterOptions = StringBuilder()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -153,7 +154,6 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 //        Log.d("filters", "filters: ${filterMap["stars"]}")
-//        Toast.makeText(applicationContext, "filters: $filterMap", Toast.LENGTH_SHORT).show()
 //        Toast.makeText(applicationContext, "index : $checked", Toast.LENGTH_SHORT).show()
         checked.forEachIndexed { index, s ->
             if(index != checked.size - 1) {
@@ -162,7 +162,19 @@ class SearchActivity : AppCompatActivity() {
                 filterLanguage.append(checked[index])
             }
         }
-        Toast.makeText(applicationContext, "filters: $filterLanguage", Toast.LENGTH_SHORT).show()
+        var count = 0
+        filterMap.forEach {
+            if(count < filterMap.size-1) {
+                filterOptions.append("${it.key}:${it.value},")
+                count++
+            } else {
+                filterOptions.append("${it.key}:${it.value}")
+            }
+        }
+//        count = 0
+        Toast.makeText(applicationContext, "filters:$filterOptions", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "filters:$filterLanguage", Toast.LENGTH_SHORT).show()
+        filterOptions = StringBuilder()
         filterLanguage = StringBuilder()
     }
 
