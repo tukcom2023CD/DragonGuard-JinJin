@@ -20,7 +20,9 @@ import com.dragonguard.android.recycleradapter.LanguagesAdapter
 import com.dragonguard.android.recycleradapter.VerticalItemDecorator
 
 class FilterDialog(private val languages: ArrayList<String>,
-                   private val languagesCheckBox: ArrayList<Boolean>
+                   private val languagesCheckBox: ArrayList<Boolean>,
+                   private val option: ImageView,
+                   private val filterMap: MutableMap<String, String>
 ): DialogFragment(){
     private lateinit var languagesAdapter: LanguagesAdapter
     private lateinit var recyclerView : RecyclerView
@@ -28,11 +30,9 @@ class FilterDialog(private val languages: ArrayList<String>,
     var fork = ""
     var topic = ""
     private lateinit var search: View
-    private lateinit var option: ImageView
 
     override fun onCreateDialog(savedInstance: Bundle?): Dialog {
         search = layoutInflater.inflate(R.layout.activity_search, null)
-        option = search.findViewById<ImageView>(R.id.option_icon)
         val v = layoutInflater.inflate(R.layout.filter_dialog, null)
         recyclerView = v.findViewById(R.id.languages_filter)
         val maindlgBuilder: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(    // 메인 다이얼로그
@@ -57,40 +57,56 @@ class FilterDialog(private val languages: ArrayList<String>,
         }
         choose.setOnClickListener {
             when(starGroup.checkedRadioButtonId) {
-                R.id.star_asc -> {
-                    star = "asc"
+                R.id.star_range0-> {
+                    star = "0..9"
                 }
-                R.id.star_desc -> {
-                    star = "desc"
+                R.id.star_range1 -> {
+                    star = "10..49"
+                }
+                R.id.star_range2 -> {
+                    star = "50..99"
+                }
+                R.id.star_range3 -> {
+                    star = "100..499"
+                }
+                R.id.star_range4 -> {
+                    star = ">=500"
                 }
             }
             when(forkGroup.checkedRadioButtonId) {
-                R.id.fork_asc -> {
-                    fork = "asc"
+                R.id.fork_range0 -> {
+                    fork = "0..9"
                 }
-                R.id.fork_desc -> {
-                    fork= "desc"
+                R.id.fork_range1 -> {
+                    fork= "10..49"
+                }
+                R.id.fork_range2 -> {
+                    fork= "50..99"
+                }
+                R.id.fork_range3 -> {
+                    fork= "100..499"
+                }
+                R.id.fork_range4 -> {
+                    fork= ">=500"
                 }
             }
             when(topicGroup.checkedRadioButtonId) {
-                R.id.zero_topic -> {
+                R.id.topic0 -> {
                     topic = "0"
                 }
-                R.id.one_topic -> {
+                R.id.topic1 -> {
                     topic = "1"
                 }
-                R.id.two_topics -> {
+                R.id.topic2 -> {
                     topic = "2"
                 }
-                R.id.three_topics -> {
+                R.id.topic3 -> {
                     topic = "3"
                 }
-                R.id.fourormore_topics -> {
-                    topic = "4~"
+                R.id.topic_over4 -> {
+                    topic = ">=4"
                 }
             }
-            option.performClick()
-            Toast.makeText(requireContext(), "star : $star, fork : $fork topics : $topic", Toast.LENGTH_SHORT).show()
             dlg.cancel()
         }
         return dlg
@@ -98,8 +114,11 @@ class FilterDialog(private val languages: ArrayList<String>,
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
+        filterMap["stars"] = star
+        filterMap["forks"] = fork
+        filterMap["topics"] = topic
         option.performClick()
-        Toast.makeText(requireContext(), "star : $star, fork : $fork topics : $topic", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(requireContext(), "star : $star, fork : $fork topics : $topic", Toast.LENGTH_SHORT).show()
     }
 
 

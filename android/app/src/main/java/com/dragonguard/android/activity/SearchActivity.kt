@@ -42,6 +42,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var languagesCheckBox: ArrayList<Boolean>
     var viewmodel = Viewmodel()
     private lateinit var filterDialog : FilterDialog
+    private var filterMap = mutableMapOf<String,String>()
+    private var filterLanguage = StringBuilder()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -62,8 +64,8 @@ class SearchActivity : AppCompatActivity() {
             languagesCheckBox.add(false)
         }
 //        Toast.makeText(applicationContext, "크기 : ${popularLanguages.size}", Toast.LENGTH_SHORT).show()
-        Toast.makeText(applicationContext, "checkbox : ${languagesCheckBox.size}", Toast.LENGTH_SHORT).show()
-        filterDialog = FilterDialog(popularLanguages, languagesCheckBox)
+//        Toast.makeText(applicationContext, "checkbox : ${languagesCheckBox.size}", Toast.LENGTH_SHORT).show()
+        filterDialog = FilterDialog(popularLanguages, languagesCheckBox, binding.optionIcon, filterMap)
 //        검색 옵션 구현
         viewmodel.onOptionListener.observe(this, Observer {
 
@@ -147,10 +149,21 @@ class SearchActivity : AppCompatActivity() {
         val checked = arrayListOf<String>()
         languagesCheckBox.forEachIndexed { index, b ->
             if(languagesCheckBox[index]){
-                checked.add(popularLanguages[index])
+                checked.add("language:"+popularLanguages[index])
             }
         }
-        Toast.makeText(applicationContext, "index : $checked", Toast.LENGTH_SHORT).show()
+//        Log.d("filters", "filters: ${filterMap["stars"]}")
+//        Toast.makeText(applicationContext, "filters: $filterMap", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "index : $checked", Toast.LENGTH_SHORT).show()
+        checked.forEachIndexed { index, s ->
+            if(index != checked.size - 1) {
+                filterLanguage.append("${checked[index]},")
+            } else {
+                filterLanguage.append(checked[index])
+            }
+        }
+        Toast.makeText(applicationContext, "filters: $filterLanguage", Toast.LENGTH_SHORT).show()
+        filterLanguage = StringBuilder()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

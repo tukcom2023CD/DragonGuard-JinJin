@@ -14,72 +14,153 @@
             android:id="@+id/languages_filter"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2.5"
+            android:layout_weight="2.25"
             android:orientation="vertical"
             tools:listitem="@layout/language_list" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_weight="1.5"
+            android:orientation="vertical"
+            android:weightSum="5">
 
-            <RadioGroup
-                android:id="@+id/group_star"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="2.5"
-                android:gravity="center"
                 android:orientation="vertical">
 
-                <RadioButton
-                    android:id="@+id/star_asc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:textSize="20sp"
                     android:fontFamily="@font/ibm_semibold"
-                    android:text="Star 수 오름차순"
-                    android:textSize="20dp" />
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:text="star 수"/>
+                <RadioGroup
+                    android:id="@+id/group_star"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/star_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:text="Star 수 내림차순"
-                    android:textSize="20dp" />
-            </RadioGroup>
+                    <RadioButton
+                        android:id="@+id/star_range0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="0~9"
+                        android:textSize="17dp" />
 
-            <RadioGroup
-                android:id="@+id/group_fork"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                    <RadioButton
+                        android:id="@+id/star_range1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="10~49"
+                        android:textSize="17sp" />
+                    <RadioButton
+                        android:id="@+id/star_range2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="50~99"
+                        android:textSize="17dp" />
+                    <RadioButton
+                        android:id="@+id/star_range3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="100~499"
+                        android:textSize="17dp" />
+                    <RadioButton
+                        android:id="@+id/star_range4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="500~"
+                        android:textSize="17dp" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="2.5"
-                android:gravity="center"
                 android:orientation="vertical">
 
-                <RadioButton
-                    android:id="@+id/fork_asc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:textSize="20sp"
                     android:fontFamily="@font/ibm_semibold"
-                    android:text="Fork 수 오름차순"
-                    android:textSize="20dp" />
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:text="fork 수"/>
 
-                <RadioButton
-                    android:id="@+id/fork_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:text="Fork 수 내림차순"
-                    android:textSize="20dp" />
-            </RadioGroup>
+                <RadioGroup
+                    android:id="@+id/group_fork"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2.5"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <RadioButton
+                        android:id="@+id/fork_range0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="0~9"
+                        android:textSize="17sp" />
+
+                    <RadioButton
+                        android:id="@+id/fork_range1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="10~49"
+                        android:textSize="17dp" />
+
+                    <RadioButton
+                        android:id="@+id/fork_range2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="50~99"
+                        android:textSize="17dp" />
+
+                    <RadioButton
+                        android:id="@+id/fork_range3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="100~499"
+                        android:textSize="17dp" />
+
+                    <RadioButton
+                        android:id="@+id/fork_range4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="500~"
+                        android:textSize="17dp" />
+                </RadioGroup>
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.75"
             android:orientation="vertical"
             android:weightSum="5">
 
@@ -91,7 +172,7 @@
                 android:gravity="center"
                 android:text="topics 수"
                 android:textColor="@color/black"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
             <RadioGroup
                 android:id="@+id/group_topics"
@@ -102,45 +183,44 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/zero_topic"
+                    android:id="@+id/topic0"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/ibm_semibold"
                     android:text="0"
-                    android:textSize="20dp" />
+                    android:textSize="17sp" />
 
                 <RadioButton
-                    android:id="@+id/one_topic"
+                    android:id="@+id/topic1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/ibm_semibold"
                     android:text="1"
-                    android:textSize="20dp" />
+                    android:textSize="17sp" />
 
                 <RadioButton
-                    android:id="@+id/two_topics"
+                    android:id="@+id/topic2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/ibm_semibold"
                     android:text="2"
-                    android:textSize="20dp" />
+                    android:textSize="17sp" />
 
                 <RadioButton
-                    android:id="@+id/three_topics"
+                    android:id="@+id/topic3"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/ibm_semibold"
                     android:text="3"
-                    android:textSize="20dp" />
+                    android:textSize="17sp" />
 
                 <RadioButton
-                    android:id="@+id/fourormore_topics"
+                    android:id="@+id/topic_over4"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/ibm_semibold"
                     android:text="4~"
-                    android:textSize="20dp" />
-
+                    android:textSize="17sp" />
 
 
             </RadioGroup>
