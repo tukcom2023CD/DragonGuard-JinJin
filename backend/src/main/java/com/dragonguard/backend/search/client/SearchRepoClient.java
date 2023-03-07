@@ -51,7 +51,7 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
     private Function<UriBuilder, URI> getUriBuilder(SearchRequest request) {
         List<String> filters = request.getFilters();
 
-        if(filters.isEmpty()) {
+        if(filters == null || filters.isEmpty()) {
             return uriBuilder -> uriBuilder
                     .path("search")
                     .path("/" + request.getType().toString().toLowerCase())

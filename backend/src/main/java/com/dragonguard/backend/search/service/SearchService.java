@@ -11,22 +11,21 @@ import com.dragonguard.backend.search.dto.request.KafkaSearchRequest;
 import com.dragonguard.backend.search.dto.request.SearchRequest;
 import com.dragonguard.backend.search.dto.response.SearchRepoResponse;
 import com.dragonguard.backend.search.dto.response.SearchUserResponse;
+import com.dragonguard.backend.search.entity.Filter;
 import com.dragonguard.backend.search.entity.Search;
 import com.dragonguard.backend.search.entity.SearchType;
 import com.dragonguard.backend.search.mapper.SearchMapper;
 import com.dragonguard.backend.search.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.*;
-import static org.springframework.data.domain.ExampleMatcher.matching;
 
 /**
  * @author 김승진
@@ -56,54 +55,65 @@ public class SearchService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    @Cacheable(value = "results", key = "#searchRequest", cacheManager = "cacheManager")
     public List<ResultResponse> getSearchResultByClient(SearchRequest searchRequest) {
         Search search = findOrSaveSearch(searchRequest);
         List<Result> results = resultRepository.findAllBySearchId(search.getId());
-        if (results.isEmpty()) {
-            Object result = requestClient(searchRequest);
-            if (result instanceof SearchRepoResponse) {
-                return Arrays.asList(((SearchRepoResponse) result).getItems()).stream()
-                        .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
-                        .map(resultMapper::toResponse).collect(Collectors.toList());
-            } else if (result instanceof SearchUserResponse) {
-                return Arrays.asList(((SearchUserResponse) result).getItems()).stream()
-                        .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
-                        .map(resultMapper::toResponse).collect(Collectors.toList());
-            }
+        results.forEach(Result::delete);
+        Object clientResult = requestClient(searchRequest);
+
+        if (clientResult instanceof SearchRepoResponse) {
+            return List.of(((SearchRepoResponse) clientResult).getItems()).stream()
+                    .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
+                    .map(resultMapper::toResponse).collect(Collectors.toList());
+        } else if (clientResult instanceof SearchUserResponse) {
+            return List.of(((SearchUserResponse) clientResult).getItems()).stream()
+                    .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
+                    .map(resultMapper::toResponse).collect(Collectors.toList());
         }
-        return results.stream()
-                .map(resultMapper::toResponse)
-                .collect(Collectors.toList());
+        return List.of();
     }
 
     public Search findOrSaveSearch(SearchRequest searchRequest) {
-        Search search = searchMapper.toEntity(searchRequest);
-        ExampleMatcher exampleMatcher = matching()
-                .withIgnorePaths("id")
-                .withMatcher("name", exact())
-                .withMatcher("page", exact())
-                .withMatcher("type", exact().ignoreCase());
+        if (searchRequest.getFilters().isEmpty()) {
+            return searchRepository
+                    .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
+                    .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
+                    .orElseGet(() -> searchRepository.save(searchMapper.toEntity(searchRequest)));
+        }
+        List<Search> searches = searchRepository
+                .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
 
-        if (!search.getFilters().isEmpty()) {
-            exampleMatcher = exampleMatcher.withMatcher("filters", exact());
+        List<String> filters = searchRequest.getFilters();
+        for (Search search : searches) {
+            if (search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList()).containsAll(filters)) {
+                return search;
+            }
         }
 
-        return searchRepository
-                .findOne(Example.of(search, exampleMatcher))
-                .orElseGet(() -> searchRepository.save(searchMapper.toEntity(searchRequest)));
+        return searchRepository.save(searchMapper.toEntity(searchRequest));
     }
 
     public Search getEntityByRequest(SearchRequest searchRequest) {
-        Search search = searchMapper.toEntity(searchRequest);
-        ExampleMatcher exampleMatcher = matching()
-                .withIgnorePaths("id")
-                .withMatcher("name", exact())
-                .withMatcher("page", exact())
-                .withMatcher("type", exact().ignoreCase());
+        if (searchRequest.getFilters().isEmpty()) {
+            return searchRepository
+                    .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
+                    .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
+                    .orElseThrow(EntityNotFoundException::new);
+        }
 
-        return searchRepository
-                .findOne(Example.of(search, exampleMatcher))
-                .orElseThrow(EntityNotFoundException::new);
+        List<Search> searches = searchRepository
+                .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
+
+        List<String> filters = searchRequest.getFilters();
+        for (Search search : searches) {
+            if (search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList()).containsAll(filters)) {
+                return search;
+            }
+        }
+        
+        throw new EntityNotFoundException();
     }
 
     private void requestScraping(SearchRequest searchRequest) {

@@ -1,6 +1,7 @@
 package com.dragonguard.backend.result.repository;
 
 import com.dragonguard.backend.result.entity.Result;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,6 @@ import java.util.List;
  */
 
 @Repository
-public interface ResultRepository extends CrudRepository<Result, String> {
-    List<Result> findAllBySearchId(String searchId);
+public interface ResultRepository extends JpaRepository<Result, String> {
+    List<Result> findAllBySearchId(Long searchId);
 }

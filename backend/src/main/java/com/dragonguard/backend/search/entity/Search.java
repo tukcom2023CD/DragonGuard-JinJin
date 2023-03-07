@@ -1,45 +1,47 @@
 package com.dragonguard.backend.search.entity;
 
+import com.dragonguard.backend.global.BaseTime;
+import com.dragonguard.backend.global.SoftDelete;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author 김승진
- * @description 검색 정보를 담는 Redis Entity
+ * @description 검색 정보를 담는 DB Entity
  */
 
-@Data
-@RedisHash("search")
-public class Search implements Serializable {
+@Getter
+@Entity
+@SoftDelete
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Search extends BaseTime {
     @Id
-    private String id;
+    @GeneratedValue
+    private Long id;
 
-    @Indexed
     @Column(nullable = false)
-    private String searchWord;
+    private String name;
 
-    @Indexed
     @Enumerated(EnumType.STRING)
-    private SearchType searchType;
+    private SearchType type;
 
-    @Indexed
     private Integer page;
 
-    private List<String> filters = new ArrayList<>();
+    @OneToMany(mappedBy = "search")
+    private List<Filter> filters = new ArrayList<>();
 
     @Builder
-    public Search(String id, String searchWord, SearchType searchType, Integer page, List<String> filters) {
-        this.id = id;
-        this.searchWord = searchWord;
-        this.searchType = searchType;
+    public Search(String name, SearchType type, Integer page, List<Filter> filters) {
+        this.name = name;
+        this.type = type;
         this.page = page;
-        this.filters = filters;
+        this.filters.forEach(filter -> filter.organizeSearch(this));
+    }
+
+    public void addFilter(Filter filter) {
+        this.filters.add(filter);
     }
 }

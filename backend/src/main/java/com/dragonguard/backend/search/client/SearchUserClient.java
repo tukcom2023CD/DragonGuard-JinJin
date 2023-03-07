@@ -4,7 +4,6 @@ import com.dragonguard.backend.config.github.GithubProperties;
 import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.global.webclient.GithubClient;
 import com.dragonguard.backend.search.dto.request.SearchRequest;
-import com.dragonguard.backend.search.dto.response.SearchRepoResponse;
 import com.dragonguard.backend.search.dto.response.SearchUserResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,7 +13,6 @@ import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -52,7 +50,7 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
     private Function<UriBuilder, URI> getUriBuilder(SearchRequest request) {
         List<String> filters = request.getFilters();
 
-        if(filters.isEmpty()) {
+        if(filters == null || filters.isEmpty()) {
             return uriBuilder -> uriBuilder
                     .path("search")
                     .path("/" + request.getType().toString().toLowerCase())
