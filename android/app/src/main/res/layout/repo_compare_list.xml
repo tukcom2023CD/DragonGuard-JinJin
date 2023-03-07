@@ -29,7 +29,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#000000"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
         <View
             android:layout_width="0dp"
@@ -47,13 +47,14 @@
             android:gravity="center"
             android:maxLines="1"
             android:textColor="#000000"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.04"
             android:background="@color/black" />
+
         <TextView
             android:id="@+id/repo2_value"
             android:layout_width="0dp"
@@ -64,7 +65,7 @@
             android:gravity="center"
             android:maxLines="1"
             android:textColor="#000000"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 

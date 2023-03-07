@@ -9,41 +9,42 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="left"
         android:layout_marginHorizontal="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="left"
         android:orientation="horizontal"
-        android:weightSum="5">
+        android:weightSum="5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/contribute_ranking"
-            android:text=""
-            android:textColor="#000000"
-            android:textSize="20dp"
-            android:fontFamily="@font/ibm_semibold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:fontFamily="@font/ibm_semibold"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="20dp" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.04"
-            android:background="@color/black"/>
+            android:background="@color/black" />
 
         <TextView
             android:id="@+id/contrubutor_id"
-            android:text="id"
-            android:textColor="#000000"
-            android:textSize="20dp"
-            android:fontFamily="@font/ibm_semibold"
             android:layout_width="0dp"
-            android:maxLines="1"
-            android:ellipsize="end"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:gravity="center"/>
+            android:ellipsize="end"
+            android:fontFamily="@font/ibm_semibold"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="id"
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/contributor_color"

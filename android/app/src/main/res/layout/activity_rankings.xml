@@ -48,7 +48,7 @@
                     android:text="내 Repository 랭킹"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
+                    android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
 
             </LinearLayout>
@@ -75,7 +75,7 @@
                     android:text="내 Organization 목록"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
+                    android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold"/>
             </LinearLayout>
 
@@ -100,7 +100,7 @@
                     android:background="@drawable/roundc"
                     android:text="대학교 내 랭킹"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
+                    android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
@@ -125,7 +125,7 @@
                     android:background="@drawable/roundc"
                     android:text="전국 대학교 랭킹"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
+                    android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
@@ -150,7 +150,7 @@
                     android:background="@drawable/roundc"
                     android:text="전체 랭킹"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
+                    android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
@@ -176,7 +176,7 @@
                     android:text="전체 Repository 랭킹"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
+                    android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
 
             </LinearLayout>

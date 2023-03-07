@@ -42,6 +42,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var languagesCheckBox: ArrayList<Boolean>
     var viewmodel = Viewmodel()
     private lateinit var filterDialog : FilterDialog
+    private var filterMap = mutableMapOf<String,String>()
+    private var filterLanguage = StringBuilder()
+    private var filterOptions = StringBuilder()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -62,8 +65,8 @@ class SearchActivity : AppCompatActivity() {
             languagesCheckBox.add(false)
         }
 //        Toast.makeText(applicationContext, "크기 : ${popularLanguages.size}", Toast.LENGTH_SHORT).show()
-        Toast.makeText(applicationContext, "checkbox : ${languagesCheckBox.size}", Toast.LENGTH_SHORT).show()
-        filterDialog = FilterDialog(popularLanguages, languagesCheckBox)
+//        Toast.makeText(applicationContext, "checkbox : ${languagesCheckBox.size}", Toast.LENGTH_SHORT).show()
+        filterDialog = FilterDialog(popularLanguages, languagesCheckBox, binding.optionIcon, filterMap)
 //        검색 옵션 구현
         viewmodel.onOptionListener.observe(this, Observer {
 
@@ -85,6 +88,7 @@ class SearchActivity : AppCompatActivity() {
 
 //        검색 아이콘 눌렀을때 검색 구현
         binding.searchIcon.setOnClickListener {
+            checkLanguage()
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
                 if (lastSearch != viewmodel.onSearchListener.value!!) {
                     repoNames.clear()
@@ -140,16 +144,38 @@ class SearchActivity : AppCompatActivity() {
             }
             true
         }
+    }
 
-
-
-
-        viewmodel.onUserIconSelected.observe(this, Observer {
-            if (viewmodel.onUserIconSelected.value == true) {
-                val intent = Intent(applicationContext, MenuActivity::class.java)
-                startActivity(intent)
+    private fun checkLanguage() {
+        val checked = arrayListOf<String>()
+        languagesCheckBox.forEachIndexed { index, b ->
+            if(languagesCheckBox[index]){
+                checked.add("language:"+popularLanguages[index])
             }
-        })
+        }
+//        Log.d("filters", "filters: ${filterMap["stars"]}")
+//        Toast.makeText(applicationContext, "index : $checked", Toast.LENGTH_SHORT).show()
+        checked.forEachIndexed { index, s ->
+            if(index != checked.size - 1) {
+                filterLanguage.append("${checked[index]},")
+            } else {
+                filterLanguage.append(checked[index])
+            }
+        }
+        var count = 0
+        filterMap.forEach {
+            if(count < filterMap.size-1) {
+                filterOptions.append("${it.key}:${it.value},")
+                count++
+            } else {
+                filterOptions.append("${it.key}:${it.value}")
+            }
+        }
+//        count = 0
+        Toast.makeText(applicationContext, "filters:$filterOptions", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "filters:$filterLanguage", Toast.LENGTH_SHORT).show()
+        filterOptions = StringBuilder()
+        filterLanguage = StringBuilder()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
