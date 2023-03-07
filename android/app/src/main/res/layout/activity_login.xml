@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="loginViewmodel"
             type="com.dragonguard.android.viewmodel.Viewmodel" />
@@ -12,9 +13,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.LoginActivity"
         android:orientation="vertical"
-        android:weightSum="3.4">
+        android:weightSum="3.4"
+        tools:context=".activity.LoginActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -37,25 +38,28 @@
                 android:layout_weight="0.8" />
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.1"
-                android:text="Wallet 인증"
                 android:id="@+id/wallet_auth"
-                android:textColor="@color/white"
-                android:textAllCaps="false"
-                android:fontFamily="@font/ibm_semibold"
-                android:backgroundTint="#222222" />
-            <Button
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.1"
-                android:text="Wallet 인증 완료"
-                android:id="@+id/wallet_finish"
-                android:textColor="@color/white"
-                android:textAllCaps="false"
+                android:backgroundTint="#222222"
                 android:fontFamily="@font/ibm_semibold"
-                android:backgroundTint="#222222" />
+                android:text="Wallet 인증"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
+
+            <Button
+                android:id="@+id/wallet_finish"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:backgroundTint="#222222"
+                android:fontFamily="@font/ibm_semibold"
+                android:text="Wallet 인증 완료"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -75,7 +75,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2.2"
-                    android:dropDownWidth="wrap_content"                  
+                    android:dropDownWidth="wrap_content"
                     android:spinnerMode="dropdown" />
 
                 <View
@@ -88,7 +88,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2.2"
-                    android:dropDownWidth="wrap_content"                    
+                    android:dropDownWidth="wrap_content"
                     android:spinnerMode="dropdown" />
 
             </LinearLayout>
@@ -113,15 +113,14 @@
                     android:gravity="center"
                     android:text="비교하기"
                     android:textColor="@color/black"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.05"/>
-
+                android:layout_weight="0.05" />
 
 
             <LinearLayout
@@ -130,27 +129,28 @@
                 android:layout_weight="2.5"
                 android:orientation="vertical"
                 android:weightSum="5">
+
                 <ProgressBar
                     android:id="@+id/progressBar"
                     style="?android:attr/progressBarStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone" />
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/user_commit_chart"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="0dp"
-                    android:layout_weight="2.5"/>
+                    android:layout_weight="2.5"
+                    android:visibility="gone" />
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/user_code_chart"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="0dp"
-                    android:layout_weight="2.5"/>
+                    android:layout_weight="2.5"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </LinearLayout>

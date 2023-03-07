@@ -62,7 +62,7 @@
                 android:text="posite"
                 android:textColor="@color/black"
                 android:onClick="@{()->mainViewModel.clickUserIcon()}"
-                android:textSize="25dp"
+                android:textSize="25sp"
                 android:fontFamily="@font/ibm_semibold"
                  />
 
@@ -183,7 +183,7 @@
                         android:background="@android:color/transparent"
                         android:text="내 티어 : "
                         android:textColor="@color/black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:fontFamily="@font/ibm_semibold" />
 
                     <TextView
@@ -196,7 +196,7 @@
                         android:text="내 기여도 : "
                         android:textAllCaps="false"
                         android:textColor="@color/black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:fontFamily="@font/ibm_semibold" />
                 </LinearLayout>
 
@@ -243,7 +243,7 @@
                         android:gravity="bottom|center_horizontal"
                         android:text="전체 사용자 랭킹"
                         android:textColor="@color/black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:fontFamily="@font/ibm_semibold" />
 
                     <TextView
@@ -255,7 +255,7 @@
                         android:gravity="center"
                         android:text="등수"
                         android:textColor="@color/black"
-                        android:textSize="30dp"
+                        android:textSize="30sp"
                         android:fontFamily="@font/ibm_semibold" />
 
                     <TextView
@@ -267,7 +267,7 @@
                         android:gravity="top|center_horizontal"
                         android:text="(비율)"
                         android:textColor="@color/black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:fontFamily="@font/ibm_semibold" />
                 </LinearLayout>
 
@@ -287,7 +287,7 @@
                         android:gravity="bottom|center_horizontal"
                         android:text="대학교 내 랭킹"
                         android:textColor="@color/black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:fontFamily="@font/ibm_semibold" />
 
                     <TextView
@@ -298,7 +298,7 @@
                         android:gravity="center"
                         android:text="등수"
                         android:textColor="@color/black"
-                        android:textSize="30dp"
+                        android:textSize="30sp"
                         android:fontFamily="@font/ibm_semibold" />
 
                     <TextView
@@ -309,7 +309,7 @@
                         android:gravity="top|center_horizontal"
                         android:text="(비율)"
                         android:textColor="@color/black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:fontFamily="@font/ibm_semibold" />
                 </LinearLayout>
             </LinearLayout>
@@ -341,7 +341,7 @@
                     android:background="@drawable/roundc"
                     android:text="랭킹\n보러가기"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:fontFamily="@font/ibm_semibold" />
 
                 <Button
@@ -354,7 +354,7 @@
                     android:background="@drawable/roundc"
                     android:text="레포지토리\n비교하기"
                     android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
             <LinearLayout

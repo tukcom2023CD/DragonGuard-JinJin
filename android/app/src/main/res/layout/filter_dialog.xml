@@ -37,9 +37,9 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/ibm_semibold"
                     android:gravity="center"
-                    android:text="star 수"
+                    android:text="Star 수"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="25sp" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -109,9 +109,9 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/ibm_semibold"
                     android:gravity="center"
-                    android:text="fork 수"
+                    android:text="Fork 수"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="25sp" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -184,9 +184,9 @@
                 android:layout_weight="2"
                 android:fontFamily="@font/ibm_semibold"
                 android:gravity="center"
-                android:text="topics 수"
+                android:text="Topic 수"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="25sp" />
 
             <RadioGroup
                 android:id="@+id/group_topics"

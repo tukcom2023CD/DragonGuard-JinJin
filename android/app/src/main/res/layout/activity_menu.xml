@@ -49,7 +49,7 @@
                     android:background="@drawable/roundc"
                     android:text="로그아웃"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
+                    android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
 
             </LinearLayout>
@@ -75,7 +75,7 @@
                     android:background="@drawable/roundc"
                     android:text="FAQ"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
+                    android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
@@ -100,7 +100,7 @@
                     android:background="@drawable/roundc"
                     android:text="토큰부여기준"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
+                    android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
@@ -125,7 +125,7 @@
                     android:background="@drawable/roundc"
                     android:text="버전 정보"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
+                    android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
