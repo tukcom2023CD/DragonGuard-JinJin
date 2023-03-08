@@ -1,5 +1,6 @@
 package com.dragonguard.backend.member.controller;
 
+import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
@@ -28,7 +29,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<Long> saveMember(@RequestBody MemberRequest memberRequest) {
+    public ResponseEntity<IdResponse<Long>> saveMember(@RequestBody MemberRequest memberRequest) {
         return ResponseEntity.ok(memberService.saveMember(memberRequest));
     }
 

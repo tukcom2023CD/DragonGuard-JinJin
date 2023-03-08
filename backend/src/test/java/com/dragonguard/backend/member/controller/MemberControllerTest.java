@@ -1,5 +1,6 @@
 package com.dragonguard.backend.member.controller;
 
+import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
@@ -39,7 +40,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 생성")
     void savemember() throws Exception {
         // given
-        Long expected = 1L;
+        IdResponse<Long> expected = new IdResponse<>(1L);
         given(memberService.saveMember(any())).willReturn(expected);
 
         // when

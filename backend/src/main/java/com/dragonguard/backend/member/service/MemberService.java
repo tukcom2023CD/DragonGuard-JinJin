@@ -5,6 +5,7 @@ import com.dragonguard.backend.blockchain.entity.ContributeType;
 import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
+import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
@@ -40,8 +41,8 @@ public class MemberService {
         return getEntity(id).getTier();
     }
 
-    public Long saveMember(MemberRequest memberRequest) {
-        return scrapeAndSave(memberRequest);
+    public IdResponse<Long> saveMember(MemberRequest memberRequest) {
+        return new IdResponse<>(scrapeAndSave(memberRequest));
     }
 
     public Long scrapeAndSave(MemberRequest memberRequest) {
@@ -97,7 +98,7 @@ public class MemberService {
     public void updateCommits(Long id) {
         Member member = getEntity(id);
         getCommitByScraping(member.getGithubId());
-        if(!isWalletAddressExist(member)) return;
+        if (!isWalletAddressExist(member)) return;
         updateTier(member);
     }
 
