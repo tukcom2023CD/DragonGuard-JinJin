@@ -38,7 +38,7 @@ class MemberControllerTest extends RestDocumentTest {
 
     @Test
     @DisplayName("멤버 생성")
-    void savemember() throws Exception {
+    void saveMember() throws Exception {
         // given
         IdResponse<Long> expected = new IdResponse<>(1L);
         given(memberService.saveMember(any())).willReturn(expected);
@@ -55,7 +55,7 @@ class MemberControllerTest extends RestDocumentTest {
 
         // then
         perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(expected));
+                .andExpect(jsonPath("$.id").value(expected.getId()));
 
         // docs
         perform.andDo(print())
@@ -64,7 +64,7 @@ class MemberControllerTest extends RestDocumentTest {
 
     @Test
     @DisplayName("멤버 커밋 내역 업데이트")
-    void updatecommits() throws Exception {
+    void updateCommits() throws Exception {
         // given
 
         // when
@@ -83,7 +83,7 @@ class MemberControllerTest extends RestDocumentTest {
 
     @Test
     @DisplayName("멤버 조회")
-    void getmember() throws Exception {
+    void getMember() throws Exception {
         // given
         MemberResponse expected = new MemberResponse(1L, "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L);
         given(memberService.getMember(any())).willReturn(expected);
