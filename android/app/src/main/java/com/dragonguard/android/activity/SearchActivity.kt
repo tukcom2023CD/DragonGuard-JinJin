@@ -3,6 +3,8 @@ package com.dragonguard.android.activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextWatcher
@@ -10,6 +12,9 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
@@ -45,6 +50,7 @@ class SearchActivity : AppCompatActivity() {
     private var filterMap = mutableMapOf<String,String>()
     private var filterLanguage = StringBuilder()
     private var filterOptions = StringBuilder()
+    private var filterResult = StringBuilder()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -79,16 +85,20 @@ class SearchActivity : AppCompatActivity() {
             if (viewmodel.onOptionListener.value == "down") {
                 binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
                 Log.d("option", "down")
+                checkLanguage()
             } else {
                 binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
                 Log.d("option", "up")
+                filterLanguage = StringBuilder()
+                filterOptions = StringBuilder()
+                filterResult = StringBuilder()
+                binding.searchOption.visibility = View.GONE
                 filterDialog.show(supportFragmentManager, "filtering")
             }
         })
 
 //        검색 아이콘 눌렀을때 검색 구현
         binding.searchIcon.setOnClickListener {
-            checkLanguage()
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
                 if (lastSearch != viewmodel.onSearchListener.value!! || filterLanguage.isNotEmpty() || filterOptions.isNotEmpty()) {
                     repoNames.clear()
@@ -110,7 +120,6 @@ class SearchActivity : AppCompatActivity() {
 
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
         binding.searchName.setOnEditorActionListener { textView, i, keyEvent ->
-            checkLanguage()
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
                     Log.d("enter click", "edittext 클릭함")
@@ -135,7 +144,7 @@ class SearchActivity : AppCompatActivity() {
                         binding.searchName.setText("")
                         Toast.makeText(
                             applicationContext,
-                            "엔터 검색어를 입력하세요!!",
+                            "검색어를 입력하세요!!",
                             Toast.LENGTH_SHORT
                         ).show()
                         closeKeyboard()
@@ -148,9 +157,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun checkLanguage() {
-        filterLanguage = StringBuilder()
-        filterOptions = StringBuilder()
         val checked = arrayListOf<String>()
+        val notCatLanguage = arrayListOf<String>()
         languagesCheckBox.forEachIndexed { index, b ->
             if(languagesCheckBox[index]){
                 checked.add("language:"+popularLanguages[index])
@@ -161,22 +169,88 @@ class SearchActivity : AppCompatActivity() {
         checked.forEachIndexed { index, s ->
             if(index != checked.size - 1) {
                 filterLanguage.append("${checked[index]},")
+                notCatLanguage.add(checked[index].substring(9,checked[index].lastIndex+1)+", ")
             } else {
                 filterLanguage.append(checked[index])
+                notCatLanguage.add(checked[index].substring(9,checked[index].lastIndex+1)+"")
             }
         }
+        val notCatFilters = arrayListOf<String>()
         var count = 0
         filterMap.forEach {
             if(count < filterMap.size-1) {
                 filterOptions.append("${it.key}:${it.value},")
+                notCatFilters.add("${it.key} ${it.value}, ")
                 count++
             } else {
                 filterOptions.append("${it.key}:${it.value}")
+                notCatFilters.add("${it.key} ${it.value} ")
             }
         }
 //        count = 0
-        Toast.makeText(applicationContext, "filters:$filterOptions", Toast.LENGTH_SHORT).show()
-        Toast.makeText(applicationContext, "filters:$filterLanguage", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "filters:$filterOptions", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "filters:$filterLanguage", Toast.LENGTH_SHORT).show()
+        filterCat(notCatLanguage, notCatFilters)
+    }
+
+    private fun filterCat(language: ArrayList<String>, filters: ArrayList<String>) {
+        val chosenFilters = StringBuilder()
+        if(filterLanguage.isNotEmpty()) {
+            if (filterOptions.isNotEmpty()) {
+                filterResult.append(filterLanguage)
+                filterResult.append(",")
+                filterResult.append(filterOptions)
+            } else {
+                filterResult.append(filterLanguage)
+            }
+        } else {
+            if (filterOptions.isNotEmpty()) {
+                filterResult.append(filterOptions)
+            } else {
+                filterResult = StringBuilder()
+            }
+        }
+        language.forEach {
+            chosenFilters.append(it)
+        }
+        chosenFilters.append(", ")
+        filters.forEach {
+            chosenFilters.append(it)
+        }
+        val split = chosenFilters.split(",")
+        for(i in split.indices) {
+            val linear = LinearLayout(this)
+            linear.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+            linear.setBackgroundResource(R.drawable.roundc)
+            linear.id = 1000000+i
+            val listButton = Button(this)
+            listButton.text = split[i]
+            val type = Typeface.createFromAsset(assets, "IBMPlexSansKR-SemiBold.ttf")
+            listButton.setTextColor(Color.BLACK)
+            listButton.setBackgroundColor(Color.rgb(204,204,204))
+            listButton.textSize = 20f
+            listButton.id = 100000+i
+            listButton.typeface = type
+            listButton.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+            val close = ImageButton(this)
+            close.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+            close.setImageResource(R.drawable.ic_baseline_clear_24)
+            close.setOnClickListener {
+                val id = this.findViewById<Button>(100000+i)
+                val lin = this.findViewById<LinearLayout>(1000000+i)
+                val sub = id.text.split(" ")
+                if(sub.size == 1) {
+                    languagesCheckBox[popularLanguages.indexOf(sub[0])] = false
+                } else {
+                    filterMap.remove(sub[0])
+                }
+                lin.removeAllViews()
+                checkLanguage()
+            }
+
+        }
+        binding.searchOption.visibility = View.VISIBLE
+        binding.chosenFilters.text = chosenFilters.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -216,88 +290,43 @@ class SearchActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            if(filterLanguage.isNotEmpty()) {
-                if(filterOptions.isNotEmpty()){
-                    filterLanguage.append(",")
-                    filterLanguage.append(filterOptions)
-                    val resultDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getRepositoryNamesWithFilters(name, count, filterLanguage.toString())
+            if(filterResult.toString().isNotEmpty()) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString())
+                }
+                val result = resultDeferred.await()
+                delay(1000)
+                if (!checkSearchResult(result)) {
+                    val secondDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString())
                     }
-                    val result = resultDeferred.await()
-                    delay(1000)
-                    if (!checkSearchResult(result)) {
-                        val secondDeferred = coroutine.async(Dispatchers.IO) {
-                            viewmodel.getRepositoryNamesWithFilters(name, count, filterLanguage.toString())
-                        }
-                        val second = secondDeferred.await()
-                        if (checkSearchResult(second)) {
-                            initRecycler()
-                        } else {
-                            binding.progressBar.visibility = View.GONE
-                        }
-                    } else {
+                    val second = secondDeferred.await()
+                    if (checkSearchResult(second)) {
                         initRecycler()
+                    } else {
+                        binding.progressBar.visibility = View.GONE
                     }
                 } else {
-                    val resultDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getRepositoryNamesWithFilters(name, count, filterLanguage.toString())
-                    }
-                    val result = resultDeferred.await()
-                    delay(1000)
-                    if (!checkSearchResult(result)) {
-                        val secondDeferred = coroutine.async(Dispatchers.IO) {
-                            viewmodel.getRepositoryNamesWithFilters(name, count, filterLanguage.toString())
-                        }
-                        val second = secondDeferred.await()
-                        if (checkSearchResult(second)) {
-                            initRecycler()
-                        } else {
-                            binding.progressBar.visibility = View.GONE
-                        }
-                    } else {
-                        initRecycler()
-                    }
+                    initRecycler()
                 }
             } else {
-                if(filterOptions.isNotEmpty()) {
-                    val resultDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getRepositoryNamesWithFilters(name, count, filterOptions.toString())
-                    }
-                    val result = resultDeferred.await()
-                    delay(1000)
-                    if (!checkSearchResult(result)) {
-                        val secondDeferred = coroutine.async(Dispatchers.IO) {
-                            viewmodel.getRepositoryNamesWithFilters(name, count, filterOptions.toString())
-                        }
-                        val second = secondDeferred.await()
-                        if (checkSearchResult(second)) {
-                            initRecycler()
-                        } else {
-                            binding.progressBar.visibility = View.GONE
-                        }
-                    } else {
-                        initRecycler()
-                    }
-
-                } else {
-                    val resultDeferred = coroutine.async(Dispatchers.IO) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getSearchRepoResult(name, count)
+                }
+                val result = resultDeferred.await()
+                delay(1000)
+                if (!checkSearchResult(result)) {
+                    val secondDeferred = coroutine.async(Dispatchers.IO) {
                         viewmodel.getSearchRepoResult(name, count)
                     }
-                    val result = resultDeferred.await()
-                    delay(1000)
-                    if (!checkSearchResult(result)) {
-                        val secondDeferred = coroutine.async(Dispatchers.IO) {
-                            viewmodel.getSearchRepoResult(name, count)
-                        }
-                        val second = secondDeferred.await()
-                        if (checkSearchResult(second)) {
-                            initRecycler()
-                        } else {
-                            binding.progressBar.visibility = View.GONE
-                        }
-                    } else {
+                    val second = secondDeferred.await()
+                    if (checkSearchResult(second)) {
                         initRecycler()
+                    } else {
+                        binding.progressBar.visibility = View.GONE
                     }
+                } else {
+                    initRecycler()
                 }
             }
         }

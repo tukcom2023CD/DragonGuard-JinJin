@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="searchViewModel"
             type="com.dragonguard.android.viewmodel.Viewmodel" />
@@ -13,9 +14,9 @@
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.SearchActivity"
         android:orientation="vertical"
-        android:weightSum="3.4">
+        android:weightSum="3.4"
+        tools:context=".activity.SearchActivity">
 
         <!--     기존 타이틀바 제거하고 다는 툴바       -->
         <androidx.appcompat.widget.Toolbar
@@ -29,16 +30,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
-            android:orientation="vertical">
+            android:layout_weight="3.1"
+            android:orientation="vertical"
+            android:weightSum="5">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.25"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:weightSum="1.1">
+                android:layout_weight="0.4"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -46,40 +47,6 @@
                     android:layout_weight="0.1"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:onClick="@{()->searchViewModel.clickUserIcon()}"
-                    android:id="@+id/githut_profile"/>
-
-                <TextView
-                    android:id="@+id/user_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="posite"
-                    android:textColor="@color/black"
-                    android:onClick="@{()->searchViewModel.clickUserIcon()}"
-                    android:textSize="25dp"
-                    android:fontFamily="@font/ibm_semibold"
-                    />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"/>
 
 
                 <com.dragonguard.android.customedittext.CustomEdittext
@@ -95,57 +62,73 @@
                     android:textSize="25dp" />
 
                 <ImageView
+                    android:id="@+id/search_icon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1"
-                    android:id="@+id/search_icon"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_baseline_search_24" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.01"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal"/>
+                    android:orientation="horizontal" />
+
                 <ImageView
-                    android:layout_width="0dp"
                     android:id="@+id/option_icon"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1"
-                    android:onClick="@{()->searchViewModel.clickSearchOption()}"
                     android:adjustViewBounds="true"
-                    android:tag="@{searchViewModel.onOptionListener}"
-                    android:src="@drawable/ic_baseline_arrow_drop_down_24" />
+                    android:onClick="@{()->searchViewModel.clickSearchOption()}"
+                    android:src="@drawable/ic_baseline_arrow_drop_down_24"
+                    android:tag="@{searchViewModel.onOptionListener}" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.05"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal"/>
+                    android:orientation="horizontal" />
             </LinearLayout>
+
             <LinearLayout
+                android:id="@+id/search_option"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:visibility="gone"
-                android:id="@+id/search_option"
-                android:orientation="vertical">
+                android:layout_weight="0.8"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/chosen_filters"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
                 android:layout_gravity="center_horizontal"
+                android:layout_weight="3.8"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:gravity="center_horizontal"
                     android:text="Repository 목록"
                     android:textColor="@color/black"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:gravity="center_horizontal"/>
+                    android:textSize="20sp" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
@@ -161,9 +144,9 @@
                         android:id="@+id/search_result"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_weight="6"
                         android:orientation="vertical"
-                        android:layout_gravity="center_horizontal"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
@@ -175,8 +158,8 @@
                         style="?android:attr/progressBarStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_gravity="center_horizontal" />
+                        android:layout_gravity="center_horizontal"
+                        android:visibility="gone" />
                 </LinearLayout>
 
 
