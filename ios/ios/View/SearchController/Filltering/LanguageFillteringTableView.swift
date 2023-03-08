@@ -13,12 +13,12 @@ import SnapKit
 final class LanguageFillteringTableView: UIViewController{
     private let popularLanguage = ["C", "C#", "C++", "CoffeeScript ", "CSS", "Dart", "DM", "Elixir", "Go", "Groovy", "HTML", "Java", "JavaScript", "Kotlin", "Objective-C", "Perl", "PHP", "PowerShell", "Python", "Ruby", "Rust", "Scala", "Shell", "Swift", "TypeScript"]
     private var selectedLanguage: [String] = [] //선택된 언어
+    var selectedLangugaeIndex: [Int] = []
     var delegate: CheckLanguage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        
         addToView()
     }
     
@@ -51,8 +51,10 @@ final class LanguageFillteringTableView: UIViewController{
     
     // 사용자가 누른 언어 리스트 검색화면으로 전송
     @objc func clickedFinishBtn(){
-        self.delegate?.sendCheckingLangugae(languageList: self.selectedLanguage)
+        self.delegate?.sendCheckingLangugae(languageList: self.selectedLanguage, index: self.selectedLangugaeIndex)
         print(self.selectedLanguage)
+        print(self.selectedLangugaeIndex)
+        self.dismiss(animated: true)
     }
     
     
@@ -99,17 +101,28 @@ extension LanguageFillteringTableView: UITableViewDelegate, UITableViewDataSourc
         let cell = tableView.dequeueReusableCell(withIdentifier: LanguageFillteringTableViewCell.identifier, for: indexPath) as? LanguageFillteringTableViewCell ?? LanguageFillteringTableViewCell()
         cell.setLangugae(text: self.popularLanguage[indexPath.row])
         cell.backgroundColor = .white
-        cell.accessoryType = cell.isSelected ? .disclosureIndicator : .none   //체크 모양 표시할 것인지
         tableView.sectionIndexColor = .black;
+        
+        for index in self.selectedLangugaeIndex{
+            if index == indexPath.row{
+                cell.accessoryType = .checkmark
+                self.selectedLanguage.append(self.popularLanguage[index])
+            }
+        }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        let index = self.selectedLangugaeIndex.firstIndex(of: indexPath.row)
+
         // 다시 선택한 경우
         if self.selectedLanguage.contains(self.popularLanguage[indexPath.row]){
-            let index = self.selectedLanguage.firstIndex(of: self.popularLanguage[indexPath.row])
-            self.selectedLanguage.remove(at: index ?? 0)
+            let languageIndex = self.selectedLanguage.firstIndex(of: self.popularLanguage[indexPath.row])
+            self.selectedLanguage.remove(at: languageIndex ?? 0)
+            
+            self.selectedLangugaeIndex.remove(at: index ?? 0)
             
             // 다시 선택시 체크 모양 해제
             if let cell = tableView.cellForRow(at: indexPath) {
@@ -118,13 +131,13 @@ extension LanguageFillteringTableView: UITableViewDelegate, UITableViewDataSourc
         }
         else{   // 처음 선택한 경우
             self.selectedLanguage.append(self.popularLanguage[indexPath.row])
+            self.selectedLangugaeIndex.append(indexPath.row)
             
             // 선택시 체크 모양 표시
             if let cell = tableView.cellForRow(at: indexPath){
                 cell.accessoryType = .checkmark
             }
         }
-        
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -135,5 +148,5 @@ extension LanguageFillteringTableView: UITableViewDelegate, UITableViewDataSourc
 
 
 protocol CheckLanguage{
-    func sendCheckingLangugae(languageList: [String])
+    func sendCheckingLangugae(languageList: [String], index: [Int])
 }

@@ -21,8 +21,8 @@ final class APIURL{
     ///   - title: Repository, Github userName
     ///   - type: REPOSITORIES, USERS 두가지 타입
     /// - Returns: 검색 결과
-    func getSearchResult(ip: String, title: String, page: Int, type: String) -> String {
-        let searchUrl = "http://\(ip)/api/search?page=\(page)&name=\(title)&type=\(type)"
+    func getSearchResult(ip: String, title: String, page: Int, type: String, filtering: String) -> String {
+        let searchUrl = "http://\(ip)/api/search?page=\(page)&name=\(title)&type=\(type)&filters=\(filtering)"
         return searchUrl
     }
     

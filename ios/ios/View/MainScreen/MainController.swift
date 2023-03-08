@@ -122,7 +122,12 @@ final class MainController: UIViewController {
     // 유저 이름 누르는 경우 네비게이션 뷰 방식으로 이동
     @objc func settingUIClicked(){
         self.navigationController?.pushViewController(SettingController(), animated: true)
-//        self.navigationController?.pushViewController(LanguageFillteringTableView(), animated: true)
+        
+//        //언어 필터링 테스트
+//        let filter = LanguageFillteringTableView()
+//        filter.delegate = self
+//        filter.selectedLangugaeIndex = self.languageFilterIndex
+//        self.present(filter, animated: true)
     }
     
     /*
@@ -200,9 +205,26 @@ final class MainController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
-    
+        
+//    var filtering = ""  //언어 필터링 테스트용
+//    var languageFilterIndex: [Int] = [] // 언어 index 받아옴
 }
 
+//extension MainController: CheckLanguage {
+//    func sendCheckingLangugae(languageList: [String], index: [Int]) {
+//        for i in 0..<languageList.count{
+//            self.filtering.append("language:\(languageList[i])")
+//            self.languageFilterIndex.append(index[i])
+//
+//            // 마지막 요소인경우 ,를 붙이지 않음
+//            if i != languageList.count-1 {
+//                self.filtering.append(",")
+//            }
+//        }
+//        print("index \(self.languageFilterIndex)")
+//        print("asdf \(self.filtering)")
+//    }
+//}
 
 // CollectionView DataSouce, Delegate 설정
 extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{

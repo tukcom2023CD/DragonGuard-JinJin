@@ -24,10 +24,10 @@ class PostService {
                        parameters: myGithubId,
                        encoding: JSONEncoding(options: []),
                        headers: ["Content-type": "application/json"])
-            .responseDecodable(of: Int.self){ response in
+            .responseDecodable(of: UserDBDecodingModel.self){ response in
                 switch response.result{
                 case .success(let data):
-                    observer.onNext(data)
+                    observer.onNext(data.id)
                 case .failure(let error):
                     print("삐리삐리 에러발생 \(error)")
                     

@@ -20,13 +20,16 @@ final class SearchPageController: UIViewController {
     var searchText = ""         // 검색하는 단어
     var beforePage: String = "" // 이전 View 이름
     var isInfiniteScroll = false // 무한 스크롤 1번만 로딩되게 확인하는 변수
+    var languageFilterIndex: [Int] = [] // 필터링한 언어 index
+    var filtering = ""  //필터링 조건 넣을 변수  ex) 언어, 스타, 포크 수 등등
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.backButtonTitle = "검색"
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        
         searchResultList = []
         addUItoView()   //View에 적용할 UI 작성
         
@@ -35,7 +38,7 @@ final class SearchPageController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        searchResultList = []
+        searchResultList = []
     }
     /*
      UI 작성
@@ -78,13 +81,15 @@ final class SearchPageController: UIViewController {
     
     @objc func refreshing(refresh: UIRefreshControl){ }
     
-    private func getData(searchWord: String, type: String, change: Bool){
-        SearchPageViewModel.viewModel.getSearchData(searchWord: searchWord, type: type, change: change)
+    // 검색한 데이터 가져오는 함수
+    private func getData(searchWord: String, type: String, change: Bool, filtering: String){
+        SearchPageViewModel.viewModel.getSearchData(searchWord: searchWord, type: type, change: change ,filtering: filtering)
             .subscribe(onNext: { searchList in
                 for data in searchList{
                     self.searchResultList.append(data)
                 }
                 self.isInfiniteScroll = true
+                self.filtering = "" // 필터링 초기화
                 self.resultTableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -135,6 +140,23 @@ final class SearchPageController: UIViewController {
     
 }
 
+// 언어 선택한 리스트를 불러옴
+extension SearchPageController: CheckLanguage {
+    func sendCheckingLangugae(languageList: [String], index: [Int]) {
+        for i in 0..<languageList.count{
+            self.filtering.append("language:\(languageList[i])")
+            self.languageFilterIndex.append(index[i])
+
+            // 마지막 요소인경우 ,를 붙이지 않음
+            if i != languageList.count-1 {
+                self.filtering.append(",")
+            }
+        }
+        print("index \(self.languageFilterIndex)")
+        print("asdf \(self.filtering)")
+    }
+}
+
 // SearchController Delegate
 extension SearchPageController: UISearchBarDelegate{
     
@@ -157,7 +179,7 @@ extension SearchPageController: UISearchBarDelegate{
         addTableView()
         
         self.searchText = searchText
-        getData(searchWord: searchText, type: "REPOSITORIES", change: true)    // API 감지 스레드
+        getData(searchWord: searchText, type: "REPOSITORIES", change: true, filtering: self.filtering)    // API 감지 스레드
     }
     
 }
@@ -210,7 +232,7 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         
         if position > (resultTableView.contentSize.height - scrollView.frame.size.height){
             if self.isInfiniteScroll{
-                getData(searchWord: self.searchText, type: "REPOSITORIES", change: false)
+                getData(searchWord: self.searchText, type: "REPOSITORIES", change: false,filtering: self.filtering)
                 self.isInfiniteScroll = false
             }
         }
