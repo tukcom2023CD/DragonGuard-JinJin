@@ -94,24 +94,17 @@
                     android:orientation="horizontal" />
             </LinearLayout>
 
-            <LinearLayout
+            <HorizontalScrollView
                 android:id="@+id/search_option"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.8"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/chosen_filters"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
 
-            </LinearLayout>
+
+            </HorizontalScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"

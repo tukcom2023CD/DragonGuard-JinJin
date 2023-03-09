@@ -52,6 +52,9 @@ class FilterDialog(private val languages: ArrayList<String>,
         val starGroup = v.findViewById<RadioGroup>(R.id.group_star)
         val forkGroup = v.findViewById<RadioGroup>(R.id.group_fork)
         val topicGroup= v.findViewById<RadioGroup>(R.id.group_topics)
+        star = ""
+        fork = ""
+        topic = ""
         cancel.setOnClickListener {
             dlg.cancel()
         }
@@ -114,6 +117,7 @@ class FilterDialog(private val languages: ArrayList<String>,
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
+        filterMap.clear()
         if(star != "") {
             filterMap["stars"] = star
         }

@@ -92,7 +92,10 @@ class SearchActivity : AppCompatActivity() {
                 filterLanguage = StringBuilder()
                 filterOptions = StringBuilder()
                 filterResult = StringBuilder()
+                binding.searchOption.removeAllViews()
+                binding.searchOption.invalidate()
                 binding.searchOption.visibility = View.GONE
+                filterMap.clear()
                 filterDialog.show(supportFragmentManager, "filtering")
             }
         })
@@ -157,6 +160,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun checkLanguage() {
+        count = 0
+        binding.searchOption.removeAllViews()
+        filterResult = StringBuilder()
+        filterLanguage = StringBuilder()
+        filterOptions = StringBuilder()
         val checked = arrayListOf<String>()
         val notCatLanguage = arrayListOf<String>()
         languagesCheckBox.forEachIndexed { index, b ->
@@ -169,22 +177,23 @@ class SearchActivity : AppCompatActivity() {
         checked.forEachIndexed { index, s ->
             if(index != checked.size - 1) {
                 filterLanguage.append("${checked[index]},")
-                notCatLanguage.add(checked[index].substring(9,checked[index].lastIndex+1)+", ")
+                notCatLanguage.add(checked[index].substring(9,checked[index].lastIndex+1)+",")
             } else {
                 filterLanguage.append(checked[index])
                 notCatLanguage.add(checked[index].substring(9,checked[index].lastIndex+1)+"")
             }
         }
         val notCatFilters = arrayListOf<String>()
-        var count = 0
+        var count1 = 0
+        Log.d("filtermap", "$filterMap")
         filterMap.forEach {
-            if(count < filterMap.size-1) {
+            if(count1 < filterMap.size-1) {
                 filterOptions.append("${it.key}:${it.value},")
-                notCatFilters.add("${it.key} ${it.value}, ")
-                count++
+                notCatFilters.add("${it.key} ${it.value},")
+                count1++
             } else {
                 filterOptions.append("${it.key}:${it.value}")
-                notCatFilters.add("${it.key} ${it.value} ")
+                notCatFilters.add("${it.key} ${it.value}")
             }
         }
 //        count = 0
@@ -210,47 +219,110 @@ class SearchActivity : AppCompatActivity() {
                 filterResult = StringBuilder()
             }
         }
-        language.forEach {
-            chosenFilters.append(it)
-        }
-        chosenFilters.append(", ")
-        filters.forEach {
-            chosenFilters.append(it)
-        }
-        val split = chosenFilters.split(",")
-        for(i in split.indices) {
-            val linear = LinearLayout(this)
-            linear.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
-            linear.setBackgroundResource(R.drawable.roundc)
-            linear.id = 1000000+i
-            val listButton = Button(this)
-            listButton.text = split[i]
-            val type = Typeface.createFromAsset(assets, "IBMPlexSansKR-SemiBold.ttf")
-            listButton.setTextColor(Color.BLACK)
-            listButton.setBackgroundColor(Color.rgb(204,204,204))
-            listButton.textSize = 20f
-            listButton.id = 100000+i
-            listButton.typeface = type
-            listButton.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
-            val close = ImageButton(this)
-            close.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
-            close.setImageResource(R.drawable.ic_baseline_clear_24)
-            close.setOnClickListener {
-                val id = this.findViewById<Button>(100000+i)
-                val lin = this.findViewById<LinearLayout>(1000000+i)
-                val sub = id.text.split(" ")
-                if(sub.size == 1) {
-                    languagesCheckBox[popularLanguages.indexOf(sub[0])] = false
-                } else {
-                    filterMap.remove(sub[0])
+        if(language.isNotEmpty()) {
+            language.forEach {
+                chosenFilters.append(it)
+            }
+            if(filters.isNotEmpty()) {
+                chosenFilters.append(",")
+                filters.forEach {
+                    chosenFilters.append(it)
                 }
-                lin.removeAllViews()
-                checkLanguage()
+            }
+        } else {
+            if(filters.isNotEmpty()) {
+                filters.forEach {
+                    chosenFilters.append(it)
+                }
+            }
+        }
+
+        if(chosenFilters.isNotEmpty() ) {
+            if(chosenFilters.last().toString() != ","){
+                val lin = LinearLayout(this)
+                val split = chosenFilters.split(",")
+                lin.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                lin.orientation = LinearLayout.HORIZONTAL
+                for(i in split.indices) {
+                    val linear = LinearLayout(this)
+                    linear.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    linear.orientation = LinearLayout.HORIZONTAL
+                    linear.setBackgroundResource(R.drawable.roundc)
+                    linear.id = 1000000+i
+                    val listButton = Button(this)
+                    listButton.text = split[i]
+//            val type = Typeface.createFromAsset(assets, "IBMPlexSansKR-SemiBold.ttf")
+                    listButton.setTextColor(Color.BLACK)
+                    listButton.setBackgroundColor(Color.rgb(204,204,204))
+                    listButton.textSize = 20f
+                    listButton.id = 100000+i
+//            listButton.typeface = type
+                    listButton.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    val close = ImageButton(this)
+                    close.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+                    close.setImageResource(R.drawable.ic_baseline_clear_24)
+                    close.setOnClickListener {
+                        val id = this.findViewById<Button>(100000+i)
+                        val sub = id.text.split(" ")
+                        if(sub.size == 1) {
+                            languagesCheckBox[popularLanguages.indexOf(sub[0])] = false
+                        } else {
+                            filterMap.remove(sub[0], sub[1])
+//                            Toast.makeText(this, "$filterMap", Toast.LENGTH_SHORT).show()
+                        }
+                        checkLanguage()
+                    }
+                    linear.addView(listButton)
+                    linear.addView(close)
+                    lin.addView(linear)
+                }
+                binding.searchOption.addView(lin)
+            } else {
+                val lin = LinearLayout(this)
+                val split = chosenFilters.split(",")
+                lin.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                lin.orientation = LinearLayout.HORIZONTAL
+                for(i in split.indices-1) {
+                    val linear = LinearLayout(this)
+                    linear.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    linear.orientation = LinearLayout.HORIZONTAL
+                    linear.setBackgroundResource(R.drawable.roundc)
+                    linear.id = 1000000+i
+                    val listButton = Button(this)
+                    listButton.text = split[i]
+//            val type = Typeface.createFromAsset(assets, "IBMPlexSansKR-SemiBold.ttf")
+                    listButton.setTextColor(Color.BLACK)
+                    listButton.setBackgroundColor(Color.rgb(204,204,204))
+                    listButton.textSize = 20f
+                    listButton.id = 100000+i
+//            listButton.typeface = type
+                    listButton.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    val close = ImageButton(this)
+                    close.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+                    close.setImageResource(R.drawable.ic_baseline_clear_24)
+                    close.setOnClickListener {
+                        val id = this.findViewById<Button>(100000+i)
+                        val sub = id.text.split(" ")
+//                        Toast.makeText(this, sub[0], Toast.LENGTH_SHORT).show()
+                        if(sub.size == 1) {
+                            languagesCheckBox[popularLanguages.indexOf(sub[0])] = false
+                        } else {
+                            filterMap.remove(sub[0])
+                        }
+                        checkLanguage()
+                    }
+                    linear.addView(listButton)
+                    linear.addView(close)
+                    lin.addView(linear)
+                }
+                binding.searchOption.addView(lin)
             }
 
         }
+
+
         binding.searchOption.visibility = View.VISIBLE
-        binding.chosenFilters.text = chosenFilters.toString()
+//        binding.chosenFilters.text = chosenFilters.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -288,6 +360,7 @@ class SearchActivity : AppCompatActivity() {
     //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
         binding.progressBar.visibility = View.VISIBLE
+        Log.d("필터", filterResult.toString())
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             if(filterResult.toString().isNotEmpty()) {
