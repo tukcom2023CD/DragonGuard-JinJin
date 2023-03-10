@@ -49,6 +49,28 @@ class ApiRepository {
         return repoNames
     }
 
+    fun getRepositoryNamesWithFilters(name: String, count: Int, filters: String): ArrayList<RepoSearchResultModel> {
+        var repoNames : ArrayList<RepoSearchResultModel> = arrayListOf<RepoSearchResultModel>()
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("page","${count+1}")
+        queryMap.put("name",name)
+        queryMap.put("type","REPOSITORIES")
+        queryMap.put("filters", filters)
+
+        Log.d("api 호출", "$count 페이지 검색")
+
+        val repoName = api.getRepoName(queryMap)
+        try{
+            val result = repoName.execute()
+            if(result.isSuccessful){
+                repoNames = result.body()!!
+            }
+        }catch (e : SocketTimeoutException){
+            return repoNames
+        }
+        return repoNames
+    }
+
     //사용자의 정보를 받아오기 위한 함수
     fun getUserInfo(id: Int): UserInfoModel {
         val userInfo = api.getUserInfo(id)

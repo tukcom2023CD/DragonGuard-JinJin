@@ -28,6 +28,10 @@ class Viewmodel {
         return repository.getRepositoryNames(name, count)
     }
 
+    fun getRepositoryNamesWithFilters(name:String, count:Int, filters: String):ArrayList<RepoSearchResultModel> {
+        return repository.getRepositoryNamesWithFilters(name, count, filters)
+    }
+
 
     fun clickUserIcon() {
         onUserIconSelected.value = true

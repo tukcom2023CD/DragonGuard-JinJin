@@ -52,6 +52,9 @@ class FilterDialog(private val languages: ArrayList<String>,
         val starGroup = v.findViewById<RadioGroup>(R.id.group_star)
         val forkGroup = v.findViewById<RadioGroup>(R.id.group_fork)
         val topicGroup= v.findViewById<RadioGroup>(R.id.group_topics)
+        star = ""
+        fork = ""
+        topic = ""
         cancel.setOnClickListener {
             dlg.cancel()
         }
@@ -114,9 +117,16 @@ class FilterDialog(private val languages: ArrayList<String>,
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        filterMap["stars"] = star
-        filterMap["forks"] = fork
-        filterMap["topics"] = topic
+        filterMap.clear()
+        if(star != "") {
+            filterMap["stars"] = star
+        }
+        if(fork != "") {
+            filterMap["forks"] = fork
+        }
+        if(topic != "") {
+            filterMap["topics"] = topic
+        }
         option.performClick()
 //        Toast.makeText(requireContext(), "star : $star, fork : $fork topics : $topic", Toast.LENGTH_SHORT).show()
     }
