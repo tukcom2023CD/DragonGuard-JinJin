@@ -127,9 +127,11 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.postRegister(body)
             }
             userId = resultDeferred.await()
-            prefs.setId("id", userId)
+            if(userId != 0) {
+                prefs.setId("id", userId)
 //            Toast.makeText(application, "id = $userId", Toast.LENGTH_SHORT).show()
-            searchUser(userId)
+                searchUser(userId)
+            }
         }
 
     }
