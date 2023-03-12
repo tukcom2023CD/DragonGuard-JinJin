@@ -62,4 +62,12 @@ interface GitRankAPI {
     @Headers("accept: application/json", "content-type: application/json")
     fun postCompareRepo(@Body compare: CompareRepoRequestModel) : Call<CompareRepoResponseModel>
 
+    @POST("access_token")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun getAccessToken(@QueryMap query: Map<String, String>): Call<AccessTokenModel>
+
+    @POST("user")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun getOauthUserInfo(@Header("Authorization")token: String): Call<OauthUserInfoModel>
+
 }

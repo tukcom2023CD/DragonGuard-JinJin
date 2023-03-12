@@ -1,11 +1,13 @@
 package com.dragonguard.android.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,23 +25,66 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
+    companion object {
+        lateinit var prefs: IdPreference
+    }
     private var backPressed : Long = 0
     private lateinit var binding :ActivityLoginBinding
     private var viewmodel = Viewmodel()
     private val body = WalletAuthRequestModel(Bapp("GitRank"), "auth")
     private var walletAddress = ""
     private var key = ""
+    private var githubId = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.loginViewmodel = viewmodel
+        prefs = IdPreference(applicationContext)
 
-        val intent = getIntent()
-        walletAddress = intent.getStringExtra("wallet_address")!!
-        if(walletAddress.isNotBlank()) {
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            setResult(1, intent)
-            val handler = Handler(Looper.getMainLooper()).postDelayed({finish()},500)
+        githubId = prefs.getGithubId("githubId", "")
+        if(githubId.isNotBlank()) {
+            binding.githubAuth.isEnabled = false
+            binding.githubAuth.setTextColor(Color.BLACK)
+        } else {
+            val result = intent?.data?.getQueryParameter("code")
+            result?.let{
+                val coroutine = CoroutineScope(Dispatchers.IO)
+                coroutine.launch {
+                    val deffered = coroutine.async ( Dispatchers.IO ) {
+                        viewmodel.getOauthToken(it)
+                    }
+                    val result = deffered.await()
+                    if(result.access_token == null) {
+                        Log.d("intent github", "실패!!")
+                    } else {
+                        Log.d("intent github", "성공!! ${result.access_token}, ${result.scope}, ${result.token_type}")
+                        getUserInfo(result.access_token)
+                    }
+                }
+            }
+        }
+
+        val intent = intent
+        val address = intent.getStringExtra("wallet_address")
+        address?.let{
+            walletAddress = address
+            if(walletAddress.isNotBlank() && githubId != "") {
+//                Log.d("wallet", "지갑주소 이미 있음 $walletAddress")
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                setResult(1, intent)
+                val handler = Handler(Looper.getMainLooper()).postDelayed({finish()},500)
+            }
+        }
+
+        key = prefs.getKey("key", "")
+
+        binding.githubAuth.setOnClickListener {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://github.com/login/oauth/authorize?client_id=cc6bd0b5c9696c693ebe&scope=user")
+            )
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(intent)
         }
         binding.walletAuth.setOnClickListener{
             if(NetworkCheck.checkNetworkState(this)) {
@@ -50,6 +95,7 @@ class LoginActivity : AppCompatActivity() {
             if(key.isNotBlank()) {
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 intent.putExtra("key", key)
+                intent.putExtra("githubId", githubId)
                 setResult(0, intent)
                 finish()
             } else {
@@ -70,11 +116,32 @@ class LoginActivity : AppCompatActivity() {
                 handler.postDelayed({walletAuthRequest()}, 1000)
             } else {
                 key = authResponse.request_key
+                prefs.setKey("key", authResponse.request_key)
+                Log.d("key", "key : ${authResponse.request_key}")
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://klipwallet.com/?target=/a2a?request_key=${authResponse.request_key}"))
                 startActivity(intent)
             }
         }
     }
+
+    private fun getUserInfo(token: String) {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val deffered = coroutine.async ( Dispatchers.IO ) {
+                viewmodel.getOauthUserInfo(token)
+            }
+            val result = deffered.await()
+            if(result != null) {
+                Log.d("result", "id : ${result.login}")
+                Toast.makeText(applicationContext, result.login, Toast.LENGTH_SHORT).show()
+                prefs.setGithubId("githubId", result.login)
+                githubId = result.login
+                binding.githubAuth.isEnabled = false
+                binding.githubAuth.setTextColor(Color.BLACK)
+            }
+        }
+    }
+
 //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
     override fun onBackPressed() {
 //        super.onBackPressed()

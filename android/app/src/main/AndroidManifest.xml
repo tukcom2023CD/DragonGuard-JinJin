@@ -75,8 +75,19 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LoginActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="github-auth"
+                    android:scheme="gitrank" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.LoadingActivity"
             android:exported="false"

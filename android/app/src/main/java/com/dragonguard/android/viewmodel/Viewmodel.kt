@@ -83,4 +83,12 @@ class Viewmodel {
         val body = CompareRepoRequestModel(firstRepo, secondRepo)
         return repository.postCompareRepoRequest(body)
     }
+
+    fun getOauthToken(code: String):AccessTokenModel {
+        return repository.getAccessToken(code)
+    }
+
+    fun getOauthUserInfo(token: String): OauthUserInfoModel? {
+        return repository.getOauthUserInfo(token)
+    }
 }

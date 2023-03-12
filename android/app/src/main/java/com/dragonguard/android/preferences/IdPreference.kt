@@ -21,4 +21,20 @@ class IdPreference (context: Context) {
     fun setWalletAddress(key: String, address: String) {
         prefs.edit().putString(key, address).apply()
     }
+
+    fun getGithubId(key:String, defValue: String):String{
+        return prefs.getString(key, defValue)!!
+    }
+
+    fun setGithubId(key:String, githubId: String) {
+        prefs.edit().putString(key, githubId).apply()
+    }
+
+    fun getKey(key:String, defValue: String):String {
+        return prefs.getString(key, defValue)!!
+    }
+
+    fun setKey(key:String, requestKey:String) {
+        prefs.edit().putString(key, requestKey)
+    }
 }
