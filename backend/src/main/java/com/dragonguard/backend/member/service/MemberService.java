@@ -42,14 +42,14 @@ public class MemberService {
     }
 
     public IdResponse<Long> saveMember(MemberRequest memberRequest) {
-        return new IdResponse<>(scrapeAndSave(memberRequest));
+        return new IdResponse<>(scrapeAndGetId(memberRequest));
     }
 
-    public Long scrapeAndSave(MemberRequest memberRequest) {
-        return scrape(memberRequest).getId();
+    public Long scrapeAndGetId(MemberRequest memberRequest) {
+        return scrapeAndGetSavedMember(memberRequest).getId();
     }
 
-    private Member scrape(MemberRequest memberRequest) {
+    private Member scrapeAndGetSavedMember(MemberRequest memberRequest) {
         getCommitByScraping(memberRequest.getGithubId());
         return saveAndGet(memberRequest);
     }
@@ -69,12 +69,9 @@ public class MemberService {
         List<Commit> commits = commitService.findCommits(githubId);
         Member member = findMemberByGithubId(githubId);
         member.updateNameAndImage(name, profileImage);
-        if (commits.isEmpty()) {
-            return;
-        }
+        if (commits.isEmpty()) return;
         commits.forEach(member::addCommit);
         updateTier(member);
-        commitService.saveAllCommits(commits);
         if (!isWalletAddressExist(member)) return;
         setTransaction(commits.size(), member);
     }
@@ -113,7 +110,7 @@ public class MemberService {
 
     public Member findMemberByGithubId(String githubId) {
         return memberRepository.findMemberByGithubId(githubId)
-                .orElseGet(() -> scrape(new MemberRequest(githubId)));
+                .orElseGet(() -> scrapeAndGetSavedMember(new MemberRequest(githubId)));
     }
 
     public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
