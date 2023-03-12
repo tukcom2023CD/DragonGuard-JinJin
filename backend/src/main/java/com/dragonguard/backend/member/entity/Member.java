@@ -4,6 +4,7 @@ import com.dragonguard.backend.blockchain.entity.Blockchain;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.global.BaseTime;
 import com.dragonguard.backend.global.SoftDelete;
+import com.dragonguard.backend.member.exception.InvalidWalletAddressException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +26,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTime {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     private String name;
@@ -65,7 +67,7 @@ public class Member extends BaseTime {
         this.githubId = githubId;
         this.walletAddress = walletAddress;
         this.tier = Tier.SPROUT;
-        this.authStep = AuthStep.NONE;
+        this.authStep = AuthStep.GITHUB_ONLY;
         this.role = Role.ROLE_USER;
         addCommit(commit);
     }
@@ -76,6 +78,7 @@ public class Member extends BaseTime {
             this.commits.stream().filter(commit::customEquals).findFirst().ifPresent(this.commits::remove);
         }
         this.commits.add(commit);
+        this.tier = Tier.checkTier(sumOfTokens);
     }
 
     public void updateNameAndImage(String name, String profileImage) {
@@ -83,11 +86,15 @@ public class Member extends BaseTime {
         this.profileImage = profileImage;
     }
 
-    public void updateTier(Tier tier) {
-        this.tier = tier;
+    public void updateTier() {
+        this.tier = Tier.checkTier(sumOfTokens);
     }
 
     public void updateWalletAddress(String walletAddress) {
+        if (walletAddress == null || walletAddress.isEmpty()) {
+            throw new InvalidWalletAddressException();
+        }
         this.walletAddress = walletAddress;
+        this.authStep = AuthStep.GITHUB_AND_KLIP;
     }
 }

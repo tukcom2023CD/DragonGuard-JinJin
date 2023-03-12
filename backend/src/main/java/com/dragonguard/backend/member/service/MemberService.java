@@ -90,8 +90,7 @@ public class MemberService {
     @Transactional
     public void updateTier(Member member) {
         if (!isWalletAddressExist(member)) return;
-        Tier tier = Tier.checkTier(member.getSumOfTokens());
-        member.updateTier(tier);
+        member.updateTier();
     }
 
     @Transactional

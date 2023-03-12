@@ -1,6 +1,6 @@
 -- 관리자 정보 미리 초기화
 
-insert into member(id, name, github_id, role) values(1, "김승진", "ohksj77", ROLE_ADMIN);
-insert into member(id, name, github_id, role) values(2, "HJ", "HJ39", ROLE_ADMIN);
-insert into member(id, name, github_id, role) values(3, "posite", "posite", ROLE_ADMIN);
-insert into member(id, name, github_id, role) values(4, "", "Sammuelwoojae", ROLE_ADMIN);
+insert into member(id, github_id, auth_step, role) values(1, "ohksj77", "GITHUB_ONLY", "ROLE_ADMIN");
+insert into member(id, github_id, auth_step, role) values(2, "HJ39", "GITHUB_ONLY", "ROLE_ADMIN");
+insert into member(id, github_id, auth_step, role) values(3, "posite", "GITHUB_ONLY", "ROLE_ADMIN");
+insert into member(id, github_id, auth_step, role) values(4, "Sammuelwoojae", "GITHUB_ONLY", "ROLE_ADMIN");
