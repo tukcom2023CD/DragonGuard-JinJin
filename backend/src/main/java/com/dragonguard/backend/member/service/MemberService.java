@@ -50,7 +50,7 @@ public class MemberService {
     }
 
     private Member scrapeAndGetSavedMember(MemberRequest memberRequest) {
-        getCommitByScraping(memberRequest.getGithubId());
+        getCommitsByScraping(memberRequest.getGithubId());
         return saveAndGet(memberRequest);
     }
 
@@ -71,9 +71,12 @@ public class MemberService {
         member.updateNameAndImage(name, profileImage);
         if (commits.isEmpty()) return;
         commits.forEach(member::addCommit);
-        updateTier(member);
-        if (!isWalletAddressExist(member)) return;
+        if (!isWalletAddressExist(member)) {
+            updateTier(member);
+            return;
+        }
         setTransaction(commits.size(), member);
+        updateTier(member);
     }
 
     private void setTransaction(Integer size, Member member) {
@@ -94,7 +97,7 @@ public class MemberService {
     @Transactional
     public void updateCommits(Long id) {
         Member member = getEntity(id);
-        getCommitByScraping(member.getGithubId());
+        getCommitsByScraping(member.getGithubId());
         if (!isWalletAddressExist(member)) return;
         updateTier(member);
     }
@@ -129,7 +132,7 @@ public class MemberService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private void getCommitByScraping(String githubId) {
+    private void getCommitsByScraping(String githubId) {
         commitService.scrapingCommits(githubId);
     }
 
