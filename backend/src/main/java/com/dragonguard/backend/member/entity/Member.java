@@ -78,7 +78,6 @@ public class Member extends BaseTime {
             this.commits.stream().filter(commit::customEquals).findFirst().ifPresent(this.commits::remove);
         }
         this.commits.add(commit);
-        this.tier = Tier.checkTier(sumOfTokens);
     }
 
     public void updateNameAndImage(String name, String profileImage) {
