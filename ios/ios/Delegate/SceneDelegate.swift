@@ -41,6 +41,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
      
     }
 
-
+    // github get redire_uri 통신 후 데이터 받는 함수
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if let url = URLContexts.first?.url {
+            let code = url.absoluteString.components(separatedBy: "=")[1]
+            LoginViewModel.loginService.getUserOAuthToken(code: code)
+        }
+    }
+    
 }
 

@@ -21,7 +21,8 @@ final class KlipLoginController: UIViewController{
         self.view.backgroundColor = .white
         
         addUItoView()
-            
+        combineSubject()
+        
         // github Id 서버에 전송한 후 DB id 받음
         viewModel.userGithubId()
             .subscribe(onNext: { id in
@@ -29,6 +30,7 @@ final class KlipLoginController: UIViewController{
                 self.id = id
             })
             .disposed(by: disposeBag)
+        
     }
     
     /*
@@ -45,13 +47,13 @@ final class KlipLoginController: UIViewController{
         return btn
     }()
     
-    lazy var goMainBtn: UIButton = {
+    lazy var goGithubBtn: UIButton = {
         let btn = UIButton()
-        btn.setTitle("Go Main", for: .normal)
+        btn.setTitle("Go Github", for: .normal)
         btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.setTitleColor(.black, for: .normal)
         btn.layer.borderWidth = 2
-        btn.addTarget(self, action: #selector(clickedGoMainBtn), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(clickedGoGihbubBtn), for: .touchUpInside)
         return btn
     }()
     
@@ -89,12 +91,50 @@ final class KlipLoginController: UIViewController{
                 print("기본 브라우저를 열 수 없습니다.")
             }
         }
+        
+        // KLIP 동의 시 KLIP 동의 하는 버튼 막기
+//        self.viewModel.chekcKlipAuthSubject
+//            .subscribe(onNext: { check in
+//                self.klipLoginBtn.isEnabled = false
+//                self.klipLoginBtn.backgroundColor = .lightGray
+//            })
+//            .disposed(by: disposeBag)
     }
     
-    @objc func clickedGoMainBtn(){
-        let nextPage = MainController()
-        nextPage.id = self.id
-        self.navigationController?.pushViewController(nextPage, animated: true)
+    @objc func clickedGoGihbubBtn(){
+        
+        let scope = "user"
+        let url = APIURL.apiUrl.githubGetAPI()
+        var component = URLComponents(string: url)
+        component?.queryItems = [
+            URLQueryItem(name: "client_id", value: Environment.clientId),
+            URLQueryItem(name: "scope", value: scope)
+        ]
+        
+        guard let url = component?.url else { return }
+        if UIApplication.shared.canOpenURL(url) {
+            let github = SFSafariViewController(url: url)
+            self.present(github, animated: true)
+        }
+        
+        
+//        self.viewModel.chekcGithubAuthSubject
+//            .subscribe(onNext: { check in
+//                self.goGithubBtn.isEnabled = false
+//                self.goGithubBtn.backgroundColor = .lightGray
+//                print("check \(check)")
+//            })
+//            .disposed(by: disposeBag)
+    }
+    
+    func combineSubject(){
+        self.viewModel.checkClearAllAuth()
+            .subscribe(onNext: { check in
+                if check {
+                    print("check")
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
     /*
@@ -103,7 +143,7 @@ final class KlipLoginController: UIViewController{
     
     private func addUItoView(){
         self.view.addSubview(klipLoginBtn)
-        self.view.addSubview(goMainBtn)
+        self.view.addSubview(goGithubBtn)
         setAutoLayout()
     }
     
@@ -120,7 +160,7 @@ final class KlipLoginController: UIViewController{
             make.trailing.equalTo(-90)
         })
         
-        goMainBtn.snp.makeConstraints({ make in
+        goGithubBtn.snp.makeConstraints({ make in
             make.top.equalTo(klipLoginBtn.snp.bottom).offset(30)
             make.leading.equalTo(90)
             make.trailing.equalTo(-90)
