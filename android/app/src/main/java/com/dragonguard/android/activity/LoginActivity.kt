@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
+import com.dragonguard.android.BuildConfig
 import com.dragonguard.android.R
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityLoginBinding
@@ -45,23 +46,6 @@ class LoginActivity : AppCompatActivity() {
         if(githubId.isNotBlank()) {
             binding.githubAuth.isEnabled = false
             binding.githubAuth.setTextColor(Color.BLACK)
-        } else {
-            val result = intent?.data?.getQueryParameter("code")
-            result?.let{
-                val coroutine = CoroutineScope(Dispatchers.IO)
-                coroutine.launch {
-                    val deffered = coroutine.async ( Dispatchers.IO ) {
-                        viewmodel.getOauthToken(it)
-                    }
-                    val result = deffered.await()
-                    if(result.access_token == null) {
-                        Log.d("intent github", "실패!!")
-                    } else {
-                        Log.d("intent github", "성공!! ${result.access_token}, ${result.scope}, ${result.token_type}")
-                        getUserInfo(result.access_token)
-                    }
-                }
-            }
         }
 
         val intent = intent
@@ -70,21 +54,26 @@ class LoginActivity : AppCompatActivity() {
             walletAddress = address
             if(walletAddress.isNotBlank() && githubId != "") {
 //                Log.d("wallet", "지갑주소 이미 있음 $walletAddress")
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                setResult(1, intent)
+                val intentW = Intent(applicationContext, MainActivity::class.java)
+                setResult(1, intentW)
                 val handler = Handler(Looper.getMainLooper()).postDelayed({finish()},500)
             }
+        }
+
+        val accessToken = intent.getStringExtra("access_token")
+        if(!accessToken.isNullOrBlank()) {
+            getUserInfo(accessToken)
         }
 
         key = prefs.getKey("key", "")
 
         binding.githubAuth.setOnClickListener {
-            val intent = Intent(
+            val intentG = Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://github.com/login/oauth/authorize?client_id=cc6bd0b5c9696c693ebe&scope=user")
+                Uri.parse("https://github.com/login/oauth/authorize?client_id=${BuildConfig.clientId}&scope=user")
             )
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            startActivity(intent)
+            intentG.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(intentG)
         }
         binding.walletAuth.setOnClickListener{
             if(NetworkCheck.checkNetworkState(this)) {
@@ -94,6 +83,7 @@ class LoginActivity : AppCompatActivity() {
         binding.walletFinish.setOnClickListener {
             if(key.isNotBlank()) {
                 val intent = Intent(applicationContext, MainActivity::class.java)
+                Log.d("info", "key : $key, github id : $githubId")
                 intent.putExtra("key", key)
                 intent.putExtra("githubId", githubId)
                 setResult(0, intent)

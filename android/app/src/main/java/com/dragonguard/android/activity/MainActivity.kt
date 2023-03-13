@@ -45,17 +45,15 @@ class MainActivity : AppCompatActivity() {
                     prefs.setGithubId("githubId", githubId!!)
                     registerUser(githubId)
                     authRequestResult(requestKey!!)
-                    userInfoTimer()
                 }
             } catch(e: Exception) {
-                finishAffinity()
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                exitProcess(0)
+//                finishAffinity()
+//                val intent = Intent(this, MainActivity::class.java)
+//                startActivity(intent)
+//                exitProcess(0)
             }
 
         } else if(it.resultCode == 1) {
-            userInfoTimer()
 //            postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
 //            Toast.makeText(applicationContext, "skip 주소 : $walletAddress", Toast.LENGTH_SHORT).show()
         }
@@ -80,13 +78,35 @@ class MainActivity : AppCompatActivity() {
         prefs = IdPreference(applicationContext)
         userId = prefs.getId("id", 0)
         githubId = prefs.getGithubId("githubId", "")
+        val result = intent?.data?.getQueryParameter("code")
+        if(result != null) {
+            val coroutine = CoroutineScope(Dispatchers.IO)
+            coroutine.launch {
+                val deffered = coroutine.async ( Dispatchers.IO ) {
+                    viewmodel.getOauthToken(result)
+                }
+                val resultToken = deffered.await()
+                if(resultToken.access_token == null) {
+                    Log.d("intent github", "실패!!")
+                } else {
+                    Log.d("intent github", "성공!! ${resultToken.access_token}, ${resultToken.scope}, ${resultToken.token_type}")
+                    walletAddress = prefs.getWalletAddress("wallet_address", "")
+//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
+                    val intent = Intent(applicationContext, LoginActivity::class.java)
+                    intent.putExtra("access_token", resultToken.access_token)
+                    intent.putExtra("wallet_address", walletAddress)
+                    activityResultLauncher.launch(intent)
+                }
+            }
+        } else {
+            walletAddress = prefs.getWalletAddress("wallet_address", "")
+//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            intent.putExtra("wallet_address", walletAddress)
+            activityResultLauncher.launch(intent)
+        }
 
         //로그인 화면으로 넘어가기
-        walletAddress = prefs.getWalletAddress("wallet_address", "")
-//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
-        val intent = Intent(applicationContext, LoginActivity::class.java)
-        intent.putExtra("wallet_address", walletAddress)
-        activityResultLauncher.launch(intent)
 
         if(userId == 0){
             if(NetworkCheck.checkNetworkState(this)) {
@@ -124,7 +144,17 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, RepoChooseActivity::class.java)
             startActivity(intent)
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        if(userId != 0) {
+            searchUser(userId)
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({searchUser(userId)}, 2000)
+            handler.postDelayed({searchUser(userId)}, 4000)
+            handler.postDelayed({searchUser(userId)}, 6000)
+        }
     }
 
 //    등록되어있지 않을 경우 post 요청을 통해 가입하기
@@ -164,11 +194,18 @@ class MainActivity : AppCompatActivity() {
                     handler.postDelayed({registerUser(prefs.getGithubId("githubId", ""))}, 2000)
                 }
             } else {
+                if(userInfo.githubId.isNotBlank()) {
+                    binding.userId.text = userInfo.githubId
+                }
                 if(userInfo.commits != 0 && userInfo.tier == "SPROUT" && !address) {
                     if(prefs.getWalletAddress("wallet_address", "") != "") {
                         address = true
                         postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
+                    } else {
+                        binding.userTier.text = "내 티어 : ${userInfo.tier}"
                     }
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({searchUser(userId)},2000)
                 } else {
                     binding.userTier.text = "내 티어 : ${userInfo.tier}"
                 }
@@ -219,9 +256,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun userInfoTimer() {
+        Toast.makeText(applicationContext,"timer", Toast.LENGTH_SHORT).show()
         Timer().scheduleAtFixedRate(3000,2000){
             if(githubId != "") {
                 if(NetworkCheck.checkNetworkState(applicationContext)) {
+                    Log.d("info", "github id : $githubId, klip address : $walletAddress")
                     searchUser(userId)
                 }
             }
