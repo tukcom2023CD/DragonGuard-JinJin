@@ -70,7 +70,7 @@ class LoginActivity : AppCompatActivity() {
         binding.githubAuth.setOnClickListener {
             val intentG = Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://github.com/login/oauth/authorize?client_id=${BuildConfig.clientId}&scope=user")
+                Uri.parse("https://github.com/login/oauth/authorize?client_id=${BuildConfig.clientId}")
             )
             intentG.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intentG)
