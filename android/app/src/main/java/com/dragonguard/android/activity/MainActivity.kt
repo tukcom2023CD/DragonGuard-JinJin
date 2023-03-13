@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -24,6 +25,7 @@ import kotlinx.coroutines.*
 import okhttp3.internal.wait
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
+import kotlin.system.exitProcess
 
 /*
  사용자의 정보를 보여주고 검색, 랭킹등을
@@ -33,12 +35,22 @@ class MainActivity : AppCompatActivity() {
     private val activityResultLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if(it.resultCode == 0 ) {
             val walletIntent = it.data
-            val requestKey = walletIntent!!.getStringExtra("key")
+            try{
+                val requestKey = walletIntent!!.getStringExtra("key")
+                val githubId = walletIntent.getStringExtra("githubId")
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
-            if(!NetworkCheck.checkNetworkState(this)) {
-                Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
-            } else {
-                authRequestResult(requestKey!!)
+                if(!NetworkCheck.checkNetworkState(this)) {
+                    Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
+                } else {
+                    prefs.setGithubId("githubId", githubId!!)
+                    registerUser(githubId)
+                    authRequestResult(requestKey!!)
+                }
+            } catch(e: Exception) {
+//                finishAffinity()
+//                val intent = Intent(this, MainActivity::class.java)
+//                startActivity(intent)
+//                exitProcess(0)
             }
 
         } else if(it.resultCode == 1) {
@@ -53,6 +65,7 @@ class MainActivity : AppCompatActivity() {
     private var viewmodel = Viewmodel()
     private var backPressed : Long = 0
     private var userId = 0
+    private var githubId = ""
     private var walletAddress = ""
     private var registered = false
     private var address = false
@@ -64,27 +77,43 @@ class MainActivity : AppCompatActivity() {
         binding.mainViewModel = viewmodel
         prefs = IdPreference(applicationContext)
         userId = prefs.getId("id", 0)
+        githubId = prefs.getGithubId("githubId", "")
+        val result = intent?.data?.getQueryParameter("code")
+        if(result != null) {
+            val coroutine = CoroutineScope(Dispatchers.IO)
+            coroutine.launch {
+                val deffered = coroutine.async ( Dispatchers.IO ) {
+                    viewmodel.getOauthToken(result)
+                }
+                val resultToken = deffered.await()
+                if(resultToken.access_token == null) {
+                    Log.d("intent github", "실패!!")
+                } else {
+                    Log.d("intent github", "성공!! ${resultToken.access_token}, ${resultToken.scope}, ${resultToken.token_type}")
+                    walletAddress = prefs.getWalletAddress("wallet_address", "")
+//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
+                    val intent = Intent(applicationContext, LoginActivity::class.java)
+                    intent.putExtra("access_token", resultToken.access_token)
+                    intent.putExtra("wallet_address", walletAddress)
+                    activityResultLauncher.launch(intent)
+                }
+            }
+        } else {
+            walletAddress = prefs.getWalletAddress("wallet_address", "")
+//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            intent.putExtra("wallet_address", walletAddress)
+            activityResultLauncher.launch(intent)
+        }
+
+        //로그인 화면으로 넘어가기
 
         if(userId == 0){
             if(NetworkCheck.checkNetworkState(this)) {
-                registerUser("posite")
+                registerUser(githubId)
             }
         } else {
             if(NetworkCheck.checkNetworkState(this)) {
-                searchUser(userId)
-            }
-        }
-        //로그인 화면으로 넘어가기
-        walletAddress = prefs.getWalletAddress("wallet_address", "")
-//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
-        val intent = Intent(applicationContext, LoginActivity::class.java)
-        intent.putExtra("wallet_address", walletAddress)
-        activityResultLauncher.launch(intent)
-
-
-        Timer().scheduleAtFixedRate(3000,2000){
-//            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
-            if(NetworkCheck.checkNetworkState(applicationContext)) {
                 searchUser(userId)
             }
         }
@@ -115,7 +144,17 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, RepoChooseActivity::class.java)
             startActivity(intent)
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        if(userId != 0) {
+            searchUser(userId)
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({searchUser(userId)}, 2000)
+            handler.postDelayed({searchUser(userId)}, 4000)
+            handler.postDelayed({searchUser(userId)}, 6000)
+        }
     }
 
 //    등록되어있지 않을 경우 post 요청을 통해 가입하기
@@ -127,9 +166,11 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.postRegister(body)
             }
             userId = resultDeferred.await()
-            prefs.setId("id", userId)
+            if(userId != 0) {
+                prefs.setId("id", userId)
 //            Toast.makeText(application, "id = $userId", Toast.LENGTH_SHORT).show()
-            searchUser(userId)
+                searchUser(userId)
+            }
         }
 
     }
@@ -150,14 +191,21 @@ class MainActivity : AppCompatActivity() {
                 if(!registered) {
                     registered = true
                     val handler = Handler(Looper.getMainLooper())
-                    handler.postDelayed({registerUser("posite")}, 4000)
+                    handler.postDelayed({registerUser(prefs.getGithubId("githubId", ""))}, 2000)
                 }
             } else {
+                if(userInfo.githubId.isNotBlank()) {
+                    binding.userId.text = userInfo.githubId
+                }
                 if(userInfo.commits != 0 && userInfo.tier == "SPROUT" && !address) {
                     if(prefs.getWalletAddress("wallet_address", "") != "") {
                         address = true
                         postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
+                    } else {
+                        binding.userTier.text = "내 티어 : ${userInfo.tier}"
                     }
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({searchUser(userId)},2000)
                 } else {
                     binding.userTier.text = "내 티어 : ${userInfo.tier}"
                 }
@@ -179,7 +227,7 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.getWalletAuthResult(key)
             }
             val authResponse = authResponseDeferred.await()
-            if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
+            if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null || prefs.getGithubId("githubId", "")=="") {
 //                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
                 val intent = Intent(applicationContext, LoginActivity::class.java)
                 intent.putExtra("wallet_address", walletAddress)
@@ -204,6 +252,19 @@ class MainActivity : AppCompatActivity() {
 //            } else {
 ////                Toast.makeText(applicationContext, "wallet post : 성공!", Toast.LENGTH_SHORT).show()
 //            }
+        }
+    }
+
+    private fun userInfoTimer() {
+        Toast.makeText(applicationContext,"timer", Toast.LENGTH_SHORT).show()
+        Timer().scheduleAtFixedRate(3000,2000){
+            if(githubId != "") {
+                if(NetworkCheck.checkNetworkState(applicationContext)) {
+                    Log.d("info", "github id : $githubId, klip address : $walletAddress")
+                    searchUser(userId)
+                }
+            }
+//            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
         }
     }
 

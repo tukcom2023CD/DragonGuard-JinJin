@@ -6,6 +6,7 @@ import com.dragonguard.android.model.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
@@ -124,7 +125,7 @@ class ApiRepository {
     //사용자의 githubid를 등록하는 함수
     fun postRegister(body: RegisterGithubIdModel): Int {
         val register = api.postGithubId(body)
-        var registerResult = 0
+        var registerResult = RegisterGithubIdResponseModel(0)
         try{
             val result = register.execute()
             if(result.isSuccessful) {
@@ -133,9 +134,9 @@ class ApiRepository {
         } catch (e: Exception) {
             e.printStackTrace()
             Log.d("error", "유저 등록 에러 ${e.message}")
-            return registerResult
+            return 0
         }
-        return registerResult
+        return registerResult.id
     }
 
     //사용자의 토큰 부여 내역을 확인하기 위한 함수
@@ -232,5 +233,47 @@ class ApiRepository {
             return compareRepoResult
         }
         return compareRepoResult
+    }
+
+    fun getAccessToken(code: String):AccessTokenModel {
+        val tokenResult = AccessTokenModel(null,null,null)
+
+        val retrofitAccess = Retrofit.Builder().baseUrl(BuildConfig.oauth)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("client_id", BuildConfig.clientId)
+        queryMap.put("client_secret", BuildConfig.clientSecret)
+        queryMap.put("code", code)
+
+        val apis = retrofitAccess.create(GitRankAPI::class.java)
+        val token = apis.getAccessToken(queryMap)
+
+        return try {
+            val result = token.execute()
+            result.body()!!
+        }catch (e:Exception) {
+            tokenResult
+        }
+    }
+
+    fun getOauthUserInfo(token: String): OauthUserInfoModel? {
+        val oauthUser: OauthUserInfoModel
+        val retro = Retrofit.Builder().baseUrl("https://api.github.com/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apis = retro.create(GitRankAPI::class.java)
+        val oauthInfo = apis.getOauthUserInfo("token $token")
+        return try {
+            val result = oauthInfo.execute()
+            oauthUser = result.body()!!
+            oauthUser
+        } catch (e: Exception) {
+            null
+        }
     }
 }
