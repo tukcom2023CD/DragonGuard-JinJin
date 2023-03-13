@@ -11,6 +11,7 @@ import RxSwift
 
 final class GithubLoginService{
     let ip = APIURL.ip
+    
     func githubPost(clientId: String, secretCode: String, code: String) -> Observable<String>{
         
         let url = APIURL.apiUrl.githubPostAPI()

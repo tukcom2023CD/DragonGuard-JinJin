@@ -11,8 +11,7 @@ import SnapKit
 import RxSwift
 import SafariServices
 
-final class KlipLoginController: UIViewController{
-    let viewModel = LoginViewModel()
+final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
     var id = 0
     
@@ -21,15 +20,7 @@ final class KlipLoginController: UIViewController{
         self.view.backgroundColor = .white
         
         addUItoView()
-        combineSubject()
-        
-        // github Id 서버에 전송한 후 DB id 받음
-        viewModel.userGithubId()
-            .subscribe(onNext: { id in
-                print("DB Id: \(id)")
-                self.id = id
-            })
-            .disposed(by: disposeBag)
+        checkClearAuths()
         
     }
     
@@ -62,7 +53,7 @@ final class KlipLoginController: UIViewController{
      */
     
     @objc func clickedKlipLoginBtn(){
-        self.viewModel.prepareKlip()
+        LoginViewModel.loginService.prepareKlip()
             .subscribe(onNext: { url in
                 self.moveToDeepLink(url)
             })
@@ -73,7 +64,7 @@ final class KlipLoginController: UIViewController{
     private func moveToDeepLink(_ url: String){
         // Klip 앱 이동 후 다른 화면 출력
         let klipCheck = KlipLoginCheckView()
-        klipCheck.viewModel = self.viewModel
+        klipCheck.viewModel = LoginViewModel.loginService
         self.present(klipCheck, animated: true)
         
         // 사용자 기본 브라우저에서 deeplink 주소 열 수 있는지 확인 후 열기
@@ -92,23 +83,16 @@ final class KlipLoginController: UIViewController{
             }
         }
         
-        // KLIP 동의 시 KLIP 동의 하는 버튼 막기
-//        self.viewModel.chekcKlipAuthSubject
-//            .subscribe(onNext: { check in
-//                self.klipLoginBtn.isEnabled = false
-//                self.klipLoginBtn.backgroundColor = .lightGray
-//            })
-//            .disposed(by: disposeBag)
     }
     
     @objc func clickedGoGihbubBtn(){
         
-        let scope = "user"
+//        let scope = ""
         let url = APIURL.apiUrl.githubGetAPI()
         var component = URLComponents(string: url)
         component?.queryItems = [
             URLQueryItem(name: "client_id", value: Environment.clientId),
-            URLQueryItem(name: "scope", value: scope)
+//            URLQueryItem(name: "scope", value: scope)
         ]
         
         guard let url = component?.url else { return }
@@ -118,21 +102,45 @@ final class KlipLoginController: UIViewController{
         }
         
         
-//        self.viewModel.chekcGithubAuthSubject
-//            .subscribe(onNext: { check in
-//                self.goGithubBtn.isEnabled = false
-//                self.goGithubBtn.backgroundColor = .lightGray
-//                print("check \(check)")
-//            })
-//            .disposed(by: disposeBag)
+    }
+
+    // 사용자가 인증을 완료했는지 확인하는 함수
+    func checkClearAuths(){
+        let checkGithubAuth = LoginViewModel.loginService.githubAuthSubject
+        let checkklipAuth = LoginViewModel.loginService.klipAuthSubject
+        
+        Observable.combineLatest(checkGithubAuth, checkklipAuth)
+            .subscribe(onNext: { first, second in
+                if first && second{
+                    self.sendUserId()
+                    
+                    let rootView = MainController()
+                    rootView.id = self.id
+                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+                    sceneDelegate.window?.rootViewController = rootView
+                    
+//                    let mc = MainController()
+//                    mc.id = self.id
+//                    self.navigationController?.pushViewController(mc, animated: true)
+                }
+                else if first{
+                    self.goGithubBtn.backgroundColor = .lightGray
+                    self.goGithubBtn.isEnabled = false
+                }
+                else if second{
+                    self.klipLoginBtn.backgroundColor = .lightGray
+                    self.klipLoginBtn.isEnabled = false
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
-    func combineSubject(){
-        self.viewModel.checkClearAllAuth()
-            .subscribe(onNext: { check in
-                if check {
-                    print("check")
-                }
+    func sendUserId(){
+        // github Id 서버에 전송한 후 DB id 받음
+        LoginViewModel.loginService.userGithubId()
+            .subscribe(onNext: { id in
+                print("DB Id: \(id)")
+                self.id = id
             })
             .disposed(by: disposeBag)
     }

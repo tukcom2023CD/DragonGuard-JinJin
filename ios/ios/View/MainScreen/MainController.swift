@@ -21,6 +21,7 @@ final class MainController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = true    // navigation bar 삭제
         self.navigationItem.backButtonTitle = "Home"    //다른 화면에서 BackBtn title 설정

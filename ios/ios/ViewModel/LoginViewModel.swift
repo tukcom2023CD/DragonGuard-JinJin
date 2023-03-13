@@ -22,8 +22,22 @@ final class LoginViewModel {
     private var requestKey = "" // 사용자 Klip request Key
     private var githubCode = ""
     private var githubUserToken = ""
-    var checkGithubAuth = false
-    var checkKlipAuth = false
+    
+    var githubAuthSubject = BehaviorSubject(value: false)   // github OAuth 완료 시 true 전송
+    // Github OAuth 완료했는지 확인 하는 용도
+    private var checkGithubAuth = false {
+        willSet{
+            githubAuthSubject.onNext(newValue)
+        }
+    }
+    
+    // klip 지갑 연동 완료했는지 확인하는 용도
+    var klipAuthSubject = BehaviorSubject(value: false)     // klip 지갑 토큰 완료한 경우 true 전송
+    private var checkKlipAuth = false{
+        willSet{
+            klipAuthSubject.onNext(newValue)
+        }
+    }
     
     /*
      KLIP 연동
@@ -90,28 +104,11 @@ final class LoginViewModel {
             .subscribe(onNext: { data in
                 self.githubUserToken = data
                 self.checkGithubAuth = true
-                print(self.checkGithubAuth)
                 print("github user token =\(self.githubUserToken)")
             })
             .disposed(by: disposeBag)
     }
     
-    
-    func checkClearAllAuth() -> Observable<Bool>{
-        
-        return Observable.create(){ observer in
-            Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { timer in
-//                print("first \(self.checkKlipAuth )")
-//                print("seoncd \(self.checkGithubAuth)")
-                if self.checkKlipAuth && self.checkGithubAuth {
-                    timer.invalidate()
-                    observer.onNext(true)
-                }
-                
-            })
-            return Disposables.create()
-        }
-    }
 }
 
 

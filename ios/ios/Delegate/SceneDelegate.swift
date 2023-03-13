@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //            window?.rootViewController = nc
 //            window?.makeKeyAndVisible()
 //        }
-        let rootView = KlipLoginController()
+        let rootView = LoginController()
         let nc = UINavigationController(rootViewController: rootView)
         window?.rootViewController = nc
         window?.makeKeyAndVisible()
@@ -41,7 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
      
     }
 
-    // github get redire_uri 통신 후 데이터 받는 함수
+    // github get redirect_uri 통신 후 데이터 받는 함수
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {
             let code = url.absoluteString.components(separatedBy: "=")[1]

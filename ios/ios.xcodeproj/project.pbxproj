@@ -29,7 +29,7 @@
 		3B3B563429A8DA12005034FC /* CompareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563329A8DA12005034FC /* CompareService.swift */; };
 		3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */; };
 		3B3CE9DC29B47EDF00B2594B /* UserDBId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3CE9DB29B47EDF00B2594B /* UserDBId.swift */; };
-		3B58A18F29A6164D006A1817 /* KlipLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B58A18E29A6164D006A1817 /* KlipLoginController.swift */; };
+		3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B58A18E29A6164D006A1817 /* LoginController.swift */; };
 		3B5E07FD29BEC0B00090E8A6 /* GithubLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E07FC29BEC0B00090E8A6 /* GithubLoginService.swift */; };
 		3B5E07FF29BEF7E50090E8A6 /* GithubTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */; };
 		3B5E080129BEFCAB0090E8A6 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E080029BEFCAB0090E8A6 /* Env.swift */; };
@@ -127,7 +127,7 @@
 		3B3B563329A8DA12005034FC /* CompareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareService.swift; sourceTree = "<group>"; };
 		3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoModel.swift; sourceTree = "<group>"; };
 		3B3CE9DB29B47EDF00B2594B /* UserDBId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDBId.swift; sourceTree = "<group>"; };
-		3B58A18E29A6164D006A1817 /* KlipLoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipLoginController.swift; sourceTree = "<group>"; };
+		3B58A18E29A6164D006A1817 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		3B5E07FC29BEC0B00090E8A6 /* GithubLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubLoginService.swift; sourceTree = "<group>"; };
 		3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubTokenModel.swift; sourceTree = "<group>"; };
 		3B5E080029BEFCAB0090E8A6 /* Env.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
@@ -348,13 +348,13 @@
 			path = RepositoryContritubutorInfo;
 			sourceTree = "<group>";
 		};
-		3B3CE9DA29B46AA700B2594B /* KLIPController */ = {
+		3B3CE9DA29B46AA700B2594B /* LoginController */ = {
 			isa = PBXGroup;
 			children = (
-				3B58A18E29A6164D006A1817 /* KlipLoginController.swift */,
+				3B58A18E29A6164D006A1817 /* LoginController.swift */,
 				3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */,
 			);
-			path = KLIPController;
+			path = LoginController;
 			sourceTree = "<group>";
 		};
 		3B7B1D2C298404AE0038BD67 /* Frameworks */ = {
@@ -412,7 +412,7 @@
 			isa = PBXGroup;
 			children = (
 				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
-				3B3CE9DA29B46AA700B2594B /* KLIPController */,
+				3B3CE9DA29B46AA700B2594B /* LoginController */,
 				A3ADC97729911357003D6483 /* MainScreen */,
 				3B9756F2298A33E900F27094 /* SettingScreen */,
 				3B3CE9D829B46A7300B2594B /* SearchController */,
@@ -692,7 +692,7 @@
 				3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */,
 				3BA2013929980661008978A5 /* MainService.swift in Sources */,
 				3BA20137299805AE008978A5 /* MainModel.swift in Sources */,
-				3B58A18F29A6164D006A1817 /* KlipLoginController.swift in Sources */,
+				3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */,
 				3B9756EB298A16D900F27094 /* AllRankingController.swift in Sources */,
 				3B5E080129BEFCAB0090E8A6 /* Env.swift in Sources */,
 				3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */,
