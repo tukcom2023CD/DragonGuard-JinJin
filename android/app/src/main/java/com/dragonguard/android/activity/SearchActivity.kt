@@ -18,6 +18,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
+import androidx.core.view.marginLeft
+import androidx.core.view.setMargins
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -245,7 +247,10 @@ class SearchActivity : AppCompatActivity() {
                 lin.orientation = LinearLayout.HORIZONTAL
                 for(i in split.indices) {
                     val linear = LinearLayout(this)
-                    linear.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    val param = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    param.setMargins(10,0,10,0)
+                    linear.layoutParams = param
+                    linear.setPadding(25,0,25,0)
                     linear.orientation = LinearLayout.HORIZONTAL
                     linear.setBackgroundResource(R.drawable.roundc)
                     linear.id = 1000000+i
@@ -284,7 +289,9 @@ class SearchActivity : AppCompatActivity() {
                 lin.orientation = LinearLayout.HORIZONTAL
                 for(i in split.indices-1) {
                     val linear = LinearLayout(this)
-                    linear.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    val param = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    param.setMargins(10,0,10,0)
+                    linear.layoutParams = param
                     linear.orientation = LinearLayout.HORIZONTAL
                     linear.setBackgroundResource(R.drawable.roundc)
                     linear.id = 1000000+i
