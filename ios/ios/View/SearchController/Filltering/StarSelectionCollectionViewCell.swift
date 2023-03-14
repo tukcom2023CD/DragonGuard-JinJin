@@ -11,6 +11,17 @@ import UIKit
 final class StarSelectionCollectionViewCell: UICollectionViewCell{
     static let identifier = "StartSelectionCollectionViewCell"
     
+    override var isSelected: Bool {
+        didSet{
+           if isSelected {
+               backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 1) /* #ffc2c2 */
+           }
+           else {
+               backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.4) /* #ffc2c2 */
+           }
+       }
+    }
+    
     lazy var label: UILabel = {
         let label = UILabel()
         

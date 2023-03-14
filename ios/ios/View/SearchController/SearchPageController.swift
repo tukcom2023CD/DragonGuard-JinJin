@@ -71,8 +71,6 @@ final class SearchPageController: UIViewController {
     lazy var filteringBtn: UIButton = {
         let btn = UIButton()
         btn.tintColor = UIColor.black
-//        btn.backgroundColor = .white
-//        btn.setTitle("d", for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.setImage(UIImage(systemName: "arrowtriangle.down.fill"), for: .normal)
         btn.addTarget(self, action: #selector(clickedFilteringBtn), for: .touchUpInside)

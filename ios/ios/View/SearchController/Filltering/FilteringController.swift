@@ -12,9 +12,11 @@ import SnapKit
 final class FilteringController: UIViewController{
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
-    var languagesArray: [String]?
     var filtering = ""  //언어 필터링 테스트용
     var languageFilterIndex: [Int] = [] // 언어 index 받아옴
+    var starFiltering = ""
+    var forkFiltering = ""
+    var topicFiltering = ""
     private let starsArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
     private let forksArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
     private let topicArray = ["0","1","2","3","4 이상"]
@@ -98,6 +100,18 @@ final class FilteringController: UIViewController{
         return cv
     }()
     
+    // 선택 완료
+    lazy var selectedDone: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("선택 완료", for: .normal)
+        btn.layer.cornerRadius = 20
+        btn.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        btn.setTitleColor(.black, for: .normal)
+        btn.addTarget(self, action: #selector(clickedSelectedDone), for: .touchUpInside)
+        return btn
+    }()
+    
     /*
      UI 추가할 때 작성하는 함수
      */
@@ -126,6 +140,8 @@ final class FilteringController: UIViewController{
         self.view.addSubview(topicSelections)
         self.topicSelections.dataSource = self
         self.topicSelections.delegate = self
+        
+        self.view.addSubview(selectedDone)
         
         setAutoLayout()
     }
@@ -189,6 +205,13 @@ final class FilteringController: UIViewController{
             make.trailing.equalTo(-30)
             make.height.equalTo(self.deviceHeight/20)
         })
+        
+        self.selectedDone.snp.makeConstraints({ make in
+            make.top.equalTo(topicSelections.snp.bottom).offset(40)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(deviceWidth/5)
+        })
+        
     }
     
     /*
@@ -204,7 +227,44 @@ final class FilteringController: UIViewController{
         self.present(filter, animated: true)
     }
     
+    // 필터링 선택 완료 시
+    @objc private func clickedSelectedDone(){
+        
+        for i in 0..<self.languageFilterIndex.count{
+            self.filtering.append("language:\(popularLanguage[self.languageFilterIndex[i]])")
+            
+            // 마지막 요소인경우 ,를 붙이지 않음
+            if i != self.languageFilterIndex.count-1 {
+                self.filtering.append(",")
+            }
+        }
+        
+        if !self.starFiltering.isEmpty{
+            if !self.filtering.isEmpty{
+                self.filtering.append(",")
+            }
+            self.filtering.append("\(self.starFiltering)")
+        }
+        
+        if !self.forkFiltering.isEmpty{
+            if !self.filtering.isEmpty{
+                self.filtering.append(",")
+            }
+            self.filtering.append("\(self.forkFiltering)")
+        }
+        
+        if !self.topicFiltering.isEmpty{
+            if !self.filtering.isEmpty{
+                self.filtering.append(",")
+            }
+            self.filtering.append("\(self.topicFiltering)")
+        }
     
+        
+        
+        print("filter \(self.filtering)")
+        self.dismiss(animated: true)
+    }
 }
 
 extension FilteringController: CheckLanguage {
@@ -230,7 +290,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == self.selectedLanguages{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LanguageSelectionsCollectionViewCell.identifier, for: indexPath) as? LanguageSelectionsCollectionViewCell ?? LanguageSelectionsCollectionViewCell()
-            print("called \(popularLanguage[self.languageFilterIndex[indexPath.row]])")
+            
             cell.inputText(text: popularLanguage[self.languageFilterIndex[indexPath.row]])
             cell.backgroundColor = .white
             cell.layer.cornerRadius = cell.bounds.height/2
@@ -239,6 +299,10 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         }
         else if collectionView == self.starSelections{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StarSelectionCollectionViewCell.identifier, for: indexPath) as! StarSelectionCollectionViewCell
+            
+            if indexPath.item == 0 {
+               cell.isSelected = true
+            }
             
             cell.inputText(text: starsArray[indexPath.row])
             cell.backgroundColor = .white
@@ -249,6 +313,10 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         else if collectionView == self.forkSelections{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ForkSelectionCollectionViewCell.identifier, for: indexPath) as! ForkSelectionCollectionViewCell
             
+            if indexPath.item == 0 {
+               cell.isSelected = true
+            }
+            
             cell.backgroundColor = .white
             cell.inputText(text: forksArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
@@ -258,6 +326,10 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         else if collectionView == self.topicSelections{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ForkSelectionCollectionViewCell.identifier, for: indexPath) as! ForkSelectionCollectionViewCell
             
+            if indexPath.item == 0 {
+               cell.isSelected = true
+            }
+            
             cell.backgroundColor = .white
             cell.inputText(text: topicArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
@@ -266,6 +338,10 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         }
         else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ForkSelectionCollectionViewCell.identifier, for: indexPath) as! ForkSelectionCollectionViewCell
+            
+            if indexPath.item == 0 {
+               cell.isSelected = true
+            }
             
             cell.backgroundColor = .white
             cell.inputText(text: starsArray[indexPath.row])
@@ -281,15 +357,6 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         if collectionView == self.selectedLanguages{
             return languageFilterIndex.count
         }
-//        else if collectionView == self.starSelections{
-//            return starsArray.count
-//        }
-//        else if collectionView == self.forkSelections{
-//            return forksArray.count
-//        }
-//        else if collectionView == self.topicSelections{
-//            return topicArray.count
-//        }
         else{
             return 5
         }
@@ -304,26 +371,168 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             let cellWidth = collectionView.bounds.width/6
             return CGSize(width: cellWidth, height: cellHeight)
         }
-//        else if collectionView == self.starSelections{
-//            let cellHeight = collectionView.bounds.height
-//            let cellWidth = collectionView.bounds.width/6
-//            return CGSize(width: cellWidth, height: cellHeight)
-//        }
-//        else if collectionView == self.forkSelections{
-//            let cellHeight = collectionView.bounds.height
-//            let cellWidth = collectionView.bounds.width/6
-//            return CGSize(width: cellWidth, height: cellHeight)
-//        }
-//        else if collectionView == self.topicSelections{
-//            let cellHeight = collectionView.bounds.height
-//            let cellWidth = collectionView.bounds.width/6
-//            return CGSize(width: cellWidth, height: cellHeight)
-//        }
         else{
             return CGSize(width: cellWidth, height: cellHeight)
         }
-
-
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == self.selectedLanguages{
+            
+        }
+        else if collectionView == self.starSelections{
+            
+            switch indexPath.row{
+            case 0:
+                let text = "stars:0..9"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.starFiltering){
+                    self.starFiltering = ""
+                }
+                else{
+                    self.starFiltering = text
+                }
+            case 1:
+                let text = "stars:10..49"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.starFiltering){
+                    self.starFiltering = ""
+                }
+                else{
+                    self.starFiltering = text
+                }
+            case 2:
+                let text = "stars:50..99"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.starFiltering){
+                    self.starFiltering = ""
+                }
+                else{
+                    self.starFiltering = text
+                }
+            case 3:
+                let text = "stars:100..499"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.starFiltering){
+                    self.starFiltering = ""
+                }
+                else{
+                    self.starFiltering = text
+                }
+            case 4:
+                let text = "stars:>=500"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.starFiltering){
+                    self.starFiltering = ""
+                }
+                else{
+                    self.starFiltering = text
+                }
+            default:
+                print("잘못된 접근입니다.")
+            }
+          
+        }
+        else if collectionView == self.forkSelections{
+            
+            switch indexPath.row{
+            case 0:
+                let text = "forks:0..9"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.forkFiltering){
+                    self.forkFiltering = ""
+                }
+                else{
+                    self.forkFiltering = text
+                }
+            case 1:
+                let text =  "forks:10..49"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.forkFiltering){
+                    self.forkFiltering = ""
+                }
+                else{
+                    self.forkFiltering = text
+                }
+            case 2:
+                let text = "forks:50..99"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.forkFiltering){
+                    self.forkFiltering = ""
+                }
+                else{
+                    self.forkFiltering = text
+                }
+            case 3:
+                let text = "forks:100..499"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.forkFiltering){
+                    self.forkFiltering = ""
+                }
+                else{
+                    self.forkFiltering = text
+                }
+            case 4:
+                let text = "forks:>=500"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.forkFiltering){
+                    self.forkFiltering = ""
+                }
+                else{
+                    self.forkFiltering = text
+                }
+            default:
+                print("잘못된 접근입니다.")
+            }
+        }
+        else if collectionView == self.topicSelections{
+            
+            switch indexPath.row{
+            case 0:
+                let text = "topics:0"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.topicFiltering){
+                    self.topicFiltering = ""
+                }
+                else{
+                    self.topicFiltering = text
+                }
+            case 1:
+                let text = "topics:1"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.topicFiltering){
+                    self.topicFiltering = ""
+                }
+                else{
+                    self.topicFiltering = text
+                }
+            case 2:
+                let text = "topics:2"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.topicFiltering){
+                    self.topicFiltering = ""
+                }
+                else{
+                    self.topicFiltering = text
+                }
+            case 3:
+                let text = "topics:3"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.topicFiltering){
+                    self.topicFiltering = ""
+                }
+                else{
+                    self.topicFiltering = text
+                }
+            case 4:
+                let text = "topics:>3"
+                if checkSelected(collectionView,indexPath: indexPath,text: text, choiceFiltering: self.topicFiltering){
+                    self.topicFiltering = ""
+                }
+                else{
+                    self.topicFiltering = text
+                }
+            default:
+                print("잘못된 접근입니다.")
+            }
+        }
+    }
+    
+    func checkSelected(_ collectionView: UICollectionView,indexPath: IndexPath, text: String, choiceFiltering: String) -> Bool{
+        if choiceFiltering.contains(text){
+            // 다시 선택시 체크 모양 해제
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+            }
+            return true
+        }
+        return false
     }
     
 }
