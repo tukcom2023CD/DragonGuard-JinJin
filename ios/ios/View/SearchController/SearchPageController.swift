@@ -46,7 +46,7 @@ final class SearchPageController: UIViewController {
     
     // 검색 UI
     lazy var searchUI: UISearchBar = {
-        let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: deviceWidth, height: 0))
+        let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: deviceWidth - 20, height: 0))
         searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "Repository or User", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         searchBar.searchTextField.backgroundColor = .white
@@ -54,7 +54,7 @@ final class SearchPageController: UIViewController {
         searchBar.layer.cornerRadius = 10
         searchBar.placeholder = "Repository or User"
         searchBar.searchTextField.tintColor = .gray
-        searchBar.showsCancelButton = true
+//        searchBar.showsCancelButton = true
         searchBar.searchTextField.leftView?.tintColor = .black  //돋보기 색상 변경
         return searchBar
     }()
@@ -65,6 +65,18 @@ final class SearchPageController: UIViewController {
         tableview.backgroundColor = .white
         tableview.separatorStyle = .none
         return tableview
+    }()
+    
+    // 필터링 화면 이동하는 버튼
+    lazy var filteringBtn: UIButton = {
+        let btn = UIButton()
+        btn.tintColor = UIColor.black
+//        btn.backgroundColor = .white
+//        btn.setTitle("d", for: .normal)
+        btn.setTitleColor(.black, for: .normal)
+        btn.setImage(UIImage(systemName: "arrowtriangle.down.fill"), for: .normal)
+        btn.addTarget(self, action: #selector(clickedFilteringBtn), for: .touchUpInside)
+        return btn
     }()
     
     /*
@@ -95,6 +107,9 @@ final class SearchPageController: UIViewController {
             .disposed(by: disposeBag)
     }
     
+    @objc private func clickedFilteringBtn(){
+        
+    }
     
     /*
      UI 추가할 때 작성하는 함수
@@ -105,6 +120,10 @@ final class SearchPageController: UIViewController {
     private func addUItoView(){
         
         self.navigationItem.titleView = searchUI
+        
+        // 필터링 버튼 적용
+        let barButton = UIBarButtonItem(customView: filteringBtn)
+        self.navigationItem.rightBarButtonItem = barButton
         
         // searchControllerDelegate
         self.searchUI.delegate = self
