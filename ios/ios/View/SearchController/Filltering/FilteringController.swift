@@ -14,13 +14,13 @@ final class FilteringController: UIViewController{
     let deviceHeight = UIScreen.main.bounds.height
     var filtering = ""  //언어 필터링 테스트용
     var languageFilterIndex: [Int] = [] // 언어 index 받아옴
+    var languageFilter: [String] = []   // 선택한 언어 리스트
     var starFiltering = ""
     var forkFiltering = ""
     var topicFiltering = ""
     private let starsArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
     private let forksArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
     private let topicArray = ["0","1","2","3","4 이상"]
-    private let popularLanguage = ["C", "C#", "C++", "CoffeeScript ", "CSS", "Dart", "DM", "Elixir", "Go", "Groovy", "HTML", "Java", "JavaScript", "Kotlin", "Objective-C", "Perl", "PHP", "PowerShell", "Python", "Ruby", "Rust", "Scala", "Shell", "Swift", "TypeScript"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +35,8 @@ final class FilteringController: UIViewController{
         let btn = UIButton()
         btn.setTitle("언어 선택하기", for: .normal)
         btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        btn.layer.cornerRadius = 20
+        btn.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
         btn.setTitleColor(.black, for: .normal)
         btn.addTarget(self, action: #selector(clickedLanguageSelections), for: .touchUpInside)
         return btn
@@ -152,7 +154,14 @@ final class FilteringController: UIViewController{
      함수 실행시 private으로 시작할 것 (추천)
      */
     
-
+    private func setLanguageAutoLayout(){
+        self.selectedLanguages.snp.makeConstraints({ make in
+            make.top.equalTo(self.languageSelections.snp.bottom).offset(10)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+            make.height.equalTo(self.deviceHeight/15)
+        })
+    }
     private func setAutoLayout(){
         // Language AutoLayout
         self.languageSelections.snp.makeConstraints({ make in
@@ -164,7 +173,6 @@ final class FilteringController: UIViewController{
             make.top.equalTo(self.languageSelections.snp.bottom).offset(10)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
-//            make.height.equalTo(self.deviceHeight/10)
         })
         
         // Star AutoLayout
@@ -231,7 +239,7 @@ final class FilteringController: UIViewController{
     @objc private func clickedSelectedDone(){
         
         for i in 0..<self.languageFilterIndex.count{
-            self.filtering.append("language:\(popularLanguage[self.languageFilterIndex[i]])")
+            self.filtering.append("language:\(languageFilter[i])")
             
             // 마지막 요소인경우 ,를 붙이지 않음
             if i != self.languageFilterIndex.count-1 {
@@ -269,18 +277,22 @@ final class FilteringController: UIViewController{
 
 extension FilteringController: CheckLanguage {
     func sendCheckingLangugae(languageList: [String], index: [Int]) {
+        var indexArray:[Int] = []
+        var stringArray:[String] = []
         for i in 0..<languageList.count{
-            self.filtering.append("language:\(languageList[i])")
-            self.languageFilterIndex.append(index[i])
-
-            // 마지막 요소인경우 ,를 붙이지 않음
-            if i != languageList.count-1 {
-                self.filtering.append(",")
-            }
+            indexArray.append(index[i])
+            stringArray.append(languageList[i])
         }
-        print("index \(self.languageFilterIndex)")
-        print("asdf \(self.filtering)")
-        self.selectedLanguages.reloadData()
+
+        let uniqueLanguageIndexArray = Set(indexArray)
+        let uniqueLanguageArray = Set(stringArray)
+        self.languageFilterIndex = Array(uniqueLanguageIndexArray)
+        self.languageFilter = Array(uniqueLanguageArray)
+        
+        if !self.languageFilterIndex.isEmpty{
+            setLanguageAutoLayout()
+            self.selectedLanguages.reloadData()
+        }
         
     }
 }
@@ -291,8 +303,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         if collectionView == self.selectedLanguages{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LanguageSelectionsCollectionViewCell.identifier, for: indexPath) as? LanguageSelectionsCollectionViewCell ?? LanguageSelectionsCollectionViewCell()
             
-            cell.inputText(text: popularLanguage[self.languageFilterIndex[indexPath.row]])
-            cell.backgroundColor = .white
+            cell.inputText(text: languageFilter[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
             cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
             return cell
@@ -305,7 +316,6 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             }
             
             cell.inputText(text: starsArray[indexPath.row])
-            cell.backgroundColor = .white
             cell.layer.cornerRadius = cell.bounds.height/2
             cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
             return cell
@@ -317,7 +327,6 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                cell.isSelected = true
             }
             
-            cell.backgroundColor = .white
             cell.inputText(text: forksArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
             cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
@@ -330,7 +339,6 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                cell.isSelected = true
             }
             
-            cell.backgroundColor = .white
             cell.inputText(text: topicArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
             cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
@@ -343,7 +351,6 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                cell.isSelected = true
             }
             
-            cell.backgroundColor = .white
             cell.inputText(text: starsArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
             cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
@@ -355,7 +362,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.selectedLanguages{
-            return languageFilterIndex.count
+                return languageFilterIndex.count
         }
         else{
             return 5
@@ -367,8 +374,9 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         let cellWidth = collectionView.bounds.width/6
         
         if collectionView == self.selectedLanguages{
-            let cellHeight = collectionView.bounds.height
+            let cellHeight = collectionView.bounds.height*3/4
             let cellWidth = collectionView.bounds.width/6
+            
             return CGSize(width: cellWidth, height: cellHeight)
         }
         else{
@@ -378,6 +386,14 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == self.selectedLanguages{
+            
+            for index in 0..<self.languageFilter.count{
+                if index == indexPath.row{
+                    self.languageFilter.remove(at: index)
+                    self.languageFilterIndex.remove(at: index)
+                    self.selectedLanguages.reloadData()
+                }
+            }
             
         }
         else if collectionView == self.starSelections{

@@ -51,7 +51,10 @@ final class LanguageFillteringTableView: UIViewController{
     
     // 사용자가 누른 언어 리스트 검색화면으로 전송
     @objc func clickedFinishBtn(){
-        self.delegate?.sendCheckingLangugae(languageList: self.selectedLanguage, index: self.selectedLangugaeIndex)
+        let uniqueLanguageArray = Set(self.selectedLanguage)
+        let uniqueLanguageIndexArray = Set(self.selectedLangugaeIndex)
+        
+        self.delegate?.sendCheckingLangugae(languageList: Array(uniqueLanguageArray), index: Array(uniqueLanguageIndexArray))
         print(self.selectedLanguage)
         print(self.selectedLangugaeIndex)
         self.dismiss(animated: true)
@@ -93,7 +96,6 @@ final class LanguageFillteringTableView: UIViewController{
     
     
 }
-
 
 extension LanguageFillteringTableView: UITableViewDelegate, UITableViewDataSource {
     
