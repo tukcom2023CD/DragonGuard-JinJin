@@ -108,7 +108,8 @@ final class SearchPageController: UIViewController {
     }
     
     @objc private func clickedFilteringBtn(){
-        
+        let filteringController = FilteringController()
+        self.present(filteringController, animated: true)
     }
     
     /*

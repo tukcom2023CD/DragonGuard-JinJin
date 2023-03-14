@@ -60,6 +60,11 @@
 		3BAEA777299CFD090054DC5D /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAEA776299CFD090054DC5D /* PostService.swift */; };
 		3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD21298129B8008C05B2 /* SearchPageController.swift */; };
 		3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */; };
+		3BDD718429C075D60018D09B /* FilteringController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD718329C075D60018D09B /* FilteringController.swift */; };
+		3BDD718629C091480018D09B /* LanguageSelectionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD718529C091480018D09B /* LanguageSelectionsCollectionViewCell.swift */; };
+		3BDD718929C0932A0018D09B /* StarSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD718829C0932A0018D09B /* StarSelectionCollectionViewCell.swift */; };
+		3BDD718B29C09E9E0018D09B /* ForkSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD718A29C09E9E0018D09B /* ForkSelectionCollectionViewCell.swift */; };
+		3BDD718D29C09FF40018D09B /* TopicSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD718C29C09FF40018D09B /* TopicSelectionCollectionViewCell.swift */; };
 		3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDF0FA429A619F900816837 /* LoginViewModel.swift */; };
 		3BDF0FA729A61A4E00816837 /* KlipLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */; };
 		3BE3F7D2297060DC0005B640 /* iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7D1297060DC0005B640 /* iosTests.swift */; };
@@ -150,6 +155,11 @@
 		3BAEA776299CFD090054DC5D /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
 		3BD6DD21298129B8008C05B2 /* SearchPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageController.swift; sourceTree = "<group>"; };
 		3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageTableView.swift; sourceTree = "<group>"; };
+		3BDD718329C075D60018D09B /* FilteringController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringController.swift; sourceTree = "<group>"; };
+		3BDD718529C091480018D09B /* LanguageSelectionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionsCollectionViewCell.swift; sourceTree = "<group>"; };
+		3BDD718829C0932A0018D09B /* StarSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
+		3BDD718A29C09E9E0018D09B /* ForkSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForkSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
+		3BDD718C29C09FF40018D09B /* TopicSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		3BDF0FA429A619F900816837 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipLoginService.swift; sourceTree = "<group>"; };
 		3BE3F7CF297060DC0005B640 /* iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -375,8 +385,12 @@
 		3B8C165429B7821100B881F4 /* Filltering */ = {
 			isa = PBXGroup;
 			children = (
-				3B8C165529B7824A00B881F4 /* LanguageFillteringTableView.swift */,
-				3B8C165729B782CD00B881F4 /* LanguageFillteringTableViewCell.swift */,
+				3BDD718329C075D60018D09B /* FilteringController.swift */,
+				3BDD718C29C09FF40018D09B /* TopicSelectionCollectionViewCell.swift */,
+				3BDD718829C0932A0018D09B /* StarSelectionCollectionViewCell.swift */,
+				3BDD718A29C09E9E0018D09B /* ForkSelectionCollectionViewCell.swift */,
+				3BDD718529C091480018D09B /* LanguageSelectionsCollectionViewCell.swift */,
+				3BDD718729C0916D0018D09B /* LanguageFiltering */,
 			);
 			path = Filltering;
 			sourceTree = "<group>";
@@ -456,6 +470,15 @@
 				3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		3BDD718729C0916D0018D09B /* LanguageFiltering */ = {
+			isa = PBXGroup;
+			children = (
+				3B8C165529B7824A00B881F4 /* LanguageFillteringTableView.swift */,
+				3B8C165729B782CD00B881F4 /* LanguageFillteringTableViewCell.swift */,
+			);
+			path = LanguageFiltering;
 			sourceTree = "<group>";
 		};
 		3BE3F7D0297060DC0005B640 /* iosTests */ = {
@@ -663,14 +686,17 @@
 				A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */,
 				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
 				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
+				3BDD718929C0932A0018D09B /* StarSelectionCollectionViewCell.swift in Sources */,
 				A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */,
 				3BE6AD2D2993904D00B22EBD /* RepoContributorTableView.swift in Sources */,
 				3B43B5A329B87FB100EBB379 /* UserDBIdModel.swift in Sources */,
 				3B8C165629B7824A00B881F4 /* LanguageFillteringTableView.swift in Sources */,
+				3BDD718D29C09FF40018D09B /* TopicSelectionCollectionViewCell.swift in Sources */,
 				A37AA6F829AD0D95002812F6 /* CompareRepoTableViewCell.swift in Sources */,
 				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
 				3B29804729ACCCA000967B6E /* CompareSelectedUserView.swift in Sources */,
 				3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */,
+				3BDD718629C091480018D09B /* LanguageSelectionsCollectionViewCell.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
 				3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */,
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,
@@ -679,6 +705,7 @@
 				3BDF0FA729A61A4E00816837 /* KlipLoginService.swift in Sources */,
 				3BAEA777299CFD090054DC5D /* PostService.swift in Sources */,
 				3BE6AD332993D0D800B22EBD /* RepoContributorInfoModel.swift in Sources */,
+				3BDD718429C075D60018D09B /* FilteringController.swift in Sources */,
 				3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */,
 				3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */,
 				3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */,
@@ -709,6 +736,7 @@
 				A3754FA02995653B00A683A9 /* TierTokenCustomUIView.swift in Sources */,
 				3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */,
 				3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */,
+				3BDD718B29C09E9E0018D09B /* ForkSelectionCollectionViewCell.swift in Sources */,
 				3B00229D2987998B003FA5CC /* SettingController.swift in Sources */,
 				A37AA6EE29A525C5002812F6 /* TabBarController.swift in Sources */,
 				3B060FD629911158000B2518 /* MainViewModel.swift in Sources */,
