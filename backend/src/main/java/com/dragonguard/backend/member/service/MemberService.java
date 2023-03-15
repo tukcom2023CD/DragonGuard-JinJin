@@ -5,6 +5,8 @@ import com.dragonguard.backend.blockchain.entity.ContributeType;
 import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
+import com.dragonguard.backend.config.security.oauth.OAuth2Request;
+import com.dragonguard.backend.config.security.oauth.user.OAuth2UserInfo;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
@@ -12,6 +14,7 @@ import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Member;
+import com.dragonguard.backend.member.entity.OAuth2Info;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.mapper.MemberMapper;
 import com.dragonguard.backend.member.repository.MemberRepository;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author 김승진
@@ -37,15 +41,15 @@ public class MemberService {
     private final CommitService commitService;
     private final BlockchainService blockchainService;
 
-    public Tier getTier(Long id) {
+    public Tier getTier(UUID id) {
         return getEntity(id).getTier();
     }
 
-    public IdResponse<Long> saveMember(MemberRequest memberRequest) {
+    public IdResponse<UUID> saveMember(MemberRequest memberRequest) {
         return new IdResponse<>(scrapeAndGetId(memberRequest));
     }
 
-    public Long scrapeAndGetId(MemberRequest memberRequest) {
+    public UUID scrapeAndGetId(MemberRequest memberRequest) {
         return scrapeAndGetSavedMember(memberRequest).getId();
     }
 
@@ -94,14 +98,14 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateCommits(Long id) {
+    public void updateCommits(UUID id) {
         Member member = getEntity(id);
         getCommitsByScraping(member.getGithubId());
         if (!isWalletAddressExist(member)) return;
         updateTier(member);
     }
 
-    public MemberResponse getMember(Long id) {
+    public MemberResponse getMember(UUID id) {
         Member member = getEntity(id);
         Integer rank = memberRepository.findRankingById(id);
         Long amount = member.getSumOfTokens();
@@ -126,7 +130,7 @@ public class MemberService {
         setTransaction(member.getSumOfCommits(), member);
     }
 
-    private Member getEntity(Long id) {
+    public Member getEntity(UUID id) {
         return memberRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
@@ -137,5 +141,20 @@ public class MemberService {
 
     private boolean isWalletAddressExist(Member member) {
         return member.getWalletAddress() != null && !member.getWalletAddress().isEmpty();
+    }
+
+    public Member saveIfNone(OAuth2Request oAuth2Request) {
+        String email = oAuth2Request.getEmail().orElseThrow(IllegalArgumentException::new);
+        return memberRepository
+                .findByEmail(email)
+                .orElseGet(() -> memberRepository.save(setUpMember(oAuth2Request)));
+    }
+
+    private Member setUpMember(OAuth2Request req) {
+        Member.MemberBuilder memberBuilder = Member.builder();
+        req.getName().ifPresent(memberBuilder::name);
+        req.getEmail().ifPresent(memberBuilder::email);
+        memberBuilder.githubId(req.getAccountId());
+        return memberBuilder.build();
     }
 }

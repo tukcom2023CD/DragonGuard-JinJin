@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author 김승진
@@ -29,23 +30,23 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<IdResponse<Long>> saveMember(@RequestBody MemberRequest memberRequest) {
+    public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody MemberRequest memberRequest) {
         return ResponseEntity.ok(memberService.saveMember(memberRequest));
     }
 
     @PostMapping("/{id}/commits")
-    public ResponseEntity<Void> updateCommits(@PathVariable Long id) {
+    public ResponseEntity<Void> updateCommits(@PathVariable UUID id) {
         memberService.updateCommits(id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MemberResponse> getMember(@PathVariable Long id) {
+    public ResponseEntity<MemberResponse> getMember(@PathVariable UUID id) {
         return ResponseEntity.ok(memberService.getMember(id));
     }
 
     @GetMapping("/{id}/tier")
-    public ResponseEntity<Tier> getTier(@PathVariable Long id) {
+    public ResponseEntity<Tier> getTier(@PathVariable UUID id) {
         return ResponseEntity.ok(memberService.getTier(id));
     }
 

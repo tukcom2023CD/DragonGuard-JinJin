@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.dragonguard.backend.member.entity.QMember.member;
 
@@ -23,6 +24,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     private final JPAQueryFactory jpaQueryFactory;
     private final MemberOrderConverter memberOrderConverter;
     private final MemberQDtoFactory qDtoFactory;
+
     @Override
     public List<MemberRankResponse> findRanking(Pageable pageable) {
         return jpaQueryFactory
@@ -35,13 +37,13 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     }
 
     @Override
-    public Integer findRankingById(Long id) {
+    public Integer findRankingById(UUID id) {
         return jpaQueryFactory
                 .select(member)
                 .from(member)
                 .where(member.sumOfTokens.gt(
                         JPAExpressions
-                        .select(member.sumOfTokens).from(member).where(member.id.eq(id))))
+                                .select(member.sumOfTokens).from(member).where(member.id.eq(id))))
                 .fetch().size() + 1;
     }
 

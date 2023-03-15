@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
@@ -40,7 +41,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 생성")
     void saveMember() throws Exception {
         // given
-        IdResponse<Long> expected = new IdResponse<>(1L);
+        IdResponse<UUID> expected = new IdResponse<>(UUID.randomUUID());
         given(memberService.saveMember(any())).willReturn(expected);
 
         // when
@@ -130,11 +131,11 @@ class MemberControllerTest extends RestDocumentTest {
     void getRanking() throws Exception {
         // given
         List<MemberRankResponse> expected = List.of(
-                new MemberRankResponse(1L, "Kim", "ohksj77", 10000L, Tier.MASTER),
-                new MemberRankResponse(2L, "Seung", "ohksj", 5000L, Tier.RUBY),
-                new MemberRankResponse(3L, "Jin", "ohksj777", 3000L, Tier.DIAMOND),
-                new MemberRankResponse(4L, "Lee", "ohksjj", 1000L, Tier.PLATINUM),
-                new MemberRankResponse(5L, "Da", "ohksjksj", 500L, Tier.GOLD));
+                new MemberRankResponse(UUID.randomUUID(), "Kim", "ohksj77", 10000L, Tier.MASTER),
+                new MemberRankResponse(UUID.randomUUID(), "Seung", "ohksj", 5000L, Tier.RUBY),
+                new MemberRankResponse(UUID.randomUUID(), "Jin", "ohksj777", 3000L, Tier.DIAMOND),
+                new MemberRankResponse(UUID.randomUUID(), "Lee", "ohksjj", 1000L, Tier.PLATINUM),
+                new MemberRankResponse(UUID.randomUUID(), "Da", "ohksjksj", 500L, Tier.GOLD));
         given(memberService.getMemberRanking(any())).willReturn(expected);
 
         // when
@@ -165,7 +166,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new WalletRequest(1L, "asdfasdf12341234"))));
+                                                new WalletRequest(UUID.randomUUID(), "asdfasdf12341234"))));
 
         // then
         perform.andExpect(status().isOk());

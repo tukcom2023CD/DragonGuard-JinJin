@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 /**
  * @author 김승진
  * @description 지갑 주소 요청 정보를 담는 dto
@@ -13,6 +15,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WalletRequest {
-    private Long id;
+    private UUID id;
     private String walletAddress;
 }

@@ -10,10 +10,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -27,8 +31,10 @@ import java.util.List;
 public class Member extends BaseTime {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     private String name;
 
@@ -41,7 +47,6 @@ public class Member extends BaseTime {
     @JoinColumn(name = "member_id")
     private List<Commit> commits = new ArrayList<>();
 
-
     private String walletAddress;
 
     @Enumerated(EnumType.STRING)
@@ -49,9 +54,6 @@ public class Member extends BaseTime {
 
     @Enumerated(EnumType.STRING)
     private AuthStep authStep;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     @OneToMany(mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
@@ -61,15 +63,24 @@ public class Member extends BaseTime {
     @Formula("(SELECT sum(b.amount) FROM blockchain b WHERE b.member_id = id)")
     private Long sumOfTokens;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
+
+    private String email;
+
+    private String refreshToken;
+
     @Builder
-    public Member(String name, String githubId, Commit commit, String walletAddress) {
+    public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage, String email) {
         this.name = name;
         this.githubId = githubId;
         this.walletAddress = walletAddress;
+        this.profileImage = profileImage;
         this.tier = Tier.SPROUT;
         this.authStep = AuthStep.GITHUB_ONLY;
-        this.role = Role.ROLE_USER;
         addCommit(commit);
+        this.email = email;
     }
 
     public void addCommit(Commit commit) {
@@ -95,5 +106,9 @@ public class Member extends BaseTime {
         }
         this.walletAddress = walletAddress;
         this.authStep = AuthStep.GITHUB_AND_KLIP;
+    }
+
+    public List<SimpleGrantedAuthority> getRole() {
+        return role.stream().map(Role::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 }
