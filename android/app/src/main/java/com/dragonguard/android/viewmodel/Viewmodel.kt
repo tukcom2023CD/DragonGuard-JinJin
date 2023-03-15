@@ -24,12 +24,12 @@ class Viewmodel {
         return repository.postRegister(body)
     }
 
-    fun getSearchRepoResult(name: String, count: Int): ArrayList<RepoSearchResultModel> {
-        return repository.getRepositoryNames(name, count)
+    fun getSearchRepoResult(name: String, count: Int, type: String): ArrayList<RepoSearchResultModel> {
+        return repository.getRepositoryNames(name, count, type)
     }
 
-    fun getRepositoryNamesWithFilters(name:String, count:Int, filters: String):ArrayList<RepoSearchResultModel> {
-        return repository.getRepositoryNamesWithFilters(name, count, filters)
+    fun getRepositoryNamesWithFilters(name:String, count:Int, filters: String, type: String):ArrayList<RepoSearchResultModel> {
+        return repository.getRepositoryNamesWithFilters(name, count, filters, type)
     }
 
 

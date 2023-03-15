@@ -166,13 +166,13 @@ class CompareSearchActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getSearchRepoResult(name, count)
+                viewmodel.getSearchRepoResult(name, count, "REPOSITORIES")
             }
             val result = resultDeferred.await()
             delay(1000)
             if (!checkSearchResult(result)) {
                 val secondDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getSearchRepoResult(name, count)
+                    viewmodel.getSearchRepoResult(name, count,"REPOSITORIES")
                 }
                 val second = secondDeferred.await()
                 if (checkSearchResult(second)) {

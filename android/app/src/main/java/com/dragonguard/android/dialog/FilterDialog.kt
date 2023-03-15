@@ -29,6 +29,7 @@ class FilterDialog(private val languages: ArrayList<String>,
     var star = ""
     var fork = ""
     var topic = ""
+    var type = ""
     private lateinit var search: View
 
     override fun onCreateDialog(savedInstance: Bundle?): Dialog {
@@ -52,9 +53,22 @@ class FilterDialog(private val languages: ArrayList<String>,
         val starGroup = v.findViewById<RadioGroup>(R.id.group_star)
         val forkGroup = v.findViewById<RadioGroup>(R.id.group_fork)
         val topicGroup= v.findViewById<RadioGroup>(R.id.group_topics)
+        val searchType = v.findViewById<RadioGroup>(R.id.group_type)
         star = ""
         fork = ""
         topic = ""
+        type = ""
+        searchType.setOnCheckedChangeListener { group, checkedId ->
+            if(checkedId == R.id.type_user) {
+                starGroup.isEnabled = false
+                forkGroup.isEnabled = false
+                topicGroup.isEnabled = false
+            } else {
+                starGroup.isEnabled = true
+                forkGroup.isEnabled = true
+                topicGroup.isEnabled = true
+            }
+        }
         cancel.setOnClickListener {
             dlg.cancel()
         }
@@ -110,6 +124,14 @@ class FilterDialog(private val languages: ArrayList<String>,
                     topic = ">=4"
                 }
             }
+            when(searchType.checkedRadioButtonId) {
+                R.id.type_user -> {
+                    type = "USERS"
+                }
+                R.id.type_repository -> {
+                    type = "REPOSITORIES"
+                }
+            }
             dlg.cancel()
         }
         return dlg
@@ -126,6 +148,9 @@ class FilterDialog(private val languages: ArrayList<String>,
         }
         if(topic != "") {
             filterMap["topics"] = topic
+        }
+        if(type != "") {
+            filterMap["type"] = type
         }
         option.performClick()
 //        Toast.makeText(requireContext(), "star : $star, fork : $fork topics : $topic", Toast.LENGTH_SHORT).show()

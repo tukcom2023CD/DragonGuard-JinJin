@@ -10,18 +10,64 @@
         android:orientation="vertical"
         android:weightSum="5">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:orientation="vertical"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2.5"
+                android:fontFamily="@font/ibm_semibold"
+                android:gravity="center"
+                android:text="검색할 항목"
+                android:textColor="@color/black"
+                android:textSize="25sp" />
+
+            <RadioGroup
+                android:id="@+id/group_type"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2.5"
+                android:gravity="center"
+                android:nestedScrollingEnabled="true"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/type_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:text="USERS"
+                    android:textSize="20sp" />
+
+                <RadioButton
+                    android:id="@+id/type_repository"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:text="REPOSITORY"
+                    android:textSize="20sp" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/languages_filter"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2.25"
+            android:layout_weight="2"
             android:orientation="vertical"
             tools:listitem="@layout/language_list" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.57"
+            android:layout_weight="1.4"
             android:orientation="vertical"
             android:weightSum="5">
 
@@ -45,6 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="3">
+
                     <RadioGroup
                         android:id="@+id/group_star"
                         android:layout_width="match_parent"
@@ -117,6 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="3">
+
                     <RadioGroup
                         android:id="@+id/group_fork"
                         android:layout_width="match_parent"
@@ -174,14 +222,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.78"
+            android:layout_weight="0.6"
             android:orientation="vertical"
             android:weightSum="5">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:fontFamily="@font/ibm_semibold"
                 android:gravity="center"
                 android:text="Topic 수"
@@ -192,7 +240,7 @@
                 android:id="@+id/group_topics"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3"
+                android:layout_weight="2.5"
                 android:gravity="center"
                 android:orientation="horizontal">
 
