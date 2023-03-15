@@ -31,7 +31,10 @@ class MenuActivity : AppCompatActivity() {
 
 //        로그아웃버튼 누르면 로그아웃 기능
         binding.logout.setOnClickListener {
-
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            intent.putExtra("logout", true)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
         }
 
 //        faq버튼 누르면 faq 화면으로 전환
