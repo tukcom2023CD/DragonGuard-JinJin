@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
+        val logout = intent.getBooleanExtra("logout", false)
         prefs = IdPreference(applicationContext)
         userId = prefs.getId("id", 0)
         githubId = prefs.getGithubId("githubId", "")
@@ -99,10 +100,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } else {
+            if(logout) {
+                prefs.setWalletAddress("wallet_address", "")
+                prefs.setGithubId("githubId", "")
+                prefs.setId("id", 0)
+            }
             walletAddress = prefs.getWalletAddress("wallet_address", "")
 //        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
             val intent = Intent(applicationContext, LoginActivity::class.java)
             intent.putExtra("wallet_address", walletAddress)
+            intent.putExtra("logout", logout)
             activityResultLauncher.launch(intent)
         }
 
@@ -153,7 +160,6 @@ class MainActivity : AppCompatActivity() {
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({searchUser(userId)}, 2000)
             handler.postDelayed({searchUser(userId)}, 4000)
-            handler.postDelayed({searchUser(userId)}, 6000)
         }
     }
 
@@ -215,7 +221,9 @@ class MainActivity : AppCompatActivity() {
                     binding.userToken.text = "내 기여도 : ${userInfo.tokenAmount}"
                 }
                 binding.userRanking.text = userInfo.rank
-                Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
+                if(!this@MainActivity.isFinishing) {
+                    Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
+                }
             }
         }
     }

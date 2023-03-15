@@ -41,14 +41,19 @@ class LoginActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.loginViewmodel = viewmodel
         prefs = IdPreference(applicationContext)
-
+        val intent = intent
+        val logout = intent.getBooleanExtra("logout", false)
+        if(logout) {
+            prefs.setGithubId("githubId", "")
+            prefs.setKey("key", "")
+        }
         githubId = prefs.getGithubId("githubId", "")
         if(githubId.isNotBlank()) {
             binding.githubAuth.isEnabled = false
             binding.githubAuth.setTextColor(Color.BLACK)
         }
 
-        val intent = intent
+
         val address = intent.getStringExtra("wallet_address")
         address?.let{
             walletAddress = address

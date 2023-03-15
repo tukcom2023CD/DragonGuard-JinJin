@@ -10,232 +10,47 @@
         android:orientation="vertical"
         android:weightSum="5">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/languages_filter"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2.25"
-            android:orientation="vertical"
-            tools:listitem="@layout/language_list" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.57"
-            android:orientation="vertical"
-            android:weightSum="5">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2.5"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:gravity="center"
-                    android:text="Star 수"
-                    android:textColor="@color/black"
-                    android:textSize="25sp" />
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="3">
-                    <RadioGroup
-                        android:id="@+id/group_star"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:nestedScrollingEnabled="true"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/star_range0"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/ibm_semibold"
-                            android:text="0~9"
-                            android:textSize="20sp" />
-
-                        <RadioButton
-                            android:id="@+id/star_range1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/ibm_semibold"
-                            android:text="10~49"
-                            android:textSize="20sp" />
-
-                        <RadioButton
-                            android:id="@+id/star_range2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/ibm_semibold"
-                            android:text="50~99"
-                            android:textSize="20sp" />
-
-                        <RadioButton
-                            android:id="@+id/star_range3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/ibm_semibold"
-                            android:text="100~499"
-                            android:textSize="20sp" />
-
-                        <RadioButton
-                            android:id="@+id/star_range4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/ibm_semibold"
-                            android:text="500~"
-                            android:textSize="20sp" />
-                    </RadioGroup>
-                </HorizontalScrollView>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2.5"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:gravity="center"
-                    android:text="Fork 수"
-                    android:textColor="@color/black"
-                    android:textSize="25sp" />
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="3">
-                    <RadioGroup
-                        android:id="@+id/group_fork"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="5">
-
-                        <RadioButton
-                            android:id="@+id/fork_range0"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/ibm_semibold"
-                            android:text="0~9"
-                            android:textSize="20sp" />
-
-                        <RadioButton
-                            android:id="@+id/fork_range1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/ibm_semibold"
-                            android:text="10~49"
-                            android:textSize="20sp" />
-
-                        <RadioButton
-                            android:id="@+id/fork_range2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/ibm_semibold"
-                            android:text="50~99"
-                            android:textSize="20sp" />
-
-                        <RadioButton
-                            android:id="@+id/fork_range3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/ibm_semibold"
-                            android:text="100~499"
-                            android:textSize="20sp" />
-
-                        <RadioButton
-                            android:id="@+id/fork_range4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/ibm_semibold"
-                            android:text="500~"
-                            android:textSize="20sp" />
-                    </RadioGroup>
-                </HorizontalScrollView>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.78"
+            android:layout_weight="0.6"
             android:orientation="vertical"
             android:weightSum="5">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:fontFamily="@font/ibm_semibold"
                 android:gravity="center"
-                android:text="Topic 수"
+                android:text="검색할 항목"
                 android:textColor="@color/black"
                 android:textSize="25sp" />
 
             <RadioGroup
-                android:id="@+id/group_topics"
+                android:id="@+id/group_type"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3"
+                android:layout_weight="2.5"
                 android:gravity="center"
+                android:nestedScrollingEnabled="true"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/topic0"
+                    android:id="@+id/type_user"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/ibm_semibold"
-                    android:text="0"
+                    android:text="USERS"
                     android:textSize="20sp" />
 
                 <RadioButton
-                    android:id="@+id/topic1"
+                    android:id="@+id/type_repository"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/ibm_semibold"
-                    android:text="1"
+                    android:text="REPOSITORY"
                     android:textSize="20sp" />
-
-                <RadioButton
-                    android:id="@+id/topic2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:text="2"
-                    android:textSize="20sp" />
-
-                <RadioButton
-                    android:id="@+id/topic3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:text="3"
-                    android:textSize="20sp" />
-
-                <RadioButton
-                    android:id="@+id/topic_over4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:text="4~"
-                    android:textSize="20sp" />
-
 
             </RadioGroup>
 
@@ -244,8 +59,262 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/filter_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/languages_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    tools:listitem="@layout/language_list" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.4"
+                    android:orientation="vertical"
+                    android:weightSum="5">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="2"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:gravity="center"
+                            android:text="Star 수"
+                            android:textColor="@color/black"
+                            android:textSize="25sp" />
+
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="3">
+
+                            <RadioGroup
+                                android:id="@+id/group_star"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:nestedScrollingEnabled="true"
+                                android:orientation="horizontal">
+
+                                <RadioButton
+                                    android:id="@+id/star_range0"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ibm_semibold"
+                                    android:text="0~9"
+                                    android:textSize="20sp" />
+
+                                <RadioButton
+                                    android:id="@+id/star_range1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ibm_semibold"
+                                    android:text="10~49"
+                                    android:textSize="20sp" />
+
+                                <RadioButton
+                                    android:id="@+id/star_range2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ibm_semibold"
+                                    android:text="50~99"
+                                    android:textSize="20sp" />
+
+                                <RadioButton
+                                    android:id="@+id/star_range3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ibm_semibold"
+                                    android:text="100~499"
+                                    android:textSize="20sp" />
+
+                                <RadioButton
+                                    android:id="@+id/star_range4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ibm_semibold"
+                                    android:text="500~"
+                                    android:textSize="20sp" />
+                            </RadioGroup>
+                        </HorizontalScrollView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="2"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:gravity="center"
+                            android:text="Fork 수"
+                            android:textColor="@color/black"
+                            android:textSize="25sp" />
+
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="3">
+
+                            <RadioGroup
+                                android:id="@+id/group_fork"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:weightSum="5">
+
+                                <RadioButton
+                                    android:id="@+id/fork_range0"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ibm_semibold"
+                                    android:text="0~9"
+                                    android:textSize="20sp" />
+
+                                <RadioButton
+                                    android:id="@+id/fork_range1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ibm_semibold"
+                                    android:text="10~49"
+                                    android:textSize="20sp" />
+
+                                <RadioButton
+                                    android:id="@+id/fork_range2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ibm_semibold"
+                                    android:text="50~99"
+                                    android:textSize="20sp" />
+
+                                <RadioButton
+                                    android:id="@+id/fork_range3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ibm_semibold"
+                                    android:text="100~499"
+                                    android:textSize="20sp" />
+
+                                <RadioButton
+                                    android:id="@+id/fork_range4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ibm_semibold"
+                                    android:text="500~"
+                                    android:textSize="20sp" />
+                            </RadioGroup>
+                        </HorizontalScrollView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.6"
+                    android:orientation="vertical"
+                    android:weightSum="5">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2.5"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:gravity="center"
+                        android:text="Topic 수"
+                        android:textColor="@color/black"
+                        android:textSize="25sp" />
+
+                    <RadioGroup
+                        android:id="@+id/group_topics"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2.5"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/topic0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:text="0"
+                            android:textSize="20sp" />
+
+                        <RadioButton
+                            android:id="@+id/topic1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:text="1"
+                            android:textSize="20sp" />
+
+                        <RadioButton
+                            android:id="@+id/topic2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:text="2"
+                            android:textSize="20sp" />
+
+                        <RadioButton
+                            android:id="@+id/topic3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:text="3"
+                            android:textSize="20sp" />
+
+                        <RadioButton
+                            android:id="@+id/topic_over4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:text="4~"
+                            android:textSize="20sp" />
+
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="0.4"
             android:orientation="horizontal"
+            android:layout_gravity="bottom"
             android:weightSum="5">
 
             <View
@@ -279,7 +348,6 @@
                 android:textSize="17sp" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 

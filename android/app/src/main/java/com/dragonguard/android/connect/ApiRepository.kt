@@ -29,12 +29,12 @@ class ApiRepository {
     private var api = retrofit.create(GitRankAPI::class.java)
 
     //Repository 검색을 위한 함수
-    fun getRepositoryNames(name: String, count: Int): ArrayList<RepoSearchResultModel> {
+    fun getRepositoryNames(name: String, count: Int, type: String): ArrayList<RepoSearchResultModel> {
         var repoNames : ArrayList<RepoSearchResultModel> = arrayListOf<RepoSearchResultModel>()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
         queryMap.put("name",name)
-        queryMap.put("type","REPOSITORIES")
+        queryMap.put("type",type)
 
         Log.d("api 호출", "$count 페이지 검색")
 
@@ -50,12 +50,12 @@ class ApiRepository {
         return repoNames
     }
 
-    fun getRepositoryNamesWithFilters(name: String, count: Int, filters: String): ArrayList<RepoSearchResultModel> {
+    fun getRepositoryNamesWithFilters(name: String, count: Int, filters: String, type: String): ArrayList<RepoSearchResultModel> {
         var repoNames : ArrayList<RepoSearchResultModel> = arrayListOf<RepoSearchResultModel>()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
         queryMap.put("name",name)
-        queryMap.put("type","REPOSITORIES")
+        queryMap.put("type",type)
         queryMap.put("filters", filters)
 
         Log.d("api 호출", "$count 페이지 검색")

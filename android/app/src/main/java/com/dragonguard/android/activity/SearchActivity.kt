@@ -18,6 +18,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
+import androidx.core.view.marginLeft
+import androidx.core.view.setMargins
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,6 +53,7 @@ class SearchActivity : AppCompatActivity() {
     private var filterLanguage = StringBuilder()
     private var filterOptions = StringBuilder()
     private var filterResult = StringBuilder()
+    private var type = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -188,12 +191,21 @@ class SearchActivity : AppCompatActivity() {
         Log.d("filtermap", "$filterMap")
         filterMap.forEach {
             if(count1 < filterMap.size-1) {
-                filterOptions.append("${it.key}:${it.value},")
+                if(it.key == "type") {
+                    type = it.value
+                } else {
+                    filterOptions.append("${it.key}:${it.value},")
+                }
                 notCatFilters.add("${it.key} ${it.value},")
+
                 count1++
             } else {
-                filterOptions.append("${it.key}:${it.value}")
-                notCatFilters.add("${it.key} ${it.value}")
+                if(it.key == "type") {
+                    type = it.value
+                } else {
+                    filterOptions.append("${it.key}:${it.value}")
+                }
+                notCatFilters.add("${it.key} ${it.value},")
             }
         }
 //        count = 0
@@ -241,15 +253,20 @@ class SearchActivity : AppCompatActivity() {
             if(chosenFilters.last().toString() != ","){
                 val lin = LinearLayout(this)
                 val split = chosenFilters.split(",")
+                Toast.makeText(this, "$split", Toast.LENGTH_SHORT).show()
                 lin.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 lin.orientation = LinearLayout.HORIZONTAL
-                for(i in split.indices) {
+                for(i in 0 until split.size) {
                     val linear = LinearLayout(this)
-                    linear.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    val param = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    param.setMargins(10,0,0,0)
+                    linear.layoutParams = param
+                    linear.setPadding(30,0,20,0)
                     linear.orientation = LinearLayout.HORIZONTAL
                     linear.setBackgroundResource(R.drawable.roundc)
                     linear.id = 1000000+i
                     val listButton = Button(this)
+                    Log.d("split", "i = $i")
                     listButton.text = split[i]
 //            val type = Typeface.createFromAsset(assets, "IBMPlexSansKR-SemiBold.ttf")
                     listButton.setTextColor(Color.BLACK)
@@ -280,15 +297,20 @@ class SearchActivity : AppCompatActivity() {
             } else {
                 val lin = LinearLayout(this)
                 val split = chosenFilters.split(",")
+                Toast.makeText(this, "$split", Toast.LENGTH_SHORT).show()
                 lin.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 lin.orientation = LinearLayout.HORIZONTAL
-                for(i in split.indices-1) {
+                for(i in 0 until (split.size-1)) {
                     val linear = LinearLayout(this)
-                    linear.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    val param = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    param.setMargins(10,0,0,0)
+                    linear.layoutParams = param
+                    linear.setPadding(30,0,20,0)
                     linear.orientation = LinearLayout.HORIZONTAL
                     linear.setBackgroundResource(R.drawable.roundc)
                     linear.id = 1000000+i
                     val listButton = Button(this)
+                    Log.d("split", "i = $i")
                     listButton.text = split[i]
 //            val type = Typeface.createFromAsset(assets, "IBMPlexSansKR-SemiBold.ttf")
                     listButton.setTextColor(Color.BLACK)
@@ -365,13 +387,13 @@ class SearchActivity : AppCompatActivity() {
         coroutine.launch {
             if(filterResult.toString().isNotEmpty()) {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString())
+                    viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type)
                 }
                 val result = resultDeferred.await()
                 delay(1000)
                 if (!checkSearchResult(result)) {
                     val secondDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString())
+                        viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type)
                     }
                     val second = secondDeferred.await()
                     if (checkSearchResult(second)) {
@@ -384,13 +406,13 @@ class SearchActivity : AppCompatActivity() {
                 }
             } else {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getSearchRepoResult(name, count)
+                    viewmodel.getSearchRepoResult(name, count, type)
                 }
                 val result = resultDeferred.await()
                 delay(1000)
                 if (!checkSearchResult(result)) {
                     val secondDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getSearchRepoResult(name, count)
+                        viewmodel.getSearchRepoResult(name, count, type)
                     }
                     val second = secondDeferred.await()
                     if (checkSearchResult(second)) {
