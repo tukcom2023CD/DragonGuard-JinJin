@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
     private var walletAddress = ""
     private var registered = false
     private var address = false
+    private var token = ""
     //    var count = 0
 
     override fun onNewIntent(intent: Intent?) {
@@ -93,12 +94,30 @@ class MainActivity : AppCompatActivity() {
             prefs.setGithubId("githubId", "")
             prefs.setId("id", 0)
         }
-        walletAddress = prefs.getWalletAddress("wallet_address", "")
-//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
+        val result = intent?.data?.getQueryParameter("accessToken")
+        Toast.makeText(applicationContext, "access token : $result", Toast.LENGTH_SHORT).show()
+        if(result != null) {
+            token = result
+            searchUser()
+            prefs.setToken("token", result)
+            Log.d("nono", "main token : ${prefs.getToken("token", "")}")
+        }
+//        if(prefs.getWalletAddress("wallet_address", "").isBlank()) {
+//            val intent = Intent(applicationContext, LoginActivity::class.java)
+//            intent.putExtra("wallet_address", walletAddress)
+//            intent.putExtra("logout", logout)
+//            activityResultLauncher.launch(intent)
+//        } else {
+//            Toast.makeText(applicationContext, "wallet address : ${prefs.getWalletAddress("wallet_address", "")}", Toast.LENGTH_SHORT).show()
+//        }
         val intent = Intent(applicationContext, LoginActivity::class.java)
         intent.putExtra("wallet_address", walletAddress)
         intent.putExtra("logout", logout)
         activityResultLauncher.launch(intent)
+//        walletAddress = prefs.getWalletAddress("wallet_address", "")
+//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
+
+
 //        val result = intent?.data?.getQueryParameter("code")
 //        if(result != null) {
 //            val coroutine = CoroutineScope(Dispatchers.IO)
@@ -178,12 +197,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(userId != 0) {
-            searchUser()
-            val handler = Handler(Looper.getMainLooper())
-            handler.postDelayed({searchUser()}, 2000)
-            handler.postDelayed({searchUser()}, 4000)
-        }
+        searchUser()
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({searchUser()}, 2000)
+        handler.postDelayed({searchUser()}, 4000)
     }
 
 //    등록되어있지 않을 경우 post 요청을 통해 가입하기
@@ -209,43 +226,42 @@ class MainActivity : AppCompatActivity() {
  */
     private fun searchUser(){
 //        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
-        val coroutine = CoroutineScope(Dispatchers.Main)
-        coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getUserInfo()
-            }
-            val userInfo : UserInfoModel = resultDeferred.await()
-            if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null) {
+        if(token.isNotBlank()) {
+            val coroutine = CoroutineScope(Dispatchers.Main)
+            coroutine.launch {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getUserInfo(token)
+                }
+                val userInfo = resultDeferred.await()
+                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
+                if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null) {
 //                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
-                if(!registered) {
-                    registered = true
-//                    val handler = Handler(Looper.getMainLooper())
-//                    handler.postDelayed({registerUser(prefs.getGithubId("githubId", ""))}, 2000)
-                }
-            } else {
-                if(userInfo.githubId.isNotBlank()) {
-                    binding.userId.text = userInfo.githubId
-                }
-                if(userInfo.commits != 0 && userInfo.tier == "SPROUT" && !address) {
-                    if(prefs.getWalletAddress("wallet_address", "") != "") {
-                        address = true
-                        postWalletAddress(prefs.getWalletAddress("wallet_address", ""))
+
+                } else {
+                    if(userInfo.githubId.isNotBlank()) {
+                        binding.userId.text = userInfo.githubId
+                    }
+                    if(userInfo.commits != 0 && userInfo.tier == "SPROUT" && !address) {
+                        if(prefs.getWalletAddress("wallet_address", "") != "") {
+                            address = true
+                            postWalletAddress(prefs.getWalletAddress("wallet_address", ""))
+                        } else {
+                            binding.userTier.text = "내 티어 : ${userInfo.tier}"
+                        }
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.postDelayed({searchUser()},2000)
                     } else {
                         binding.userTier.text = "내 티어 : ${userInfo.tier}"
                     }
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.postDelayed({searchUser()},2000)
-                } else {
-                    binding.userTier.text = "내 티어 : ${userInfo.tier}"
-                }
-                if(userInfo.tokenAmount == null) {
-                    binding.userToken.text = "내 기여도 : ${userInfo.commits}"
-                } else {
-                    binding.userToken.text = "내 기여도 : ${userInfo.tokenAmount}"
-                }
-                binding.userRanking.text = userInfo.rank
-                if(!this@MainActivity.isFinishing) {
-                    Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
+                    if(userInfo.tokenAmount == null) {
+                        binding.userToken.text = "내 기여도 : ${userInfo.commits}"
+                    } else {
+                        binding.userToken.text = "내 기여도 : ${userInfo.tokenAmount}"
+                    }
+                    binding.userRanking.text = userInfo.rank
+                    if(!this@MainActivity.isFinishing) {
+                        Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
+                    }
                 }
             }
         }

@@ -73,14 +73,14 @@ class ApiRepository {
     }
 
     //사용자의 정보를 받아오기 위한 함수
-    fun getUserInfo(): UserInfoModel {
-        val userInfo = api.getUserInfo()
+    fun getUserInfo(token: String): UserInfoModel {
+        val userInfo = api.getUserInfo("Bearer $token")
         var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null)
         try {
             val result = userInfo.execute()
-            if (result.isSuccessful) {
-                userResult = result.body()!!
-            }
+            Log.d("no", "status : ${result.code()}")
+            userResult = result.body()!!
+            Log.d("결과", "사용자 정보 : $userResult")
         } catch (e: Exception) {
             return userResult
         }
