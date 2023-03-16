@@ -181,7 +181,6 @@ final class FilteringController: UIViewController{
         })
         
         if !self.languageFilter.isEmpty{
-            print("called")
             setLanguageAutoLayout()
         }
         else{
@@ -289,7 +288,6 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         if collectionView == self.selectedLanguages{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LanguageSelectionsCollectionViewCell.identifier, for: indexPath) as? LanguageSelectionsCollectionViewCell ?? LanguageSelectionsCollectionViewCell()
             
-            print("lang \(self.languageFilter)")
             cell.inputText(text: languageFilter[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
             cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
