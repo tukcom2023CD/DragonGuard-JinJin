@@ -32,6 +32,10 @@ public class AuthService {
         String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
                 .map(Cookie::getValue).orElseThrow(OAuthProcessingException::new);
 
+        if (!jwtTokenProvider.validateToken(oldAccessToken)) {
+            throw new OAuthProcessingException();
+        }
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
 

@@ -36,6 +36,16 @@ public class JwtTokenProvider {
                 .build();
     }
 
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException | UnsupportedJwtException | IllegalStateException e) {
+            log.info("만료된 JWT 토큰입니다.");
+        }
+        return false;
+    }
+
     private void saveRefreshToken(String refreshToken, UserDetailsImpl userDetails) {
         UUID id = UUID.fromString(userDetails.getName());
 

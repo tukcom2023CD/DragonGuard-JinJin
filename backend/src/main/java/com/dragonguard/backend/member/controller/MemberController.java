@@ -62,8 +62,7 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
-    public MemberResponse getCurrentUser() {
-        return memberService.getMember();
+    public ResponseEntity<MemberResponse> getCurrentUser() {
+        return ResponseEntity.ok(memberService.getMember());
     }
 }
