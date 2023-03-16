@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
 
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
@@ -32,17 +33,18 @@ class BlockchainControllerTest extends RestDocumentTest {
     private BlockchainService blockchainService;
     @MockBean
     private TransactionService transactionService;
+
     @Test
     @DisplayName("블록체인 부여 기록 리스트 조회")
     void getBlockchainInfo() throws Exception {
         List<BlockchainResponse> expected = List.of(
-                new BlockchainResponse(1L, ContributeType.COMMIT, new BigInteger("10"), "ohksj77", 1L),
-                new BlockchainResponse(2L, ContributeType.COMMIT, new BigInteger("5"), "ohksj77", 1L));
+                new BlockchainResponse(1L, ContributeType.COMMIT, new BigInteger("10"), "ohksj77", UUID.randomUUID()),
+                new BlockchainResponse(2L, ContributeType.COMMIT, new BigInteger("5"), "ohksj77", UUID.randomUUID()));
         given(blockchainService.getBlockchainList(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/blockchain/1")
+                        get("/blockchain/1")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         perform.andExpect(status().isOk())

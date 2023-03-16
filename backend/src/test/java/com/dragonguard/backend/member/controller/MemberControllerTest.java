@@ -7,6 +7,7 @@ import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.service.MemberService;
+import com.dragonguard.backend.support.LoginTest;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import com.dragonguard.backend.support.fixture.member.dto.MemberRequestFixture;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +48,7 @@ class MemberControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        post("/api/members")
+                        post("/members")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
@@ -71,7 +72,7 @@ class MemberControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        post("/api/members/1/commits")
+                        post("/members/commits")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -92,7 +93,7 @@ class MemberControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/members/1")
+                        get("/members/me")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -114,7 +115,7 @@ class MemberControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/members/1/tier")
+                        get("/members/tier")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -141,7 +142,7 @@ class MemberControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/members/ranking?page=0&size=20&sort=commits,DESC")
+                        get("/members/ranking?page=0&size=20&sort=commits,DESC")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -162,7 +163,7 @@ class MemberControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        post("/api/members/wallet-address")
+                        post("/members/wallet-address")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(

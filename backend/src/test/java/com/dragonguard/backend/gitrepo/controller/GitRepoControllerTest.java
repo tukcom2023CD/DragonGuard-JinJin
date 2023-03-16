@@ -49,7 +49,7 @@ class GitRepoControllerTest extends RestDocumentTest {
 
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/git-repos?name=tukcom2023CD/DragonGuard-JinJin")
+                        get("/git-repos?name=tukcom2023CD/DragonGuard-JinJin")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         perform.andExpect(status().isOk())
@@ -76,7 +76,7 @@ class GitRepoControllerTest extends RestDocumentTest {
 
         ResultActions perform =
                 mockMvc.perform(
-                        post("/api/git-repos/compare/git-repos-members")
+                        post("/git-repos/compare/git-repos-members")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
@@ -108,7 +108,7 @@ class GitRepoControllerTest extends RestDocumentTest {
 
         ResultActions perform =
                 mockMvc.perform(
-                        post("/api/git-repos/compare")
+                        post("/git-repos/compare")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
@@ -130,7 +130,7 @@ class GitRepoControllerTest extends RestDocumentTest {
 
         ResultActions perform =
                 mockMvc.perform(
-                        post("/api/git-repos/compare/members")
+                        post("/git-repos/compare/members")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(

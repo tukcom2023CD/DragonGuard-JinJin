@@ -47,7 +47,7 @@ class SearchControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/search?page=1&name=gitrank&type=REPOSITORIES")
+                        get("/search?page=1&name=gitrank&type=REPOSITORIES")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -70,13 +70,13 @@ class SearchControllerTest extends RestDocumentTest {
                 new ResultResponse(4L, "Sammuelwoojae"),
                 new ResultResponse(5L, "And"),
                 new ResultResponse(6L, "DragonGuard-JinJin"));
-        
+
         given(searchService.getSearchResultByClient(any())).willReturn(expected);
 
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/search?page=1&name=gitrank&type=REPOSITORIES&filters=language:swift,language:kotlin,language:java")
+                        get("/search?page=1&name=gitrank&type=REPOSITORIES&filters=language:swift,language:kotlin,language:java")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
