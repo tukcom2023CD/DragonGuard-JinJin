@@ -1,12 +1,10 @@
 package com.dragonguard.backend.config.security.oauth.user;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Map;
 
 @Getter
-@Setter
 public class OAuth2UserInfo {
     private Map<String, Object> attributes;
 
