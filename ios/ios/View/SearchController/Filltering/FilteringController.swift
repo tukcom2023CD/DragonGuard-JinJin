@@ -277,6 +277,8 @@ extension FilteringController: CheckLanguage {
     func sendCheckingLangugae(languageList: [String], index: [Int]) {
         var indexArray:[Int] = []
         var stringArray:[String] = []
+        
+        print("list \(languageList)")
         for i in 0..<languageList.count{
             indexArray.append(index[i])
             stringArray.append(languageList[i])
@@ -312,12 +314,12 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             cell.inputText(text: starsArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
             
-            if starIndex ?? -1 == indexPath.row {
-                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 1) /* #ffc2c2 */
-            }
-            else{
+//            if starIndex ?? -1 == indexPath.row {
+//                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 1) /* #ffc2c2 */
+//            }
+//            else{
                 cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-            }
+//            }
             
             
             return cell
@@ -328,12 +330,12 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             cell.inputText(text: forksArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
             
-            if forkIndex ?? -1 == indexPath.row {
-                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 1) /* #ffc2c2 */
-            }
-            else{
+//            if forkIndex ?? -1 == indexPath.row {
+//                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 1) /* #ffc2c2 */
+//            }
+//            else{
                 cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-            }
+//            }
             
             return cell
         }
@@ -343,12 +345,12 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             cell.inputText(text: topicArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
             
-            if topicIndex ?? -1 == indexPath.row {
-                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 1) /* #ffc2c2 */
-            }
-            else{
+//            if topicIndex ?? -1 == indexPath.row {
+//                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 1) /* #ffc2c2 */
+//            }
+//            else{
                 cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-            }
+//            }
             
             return cell
         }
@@ -382,7 +384,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == self.selectedLanguages{
-            
+            print(self.languageFilterIndex)
             for index in self.languageFilterIndex{
                 if index == indexPath.row{
                     self.languageFilter.remove(at: index)
@@ -397,6 +399,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             switch indexPath.row{
             case 0:
                 let text = "stars:0..9"
+//                let remainIndex = self.starIndex
                 self.starIndex = indexPath.row
                 if checkSelected(collectionView,
                                  indexPath: indexPath,
@@ -407,9 +410,16 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 else{
                     self.starFiltering = text
+                    
+//                    if remainIndex ?? -1 == indexPath.row && remainIndex ?? -1 != self.starIndex{
+//                        if let cell = collectionView.cellForItem(at: indexPath){
+//                            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+//                        }
+//                    }
                 }
             case 1:
                 let text = "stars:10..49"
+//                let remainIndex = self.starIndex
                 self.starIndex = indexPath.row
                 if checkSelected(collectionView,
                                  indexPath: indexPath,
@@ -420,9 +430,16 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 else{
                     self.starFiltering = text
+                    
+//                    if remainIndex ?? -1 == indexPath.row && remainIndex ?? -1 != self.starIndex{
+//                        if let cell = collectionView.cellForItem(at: indexPath){
+//                            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+//                        }
+//                    }
                 }
             case 2:
                 let text = "stars:50..99"
+//                let remainIndex = self.starIndex
                 self.starIndex = indexPath.row
                 if checkSelected(collectionView,
                                  indexPath: indexPath,
@@ -433,9 +450,16 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 else{
                     self.starFiltering = text
+                    
+//                    if remainIndex ?? -1 == indexPath.row && remainIndex ?? -1 != self.starIndex{
+//                        if let cell = collectionView.cellForItem(at: indexPath){
+//                            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+//                        }
+//                    }
                 }
             case 3:
                 let text = "stars:100..499"
+//                let remainIndex = self.starIndex
                 self.starIndex = indexPath.row
                 if checkSelected(collectionView,
                                  indexPath: indexPath,
@@ -446,6 +470,12 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 else{
                     self.starFiltering = text
+                    
+//                    if remainIndex ?? -1 == indexPath.row && remainIndex ?? -1 != self.starIndex{
+//                        if let cell = collectionView.cellForItem(at: indexPath){
+//                            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+//                        }
+//                    }
                 }
             case 4:
                 let text = "stars:>=500"
@@ -461,11 +491,11 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                 else{
                     self.starFiltering = text
                     
-//                        if remainIndex ?? -1 == indexPath.row{
-//                            if let cell = collectionView.cellForItem(at: indexPath){
-//                                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-//                            }
+//                    if remainIndex ?? -1 == indexPath.row && remainIndex ?? -1 != self.starIndex{
+//                        if let cell = collectionView.cellForItem(at: indexPath){
+//                            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
 //                        }
+//                    }
                     
                 }
             default:

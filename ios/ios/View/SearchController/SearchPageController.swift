@@ -124,6 +124,14 @@ final class SearchPageController: UIViewController {
         filteringController.topicFiltering = self.topicFiltering
         filteringController.topicIndex = self.topicIndex
         self.filtering = ""
+        self.languageFilter = []   // 선택한 언어 리스트
+        self.languageFilterIndex = [] // 선택안 언어의 인덱스
+        self.starFiltering = ""  // 선택된 star 조건
+        self.starIndex = nil
+        self.forkFiltering = ""  // 선택된 fork 조건
+        self.forkIndex = nil
+        self.topicFiltering = "" // 선택된 topic 조건
+        self.topicIndex = nil
         self.present(filteringController, animated: true)
     }
     

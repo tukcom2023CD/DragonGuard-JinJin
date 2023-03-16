@@ -20,6 +20,10 @@ final class LanguageFillteringTableView: UIViewController{
         super.viewDidLoad()
         self.view.backgroundColor = .white
         addToView()
+        
+        print("x,x,x,x, \(self.selectedLanguage)")
+        print("x,x,x,x, \(self.selectedLangugaeIndex)")
+        
     }
     
     /*
@@ -55,6 +59,8 @@ final class LanguageFillteringTableView: UIViewController{
         let uniqueLanguageIndexArray = Set(self.selectedLangugaeIndex)
         
         self.delegate?.sendCheckingLangugae(languageList: Array(uniqueLanguageArray), index: Array(uniqueLanguageIndexArray))
+        self.selectedLanguage = []
+        self.selectedLangugaeIndex = []
         self.dismiss(animated: true)
     }
     
@@ -106,7 +112,6 @@ extension LanguageFillteringTableView: UITableViewDelegate, UITableViewDataSourc
         for index in self.selectedLangugaeIndex{
             if index == indexPath.row{
                 cell.accessoryType = .checkmark
-                self.selectedLanguage.append(self.popularLanguage[index])
             }
         }
         
@@ -116,11 +121,10 @@ extension LanguageFillteringTableView: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let index = self.selectedLangugaeIndex.firstIndex(of: indexPath.row)
-
         // 다시 선택한 경우
         if self.selectedLanguage.contains(self.popularLanguage[indexPath.row]){
             let languageIndex = self.selectedLanguage.firstIndex(of: self.popularLanguage[indexPath.row])
-            self.selectedLanguage.remove(at: languageIndex ?? 0)
+            self.selectedLanguage.remove(at: languageIndex ?? -1)
             
             self.selectedLangugaeIndex.remove(at: index ?? 0)
             
