@@ -15,6 +15,5 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WalletRequest {
-    private UUID id;
     private String walletAddress;
 }

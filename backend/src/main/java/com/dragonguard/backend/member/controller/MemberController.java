@@ -61,8 +61,8 @@ public class MemberController {
     }
 
     @PostMapping("/wallet-address")
-    public ResponseEntity<Void> updateWalletAddress(@RequestBody WalletRequest walletRequest) {
-        memberService.updateWalletAddress(walletRequest);
+    public ResponseEntity<Void> updateWalletAddress(@AuthenticationPrincipal UserDetailsImpl user, @RequestBody WalletRequest walletRequest) {
+        memberService.updateWalletAddress(walletRequest, UUID.fromString(user.getName()));
         return ResponseEntity.ok().build();
     }
 

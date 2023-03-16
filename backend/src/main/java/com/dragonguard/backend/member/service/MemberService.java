@@ -124,8 +124,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateWalletAddress(WalletRequest walletRequest) {
-        Member member = getEntity(walletRequest.getId());
+    public void updateWalletAddress(WalletRequest walletRequest, UUID memberId) {
+        Member member = getEntity(memberId);
         member.updateWalletAddress(walletRequest.getWalletAddress());
         setTransaction(member.getSumOfCommits(), member);
     }

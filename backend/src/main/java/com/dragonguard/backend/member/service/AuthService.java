@@ -4,6 +4,7 @@ import com.dragonguard.backend.config.security.jwt.JwtToken;
 import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
 import com.dragonguard.backend.config.security.oauth.OAuthProcessingException;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
+import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import com.dragonguard.backend.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +46,10 @@ public class AuthService {
         JwtToken token = jwtTokenProvider.createAccessToken(user);
 
         return token.getAccessToken();
+    }
+
+    public Member getLoginUser() {
+        return ((UserDetailsImpl) (SecurityContextHolder.getContext().getAuthentication().getPrincipal()))
+                .getMember();
     }
 }

@@ -157,7 +157,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 지갑 주소 갱신")
     void updateWalletAddress() throws Exception {
         // given
-        willDoNothing().given(memberService).updateWalletAddress(any());
+        willDoNothing().given(memberService).updateWalletAddress(any(), any());
 
         // when
         ResultActions perform =
@@ -166,7 +166,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new WalletRequest(UUID.randomUUID(), "asdfasdf12341234"))));
+                                                new WalletRequest("asdfasdf12341234"))));
 
         // then
         perform.andExpect(status().isOk());
