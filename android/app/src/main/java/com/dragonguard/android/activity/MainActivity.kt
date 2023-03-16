@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity() {
                 if(userInfo.commits != 0 && userInfo.tier == "SPROUT" && !address) {
                     if(prefs.getWalletAddress("wallet_address", "") != "") {
                         address = true
-                        postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
+                        postWalletAddress(prefs.getWalletAddress("wallet_address", ""))
                     } else {
                         binding.userTier.text = "내 티어 : ${userInfo.tier}"
                     }
@@ -255,24 +255,25 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.getWalletAuthResult(key)
             }
             val authResponse = authResponseDeferred.await()
-            if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null || prefs.getGithubId("githubId", "")=="") {
+            if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
 //                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
                 val intent = Intent(applicationContext, LoginActivity::class.java)
                 intent.putExtra("wallet_address", walletAddress)
                 activityResultLauncher.launch(intent)
 
             } else {
-//                Toast.makeText(applicationContext, "wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "key : $key wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
                 prefs.setWalletAddress("wallet_address", authResponse.result.klaytn_address)
+                postWalletAddress(authResponse.result.klaytn_address)
             }
         }
     }
 
-    private fun postWalletAddress(id: Int, address: String) {
+    private fun postWalletAddress(address: String) {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val postwalletDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.postWalletAddress(id, address)
+                viewmodel.postWalletAddress(address)
             }
             val postWalletResponse = postwalletDeferred.await()
 //            if(!postWalletResponse) {

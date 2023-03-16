@@ -69,8 +69,8 @@ class Viewmodel {
         return repository.getTokenHistory(id)
     }
 
-    fun postWalletAddress(id: Int, walletAddress: String): Boolean {
-        val body = WalletAddressModel(id.toString(), walletAddress)
+    fun postWalletAddress(walletAddress: String): Boolean {
+        val body = WalletAddressModel(walletAddress)
         return repository.postWalletAddress(body)
     }
 
