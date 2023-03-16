@@ -1,12 +1,10 @@
 package com.dragonguard.backend.member.controller;
 
-import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
-import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
