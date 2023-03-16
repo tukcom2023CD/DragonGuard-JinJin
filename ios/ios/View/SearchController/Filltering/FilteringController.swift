@@ -385,13 +385,11 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == self.selectedLanguages{
             print(self.languageFilterIndex)
-            for index in self.languageFilterIndex{
-                if index == indexPath.row{
-                    self.languageFilter.remove(at: index)
-                    self.languageFilterIndex.remove(at: index)
-                    self.selectedLanguages.reloadData()
-                }
-            }
+            
+            let index = self.languageFilterIndex.firstIndex(of: self.languageFilterIndex[indexPath.row])
+            self.languageFilter.remove(at: index ?? 0)
+            self.languageFilterIndex.remove(at: index ?? 0)
+            self.selectedLanguages.reloadData()
             
         }
         else if collectionView == self.starSelections{
