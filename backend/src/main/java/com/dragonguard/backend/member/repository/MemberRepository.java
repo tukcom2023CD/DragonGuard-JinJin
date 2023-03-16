@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ public interface MemberRepository extends JpaRepository<Member, UUID>, MemberQue
     @Query("SELECT m.refreshToken FROM Member m WHERE m.id = :id")
     String findRefreshTokenById(UUID id);
 
+    @Transactional
     @Modifying
     @Query("UPDATE Member m SET m.refreshToken = :token WHERE m.id = :id")
     void updateRefreshToken(UUID id, String token);
