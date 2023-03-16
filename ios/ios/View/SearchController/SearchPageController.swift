@@ -24,8 +24,11 @@ final class SearchPageController: UIViewController {
     var languageFilter: [String] = []   // 선택한 언어 리스트
     var languageFilterIndex: [Int] = [] // 선택안 언어의 인덱스
     var starFiltering = ""  // 선택된 star 조건
+    var starIndex: Int?
     var forkFiltering = ""  // 선택된 fork 조건
+    var forkIndex: Int?
     var topicFiltering = "" // 선택된 topic 조건
+    var topicIndex: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,14 +110,20 @@ final class SearchPageController: UIViewController {
             .disposed(by: disposeBag)
     }
     
+    // 필터링 버튼 클릭 시 화면 전환
     @objc private func clickedFilteringBtn(){
         let filteringController = FilteringController()
+        
         filteringController.delegate = self
         filteringController.languageFilter = self.languageFilter
         filteringController.languageFilterIndex = self.languageFilterIndex
         filteringController.starFiltering = self.starFiltering
+        filteringController.starIndex = self.starIndex
         filteringController.forkFiltering = self.forkFiltering
+        filteringController.forkIndex = self.forkIndex
         filteringController.topicFiltering = self.topicFiltering
+        filteringController.topicIndex = self.topicIndex
+        self.filtering = ""
         self.present(filteringController, animated: true)
     }
     
@@ -216,6 +225,9 @@ extension SearchPageController: UISearchBarDelegate{
             }
             self.filtering.append("\(self.starFiltering)")
         }
+        else{
+            self.starFiltering = ""
+        }
 
         if !self.forkFiltering.isEmpty{
             if !self.filtering.isEmpty{
@@ -239,7 +251,15 @@ extension SearchPageController: UISearchBarDelegate{
 
 // 레포지토리 필터링된 정보들을 가지고 오는 구문
 extension SearchPageController: SendFilteringData{
-    func send(languageFilter: [String],languageFilterIndex: [Int], starFiltering: String, forkFiltering: String, topicFiltering: String) {
+    func send(languageFilter: [String],
+              languageFilterIndex: [Int],
+              starFiltering: String,
+              starIndex: Int?,
+              forkFiltering: String,
+              forkIndex: Int?,
+              topicFiltering: String,
+              topicIndex: Int?) {
+        
         for lang in languageFilter{
             self.languageFilter.append(lang)
         }
@@ -247,8 +267,11 @@ extension SearchPageController: SendFilteringData{
             self.languageFilterIndex.append(index)
         }
         self.starFiltering = starFiltering
+        self.starIndex = starIndex
         self.forkFiltering = forkFiltering
+        self.forkIndex = forkIndex
         self.topicFiltering = topicFiltering
+        self.topicIndex = topicIndex
     }
 }
 
