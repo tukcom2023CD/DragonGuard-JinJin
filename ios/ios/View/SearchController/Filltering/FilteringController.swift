@@ -31,7 +31,6 @@ final class FilteringController: UIViewController{
         self.view.backgroundColor = .white
         
         addToView()
-        print(self.starIndex)
     }
     
     // Languages

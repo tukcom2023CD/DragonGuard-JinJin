@@ -21,14 +21,8 @@ final class SearchPageController: UIViewController {
     var beforePage: String = "" // 이전 View 이름
     var isInfiniteScroll = false // 무한 스크롤 1번만 로딩되게 확인하는 변수
     var filtering = ""  //필터링 조건 넣을 변수  ex) 언어, 스타, 포크 수 등등
-    var languageFilter: [String] = []   // 선택한 언어 리스트
-    var languageFilterIndex: [Int] = [] // 선택안 언어의 인덱스
-    var starFiltering = ""  // 선택된 star 조건
-    var starIndex: Int?
-    var forkFiltering = ""  // 선택된 fork 조건
-    var forkIndex: Int?
-    var topicFiltering = "" // 선택된 topic 조건
-    var topicIndex: Int?
+    var filteringArray: [String] = []  // 언어를 제외한 모든 필터 API용
+    var conditionFilter: [String] = []  // 언어를 제외한 모든 필터 사용자 시각용
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,6 +76,14 @@ final class SearchPageController: UIViewController {
         return btn
     }()
     
+    lazy var filteringCollectionView : UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .white
+        return cv
+    }()
+    
     /*
      UI Action 작성
      
@@ -115,23 +117,9 @@ final class SearchPageController: UIViewController {
         let filteringController = FilteringController()
         
         filteringController.delegate = self
-        filteringController.languageFilter = self.languageFilter
-        filteringController.languageFilterIndex = self.languageFilterIndex
-        filteringController.starFiltering = self.starFiltering
-        filteringController.starIndex = self.starIndex
-        filteringController.forkFiltering = self.forkFiltering
-        filteringController.forkIndex = self.forkIndex
-        filteringController.topicFiltering = self.topicFiltering
-        filteringController.topicIndex = self.topicIndex
-        self.filtering = ""
-        self.languageFilter = []   // 선택한 언어 리스트
-        self.languageFilterIndex = [] // 선택안 언어의 인덱스
-        self.starFiltering = ""  // 선택된 star 조건
-        self.starIndex = nil
-        self.forkFiltering = ""  // 선택된 fork 조건
-        self.forkIndex = nil
-        self.topicFiltering = "" // 선택된 topic 조건
-        self.topicIndex = nil
+        self.conditionFilter = []
+        self.filteringArray = []
+        
         self.present(filteringController, animated: true)
     }
     
@@ -152,17 +140,22 @@ final class SearchPageController: UIViewController {
         // searchControllerDelegate
         self.searchUI.delegate = self
         
+        self.view.addSubview(filteringCollectionView)
+        self.filteringCollectionView.delegate = self
+        self.filteringCollectionView.dataSource = self
+        self.filteringCollectionView.register(FilteringCollectionViewCell.self, forCellWithReuseIdentifier: FilteringCollectionViewCell.identifier)
+        
         // tableview 설치
         self.resultTableView.register(SearchPageTableView.self, forCellReuseIdentifier: SearchPageTableView.identifier)
         
     }
     private func addTableView(){
         self.view.addSubview(resultTableView)   //tableview 적용
-        
         // 결과 출력하는 테이블 뷰 적용
         self.resultTableView.dataSource = self
         self.resultTableView.delegate = self
-        resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
+        
+        setAutoLayuot()    // 검색 결과 출력할 tableview AutoLayout
     }
     
     /*
@@ -171,19 +164,28 @@ final class SearchPageController: UIViewController {
      함수 실행시 private으로 시작할 것 (추천)
      */
     
-    // tableview Autolayout 설정
-    private func resultTableViewSetLayout(){
-        resultTableView.snp.makeConstraints({ make in
-            make.top.equalTo(50)
-            make.bottom.equalTo(0)
+    private func setCollectionView(){
+        filteringCollectionView.snp.makeConstraints({ make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(10)
             make.leading.equalTo(10)
             make.trailing.equalTo(-10)
+            
+            if !self.conditionFilter.isEmpty{
+                make.height.equalTo(deviceHeight/15)
+            }
+        })
+    }
+    
+    private func setAutoLayuot(){
+        resultTableView.snp.makeConstraints({ make in
+            make.top.equalTo(self.filteringCollectionView.snp.bottom).offset(10)
+            make.leading.equalTo(10)
+            make.trailing.equalTo(-10)
+            make.bottom.equalTo(0)
         })
     }
     
 }
-
-
 
 // SearchController Delegate
 extension SearchPageController: UISearchBarDelegate{
@@ -214,43 +216,14 @@ extension SearchPageController: UISearchBarDelegate{
     
     func repositoryfiltering(){
         
-        let uniqueLanguageArray = Set(self.languageFilter)
-        
-        for i in 0..<Array(uniqueLanguageArray).count{
-            if !self.filtering.contains("language:\(Array(uniqueLanguageArray)[i])") {
-                self.filtering.append("language:\(Array(uniqueLanguageArray)[i])")
-                
-                // 마지막 요소인경우 ,를 붙이지 않음
-                if i != Array(uniqueLanguageArray).count-1 {
+        if !self.filteringArray.isEmpty{
+            for index in 0..<self.filteringArray.count{
+                self.filtering.append(self.filteringArray[index])
+                if index != self.filteringArray.count-1{
                     self.filtering.append(",")
                 }
             }
         }
-        
-        if !self.starFiltering.isEmpty{
-            if !self.filtering.isEmpty{
-                self.filtering.append(",")
-            }
-            self.filtering.append("\(self.starFiltering)")
-        }
-        else{
-            self.starFiltering = ""
-        }
-
-        if !self.forkFiltering.isEmpty{
-            if !self.filtering.isEmpty{
-                self.filtering.append(",")
-            }
-            self.filtering.append("\(self.forkFiltering)")
-        }
-
-        if !self.topicFiltering.isEmpty{
-            if !self.filtering.isEmpty{
-                self.filtering.append(",")
-            }
-            self.filtering.append("\(self.topicFiltering)")
-        }
-        
         print("필터링 결과")
         print(self.filtering)
     }
@@ -267,20 +240,70 @@ extension SearchPageController: SendFilteringData{
               forkIndex: Int?,
               topicFiltering: String,
               topicIndex: Int?) {
+        let starsArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
+        let forksArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
+        let topicArray = ["0","1","2","3","4 이상"]
         
-        for lang in languageFilter{
-            self.languageFilter.append(lang)
+        if !languageFilter.isEmpty{
+            for lang in languageFilter{
+                filteringArray.append("languages:\(lang)")
+                conditionFilter.append(lang)
+            }
         }
-        for index in languageFilterIndex{
-            self.languageFilterIndex.append(index)
+        if !starFiltering.isEmpty{
+            for index in 0..<starsArray.count{
+                if index == starIndex ?? -1{
+                    filteringArray.append(starFiltering)
+                    conditionFilter.append("star:\(starsArray[index])")
+                }
+            }
         }
-        self.starFiltering = starFiltering
-        self.starIndex = starIndex
-        self.forkFiltering = forkFiltering
-        self.forkIndex = forkIndex
-        self.topicFiltering = topicFiltering
-        self.topicIndex = topicIndex
+        if !forkFiltering.isEmpty{
+            for index in 0..<forksArray.count{
+                if index == forkIndex ?? -1{
+                    filteringArray.append(forkFiltering)
+                    conditionFilter.append("fork:\(forksArray[index])")
+                }
+            }
+        }
+        if !topicFiltering.isEmpty{
+            for index in 0..<topicArray.count{
+                if index == topicIndex ?? -1{
+                    filteringArray.append(topicFiltering)
+                    conditionFilter.append("topic:\(topicArray[index])")
+                }
+            }
+        }
+        print("api \(self.filteringArray)")
+        setCollectionView()
+        self.filteringCollectionView.reloadData()
     }
+}
+
+extension SearchPageController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilteringCollectionViewCell.identifier, for: indexPath) as? FilteringCollectionViewCell ?? FilteringCollectionViewCell()
+
+        cell.inputText(text: self.conditionFilter[indexPath.row])
+        cell.layer.cornerRadius = collectionView.bounds.height/2
+        cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.conditionFilter.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellHeight = collectionView.bounds.height
+        let cellWidth = collectionView.bounds.width/4
+        
+        return CGSize(width: cellWidth, height: cellHeight)
+        
+    }
+    
+    
 }
 
 
