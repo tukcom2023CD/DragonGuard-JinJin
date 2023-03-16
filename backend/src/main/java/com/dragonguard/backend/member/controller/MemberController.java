@@ -28,7 +28,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;

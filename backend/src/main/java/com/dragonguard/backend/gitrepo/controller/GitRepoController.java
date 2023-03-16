@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/git-repos")
+@RequestMapping("/git-repos")
 public class GitRepoController {
     private final GitRepoService gitRepoService;
 

@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/blockchain")
+@RequestMapping("/blockchain")
 public class BlockchainController {
     private final BlockchainService blockchainService;
     private final TransactionService transactionService;

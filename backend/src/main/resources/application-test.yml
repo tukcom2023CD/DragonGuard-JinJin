@@ -4,6 +4,7 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+    context-path: /api
   config:
     import:
       - classpath:env.yml

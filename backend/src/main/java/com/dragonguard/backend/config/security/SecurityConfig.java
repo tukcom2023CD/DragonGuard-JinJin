@@ -78,7 +78,8 @@ public class SecurityConfig {
 
     private Customizer<OAuth2LoginConfigurer<HttpSecurity>> oAuth2LoginConfigurer() {
         return o -> o.authorizationEndpoint(a ->
-                        a.baseUri("/auth/login").authorizationRequestRepository(cookieAuthorizationRequestRepository))
+                        a.baseUri("/oauth2/authorize").authorizationRequestRepository(cookieAuthorizationRequestRepository)
+                                .and().redirectionEndpoint().baseUri("/oauth2/callback/*"))
                 .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler);
