@@ -20,25 +20,25 @@ import java.util.List;
 public class ErrorAdvice {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> entityNotFound(EntityNotFoundException e) {
-        log.info("entity not found exception occured");
+        log.info("entity not found exception occurred");
         return ResponseEntity.ok("엔티티를 찾을 수 없습니다.");
     }
 
     @ExceptionHandler(javax.persistence.EntityNotFoundException.class)
     public ResponseEntity<String> entityNotFoundException(javax.persistence.EntityNotFoundException e) {
-        log.info("entity not found exception occured");
+        log.info("entity not found exception occurred");
         return ResponseEntity.ok("엔티티를 찾을 수 없습니다.");
     }
 
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<List> webClientResponse(WebClientResponseException e) {
-        log.info("web client error occured");
+        log.info("web client error occurred");
         return ResponseEntity.ok(List.of());
     }
 
     @ExceptionHandler(DecodingException.class)
     public ResponseEntity<List> decodingException(DecodingException e) {
-        log.info("decoding error occured");
+        log.info("decoding error occurred");
         return ResponseEntity.ok(List.of());
     }
 }
