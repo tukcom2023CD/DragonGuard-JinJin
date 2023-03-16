@@ -3,6 +3,7 @@ package com.dragonguard.backend.config.security;
 import com.dragonguard.backend.config.security.jwt.JwtAuthenticationFilter;
 import com.dragonguard.backend.config.security.oauth.CookieAuthorizationRequestRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -38,6 +39,9 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
+
+    @Value("spring.security.oauth2.client.registration.github.redirectUri")
+    private final String redirectUri;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -79,7 +83,7 @@ public class SecurityConfig {
     private Customizer<OAuth2LoginConfigurer<HttpSecurity>> oAuth2LoginConfigurer() {
         return o -> o.authorizationEndpoint(a ->
                         a.baseUri("/oauth2/authorize").authorizationRequestRepository(cookieAuthorizationRequestRepository)
-                                .and().redirectionEndpoint().baseUri("/oauth2/callback/*"))
+                                .and().redirectionEndpoint().baseUri(redirectUri))
                 .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler);

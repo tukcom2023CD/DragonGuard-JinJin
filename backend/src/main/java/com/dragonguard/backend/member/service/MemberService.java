@@ -145,6 +145,7 @@ public class MemberService {
 
     public Member saveIfNone(OAuth2Request oAuth2Request) {
         String email = oAuth2Request.getEmail().orElseThrow(IllegalArgumentException::new);
+        getCommitsByScraping(oAuth2Request.getAccountId());
         return memberRepository
                 .findByEmail(email)
                 .orElseGet(() -> memberRepository.save(setUpMember(oAuth2Request)));
