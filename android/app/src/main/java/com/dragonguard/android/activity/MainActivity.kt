@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
                 } else {
                     prefs.setGithubId("githubId", githubId!!)
-                    registerUser(githubId)
+//                    registerUser(githubId)
                     authRequestResult(requestKey!!)
                 }
             } catch(e: Exception) {
@@ -135,14 +135,17 @@ class MainActivity : AppCompatActivity() {
 
         //로그인 화면으로 넘어가기
 
-        if(userId == 0){
-            if(NetworkCheck.checkNetworkState(this)) {
-                registerUser(githubId)
-            }
-        } else {
-            if(NetworkCheck.checkNetworkState(this)) {
-                searchUser(userId)
-            }
+//        if(userId == 0){
+//            if(NetworkCheck.checkNetworkState(this)) {
+////                registerUser(githubId)
+//            }
+//        } else {
+//            if(NetworkCheck.checkNetworkState(this)) {
+//                searchUser()
+//            }
+//        }
+        if(NetworkCheck.checkNetworkState(this)) {
+            searchUser()
         }
 
 //        랭킹 보러가기 버튼 눌렀을 때 랭킹 화면으로 전환
@@ -176,35 +179,35 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if(userId != 0) {
-            searchUser(userId)
+            searchUser()
             val handler = Handler(Looper.getMainLooper())
-            handler.postDelayed({searchUser(userId)}, 2000)
-            handler.postDelayed({searchUser(userId)}, 4000)
+            handler.postDelayed({searchUser()}, 2000)
+            handler.postDelayed({searchUser()}, 4000)
         }
     }
 
 //    등록되어있지 않을 경우 post 요청을 통해 가입하기
-    private fun registerUser(githubId: String) {
-        var body = RegisterGithubIdModel(githubId)
-        val coroutine = CoroutineScope(Dispatchers.Main)
-        coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.postRegister(body)
-            }
-            userId = resultDeferred.await()
-            if(userId != 0) {
-                prefs.setId("id", userId)
-//            Toast.makeText(application, "id = $userId", Toast.LENGTH_SHORT).show()
-                searchUser(userId)
-            }
-        }
-
-    }
+//    private fun registerUser(githubId: String) {
+//        var body = RegisterGithubIdModel(githubId)
+//        val coroutine = CoroutineScope(Dispatchers.Main)
+//        coroutine.launch {
+//            val resultDeferred = coroutine.async(Dispatchers.IO) {
+//                viewmodel.postRegister(body)
+//            }
+//            userId = resultDeferred.await()
+//            if(userId != 0) {
+//                prefs.setId("id", userId)
+////            Toast.makeText(application, "id = $userId", Toast.LENGTH_SHORT).show()
+//                searchUser()
+//            }
+//        }
+//
+//    }
 
 /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
     무한히 요청을 보내는 버그 해결
  */
-    private fun searchUser(id: Int){
+    private fun searchUser(){
 //        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -216,8 +219,8 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
                 if(!registered) {
                     registered = true
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.postDelayed({registerUser(prefs.getGithubId("githubId", ""))}, 2000)
+//                    val handler = Handler(Looper.getMainLooper())
+//                    handler.postDelayed({registerUser(prefs.getGithubId("githubId", ""))}, 2000)
                 }
             } else {
                 if(userInfo.githubId.isNotBlank()) {
@@ -231,7 +234,7 @@ class MainActivity : AppCompatActivity() {
                         binding.userTier.text = "내 티어 : ${userInfo.tier}"
                     }
                     val handler = Handler(Looper.getMainLooper())
-                    handler.postDelayed({searchUser(userId)},2000)
+                    handler.postDelayed({searchUser()},2000)
                 } else {
                     binding.userTier.text = "내 티어 : ${userInfo.tier}"
                 }
@@ -270,6 +273,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun postWalletAddress(address: String) {
+        Toast.makeText(applicationContext, "address: $address", Toast.LENGTH_SHORT).show()
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val postwalletDeferred = coroutine.async(Dispatchers.IO) {
@@ -290,7 +294,7 @@ class MainActivity : AppCompatActivity() {
             if(githubId != "") {
                 if(NetworkCheck.checkNetworkState(applicationContext)) {
                     Log.d("info", "github id : $githubId, klip address : $walletAddress")
-                    searchUser(userId)
+                    searchUser()
                 }
             }
 //            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()

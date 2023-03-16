@@ -159,8 +159,10 @@ class ApiRepository {
         val walletAddress = api.postWalletAddress(body)
         try{
             val result = walletAddress.execute()
+            Log.d("dd", "결과 : ${result.code()}")
             return result.isSuccessful
         } catch (e: Exception) {
+            Log.d("dd", "결과 실패")
             return false
         }
     }
