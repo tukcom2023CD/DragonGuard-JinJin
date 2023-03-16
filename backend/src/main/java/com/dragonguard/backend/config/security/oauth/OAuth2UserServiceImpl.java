@@ -23,10 +23,9 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        String accountId = (String) attributes.get("login");
-        String name = (String) attributes.get("name");
+        String githubId = (String) attributes.get("githubId");
 
-        Member user = memberService.saveIfNone(new OAuth2Request(accountId, name));
+        Member user = memberService.saveIfNone(new OAuth2Request(githubId));
         return userDetailsMapper.mapToLoginUser(user);
     }
 }

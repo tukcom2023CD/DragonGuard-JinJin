@@ -10,7 +10,7 @@ import java.util.Map;
 public class UserDetailsMapper {
     public UserDetailsImpl mapToLoginUser(Member user) {
         Map<String, Object> attributes = new HashMap<>();
-        attributes.put("id", user.getId());
+        attributes.put("githubId", user.getGithubId());
         return new UserDetailsImpl(user, user.getRole(), attributes);
     }
 }

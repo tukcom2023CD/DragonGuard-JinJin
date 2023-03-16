@@ -6,7 +6,6 @@ import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
 import com.dragonguard.backend.config.security.oauth.OAuth2Request;
-import com.dragonguard.backend.config.security.oauth.user.OAuth2UserInfo;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
@@ -14,7 +13,6 @@ import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Member;
-import com.dragonguard.backend.member.entity.OAuth2Info;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.mapper.MemberMapper;
 import com.dragonguard.backend.member.repository.MemberRepository;
@@ -159,9 +157,6 @@ public class MemberService {
     }
 
     private Member setUpMember(OAuth2Request req) {
-        Member.MemberBuilder memberBuilder = Member.builder();
-        req.getName().ifPresent(memberBuilder::name);
-        memberBuilder.githubId(req.getAccountId());
-        return memberBuilder.build();
+        return Member.builder().githubId(req.getAccountId()).build();
     }
 }
