@@ -25,13 +25,25 @@ final class FilteringController: UIViewController{
     private let starsArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
     private let forksArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
     private let topicArray = ["0","1","2","3","4 이상"]
+    private let filterType = ["User","Repository"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        addToView()
+        chooseType()
+        
     }
+    
+    // Filter Type
+    lazy var filterTypeCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .white
+        cv.register(TypeCollectionViewCell.self, forCellWithReuseIdentifier: TypeCollectionViewCell.identifier)
+        return cv
+    }()
     
     // Languages
     lazy var languageSelections: UIButton = {
@@ -121,6 +133,13 @@ final class FilteringController: UIViewController{
      UI 추가할 때 작성하는 함수
      */
     
+    private func chooseType(){
+        self.view.addSubview(filterTypeCollectionView)
+        self.filterTypeCollectionView.delegate = self
+        self.filterTypeCollectionView.dataSource = self
+        setTypeAutoLayout()
+    }
+    
     private func addToView(){
         // Add Language
         self.view.addSubview(languageSelections)
@@ -157,6 +176,15 @@ final class FilteringController: UIViewController{
      함수 실행시 private으로 시작할 것 (추천)
      */
     
+    private func setTypeAutoLayout(){
+        self.filterTypeCollectionView.snp.makeConstraints({ make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(10)
+            make.leading.equalTo(0)
+            make.trailing.equalTo(0)
+            make.height.equalTo(deviceHeight/15)
+        })
+    }
+    
     private func setLanguageAutoLayout(){
         self.selectedLanguages.snp.makeConstraints({ make in
             make.top.equalTo(self.languageSelections.snp.bottom).offset(10)
@@ -178,7 +206,7 @@ final class FilteringController: UIViewController{
     private func setAutoLayout(){
         // Language AutoLayout
         self.languageSelections.snp.makeConstraints({ make in
-            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(10)
+            make.top.equalTo(self.filterTypeCollectionView.snp.bottom).offset(10)
             make.leading.equalTo(30)
         })
         
@@ -259,7 +287,8 @@ final class FilteringController: UIViewController{
                             forkFiltering: self.forkFiltering,
                             forkIndex: self.forkIndex,
                             topicFiltering: self.topicFiltering,
-                            topicIndex: self.topicIndex)
+                            topicIndex: self.topicIndex,
+                            type: "REPOSITORIES")
 
         self.languageFilter = []
         self.starFiltering = ""
@@ -277,7 +306,6 @@ extension FilteringController: CheckLanguage {
         var indexArray:[Int] = []
         var stringArray:[String] = []
         
-        print("list \(languageList)")
         for i in 0..<languageList.count{
             indexArray.append(index[i])
             stringArray.append(languageList[i])
@@ -299,7 +327,14 @@ extension FilteringController: CheckLanguage {
 extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == self.selectedLanguages{
+        if collectionView == self.filterTypeCollectionView{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TypeCollectionViewCell.identifier, for: indexPath) as? TypeCollectionViewCell ?? TypeCollectionViewCell()
+            
+            cell.inputText(text: filterType[indexPath.row])
+            
+            return cell
+        }
+        else if collectionView == self.selectedLanguages{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LanguageSelectionsCollectionViewCell.identifier, for: indexPath) as? LanguageSelectionsCollectionViewCell ?? LanguageSelectionsCollectionViewCell()
             
             cell.inputText(text: languageFilter[indexPath.row])
@@ -312,13 +347,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             
             cell.inputText(text: starsArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
-            
-//            if starIndex ?? -1 == indexPath.row {
-//                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 1) /* #ffc2c2 */
-//            }
-//            else{
-                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-//            }
+            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
             
             
             return cell
@@ -328,13 +357,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             
             cell.inputText(text: forksArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
-            
-//            if forkIndex ?? -1 == indexPath.row {
-//                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 1) /* #ffc2c2 */
-//            }
-//            else{
-                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-//            }
+            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
             
             return cell
         }
@@ -343,13 +366,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             
             cell.inputText(text: topicArray[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
-            
-//            if topicIndex ?? -1 == indexPath.row {
-//                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 1) /* #ffc2c2 */
-//            }
-//            else{
-                cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-//            }
+            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
             
             return cell
         }
@@ -358,7 +375,10 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == self.selectedLanguages{
+        if collectionView == self.filterTypeCollectionView{
+            return self.filterType.count
+        }
+        else if collectionView == self.selectedLanguages{
                 return languageFilter.count
         }
         else{
@@ -370,7 +390,13 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         let cellHeight = collectionView.bounds.height
         let cellWidth = collectionView.bounds.width/6
         
-        if collectionView == self.selectedLanguages{
+        if collectionView == self.filterTypeCollectionView{
+            let cellHeight = collectionView.bounds.height
+            let cellWidth = collectionView.bounds.width/2
+            
+            return CGSize(width: cellWidth, height: cellHeight)
+        }
+        else if collectionView == self.selectedLanguages{
             let cellHeight = collectionView.bounds.height*3/4
             let cellWidth = collectionView.bounds.width/6
             
@@ -382,9 +408,20 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == self.selectedLanguages{
-            print(self.languageFilterIndex)
+        if collectionView == self.filterTypeCollectionView{
             
+            switch indexPath.row{
+            case 0:
+                print("clicked")
+                self.dismiss(animated: true)
+            case 1:
+                addToView()
+            default:
+                print("잘못된 선택입니다.")
+            }
+            
+        }
+        else if collectionView == self.selectedLanguages{
             let index = self.languageFilterIndex.firstIndex(of: self.languageFilterIndex[indexPath.row])
             self.languageFilter.remove(at: index ?? 0)
             self.languageFilterIndex.remove(at: index ?? 0)
@@ -396,7 +433,6 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             switch indexPath.row{
             case 0:
                 let text = "stars:0..9"
-//                let remainIndex = self.starIndex
                 self.starIndex = indexPath.row
                 if checkSelected(collectionView,
                                  indexPath: indexPath,
@@ -407,16 +443,9 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 else{
                     self.starFiltering = text
-                    
-//                    if remainIndex ?? -1 == indexPath.row && remainIndex ?? -1 != self.starIndex{
-//                        if let cell = collectionView.cellForItem(at: indexPath){
-//                            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-//                        }
-//                    }
                 }
             case 1:
                 let text = "stars:10..49"
-//                let remainIndex = self.starIndex
                 self.starIndex = indexPath.row
                 if checkSelected(collectionView,
                                  indexPath: indexPath,
@@ -427,16 +456,9 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 else{
                     self.starFiltering = text
-                    
-//                    if remainIndex ?? -1 == indexPath.row && remainIndex ?? -1 != self.starIndex{
-//                        if let cell = collectionView.cellForItem(at: indexPath){
-//                            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-//                        }
-//                    }
                 }
             case 2:
                 let text = "stars:50..99"
-//                let remainIndex = self.starIndex
                 self.starIndex = indexPath.row
                 if checkSelected(collectionView,
                                  indexPath: indexPath,
@@ -447,16 +469,9 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 else{
                     self.starFiltering = text
-                    
-//                    if remainIndex ?? -1 == indexPath.row && remainIndex ?? -1 != self.starIndex{
-//                        if let cell = collectionView.cellForItem(at: indexPath){
-//                            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-//                        }
-//                    }
                 }
             case 3:
                 let text = "stars:100..499"
-//                let remainIndex = self.starIndex
                 self.starIndex = indexPath.row
                 if checkSelected(collectionView,
                                  indexPath: indexPath,
@@ -467,16 +482,9 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 else{
                     self.starFiltering = text
-                    
-//                    if remainIndex ?? -1 == indexPath.row && remainIndex ?? -1 != self.starIndex{
-//                        if let cell = collectionView.cellForItem(at: indexPath){
-//                            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-//                        }
-//                    }
                 }
             case 4:
                 let text = "stars:>=500"
-//                let remainIndex = self.starIndex
                 self.starIndex = indexPath.row
                 if checkSelected(collectionView,
                                  indexPath: indexPath,
@@ -487,13 +495,6 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
                 }
                 else{
                     self.starFiltering = text
-                    
-//                    if remainIndex ?? -1 == indexPath.row && remainIndex ?? -1 != self.starIndex{
-//                        if let cell = collectionView.cellForItem(at: indexPath){
-//                            cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
-//                        }
-//                    }
-                    
                 }
             default:
                 print("잘못된 접근입니다.")
@@ -671,7 +672,8 @@ protocol SendFilteringData{
               forkFiltering: String,
               forkIndex: Int?,
               topicFiltering: String,
-              topicIndex: Int?)
+              topicIndex: Int?,
+              type: String)
 }
 
 

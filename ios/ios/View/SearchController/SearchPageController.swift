@@ -23,6 +23,7 @@ final class SearchPageController: UIViewController {
     var filtering = ""  //필터링 조건 넣을 변수  ex) 언어, 스타, 포크 수 등등
     var filteringArray: [String] = []  // 언어를 제외한 모든 필터 API용
     var conditionFilter: [String] = []  // 언어를 제외한 모든 필터 사용자 시각용
+    var type: String = "USER"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,7 +120,7 @@ final class SearchPageController: UIViewController {
         filteringController.delegate = self
         self.conditionFilter = []
         self.filteringArray = []
-        
+        self.filtering = ""
         self.present(filteringController, animated: true)
     }
     
@@ -211,7 +212,7 @@ extension SearchPageController: UISearchBarDelegate{
         addTableView()
         
         self.searchText = searchText
-        getData(searchWord: searchText, type: "REPOSITORIES", change: true, filtering: self.filtering)    // API 감지 스레드
+        getData(searchWord: searchText, type: self.type, change: true, filtering: self.filtering)    // API 감지 스레드
     }
     
     func repositoryfiltering(){
@@ -239,7 +240,8 @@ extension SearchPageController: SendFilteringData{
               forkFiltering: String,
               forkIndex: Int?,
               topicFiltering: String,
-              topicIndex: Int?) {
+              topicIndex: Int?,
+              type: String) {
         let starsArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
         let forksArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
         let topicArray = ["0","1","2","3","4 이상"]
@@ -274,7 +276,8 @@ extension SearchPageController: SendFilteringData{
                 }
             }
         }
-        print("api \(self.filteringArray)")
+        self.type = type
+        
         setCollectionView()
         self.filteringCollectionView.reloadData()
     }
@@ -300,9 +303,13 @@ extension SearchPageController: UICollectionViewDelegate, UICollectionViewDataSo
         let cellWidth = collectionView.bounds.width/4
         
         return CGSize(width: cellWidth, height: cellHeight)
-        
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.conditionFilter.remove(at: indexPath.row)
+        self.filteringArray.remove(at: indexPath.row)
+        self.filteringCollectionView.reloadData()
+    }
     
 }
 
