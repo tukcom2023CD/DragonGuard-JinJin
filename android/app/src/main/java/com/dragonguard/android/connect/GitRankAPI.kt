@@ -18,8 +18,8 @@ interface GitRankAPI {
     fun getUserTier(@Path("id")userId : Int) : Call<String>
 
 //    id에 해당하는 사용자의 정보를 받아오는 함수
-    @GET("/api/members/{id}")
-    fun getUserInfo(@Path("id")userId : Int) : Call<UserInfoModel>
+    @GET("/api/members/me")
+    fun getUserInfo() : Call<UserInfoModel>
 
 //    repoName에 해당하는 repo의 정보를 받아오는 함수
     @GET("git-repos")

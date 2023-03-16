@@ -16,8 +16,8 @@ class Viewmodel {
     var onSearchListener = MutableLiveData<String>()
 
 //
-    fun getSearchTierResult(id: Int): UserInfoModel{
-        return repository.getUserInfo(id)
+    fun getUserInfo(): UserInfoModel{
+        return repository.getUserInfo()
     }
 
     fun postRegister(body: RegisterGithubIdModel): Int {

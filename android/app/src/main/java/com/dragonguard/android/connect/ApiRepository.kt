@@ -73,8 +73,8 @@ class ApiRepository {
     }
 
     //사용자의 정보를 받아오기 위한 함수
-    fun getUserInfo(id: Int): UserInfoModel {
-        val userInfo = api.getUserInfo(id)
+    fun getUserInfo(): UserInfoModel {
+        val userInfo = api.getUserInfo()
         var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null)
         try {
             val result = userInfo.execute()

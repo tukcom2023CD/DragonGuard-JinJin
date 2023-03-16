@@ -209,7 +209,7 @@ class MainActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getSearchTierResult(id)
+                viewmodel.getUserInfo()
             }
             val userInfo : UserInfoModel = resultDeferred.await()
             if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null) {
