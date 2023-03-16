@@ -71,6 +71,13 @@ class MainActivity : AppCompatActivity() {
     private var address = false
     //    var count = 0
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.d("on", "onnewintent")
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        startActivity(intent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -79,39 +86,52 @@ class MainActivity : AppCompatActivity() {
         prefs = IdPreference(applicationContext)
         userId = prefs.getId("id", 0)
         githubId = prefs.getGithubId("githubId", "")
-        val result = intent?.data?.getQueryParameter("code")
-        if(result != null) {
-            val coroutine = CoroutineScope(Dispatchers.IO)
-            coroutine.launch {
-                val deffered = coroutine.async ( Dispatchers.IO ) {
-                    viewmodel.getOauthToken(result)
-                }
-                val resultToken = deffered.await()
-                if(resultToken.access_token == null) {
-                    Log.d("intent github", "실패!!")
-                } else {
-                    Log.d("intent github", "성공!! ${resultToken.access_token}, ${resultToken.scope}, ${resultToken.token_type}")
-                    walletAddress = prefs.getWalletAddress("wallet_address", "")
-//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
-                    val intent = Intent(applicationContext, LoginActivity::class.java)
-                    intent.putExtra("access_token", resultToken.access_token)
-                    intent.putExtra("wallet_address", walletAddress)
-                    activityResultLauncher.launch(intent)
-                }
-            }
-        } else {
-            if(logout) {
-                prefs.setWalletAddress("wallet_address", "")
-                prefs.setGithubId("githubId", "")
-                prefs.setId("id", 0)
-            }
-            walletAddress = prefs.getWalletAddress("wallet_address", "")
-//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
-            val intent = Intent(applicationContext, LoginActivity::class.java)
-            intent.putExtra("wallet_address", walletAddress)
-            intent.putExtra("logout", logout)
-            activityResultLauncher.launch(intent)
+//        val intent = Intent(applicationContext, LoginActivity::class.java)
+//        startActivity(intent)
+        if(logout) {
+            prefs.setWalletAddress("wallet_address", "")
+            prefs.setGithubId("githubId", "")
+            prefs.setId("id", 0)
         }
+        walletAddress = prefs.getWalletAddress("wallet_address", "")
+//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        intent.putExtra("wallet_address", walletAddress)
+        intent.putExtra("logout", logout)
+        activityResultLauncher.launch(intent)
+//        val result = intent?.data?.getQueryParameter("code")
+//        if(result != null) {
+//            val coroutine = CoroutineScope(Dispatchers.IO)
+//            coroutine.launch {
+//                val deffered = coroutine.async ( Dispatchers.IO ) {
+//                    viewmodel.getOauthToken(result)
+//                }
+//                val resultToken = deffered.await()
+//                if(resultToken.access_token == null) {
+//                    Log.d("intent github", "실패!!")
+//                } else {
+//                    Log.d("intent github", "성공!! ${resultToken.access_token}, ${resultToken.scope}, ${resultToken.token_type}")
+//                    walletAddress = prefs.getWalletAddress("wallet_address", "")
+////        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
+//                    val intent = Intent(applicationContext, LoginActivity::class.java)
+//                    intent.putExtra("access_token", resultToken.access_token)
+//                    intent.putExtra("wallet_address", walletAddress)
+//                    activityResultLauncher.launch(intent)
+//                }
+//            }
+//        } else {
+//            if(logout) {
+//                prefs.setWalletAddress("wallet_address", "")
+//                prefs.setGithubId("githubId", "")
+//                prefs.setId("id", 0)
+//            }
+//            walletAddress = prefs.getWalletAddress("wallet_address", "")
+////        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
+//            val intent = Intent(applicationContext, LoginActivity::class.java)
+//            intent.putExtra("wallet_address", walletAddress)
+//            intent.putExtra("logout", logout)
+//            activityResultLauncher.launch(intent)
+//        }
 
         //로그인 화면으로 넘어가기
 

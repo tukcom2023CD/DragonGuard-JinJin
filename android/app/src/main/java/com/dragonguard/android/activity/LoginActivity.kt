@@ -40,6 +40,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.loginViewmodel = viewmodel
+        Log.d("login", "loginactivity1")
         prefs = IdPreference(applicationContext)
         val intent = intent
         val logout = intent.getBooleanExtra("logout", false)
@@ -75,10 +76,17 @@ class LoginActivity : AppCompatActivity() {
         binding.githubAuth.setOnClickListener {
             val intentG = Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://github.com/login/oauth/authorize?client_id=${BuildConfig.clientId}")
+                Uri.parse("${BuildConfig.api}oauth2/authorize/github")
             )
             intentG.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intentG)
+//            val coroutine = CoroutineScope(Dispatchers.Main)
+//            coroutine.launch {
+//                val deffered = coroutine.async(Dispatchers.IO){
+//                    viewmodel.getGithubLogin()
+//                }
+//                val result = deffered.await()
+//            }
         }
         binding.walletAuth.setOnClickListener{
             if(NetworkCheck.checkNetworkState(this)) {
