@@ -22,9 +22,10 @@ final class SearchPageController: UIViewController {
     var isInfiniteScroll = false // 무한 스크롤 1번만 로딩되게 확인하는 변수
     var filtering = ""  //필터링 조건 넣을 변수  ex) 언어, 스타, 포크 수 등등
     var languageFilter: [String] = []   // 선택한 언어 리스트
-    var starFiltering = ""
-    var forkFiltering = ""
-    var topicFiltering = ""
+    var languageFilterIndex: [Int] = [] // 선택안 언어의 인덱스
+    var starFiltering = ""  // 선택된 star 조건
+    var forkFiltering = ""  // 선택된 fork 조건
+    var topicFiltering = "" // 선택된 topic 조건
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +57,6 @@ final class SearchPageController: UIViewController {
         searchBar.layer.cornerRadius = 10
         searchBar.placeholder = "Repository or User"
         searchBar.searchTextField.tintColor = .gray
-//        searchBar.showsCancelButton = true
         searchBar.searchTextField.leftView?.tintColor = .black  //돋보기 색상 변경
         return searchBar
     }()
@@ -110,6 +110,11 @@ final class SearchPageController: UIViewController {
     @objc private func clickedFilteringBtn(){
         let filteringController = FilteringController()
         filteringController.delegate = self
+        filteringController.languageFilter = self.languageFilter
+        filteringController.languageFilterIndex = self.languageFilterIndex
+        filteringController.starFiltering = self.starFiltering
+        filteringController.forkFiltering = self.forkFiltering
+        filteringController.topicFiltering = self.topicFiltering
         self.present(filteringController, animated: true)
     }
     
@@ -191,15 +196,20 @@ extension SearchPageController: UISearchBarDelegate{
     }
     
     func repositoryfiltering(){
-        for i in 0..<self.languageFilter.count{
-            self.filtering.append("language:\(languageFilter[i])")
-
-            // 마지막 요소인경우 ,를 붙이지 않음
-            if i != self.languageFilter.count-1 {
-                self.filtering.append(",")
+        
+        let uniqueLanguageArray = Set(self.languageFilter)
+        
+        for i in 0..<Array(uniqueLanguageArray).count{
+            if !self.filtering.contains("language:\(Array(uniqueLanguageArray)[i])") {
+                self.filtering.append("language:\(Array(uniqueLanguageArray)[i])")
+                
+                // 마지막 요소인경우 ,를 붙이지 않음
+                if i != Array(uniqueLanguageArray).count-1 {
+                    self.filtering.append(",")
+                }
             }
         }
-
+        
         if !self.starFiltering.isEmpty{
             if !self.filtering.isEmpty{
                 self.filtering.append(",")
@@ -229,9 +239,12 @@ extension SearchPageController: UISearchBarDelegate{
 
 // 레포지토리 필터링된 정보들을 가지고 오는 구문
 extension SearchPageController: SendFilteringData{
-    func send(languageFilter: [String], starFiltering: String, forkFiltering: String, topicFiltering: String) {
+    func send(languageFilter: [String],languageFilterIndex: [Int], starFiltering: String, forkFiltering: String, topicFiltering: String) {
         for lang in languageFilter{
             self.languageFilter.append(lang)
+        }
+        for index in languageFilterIndex{
+            self.languageFilterIndex.append(index)
         }
         self.starFiltering = starFiltering
         self.forkFiltering = forkFiltering

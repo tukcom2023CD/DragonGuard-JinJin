@@ -163,6 +163,16 @@ final class FilteringController: UIViewController{
             make.height.equalTo(self.deviceHeight/15)
         })
     }
+    
+    private func setLanguageNoDataAutoLayout(){
+        self.selectedLanguages.snp.makeConstraints({ make in
+            make.top.equalTo(self.languageSelections.snp.bottom).offset(10)
+            make.leading.equalTo(30)
+            make.trailing.equalTo(-30)
+        })
+        
+    }
+    
     private func setAutoLayout(){
         // Language AutoLayout
         self.languageSelections.snp.makeConstraints({ make in
@@ -170,11 +180,13 @@ final class FilteringController: UIViewController{
             make.leading.equalTo(30)
         })
         
-        self.selectedLanguages.snp.makeConstraints({ make in
-            make.top.equalTo(self.languageSelections.snp.bottom).offset(10)
-            make.leading.equalTo(30)
-            make.trailing.equalTo(-30)
-        })
+        if !self.languageFilter.isEmpty{
+            print("called")
+            setLanguageAutoLayout()
+        }
+        else{
+            setLanguageNoDataAutoLayout()
+        }
         
         // Star AutoLayout
         self.starLabel.snp.makeConstraints({ make in
@@ -233,12 +245,14 @@ final class FilteringController: UIViewController{
         let filter = LanguageFillteringTableView()
         filter.delegate = self
         filter.selectedLangugaeIndex = self.languageFilterIndex
+        filter.selectedLanguage = self.languageFilter
         self.present(filter, animated: true)
     }
     
     // 필터링 선택 완료 시
     @objc private func clickedSelectedDone(){
         self.delegate?.send(languageFilter: self.languageFilter,
+                            languageFilterIndex: self.languageFilterIndex,
                             starFiltering: self.starFiltering,
                             forkFiltering: self.forkFiltering,
                             topicFiltering: self.topicFiltering)
@@ -261,7 +275,7 @@ extension FilteringController: CheckLanguage {
         self.languageFilterIndex = Array(uniqueLanguageIndexArray)
         self.languageFilter = Array(uniqueLanguageArray)
         
-        if !self.languageFilterIndex.isEmpty{
+        if !self.languageFilter.isEmpty{
             setLanguageAutoLayout()
             self.selectedLanguages.reloadData()
         }
@@ -275,6 +289,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         if collectionView == self.selectedLanguages{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LanguageSelectionsCollectionViewCell.identifier, for: indexPath) as? LanguageSelectionsCollectionViewCell ?? LanguageSelectionsCollectionViewCell()
             
+            print("lang \(self.languageFilter)")
             cell.inputText(text: languageFilter[indexPath.row])
             cell.layer.cornerRadius = cell.bounds.height/2
             cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
@@ -334,7 +349,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.selectedLanguages{
-                return languageFilterIndex.count
+                return languageFilter.count
         }
         else{
             return 5
@@ -526,7 +541,11 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
 }
 
 protocol SendFilteringData{
-    func send(languageFilter: [String], starFiltering: String, forkFiltering: String, topicFiltering: String)
+    func send(languageFilter: [String],
+              languageFilterIndex: [Int],
+              starFiltering: String,
+              forkFiltering: String,
+              topicFiltering: String)
 }
 
 

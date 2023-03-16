@@ -12,7 +12,7 @@ import SnapKit
 // 사용자 언어 선택하는 tableview
 final class LanguageFillteringTableView: UIViewController{
     private let popularLanguage = ["C", "C#", "C++", "CoffeeScript ", "CSS", "Dart", "DM", "Elixir", "Go", "Groovy", "HTML", "Java", "JavaScript", "Kotlin", "Objective-C", "Perl", "PHP", "PowerShell", "Python", "Ruby", "Rust", "Scala", "Shell", "Swift", "TypeScript"]
-    private var selectedLanguage: [String] = [] //선택된 언어
+    var selectedLanguage: [String] = [] //선택된 언어
     var selectedLangugaeIndex: [Int] = []
     var delegate: CheckLanguage?
     
