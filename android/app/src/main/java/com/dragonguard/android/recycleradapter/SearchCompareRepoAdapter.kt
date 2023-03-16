@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.CompareSearchActivity
+import com.dragonguard.android.activity.compare.CompareSearchActivity
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.model.RepoSearchResultModel
 

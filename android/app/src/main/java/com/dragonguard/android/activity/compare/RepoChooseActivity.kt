@@ -1,4 +1,4 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.compare
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivityRepoChooseBinding
 import com.dragonguard.android.viewmodel.Viewmodel
 

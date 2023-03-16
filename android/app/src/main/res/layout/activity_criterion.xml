@@ -7,13 +7,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.CriterionActivity">
+        tools:context=".activity.menu.CriterionActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context=".activity.CriterionActivity"
+            tools:context=".activity.menu.CriterionActivity"
             android:weightSum="3.4">
 
             <androidx.appcompat.widget.Toolbar

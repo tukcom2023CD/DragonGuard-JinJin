@@ -14,63 +14,63 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true" >
         <activity
-            android:name=".activity.RepoCompareActivity"
+            android:name=".activity.compare.RepoCompareActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.RepoChooseActivity"
+            android:name=".activity.compare.RepoChooseActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.CompareSearchActivity"
+            android:name=".activity.compare.CompareSearchActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.RepoContributorsActivity"
+            android:name=".activity.search.RepoContributorsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.MyUniversityInternalActivity"
+            android:name=".activity.ranking.MyUniversityInternalActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.TotalUsersRankingActivity"
+            android:name=".activity.ranking.TotalUsersRankingActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.TotalUniversitiesRankingActivity"
+            android:name=".activity.ranking.TotalUniversitiesRankingActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.MyOrganizationListActivity"
+            android:name=".activity.ranking.MyOrganizationListActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.MyRepoRankingActivity"
+            android:name=".activity.ranking.MyRepoRankingActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.TotalRepoRankingActivity"
+            android:name=".activity.ranking.TotalRepoRankingActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.MenuActivity"
+            android:name=".activity.menu.MenuActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.RankingsActivity"
+            android:name=".activity.ranking.RankingsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.CriterionActivity"
+            android:name=".activity.menu.CriterionActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.FaqActivity"
+            android:name=".activity.menu.FaqActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.SearchActivity"
+            android:name=".activity.search.SearchActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

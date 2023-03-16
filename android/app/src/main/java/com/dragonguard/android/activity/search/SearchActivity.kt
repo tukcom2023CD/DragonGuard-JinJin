@@ -1,13 +1,9 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.search
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -15,16 +11,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
-import androidx.core.view.marginLeft
-import androidx.core.view.setMargins
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.model.RepoSearchResultModel
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.dialog.FilterDialog

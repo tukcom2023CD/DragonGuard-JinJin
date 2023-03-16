@@ -1,4 +1,4 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.menu
 
 import android.app.Dialog
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.Window
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivityMenuBinding
 
 /*

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".activity.TotalRepoRankingActivity"
+        tools:context=".activity.ranking.TotalRepoRankingActivity"
         android:weightSum="3.1">
 
         <androidx.appcompat.widget.Toolbar

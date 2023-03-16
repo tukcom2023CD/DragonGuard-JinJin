@@ -1,4 +1,4 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.compare
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.model.RepoSearchResultModel
 import com.dragonguard.android.recycleradapter.SearchCompareRepoAdapter

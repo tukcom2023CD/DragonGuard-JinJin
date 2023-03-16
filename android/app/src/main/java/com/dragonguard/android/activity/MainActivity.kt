@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +13,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.compare.RepoChooseActivity
+import com.dragonguard.android.activity.menu.MenuActivity
+import com.dragonguard.android.activity.ranking.RankingsActivity
+import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.model.RegisterGithubIdModel
@@ -22,10 +24,8 @@ import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
-import okhttp3.internal.wait
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
-import kotlin.system.exitProcess
 
 /*
  사용자의 정보를 보여주고 검색, 랭킹등을
