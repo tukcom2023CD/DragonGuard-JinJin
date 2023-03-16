@@ -86,8 +86,8 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회")
     void getMember() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(1L, "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L);
-        given(memberService.getMember(any())).willReturn(expected);
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L);
+        given(memberService.getMember()).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -109,7 +109,7 @@ class MemberControllerTest extends RestDocumentTest {
     void getTier() throws Exception {
         // given
         Tier expected = Tier.MASTER;
-        given(memberService.getTier(any())).willReturn(expected);
+        given(memberService.getTier()).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -157,7 +157,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 지갑 주소 갱신")
     void updateWalletAddress() throws Exception {
         // given
-        willDoNothing().given(memberService).updateWalletAddress(any(), any());
+        willDoNothing().given(memberService).updateWalletAddress(any());
 
         // when
         ResultActions perform =

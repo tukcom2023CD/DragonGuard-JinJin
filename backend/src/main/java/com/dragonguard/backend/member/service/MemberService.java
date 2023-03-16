@@ -40,9 +40,10 @@ public class MemberService {
     private final MemberMapper memberMapper;
     private final CommitService commitService;
     private final BlockchainService blockchainService;
+    private final AuthService authService;
 
-    public Tier getTier(UUID id) {
-        return getEntity(id).getTier();
+    public Tier getTier() {
+        return authService.getLoginUser().getTier();
     }
 
     public IdResponse<UUID> saveMember(MemberRequest memberRequest) {
@@ -98,16 +99,16 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateCommits(UUID id) {
-        Member member = getEntity(id);
+    public void updateCommits() {
+        Member member = authService.getLoginUser();
         getCommitsByScraping(member.getGithubId());
         if (!isWalletAddressExist(member)) return;
         updateTier(member);
     }
 
-    public MemberResponse getMember(UUID id) {
-        Member member = getEntity(id);
-        Integer rank = memberRepository.findRankingById(id);
+    public MemberResponse getMember() {
+        Member member = authService.getLoginUser();
+        Integer rank = memberRepository.findRankingById(member.getId());
         Long amount = member.getSumOfTokens();
         updateTier(member);
 
@@ -124,8 +125,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateWalletAddress(WalletRequest walletRequest, UUID memberId) {
-        Member member = getEntity(memberId);
+    public void updateWalletAddress(WalletRequest walletRequest) {
+        Member member = authService.getLoginUser();
         member.updateWalletAddress(walletRequest.getWalletAddress());
         setTransaction(member.getSumOfCommits(), member);
     }

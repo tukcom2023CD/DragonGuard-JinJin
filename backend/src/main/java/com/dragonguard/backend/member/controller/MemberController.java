@@ -38,20 +38,15 @@ public class MemberController {
         return ResponseEntity.ok(memberService.saveMember(memberRequest));
     }
 
-    @PostMapping("/{id}/commits")
-    public ResponseEntity<Void> updateCommits(@PathVariable UUID id) {
-        memberService.updateCommits(id);
+    @PostMapping("/commits")
+    public ResponseEntity<Void> updateCommits() {
+        memberService.updateCommits();
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<MemberResponse> getMember(@PathVariable UUID id) {
-        return ResponseEntity.ok(memberService.getMember(id));
-    }
-
-    @GetMapping("/{id}/tier")
-    public ResponseEntity<Tier> getTier(@PathVariable UUID id) {
-        return ResponseEntity.ok(memberService.getTier(id));
+    @GetMapping("/tier")
+    public ResponseEntity<Tier> getTier() {
+        return ResponseEntity.ok(memberService.getTier());
     }
 
     @GetMapping("/ranking")
@@ -61,14 +56,14 @@ public class MemberController {
     }
 
     @PostMapping("/wallet-address")
-    public ResponseEntity<Void> updateWalletAddress(@AuthenticationPrincipal UserDetailsImpl user, @RequestBody WalletRequest walletRequest) {
-        memberService.updateWalletAddress(walletRequest, UUID.fromString(user.getName()));
+    public ResponseEntity<Void> updateWalletAddress(@RequestBody WalletRequest walletRequest) {
+        memberService.updateWalletAddress(walletRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public MemberResponse getCurrentUser(@AuthenticationPrincipal UserDetailsImpl user) {
-        return memberService.getMember(UUID.fromString(user.getName()));
+    public MemberResponse getCurrentUser() {
+        return memberService.getMember();
     }
 }
