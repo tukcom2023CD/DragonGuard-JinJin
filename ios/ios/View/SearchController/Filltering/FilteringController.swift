@@ -18,6 +18,7 @@ final class FilteringController: UIViewController{
     var starFiltering = ""
     var forkFiltering = ""
     var topicFiltering = ""
+    var delegate: SendFilteringData?
     private let starsArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
     private let forksArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
     private let topicArray = ["0","1","2","3","4 이상"]
@@ -237,40 +238,11 @@ final class FilteringController: UIViewController{
     
     // 필터링 선택 완료 시
     @objc private func clickedSelectedDone(){
-        
-        for i in 0..<self.languageFilterIndex.count{
-            self.filtering.append("language:\(languageFilter[i])")
-            
-            // 마지막 요소인경우 ,를 붙이지 않음
-            if i != self.languageFilterIndex.count-1 {
-                self.filtering.append(",")
-            }
-        }
-        
-        if !self.starFiltering.isEmpty{
-            if !self.filtering.isEmpty{
-                self.filtering.append(",")
-            }
-            self.filtering.append("\(self.starFiltering)")
-        }
-        
-        if !self.forkFiltering.isEmpty{
-            if !self.filtering.isEmpty{
-                self.filtering.append(",")
-            }
-            self.filtering.append("\(self.forkFiltering)")
-        }
-        
-        if !self.topicFiltering.isEmpty{
-            if !self.filtering.isEmpty{
-                self.filtering.append(",")
-            }
-            self.filtering.append("\(self.topicFiltering)")
-        }
-    
-        
-        
-        print("filter \(self.filtering)")
+        self.delegate?.send(languageFilter: self.languageFilter,
+                            starFiltering: self.starFiltering,
+                            forkFiltering: self.forkFiltering,
+                            topicFiltering: self.topicFiltering)
+
         self.dismiss(animated: true)
     }
 }
@@ -551,6 +523,10 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
         return false
     }
     
+}
+
+protocol SendFilteringData{
+    func send(languageFilter: [String], starFiltering: String, forkFiltering: String, topicFiltering: String)
 }
 
 

@@ -56,7 +56,6 @@ final class LanguageFillteringTableView: UIViewController{
         
         self.delegate?.sendCheckingLangugae(languageList: Array(uniqueLanguageArray), index: Array(uniqueLanguageIndexArray))
         print(self.selectedLanguage)
-        print(self.selectedLangugaeIndex)
         self.dismiss(animated: true)
     }
     

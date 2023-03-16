@@ -20,9 +20,11 @@ final class SearchPageController: UIViewController {
     var searchText = ""         // 검색하는 단어
     var beforePage: String = "" // 이전 View 이름
     var isInfiniteScroll = false // 무한 스크롤 1번만 로딩되게 확인하는 변수
-    var languageFilterIndex: [Int] = [] // 필터링한 언어 index
     var filtering = ""  //필터링 조건 넣을 변수  ex) 언어, 스타, 포크 수 등등
-    
+    var languageFilter: [String] = []   // 선택한 언어 리스트
+    var starFiltering = ""
+    var forkFiltering = ""
+    var topicFiltering = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,6 +109,7 @@ final class SearchPageController: UIViewController {
     
     @objc private func clickedFilteringBtn(){
         let filteringController = FilteringController()
+        filteringController.delegate = self
         self.present(filteringController, animated: true)
     }
     
@@ -158,22 +161,7 @@ final class SearchPageController: UIViewController {
     
 }
 
-// 언어 선택한 리스트를 불러옴
-extension SearchPageController: CheckLanguage {
-    func sendCheckingLangugae(languageList: [String], index: [Int]) {
-        for i in 0..<languageList.count{
-            self.filtering.append("language:\(languageList[i])")
-            self.languageFilterIndex.append(index[i])
 
-            // 마지막 요소인경우 ,를 붙이지 않음
-            if i != languageList.count-1 {
-                self.filtering.append(",")
-            }
-        }
-        print("index \(self.languageFilterIndex)")
-        print("asdf \(self.filtering)")
-    }
-}
 
 // SearchController Delegate
 extension SearchPageController: UISearchBarDelegate{
@@ -193,6 +181,8 @@ extension SearchPageController: UISearchBarDelegate{
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchUI.resignFirstResponder()
         
+        repositoryfiltering()
+        
         guard let searchText = searchUI.text else{ return }
         addTableView()
         
@@ -200,6 +190,53 @@ extension SearchPageController: UISearchBarDelegate{
         getData(searchWord: searchText, type: "REPOSITORIES", change: true, filtering: self.filtering)    // API 감지 스레드
     }
     
+    func repositoryfiltering(){
+        for i in 0..<self.languageFilter.count{
+            self.filtering.append("language:\(languageFilter[i])")
+
+            // 마지막 요소인경우 ,를 붙이지 않음
+            if i != self.languageFilter.count-1 {
+                self.filtering.append(",")
+            }
+        }
+
+        if !self.starFiltering.isEmpty{
+            if !self.filtering.isEmpty{
+                self.filtering.append(",")
+            }
+            self.filtering.append("\(self.starFiltering)")
+        }
+
+        if !self.forkFiltering.isEmpty{
+            if !self.filtering.isEmpty{
+                self.filtering.append(",")
+            }
+            self.filtering.append("\(self.forkFiltering)")
+        }
+
+        if !self.topicFiltering.isEmpty{
+            if !self.filtering.isEmpty{
+                self.filtering.append(",")
+            }
+            self.filtering.append("\(self.topicFiltering)")
+        }
+        
+        print("필터링 결과")
+        print(self.filtering)
+    }
+    
+}
+
+// 레포지토리 필터링된 정보들을 가지고 오는 구문
+extension SearchPageController: SendFilteringData{
+    func send(languageFilter: [String], starFiltering: String, forkFiltering: String, topicFiltering: String) {
+        for lang in languageFilter{
+            self.languageFilter.append(lang)
+        }
+        self.starFiltering = starFiltering
+        self.forkFiltering = forkFiltering
+        self.topicFiltering = topicFiltering
+    }
 }
 
 
