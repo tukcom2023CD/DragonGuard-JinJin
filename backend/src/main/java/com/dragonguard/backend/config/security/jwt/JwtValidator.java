@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Map;
 import java.util.UUID;
 
 @Component
@@ -24,7 +25,7 @@ public class JwtValidator {
     public Authentication getAuthentication(String accessToken) {
         Claims claims = getTokenBodyClaims(accessToken);
         Member member = memberService.getEntity(extractUUID(claims));
-        UserDetailsImpl loginUser = userDetailsMapper.mapToLoginUser(member);
+        UserDetailsImpl loginUser = userDetailsMapper.mapToLoginUser(member, Map.of());
 
         return new UsernamePasswordAuthenticationToken(loginUser, "", loginUser.getAuthorities());
     }

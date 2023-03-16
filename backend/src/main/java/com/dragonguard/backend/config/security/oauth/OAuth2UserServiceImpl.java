@@ -1,5 +1,6 @@
 package com.dragonguard.backend.config.security.oauth;
 
+import com.dragonguard.backend.config.security.oauth.user.OAuth2UserInfo;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.service.MemberService;
@@ -22,10 +23,10 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
+        OAuth2UserInfo userInfo = new OAuth2UserInfo(attributes);
 
-        String githubId = (String) attributes.get("githubId");
+        Member user = memberService.findMemberByGithubId(userInfo.getLogin());
 
-        Member user = memberService.saveIfNone(new OAuth2Request(githubId));
-        return userDetailsMapper.mapToLoginUser(user);
+        return userDetailsMapper.mapToLoginUser(user, attributes);
     }
 }
