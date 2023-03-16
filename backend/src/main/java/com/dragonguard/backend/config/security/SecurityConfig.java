@@ -3,7 +3,6 @@ package com.dragonguard.backend.config.security;
 import com.dragonguard.backend.config.security.jwt.JwtAuthenticationFilter;
 import com.dragonguard.backend.config.security.oauth.CookieAuthorizationRequestRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
