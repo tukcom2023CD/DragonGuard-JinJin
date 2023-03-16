@@ -28,6 +28,4 @@ public interface MemberRepository extends JpaRepository<Member, UUID>, MemberQue
     @Modifying
     @Query("UPDATE Member m SET m.refreshToken = :token WHERE m.id = :id")
     void updateRefreshToken(UUID id, String token);
-
-    Optional<Member> findByEmail(String email);
 }

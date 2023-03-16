@@ -1,11 +1,11 @@
 package com.dragonguard.backend.config.security.jwt;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -37,7 +37,7 @@ public class JwtTokenProvider {
     }
 
     private void saveRefreshToken(String refreshToken, UserDetailsImpl userDetails) {
-        UUID id = UUID.fromString(userDetails.getUsername());
+        UUID id = UUID.fromString(userDetails.getName());
 
         memberRepository.updateRefreshToken(id, refreshToken);
     }

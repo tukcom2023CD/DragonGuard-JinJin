@@ -15,7 +15,6 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
-
     private final MemberService memberService;
     private final UserDetailsMapper userDetailsMapper;
 
@@ -24,11 +23,10 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        String accountId = (String) attributes.get("id");
+        String accountId = (String) attributes.get("login");
         String name = (String) attributes.get("name");
-        String email = (String) attributes.get("email");
 
-        Member user = memberService.saveIfNone(new OAuth2Request(accountId, name, email));
+        Member user = memberService.saveIfNone(new OAuth2Request(accountId, name));
         return userDetailsMapper.mapToLoginUser(user);
     }
 }

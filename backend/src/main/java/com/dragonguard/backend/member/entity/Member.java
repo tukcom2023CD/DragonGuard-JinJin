@@ -67,8 +67,6 @@ public class Member extends BaseTime {
     @Enumerated(EnumType.STRING)
     private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
 
-    private String email;
-
     private String refreshToken;
 
     @Builder
@@ -80,7 +78,6 @@ public class Member extends BaseTime {
         this.tier = Tier.SPROUT;
         this.authStep = AuthStep.GITHUB_ONLY;
         addCommit(commit);
-        this.email = email;
     }
 
     public void addCommit(Commit commit) {
@@ -110,5 +107,9 @@ public class Member extends BaseTime {
 
     public List<SimpleGrantedAuthority> getRole() {
         return role.stream().map(Role::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

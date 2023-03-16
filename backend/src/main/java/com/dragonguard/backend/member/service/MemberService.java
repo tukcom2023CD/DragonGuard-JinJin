@@ -136,6 +136,20 @@ public class MemberService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
+    public Member saveIfNone(OAuth2Request oAuth2Request) {
+        String githubId = oAuth2Request.getAccountId();
+        Member member = memberRepository
+                .findMemberByGithubId(githubId)
+                .orElseGet(() -> memberRepository.save(setUpMember(oAuth2Request)));
+        getCommitsByScraping(githubId);
+        return member;
+    }
+
+    @Transactional
+    public void updateRefreshToken(UUID id, String refreshToken) {
+        getEntity(id).updateRefreshToken(refreshToken);
+    }
+
     private void getCommitsByScraping(String githubId) {
         commitService.scrapingCommits(githubId);
     }
@@ -144,18 +158,9 @@ public class MemberService {
         return member.getWalletAddress() != null && !member.getWalletAddress().isEmpty();
     }
 
-    public Member saveIfNone(OAuth2Request oAuth2Request) {
-        String email = oAuth2Request.getEmail().orElseThrow(IllegalArgumentException::new);
-        getCommitsByScraping(oAuth2Request.getAccountId());
-        return memberRepository
-                .findByEmail(email)
-                .orElseGet(() -> memberRepository.save(setUpMember(oAuth2Request)));
-    }
-
     private Member setUpMember(OAuth2Request req) {
         Member.MemberBuilder memberBuilder = Member.builder();
         req.getName().ifPresent(memberBuilder::name);
-        req.getEmail().ifPresent(memberBuilder::email);
         memberBuilder.githubId(req.getAccountId());
         return memberBuilder.build();
     }

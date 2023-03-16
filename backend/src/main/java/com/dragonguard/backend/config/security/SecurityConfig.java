@@ -40,9 +40,6 @@ public class SecurityConfig {
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
 
-    @Value("spring.security.oauth2.client.registration.github.redirectUri")
-    private final String redirectUri;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -83,7 +80,7 @@ public class SecurityConfig {
     private Customizer<OAuth2LoginConfigurer<HttpSecurity>> oAuth2LoginConfigurer() {
         return o -> o.authorizationEndpoint(a ->
                         a.baseUri("/oauth2/authorize").authorizationRequestRepository(cookieAuthorizationRequestRepository)
-                                .and().redirectionEndpoint().baseUri(redirectUri))
+                                .and().redirectionEndpoint().baseUri("/oauth2/callback/*"))
                 .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler);

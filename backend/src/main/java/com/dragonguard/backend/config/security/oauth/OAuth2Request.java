@@ -8,11 +8,9 @@ import java.util.Optional;
 public class OAuth2Request {
     private String accountId;
     private Optional<String> name;
-    private Optional<String> email;
 
-    public OAuth2Request(String accountId, String name, String email) {
+    public OAuth2Request(String accountId, String name) {
         this.accountId = accountId;
         this.name = Optional.ofNullable(name);
-        this.email = Optional.ofNullable(email);
     }
 }
