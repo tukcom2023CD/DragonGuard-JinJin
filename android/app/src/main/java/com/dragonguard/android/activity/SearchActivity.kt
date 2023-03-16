@@ -78,26 +78,22 @@ class SearchActivity : AppCompatActivity() {
         filterDialog = FilterDialog(popularLanguages, languagesCheckBox, binding.optionIcon, filterMap)
 //        검색 옵션 구현
         viewmodel.onOptionListener.observe(this, Observer {
-
-/*            화면전환 테스트
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            startActivity(intent)
- */
             if (viewmodel.onOptionListener.value == "down") {
                 binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
                 Log.d("option", "down")
-                checkLanguage()
+                if(filterDialog.close) {
+                    filterLanguage = StringBuilder()
+                    filterOptions = StringBuilder()
+                    filterResult = StringBuilder()
+                    binding.searchOption.removeAllViews()
+                    binding.searchOption.invalidate()
+                    binding.searchOption.visibility = View.GONE
+                    checkLanguage()
+                }
             } else {
                 binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
                 Log.d("option", "up")
-                filterLanguage = StringBuilder()
-                filterOptions = StringBuilder()
-                filterResult = StringBuilder()
-                binding.searchOption.removeAllViews()
-                binding.searchOption.invalidate()
-                binding.searchOption.visibility = View.GONE
+
                 filterMap.clear()
                 filterDialog.show(supportFragmentManager, "filtering")
             }
