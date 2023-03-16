@@ -1,11 +1,13 @@
 package com.dragonguard.backend.member.controller;
 
+import com.dragonguard.backend.member.service.AuthService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author 김승진
@@ -13,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
-    @GetMapping
-    public ResponseEntity<Object> authorize(@RequestParam Object code) {
-        
-        return ResponseEntity.ok(code);
+    private final AuthService authService;
+
+    @GetMapping("/refresh")
+    public ResponseEntity<Object> authorize(HttpServletRequest request, HttpServletResponse response, @RequestBody String accessToken) {
+        return ResponseEntity.ok(authService.refreshToken(request, response, accessToken));
     }
 }

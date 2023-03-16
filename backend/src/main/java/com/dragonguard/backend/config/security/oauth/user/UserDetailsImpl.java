@@ -40,7 +40,7 @@ public class UserDetailsImpl implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        return member.getId().toString();
+        return member.getGithubId();
     }
 
     @Override
