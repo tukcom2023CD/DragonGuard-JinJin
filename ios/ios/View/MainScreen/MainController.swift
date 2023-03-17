@@ -114,6 +114,7 @@ final class MainController: UIViewController {
     
     // 검색 버튼 누르는 경우 네비게이션 뷰 방식으로 이동
     @objc func searchUIClicked(){
+        print("cleikc1")
         let searchPage = SearchPageController()
         searchPage.beforePage = "Main"
         self.navigationItem.backButtonTitle = " "    //다른 화면에서 BackBtn title 설정
@@ -122,6 +123,7 @@ final class MainController: UIViewController {
     
     // 유저 이름 누르는 경우 네비게이션 뷰 방식으로 이동
     @objc func settingUIClicked(){
+        print("cleikc")
         self.navigationController?.pushViewController(SettingController(), animated: true)
     }
     
