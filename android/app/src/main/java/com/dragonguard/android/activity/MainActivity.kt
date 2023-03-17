@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     private var userId = 0
     private var githubId = ""
     private var walletAddress = ""
-    private var registered = false
+    private var loginOut = false
     private var address = false
     private var token = ""
     //    var count = 0
@@ -75,21 +75,31 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.d("on", "onnewintent")
-        val intent = Intent(applicationContext, LoginActivity::class.java)
-        startActivity(intent)
+        val logout = intent?.getBooleanExtra("logout", false)
+        if(logout != null) {
+            loginOut = logout
+            if(loginOut) {
+                prefs.setWalletAddress("wallet_address", "")
+                prefs.setGithubId("githubId", "")
+                prefs.setId("id", 0)
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                intent.putExtra("wallet_address", walletAddress)
+                intent.putExtra("logout", loginOut)
+                activityResultLauncher.launch(intent)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
-        val logout = intent.getBooleanExtra("logout", false)
         prefs = IdPreference(applicationContext)
         userId = prefs.getId("id", 0)
         githubId = prefs.getGithubId("githubId", "")
 //        val intent = Intent(applicationContext, LoginActivity::class.java)
 //        startActivity(intent)
-        if(logout) {
+        if(loginOut) {
             prefs.setWalletAddress("wallet_address", "")
             prefs.setGithubId("githubId", "")
             prefs.setId("id", 0)
@@ -112,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 //        }
         val intent = Intent(applicationContext, LoginActivity::class.java)
         intent.putExtra("wallet_address", walletAddress)
-        intent.putExtra("logout", logout)
+        intent.putExtra("logout", loginOut)
         activityResultLauncher.launch(intent)
 //        walletAddress = prefs.getWalletAddress("wallet_address", "")
 //        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
