@@ -23,7 +23,7 @@ final class SearchPageController: UIViewController {
     var filtering = ""  //필터링 조건 넣을 변수  ex) 언어, 스타, 포크 수 등등
     var filteringArray: [String] = []  // 언어를 제외한 모든 필터 API용
     var conditionFilter: [String] = []  // 언어를 제외한 모든 필터 사용자 시각용
-    var type: String = "USER"
+    var type: String = "REPOSITORIES"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,11 +49,11 @@ final class SearchPageController: UIViewController {
     lazy var searchUI: UISearchBar = {
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: deviceWidth - 20, height: 0))
         searchBar.searchTextField.textColor = .black
-        searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "Repository or User", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
+        searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "REPOSITORIES", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         searchBar.searchTextField.backgroundColor = .white
         searchBar.searchBarStyle = .minimal
         searchBar.layer.cornerRadius = 10
-        searchBar.placeholder = "Repository or User"
+        searchBar.placeholder = "REPOSITORIES"
         searchBar.searchTextField.tintColor = .gray
         searchBar.searchTextField.leftView?.tintColor = .black  //돋보기 색상 변경
         return searchBar
@@ -121,6 +121,7 @@ final class SearchPageController: UIViewController {
         self.conditionFilter = []
         self.filteringArray = []
         self.filtering = ""
+        self.filteringCollectionView.reloadData()
         self.present(filteringController, animated: true)
     }
     
@@ -233,6 +234,13 @@ extension SearchPageController: UISearchBarDelegate{
 
 // 레포지토리 필터링된 정보들을 가지고 오는 구문
 extension SearchPageController: SendFilteringData{
+    
+    func sendUser(type: String) {
+        self.type = type
+        self.searchUI.placeholder = type
+        self.searchUI.searchTextField.attributedPlaceholder = NSAttributedString(string: type, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
+    }
+    
     func send(languageFilter: [String],
               languageFilterIndex: [Int],
               starFiltering: String,
@@ -277,6 +285,8 @@ extension SearchPageController: SendFilteringData{
             }
         }
         self.type = type
+        self.searchUI.placeholder = type
+        self.searchUI.searchTextField.attributedPlaceholder = NSAttributedString(string: type, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         
         setCollectionView()
         self.filteringCollectionView.reloadData()
@@ -361,7 +371,7 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         
         if position > (resultTableView.contentSize.height - scrollView.frame.size.height){
             if self.isInfiniteScroll{
-                getData(searchWord: self.searchText, type: "REPOSITORIES", change: false,filtering: self.filtering)
+                getData(searchWord: self.searchText, type: self.type, change: false,filtering: self.filtering)
                 self.isInfiniteScroll = false
             }
         }
