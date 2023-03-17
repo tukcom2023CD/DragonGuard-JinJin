@@ -2,6 +2,7 @@ package com.dragonguard.backend.config.security.oauth.user;
 
 import com.dragonguard.backend.member.entity.Member;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -9,16 +10,12 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Collection;
 import java.util.Map;
 
+@Getter
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails, OAuth2User {
-
     private Member member;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
-
-    public Member getMember() {
-        return member;
-    }
 
     @Override
     public String getName() {

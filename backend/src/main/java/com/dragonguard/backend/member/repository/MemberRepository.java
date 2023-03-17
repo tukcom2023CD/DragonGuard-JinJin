@@ -19,8 +19,6 @@ import java.util.UUID;
 public interface MemberRepository extends JpaRepository<Member, UUID>, MemberQueryRepository {
     Optional<Member> findMemberByGithubId(String githubId);
 
-    Optional<Member> findGithubIdById(UUID id);
-
     boolean existsByGithubId(String githubId);
 
     @Query("SELECT m.refreshToken FROM Member m WHERE m.id = :id")

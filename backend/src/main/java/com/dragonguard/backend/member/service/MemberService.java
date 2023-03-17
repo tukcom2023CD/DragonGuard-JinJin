@@ -143,11 +143,6 @@ public class MemberService {
         return member;
     }
 
-    @Transactional
-    public void updateRefreshToken(UUID id, String refreshToken) {
-        getEntity(id).updateRefreshToken(refreshToken);
-    }
-
     private void getCommitsByScraping(String githubId) {
         commitService.scrapingCommits(githubId);
     }
