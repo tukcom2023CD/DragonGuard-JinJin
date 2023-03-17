@@ -12,7 +12,8 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL() 
-    static let ip = ""
+    static let ip = Environment.ip
+    
     
     private init(){}
     
@@ -106,4 +107,16 @@ final class APIURL{
         return url
     }
     
+    // Github get
+    func githubGetAPI()-> String{
+        let url = "https://github.com/login/oauth/authorize"
+        return url
+    }
+
+    func githubPostAPI() -> String{
+        let url = "https://github.com/login/oauth/access_token"
+        return url
+    }
+    
 }
+
