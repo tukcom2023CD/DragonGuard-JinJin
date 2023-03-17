@@ -27,6 +27,6 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
         Member user = memberService.findMemberByGithubId(userInfo.getLogin());
 
-        return userDetailsMapper.mapToLoginUser(user, attributes);
+        return userDetailsMapper.mapToLoginUser(user);
     }
 }

@@ -25,7 +25,7 @@ public class JwtValidator {
     public Authentication getAuthentication(String accessToken) {
         Claims claims = getTokenBodyClaims(accessToken);
         Member member = memberService.getEntity(extractUUID(claims));
-        UserDetailsImpl loginUser = userDetailsMapper.mapToLoginUser(member, Map.of());
+        UserDetailsImpl loginUser = userDetailsMapper.mapToLoginUser(member);
 
         return new UsernamePasswordAuthenticationToken(loginUser, "", loginUser.getAuthorities());
     }
@@ -42,4 +42,3 @@ public class JwtValidator {
                 .getBody();
     }
 }
-

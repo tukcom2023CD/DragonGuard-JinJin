@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Component
 public class UserDetailsMapper {
-    public UserDetailsImpl mapToLoginUser(Member user, Map<String, Object> attributes) {
-        return new UserDetailsImpl(user, user.getRole(), attributes);
+    public UserDetailsImpl mapToLoginUser(Member user) {
+        return new UserDetailsImpl(user, user.getRole(), Map.of("id", user.getId()));
     }
 }

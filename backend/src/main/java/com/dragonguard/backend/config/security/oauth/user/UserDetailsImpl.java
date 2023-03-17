@@ -16,6 +16,10 @@ public class UserDetailsImpl implements UserDetails, OAuth2User {
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
+    public Member getMember() {
+        return member;
+    }
+
     @Override
     public String getName() {
         return member.getId().toString();

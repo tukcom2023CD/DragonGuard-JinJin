@@ -1,7 +1,6 @@
 package com.dragonguard.backend.config.security.jwt;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,7 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(key).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException | UnsupportedJwtException | IllegalStateException e) {
-            log.info("만료된 JWT 토큰입니다.");
+            log.info("JWT 오류");
         }
         return false;
     }
