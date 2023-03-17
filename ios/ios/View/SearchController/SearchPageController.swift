@@ -16,18 +16,21 @@ final class SearchPageController: UIViewController {
     let deviceHeight = UIScreen.main.bounds.height  // 각 장치들의 세로 길이
     let refreshTable = UIRefreshControl()   //새로 고침 사용
     private let disposeBag = DisposeBag()
-    private let searchViewModel = SearchPageViewModel()
     var searchResultList = [SearchPageResultModel]()
     var searchText = ""         // 검색하는 단어
     var beforePage: String = "" // 이전 View 이름
     var isInfiniteScroll = false // 무한 스크롤 1번만 로딩되게 확인하는 변수
+    var filtering = ""  //필터링 조건 넣을 변수  ex) 언어, 스타, 포크 수 등등
+    var filteringArray: [String] = []  // 언어를 제외한 모든 필터 API용
+    var conditionFilter: [String] = []  // 언어를 제외한 모든 필터 사용자 시각용
+    var type: String = "USER"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.backButtonTitle = "검색"
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        
         searchResultList = []
         addUItoView()   //View에 적용할 UI 작성
         
@@ -36,7 +39,7 @@ final class SearchPageController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        searchResultList = []
+        searchResultList = []
     }
     /*
      UI 작성
@@ -44,7 +47,7 @@ final class SearchPageController: UIViewController {
     
     // 검색 UI
     lazy var searchUI: UISearchBar = {
-        let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: deviceWidth, height: 0))
+        let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: deviceWidth - 20, height: 0))
         searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "Repository or User", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         searchBar.searchTextField.backgroundColor = .white
@@ -52,7 +55,6 @@ final class SearchPageController: UIViewController {
         searchBar.layer.cornerRadius = 10
         searchBar.placeholder = "Repository or User"
         searchBar.searchTextField.tintColor = .gray
-        searchBar.showsCancelButton = true
         searchBar.searchTextField.leftView?.tintColor = .black  //돋보기 색상 변경
         return searchBar
     }()
@@ -63,6 +65,24 @@ final class SearchPageController: UIViewController {
         tableview.backgroundColor = .white
         tableview.separatorStyle = .none
         return tableview
+    }()
+    
+    // 필터링 화면 이동하는 버튼
+    lazy var filteringBtn: UIButton = {
+        let btn = UIButton()
+        btn.tintColor = UIColor.black
+        btn.setTitleColor(.black, for: .normal)
+        btn.setImage(UIImage(systemName: "arrowtriangle.down.fill"), for: .normal)
+        btn.addTarget(self, action: #selector(clickedFilteringBtn), for: .touchUpInside)
+        return btn
+    }()
+    
+    lazy var filteringCollectionView : UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .white
+        return cv
     }()
     
     /*
@@ -79,18 +99,30 @@ final class SearchPageController: UIViewController {
     
     @objc func refreshing(refresh: UIRefreshControl){ }
     
-    private func getData(searchWord: String, type: String, change: Bool){
-        self.searchViewModel.getSearchData(searchWord: searchWord, type: type, change: change)
+    // 검색한 데이터 가져오는 함수
+    private func getData(searchWord: String, type: String, change: Bool, filtering: String){
+        SearchPageViewModel.viewModel.getSearchData(searchWord: searchWord, type: type, change: change ,filtering: filtering)
             .subscribe(onNext: { searchList in
                 for data in searchList{
                     self.searchResultList.append(data)
                 }
                 self.isInfiniteScroll = true
+                self.filtering = "" // 필터링 초기화
                 self.resultTableView.reloadData()
             })
             .disposed(by: disposeBag)
     }
     
+    // 필터링 버튼 클릭 시 화면 전환
+    @objc private func clickedFilteringBtn(){
+        let filteringController = FilteringController()
+        
+        filteringController.delegate = self
+        self.conditionFilter = []
+        self.filteringArray = []
+        self.filtering = ""
+        self.present(filteringController, animated: true)
+    }
     
     /*
      UI 추가할 때 작성하는 함수
@@ -102,8 +134,17 @@ final class SearchPageController: UIViewController {
         
         self.navigationItem.titleView = searchUI
         
+        // 필터링 버튼 적용
+        let barButton = UIBarButtonItem(customView: filteringBtn)
+        self.navigationItem.rightBarButtonItem = barButton
+        
         // searchControllerDelegate
         self.searchUI.delegate = self
+        
+        self.view.addSubview(filteringCollectionView)
+        self.filteringCollectionView.delegate = self
+        self.filteringCollectionView.dataSource = self
+        self.filteringCollectionView.register(FilteringCollectionViewCell.self, forCellWithReuseIdentifier: FilteringCollectionViewCell.identifier)
         
         // tableview 설치
         self.resultTableView.register(SearchPageTableView.self, forCellReuseIdentifier: SearchPageTableView.identifier)
@@ -111,11 +152,11 @@ final class SearchPageController: UIViewController {
     }
     private func addTableView(){
         self.view.addSubview(resultTableView)   //tableview 적용
-        
         // 결과 출력하는 테이블 뷰 적용
         self.resultTableView.dataSource = self
         self.resultTableView.delegate = self
-        resultTableViewSetLayout()    // 검색 결과 출력할 tableview AutoLayout
+        
+        setAutoLayuot()    // 검색 결과 출력할 tableview AutoLayout
     }
     
     /*
@@ -124,13 +165,24 @@ final class SearchPageController: UIViewController {
      함수 실행시 private으로 시작할 것 (추천)
      */
     
-    // tableview Autolayout 설정
-    private func resultTableViewSetLayout(){
-        resultTableView.snp.makeConstraints({ make in
-            make.top.equalTo(50)
-            make.bottom.equalTo(0)
+    private func setCollectionView(){
+        filteringCollectionView.snp.makeConstraints({ make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(10)
             make.leading.equalTo(10)
             make.trailing.equalTo(-10)
+            
+            if !self.conditionFilter.isEmpty{
+                make.height.equalTo(deviceHeight/15)
+            }
+        })
+    }
+    
+    private func setAutoLayuot(){
+        resultTableView.snp.makeConstraints({ make in
+            make.top.equalTo(self.filteringCollectionView.snp.bottom).offset(10)
+            make.leading.equalTo(10)
+            make.trailing.equalTo(-10)
+            make.bottom.equalTo(0)
         })
     }
     
@@ -154,11 +206,109 @@ extension SearchPageController: UISearchBarDelegate{
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchUI.resignFirstResponder()
         
+        repositoryfiltering()
+        
         guard let searchText = searchUI.text else{ return }
         addTableView()
         
         self.searchText = searchText
-        getData(searchWord: searchText, type: "REPOSITORIES", change: true)    // API 감지 스레드
+        getData(searchWord: searchText, type: self.type, change: true, filtering: self.filtering)    // API 감지 스레드
+    }
+    
+    func repositoryfiltering(){
+        
+        if !self.filteringArray.isEmpty{
+            for index in 0..<self.filteringArray.count{
+                self.filtering.append(self.filteringArray[index])
+                if index != self.filteringArray.count-1{
+                    self.filtering.append(",")
+                }
+            }
+        }
+        print("필터링 결과")
+        print(self.filtering)
+    }
+    
+}
+
+// 레포지토리 필터링된 정보들을 가지고 오는 구문
+extension SearchPageController: SendFilteringData{
+    func send(languageFilter: [String],
+              languageFilterIndex: [Int],
+              starFiltering: String,
+              starIndex: Int?,
+              forkFiltering: String,
+              forkIndex: Int?,
+              topicFiltering: String,
+              topicIndex: Int?,
+              type: String) {
+        let starsArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
+        let forksArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
+        let topicArray = ["0","1","2","3","4 이상"]
+        
+        if !languageFilter.isEmpty{
+            for lang in languageFilter{
+                filteringArray.append("languages:\(lang)")
+                conditionFilter.append(lang)
+            }
+        }
+        if !starFiltering.isEmpty{
+            for index in 0..<starsArray.count{
+                if index == starIndex ?? -1{
+                    filteringArray.append(starFiltering)
+                    conditionFilter.append("star:\(starsArray[index])")
+                }
+            }
+        }
+        if !forkFiltering.isEmpty{
+            for index in 0..<forksArray.count{
+                if index == forkIndex ?? -1{
+                    filteringArray.append(forkFiltering)
+                    conditionFilter.append("fork:\(forksArray[index])")
+                }
+            }
+        }
+        if !topicFiltering.isEmpty{
+            for index in 0..<topicArray.count{
+                if index == topicIndex ?? -1{
+                    filteringArray.append(topicFiltering)
+                    conditionFilter.append("topic:\(topicArray[index])")
+                }
+            }
+        }
+        self.type = type
+        
+        setCollectionView()
+        self.filteringCollectionView.reloadData()
+    }
+}
+
+extension SearchPageController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilteringCollectionViewCell.identifier, for: indexPath) as? FilteringCollectionViewCell ?? FilteringCollectionViewCell()
+
+        cell.inputText(text: self.conditionFilter[indexPath.row])
+        cell.layer.cornerRadius = collectionView.bounds.height/2
+        cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.conditionFilter.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellHeight = collectionView.bounds.height
+        let cellWidth = collectionView.bounds.width/4
+        
+        return CGSize(width: cellWidth, height: cellHeight)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.conditionFilter.remove(at: indexPath.row)
+        self.filteringArray.remove(at: indexPath.row)
+        self.filteringCollectionView.reloadData()
     }
     
 }
@@ -211,7 +361,7 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         
         if position > (resultTableView.contentSize.height - scrollView.frame.size.height){
             if self.isInfiniteScroll{
-                getData(searchWord: self.searchText, type: "REPOSITORIES", change: false)
+                getData(searchWord: self.searchText, type: "REPOSITORIES", change: false,filtering: self.filtering)
                 self.isInfiniteScroll = false
             }
         }

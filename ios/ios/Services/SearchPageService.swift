@@ -16,8 +16,9 @@ final class SearchPageService {
     /// - Parameters:
     ///   - searchWord: 사용자가 검색한 단어
     ///   - page: 검색 결과 페이지
-    func getSearchResult(searchWord: String,page: Int, type: String) -> Observable<[SearchPageResultModel]>{
-        let url = APIURL.apiUrl.getSearchResult(ip: ip, title: searchWord,page: page, type: type)
+    func getSearchResult(searchWord: String,page: Int, type: String,filtering: String) -> Observable<[SearchPageResultModel]>{
+        let url = APIURL.apiUrl.getSearchResult(ip: ip, title: searchWord,page: page, type: type, filtering: filtering)
+        print("rul \(url)")
         return Observable.create(){ observer in
             AF.request(url, method: .get)
                 .validate(statusCode: 200..<201)

@@ -199,8 +199,9 @@ final class MainController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
-    
+        
 }
+
 
 
 // CollectionView DataSouce, Delegate 설정

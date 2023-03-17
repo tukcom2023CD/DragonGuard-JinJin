@@ -21,9 +21,15 @@ final class APIURL{
     ///   - title: Repository, Github userName
     ///   - type: REPOSITORIES, USERS 두가지 타입
     /// - Returns: 검색 결과
-    func getSearchResult(ip: String, title: String, page: Int, type: String) -> String {
-        let searchUrl = "http://\(ip)/api/search?page=\(page)&name=\(title)&type=\(type)"
-        return searchUrl
+    func getSearchResult(ip: String, title: String, page: Int, type: String, filtering: String) -> String {
+        if !filtering.isEmpty{
+            let searchUrl = "http://\(ip)/api/search?page=\(page)&name=\(title)&type=\(type)&filters=\(filtering)"
+            return searchUrl
+        }
+        else{
+            let searchUrl = "http://\(ip)/api/search?page=\(page)&name=\(title)&type=\(type)"
+            return searchUrl
+        }
     }
     
     ///  DB에 User 정보 넣는 함수
