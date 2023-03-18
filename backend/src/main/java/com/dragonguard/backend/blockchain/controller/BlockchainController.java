@@ -31,8 +31,8 @@ public class BlockchainController {
         transactionService.deploy();
     }
 
-    @GetMapping("/{memberId}")
-    public ResponseEntity<List<BlockchainResponse>> getBlockchainInfo(@PathVariable UUID memberId) {
-        return ResponseEntity.ok(blockchainService.getBlockchainList(memberId));
+    @GetMapping
+    public ResponseEntity<List<BlockchainResponse>> getBlockchainInfo() {
+        return ResponseEntity.ok(blockchainService.getBlockchainList());
     }
 }

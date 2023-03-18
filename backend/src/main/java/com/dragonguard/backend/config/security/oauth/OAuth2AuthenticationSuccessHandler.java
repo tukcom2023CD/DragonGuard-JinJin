@@ -4,6 +4,7 @@ import com.dragonguard.backend.config.security.jwt.JwtSetupService;
 import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -45,12 +46,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String githubToken = request.getParameter("access_token");
+        String code = request.getParameter("code");
+
         String accessToken = tokenProvider.createAccessToken((UserDetailsImpl) authentication.getPrincipal()).getAccessToken();
 
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("accessToken", accessToken)
-                .queryParam("githubToken", githubToken)
+                .queryParam("code", code)
                 .build().toUriString();
     }
 
