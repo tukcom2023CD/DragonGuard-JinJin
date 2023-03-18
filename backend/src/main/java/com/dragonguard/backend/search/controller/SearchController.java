@@ -26,9 +26,8 @@ public class SearchController {
 
     @GetMapping
     public ResponseEntity<List<ResultResponse>> getSearchResult(
-            @RequestHeader String githubToken,
             @RequestParam(value = "filters", required = false) List<String> filters,
             @RequestParam String name, @RequestParam SearchType type, @RequestParam Integer page) {
-        return ResponseEntity.ok(searchService.getSearchResultByClient(new SearchRequest(githubToken, name, type, page, filters)));
+        return ResponseEntity.ok(searchService.getSearchResultByClient(new SearchRequest(name, type, page, filters)));
     }
 }

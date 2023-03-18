@@ -3,6 +3,8 @@ package com.dragonguard.backend.search.service;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.webclient.GithubClient;
+import com.dragonguard.backend.member.service.AuthService;
+import com.dragonguard.backend.member.service.MemberService;
 import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.result.entity.Result;
 import com.dragonguard.backend.result.mapper.ResultMapper;
@@ -39,6 +41,7 @@ public class SearchService {
     private final SearchMapper searchMapper;
     private final ResultMapper resultMapper;
     private final ResultRepository resultRepository;
+    private final AuthService authService;
     private final KafkaProducer<KafkaSearchRequest> kafkaSearchProducer;
     private final GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     private final GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
@@ -61,6 +64,7 @@ public class SearchService {
         Search search = findOrSaveSearch(searchRequest);
         List<Result> results = resultRepository.findAllBySearchId(search.getId());
         results.forEach(Result::delete);
+        searchRequest.setGithubToken(authService.getLoginUser().getGithubToken());
         Object clientResult = requestClient(searchRequest);
 
         if (clientResult instanceof SearchRepoResponse) {
