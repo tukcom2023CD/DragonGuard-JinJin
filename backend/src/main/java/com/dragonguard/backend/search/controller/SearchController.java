@@ -6,10 +6,7 @@ import com.dragonguard.backend.search.entity.SearchType;
 import com.dragonguard.backend.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -29,8 +26,9 @@ public class SearchController {
 
     @GetMapping
     public ResponseEntity<List<ResultResponse>> getSearchResult(
+            @RequestHeader String githubToken,
             @RequestParam(value = "filters", required = false) List<String> filters,
             @RequestParam String name, @RequestParam SearchType type, @RequestParam Integer page) {
-        return ResponseEntity.ok(searchService.getSearchResultByClient(new SearchRequest(name, type, page, filters)));
+        return ResponseEntity.ok(searchService.getSearchResultByClient(new SearchRequest(githubToken, name, type, page, filters)));
     }
 }

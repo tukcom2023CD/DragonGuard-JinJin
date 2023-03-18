@@ -1,6 +1,7 @@
 package com.dragonguard.backend.gitrepo.client;
 
 import com.dragonguard.backend.config.github.GithubProperties;
+import com.dragonguard.backend.gitrepo.dto.request.GitRepoClientRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.gitrepo.dto.response.GitRepoClientResponse;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberClientResponse;
@@ -19,7 +20,7 @@ import java.nio.charset.StandardCharsets;
  */
 
 @Component
-public class GitRepoClient implements GithubClient<String, GitRepoClientResponse> {
+public class GitRepoClient implements GithubClient<GitRepoClientRequest, GitRepoClientResponse> {
 
     private final GithubProperties githubProperties;
     private final WebClient webClient;
@@ -32,14 +33,14 @@ public class GitRepoClient implements GithubClient<String, GitRepoClientResponse
     }
 
     @Override
-    public GitRepoClientResponse requestToGithub(String request) {
+    public GitRepoClientResponse requestToGithub(GitRepoClientRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
                                 .path("repos/")
-                                .path(request)
+                                .path(request.getName())
                                 .build())
-                .headers(headers -> headers.setBearerAuth(githubProperties.getToken()))
+                .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()
