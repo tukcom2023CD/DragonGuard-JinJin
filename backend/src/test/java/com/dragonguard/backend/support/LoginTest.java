@@ -12,18 +12,15 @@ import static org.mockito.Mockito.when;
 
 @DatabaseTest
 public abstract class LoginTest {
-
     @MockBean
     protected AuthService authService;
-
     @Autowired
     private MemberRepository memberRepository;
-
     protected Member loginUser;
 
     @BeforeEach
-    private void setup() {
-        Member member = new Member("Kim", "ohksj77", new Commit(2023, 100, "ohksj77"), "12341234", "https://github", "ohksj77@gmail.com");
+    public void setup() {
+        Member member = new Member("Kim", "ohksj77", new Commit(2023, 100, "ohksj77"), "12341234", "https://github");
         loginUser = memberRepository.save(member);
         when(authService.getLoginUser()).thenReturn(loginUser);
     }

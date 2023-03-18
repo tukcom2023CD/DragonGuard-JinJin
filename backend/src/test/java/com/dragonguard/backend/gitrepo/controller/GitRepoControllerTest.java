@@ -1,14 +1,21 @@
 package com.dragonguard.backend.gitrepo.controller;
 
+import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.response.*;
 import com.dragonguard.backend.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.dto.response.TwoGitRepoMemberResponse;
+import com.dragonguard.backend.member.entity.Member;
+import com.dragonguard.backend.member.repository.MemberRepository;
+import com.dragonguard.backend.member.service.AuthService;
+import com.dragonguard.backend.support.DatabaseTest;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -24,6 +31,7 @@ import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentR
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -31,11 +39,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DatabaseTest
 @WebMvcTest(GitRepoController.class)
 class GitRepoControllerTest extends RestDocumentTest {
 
     @MockBean
     private GitRepoService gitRepoService;
+    @MockBean
+    protected AuthService authService;
+    @Autowired
+    private MemberRepository memberRepository;
+    protected Member loginUser;
+
+    @BeforeEach
+    public void setup() {
+        Member member = new Member("Kim", "ohksj77", new Commit(2023, 100, "ohksj77"), "12341234", "https://github");
+        loginUser = memberRepository.save(member);
+        when(authService.getLoginUser()).thenReturn(loginUser);
+    }
 
     @Test
     @DisplayName("레포 멤버 조회")
@@ -72,7 +93,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                         new GitRepoMemberResponse("HJ39", 101, 999, 500),
                         new GitRepoMemberResponse("posite", 99, 1001, 500),
                         new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499)));
-        given(gitRepoService.findMembersByGitRepoForCompare(any())).willReturn(expected);
+        given(gitRepoService.findMembersByGitRepoForCompare(any(), any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -104,7 +125,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 new IntSummaryStatistics(4, 5000, 15000, 30000)),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
                         new IntSummaryStatistics(4, 9998, 10000, 29997)));
-        given(gitRepoService.findTwoGitRepos(any())).willReturn(expected);
+        given(gitRepoService.findTwoGitRepos(any(), any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
