@@ -46,13 +46,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String code = request.getParameter("code");
 
         String accessToken = tokenProvider.createAccessToken((UserDetailsImpl) authentication.getPrincipal()).getAccessToken();
 
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("accessToken", accessToken)
-                .queryParam("code", code)
                 .build().toUriString();
     }
 

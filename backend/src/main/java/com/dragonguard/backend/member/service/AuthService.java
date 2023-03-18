@@ -55,7 +55,7 @@ public class AuthService {
     }
 
     public Member getLoginUser() {
-        String githubId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return memberRepository.findMemberByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
+        return ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                .getMember();
     }
 }
