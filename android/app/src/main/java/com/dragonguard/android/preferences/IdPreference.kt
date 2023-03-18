@@ -35,6 +35,14 @@ class IdPreference (context: Context) {
     }
 
     fun setKey(key:String, requestKey:String) {
-        prefs.edit().putString(key, requestKey)
+        prefs.edit().putString(key, requestKey).apply()
+    }
+
+    fun setToken(key:String, requestKey:String) {
+        prefs.edit().putString(key, requestKey).apply()
+    }
+
+    fun getToken(key:String, defValue: String):String {
+        return prefs.getString(key, defValue)!!
     }
 }

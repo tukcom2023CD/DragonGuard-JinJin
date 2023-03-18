@@ -31,6 +31,7 @@ class FilterDialog(private val languages: ArrayList<String>,
     var fork = ""
     var topic = ""
     var type = ""
+    var close = true
     private lateinit var search: View
 
     override fun onCreateDialog(savedInstance: Bundle?): Dialog {
@@ -55,7 +56,6 @@ class FilterDialog(private val languages: ArrayList<String>,
         val forkGroup = v.findViewById<RadioGroup>(R.id.group_fork)
         val topicGroup= v.findViewById<RadioGroup>(R.id.group_topics)
         val searchType = v.findViewById<RadioGroup>(R.id.group_type)
-        val languages = v.findViewById<RecyclerView>(R.id.languages_filter)
         star = ""
         fork = ""
         topic = ""
@@ -71,12 +71,16 @@ class FilterDialog(private val languages: ArrayList<String>,
             }
         }
         cancel.setOnClickListener {
+            close = false
             dlg.cancel()
         }
         choose.setOnClickListener {
             when(searchType.checkedRadioButtonId) {
                 R.id.type_user -> {
                     type = "USERS"
+                    languagesCheckBox.fill(false)
+                    close = true
+                    dlg.cancel()
                 }
                 R.id.type_repository -> {
                     type = "REPOSITORIES"
@@ -131,29 +135,37 @@ class FilterDialog(private val languages: ArrayList<String>,
                             topic = ">=4"
                         }
                     }
+                    close = true
+                    dlg.cancel()
+                }
+                else -> {
+                    Toast.makeText(requireContext(), "검색할 항목을 선택해주세요!!", Toast.LENGTH_SHORT).show()
                 }
             }
-            dlg.cancel()
         }
         return dlg
     }
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        filterMap.clear()
-        if(star != "") {
-            filterMap["stars"] = star
+        if(close) {
+            filterMap.clear()
+            if(star != "") {
+                filterMap["stars"] = star
+            }
+            if(fork != "") {
+                filterMap["forks"] = fork
+            }
+            if(topic != "") {
+                filterMap["topics"] = topic
+            }
+            if(type != "") {
+                filterMap["type"] = type
+            }
+            option.performClick()
+        } else {
+            option.performClick()
         }
-        if(fork != "") {
-            filterMap["forks"] = fork
-        }
-        if(topic != "") {
-            filterMap["topics"] = topic
-        }
-        if(type != "") {
-            filterMap["type"] = type
-        }
-        option.performClick()
 //        Toast.makeText(requireContext(), "star : $star, fork : $fork topics : $topic", Toast.LENGTH_SHORT).show()
     }
 

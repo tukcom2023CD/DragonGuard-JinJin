@@ -1,6 +1,7 @@
 package com.dragonguard.android.viewmodel
 
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.dragonguard.android.connect.ApiRepository
 import com.dragonguard.android.model.*
@@ -16,8 +17,9 @@ class Viewmodel {
     var onSearchListener = MutableLiveData<String>()
 
 //
-    fun getSearchTierResult(id: Int): UserInfoModel{
-        return repository.getUserInfo(id)
+    fun getUserInfo(token: String): UserInfoModel{
+        Log.d("token", "token : $token")
+        return repository.getUserInfo(token)
     }
 
     fun postRegister(body: RegisterGithubIdModel): Int {
@@ -69,8 +71,8 @@ class Viewmodel {
         return repository.getTokenHistory(id)
     }
 
-    fun postWalletAddress(id: Int, walletAddress: String): Boolean {
-        val body = WalletAddressModel(id.toString(), walletAddress)
+    fun postWalletAddress(walletAddress: String): Boolean {
+        val body = WalletAddressModel(walletAddress)
         return repository.postWalletAddress(body)
     }
 

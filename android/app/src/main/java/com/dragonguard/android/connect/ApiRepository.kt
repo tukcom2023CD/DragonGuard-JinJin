@@ -73,14 +73,14 @@ class ApiRepository {
     }
 
     //사용자의 정보를 받아오기 위한 함수
-    fun getUserInfo(id: Int): UserInfoModel {
-        val userInfo = api.getUserInfo(id)
+    fun getUserInfo(token: String): UserInfoModel {
+        val userInfo = api.getUserInfo("Bearer $token")
         var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null)
         try {
             val result = userInfo.execute()
-            if (result.isSuccessful) {
-                userResult = result.body()!!
-            }
+            Log.d("no", "status : ${result.code()}")
+            userResult = result.body()!!
+            Log.d("결과", "사용자 정보 : $userResult")
         } catch (e: Exception) {
             return userResult
         }
@@ -159,8 +159,10 @@ class ApiRepository {
         val walletAddress = api.postWalletAddress(body)
         try{
             val result = walletAddress.execute()
+            Log.d("dd", "결과 : ${result.code()}")
             return result.isSuccessful
         } catch (e: Exception) {
+            Log.d("dd", "결과 실패")
             return false
         }
     }

@@ -1,4 +1,4 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.ranking
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,16 +7,17 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
-import com.dragonguard.android.databinding.ActivityMyOrganizationsBinding
+import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.databinding.ActivityTotalUniversitiesRankingBinding
 
 /*
- 사용자의 oranizations 들을 보여주는 activity
+ 모든 대학교들의 랭킹을 보여주는 activity
  */
-class MyOrganizationListActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMyOrganizationsBinding
+class TotalUniversitiesRankingActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityTotalUniversitiesRankingBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_my_organizations)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_total_universities_ranking)
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
