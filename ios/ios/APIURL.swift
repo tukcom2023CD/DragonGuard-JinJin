@@ -113,7 +113,7 @@ final class APIURL{
         return url
     }
     
-    
+//    func getMY
     
     
     
