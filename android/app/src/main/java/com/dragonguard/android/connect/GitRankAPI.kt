@@ -46,7 +46,7 @@ interface GitRankAPI {
 //    klip wallet address를 서버로 보내는 함수
     @POST("members/wallet-address")
     @Headers("accept: application/json", "content-type: application/json")
-    fun postWalletAddress(@Body walletAddress : WalletAddressModel) : Call<Unit>
+    fun postWalletAddress(@Body walletAddress : WalletAddressModel, @Header("Authorization")token: String) : Call<Unit>
 
 //    두 Repository의 구성원들의 정보를 받아오기 위한 함수
     @POST("git-repos/compare/git-repos-members")

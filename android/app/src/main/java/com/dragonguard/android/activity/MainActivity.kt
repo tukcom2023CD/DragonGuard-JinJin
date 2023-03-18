@@ -103,25 +103,8 @@ class MainActivity : AppCompatActivity() {
             prefs.setId("id", 0)
         }
         val jwtToken = intent?.data?.getQueryParameter("accessToken")
-        val code = intent?.data?.getQueryParameter("code")
         Toast.makeText(applicationContext, "jwt token : $jwtToken", Toast.LENGTH_SHORT).show()
-        Log.d("code", "code : $code")
         Log.d("jwt token", "jwt Token : $jwtToken")
-        if(!code.isNullOrBlank()) {
-            val coroutine = CoroutineScope(Dispatchers.Main)
-            coroutine.launch {
-                val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getOauthToken(code)
-                }
-                val githubToken = resultDeferred.await()
-                if(githubToken.access_token != null) {
-                    prefs.setGithubToken("githubToken", githubToken.access_token)
-                    Log.d("github Token", "github token : ${prefs.getGithubToken("githubToken", "none")}")
-                } else {
-                    Log.d("github Token", "github token : ${prefs.getGithubToken("githubToken", "none")}")
-                }
-            }
-        }
         if(jwtToken != null) {
             token = jwtToken
             searchUser()
@@ -303,7 +286,7 @@ class MainActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val postwalletDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.postWalletAddress(address)
+                viewmodel.postWalletAddress(address, prefs.getJwtToken("token", ""))
             }
             val postWalletResponse = postwalletDeferred.await()
 //            if(!postWalletResponse) {

@@ -18,7 +18,7 @@ class Viewmodel {
 
 //
     fun getUserInfo(token: String): UserInfoModel{
-        Log.d("token", "token : $token")
+        Log.d("token", "Bearer : $token")
         return repository.getUserInfo(token)
     }
 
@@ -71,9 +71,9 @@ class Viewmodel {
         return repository.getTokenHistory(id)
     }
 
-    fun postWalletAddress(walletAddress: String): Boolean {
+    fun postWalletAddress(walletAddress: String, token: String): Boolean {
         val body = WalletAddressModel(walletAddress)
-        return repository.postWalletAddress(body)
+        return repository.postWalletAddress(body, token)
     }
 
     fun postCompareRepoMembersRequest(firstRepo: String, secondRepo: String): CompareRepoMembersResponseModel {

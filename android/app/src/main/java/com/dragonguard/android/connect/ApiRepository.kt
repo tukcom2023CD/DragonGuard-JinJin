@@ -74,7 +74,7 @@ class ApiRepository {
 
     //사용자의 정보를 받아오기 위한 함수
     fun getUserInfo(token: String): UserInfoModel {
-        val userInfo = api.getUserInfo("Bearer $token")
+        val userInfo = api.getUserInfo("token $token")
         var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null)
         try {
             val result = userInfo.execute()
@@ -155,8 +155,8 @@ class ApiRepository {
     }
 
     //klip wallet address를 서버에 등록하기 위한 함수
-    fun postWalletAddress(body: WalletAddressModel): Boolean {
-        val walletAddress = api.postWalletAddress(body)
+    fun postWalletAddress(body: WalletAddressModel, token: String): Boolean {
+        val walletAddress = api.postWalletAddress(body, "bearer $token")
         try{
             val result = walletAddress.execute()
             Log.d("dd", "지갑주소 전송 결과 : ${result.code()} ${body.walletAddress}")
