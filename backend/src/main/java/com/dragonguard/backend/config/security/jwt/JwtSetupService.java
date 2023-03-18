@@ -1,6 +1,7 @@
 package com.dragonguard.backend.config.security.jwt;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 @Service
+@RequiredArgsConstructor
 public class JwtSetupService {
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -21,10 +23,6 @@ public class JwtSetupService {
 
     @Value("${app.auth.token.refresh-header}")
     private String refreshTokenHeaderTag;
-
-    public JwtSetupService(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     public void addJwtTokensInCookie(HttpServletResponse response, UserDetailsImpl loginUser) {
         JwtToken jwtToken = jwtTokenProvider.createAccessToken(loginUser);

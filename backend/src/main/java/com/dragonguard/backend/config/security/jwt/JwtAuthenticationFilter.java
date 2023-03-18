@@ -1,5 +1,6 @@
 package com.dragonguard.backend.config.security.jwt;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,14 +22,11 @@ import java.util.Optional;
  */
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtValidator jwtValidator;
-    private final String tokenTag;
-
-    public JwtAuthenticationFilter(JwtValidator jwtValidator, @Value("${app.auth.token.access-header}") String tokenTag) {
-        this.jwtValidator = jwtValidator;
-        this.tokenTag = tokenTag;
-    }
+    @Value("${app.auth.token.access-header}")
+    private String tokenTag;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
