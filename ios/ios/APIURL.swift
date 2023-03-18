@@ -45,15 +45,6 @@ final class APIURL{
         return inputUserUrl
     }
     
-    
-    /// 멤버 정보 조회하는 함수
-    /// - Parameter id:inputDBMembers 함수 return값, DB에 저장되는 Id
-    /// - Returns: URL
-    func getMembersInfo(ip:String, id: Int) -> String{
-        let getMemberInfoUrl = "http://\(ip)/api/members/\(id)"
-        return getMemberInfoUrl
-    }
-    
     /// 유저 전체 랭킹 받는 함수
     /// - Parameters:
     ///   - page: 다음 유저 페이지
@@ -113,8 +104,14 @@ final class APIURL{
         return url
     }
     
-//    func getMY
     
+    /// 멤버 정보 조회하는 함수
+    /// - Parameter id:inputDBMembers 함수 return값, DB에 저장되는 Id
+    /// - Returns: URL
+    func getMembersInfo(ip:String) -> String{
+        let getMemberInfoUrl = "http://\(ip)/api/members/me"
+        return getMemberInfoUrl
+    }
     
     
     

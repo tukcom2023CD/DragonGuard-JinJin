@@ -8,7 +8,7 @@
 import Foundation
 
 final class MainModel{
-    var id: Int
+    var id: String
     var name: String
     var githubId: String
     var commits: Int
@@ -18,7 +18,7 @@ final class MainModel{
     var rank: Int
     var tokenAmount: Int
     
-    init(id: Int, name: String, githubId: String, commits: Int, tier: String, authStep: String, profileImage: String,rank: Int, tokenAmount: Int ) {
+    init(id: String, name: String, githubId: String, commits: Int, tier: String, authStep: String, profileImage: String,rank: Int, tokenAmount: Int ) {
         self.id = id
         self.name = name
         self.githubId = githubId
@@ -32,7 +32,7 @@ final class MainModel{
 }
 
 struct MainDecodingModel: Codable{
-    var id: Int
+    var id: String
     var name: String?
     var githubId: String
     var commits: Int?

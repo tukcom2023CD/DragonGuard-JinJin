@@ -14,30 +14,33 @@ final class MainService{
     let ip = APIURL.ip
     
     /// 사용자 정보 받아옴
-    func getUserInfo(id: Int) -> Observable<MainModel>{
-        let url = APIURL.apiUrl.getMembersInfo(ip: ip, id: id)
-        
-        //        if let savedData = UserDefaults.standard.object(forKey: "UserDBId") as? Data{
-        //            if let savedObject = try? JSONDecoder().decode(UserDBId.self, from: savedData){
-        //                self.data = savedObject.id ?? 0
-        //            }
-        //        }
-        
+    func getUserInfo(token: String) -> Observable<MainModel>{
+        let url = APIURL.apiUrl.getMembersInfo(ip: ip)
+    
         return Observable.create(){ observer in
-            AF.request(url)
+            AF.request(url, headers: ["Authorization": "Bearer \(token)"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: MainDecodingModel.self) { response in
-                    guard let data = response.value else {return}
-                    let info = MainModel(id: data.id,
-                                         name: data.name ?? "unknown",
-                                         githubId: data.githubId,
-                                         commits: data.commits ?? 0,
-                                         tier: data.tier,
-                                         authStep: data.authStep,
-                                         profileImage: data.profileImage ?? "",
-                                         rank: data.rank,
-                                         tokenAmount: data.tokenAmount ?? 0)
-                    observer.onNext(info)
+                    print("main service")
+                    print(response)
+                    
+                    switch response.result{
+                    case.success(let data):
+                        let info = MainModel(id: data.id,
+                                             name: data.name ?? "unknown",
+                                             githubId: data.githubId,
+                                             commits: data.commits ?? 0,
+                                             tier: data.tier,
+                                             authStep: data.authStep,
+                                             profileImage: data.profileImage ?? "",
+                                             rank: data.rank,
+                                             tokenAmount: data.tokenAmount ?? 0)
+                        observer.onNext(info)
+                    case .failure(let error):
+                        print("삐리삐리 에러발생 !! \(error)")
+                    }
+                    
+                   
                 }
             return Disposables.create()
         }
