@@ -78,7 +78,7 @@ public class MemberService {
             updateTier(member);
             return;
         }
-        setTransaction(commits.size(), member.getWalletAddress(), member.getGithubId());
+        setTransaction(member);
         updateTier(member);
     }
 
@@ -115,13 +115,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateWalletAddress(WalletRequest walletRequest) {
+    public Member updateWalletAddress(WalletRequest walletRequest) {
         Member member = authService.getLoginUser();
         member.updateWalletAddress(walletRequest.getWalletAddress());
-        if (member.getCommits().isEmpty()) {
-            return;
-        }
-        setTransaction(member.getCommits().stream().mapToInt(i -> i.getCommitNum()).sum(), member.getWalletAddress(), member.getGithubId());
+        return member;
     }
 
     public Member getEntity(UUID id) {
@@ -138,12 +135,12 @@ public class MemberService {
         return member;
     }
 
-    private void setTransaction(Integer size, String walletAddress, String githubId) {
+    public void setTransaction(Member member) {
         blockchainService.setTransaction(
-                new ContractRequest(walletAddress,
+                new ContractRequest(member.getWalletAddress(),
                         ContributeType.COMMIT.toString(),
-                        BigInteger.valueOf(size),
-                        githubId));
+                        BigInteger.valueOf(member.getSumOfCommits()),
+                        member.getGithubId()));
     }
 
     private void getCommitsByScraping(String githubId) {
