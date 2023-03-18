@@ -5,6 +5,7 @@ import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
+import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,8 @@ public class MemberController {
 
     @PostMapping("/wallet-address")
     public ResponseEntity<Void> updateWalletAddress(@RequestBody WalletRequest walletRequest) {
-        memberService.updateWalletAddress(walletRequest);
+        Member member = memberService.updateWalletAddress(walletRequest);
+        memberService.setTransaction(member);
         return ResponseEntity.ok().build();
     }
 
