@@ -47,6 +47,7 @@ class SearchActivity : AppCompatActivity() {
     private var filterOptions = StringBuilder()
     private var filterResult = StringBuilder()
     private var type = ""
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -60,6 +61,9 @@ class SearchActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+
+        val intent = intent
+        token = intent.getStringExtra("token")!!
         popularLanguages = arrayListOf("C", "C#", "C++", "CoffeeScript ", "CSS", "Dart", "DM", "Elixir", "Go", "Groovy", "HTML", "Java", "JavaScript",
             "Kotlin", "Objective-C", "Perl", "PHP", "PowerShell", "Python", "Ruby", "Rust", "Scala", "Shell", "Swift", "TypeScript")
         languagesCheckBox = ArrayList<Boolean>()
@@ -376,13 +380,13 @@ class SearchActivity : AppCompatActivity() {
         coroutine.launch {
             if(filterResult.toString().isNotEmpty()) {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type)
+                    viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
                 }
                 val result = resultDeferred.await()
                 delay(1000)
                 if (!checkSearchResult(result)) {
                     val secondDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type)
+                        viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
                     }
                     val second = secondDeferred.await()
                     if (checkSearchResult(second)) {
@@ -395,13 +399,13 @@ class SearchActivity : AppCompatActivity() {
                 }
             } else {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getSearchRepoResult(name, count, type)
+                    viewmodel.getSearchRepoResult(name, count, type, token)
                 }
                 val result = resultDeferred.await()
                 delay(1000)
                 if (!checkSearchResult(result)) {
                     val secondDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getSearchRepoResult(name, count, type)
+                        viewmodel.getSearchRepoResult(name, count, type, token)
                     }
                     val second = secondDeferred.await()
                     if (checkSearchResult(second)) {
@@ -447,7 +451,7 @@ class SearchActivity : AppCompatActivity() {
     private fun initRecycler() {
         Log.d("count", "count: $count")
         if (count == 0) {
-            repositoryProfileAdapter = RepositoryProfileAdapter(repoNames, this)
+            repositoryProfileAdapter = RepositoryProfileAdapter(repoNames, this, token)
             binding.searchResult.adapter = repositoryProfileAdapter
             binding.searchResult.layoutManager = LinearLayoutManager(this)
             repositoryProfileAdapter.notifyDataSetChanged()

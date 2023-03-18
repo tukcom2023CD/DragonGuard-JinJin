@@ -8,7 +8,7 @@ data class UserInfoModel(
     val authStep: String?,
     val commits: Int?,
     val githubId: String?,
-    val id: Int?,
+    val id: String?,
     val name: String?,
     val profileImage: String?,
     val tier: String?,

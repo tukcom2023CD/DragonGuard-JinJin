@@ -28,22 +28,21 @@ class RepoCompareActivity : AppCompatActivity() {
     private var count = 0
     private lateinit var compareUserFragment: CompareUserFragment
     private lateinit var compareRepoFragment: CompareRepoFragment
+    private var token = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_compare)
         binding.repoCompareViewModel = viewmodel
 
-        val intent = getIntent()
         repo1 = intent.getStringExtra("repo1")!!
         repo2 = intent.getStringExtra("repo2")!!
+        token = intent.getStringExtra("token")!!
         repoContributors()
 
 //        Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()
 
 //        val myFragment = supportFragmentManager.findFragmentById(R.id.compare_frame) as CompareUserFragment
-
-
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -56,7 +55,7 @@ class RepoCompareActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.postCompareRepoMembersRequest(repo1, repo2)
+                viewmodel.postCompareRepoMembersRequest(repo1, repo2, token)
             }
             val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()
@@ -83,8 +82,8 @@ class RepoCompareActivity : AppCompatActivity() {
     }
 
     private fun startFragment() {
-        compareRepoFragment = CompareRepoFragment(repo1, repo2)
-        compareUserFragment = CompareUserFragment(repo1, repo2)
+        compareRepoFragment = CompareRepoFragment(repo1, repo2, token)
+        compareUserFragment = CompareUserFragment(repo1, repo2, token)
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.compare_frame, compareRepoFragment)
             .add(R.id.compare_frame, compareUserFragment)

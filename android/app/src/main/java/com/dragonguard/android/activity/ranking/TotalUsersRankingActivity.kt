@@ -37,6 +37,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
     private var ranking = 0
     private var usersRanking = ArrayList<TotalUsersRankingsModel>()
     private var changed = true
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_total_users_ranking)
@@ -47,6 +48,8 @@ class TotalUsersRankingActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
+        token = intent.getStringExtra("token")!!
+
         getTotalUsersRanking(page, size)
     }
 
@@ -55,7 +58,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getTotalUserRanking(page, size)
+                viewmodel.getTotalUserRanking(page, size, token)
             }
             val result = resultDeferred.await()
             checkRankings(result)

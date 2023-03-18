@@ -17,6 +17,7 @@ import com.dragonguard.android.databinding.ActivityMenuBinding
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
     private lateinit var versionDialog : Dialog
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_menu)
@@ -29,6 +30,8 @@ class MenuActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+
+        token = intent.getStringExtra("token")!!
 
 //        로그아웃버튼 누르면 로그아웃 기능
         binding.logout.setOnClickListener {

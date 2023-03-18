@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 import java.lang.invoke.ConstantCallSite
 
 //선택한 두 Repository를 비교하기 위한 fragment
-class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
+class CompareRepoFragment(repoName1: String, repoName2: String, token: String) : Fragment() {
     // TODO: Rename and change types of parameters
     private var repo1 = repoName1
     private var repo2 = repoName2
@@ -42,6 +42,7 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
     private val compareItems = arrayListOf("forks", "close된\n 이슈 수", "open된\n이슈 수", "스타 수", "구독자 수", "watchers 수", "총 커밋 수",
     "최대 커밋수", "최소 커밋 수", "커밋\n기여자 수", "평균 커밋 수", "총\naddtions", "최대\naddtions", "최소\nadditions", "additions\n기여자 수",
     "평균\naddtions", "총\ndeletions", "최대\ndeletions", "최소\ndeletions", "deletions\n기여자 수", "평균\ndeletions", "사용된\n언어 수", "평균 코드 수")
+    private val token = token
 
 
     override fun onCreateView(
@@ -71,7 +72,7 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.postCompareRepoMembersRequest(repo1, repo2)
+                viewmodel.postCompareRepoMembersRequest(repo1, repo2, token)
             }
             val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()
@@ -123,7 +124,7 @@ class CompareRepoFragment(repoName1: String, repoName2: String) : Fragment() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.postCompareRepoRequest(repo1, repo2)
+                viewmodel.postCompareRepoRequest(repo1, repo2, token)
             }
             val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()

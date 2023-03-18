@@ -38,6 +38,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     var viewmodel = Viewmodel()
     private var count = 0
     private val colorsets = ArrayList<Int>()
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_contributors)
@@ -47,6 +48,8 @@ class RepoContributorsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        val intent = intent
+        token = intent.getStringExtra("token")!!
 
         repoName = intent.getStringExtra("repoName")!!
 //        Toast.makeText(applicationContext, "reponame = $repoName", Toast.LENGTH_SHORT).show()
@@ -58,7 +61,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getRepoContributors(repoName)
+                viewmodel.getRepoContributors(repoName, token)
             }
             val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()

@@ -19,8 +19,6 @@ import com.dragonguard.android.activity.ranking.RankingsActivity
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityMainBinding
-import com.dragonguard.android.model.RegisterGithubIdModel
-import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
@@ -37,12 +35,10 @@ class MainActivity : AppCompatActivity() {
             val walletIntent = it.data
             try{
                 val requestKey = walletIntent!!.getStringExtra("key")
-                val githubId = walletIntent.getStringExtra("githubId")
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
                 if(!NetworkCheck.checkNetworkState(this)) {
                     Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
                 } else {
-                    prefs.setGithubId("githubId", githubId!!)
 //                    registerUser(githubId)
                     authRequestResult(requestKey!!)
                 }
@@ -104,75 +100,26 @@ class MainActivity : AppCompatActivity() {
             prefs.setGithubId("githubId", "")
             prefs.setId("id", 0)
         }
-        val result = intent?.data?.getQueryParameter("accessToken")
-        Toast.makeText(applicationContext, "access token : $result", Toast.LENGTH_SHORT).show()
-        if(result != null) {
-            token = result
+        val jwtToken = intent?.data?.getQueryParameter("accessToken")
+        Toast.makeText(applicationContext, "jwt token : $jwtToken", Toast.LENGTH_SHORT).show()
+        Log.d("jwt token", "jwt Token : $jwtToken")
+        if(jwtToken != null) {
+            token = jwtToken
             searchUser()
-            prefs.setToken("token", result)
-            Log.d("nono", "main token : ${prefs.getToken("token", "")}")
+            prefs.setJwtToken("token", jwtToken)
+            Log.d("nono", "main token : ${prefs.getJwtToken("token", "")}")
+        } else {
+            token = prefs.getJwtToken("token", "")
         }
-//        if(prefs.getWalletAddress("wallet_address", "").isBlank()) {
-//            val intent = Intent(applicationContext, LoginActivity::class.java)
-//            intent.putExtra("wallet_address", walletAddress)
-//            intent.putExtra("logout", logout)
-//            activityResultLauncher.launch(intent)
-//        } else {
-//            Toast.makeText(applicationContext, "wallet address : ${prefs.getWalletAddress("wallet_address", "")}", Toast.LENGTH_SHORT).show()
-//        }
+
         val intent = Intent(applicationContext, LoginActivity::class.java)
         intent.putExtra("wallet_address", walletAddress)
         intent.putExtra("logout", loginOut)
+        intent.putExtra("token", prefs.getJwtToken("token", ""))
         activityResultLauncher.launch(intent)
-//        walletAddress = prefs.getWalletAddress("wallet_address", "")
-//        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
 
 
-//        val result = intent?.data?.getQueryParameter("code")
-//        if(result != null) {
-//            val coroutine = CoroutineScope(Dispatchers.IO)
-//            coroutine.launch {
-//                val deffered = coroutine.async ( Dispatchers.IO ) {
-//                    viewmodel.getOauthToken(result)
-//                }
-//                val resultToken = deffered.await()
-//                if(resultToken.access_token == null) {
-//                    Log.d("intent github", "실패!!")
-//                } else {
-//                    Log.d("intent github", "성공!! ${resultToken.access_token}, ${resultToken.scope}, ${resultToken.token_type}")
-//                    walletAddress = prefs.getWalletAddress("wallet_address", "")
-////        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
-//                    val intent = Intent(applicationContext, LoginActivity::class.java)
-//                    intent.putExtra("access_token", resultToken.access_token)
-//                    intent.putExtra("wallet_address", walletAddress)
-//                    activityResultLauncher.launch(intent)
-//                }
-//            }
-//        } else {
-//            if(logout) {
-//                prefs.setWalletAddress("wallet_address", "")
-//                prefs.setGithubId("githubId", "")
-//                prefs.setId("id", 0)
-//            }
-//            walletAddress = prefs.getWalletAddress("wallet_address", "")
-////        Toast.makeText(applicationContext, walletAddress, Toast.LENGTH_SHORT).show()
-//            val intent = Intent(applicationContext, LoginActivity::class.java)
-//            intent.putExtra("wallet_address", walletAddress)
-//            intent.putExtra("logout", logout)
-//            activityResultLauncher.launch(intent)
-//        }
 
-        //로그인 화면으로 넘어가기
-
-//        if(userId == 0){
-//            if(NetworkCheck.checkNetworkState(this)) {
-////                registerUser(githubId)
-//            }
-//        } else {
-//            if(NetworkCheck.checkNetworkState(this)) {
-//                searchUser()
-//            }
-//        }
         if(NetworkCheck.checkNetworkState(this)) {
             searchUser()
         }
@@ -180,6 +127,7 @@ class MainActivity : AppCompatActivity() {
 //        랭킹 보러가기 버튼 눌렀을 때 랭킹 화면으로 전환
         binding.lookRanking.setOnClickListener {
             val intent = Intent(applicationContext, RankingsActivity::class.java)
+            intent.putExtra("token", prefs.getJwtToken("token", ""))
             startActivity(intent)
         }
 
@@ -187,6 +135,7 @@ class MainActivity : AppCompatActivity() {
         viewmodel.onUserIconSelected.observe(this, Observer {
             if(viewmodel.onUserIconSelected.value == true){
                 val intent = Intent(applicationContext, MenuActivity::class.java)
+                intent.putExtra("token", prefs.getJwtToken("token", ""))
                 startActivity(intent)
             }
         })
@@ -194,13 +143,17 @@ class MainActivity : AppCompatActivity() {
 //        검색창, 검색 아이콘 눌렀을 때 검색화면으로 전환
         viewmodel.onSearchClickListener.observe(this, Observer {
             if(viewmodel.onSearchClickListener.value == true) {
-                val intent = Intent(applicationContext, SearchActivity::class.java)
-                startActivity(intent)
+                if(prefs.getJwtToken("token", "").isNotBlank()) {
+                    val intent = Intent(applicationContext, SearchActivity::class.java)
+                    intent.putExtra("token", prefs.getJwtToken("token", ""))
+                    startActivity(intent)
+                }
             }
         })
 
         binding.repoCompare.setOnClickListener {
             val intent = Intent(applicationContext, RepoChooseActivity::class.java)
+            intent.putExtra("token", prefs.getJwtToken("token", ""))
             startActivity(intent)
         }
     }
@@ -212,24 +165,6 @@ class MainActivity : AppCompatActivity() {
         handler.postDelayed({searchUser()}, 2000)
         handler.postDelayed({searchUser()}, 4000)
     }
-
-//    등록되어있지 않을 경우 post 요청을 통해 가입하기
-//    private fun registerUser(githubId: String) {
-//        var body = RegisterGithubIdModel(githubId)
-//        val coroutine = CoroutineScope(Dispatchers.Main)
-//        coroutine.launch {
-//            val resultDeferred = coroutine.async(Dispatchers.IO) {
-//                viewmodel.postRegister(body)
-//            }
-//            userId = resultDeferred.await()
-//            if(userId != 0) {
-//                prefs.setId("id", userId)
-////            Toast.makeText(application, "id = $userId", Toast.LENGTH_SHORT).show()
-//                searchUser()
-//            }
-//        }
-//
-//    }
 
 /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
     무한히 요청을 보내는 버그 해결
@@ -303,7 +238,7 @@ class MainActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val postwalletDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.postWalletAddress(address)
+                viewmodel.postWalletAddress(address, prefs.getJwtToken("token", ""))
             }
             val postWalletResponse = postwalletDeferred.await()
 //            if(!postWalletResponse) {

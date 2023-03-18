@@ -18,7 +18,7 @@ class Viewmodel {
 
 //
     fun getUserInfo(token: String): UserInfoModel{
-        Log.d("token", "token : $token")
+        Log.d("token", "Bearer : $token")
         return repository.getUserInfo(token)
     }
 
@@ -26,12 +26,12 @@ class Viewmodel {
         return repository.postRegister(body)
     }
 
-    fun getSearchRepoResult(name: String, count: Int, type: String): ArrayList<RepoSearchResultModel> {
-        return repository.getRepositoryNames(name, count, type)
+    fun getSearchRepoResult(name: String, count: Int, type: String, token: String): ArrayList<RepoSearchResultModel> {
+        return repository.getRepositoryNames(name, count, type, token)
     }
 
-    fun getRepositoryNamesWithFilters(name:String, count:Int, filters: String, type: String):ArrayList<RepoSearchResultModel> {
-        return repository.getRepositoryNamesWithFilters(name, count, filters, type)
+    fun getRepositoryNamesWithFilters(name:String, count:Int, filters: String, type: String, token: String):ArrayList<RepoSearchResultModel> {
+        return repository.getRepositoryNamesWithFilters(name, count, filters, type, token)
     }
 
 
@@ -43,8 +43,8 @@ class Viewmodel {
         onSearchClickListener.value = true
     }
 
-    fun getRepoContributors(repoName: String): ArrayList<RepoContributorsItem> {
-        return repository.getRepoContributors(repoName)
+    fun getRepoContributors(repoName: String, token: String): ArrayList<RepoContributorsItem> {
+        return repository.getRepoContributors(repoName, token)
     }
 
     fun clickSearchOption(){
@@ -55,8 +55,8 @@ class Viewmodel {
         }
     }
 
-    fun getTotalUserRanking(page: Int, size: Int): ArrayList<TotalUsersRankingModelItem> {
-        return repository.getTotalUsersRankings(page, size)
+    fun getTotalUserRanking(page: Int, size: Int, token: String): ArrayList<TotalUsersRankingModelItem> {
+        return repository.getTotalUsersRankings(page, size, token)
     }
 
     fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel {
@@ -67,23 +67,23 @@ class Viewmodel {
         return repository.getAuthResult(key)
     }
 
-    fun getTokenHistory(id: Int): ArrayList<TokenHistoryModelItem> {
-        return repository.getTokenHistory(id)
+    fun getTokenHistory(id: Int, token: String): ArrayList<TokenHistoryModelItem> {
+        return repository.getTokenHistory(id, token)
     }
 
-    fun postWalletAddress(walletAddress: String): Boolean {
+    fun postWalletAddress(walletAddress: String, token: String): Boolean {
         val body = WalletAddressModel(walletAddress)
-        return repository.postWalletAddress(body)
+        return repository.postWalletAddress(body, token)
     }
 
-    fun postCompareRepoMembersRequest(firstRepo: String, secondRepo: String): CompareRepoMembersResponseModel {
+    fun postCompareRepoMembersRequest(firstRepo: String, secondRepo: String, token: String): CompareRepoMembersResponseModel {
         val body = CompareRepoRequestModel(firstRepo, secondRepo)
-        return repository.postCompareRepoMembersRequest(body)
+        return repository.postCompareRepoMembersRequest(body, token)
     }
 
-    fun postCompareRepoRequest(firstRepo: String, secondRepo: String): CompareRepoResponseModel {
+    fun postCompareRepoRequest(firstRepo: String, secondRepo: String, token: String): CompareRepoResponseModel {
         val body = CompareRepoRequestModel(firstRepo, secondRepo)
-        return repository.postCompareRepoRequest(body)
+        return repository.postCompareRepoRequest(body, token)
     }
 
     fun getOauthToken(code: String):AccessTokenModel {
