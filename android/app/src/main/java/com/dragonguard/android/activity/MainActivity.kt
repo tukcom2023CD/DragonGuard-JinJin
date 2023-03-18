@@ -127,6 +127,8 @@ class MainActivity : AppCompatActivity() {
             searchUser()
             prefs.setJwtToken("token", jwtToken)
             Log.d("nono", "main token : ${prefs.getJwtToken("token", "")}")
+        } else {
+            token = prefs.getJwtToken("token", "")
         }
 //        if(prefs.getWalletAddress("wallet_address", "").isBlank()) {
 //            val intent = Intent(applicationContext, LoginActivity::class.java)
