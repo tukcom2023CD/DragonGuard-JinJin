@@ -9,12 +9,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.CompareSearchActivity
+import com.dragonguard.android.activity.compare.CompareSearchActivity
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.model.RepoSearchResultModel
 
 //비교할 Repository를 나열하기 위한 recyclerview의 adapter
-class SearchCompareRepoAdapter (private val datas : ArrayList<RepoSearchResultModel>, private val context: Context, count: Int) : RecyclerView.Adapter<SearchCompareRepoAdapter.ViewHolder>() {
+class SearchCompareRepoAdapter (private val datas : ArrayList<RepoSearchResultModel>, private val context: Context, count: Int, private val token: String) : RecyclerView.Adapter<SearchCompareRepoAdapter.ViewHolder>() {
     private var repoCount = count
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.repository_list,parent,false)
@@ -34,6 +34,7 @@ class SearchCompareRepoAdapter (private val datas : ArrayList<RepoSearchResultMo
             itemView.setOnClickListener{
                 val intent = Intent(context, MainActivity::class.java)
                 intent.putExtra("repo_name", data.name)
+                intent.putExtra("token", token)
                 context.setResult(count, intent)
                 context.finish()
             }

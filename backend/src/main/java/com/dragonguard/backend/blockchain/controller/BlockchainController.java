@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author 김승진
@@ -20,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/blockchain")
+@RequestMapping("/blockchain")
 public class BlockchainController {
     private final BlockchainService blockchainService;
     private final TransactionService transactionService;
@@ -30,8 +31,8 @@ public class BlockchainController {
         transactionService.deploy();
     }
 
-    @GetMapping("/{memberId}")
-    public ResponseEntity<List<BlockchainResponse>> getBlockchainInfo(@PathVariable Long memberId) {
-        return ResponseEntity.ok(blockchainService.getBlockchainList(memberId));
+    @GetMapping
+    public ResponseEntity<List<BlockchainResponse>> getBlockchainInfo() {
+        return ResponseEntity.ok(blockchainService.getBlockchainList());
     }
 }

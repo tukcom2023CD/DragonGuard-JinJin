@@ -1,6 +1,7 @@
 package com.dragonguard.backend.gitrepo.client;
 
 import com.dragonguard.backend.config.github.GithubProperties;
+import com.dragonguard.backend.gitrepo.dto.request.GitRepoClientRequest;
 import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.global.webclient.GithubClient;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 
 @Component
-public class GitRepoLanguageClient implements GithubClient<String, Map<String, Integer>> {
+public class GitRepoLanguageClient implements GithubClient<GitRepoClientRequest, Map<String, Integer>> {
     private final GithubProperties githubProperties;
     private final WebClient webClient;
     private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";
@@ -29,15 +30,15 @@ public class GitRepoLanguageClient implements GithubClient<String, Map<String, I
     }
 
     @Override
-    public Map<String, Integer> requestToGithub(String request) {
+    public Map<String, Integer> requestToGithub(GitRepoClientRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
                                 .path("repos/")
-                                .path(request)
+                                .path(request.getName())
                                 .path("/languages")
                                 .build())
-                .headers(headers -> headers.setBearerAuth(githubProperties.getToken()))
+                .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()

@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="3.4"
-        tools:context=".activity.SearchActivity">
+        tools:context=".activity.search.SearchActivity">
 
         <!--     기존 타이틀바 제거하고 다는 툴바       -->
         <androidx.appcompat.widget.Toolbar

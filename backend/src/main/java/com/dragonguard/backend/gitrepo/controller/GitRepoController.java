@@ -22,22 +22,25 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/git-repos")
+@RequestMapping("/git-repos")
 public class GitRepoController {
     private final GitRepoService gitRepoService;
 
     @GetMapping
-    public ResponseEntity<List<GitRepoMemberResponse>> getRepoMembers(@RequestParam String name) {
+    public ResponseEntity<List<GitRepoMemberResponse>> getRepoMembers(
+            @RequestParam String name) {
         return ResponseEntity.ok(gitRepoService.findMembersByGitRepoWithClient(new GitRepoRequest(name, LocalDate.now().getYear())));
     }
 
     @PostMapping("/compare")
-    public ResponseEntity<TwoGitRepoResponse> getTwoGitRepos(@RequestBody GitRepoCompareRequest request) {
+    public ResponseEntity<TwoGitRepoResponse> getTwoGitRepos(
+            @RequestBody GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findTwoGitRepos(request));
     }
 
     @PostMapping("/compare/git-repos-members")
-    public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(@RequestBody GitRepoCompareRequest request) {
+    public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(
+            @RequestBody GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompare(request));
     }
 

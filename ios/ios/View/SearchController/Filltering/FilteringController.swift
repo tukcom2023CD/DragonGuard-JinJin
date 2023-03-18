@@ -413,6 +413,7 @@ extension FilteringController: UICollectionViewDelegate, UICollectionViewDataSou
             switch indexPath.row{
             case 0:
                 print("clicked")
+                delegate?.sendUser(type: "USER")
                 self.dismiss(animated: true)
             case 1:
                 addToView()
@@ -674,7 +675,10 @@ protocol SendFilteringData{
               topicFiltering: String,
               topicIndex: Int?,
               type: String)
+    
+    func sendUser(type: String)
 }
+
 
 
 

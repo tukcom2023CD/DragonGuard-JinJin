@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author 김승진
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Repository
 public interface BlockchainRepository extends JpaRepository<Blockchain, Long> {
-    List<Blockchain> findByMemberId(Long memberId);
+    List<Blockchain> findByMemberId(UUID memberId);
 
-    boolean existsByMemberId(Long memberId);
+    boolean existsByMemberId(UUID memberId);
 }

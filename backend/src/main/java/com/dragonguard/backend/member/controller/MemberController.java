@@ -5,6 +5,7 @@ import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
+import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author 김승진
@@ -23,30 +25,25 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<IdResponse<Long>> saveMember(@RequestBody MemberRequest memberRequest) {
+    public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody MemberRequest memberRequest) {
         return ResponseEntity.ok(memberService.saveMember(memberRequest));
     }
 
-    @PostMapping("/{id}/commits")
-    public ResponseEntity<Void> updateCommits(@PathVariable Long id) {
-        memberService.updateCommits(id);
+    @PostMapping("/commits")
+    public ResponseEntity<Void> updateCommits() {
+        memberService.updateCommits();
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<MemberResponse> getMember(@PathVariable Long id) {
-        return ResponseEntity.ok(memberService.getMember(id));
-    }
-
-    @GetMapping("/{id}/tier")
-    public ResponseEntity<Tier> getTier(@PathVariable Long id) {
-        return ResponseEntity.ok(memberService.getTier(id));
+    @GetMapping("/tier")
+    public ResponseEntity<Tier> getTier() {
+        return ResponseEntity.ok(memberService.getTier());
     }
 
     @GetMapping("/ranking")
@@ -57,7 +54,13 @@ public class MemberController {
 
     @PostMapping("/wallet-address")
     public ResponseEntity<Void> updateWalletAddress(@RequestBody WalletRequest walletRequest) {
-        memberService.updateWalletAddress(walletRequest);
+        Member member = memberService.updateWalletAddress(walletRequest);
+        memberService.setTransaction(member);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<MemberResponse> getCurrentUser() {
+        return ResponseEntity.ok(memberService.getMember());
     }
 }

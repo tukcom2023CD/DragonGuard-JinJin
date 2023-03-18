@@ -1,13 +1,9 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.search
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -15,16 +11,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
-import androidx.core.view.marginLeft
-import androidx.core.view.setMargins
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.model.RepoSearchResultModel
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.dialog.FilterDialog
@@ -54,6 +47,7 @@ class SearchActivity : AppCompatActivity() {
     private var filterOptions = StringBuilder()
     private var filterResult = StringBuilder()
     private var type = ""
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -67,6 +61,9 @@ class SearchActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+
+        val intent = intent
+        token = intent.getStringExtra("token")!!
         popularLanguages = arrayListOf("C", "C#", "C++", "CoffeeScript ", "CSS", "Dart", "DM", "Elixir", "Go", "Groovy", "HTML", "Java", "JavaScript",
             "Kotlin", "Objective-C", "Perl", "PHP", "PowerShell", "Python", "Ruby", "Rust", "Scala", "Shell", "Swift", "TypeScript")
         languagesCheckBox = ArrayList<Boolean>()
@@ -78,26 +75,22 @@ class SearchActivity : AppCompatActivity() {
         filterDialog = FilterDialog(popularLanguages, languagesCheckBox, binding.optionIcon, filterMap)
 //        검색 옵션 구현
         viewmodel.onOptionListener.observe(this, Observer {
-
-/*            화면전환 테스트
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            startActivity(intent)
- */
             if (viewmodel.onOptionListener.value == "down") {
                 binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
                 Log.d("option", "down")
-                checkLanguage()
+                if(filterDialog.close) {
+                    filterLanguage = StringBuilder()
+                    filterOptions = StringBuilder()
+                    filterResult = StringBuilder()
+                    binding.searchOption.removeAllViews()
+                    binding.searchOption.invalidate()
+                    binding.searchOption.visibility = View.GONE
+                    checkLanguage()
+                }
             } else {
                 binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
                 Log.d("option", "up")
-                filterLanguage = StringBuilder()
-                filterOptions = StringBuilder()
-                filterResult = StringBuilder()
-                binding.searchOption.removeAllViews()
-                binding.searchOption.invalidate()
-                binding.searchOption.visibility = View.GONE
+
                 filterMap.clear()
                 filterDialog.show(supportFragmentManager, "filtering")
             }
@@ -387,13 +380,13 @@ class SearchActivity : AppCompatActivity() {
         coroutine.launch {
             if(filterResult.toString().isNotEmpty()) {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type)
+                    viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
                 }
                 val result = resultDeferred.await()
                 delay(1000)
                 if (!checkSearchResult(result)) {
                     val secondDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type)
+                        viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
                     }
                     val second = secondDeferred.await()
                     if (checkSearchResult(second)) {
@@ -406,13 +399,13 @@ class SearchActivity : AppCompatActivity() {
                 }
             } else {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getSearchRepoResult(name, count, type)
+                    viewmodel.getSearchRepoResult(name, count, type, token)
                 }
                 val result = resultDeferred.await()
                 delay(1000)
                 if (!checkSearchResult(result)) {
                     val secondDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getSearchRepoResult(name, count, type)
+                        viewmodel.getSearchRepoResult(name, count, type, token)
                     }
                     val second = secondDeferred.await()
                     if (checkSearchResult(second)) {
@@ -458,7 +451,7 @@ class SearchActivity : AppCompatActivity() {
     private fun initRecycler() {
         Log.d("count", "count: $count")
         if (count == 0) {
-            repositoryProfileAdapter = RepositoryProfileAdapter(repoNames, this)
+            repositoryProfileAdapter = RepositoryProfileAdapter(repoNames, this, token)
             binding.searchResult.adapter = repositoryProfileAdapter
             binding.searchResult.layoutManager = LinearLayoutManager(this)
             repositoryProfileAdapter.notifyDataSetChanged()

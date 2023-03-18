@@ -13,7 +13,6 @@ import SafariServices
 
 final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
-    var id = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +33,7 @@ final class LoginController: UIViewController{
         btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.setTitleColor(.black, for: .normal)
         btn.layer.borderWidth = 2
+        btn.isEnabled = false
         btn.addTarget(self, action: #selector(clickedKlipLoginBtn), for: .touchUpInside)
         return btn
     }()
@@ -87,15 +87,8 @@ final class LoginController: UIViewController{
     
     @objc func clickedGoGihbubBtn(){
         
-//        let scope = ""
-        let url = APIURL.apiUrl.githubGetAPI()
-        var component = URLComponents(string: url)
-        component?.queryItems = [
-            URLQueryItem(name: "client_id", value: Environment.clientId),
-//            URLQueryItem(name: "scope", value: scope)
-        ]
-        
-        guard let url = component?.url else { return }
+        let url = URL(string: APIURL.apiUrl.callBackendForGithubLogin(ip: APIURL.ip))!
+        print("url \(url)")
         if UIApplication.shared.canOpenURL(url) {
             let github = SFSafariViewController(url: url)
             self.present(github, animated: true)
@@ -108,20 +101,30 @@ final class LoginController: UIViewController{
     func checkClearAuths(){
         let checkGithubAuth = LoginViewModel.loginService.githubAuthSubject
         let checkklipAuth = LoginViewModel.loginService.klipAuthSubject
+        let jwtTokenSubject = LoginViewModel.loginService.jwtTokenSubject
+        var jwtToken = ""
+        
+        jwtTokenSubject.subscribe(onNext: {
+            if !$0.isEmpty{
+                jwtToken = $0
+                self.klipLoginBtn.isEnabled = true
+            }
+        })
+        .disposed(by: self.disposeBag)
+        
+        
+        
         
         Observable.combineLatest(checkGithubAuth, checkklipAuth)
             .subscribe(onNext: { first, second in
                 if first && second{
-                    self.sendUserId()
                     
-//                    let rootView = MainController()
-//                    rootView.id = self.id
-//                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-//                    sceneDelegate.window?.rootViewController = rootView
+                    let rootView = MainController()
+                    rootView.jwtToken = jwtToken
+                    let nc = UINavigationController(rootViewController: rootView)
+                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+                    sceneDelegate.window?.rootViewController = nc
                     
-                    let mc = MainController()
-                    mc.id = self.id
-                    self.navigationController?.pushViewController(mc, animated: true)
                 }
                 else if first{
                     self.goGithubBtn.backgroundColor = .lightGray
@@ -131,16 +134,6 @@ final class LoginController: UIViewController{
                     self.klipLoginBtn.backgroundColor = .lightGray
                     self.klipLoginBtn.isEnabled = false
                 }
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    func sendUserId(){
-        // github Id 서버에 전송한 후 DB id 받음
-        LoginViewModel.loginService.userGithubId()
-            .subscribe(onNext: { id in
-                print("DB Id: \(id)")
-                self.id = id
             })
             .disposed(by: disposeBag)
     }

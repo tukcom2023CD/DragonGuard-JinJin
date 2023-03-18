@@ -1,10 +1,7 @@
 package com.dragonguard.backend.search.dto.request;
 
 import com.dragonguard.backend.search.entity.SearchType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchRequest {
+    @Setter
+    private String githubToken;
     @NotBlank
     private String name;
     @NotNull
@@ -34,5 +33,12 @@ public class SearchRequest {
         this.name = name;
         this.type = type;
         this.page = page;
+    }
+
+    public SearchRequest(String name, SearchType type, Integer page, List<String> filters) {
+        this.name = name;
+        this.type = type;
+        this.page = page;
+        this.filters = filters;
     }
 }

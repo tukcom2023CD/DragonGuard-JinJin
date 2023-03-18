@@ -13,7 +13,6 @@ import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -39,7 +38,7 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
     public SearchRepoResponse requestToGithub(SearchRequest request) {
         return webClient.get()
                 .uri(getUriBuilder(request))
-                .headers(headers -> headers.setBearerAuth(githubProperties.getToken()))
+                .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()
@@ -51,7 +50,7 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
     private Function<UriBuilder, URI> getUriBuilder(SearchRequest request) {
         List<String> filters = request.getFilters();
 
-        if(filters == null || filters.isEmpty()) {
+        if (filters == null || filters.isEmpty()) {
             return uriBuilder -> uriBuilder
                     .path("search")
                     .path("/" + request.getType().toString().toLowerCase())

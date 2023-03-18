@@ -1,4 +1,4 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.search
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,17 +8,16 @@ import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivityRepoContributorsBinding
 import com.dragonguard.android.model.RepoContributorsItem
 import com.dragonguard.android.recycleradapter.ContributorsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
-import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -39,6 +38,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     var viewmodel = Viewmodel()
     private var count = 0
     private val colorsets = ArrayList<Int>()
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_contributors)
@@ -48,6 +48,8 @@ class RepoContributorsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        val intent = intent
+        token = intent.getStringExtra("token")!!
 
         repoName = intent.getStringExtra("repoName")!!
 //        Toast.makeText(applicationContext, "reponame = $repoName", Toast.LENGTH_SHORT).show()
@@ -59,7 +61,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getRepoContributors(repoName)
+                viewmodel.getRepoContributors(repoName, token)
             }
             val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()

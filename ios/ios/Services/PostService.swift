@@ -13,57 +13,26 @@ import RxSwift
 class PostService {
     let ip = APIURL.ip
     
-    /// githubID를 backend로 보냄
-    func postMyGithubId() -> Observable<Int> {
-        let url = APIURL.apiUrl.inputDBMembers(ip: ip)
-        let myGithubId = ["githubId" : "HJ39"]
-        
-        return Observable.create(){ observer in
-            AF.request(url,
-                       method: .post,
-                       parameters: myGithubId,
-                       encoding: JSONEncoding(options: []),
-                       headers: ["Content-type": "application/json"])
-            .responseDecodable(of: UserDBDecodingModel.self){ response in
-                switch response.result{
-                case .success(let data):
-                    observer.onNext(data.id)
-                case .failure(let error):
-                    print("삐리삐리 에러발생 \(error)")
-                    
-                }
-            }
-            return Disposables.create()
-        }
-    }
-    
     /// KLIP 지갑 주소를 backend로 전송
     /// - Parameter walletAddress: 사용자 Klip 지갑 주소
-    func sendMyWalletAddress(id: Int, walletAddress: String) -> Observable<Int> {
+    func sendMyWalletAddress(token: String, walletAddress: String) -> Observable<String> {
         let url = APIURL.apiUrl.inputWalletAddress(ip: ip)
-        let body: Parameters = [
-            "id": id,
-            "walletAddress" : "\(walletAddress)"
-        ]
-        //        let savedId = UserDBId(id: self.data, address: walletAddress)
-        //        if let encoded = try? JSONEncoder().encode(savedId){
-        //            UserDefaults.standard.setValue(encoded, forKey: "UserDBId")
-        //            print(self.data)
-        //            print(walletAddress)
-        //        }
+        let body: Parameters = ["walletAddress" : "\(walletAddress)"]
+        print(token)
         
         return Observable.create(){ observer in
             AF.request(url,
                        method: .post,
                        parameters: body,
                        encoding: JSONEncoding.default,
-                       headers: ["Content-type": "application/json"])
-            .validate(statusCode: 200..<404)
+                       headers: ["Content-type": "application/json",
+                                 "Authorization": "Bearer \(token)"])
+            .validate(statusCode: 200..<201)
             .response { response in
                 switch response.result{
                 case .success(_):
-                    print("success")
-                    observer.onNext(id)
+                    print("success send wallet address")
+                    observer.onNext("done")
                 case .failure(let error):
                     print("sendMyWalletAddress Error!!\n \(error)")
                 }

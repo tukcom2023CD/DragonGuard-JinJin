@@ -14,10 +14,10 @@ final class MainViewModel {
     let service = MainService()
     let disposeBag = DisposeBag()
     
-    func getMyInformation(id: Int) -> Observable<MainModel>{
+    func getMyInformation(token: String) -> Observable<MainModel>{
         return Observable<MainModel>.create(){ observer in
             
-            self.service.getUserInfo(id: id)
+            self.service.getUserInfo(token: token)
                 .subscribe(onNext: { info in
                     observer.onNext(info)
                 })

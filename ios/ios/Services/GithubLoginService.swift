@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import RxSwift
 
+// 안씀 삭제 예정
 final class GithubLoginService{
     let ip = APIURL.ip
     
@@ -18,7 +19,8 @@ final class GithubLoginService{
         let parameters = ["client_id": clientId,
                           "client_secret": secretCode,
                           "code": code]
-        let headers: HTTPHeaders = ["Accept": "application/json"]
+        let headers: HTTPHeaders = ["Accept": "application/json",
+                                    "Authorization": "Bearer \(Environment.jwtToken)"]
         
         return Observable.create(){ Observer in
             AF.request(url,

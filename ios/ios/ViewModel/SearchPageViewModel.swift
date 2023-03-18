@@ -21,7 +21,10 @@ final class SearchPageViewModel {
             self.pageCount = 1
         }
         return Observable.create(){ observer in
-            self.searchPageService.getSearchResult(searchWord: searchWord, page: self.pageCount, type: type,filtering: filtering)
+            self.searchPageService.getSearchResult(searchWord: searchWord,
+                                                   page: self.pageCount,
+                                                   type: type,
+                                                   filtering: filtering)
                 .subscribe(onNext: { searchResultList in
                     
                     observer.onNext(searchResultList)

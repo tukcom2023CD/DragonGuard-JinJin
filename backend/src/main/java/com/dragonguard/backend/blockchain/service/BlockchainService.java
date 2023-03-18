@@ -7,6 +7,7 @@ import com.dragonguard.backend.blockchain.repository.BlockchainRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.repository.MemberRepository;
+import com.dragonguard.backend.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +26,14 @@ public class BlockchainService {
     private final BlockchainRepository blockchainRepository;
     private final TransactionService transactionService;
     private final BlockchainMapper blockchainMapper;
+    private final AuthService authService;
     private final MemberRepository memberRepository;
 
     public void setTransaction(ContractRequest request) {
         Member member = memberRepository.findMemberByGithubId(request.getGithubId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        if(blockchainRepository.existsByMemberId(member.getId())) {
+        if (blockchainRepository.existsByMemberId(member.getId())) {
             Long sum = blockchainRepository.findByMemberId(member.getId()).stream()
                     .mapToLong(i -> Long.valueOf(String.valueOf(i.getAmount()))).sum();
             Long num = Long.valueOf(String.valueOf(request.getAmount())) - sum;
@@ -48,8 +50,8 @@ public class BlockchainService {
         blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));
     }
 
-    public List<BlockchainResponse> getBlockchainList(Long memberId) {
-        return blockchainRepository.findByMemberId(memberId).stream()
+    public List<BlockchainResponse> getBlockchainList() {
+        return blockchainRepository.findByMemberId(authService.getLoginUser().getId()).stream()
                 .map(blockchainMapper::toResponse)
                 .collect(Collectors.toList());
     }

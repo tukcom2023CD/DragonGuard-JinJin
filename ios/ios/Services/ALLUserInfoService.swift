@@ -22,7 +22,7 @@ final class ALLUserInfoService{
         var resultArray = [UserInfoModel]()
         
         return Observable.create(){ observer in
-            AF.request(url)
+            AF.request(url,headers: ["Authorization": "Bearer \(Environment.jwtToken)"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: [UserInfoDecodingData].self) { response in
                     guard let responseResult = response.value else {return}

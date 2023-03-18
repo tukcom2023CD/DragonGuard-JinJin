@@ -1,4 +1,4 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.menu
 
 import android.app.Dialog
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.Window
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivityMenuBinding
 
 /*
@@ -16,6 +17,7 @@ import com.dragonguard.android.databinding.ActivityMenuBinding
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
     private lateinit var versionDialog : Dialog
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_menu)
@@ -29,11 +31,14 @@ class MenuActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
+        token = intent.getStringExtra("token")!!
+
 //        로그아웃버튼 누르면 로그아웃 기능
         binding.logout.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
-            intent.putExtra("logout", true)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            intent.putExtra("logout", true)
             startActivity(intent)
         }
 

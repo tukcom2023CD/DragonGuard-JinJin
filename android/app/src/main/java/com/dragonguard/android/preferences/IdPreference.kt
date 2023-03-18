@@ -35,6 +35,23 @@ class IdPreference (context: Context) {
     }
 
     fun setKey(key:String, requestKey:String) {
-        prefs.edit().putString(key, requestKey)
+        prefs.edit().putString(key, requestKey).apply()
     }
+
+    fun setJwtToken(key:String, requestKey:String) {
+        prefs.edit().putString(key, requestKey).apply()
+    }
+
+    fun getJwtToken(key:String, defValue: String):String {
+        return prefs.getString(key, defValue)!!
+    }
+
+    fun setGithubToken(key:String, requestKey:String) {
+        prefs.edit().putString(key, requestKey).apply()
+    }
+
+    fun getGithubToken(key:String, defValue: String):String {
+        return prefs.getString(key, defValue)!!
+    }
+
 }

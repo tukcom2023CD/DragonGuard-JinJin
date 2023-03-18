@@ -16,11 +16,14 @@ final class SearchPageService {
     /// - Parameters:
     ///   - searchWord: 사용자가 검색한 단어
     ///   - page: 검색 결과 페이지
-    func getSearchResult(searchWord: String,page: Int, type: String,filtering: String) -> Observable<[SearchPageResultModel]>{
+    func getSearchResult(searchWord: String,
+                         page: Int,
+                         type: String,
+                         filtering: String) -> Observable<[SearchPageResultModel]>{
         let url = APIURL.apiUrl.getSearchResult(ip: ip, title: searchWord,page: page, type: type, filtering: filtering)
         print("SearchUrl \(url)")
         return Observable.create(){ observer in
-            AF.request(url, method: .get)
+            AF.request(url, method: .get, headers: ["Authorization": "Bearer \(Environment.jwtToken)"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: [SearchPageDecodingData].self) { response in
                     guard let responseResult = response.value else {return}

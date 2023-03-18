@@ -1,28 +1,38 @@
 package com.dragonguard.backend.member.controller;
 
+import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.AuthStep;
+import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
+import com.dragonguard.backend.member.repository.MemberRepository;
+import com.dragonguard.backend.member.service.AuthService;
 import com.dragonguard.backend.member.service.MemberService;
+import com.dragonguard.backend.support.DatabaseTest;
+import com.dragonguard.backend.support.LoginTest;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import com.dragonguard.backend.support.fixture.member.dto.MemberRequestFixture;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -30,23 +40,35 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DatabaseTest
 @WebMvcTest(MemberController.class)
 class MemberControllerTest extends RestDocumentTest {
-
     @MockBean
     private MemberService memberService;
+    @MockBean
+    protected AuthService authService;
+    @Autowired
+    private MemberRepository memberRepository;
+    protected Member loginUser;
+
+    @BeforeEach
+    public void setup() {
+        Member member = new Member("Kim", "ohksj77", new Commit(2023, 100, "ohksj77"), "12341234", "https://github");
+        loginUser = memberRepository.save(member);
+        when(authService.getLoginUser()).thenReturn(loginUser);
+    }
 
     @Test
     @DisplayName("멤버 생성")
     void saveMember() throws Exception {
         // given
-        IdResponse<Long> expected = new IdResponse<>(1L);
+        IdResponse<UUID> expected = new IdResponse<>(UUID.randomUUID());
         given(memberService.saveMember(any())).willReturn(expected);
 
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        post("/api/members")
+                        post("/members")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
@@ -70,7 +92,7 @@ class MemberControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        post("/api/members/1/commits")
+                        post("/members/commits")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -85,13 +107,13 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회")
     void getMember() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(1L, "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L);
-        given(memberService.getMember(any())).willReturn(expected);
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L);
+        given(memberService.getMember()).willReturn(expected);
 
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/members/1")
+                        get("/members/me")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -108,12 +130,12 @@ class MemberControllerTest extends RestDocumentTest {
     void getTier() throws Exception {
         // given
         Tier expected = Tier.MASTER;
-        given(memberService.getTier(any())).willReturn(expected);
+        given(memberService.getTier()).willReturn(expected);
 
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/members/1/tier")
+                        get("/members/tier")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -130,17 +152,17 @@ class MemberControllerTest extends RestDocumentTest {
     void getRanking() throws Exception {
         // given
         List<MemberRankResponse> expected = List.of(
-                new MemberRankResponse(1L, "Kim", "ohksj77", 10000L, Tier.MASTER),
-                new MemberRankResponse(2L, "Seung", "ohksj", 5000L, Tier.RUBY),
-                new MemberRankResponse(3L, "Jin", "ohksj777", 3000L, Tier.DIAMOND),
-                new MemberRankResponse(4L, "Lee", "ohksjj", 1000L, Tier.PLATINUM),
-                new MemberRankResponse(5L, "Da", "ohksjksj", 500L, Tier.GOLD));
+                new MemberRankResponse(UUID.randomUUID(), "Kim", "ohksj77", 10000L, Tier.MASTER),
+                new MemberRankResponse(UUID.randomUUID(), "Seung", "ohksj", 5000L, Tier.RUBY),
+                new MemberRankResponse(UUID.randomUUID(), "Jin", "ohksj777", 3000L, Tier.DIAMOND),
+                new MemberRankResponse(UUID.randomUUID(), "Lee", "ohksjj", 1000L, Tier.PLATINUM),
+                new MemberRankResponse(UUID.randomUUID(), "Da", "ohksjksj", 500L, Tier.GOLD));
         given(memberService.getMemberRanking(any())).willReturn(expected);
 
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/api/members/ranking?page=0&size=20&sort=commits,DESC")
+                        get("/members/ranking?page=0&size=20&sort=commits,DESC")
                                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -161,11 +183,11 @@ class MemberControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        post("/api/members/wallet-address")
+                        post("/members/wallet-address")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new WalletRequest(1L, "asdfasdf12341234"))));
+                                                new WalletRequest("asdfasdf12341234"))));
 
         // then
         perform.andExpect(status().isOk());

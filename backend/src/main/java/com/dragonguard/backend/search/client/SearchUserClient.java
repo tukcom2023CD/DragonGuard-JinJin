@@ -38,7 +38,7 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
     public SearchUserResponse requestToGithub(SearchRequest request) {
         return webClient.get()
                 .uri(getUriBuilder(request))
-                .headers(headers -> headers.setBearerAuth(githubProperties.getToken()))
+                .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()
@@ -50,7 +50,7 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
     private Function<UriBuilder, URI> getUriBuilder(SearchRequest request) {
         List<String> filters = request.getFilters();
 
-        if(filters == null || filters.isEmpty()) {
+        if (filters == null || filters.isEmpty()) {
             return uriBuilder -> uriBuilder
                     .path("search")
                     .path("/" + request.getType().toString().toLowerCase())

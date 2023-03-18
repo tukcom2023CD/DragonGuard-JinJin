@@ -19,7 +19,9 @@ final class RepoContributorInfoService{
         print(url)
         return Observable.create(){ observer in
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
-                AF.request(url, method: .get)
+                AF.request(url,
+                           method: .get,
+                           headers: ["Authorization": "Bearer \(Environment.jwtToken)"])
                     .validate(statusCode: 200..<201)
                     .responseDecodable(of: [RepoContriInfoDecodingModel].self) { response in
                         print("repoContributor \(response)")

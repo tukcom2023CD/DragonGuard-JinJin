@@ -1,5 +1,6 @@
 package com.dragonguard.backend.gitrepo.service;
 
+import com.dragonguard.backend.gitrepo.dto.request.GitRepoClientRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
@@ -17,6 +18,7 @@ import com.dragonguard.backend.gitrepomember.service.GitRepoMemberService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.webclient.GithubClient;
+import com.dragonguard.backend.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,12 +39,13 @@ public class GitRepoService {
     private final GitRepoMemberMapper gitRepoMemberMapper;
     private final GitRepoRepository gitRepoRepository;
     private final GitRepoMemberService gitRepoMemberService;
+    private final AuthService authService;
     private final GitRepoMapper gitRepoMapper;
     private final KafkaProducer<GitRepoRequest> kafkaGitRepoProducer;
     private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
     private final GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
-    private final GithubClient<String, GitRepoClientResponse> gitRepoClient;
-    private final GithubClient<String, Map<String, Integer>> gitRepoLanguageClient;
+    private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
+    private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
 
     public List<GitRepoMemberResponse> findMembersByGitRepo(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
@@ -61,6 +64,7 @@ public class GitRepoService {
 
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
+        gitRepoRequest.setGithubToken(authService.getLoginUser().getGithubToken());
         if (gitRepo.isEmpty()) {
             gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
             return requestToGithub(gitRepoRequest);
@@ -74,8 +78,9 @@ public class GitRepoService {
 
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(GitRepoCompareRequest request) {
         Integer year = LocalDate.now().getYear();
-        List<GitRepoMemberResponse> firstResult = findMembersByGitRepoWithClient(new GitRepoRequest(request.getFirstRepo(), year));
-        List<GitRepoMemberResponse> secondResult = findMembersByGitRepoWithClient(new GitRepoRequest(request.getSecondRepo(), year));
+        String githubToken = authService.getLoginUser().getGithubToken();
+        List<GitRepoMemberResponse> firstResult = findMembersByGitRepoWithClient(new GitRepoRequest(githubToken, request.getFirstRepo(), year));
+        List<GitRepoMemberResponse> secondResult = findMembersByGitRepoWithClient(new GitRepoRequest(githubToken, request.getSecondRepo(), year));
         requestIssueToScraping(new GitRepoNameRequest(request.getFirstRepo()));
         requestIssueToScraping(new GitRepoNameRequest(request.getSecondRepo()));
 
@@ -94,10 +99,11 @@ public class GitRepoService {
     }
 
     private GitRepoResponse getOneRepoResponse(String repoName) {
-        GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(new GitRepoRequest(repoName, null))));
-        GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(repoName);
-        if(repo.getClosedIssues() != null) repoResponse.setClosed_issues_count(repo.getClosedIssues());
-        Map<String, Integer> languages = gitRepoLanguageClient.requestToGithub(repoName);
+        String githubToken = authService.getLoginUser().getGithubToken();
+        GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(new GitRepoRequest(githubToken, repoName, null))));
+        GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
+        if (repo.getClosedIssues() != null) repoResponse.setClosed_issues_count(repo.getClosedIssues());
+        Map<String, Integer> languages = gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
         IntSummaryStatistics langStats =
                 languages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
                         : languages.keySet().stream().mapToInt(languages::get).summaryStatistics();
@@ -118,9 +124,9 @@ public class GitRepoService {
         List<Integer> deletions = gitRepo.getGitRepoMembers().stream().map(GitRepoMember::getDeletions).collect(Collectors.toList());
 
         return new StatisticsResponse(
-                commits.isEmpty() ? new IntSummaryStatistics(0, 0, 0 ,0 ) : commits.stream().mapToInt(Integer::intValue).summaryStatistics(),
-                additions.isEmpty() ? new IntSummaryStatistics(0, 0, 0 ,0 ) : additions.stream().mapToInt(Integer::intValue).summaryStatistics(),
-                deletions.isEmpty() ? new IntSummaryStatistics(0, 0, 0 ,0 ) : deletions.stream().mapToInt(Integer::intValue).summaryStatistics());
+                commits.isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0) : commits.stream().mapToInt(Integer::intValue).summaryStatistics(),
+                additions.isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0) : additions.stream().mapToInt(Integer::intValue).summaryStatistics(),
+                deletions.isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0) : deletions.stream().mapToInt(Integer::intValue).summaryStatistics());
     }
 
     private GitRepo getEntityByName(String name) {
