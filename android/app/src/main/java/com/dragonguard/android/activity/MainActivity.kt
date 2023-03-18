@@ -117,6 +117,8 @@ class MainActivity : AppCompatActivity() {
                 if(githubToken.access_token != null) {
                     prefs.setGithubToken("githubToken", githubToken.access_token)
                     Log.d("github Token", "github token : ${prefs.getGithubToken("githubToken", "none")}")
+                } else {
+                    Log.d("github Token", "github token : ${prefs.getGithubToken("githubToken", "none")}")
                 }
             }
         }

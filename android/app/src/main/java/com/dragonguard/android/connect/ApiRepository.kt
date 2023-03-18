@@ -255,6 +255,7 @@ class ApiRepository {
 
         return try {
             val result = token.execute()
+            Log.d("result", "oauth 토큰 결과 : ${result.code()}, ${result.body()!!.access_token}")
             result.body()!!
         }catch (e:Exception) {
             tokenResult
