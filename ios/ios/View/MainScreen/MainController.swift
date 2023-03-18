@@ -116,6 +116,7 @@ final class MainController: UIViewController {
     @objc func searchUIClicked(){
         let searchPage = SearchPageController()
         searchPage.beforePage = "Main"
+        searchPage.jwtToken = self.jwtToken
         self.navigationItem.backButtonTitle = " "    //다른 화면에서 BackBtn title 설정
         self.navigationController?.pushViewController(searchPage, animated: true)
     }

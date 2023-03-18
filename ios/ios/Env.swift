@@ -10,6 +10,5 @@ import Foundation
 // 커밋할 때 꼭 다 지우세요!!
 final class Environment{
     static let ip = ""
-    static let clientId = ""
-    static let clientSecret = ""
+    static var jwtToken = ""
 }

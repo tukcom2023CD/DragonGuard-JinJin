@@ -16,7 +16,7 @@ final class MainService{
     /// 사용자 정보 받아옴
     func getUserInfo(token: String) -> Observable<MainModel>{
         let url = APIURL.apiUrl.getMembersInfo(ip: ip)
-    
+        
         return Observable.create(){ observer in
             AF.request(url, headers: ["Authorization": "Bearer \(token)"])
                 .validate(statusCode: 200..<201)

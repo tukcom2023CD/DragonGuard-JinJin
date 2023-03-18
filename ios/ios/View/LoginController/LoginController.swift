@@ -33,6 +33,7 @@ final class LoginController: UIViewController{
         btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.setTitleColor(.black, for: .normal)
         btn.layer.borderWidth = 2
+        btn.isEnabled = false
         btn.addTarget(self, action: #selector(clickedKlipLoginBtn), for: .touchUpInside)
         return btn
     }()
@@ -104,9 +105,15 @@ final class LoginController: UIViewController{
         var jwtToken = ""
         
         jwtTokenSubject.subscribe(onNext: {
-            jwtToken = $0
+            if !$0.isEmpty{
+                jwtToken = $0
+                self.klipLoginBtn.isEnabled = true
+            }
         })
         .disposed(by: self.disposeBag)
+        
+        
+        
         
         Observable.combineLatest(checkGithubAuth, checkklipAuth)
             .subscribe(onNext: { first, second in
