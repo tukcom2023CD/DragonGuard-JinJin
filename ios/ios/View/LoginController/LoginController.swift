@@ -114,14 +114,16 @@ final class LoginController: UIViewController{
                 if first && second{
                     self.sendUserId()
                     
-//                    let rootView = MainController()
-//                    rootView.id = self.id
-//                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-//                    sceneDelegate.window?.rootViewController = rootView
+                    let rootView = MainController()
+                    rootView.id = self.id
+                    let nc = UINavigationController(rootViewController: rootView)
+                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+                    sceneDelegate.window?.rootViewController = nc
+
+//                    let mc = MainController()
+//                    mc.id = self.id
+//                    self.navigationController?.pushViewController(mc, animated: true)
                     
-                    let mc = MainController()
-                    mc.id = self.id
-                    self.navigationController?.pushViewController(mc, animated: true)
                 }
                 else if first{
                     self.goGithubBtn.backgroundColor = .lightGray
