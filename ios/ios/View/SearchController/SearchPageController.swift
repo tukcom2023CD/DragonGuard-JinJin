@@ -102,12 +102,10 @@ final class SearchPageController: UIViewController {
     
     // 검색한 데이터 가져오는 함수
     private func getData(searchWord: String, type: String, change: Bool, filtering: String){
-        guard let token = self.jwtToken else { return }
         SearchPageViewModel.viewModel.getSearchData(searchWord: searchWord,
                                                     type: type,
                                                     change: change ,
-                                                    filtering: filtering,
-                                                    token: token)
+                                                    filtering: filtering)
             .subscribe(onNext: { searchList in
                 for data in searchList{
                     self.searchResultList.append(data)

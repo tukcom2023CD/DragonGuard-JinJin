@@ -25,10 +25,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     // github get redirect_uri 통신 후 데이터 받는 함수
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        
         if let url = URLContexts.first?.url {
             let component = URLComponents(string: url.absoluteString)
             let items = component?.queryItems ?? []
-
+            
             let jwtToken = items[0].value ?? ""
             Environment.jwtToken = jwtToken
             LoginViewModel.loginService.saveJWTToken(token: jwtToken)
