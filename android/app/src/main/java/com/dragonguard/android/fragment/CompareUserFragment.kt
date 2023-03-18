@@ -28,7 +28,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 //선택한 두 Repository의 member들을 비교하기 위한 fragment
-class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
+class CompareUserFragment(repoName1: String, repoName2: String, token: String) : Fragment() {
 
     private var repo1 = repoName1
     private var repo2 = repoName2
@@ -37,6 +37,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
     private var count = 0
     private lateinit var binding : FragmentCompareUserBinding
     private var viewmodel = Viewmodel()
+    private val token = token
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +58,7 @@ class CompareUserFragment(repoName1: String, repoName2: String) : Fragment() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.postCompareRepoMembersRequest(repoName1, repoName2)
+                viewmodel.postCompareRepoMembersRequest(repoName1, repoName2, token)
             }
             val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()

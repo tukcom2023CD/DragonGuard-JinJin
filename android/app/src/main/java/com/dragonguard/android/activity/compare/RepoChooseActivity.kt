@@ -32,6 +32,7 @@ class RepoChooseActivity : AppCompatActivity() {
     }
     private lateinit var binding: ActivityRepoChooseBinding
     private var viewmodel = Viewmodel()
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_choose)
@@ -42,14 +43,18 @@ class RepoChooseActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
+        token = intent.getStringExtra("token")!!
+
         binding.repoCompare1.setOnClickListener {
             val intent = Intent(applicationContext, CompareSearchActivity::class.java)
+            intent.putExtra("token", token)
             intent.putExtra("count", 0)
             activityResultLauncher.launch(intent)
         }
 
         binding.repoCompare2.setOnClickListener {
             val intent = Intent(applicationContext, CompareSearchActivity::class.java)
+            intent.putExtra("token", token)
             intent.putExtra("count", 1)
             activityResultLauncher.launch(intent)
         }
@@ -63,6 +68,7 @@ class RepoChooseActivity : AppCompatActivity() {
                     val intent = Intent(applicationContext, RepoCompareActivity::class.java)
                     intent.putExtra("repo1", binding.repoCompare1.text.toString())
                     intent.putExtra("repo2", binding.repoCompare2.text.toString())
+                    intent.putExtra("token", token)
                     startActivity(intent)
                 } else {
                     Toast.makeText(applicationContext,"서로 다른 Repository를 선택해 주세요!!", Toast.LENGTH_SHORT).show()

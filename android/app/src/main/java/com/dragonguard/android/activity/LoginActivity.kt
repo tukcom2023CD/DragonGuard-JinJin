@@ -35,7 +35,6 @@ class LoginActivity : AppCompatActivity() {
     private val body = WalletAuthRequestModel(Bapp("GitRank"), "auth")
     private var walletAddress = ""
     private var key = ""
-    private var githubId = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
@@ -43,22 +42,20 @@ class LoginActivity : AppCompatActivity() {
         Log.d("login", "loginactivity1")
         prefs = IdPreference(applicationContext)
         val intent = intent
+        val token = intent.getStringExtra("token")
         val logout = intent.getBooleanExtra("logout", false)
-        if(logout) {
-            prefs.setGithubId("githubId", "")
-            prefs.setKey("key", "")
-        }
-        githubId = prefs.getGithubId("githubId", "")
-        if(githubId.isNotBlank()) {
+        if(!token.isNullOrEmpty()) {
             binding.githubAuth.isEnabled = false
             binding.githubAuth.setTextColor(Color.BLACK)
         }
-
+        if(logout) {
+            prefs.setKey("key", "")
+        }
 
         val address = intent.getStringExtra("wallet_address")
         address?.let{
             walletAddress = address
-            if(walletAddress.isNotBlank() && githubId != "") {
+            if(walletAddress.isNotBlank() && !token.isNullOrEmpty()) {
 //                Log.d("wallet", "지갑주소 이미 있음 $walletAddress")
                 val intentW = Intent(applicationContext, MainActivity::class.java)
                 setResult(1, intentW)
@@ -66,10 +63,6 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        val accessToken = intent.getStringExtra("access_token")
-        if(!accessToken.isNullOrBlank()) {
-            getUserInfo(accessToken)
-        }
 
         key = prefs.getKey("key", "")
 
@@ -96,9 +89,8 @@ class LoginActivity : AppCompatActivity() {
         binding.walletFinish.setOnClickListener {
             if(key.isNotBlank()) {
                 val intent = Intent(applicationContext, MainActivity::class.java)
-                Log.d("info", "key : $key, github id : $githubId")
+                Log.d("info", "key : $key")
                 intent.putExtra("key", key)
-                intent.putExtra("githubId", githubId)
                 setResult(0, intent)
                 finish()
             } else {
@@ -123,24 +115,6 @@ class LoginActivity : AppCompatActivity() {
                 Log.d("key", "key : ${authResponse.request_key}")
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://klipwallet.com/?target=/a2a?request_key=${authResponse.request_key}"))
                 startActivity(intent)
-            }
-        }
-    }
-
-    private fun getUserInfo(token: String) {
-        val coroutine = CoroutineScope(Dispatchers.Main)
-        coroutine.launch {
-            val deffered = coroutine.async ( Dispatchers.IO ) {
-                viewmodel.getOauthUserInfo(token)
-            }
-            val result = deffered.await()
-            if(result != null) {
-                Log.d("result", "id : ${result.login}")
-                Toast.makeText(applicationContext, result.login, Toast.LENGTH_SHORT).show()
-                prefs.setGithubId("githubId", result.login)
-                githubId = result.login
-                binding.githubAuth.isEnabled = false
-                binding.githubAuth.setTextColor(Color.BLACK)
             }
         }
     }

@@ -33,6 +33,7 @@ class CompareSearchActivity : AppCompatActivity() {
     private var changed = true
     private var lastSearch = ""
     private var repoCount = 0
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -43,7 +44,7 @@ class CompareSearchActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
-        val intent = getIntent()
+        token = intent.getStringExtra("token")!!
         repoCount = intent.getIntExtra("count", 0)
         if(repoCount == 0) {
             supportActionBar?.setTitle("첫번째 Repository")
@@ -167,13 +168,13 @@ class CompareSearchActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getSearchRepoResult(name, count, "REPOSITORIES")
+                viewmodel.getSearchRepoResult(name, count, "REPOSITORIES", token)
             }
             val result = resultDeferred.await()
             delay(1000)
             if (!checkSearchResult(result)) {
                 val secondDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getSearchRepoResult(name, count,"REPOSITORIES")
+                    viewmodel.getSearchRepoResult(name, count,"REPOSITORIES", token)
                 }
                 val second = secondDeferred.await()
                 if (checkSearchResult(second)) {
@@ -218,7 +219,7 @@ class CompareSearchActivity : AppCompatActivity() {
     private fun initRecycler() {
         Log.d("count", "count: $count")
         if (count == 0) {
-            compareRepositoryAdapter = SearchCompareRepoAdapter(repoNames, this, repoCount)
+            compareRepositoryAdapter = SearchCompareRepoAdapter(repoNames, this, repoCount, token)
             binding.searchResult.adapter = compareRepositoryAdapter
             binding.searchResult.layoutManager = LinearLayoutManager(this)
             compareRepositoryAdapter.notifyDataSetChanged()

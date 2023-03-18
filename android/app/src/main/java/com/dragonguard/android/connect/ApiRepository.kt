@@ -29,7 +29,7 @@ class ApiRepository {
     private var api = retrofit.create(GitRankAPI::class.java)
 
     //Repository 검색을 위한 함수
-    fun getRepositoryNames(name: String, count: Int, type: String): ArrayList<RepoSearchResultModel> {
+    fun getRepositoryNames(name: String, count: Int, type: String, token: String): ArrayList<RepoSearchResultModel> {
         var repoNames : ArrayList<RepoSearchResultModel> = arrayListOf<RepoSearchResultModel>()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
@@ -38,7 +38,7 @@ class ApiRepository {
 
         Log.d("api 호출", "$count 페이지 검색")
 
-        val repoName = api.getRepoName(queryMap)
+        val repoName = api.getRepoName(queryMap, "Bearer $token")
         try{
             val result = repoName.execute()
             if(result.isSuccessful){
@@ -50,7 +50,7 @@ class ApiRepository {
         return repoNames
     }
 
-    fun getRepositoryNamesWithFilters(name: String, count: Int, filters: String, type: String): ArrayList<RepoSearchResultModel> {
+    fun getRepositoryNamesWithFilters(name: String, count: Int, filters: String, type: String, token: String): ArrayList<RepoSearchResultModel> {
         var repoNames : ArrayList<RepoSearchResultModel> = arrayListOf<RepoSearchResultModel>()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${count+1}")
@@ -60,7 +60,7 @@ class ApiRepository {
 
         Log.d("api 호출", "$count 페이지 검색")
 
-        val repoName = api.getRepoName(queryMap)
+        val repoName = api.getRepoName(queryMap, "Bearer $token")
         try{
             val result = repoName.execute()
             if(result.isSuccessful){
@@ -74,22 +74,23 @@ class ApiRepository {
 
     //사용자의 정보를 받아오기 위한 함수
     fun getUserInfo(token: String): UserInfoModel {
-        val userInfo = api.getUserInfo("token $token")
+        val userInfo = api.getUserInfo("Bearer $token")
         var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null)
         try {
             val result = userInfo.execute()
             Log.d("no", "사용자 정보 요청 결과 : ${result.code()}")
-            userResult = result.body()!!
             Log.d("결과", "사용자 정보 : $userResult")
+            userResult = result.body()!!
         } catch (e: Exception) {
+            Log.d("exception", "exception : ${e.printStackTrace()}")
             return userResult
         }
         return userResult
     }
 
     //Repository의 기여자들의 정보를 받아오기 위한 함수
-    fun getRepoContributors(repoName: String): ArrayList<RepoContributorsItem> {
-        val repoContributors = api.getRepoContributors(repoName)
+    fun getRepoContributors(repoName: String, token: String): ArrayList<RepoContributorsItem> {
+        val repoContributors = api.getRepoContributors(repoName, "Bearer $token")
         var repoContResult = arrayListOf(RepoContributorsItem(null,null,null,null))
         try{
             val result = repoContributors.execute()
@@ -103,13 +104,13 @@ class ApiRepository {
     }
 
     //klip wallet을 등록한 모든 사용자의 토큰에 따른 등수를 받아오는 함수
-    fun getTotalUsersRankings(page: Int, size: Int): ArrayList<TotalUsersRankingModelItem> {
+    fun getTotalUsersRankings(page: Int, size: Int, token: String): ArrayList<TotalUsersRankingModelItem> {
         var rankingResult = ArrayList<TotalUsersRankingModelItem>()
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("page","${page}")
         queryMap.put("size","$size")
         queryMap.put("sort","tokens,DESC")
-        val ranking = api.getTotalUsersRanking(queryMap)
+        val ranking = api.getTotalUsersRanking(queryMap, "Bearer $token")
         try {
             val result = ranking.execute()
             if(result.isSuccessful) {
@@ -140,8 +141,8 @@ class ApiRepository {
     }
 
     //사용자의 토큰 부여 내역을 확인하기 위한 함수
-    fun getTokenHistory(id: Int): ArrayList<TokenHistoryModelItem> {
-        val tokenHistory = api.getTokenHistory(id)
+    fun getTokenHistory(id: Int, token: String): ArrayList<TokenHistoryModelItem> {
+        val tokenHistory = api.getTokenHistory(id, "Bearer $token")
         var tokenHistoryResult = arrayListOf(TokenHistoryModelItem(null,null,null,null, null))
         try {
             val result = tokenHistory.execute()
@@ -156,7 +157,7 @@ class ApiRepository {
 
     //klip wallet address를 서버에 등록하기 위한 함수
     fun postWalletAddress(body: WalletAddressModel, token: String): Boolean {
-        val walletAddress = api.postWalletAddress(body, "bearer $token")
+        val walletAddress = api.postWalletAddress(body, "Bearer $token")
         try{
             val result = walletAddress.execute()
             Log.d("dd", "지갑주소 전송 결과 : ${result.code()} ${body.walletAddress}")
@@ -208,9 +209,9 @@ class ApiRepository {
     }
 
     //두 Repository의 구성원들의 기여도를 받아오기 위한 함수
-    fun postCompareRepoMembersRequest(body: CompareRepoRequestModel): CompareRepoMembersResponseModel {
+    fun postCompareRepoMembersRequest(body: CompareRepoRequestModel, token: String): CompareRepoMembersResponseModel {
         var compareRepoResult = CompareRepoMembersResponseModel(null, null)
-        val compareRepoMembers = api.postCompareRepoMembers(body)
+        val compareRepoMembers = api.postCompareRepoMembers(body, "Bearer $token")
         try{
             val result = compareRepoMembers.execute()
             if(result.isSuccessful) {
@@ -223,9 +224,9 @@ class ApiRepository {
     }
 
     //두 Repository의 정보를 받아오기 위한 함수
-    fun postCompareRepoRequest(body: CompareRepoRequestModel): CompareRepoResponseModel {
+    fun postCompareRepoRequest(body: CompareRepoRequestModel, token: String): CompareRepoResponseModel {
         var compareRepoResult = CompareRepoResponseModel(null, null)
-        val compareRepo = api.postCompareRepo(body)
+        val compareRepo = api.postCompareRepo(body, "Bearer $token")
         try{
             val result = compareRepo.execute()
             if(result.isSuccessful) {

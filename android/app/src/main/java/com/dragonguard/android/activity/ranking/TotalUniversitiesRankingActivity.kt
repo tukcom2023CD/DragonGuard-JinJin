@@ -15,6 +15,7 @@ import com.dragonguard.android.databinding.ActivityTotalUniversitiesRankingBindi
  */
 class TotalUniversitiesRankingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTotalUniversitiesRankingBinding
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_total_universities_ranking)
@@ -23,6 +24,7 @@ class TotalUniversitiesRankingActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        token = intent.getStringExtra("token")!!
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home, binding.toolbar.menu)

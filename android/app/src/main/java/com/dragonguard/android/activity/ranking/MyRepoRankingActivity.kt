@@ -15,6 +15,7 @@ import com.dragonguard.android.databinding.ActivityMyRepoRankingBinding
  */
 class MyRepoRankingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyRepoRankingBinding
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_repo_ranking)
@@ -24,6 +25,8 @@ class MyRepoRankingActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+
+        token = intent.getStringExtra("token")!!
 
     }
 

@@ -11,7 +11,7 @@ interface GitRankAPI {
 
 //    repo 검색 함수
     @GET("search")
-    fun getRepoName(@QueryMap query: Map<String, String>) : Call<RepoNameModel>
+    fun getRepoName(@QueryMap query: Map<String, String>, @Header("Authorization")token: String) : Call<RepoNameModel>
 
 //    id에 해당하는 사용자의 정보를 받아오는 함수
     @GET("members/me")
@@ -19,11 +19,11 @@ interface GitRankAPI {
 
 //    repoName에 해당하는 repo의 정보를 받아오는 함수
     @GET("git-repos")
-    fun getRepoContributors(@Query("name") repoName: String): Call<RepoContributorsModel>
+    fun getRepoContributors(@Query("name") repoName: String, @Header("Authorization")token: String): Call<RepoContributorsModel>
 
 //    모든 사용자들의 랭킹을 받아오는 함수
     @GET("members/ranking")
-    fun getTotalUsersRanking(@QueryMap query: Map<String, String>) : Call<TotalUsersRankingModel>
+    fun getTotalUsersRanking(@QueryMap query: Map<String, String>, @Header("Authorization")token: String) : Call<TotalUsersRankingModel>
 
 //    서버에 해당 정보를 가진 사용자를 등록하는 함수
     @POST("members")
@@ -41,7 +41,7 @@ interface GitRankAPI {
 
 //    사용자의 토큰부여 내역을 가져오기 위한 함수
     @GET("blockchain/{id}")
-    fun getTokenHistory(@Path("id") userId: Int) : Call<TokenHistoryModel>
+    fun getTokenHistory(@Path("id") userId: Int, @Header("Authorization")token: String) : Call<TokenHistoryModel>
 
 //    klip wallet address를 서버로 보내는 함수
     @POST("members/wallet-address")
@@ -51,12 +51,12 @@ interface GitRankAPI {
 //    두 Repository의 구성원들의 정보를 받아오기 위한 함수
     @POST("git-repos/compare/git-repos-members")
     @Headers("accept: application/json", "content-type: application/json")
-    fun postCompareRepoMembers(@Body compare : CompareRepoRequestModel) : Call<CompareRepoMembersResponseModel>
+    fun postCompareRepoMembers(@Body compare : CompareRepoRequestModel, @Header("Authorization")token: String) : Call<CompareRepoMembersResponseModel>
 
 //    두 Repository의 정보를 받아오기 위한 함수
     @POST("git-repos/compare")
     @Headers("accept: application/json", "content-type: application/json")
-    fun postCompareRepo(@Body compare: CompareRepoRequestModel) : Call<CompareRepoResponseModel>
+    fun postCompareRepo(@Body compare: CompareRepoRequestModel, @Header("Authorization")token: String) : Call<CompareRepoResponseModel>
 
     @POST("access_token")
     @Headers("accept: application/json", "content-type: application/json")
