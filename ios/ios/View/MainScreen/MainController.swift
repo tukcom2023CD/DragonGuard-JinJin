@@ -17,14 +17,16 @@ final class MainController: UIViewController {
     let disposeBag = DisposeBag()
     let img = UIImageView()
     var id: Int?
+    var jwtToken: String?
     var rank = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = true    // navigation bar 삭제
         self.navigationItem.backButtonTitle = "Home"    //다른 화면에서 BackBtn title 설정
+        
+        getMyData() // 내 토큰, 내 티어 데이터 불러오기
         
         // UI view에 적용
         addUItoView()
@@ -34,8 +36,6 @@ final class MainController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        getMyData() // 내 토큰, 내 티어 데이터 불러오기
         self.navigationController?.navigationBar.isHidden = true // navigation bar 삭제
     }
     
@@ -188,8 +188,9 @@ final class MainController: UIViewController {
     
     // 내 티어, 내 토큰 가져오는 함수
     private func getMyData(){
-        guard let id = self.id else {return}
-        self.viewModel.getMyInformation(id: id)
+        guard let jwtToken = self.jwtToken else {return}
+        
+        self.viewModel.getMyInformation(token: jwtToken)
             .subscribe(onNext: { data in
                 self.rank = data.rank
                 self.tierTokenUI.inputText(myTier: data.tier, tokens: data.tokenAmount)

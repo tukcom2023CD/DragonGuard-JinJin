@@ -13,7 +13,6 @@ import SafariServices
 
 final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
-    var id = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,14 +100,20 @@ final class LoginController: UIViewController{
     func checkClearAuths(){
         let checkGithubAuth = LoginViewModel.loginService.githubAuthSubject
         let checkklipAuth = LoginViewModel.loginService.klipAuthSubject
+        let jwtTokenSubject = LoginViewModel.loginService.jwtTokenSubject
+        var jwtToken = ""
+        
+        jwtTokenSubject.subscribe(onNext: {
+            jwtToken = $0
+        })
+        .disposed(by: self.disposeBag)
         
         Observable.combineLatest(checkGithubAuth, checkklipAuth)
             .subscribe(onNext: { first, second in
                 if first && second{
-                    self.sendUserId()
                     
                     let rootView = MainController()
-                    rootView.id = self.id
+                    rootView.jwtToken = jwtToken
                     let nc = UINavigationController(rootViewController: rootView)
                     let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
                     sceneDelegate.window?.rootViewController = nc
@@ -122,16 +127,6 @@ final class LoginController: UIViewController{
                     self.klipLoginBtn.backgroundColor = .lightGray
                     self.klipLoginBtn.isEnabled = false
                 }
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    func sendUserId(){
-        // github Id 서버에 전송한 후 DB id 받음
-        LoginViewModel.loginService.userGithubId()
-            .subscribe(onNext: { id in
-                print("DB Id: \(id)")
-                self.id = id
             })
             .disposed(by: disposeBag)
     }
