@@ -107,6 +107,19 @@ final class APIURL{
         return url
     }
     
+    // Github 로그인 하기 위해 백엔드에 요청
+    func callBackendForGithubLogin(ip: String) -> String{
+        let url = "http://\(ip)/api/oauth2/authorize/github"
+        return url
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     // Github get
     func githubGetAPI()-> String{
         let url = "https://github.com/login/oauth/authorize"

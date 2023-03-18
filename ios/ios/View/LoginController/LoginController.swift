@@ -87,15 +87,8 @@ final class LoginController: UIViewController{
     
     @objc func clickedGoGihbubBtn(){
         
-//        let scope = ""
-        let url = APIURL.apiUrl.githubGetAPI()
-        var component = URLComponents(string: url)
-        component?.queryItems = [
-            URLQueryItem(name: "client_id", value: Environment.clientId),
-//            URLQueryItem(name: "scope", value: scope)
-        ]
-        
-        guard let url = component?.url else { return }
+        let url = URL(string: APIURL.apiUrl.callBackendForGithubLogin(ip: APIURL.ip))!
+        print("url \(url)")
         if UIApplication.shared.canOpenURL(url) {
             let github = SFSafariViewController(url: url)
             self.present(github, animated: true)
@@ -119,10 +112,6 @@ final class LoginController: UIViewController{
                     let nc = UINavigationController(rootViewController: rootView)
                     let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
                     sceneDelegate.window?.rootViewController = nc
-
-//                    let mc = MainController()
-//                    mc.id = self.id
-//                    self.navigationController?.pushViewController(mc, animated: true)
                     
                 }
                 else if first{
