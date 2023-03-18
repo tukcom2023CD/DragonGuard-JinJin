@@ -26,10 +26,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // github get redirect_uri 통신 후 데이터 받는 함수
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {
+            print("called here")
             print(url)
-//            let code = url.absoluteString.components(separatedBy: "=")[1]
-//            LoginViewModel.loginService.getUserOAuthToken(code: code)
+            
+            let component = URLComponents(string: url.absoluteString)
+            let items = component?.queryItems ?? []
+
+            let code = items[0].value ?? ""
+            print(code)
+            
+            LoginViewModel.loginService.getUserOAuthToken(code: code)
         }
+        
+        
+        
     }
     
 }
