@@ -22,23 +22,29 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/git-repos")
+@RequestMapping("/git-repos")
 public class GitRepoController {
     private final GitRepoService gitRepoService;
 
     @GetMapping
-    public ResponseEntity<List<GitRepoMemberResponse>> getRepoMembers(@RequestParam String name) {
-        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoWithClient(new GitRepoRequest(name, LocalDate.now().getYear())));
+    public ResponseEntity<List<GitRepoMemberResponse>> getRepoMembers(
+            @RequestHeader String githubToken,
+            @RequestParam String name) {
+        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoWithClient(new GitRepoRequest(githubToken, name, LocalDate.now().getYear())));
     }
 
     @PostMapping("/compare")
-    public ResponseEntity<TwoGitRepoResponse> getTwoGitRepos(@RequestBody GitRepoCompareRequest request) {
-        return ResponseEntity.ok(gitRepoService.findTwoGitRepos(request));
+    public ResponseEntity<TwoGitRepoResponse> getTwoGitRepos(
+            @RequestHeader String githubToken,
+            @RequestBody GitRepoCompareRequest request) {
+        return ResponseEntity.ok(gitRepoService.findTwoGitRepos(githubToken, request));
     }
 
     @PostMapping("/compare/git-repos-members")
-    public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(@RequestBody GitRepoCompareRequest request) {
-        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompare(request));
+    public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(
+            @RequestHeader String githubToken,
+            @RequestBody GitRepoCompareRequest request) {
+        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompare(githubToken, request));
     }
 
     @PostMapping("/compare/members")

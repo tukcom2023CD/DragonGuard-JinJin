@@ -4,12 +4,13 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+    context-path: /api
+spring:
   config:
     import:
       - classpath:env.yml
   main:
     allow-bean-definition-overriding: true
-spring:
   jpa:
     show-sql: true
     hibernate:
@@ -30,4 +31,3 @@ spring:
   redis:
     host: localhost
     port: 6379
-

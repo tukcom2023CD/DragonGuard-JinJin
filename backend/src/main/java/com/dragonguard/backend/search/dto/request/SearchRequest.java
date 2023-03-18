@@ -22,6 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchRequest {
+    private String githubToken;
     @NotBlank
     private String name;
     @NotNull
@@ -31,6 +32,13 @@ public class SearchRequest {
     private List<String> filters = new ArrayList<>();
 
     public SearchRequest(String name, SearchType type, Integer page) {
+        this.name = name;
+        this.type = type;
+        this.page = page;
+    }
+
+    public SearchRequest(String githubToken, String name, SearchType type, Integer page) {
+        this.githubToken = githubToken;
         this.name = name;
         this.type = type;
         this.page = page;

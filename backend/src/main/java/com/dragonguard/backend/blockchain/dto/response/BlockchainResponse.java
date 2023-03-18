@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
 /**
  * @author 김승진
@@ -22,5 +23,5 @@ public class BlockchainResponse {
     private ContributeType contributeType;
     private BigInteger amount;
     private String githubId;
-    private Long memberId;
+    private UUID memberId;
 }

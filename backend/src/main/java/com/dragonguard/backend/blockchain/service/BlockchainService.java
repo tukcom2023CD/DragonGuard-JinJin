@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -31,7 +32,7 @@ public class BlockchainService {
         Member member = memberRepository.findMemberByGithubId(request.getGithubId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        if(blockchainRepository.existsByMemberId(member.getId())) {
+        if (blockchainRepository.existsByMemberId(member.getId())) {
             Long sum = blockchainRepository.findByMemberId(member.getId()).stream()
                     .mapToLong(i -> Long.valueOf(String.valueOf(i.getAmount()))).sum();
             Long num = Long.valueOf(String.valueOf(request.getAmount())) - sum;
@@ -48,7 +49,7 @@ public class BlockchainService {
         blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));
     }
 
-    public List<BlockchainResponse> getBlockchainList(Long memberId) {
+    public List<BlockchainResponse> getBlockchainList(UUID memberId) {
         return blockchainRepository.findByMemberId(memberId).stream()
                 .map(blockchainMapper::toResponse)
                 .collect(Collectors.toList());
