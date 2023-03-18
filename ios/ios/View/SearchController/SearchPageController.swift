@@ -350,22 +350,27 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         if beforePage == "Main"{
             let nextPage = RepoContributorInfoController()
             nextPage.selectedTitle = searchResultList[indexPath.section].name
+            self.searchResultList = []
+            tableView.reloadData()
             self.navigationController?.pushViewController(nextPage, animated: true)
         }
         else if beforePage == "CompareRepo1"{
             comparePage.repository1 = searchResultList[indexPath.section].name
             NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 1, NotificationKey.repository: searchResultList[indexPath.section].name])
-            
+            self.searchResultList = []
+            tableView.reloadData()
             self.navigationController?.popViewController(animated: true)
         }
         else if beforePage == "CompareRepo2"{
             comparePage.repository2 = searchResultList[indexPath.section].name
             NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 2, NotificationKey.repository: searchResultList[indexPath.section].name])
+            self.searchResultList = []
+            tableView.reloadData()
             self.navigationController?.popViewController(animated: true)
         }
         
         searchUI.text = ""
-        tableView.reloadData()
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
