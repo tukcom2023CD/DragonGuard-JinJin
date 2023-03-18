@@ -19,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class GitRepoMemberClient implements GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> {
-
     private final GithubProperties githubProperties;
     private final WebClient webClient;
     private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";

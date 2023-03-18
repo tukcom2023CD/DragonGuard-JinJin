@@ -1,5 +1,6 @@
 package com.dragonguard.backend.gitrepo.service;
 
+import com.dragonguard.backend.gitrepo.dto.request.GitRepoClientRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
@@ -41,8 +42,8 @@ public class GitRepoService {
     private final KafkaProducer<GitRepoRequest> kafkaGitRepoProducer;
     private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
     private final GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
-    private final GithubClient<String, GitRepoClientResponse> gitRepoClient;
-    private final GithubClient<String, Map<String, Integer>> gitRepoLanguageClient;
+    private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
+    private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
 
     public List<GitRepoMemberResponse> findMembersByGitRepo(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
@@ -95,9 +96,9 @@ public class GitRepoService {
 
     private GitRepoResponse getOneRepoResponse(String githubToken, String repoName) {
         GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(new GitRepoRequest(githubToken, repoName, null))));
-        GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(repoName);
+        GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
         if (repo.getClosedIssues() != null) repoResponse.setClosed_issues_count(repo.getClosedIssues());
-        Map<String, Integer> languages = gitRepoLanguageClient.requestToGithub(repoName);
+        Map<String, Integer> languages = gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
         IntSummaryStatistics langStats =
                 languages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
                         : languages.keySet().stream().mapToInt(languages::get).summaryStatistics();
