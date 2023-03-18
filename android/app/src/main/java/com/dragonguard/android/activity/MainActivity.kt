@@ -104,14 +104,27 @@ class MainActivity : AppCompatActivity() {
         }
         val jwtToken = intent?.data?.getQueryParameter("accessToken")
         val code = intent?.data?.getQueryParameter("code")
-        Toast.makeText(applicationContext, "access token : $jwtToken", Toast.LENGTH_SHORT).show()
-        Log.d("github token", "github Token : $code")
+        Toast.makeText(applicationContext, "jwt token : $jwtToken", Toast.LENGTH_SHORT).show()
+        Log.d("code", "code : $code")
         Log.d("jwt token", "jwt Token : $jwtToken")
+        if(!code.isNullOrBlank()) {
+            val coroutine = CoroutineScope(Dispatchers.Main)
+            coroutine.launch {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getOauthToken(code)
+                }
+                val githubToken = resultDeferred.await()
+                if(githubToken.access_token != null) {
+                    prefs.setGithubToken("githubToken", githubToken.access_token)
+                    Log.d("github Token", "github token : ${prefs.getGithubToken("githubToken", "none")}")
+                }
+            }
+        }
         if(jwtToken != null) {
             token = jwtToken
             searchUser()
-            prefs.setToken("token", jwtToken)
-            Log.d("nono", "main token : ${prefs.getToken("token", "")}")
+            prefs.setJwtToken("token", jwtToken)
+            Log.d("nono", "main token : ${prefs.getJwtToken("token", "")}")
         }
 //        if(prefs.getWalletAddress("wallet_address", "").isBlank()) {
 //            val intent = Intent(applicationContext, LoginActivity::class.java)
@@ -213,24 +226,6 @@ class MainActivity : AppCompatActivity() {
         handler.postDelayed({searchUser()}, 2000)
         handler.postDelayed({searchUser()}, 4000)
     }
-
-//    등록되어있지 않을 경우 post 요청을 통해 가입하기
-//    private fun registerUser(githubId: String) {
-//        var body = RegisterGithubIdModel(githubId)
-//        val coroutine = CoroutineScope(Dispatchers.Main)
-//        coroutine.launch {
-//            val resultDeferred = coroutine.async(Dispatchers.IO) {
-//                viewmodel.postRegister(body)
-//            }
-//            userId = resultDeferred.await()
-//            if(userId != 0) {
-//                prefs.setId("id", userId)
-////            Toast.makeText(application, "id = $userId", Toast.LENGTH_SHORT).show()
-//                searchUser()
-//            }
-//        }
-//
-//    }
 
 /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
     무한히 요청을 보내는 버그 해결
