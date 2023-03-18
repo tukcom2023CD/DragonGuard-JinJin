@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -30,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Optional<String> token = Optional.ofNullable(extractToken(request.getCookies()));
+        Optional<String> token = Optional.ofNullable(parseBearerToken(request));
 
         token.ifPresent(
                 t -> {
@@ -41,18 +42,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String extractToken(Cookie[] cookies) {
-        if (cookies == null) {
-            return null;
+    private String parseBearerToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(tokenTag);
+
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
-
-        Optional<Cookie> accessCookie = extractAccessToken(cookies);
-        return accessCookie.map(Cookie::getValue).orElse(null);
-    }
-
-    private Optional<Cookie> extractAccessToken(Cookie[] cookies) {
-        return Arrays.stream(cookies)
-                .filter(c -> c.getName().equals(tokenTag))
-                .findFirst();
+        return null;
     }
 }
