@@ -11,7 +11,7 @@
 			<string>com.ios.gitrank</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>GitRank</string>
+				<string>gitrank</string>
 			</array>
 		</dict>
 	</array>

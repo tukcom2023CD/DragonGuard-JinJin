@@ -59,7 +59,7 @@ class BlockchainControllerTest extends RestDocumentTest {
         List<BlockchainResponse> expected = List.of(
                 new BlockchainResponse(1L, ContributeType.COMMIT, new BigInteger("10"), "ohksj77", UUID.randomUUID()),
                 new BlockchainResponse(2L, ContributeType.COMMIT, new BigInteger("5"), "ohksj77", UUID.randomUUID()));
-        given(blockchainService.getBlockchainList(any())).willReturn(expected);
+        given(blockchainService.getBlockchainList()).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
