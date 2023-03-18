@@ -30,12 +30,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let items = component?.queryItems ?? []
 
             let jwtToken = items[0].value ?? ""
-            
+            Environment.jwtToken = jwtToken
             LoginViewModel.loginService.saveJWTToken(token: jwtToken)
         }
-        
-        
-        
     }
     
 }

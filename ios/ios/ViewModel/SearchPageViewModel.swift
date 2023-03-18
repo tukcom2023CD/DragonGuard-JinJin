@@ -16,12 +16,16 @@ final class SearchPageViewModel {
     var pageCount = 1   //페이지 수
     
     // 검색 결과를 가져오는 함수
-    func getSearchData(searchWord: String, type: String, change: Bool, filtering: String) -> Observable<[SearchPageResultModel]>{
+    func getSearchData(searchWord: String, type: String, change: Bool, filtering: String, token: String) -> Observable<[SearchPageResultModel]>{
         if change{
             self.pageCount = 1
         }
         return Observable.create(){ observer in
-            self.searchPageService.getSearchResult(searchWord: searchWord, page: self.pageCount, type: type,filtering: filtering)
+            self.searchPageService.getSearchResult(searchWord: searchWord,
+                                                   page: self.pageCount,
+                                                   type: type,
+                                                   filtering: filtering,
+                                                   token: token)
                 .subscribe(onNext: { searchResultList in
                     
                     observer.onNext(searchResultList)

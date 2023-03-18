@@ -24,6 +24,7 @@ final class SearchPageController: UIViewController {
     var filteringArray: [String] = []  // 언어를 제외한 모든 필터 API용
     var conditionFilter: [String] = []  // 언어를 제외한 모든 필터 사용자 시각용
     var type: String = "REPOSITORIES"
+    var jwtToken: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,7 +102,12 @@ final class SearchPageController: UIViewController {
     
     // 검색한 데이터 가져오는 함수
     private func getData(searchWord: String, type: String, change: Bool, filtering: String){
-        SearchPageViewModel.viewModel.getSearchData(searchWord: searchWord, type: type, change: change ,filtering: filtering)
+        guard let token = self.jwtToken else { return }
+        SearchPageViewModel.viewModel.getSearchData(searchWord: searchWord,
+                                                    type: type,
+                                                    change: change ,
+                                                    filtering: filtering,
+                                                    token: token)
             .subscribe(onNext: { searchList in
                 for data in searchList{
                     self.searchResultList.append(data)

@@ -18,6 +18,7 @@ class PostService {
     func sendMyWalletAddress(token: String, walletAddress: String) -> Observable<String> {
         let url = APIURL.apiUrl.inputWalletAddress(ip: ip)
         let body: Parameters = ["walletAddress" : "\(walletAddress)"]
+        print(token)
         
         return Observable.create(){ observer in
             AF.request(url,
