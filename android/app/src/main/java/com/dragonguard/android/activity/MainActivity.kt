@@ -178,7 +178,7 @@ class MainActivity : AppCompatActivity() {
                     viewmodel.getUserInfo(token)
                 }
                 val userInfo = resultDeferred.await()
-                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
                 if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null) {
 //                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
 

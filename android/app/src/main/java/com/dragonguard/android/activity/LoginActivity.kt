@@ -44,9 +44,11 @@ class LoginActivity : AppCompatActivity() {
         val intent = intent
         val token = intent.getStringExtra("token")
         val logout = intent.getBooleanExtra("logout", false)
-        if(!token.isNullOrEmpty()) {
+        if(token != "") {
             binding.githubAuth.isEnabled = false
             binding.githubAuth.setTextColor(Color.BLACK)
+        } else {
+            binding.githubAuth.isEnabled = true
         }
         if(logout) {
             prefs.setKey("key", "")
