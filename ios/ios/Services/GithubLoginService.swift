@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import RxSwift
 
+// 안씀 삭제 예정
 final class GithubLoginService{
     let ip = APIURL.ip
     

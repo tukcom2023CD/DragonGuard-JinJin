@@ -45,12 +45,6 @@ class PostService {
             "id": id,
             "walletAddress" : "\(walletAddress)"
         ]
-        //        let savedId = UserDBId(id: self.data, address: walletAddress)
-        //        if let encoded = try? JSONEncoder().encode(savedId){
-        //            UserDefaults.standard.setValue(encoded, forKey: "UserDBId")
-        //            print(self.data)
-        //            print(walletAddress)
-        //        }
         
         return Observable.create(){ observer in
             AF.request(url,
