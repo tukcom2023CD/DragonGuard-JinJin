@@ -12,8 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Map;
 import java.util.UUID;
+
+/**
+ * @author 김승진
+ * @description JWT 토큰 정보를 검증하는 클래스
+ */
 
 @Component
 @RequiredArgsConstructor

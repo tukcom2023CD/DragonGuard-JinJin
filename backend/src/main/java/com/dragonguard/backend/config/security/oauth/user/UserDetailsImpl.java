@@ -10,6 +10,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * @author 김승진
+ * @description UserDetails의 구현체로 유저 계정의 정보를 담는 클래스
+ */
+
 @Getter
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails, OAuth2User {

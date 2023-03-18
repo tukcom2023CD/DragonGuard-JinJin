@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author 김승진
+ * @description 인증 상황에 따라 알맞은 쿠키 로직을 담당하는 클래스
+ */
+
 @Component
 public class CookieAuthorizationRequestRepository implements AuthorizationRequestRepository {
 

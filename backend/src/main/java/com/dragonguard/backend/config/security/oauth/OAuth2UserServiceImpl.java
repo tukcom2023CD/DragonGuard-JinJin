@@ -12,6 +12,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * @author 김승진
+ * @description OAuth2UserService의 구현체로 유저를 로드한다.
+ */
+
 @Service
 @RequiredArgsConstructor
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {

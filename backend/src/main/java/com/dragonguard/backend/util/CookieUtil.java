@@ -8,6 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Optional;
 
+/**
+ * @author 김승진
+ * @description 클라이언트의 Cookie를 다루는 Util 클래스
+ */
+
 public class CookieUtil {
 
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {

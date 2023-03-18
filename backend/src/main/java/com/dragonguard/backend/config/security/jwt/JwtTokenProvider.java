@@ -11,6 +11,11 @@ import java.security.Key;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * @author 김승진
+ * @description JWT 토큰을 발급하는 클래스
+ */
+
 @Slf4j
 @Component
 @RequiredArgsConstructor

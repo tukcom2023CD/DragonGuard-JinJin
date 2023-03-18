@@ -8,6 +8,11 @@ import org.springframework.context.annotation.Configuration;
 
 import java.security.Key;
 
+/**
+ * @author 김승진
+ * @description JWT 토큰 키를 가지는 설정 클래스
+ */
+
 @Configuration
 public class JwtKeyConfig {
     @Value("${app.auth.token.secret-key}")

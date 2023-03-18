@@ -15,6 +15,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * @author 김승진
+ * @description JWT 토큰의 유효성에 따라 로직을 수행하는 필터 클래스
+ */
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtValidator jwtValidator;

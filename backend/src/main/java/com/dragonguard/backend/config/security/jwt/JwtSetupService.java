@@ -7,6 +7,11 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author 김승진
+ * @description JWT와 쿠키의 연계를 돕는 클래스
+ */
+
 @Service
 public class JwtSetupService {
     private final JwtTokenProvider jwtTokenProvider;

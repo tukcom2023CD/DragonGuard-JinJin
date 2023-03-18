@@ -16,5 +16,4 @@ import org.springframework.stereotype.Component;
 @Component
 public class GithubProperties {
     private String url;
-    private String token;
 }
