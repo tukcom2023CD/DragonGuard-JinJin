@@ -29,11 +29,11 @@
 		3B3B563429A8DA12005034FC /* CompareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563329A8DA12005034FC /* CompareService.swift */; };
 		3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */; };
 		3B3CE9DC29B47EDF00B2594B /* UserDBId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3CE9DB29B47EDF00B2594B /* UserDBId.swift */; };
+		3B43B5A329B87FB100EBB379 /* UserDBIdModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */; };
 		3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B58A18E29A6164D006A1817 /* LoginController.swift */; };
 		3B5E07FD29BEC0B00090E8A6 /* GithubLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E07FC29BEC0B00090E8A6 /* GithubLoginService.swift */; };
 		3B5E07FF29BEF7E50090E8A6 /* GithubTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */; };
 		3B5E080129BEFCAB0090E8A6 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E080029BEFCAB0090E8A6 /* Env.swift */; };
-		3B43B5A329B87FB100EBB379 /* UserDBIdModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */; };
 		3B6E075A29ABBD64002676DF /* CompareUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6E075929ABBD64002676DF /* CompareUserModel.swift */; };
 		3B781FB329C32871007FBDFA /* FilteringCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B781FB229C32871007FBDFA /* FilteringCollectionViewCell.swift */; };
 		3B7B1D2E298404AE0038BD67 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 3B7B1D2D298404AE0038BD67 /* RxCocoa */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -137,11 +137,11 @@
 		3B3B563329A8DA12005034FC /* CompareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareService.swift; sourceTree = "<group>"; };
 		3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoModel.swift; sourceTree = "<group>"; };
 		3B3CE9DB29B47EDF00B2594B /* UserDBId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDBId.swift; sourceTree = "<group>"; };
+		3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDBIdModel.swift; sourceTree = "<group>"; };
 		3B58A18E29A6164D006A1817 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		3B5E07FC29BEC0B00090E8A6 /* GithubLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubLoginService.swift; sourceTree = "<group>"; };
 		3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubTokenModel.swift; sourceTree = "<group>"; };
 		3B5E080029BEFCAB0090E8A6 /* Env.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
-		3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDBIdModel.swift; sourceTree = "<group>"; };
 		3B6E075929ABBD64002676DF /* CompareUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareUserModel.swift; sourceTree = "<group>"; };
 		3B781FB229C32871007FBDFA /* FilteringCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringCollectionViewCell.swift; sourceTree = "<group>"; };
 		3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansKR-SemiBold.otf"; sourceTree = "<group>"; };
