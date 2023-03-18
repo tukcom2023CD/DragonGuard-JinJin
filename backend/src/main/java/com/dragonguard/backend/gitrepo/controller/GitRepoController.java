@@ -28,23 +28,20 @@ public class GitRepoController {
 
     @GetMapping
     public ResponseEntity<List<GitRepoMemberResponse>> getRepoMembers(
-            @RequestHeader String githubToken,
             @RequestParam String name) {
-        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoWithClient(new GitRepoRequest(githubToken, name, LocalDate.now().getYear())));
+        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoWithClient(new GitRepoRequest(name, LocalDate.now().getYear())));
     }
 
     @PostMapping("/compare")
     public ResponseEntity<TwoGitRepoResponse> getTwoGitRepos(
-            @RequestHeader String githubToken,
             @RequestBody GitRepoCompareRequest request) {
-        return ResponseEntity.ok(gitRepoService.findTwoGitRepos(githubToken, request));
+        return ResponseEntity.ok(gitRepoService.findTwoGitRepos(request));
     }
 
     @PostMapping("/compare/git-repos-members")
     public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(
-            @RequestHeader String githubToken,
             @RequestBody GitRepoCompareRequest request) {
-        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompare(githubToken, request));
+        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompare(request));
     }
 
     @PostMapping("/compare/members")

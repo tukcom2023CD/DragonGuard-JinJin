@@ -3,6 +3,7 @@ package com.dragonguard.backend.gitrepo.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author 김승진
@@ -13,7 +14,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoRequest {
+    @Setter
     private String githubToken;
     private String name;
     private Integer year;
+
+    public GitRepoRequest(String name, Integer year) {
+        this.name = name;
+        this.year = year;
+    }
 }

@@ -69,6 +69,8 @@ public class Member extends BaseTime {
 
     private String refreshToken;
 
+    private String githubToken;
+
     @Builder
     public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage) {
         this.name = name;
@@ -107,5 +109,9 @@ public class Member extends BaseTime {
 
     public List<SimpleGrantedAuthority> getRole() {
         return role.stream().map(Role::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    }
+
+    public void updateGithubToken(String githubToken) {
+        this.githubToken = githubToken;
     }
 }
