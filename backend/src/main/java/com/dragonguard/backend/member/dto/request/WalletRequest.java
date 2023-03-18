@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 /**
@@ -15,5 +16,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WalletRequest {
+    @NotBlank
     private String walletAddress;
 }

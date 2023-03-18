@@ -100,9 +100,6 @@ public class Member extends BaseTime {
     }
 
     public void updateWalletAddress(String walletAddress) {
-        if (walletAddress == null || walletAddress.isEmpty()) {
-            throw new InvalidWalletAddressException();
-        }
         this.walletAddress = walletAddress;
         this.authStep = AuthStep.GITHUB_AND_KLIP;
     }
