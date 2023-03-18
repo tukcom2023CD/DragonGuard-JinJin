@@ -19,8 +19,6 @@ import com.dragonguard.android.activity.ranking.RankingsActivity
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityMainBinding
-import com.dragonguard.android.model.RegisterGithubIdModel
-import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
@@ -104,12 +102,15 @@ class MainActivity : AppCompatActivity() {
             prefs.setGithubId("githubId", "")
             prefs.setId("id", 0)
         }
-        val result = intent?.data?.getQueryParameter("accessToken")
-        Toast.makeText(applicationContext, "access token : $result", Toast.LENGTH_SHORT).show()
-        if(result != null) {
-            token = result
+        val jwtToken = intent?.data?.getQueryParameter("accessToken")
+        val code = intent?.data?.getQueryParameter("code")
+        Toast.makeText(applicationContext, "access token : $jwtToken", Toast.LENGTH_SHORT).show()
+        Log.d("github token", "github Token : $code")
+        Log.d("jwt token", "jwt Token : $jwtToken")
+        if(jwtToken != null) {
+            token = jwtToken
             searchUser()
-            prefs.setToken("token", result)
+            prefs.setToken("token", jwtToken)
             Log.d("nono", "main token : ${prefs.getToken("token", "")}")
         }
 //        if(prefs.getWalletAddress("wallet_address", "").isBlank()) {

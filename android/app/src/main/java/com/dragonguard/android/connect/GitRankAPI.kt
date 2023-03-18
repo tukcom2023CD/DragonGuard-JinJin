@@ -13,10 +13,6 @@ interface GitRankAPI {
     @GET("search")
     fun getRepoName(@QueryMap query: Map<String, String>) : Call<RepoNameModel>
 
-//    id에 해당하는 사용자의 티어를 받아오는 함수
-    @GET("members/{id}/tier")
-    fun getUserTier(@Path("id")userId : Int) : Call<String>
-
 //    id에 해당하는 사용자의 정보를 받아오는 함수
     @GET("members/me")
     fun getUserInfo(@Header("Authorization")token: String) : Call<UserInfoModel>

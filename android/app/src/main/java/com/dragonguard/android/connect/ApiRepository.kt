@@ -78,7 +78,7 @@ class ApiRepository {
         var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null)
         try {
             val result = userInfo.execute()
-            Log.d("no", "status : ${result.code()}")
+            Log.d("no", "사용자 정보 요청 결과 : ${result.code()}")
             userResult = result.body()!!
             Log.d("결과", "사용자 정보 : $userResult")
         } catch (e: Exception) {
@@ -159,7 +159,7 @@ class ApiRepository {
         val walletAddress = api.postWalletAddress(body)
         try{
             val result = walletAddress.execute()
-            Log.d("dd", "결과 : ${result.code()}")
+            Log.d("dd", "지갑주소 전송 결과 : ${result.code()} ${body.walletAddress}")
             return result.isSuccessful
         } catch (e: Exception) {
             Log.d("dd", "결과 실패")
