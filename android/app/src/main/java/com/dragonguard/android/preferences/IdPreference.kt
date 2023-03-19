@@ -7,27 +7,11 @@ class IdPreference (context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences("id", Context.MODE_PRIVATE)
 
-    fun getId(key: String, defValue: Int): Int {
-        return prefs.getInt(key, defValue)
-    }
-
-    fun setId(key: String, id: Int) {
-        prefs.edit().putInt(key, id).apply()
-    }
-
     fun getWalletAddress(key:String, defValue: String): String {
         return prefs.getString(key, defValue)!!
     }
     fun setWalletAddress(key: String, address: String) {
         prefs.edit().putString(key, address).apply()
-    }
-
-    fun getGithubId(key:String, defValue: String):String{
-        return prefs.getString(key, defValue)!!
-    }
-
-    fun setGithubId(key:String, githubId: String) {
-        prefs.edit().putString(key, githubId).apply()
     }
 
     fun getKey(key:String, defValue: String):String {
@@ -46,11 +30,11 @@ class IdPreference (context: Context) {
         return prefs.getString(key, defValue)!!
     }
 
-    fun setGithubToken(key:String, requestKey:String) {
+    fun setRefreshToken(key:String, requestKey:String) {
         prefs.edit().putString(key, requestKey).apply()
     }
 
-    fun getGithubToken(key:String, defValue: String):String {
+    fun getRefreshToken(key:String, defValue: String):String {
         return prefs.getString(key, defValue)!!
     }
 

@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
                 if(!NetworkCheck.checkNetworkState(this)) {
                     Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
                 } else {
-//                    registerUser(githubId)
                     authRequestResult(requestKey!!)
                 }
             } catch(e: Exception) {
@@ -50,8 +49,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         } else if(it.resultCode == 1) {
-//            postWalletAddress(userId, prefs.getWalletAddress("wallet_address", ""))
-//            Toast.makeText(applicationContext, "skip 주소 : $walletAddress", Toast.LENGTH_SHORT).show()
+
         }
     }
     companion object {
@@ -60,13 +58,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var viewmodel = Viewmodel()
     private var backPressed : Long = 0
-    private var userId = 0
-    private var githubId = ""
     private var walletAddress = ""
     private var loginOut = false
     private var address = false
     private var token = ""
-    //    var count = 0
+    private var count = 0
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -76,8 +72,6 @@ class MainActivity : AppCompatActivity() {
             loginOut = logout
             if(loginOut) {
                 prefs.setWalletAddress("wallet_address", "")
-                prefs.setGithubId("githubId", "")
-                prefs.setId("id", 0)
                 val intent = Intent(applicationContext, LoginActivity::class.java)
                 intent.putExtra("wallet_address", walletAddress)
                 intent.putExtra("logout", loginOut)
@@ -91,17 +85,14 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
         prefs = IdPreference(applicationContext)
-        userId = prefs.getId("id", 0)
-        githubId = prefs.getGithubId("githubId", "")
 //        val intent = Intent(applicationContext, LoginActivity::class.java)
 //        startActivity(intent)
         if(loginOut) {
             prefs.setWalletAddress("wallet_address", "")
-            prefs.setGithubId("githubId", "")
-            prefs.setId("id", 0)
         }
+        count = 0
         val jwtToken = intent?.data?.getQueryParameter("accessToken")
-        Toast.makeText(applicationContext, "jwt token : $jwtToken", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "jwt token : $jwtToken", Toast.LENGTH_SHORT).show()
         Log.d("jwt token", "jwt Token : $jwtToken")
         if(jwtToken != null) {
             token = jwtToken
@@ -161,9 +152,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         searchUser()
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed({searchUser()}, 2000)
-        handler.postDelayed({searchUser()}, 4000)
     }
 
 /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
@@ -181,10 +169,19 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
                 if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null) {
 //                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
-
+                    if(prefs.getRefreshToken("refresh", "").isBlank() && count ==0) {
+                        count++
+                        Toast.makeText(applicationContext, "refresh token is blank", Toast.LENGTH_SHORT).show()
+                        loginOut = true
+                        prefs.setWalletAddress("wallet_address", "")
+                        val intent = Intent(applicationContext, LoginActivity::class.java)
+                        intent.putExtra("wallet_address", walletAddress)
+                        intent.putExtra("token", prefs.getJwtToken("token", ""))
+                        intent.putExtra("logout", true)
+                        activityResultLauncher.launch(intent)
+                    }
                 } else {
                     if(userInfo.githubId.isNotBlank()) {
-                        binding.userId.text = userInfo.githubId
                     }
                     if(userInfo.commits != 0 && userInfo.tier == "SPROUT" && !address) {
                         if(prefs.getWalletAddress("wallet_address", "") != "") {
@@ -241,24 +238,9 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.postWalletAddress(address, prefs.getJwtToken("token", ""))
             }
             val postWalletResponse = postwalletDeferred.await()
-//            if(!postWalletResponse) {
-//                postWalletAddress(userId, address)
-//            } else {
-////                Toast.makeText(applicationContext, "wallet post : 성공!", Toast.LENGTH_SHORT).show()
-//            }
-        }
-    }
-
-    private fun userInfoTimer() {
-        Toast.makeText(applicationContext,"timer", Toast.LENGTH_SHORT).show()
-        Timer().scheduleAtFixedRate(3000,2000){
-            if(githubId != "") {
-                if(NetworkCheck.checkNetworkState(applicationContext)) {
-                    Log.d("info", "github id : $githubId, klip address : $walletAddress")
-                    searchUser()
-                }
+            if(postWalletResponse) {
+                searchUser()
             }
-//            Toast.makeText(applicationContext, "반복", Toast.LENGTH_SHORT).show()
         }
     }
 
