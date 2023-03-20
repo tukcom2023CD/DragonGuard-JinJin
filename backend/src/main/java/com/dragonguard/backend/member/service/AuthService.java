@@ -1,5 +1,6 @@
 package com.dragonguard.backend.member.service;
 
+import com.dragonguard.backend.config.security.exception.CookieException;
 import com.dragonguard.backend.config.security.exception.JwtProcessingException;
 import com.dragonguard.backend.config.security.jwt.JwtSetupService;
 import com.dragonguard.backend.config.security.jwt.JwtToken;
@@ -29,8 +30,13 @@ public class AuthService {
     private final JwtValidator jwtValidator;
 
     @Transactional
-    public String refreshToken(Cookie cookie, String oldAccessToken, HttpServletResponse response) {
-        String oldRefreshToken = cookie.getValue();
+    public String refreshToken(Cookie refreshCookie, Cookie accessCookie, HttpServletResponse response) {
+        if (refreshCookie == null || accessCookie == null) {
+            throw new CookieException();
+        }
+
+        String oldRefreshToken = refreshCookie.getValue();
+        String oldAccessToken = accessCookie.getValue();
 
         if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
             throw new IllegalArgumentException();
