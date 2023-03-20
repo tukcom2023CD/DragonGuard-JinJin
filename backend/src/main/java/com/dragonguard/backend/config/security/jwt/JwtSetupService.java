@@ -25,7 +25,7 @@ public class JwtSetupService {
     @Value("${app.auth.token.refresh-header}")
     private String refreshTokenHeaderTag;
 
-    public void addJwtTokensInCookie(HttpServletResponse response, UserDetailsImpl loginUser) {
+    public JwtToken addJwtTokensInCookie(HttpServletResponse response, UserDetailsImpl loginUser) {
         JwtToken jwtToken = jwtTokenProvider.createAccessToken(loginUser);
         ResponseCookie accessTokenCookie =
                 setCookie(accessTokenHeaderTag, jwtToken.getAccessToken());
@@ -33,6 +33,7 @@ public class JwtSetupService {
         ResponseCookie refreshTokenCookie =
                 setCookie(refreshTokenHeaderTag, jwtToken.getRefreshToken());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+        return jwtToken;
     }
 
     private ResponseCookie setCookie(String key, String value) {
