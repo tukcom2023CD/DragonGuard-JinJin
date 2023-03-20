@@ -1,5 +1,6 @@
 package com.dragonguard.backend.util;
 
+import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
 import javax.servlet.http.Cookie;
@@ -13,6 +14,7 @@ import java.util.Optional;
  * @description 클라이언트의 Cookie를 다루는 Util 클래스
  */
 
+@Component
 public class CookieUtil {
 
     public Optional<Cookie> getCookie(HttpServletRequest request, String name) {
