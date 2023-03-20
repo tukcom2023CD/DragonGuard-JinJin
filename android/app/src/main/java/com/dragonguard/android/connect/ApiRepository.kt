@@ -279,4 +279,16 @@ class ApiRepository {
             null
         }
     }
+
+    fun getNewAccessToken(token: String): String {
+        var newToken = ""
+        val getToken = api.getNewAccessToken(token)
+        try {
+            val result = getToken.execute()
+            newToken = result.body()!!
+        } catch (e: Exception) {
+            return newToken
+        }
+        return newToken
+    }
 }

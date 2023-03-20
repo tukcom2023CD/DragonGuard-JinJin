@@ -122,7 +122,6 @@ class MainActivity : AppCompatActivity() {
             prefs.setWalletAddress("wallet_address", "")
         }
 
-        checkCookies()
         count = 0
         val jwtToken = intent?.data?.getQueryParameter("accessToken")
 //        Toast.makeText(applicationContext, "jwt token : $jwtToken", Toast.LENGTH_SHORT).show()
@@ -183,6 +182,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         searchUser()
+        getNewAccessToken()
         Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 500)
         Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 1000)
     }
@@ -235,7 +235,7 @@ class MainActivity : AppCompatActivity() {
                     if(!this@MainActivity.isFinishing) {
                         Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
                     }
-                    checkCookies()
+
                 }
             }
         }
@@ -295,29 +295,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun checkCookies() {
-        val coroutine = CoroutineScope(Dispatchers.IO)
+    private fun getNewAccessToken() {
+        val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val url = URL(BuildConfig.api)
-            val connection = url.openConnection() as HttpURLConnection
-            connection.requestMethod = "GET"
-            val cookieManager = CookieManager()
-            CookieHandler.setDefault(cookieManager)
-            connection.instanceFollowRedirects = true
-            connection.connect()
-
-            val redirectUrl = connection.getHeaderField("Refresh")
-            if (redirectUrl == "gitrank://github-auth") {
-                val headers = connection.headerFields
-                if (headers != null) {
-                    for (header in headers.entries) {
-                        for (cookie in header.value) {
-                            Log.d("cookie","Cookie: $cookie")
-                        }
-                    }
-                }
+            val newTokenDeffered = coroutine.async(Dispatchers.IO){
+                viewmodel.getNewToken(prefs.getJwtToken("token", ""))
+            }
+            val newToken = newTokenDeffered.await()
+            if(newToken.isNotBlank()) {
+                Toast.makeText(applicationContext,"refresh 결과 : 성공!! $newToken", Toast.LENGTH_SHORT).show()
+                prefs.setJwtToken("token", newToken)
+                token = prefs.getJwtToken("token", "")
+                searchUser()
             }
         }
     }
+
 
 }
