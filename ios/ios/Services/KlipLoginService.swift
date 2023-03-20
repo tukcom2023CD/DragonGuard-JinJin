@@ -49,6 +49,7 @@ final class KlipLoginService {
                     case .success(let data):
                         observer.onNext(data.result.klaytn_address)
                         print("address \(data.result.klaytn_address)")
+                        
                     case .failure(let error):
                         print("error!! \(error)")
                     }
