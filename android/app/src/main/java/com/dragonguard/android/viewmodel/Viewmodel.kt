@@ -3,6 +3,7 @@ package com.dragonguard.android.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dragonguard.android.connect.ApiRepository
 import com.dragonguard.android.model.*
 
@@ -92,5 +93,9 @@ class Viewmodel {
 
     fun getOauthUserInfo(token: String): OauthUserInfoModel? {
         return repository.getOauthUserInfo(token)
+    }
+
+    fun getNewToken(token: String): String {
+        return repository.getNewAccessToken(token)
     }
 }
