@@ -261,12 +261,10 @@ class SearchActivity : AppCompatActivity() {
                     val listButton = Button(this)
                     Log.d("split", "i = $i")
                     listButton.text = split[i]
-//            val type = Typeface.createFromAsset(assets, "IBMPlexSansKR-SemiBold.ttf")
                     listButton.setTextColor(Color.BLACK)
                     listButton.setBackgroundColor(Color.rgb(204,204,204))
                     listButton.textSize = 20f
                     listButton.id = 100000+i
-//            listButton.typeface = type
                     listButton.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     val close = ImageButton(this)
                     close.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
@@ -305,12 +303,10 @@ class SearchActivity : AppCompatActivity() {
                     val listButton = Button(this)
                     Log.d("split", "i = $i")
                     listButton.text = split[i]
-//            val type = Typeface.createFromAsset(assets, "IBMPlexSansKR-SemiBold.ttf")
                     listButton.setTextColor(Color.BLACK)
                     listButton.setBackgroundColor(Color.rgb(204,204,204))
                     listButton.textSize = 20f
                     listButton.id = 100000+i
-//            listButton.typeface = type
                     listButton.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     val close = ImageButton(this)
                     close.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
@@ -378,34 +374,55 @@ class SearchActivity : AppCompatActivity() {
         Log.d("필터", filterResult.toString())
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            if(filterResult.toString().isNotEmpty()) {
-                val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
-                }
-                val result = resultDeferred.await()
-                delay(1000)
-                if (!checkSearchResult(result)) {
-                    val secondDeferred = coroutine.async(Dispatchers.IO) {
+            if(type.isNotBlank()) {
+                if(filterResult.toString().isNotEmpty()) {
+                    val resultDeferred = coroutine.async(Dispatchers.IO) {
                         viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
                     }
-                    val second = secondDeferred.await()
-                    if (checkSearchResult(second)) {
-                        initRecycler()
+                    val result = resultDeferred.await()
+                    delay(1000)
+                    if (!checkSearchResult(result)) {
+                        val secondDeferred = coroutine.async(Dispatchers.IO) {
+                            viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
+                        }
+                        val second = secondDeferred.await()
+                        if (checkSearchResult(second)) {
+                            initRecycler()
+                        } else {
+                            binding.progressBar.visibility = View.GONE
+                        }
                     } else {
-                        binding.progressBar.visibility = View.GONE
+                        initRecycler()
                     }
                 } else {
-                    initRecycler()
+                    val resultDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getSearchRepoResult(name, count, type, token)
+                    }
+                    val result = resultDeferred.await()
+                    delay(1000)
+                    if (!checkSearchResult(result)) {
+                        val secondDeferred = coroutine.async(Dispatchers.IO) {
+                            viewmodel.getSearchRepoResult(name, count, type, token)
+                        }
+                        val second = secondDeferred.await()
+                        if (checkSearchResult(second)) {
+                            initRecycler()
+                        } else {
+                            binding.progressBar.visibility = View.GONE
+                        }
+                    } else {
+                        initRecycler()
+                    }
                 }
             } else {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getSearchRepoResult(name, count, type, token)
+                    viewmodel.getSearchRepoResult(name, count, "REPOSITORIES", token)
                 }
                 val result = resultDeferred.await()
                 delay(1000)
                 if (!checkSearchResult(result)) {
                     val secondDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getSearchRepoResult(name, count, type, token)
+                        viewmodel.getSearchRepoResult(name, count, "REPOSITORIES", token)
                     }
                     val second = secondDeferred.await()
                     if (checkSearchResult(second)) {

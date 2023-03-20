@@ -122,9 +122,9 @@ class MainActivity : AppCompatActivity() {
             prefs.setWalletAddress("wallet_address", "")
         }
 
+        checkCookies()
         count = 0
         val jwtToken = intent?.data?.getQueryParameter("accessToken")
-        val refreshToken = intent?.data?.getQueryParameter("Refresh")
 //        Toast.makeText(applicationContext, "jwt token : $jwtToken", Toast.LENGTH_SHORT).show()
         Log.d("jwt token", "jwt Token : $jwtToken")
         if(jwtToken != null) {
@@ -134,11 +134,6 @@ class MainActivity : AppCompatActivity() {
             Log.d("nono", "main token : ${prefs.getJwtToken("token", "")}")
         } else {
             token = prefs.getJwtToken("token", "")
-        }
-
-        if(refreshToken != null) {
-            prefs.setRefreshToken("refresh", refreshToken)
-            Log.d("refresh", "refresh token: $refreshToken")
         }
 
         val intent = Intent(applicationContext, LoginActivity::class.java)
@@ -240,6 +235,7 @@ class MainActivity : AppCompatActivity() {
                     if(!this@MainActivity.isFinishing) {
                         Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
                     }
+                    checkCookies()
                 }
             }
         }
@@ -298,4 +294,30 @@ class MainActivity : AppCompatActivity() {
             finishAffinity()
         }
     }
+
+    fun checkCookies() {
+        val coroutine = CoroutineScope(Dispatchers.IO)
+        coroutine.launch {
+            val url = URL(BuildConfig.api)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            val cookieManager = CookieManager()
+            CookieHandler.setDefault(cookieManager)
+            connection.instanceFollowRedirects = true
+            connection.connect()
+
+            val redirectUrl = connection.getHeaderField("Refresh")
+            if (redirectUrl == "gitrank://github-auth") {
+                val headers = connection.headerFields
+                if (headers != null) {
+                    for (header in headers.entries) {
+                        for (cookie in header.value) {
+                            Log.d("cookie","Cookie: $cookie")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
