@@ -113,6 +113,10 @@ final class APIURL{
         return getMemberInfoUrl
     }
     
+    func getRefreshToken(ip: String, accessToken: String) -> String{
+        let url = "http://\(ip)/api/auth/refresh?accessToken=\(accessToken)"
+        return url
+    }
     
     
     
