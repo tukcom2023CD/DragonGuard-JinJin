@@ -38,4 +38,12 @@ class IdPreference (context: Context) {
         return prefs.getString(key, defValue)!!
     }
 
+    fun setPostAddress(key: String, value: Boolean) {
+        prefs.edit().putBoolean(key, value).apply()
+    }
+
+    fun getPostAddress(key:String, defValue: Boolean):Boolean {
+        return prefs.getBoolean(key, defValue)!!
+    }
+
 }

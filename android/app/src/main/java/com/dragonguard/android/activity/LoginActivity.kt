@@ -24,6 +24,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.net.CookieHandler
+import java.net.CookieManager
 
 class LoginActivity : AppCompatActivity() {
     companion object {
@@ -41,6 +43,13 @@ class LoginActivity : AppCompatActivity() {
         binding.loginViewmodel = viewmodel
         Log.d("login", "loginactivity1")
         prefs = IdPreference(applicationContext)
+        //쿠키 확인 코드
+        val cookieManager = CookieManager()
+        CookieHandler.setDefault(cookieManager)
+        val cookieList = cookieManager.cookieStore.cookies
+        for (cookie in cookieList) {
+            Log.d("cookie", "cookies :  ${cookie.name} = ${cookie.value}")
+        }
         val intent = intent
         val token = intent.getStringExtra("token")
         val logout = intent.getBooleanExtra("logout", false)
