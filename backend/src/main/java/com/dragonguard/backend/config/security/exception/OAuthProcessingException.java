@@ -1,4 +1,4 @@
-package com.dragonguard.backend.config.security.oauth;
+package com.dragonguard.backend.config.security.exception;
 
 /**
  * @author 김승진

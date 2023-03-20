@@ -1,24 +1,18 @@
 package com.dragonguard.backend.member.service;
 
+import com.dragonguard.backend.config.security.exception.JwtProcessingException;
 import com.dragonguard.backend.config.security.jwt.JwtToken;
 import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
-import com.dragonguard.backend.config.security.oauth.OAuthProcessingException;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.repository.MemberRepository;
-import com.dragonguard.backend.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import javax.servlet.http.Cookie;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Service
@@ -30,12 +24,13 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public String refreshToken(HttpServletRequest request, HttpServletResponse response, String oldAccessToken) {
-        String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
-                .map(Cookie::getValue).orElseThrow(OAuthProcessingException::new);
+    public String refreshToken(String oldRefreshToken, String oldAccessToken) {
+        if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
+            throw new IllegalArgumentException();
+        }
 
         if (!jwtTokenProvider.validateToken(oldAccessToken)) {
-            throw new OAuthProcessingException();
+            throw new JwtProcessingException();
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -46,7 +41,7 @@ public class AuthService {
         String savedToken = memberRepository.findRefreshTokenById(id);
 
         if (!savedToken.equals(oldRefreshToken)) {
-            throw new OAuthProcessingException();
+            throw new JwtProcessingException();
         }
 
         JwtToken token = jwtTokenProvider.createAccessToken(user);
