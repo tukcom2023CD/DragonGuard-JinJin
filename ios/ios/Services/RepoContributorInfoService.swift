@@ -26,7 +26,7 @@ final class RepoContributorInfoService{
                     .responseDecodable(of: [RepoContriInfoDecodingModel].self) { response in
                         print("repoContributor \(response)")
                         guard let responseResult = response.value else {return}
-
+                        
                         if responseResult.count > 0 && resultData.count == 0 {
                             timer.invalidate()
                             
