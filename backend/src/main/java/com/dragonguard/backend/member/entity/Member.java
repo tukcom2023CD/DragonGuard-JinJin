@@ -111,4 +111,8 @@ public class Member extends BaseTime {
     public void updateGithubToken(String githubToken) {
         this.githubToken = githubToken;
     }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
