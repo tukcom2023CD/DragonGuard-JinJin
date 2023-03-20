@@ -54,8 +54,7 @@ public class MemberController {
 
     @PostMapping("/wallet-address")
     public ResponseEntity<Void> updateWalletAddress(@RequestBody WalletRequest walletRequest) {
-        Member member = memberService.updateWalletAddress(walletRequest);
-        memberService.setTransaction(member);
+        memberService.updateWalletAddress(walletRequest);
         return ResponseEntity.ok().build();
     }
 

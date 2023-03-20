@@ -115,10 +115,10 @@ public class MemberService {
     }
 
     @Transactional
-    public Member updateWalletAddress(WalletRequest walletRequest) {
-        Member member = authService.getLoginUser();
+    public void updateWalletAddress(WalletRequest walletRequest) {
+        Member member = getEntity(authService.getLoginUser().getId());
         member.updateWalletAddress(walletRequest.getWalletAddress());
-        return member;
+        setTransaction(member);
     }
 
     public Member getEntity(UUID id) {
