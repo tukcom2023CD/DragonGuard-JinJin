@@ -122,25 +122,9 @@ class MainActivity : AppCompatActivity() {
             prefs.setWalletAddress("wallet_address", "")
         }
 
-        //쿠키 확인 코드
-        val coroutine = CoroutineScope(Dispatchers.IO)
-        coroutine.launch {
-            val url = URL("http://172.30.1.44/api")
-            val connection = url.openConnection() as HttpURLConnection
-            val cookieManager = CookieManager()
-            cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-            val cookies = connection.getHeaderField("Set-Cookie")
-            if (cookies != null) {
-                cookieManager.cookieStore.add(url.toURI(), HttpCookie.parse(cookies)[0])
-            }
-            val storedCookies = cookieManager.cookieStore.get(url.toURI())
-            for (cookie in storedCookies) {
-                Log.d("COOKIE", "cookie $cookie")
-            }
-        }
-
         count = 0
         val jwtToken = intent?.data?.getQueryParameter("accessToken")
+        val refreshToken = intent?.data?.getQueryParameter("Refresh")
 //        Toast.makeText(applicationContext, "jwt token : $jwtToken", Toast.LENGTH_SHORT).show()
         Log.d("jwt token", "jwt Token : $jwtToken")
         if(jwtToken != null) {
@@ -152,13 +136,16 @@ class MainActivity : AppCompatActivity() {
             token = prefs.getJwtToken("token", "")
         }
 
+        if(refreshToken != null) {
+            prefs.setRefreshToken("refresh", refreshToken)
+            Log.d("refresh", "refresh token: $refreshToken")
+        }
+
         val intent = Intent(applicationContext, LoginActivity::class.java)
-        intent.putExtra("wallet_address", walletAddress)
+        intent.putExtra("wallet_address", prefs.getWalletAddress("wallet_address", ""))
         intent.putExtra("logout", loginOut)
         intent.putExtra("token", prefs.getJwtToken("token", ""))
         activityResultLauncher.launch(intent)
-
-
 
         if(NetworkCheck.checkNetworkState(this)) {
             searchUser()
@@ -201,6 +188,8 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         searchUser()
+        Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 500)
+        Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 1000)
     }
 
 /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)

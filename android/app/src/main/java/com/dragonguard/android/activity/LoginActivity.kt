@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
         val token = intent.getStringExtra("token")
         val logout = intent.getBooleanExtra("logout", false)
         if(token != "") {
-            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
             binding.githubAuth.isEnabled = false
             binding.githubAuth.setTextColor(Color.BLACK)
         } else {
@@ -69,6 +69,7 @@ class LoginActivity : AppCompatActivity() {
             walletAddress = address
             if(walletAddress.isNotBlank() && !token.isNullOrEmpty()) {
 //                Log.d("wallet", "지갑주소 이미 있음 $walletAddress")
+//                Toast.makeText(applicationContext, "wallet : $walletAddress", Toast.LENGTH_SHORT).show()
                 val intentW = Intent(applicationContext, MainActivity::class.java)
                 setResult(1, intentW)
                 finish()
