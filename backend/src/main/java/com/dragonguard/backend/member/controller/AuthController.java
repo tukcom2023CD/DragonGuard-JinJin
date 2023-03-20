@@ -20,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("/refresh")
-    public ResponseEntity<String> authorize(HttpServletRequest request, HttpServletResponse response, @RequestParam String accessToken) {
-        return ResponseEntity.ok(authService.refreshToken(request, response, accessToken));
+    public ResponseEntity<String> authorize(@CookieValue("Refresh") String refreshToken, @RequestParam String accessToken) {
+        return ResponseEntity.ok(authService.refreshToken(refreshToken, accessToken));
     }
 }
