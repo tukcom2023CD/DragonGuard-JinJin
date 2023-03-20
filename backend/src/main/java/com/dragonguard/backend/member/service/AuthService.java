@@ -1,5 +1,6 @@
 package com.dragonguard.backend.member.service;
 
+import com.dragonguard.backend.config.security.exception.CookieException;
 import com.dragonguard.backend.config.security.exception.JwtProcessingException;
 import com.dragonguard.backend.config.security.jwt.JwtSetupService;
 import com.dragonguard.backend.config.security.jwt.JwtToken;
@@ -30,6 +31,10 @@ public class AuthService {
 
     @Transactional
     public String refreshToken(Cookie cookie, String oldAccessToken, HttpServletResponse response) {
+        if (cookie == null) {
+            throw new CookieException();
+        }
+
         String oldRefreshToken = cookie.getValue();
 
         if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
