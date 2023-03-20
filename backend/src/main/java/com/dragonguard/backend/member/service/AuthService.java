@@ -30,12 +30,13 @@ public class AuthService {
     private final JwtValidator jwtValidator;
 
     @Transactional
-    public String refreshToken(Cookie cookie, String oldAccessToken, HttpServletResponse response) {
-        if (cookie == null) {
+    public String refreshToken(Cookie refreshCookie, Cookie accessCookie, HttpServletResponse response) {
+        if (refreshCookie == null || accessCookie == null) {
             throw new CookieException();
         }
 
-        String oldRefreshToken = cookie.getValue();
+        String oldRefreshToken = refreshCookie.getValue();
+        String oldAccessToken = accessCookie.getValue();
 
         if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
             throw new IllegalArgumentException();
