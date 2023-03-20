@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,9 +22,9 @@ public class AuthController {
 
     @GetMapping("/refresh")
     public ResponseEntity<String> authorize(
-            @CookieValue("Refresh") String refreshToken,
+            @CookieValue("Refresh") Cookie cookie,
             HttpServletResponse response,
             @RequestParam String accessToken) {
-        return ResponseEntity.ok(authService.refreshToken(refreshToken, accessToken, response));
+        return ResponseEntity.ok(authService.refreshToken(cookie, accessToken, response));
     }
 }
