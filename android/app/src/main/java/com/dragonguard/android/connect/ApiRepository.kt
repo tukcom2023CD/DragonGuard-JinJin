@@ -79,7 +79,6 @@ class ApiRepository {
         try {
             val result = userInfo.execute()
             Log.d("no", "사용자 정보 요청 결과 : ${result.code()}")
-            Log.d("결과", "사용자 정보 : $userResult")
             userResult = result.body()!!
         } catch (e: Exception) {
             Log.d("exception", "exception : ${e.printStackTrace()}")
