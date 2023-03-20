@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .authorizeRequests(requests -> requests.requestMatchers(CorsUtils::isPreFlightRequest)
                         .permitAll()
+                        .antMatchers("/oauth2/**", "/auth/**").permitAll()
                         .antMatchers("/admin/**")
                         .hasRole("ADMIN")
                         .anyRequest()
