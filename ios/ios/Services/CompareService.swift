@@ -21,7 +21,7 @@ final class CompareService{
         let body = ["firstRepo": firstRepo, "secondRepo": secondRepo]
         var firstRepoUserInfo: [FirstRepoResult] = []   // 첫 번째 레포 내부 유저 리스트
         var secondRepoUserInfo: [SecondRepoResult] = []  // 두 번째 레포 내부 유저 리스트
-        
+        print("token \(Environment.jwtToken)")
         return Observable.create(){ observer in
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
                 AF.request(url,
