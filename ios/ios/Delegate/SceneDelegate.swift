@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     
@@ -31,23 +32,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
             print("request_uri \(url)")
             print("items \(items)")
             
-            let request = URLRequest(url: url)
-            print("header \(request.allHTTPHeaderFields)")
-            
-            if let headers = request.allHTTPHeaderFields {
-                for (key, value) in headers {
-                    print("\(key): \(value)")
-                }
-            }
-            
-            
-            
             let jwtToken = items[0].value ?? ""
             Environment.jwtToken = jwtToken
+            
+            getRefreshToken()
+            
             LoginViewModel.loginService.saveJWTToken(token: jwtToken)
         }
     }
     
+    func getRefreshToken(){
+        let url = APIURL.apiUrl.getRefreshToken(ip: APIURL.ip,accessToken: Environment.jwtToken)
+        
+        AF.request(url,
+                   method: .get,
+                   headers: ["Authorization": "Bearer \(Environment.jwtToken)"])
+        .responseJSON { response in
+            print(response)
+        }
+    }
     
 }
 
