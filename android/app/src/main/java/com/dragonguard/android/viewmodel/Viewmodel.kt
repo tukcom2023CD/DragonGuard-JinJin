@@ -95,7 +95,7 @@ class Viewmodel {
         return repository.getOauthUserInfo(token)
     }
 
-    fun getNewToken(token: String): String {
-        return repository.getNewAccessToken(token)
+    fun getNewToken(): String {
+        return repository.getNewAccessToken()
     }
 }

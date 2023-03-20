@@ -182,9 +182,8 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         searchUser()
-        getNewAccessToken()
         Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 500)
-        Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 1000)
+        Handler(Looper.getMainLooper()).postDelayed({getNewAccessToken()}, 1000)
     }
 
 /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
@@ -299,7 +298,7 @@ class MainActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val newTokenDeffered = coroutine.async(Dispatchers.IO){
-                viewmodel.getNewToken(prefs.getJwtToken("token", ""))
+                viewmodel.getNewToken()
             }
             val newToken = newTokenDeffered.await()
             if(newToken.isNotBlank()) {
