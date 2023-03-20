@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -28,7 +29,9 @@ public class AuthService {
     private final JwtValidator jwtValidator;
 
     @Transactional
-    public String refreshToken(String oldRefreshToken, String oldAccessToken, HttpServletResponse response) {
+    public String refreshToken(Cookie cookie, String oldAccessToken, HttpServletResponse response) {
+        String oldRefreshToken = cookie.getValue();
+
         if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
             throw new IllegalArgumentException();
         }
