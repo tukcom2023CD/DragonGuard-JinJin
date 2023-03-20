@@ -24,6 +24,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.net.CookieHandler
+import java.net.CookieManager
 
 class LoginActivity : AppCompatActivity() {
     companion object {
@@ -41,11 +43,18 @@ class LoginActivity : AppCompatActivity() {
         binding.loginViewmodel = viewmodel
         Log.d("login", "loginactivity1")
         prefs = IdPreference(applicationContext)
+        //쿠키 확인 코드
+        val cookieManager = CookieManager()
+        CookieHandler.setDefault(cookieManager)
+        val cookieList = cookieManager.cookieStore.cookies
+        for (cookie in cookieList) {
+            Log.d("cookie", "cookies :  ${cookie.name} = ${cookie.value}")
+        }
         val intent = intent
         val token = intent.getStringExtra("token")
         val logout = intent.getBooleanExtra("logout", false)
         if(token != "") {
-            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
             binding.githubAuth.isEnabled = false
             binding.githubAuth.setTextColor(Color.BLACK)
         } else {
@@ -60,6 +69,7 @@ class LoginActivity : AppCompatActivity() {
             walletAddress = address
             if(walletAddress.isNotBlank() && !token.isNullOrEmpty()) {
 //                Log.d("wallet", "지갑주소 이미 있음 $walletAddress")
+//                Toast.makeText(applicationContext, "wallet : $walletAddress", Toast.LENGTH_SHORT).show()
                 val intentW = Intent(applicationContext, MainActivity::class.java)
                 setResult(1, intentW)
                 finish()

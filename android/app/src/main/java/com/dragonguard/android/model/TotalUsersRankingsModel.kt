@@ -4,7 +4,7 @@ package com.dragonguard.android.model
 data class TotalUsersRankingsModel(
     val tokens: Int?,
     val githubId: String?,
-    val id: Int?,
+    val id: String?,
     val name: String?,
     val tier: String?,
     val ranking: Int?
