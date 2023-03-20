@@ -67,6 +67,6 @@ interface GitRankAPI {
     fun getOauthUserInfo(@Header("Authorization")token: String): Call<OauthUserInfoModel>
 
     @GET("auth/refresh")
-    fun getNewAccessToken(@Query("accessToken")token: String): Call<String>
+    fun getNewAccessToken(): Call<String>
 
 }

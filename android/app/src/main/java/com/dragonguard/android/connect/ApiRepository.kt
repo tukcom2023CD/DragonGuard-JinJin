@@ -283,13 +283,15 @@ class ApiRepository {
         }
     }
 
-    fun getNewAccessToken(token: String): String {
+    fun getNewAccessToken(): String {
         var newToken = ""
-        val getToken = api.getNewAccessToken(token)
+        val getToken = api.getNewAccessToken()
         try {
             val result = getToken.execute()
             newToken = result.body()!!
+            Log.d("e", "result ${result.code()}  ${result.message()}")
         } catch (e: Exception) {
+            Log.d("e", "error ${e.printStackTrace()}")
             return newToken
         }
         return newToken
