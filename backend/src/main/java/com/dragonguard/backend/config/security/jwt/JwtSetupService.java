@@ -3,6 +3,7 @@ package com.dragonguard.backend.config.security.jwt;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +29,13 @@ public class JwtSetupService {
         JwtToken jwtToken = jwtTokenProvider.createAccessToken(loginUser);
         ResponseCookie accessTokenCookie =
                 setCookie(accessTokenHeaderTag, jwtToken.getAccessToken());
-        response.addHeader("Set-Cookie", accessTokenCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
         ResponseCookie refreshTokenCookie =
                 setCookie(refreshTokenHeaderTag, jwtToken.getRefreshToken());
-        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
     }
 
     private ResponseCookie setCookie(String key, String value) {
-        return ResponseCookie.from(key, value).path("/").httpOnly(true).build();
+        return ResponseCookie.from(key, value).path("/").httpOnly(true).sameSite("None").build();
     }
 }
