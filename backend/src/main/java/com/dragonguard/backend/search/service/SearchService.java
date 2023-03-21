@@ -4,7 +4,6 @@ import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.webclient.GithubClient;
 import com.dragonguard.backend.member.service.AuthService;
-import com.dragonguard.backend.member.service.MemberService;
 import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.result.entity.Result;
 import com.dragonguard.backend.result.mapper.ResultMapper;
@@ -26,7 +25,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

@@ -1,6 +1,6 @@
 # DragonGuard-JinJin
 ## 블록체인 기반 깃 랭크 시스템
-깃허브를 개인별로 또는 대학별로 깃허브를 얼마나 활용하는지 경쟁하며 순위를 매기는 기능을 제공
+개인별로 또는 조직별로 깃허브를 얼마나 활용하는지 경쟁하며 순위를 매기는 기능을 제공
 ## 시스템 아키텍처
 
 ![image](https://user-images.githubusercontent.com/89020004/218316567-aaebb947-55ea-40da-a9ad-970f967036db.png)
