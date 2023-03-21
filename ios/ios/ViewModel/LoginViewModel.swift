@@ -19,7 +19,6 @@ final class LoginViewModel {
     private let disposeBag = DisposeBag()
     private var walletAddress = "" // 사용자 지갑 주소
     private var requestKey = "" // 사용자 Klip request Key
-    private var jwtToken = ""   // JWT Token
     
     var githubAuthSubject = BehaviorSubject(value: false)   // github OAuth 완료 시 true 전송
     var jwtTokenSubject = BehaviorSubject(value: "")    // jwt Token 전송
@@ -72,19 +71,10 @@ final class LoginViewModel {
 
     // 사용자 지갑 주소 서버로 전송
     func userWalletAddress(){
-        post.sendMyWalletAddress(token: self.jwtToken, walletAddress: self.walletAddress)
+        post.sendMyWalletAddress(token: Environment.jwtToken!, walletAddress: self.walletAddress)
             .subscribe(onNext: { msg in print(msg)})
             .disposed(by: disposeBag)
     }
-    
-    // MARK:
-    func saveJWTToken(token: String){
-        self.jwtToken = token
-        self.checkGithubAuth = true
-        jwtTokenSubject.onNext(token)
-    }
-    
-
     
 }
 
