@@ -63,7 +63,7 @@ class MemberControllerTest extends RestDocumentTest {
     void saveMember() throws Exception {
         // given
         IdResponse<UUID> expected = new IdResponse<>(UUID.randomUUID());
-        given(memberService.saveMember(any())).willReturn(expected);
+        given(memberService.saveMember(any(), any())).willReturn(expected);
 
         // when
         ResultActions perform =

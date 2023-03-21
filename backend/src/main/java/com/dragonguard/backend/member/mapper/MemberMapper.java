@@ -3,6 +3,7 @@ package com.dragonguard.backend.member.mapper;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Member;
+import com.dragonguard.backend.member.entity.Role;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,6 +16,13 @@ public class MemberMapper {
     public Member toEntity(MemberRequest memberRequest) {
         return Member.builder()
                 .githubId(memberRequest.getGithubId())
+                .build();
+    }
+
+    public Member toEntity(MemberRequest memberRequest, Role role) {
+        return Member.builder()
+                .githubId(memberRequest.getGithubId())
+                .role(role)
                 .build();
     }
 

@@ -5,6 +5,7 @@ import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
+import com.dragonguard.backend.member.entity.Role;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,9 +32,18 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @PostConstruct
+    public void init() {
+        memberService.saveMember(new MemberRequest("Sammuelwoojae"), Role.ROLE_ADMIN);
+        memberService.saveMember(new MemberRequest("posite"), Role.ROLE_ADMIN);
+        memberService.saveMember(new MemberRequest("HJ39"), Role.ROLE_ADMIN);
+        memberService.saveMember(new MemberRequest("ohksj77"), Role.ROLE_ADMIN);
+    }
+
+
     @PostMapping
-    public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody MemberRequest memberRequest) {
-        return ResponseEntity.ok(memberService.saveMember(memberRequest));
+    public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody @Valid MemberRequest memberRequest) {
+        return ResponseEntity.ok(memberService.saveMember(memberRequest, Role.ROLE_USER));
     }
 
     @PostMapping("/commits")
@@ -59,7 +71,7 @@ public class MemberController {
     }
 
     @PostMapping("/wallet-address")
-    public ResponseEntity<Void> updateWalletAddress(@RequestBody WalletRequest walletRequest) {
+    public ResponseEntity<Void> updateWalletAddress(@RequestBody @Valid WalletRequest walletRequest) {
         memberService.updateWalletAddress(walletRequest);
         return ResponseEntity.ok().build();
     }

@@ -74,7 +74,7 @@ public class Member extends BaseTime {
     private Long organizationId;
 
     @Builder
-    public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage) {
+    public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage, Role role) {
         this.name = name;
         this.githubId = githubId;
         this.walletAddress = walletAddress;
@@ -82,6 +82,9 @@ public class Member extends BaseTime {
         this.tier = Tier.SPROUT;
         this.authStep = AuthStep.GITHUB_ONLY;
         addCommit(commit);
+        if (role.equals(Role.ROLE_ADMIN)) {
+            this.role.add(Role.ROLE_ADMIN);
+        }
     }
 
     public void addCommit(Commit commit) {
