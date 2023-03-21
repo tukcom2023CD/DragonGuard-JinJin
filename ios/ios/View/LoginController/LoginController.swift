@@ -14,7 +14,7 @@ import WebKit
 
 final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
-    let webView = WKWebView()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,20 +88,17 @@ final class LoginController: UIViewController{
     }
     
     @objc func clickedGoGihbubBtn(){
-        
         let url = URL(string: APIURL.apiUrl.callBackendForGithubLogin(ip: APIURL.ip))!
         print("url \(url)")
         let urlRequest = URLRequest(url: url)
+        let newViewController = UIViewController()
+        let webView = WKWebView(frame: newViewController.view.bounds)
+        newViewController.view.addSubview(webView)
+        
         webView.navigationDelegate = self
-        
+        webView.goBack()
         webView.load(urlRequest)
-        
-//        if UIApplication.shared.canOpenURL(url) {
-//            let github = SFSafariViewController(url: url)
-//            self.present(github, animated: true)
-//        }
-        
-        
+        self.navigationController?.pushViewController(newViewController,animated: true)
         
     }
 
@@ -110,26 +107,13 @@ final class LoginController: UIViewController{
     func checkClearAuths(){
         let checkGithubAuth = LoginViewModel.loginService.githubAuthSubject
         let checkklipAuth = LoginViewModel.loginService.klipAuthSubject
-        let jwtTokenSubject = LoginViewModel.loginService.jwtTokenSubject
-        var jwtToken = ""
-        
-        jwtTokenSubject.subscribe(onNext: {
-            if !$0.isEmpty{
-                jwtToken = $0
-                self.klipLoginBtn.isEnabled = true
-            }
-        })
-        .disposed(by: self.disposeBag)
-        
-        
-        
         
         Observable.combineLatest(checkGithubAuth, checkklipAuth)
             .subscribe(onNext: { first, second in
                 if first && second{
                     
                     let rootView = MainController()
-                    rootView.jwtToken = jwtToken
+                    rootView.jwtToken = Environment.jwtToken
                     let nc = UINavigationController(rootViewController: rootView)
                     let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
                     sceneDelegate.window?.rootViewController = nc
@@ -137,6 +121,7 @@ final class LoginController: UIViewController{
                 }
                 else if first{
                     self.goGithubBtn.backgroundColor = .lightGray
+                    self.klipLoginBtn.isEnabled = true
                     self.goGithubBtn.isEnabled = false
                 }
                 else if second{
@@ -181,26 +166,36 @@ final class LoginController: UIViewController{
     
 }
 
-extension LoginController: UIWebViewDelegate, WKNavigationDelegate{
-    func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
-        print("called")
-        print(webView.url?.absoluteString)
-    }
+extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate{
     
     // WKNavigationDelegate 메서드 구현
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
                      decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            guard let url = navigationAction.request.url else {
-                decisionHandler(.cancel)
-                return
+        
+            WKWebsiteDataStore.default().httpCookieStore.getAllCookies { cookies in
+                var accessTokenCheck = false
+                var refreshTokenCheck = false
+                
+                for cookie in cookies{
+                    if cookie.name == "Access" {
+                        UserDefaults.standard.set(cookie.value, forKey:"Access")
+                        print("@@@ Access  저장하기: \(cookie.value)")
+                        accessTokenCheck = true
+                    }
+                    if cookie.name == "Refresh" {
+                        UserDefaults.standard.set(cookie.value, forKey:"Refresh")
+                        print("@@@ Refresh  저장하기: \(cookie.value)")
+                        refreshTokenCheck = true
+                    }
+               
+                    if accessTokenCheck && refreshTokenCheck{
+                        LoginViewModel.loginService.githubAuthSubject.onNext(true)
+                    }
+                    
+                }
             }
             
-            let allHeaders = navigationAction.request.allHTTPHeaderFields
-            
-            // 헤더 정보 출력
-            print("URL: \(url)")
-            print("Headers: \(String(describing: allHeaders))")
-            
+          
             decisionHandler(.allow)
         }
     
