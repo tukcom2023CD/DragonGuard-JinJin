@@ -115,8 +115,6 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
         prefs = IdPreference(applicationContext)
-//        val intent = Intent(applicationContext, LoginActivity::class.java)
-//        startActivity(intent)
         addressPost = prefs.getPostAddress("post", false)
         if(loginOut) {
             prefs.setWalletAddress("wallet_address", "")
@@ -182,8 +180,9 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         searchUser()
+        getNewAccessToken()
         Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 500)
-        Handler(Looper.getMainLooper()).postDelayed({getNewAccessToken()}, 1000)
+        Handler(Looper.getMainLooper()).postDelayed({}, 1000)
     }
 
 /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
@@ -295,17 +294,40 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getNewAccessToken() {
-        val coroutine = CoroutineScope(Dispatchers.Main)
+        val coroutine = CoroutineScope(Dispatchers.IO)
         coroutine.launch {
-            val newTokenDeffered = coroutine.async(Dispatchers.IO){
-                viewmodel.getNewToken()
-            }
-            val newToken = newTokenDeffered.await()
-            if(newToken.isNotBlank()) {
-                Toast.makeText(applicationContext,"refresh 결과 : 성공!! $newToken", Toast.LENGTH_SHORT).show()
-                prefs.setJwtToken("token", newToken)
-                token = prefs.getJwtToken("token", "")
-                searchUser()
+//            val url = URL("${BuildConfig.api}oauth2/callback/github")
+//            val connection = url.openConnection() as HttpURLConnection
+//            connection.requestMethod = "GET"
+//            val cookiesHeader = connection.headerFields["Refresh"]
+//            val cookies = cookiesHeader?.map { cookie ->
+//                HttpCookie.parse(cookie).first()
+//            }
+//            cookies?.forEach { cookie ->
+//                Log.d("cookie","cookie -> ${cookie.name}: ${cookie.value}")
+//            }
+            val cookieManager = CookieManager()
+            CookieHandler.setDefault(cookieManager)
+            val url = URL("${BuildConfig.api}login/")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.instanceFollowRedirects = false
+            connection.connect()
+            if (connection.responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
+                connection.responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
+                connection.responseCode == HttpURLConnection.HTTP_SEE_OTHER
+            ) {
+                val redirectUrl = connection.getHeaderField("Location")
+                val redirectConnection = URL(redirectUrl).openConnection() as HttpURLConnection
+                redirectConnection.requestMethod = "GET"
+                redirectConnection.connect()
+
+                // Get the cookies from the redirect response
+                val cookies = cookieManager.cookieStore.cookies
+                // Do something with the cookies
+                for(cookie in cookies) {
+                    Log.d("cooke", "name: ${cookie.name}, value: ${cookie.value}")
+                }
             }
         }
     }
