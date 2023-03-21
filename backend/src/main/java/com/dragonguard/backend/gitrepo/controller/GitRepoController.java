@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,18 +35,18 @@ public class GitRepoController {
 
     @PostMapping("/compare")
     public ResponseEntity<TwoGitRepoResponse> getTwoGitRepos(
-            @RequestBody GitRepoCompareRequest request) {
+            @RequestBody @Valid GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findTwoGitRepos(request));
     }
 
     @PostMapping("/compare/git-repos-members")
     public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(
-            @RequestBody GitRepoCompareRequest request) {
+            @RequestBody @Valid GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompare(request));
     }
 
     @PostMapping("/compare/members")
-    public ResponseEntity<GirRepoMemberCompareResponse> getTwoGitRepoMember(@RequestBody GitRepoMemberCompareRequest request) {
+    public ResponseEntity<GirRepoMemberCompareResponse> getTwoGitRepoMember(@RequestBody @Valid GitRepoMemberCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findTwoGitRepoMember(request));
     }
 }

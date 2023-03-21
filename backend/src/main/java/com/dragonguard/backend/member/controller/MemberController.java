@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody MemberRequest memberRequest) {
+    public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody @Valid MemberRequest memberRequest) {
         return ResponseEntity.ok(memberService.saveMember(memberRequest));
     }
 
@@ -59,7 +60,7 @@ public class MemberController {
     }
 
     @PostMapping("/wallet-address")
-    public ResponseEntity<Void> updateWalletAddress(@RequestBody WalletRequest walletRequest) {
+    public ResponseEntity<Void> updateWalletAddress(@RequestBody @Valid WalletRequest walletRequest) {
         memberService.updateWalletAddress(walletRequest);
         return ResponseEntity.ok().build();
     }

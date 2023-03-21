@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -25,12 +26,12 @@ public class OrganizationController {
     private final OrganizationService organizationService;
 
     @PostMapping
-    public ResponseEntity<IdResponse<Long>> postOrganization(@RequestBody OrganizationRequest organizationRequest) {
+    public ResponseEntity<IdResponse<Long>> postOrganization(@RequestBody @Valid OrganizationRequest organizationRequest) {
         return ResponseEntity.ok(organizationService.saveOrganizationAndAddMember(organizationRequest));
     }
 
     @PostMapping("/add-member")
-    public ResponseEntity<Void> addMemberToOrganization(@RequestBody AddMemberRequest addMemberRequest) {
+    public ResponseEntity<Void> addMemberToOrganization(@RequestBody @Valid AddMemberRequest addMemberRequest) {
         organizationService.findAndAddMember(addMemberRequest);
         return ResponseEntity.ok().build();
     }
