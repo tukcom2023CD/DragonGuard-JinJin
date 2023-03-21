@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * @author 김승진
  * @description 조직(회사, 대학교)관련 요청정보를 담는 dto
@@ -14,7 +18,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrganizationRequest {
+    @NotBlank
     private String name;
+    @NotNull
     private OrganizationType organizationType;
+    @Email
     private String email;
 }
