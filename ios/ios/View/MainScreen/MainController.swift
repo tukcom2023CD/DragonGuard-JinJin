@@ -26,8 +26,6 @@ final class MainController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true    // navigation bar 삭제
         self.navigationItem.backButtonTitle = "Home"    //다른 화면에서 BackBtn title 설정
         
-        getMyData() // 내 토큰, 내 티어 데이터 불러오기
-        
         // UI view에 적용
         addUItoView()
         
@@ -36,6 +34,7 @@ final class MainController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        getMyData() // 내 토큰, 내 티어 데이터 불러오기
         self.navigationController?.navigationBar.isHidden = true // navigation bar 삭제
     }
     
@@ -189,7 +188,7 @@ final class MainController: UIViewController {
     
     // 내 티어, 내 토큰 가져오는 함수
     private func getMyData(){
-        guard let jwtToken = self.jwtToken else {return}
+        guard let jwtToken = Environment.jwtToken else {return}
         
         self.viewModel.getMyInformation(token: jwtToken)
             .subscribe(onNext: { data in

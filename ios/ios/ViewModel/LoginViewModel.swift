@@ -76,15 +76,6 @@ final class LoginViewModel {
             .disposed(by: disposeBag)
     }
     
-//    // MARK:
-//    func saveJWTToken(token: String){
-//        self.jwtToken = token
-//        self.checkGithubAuth = true
-//        jwtTokenSubject.onNext(token)
-//    }
-    
-
-    
 }
 
 

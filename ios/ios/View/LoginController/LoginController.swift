@@ -11,10 +11,11 @@ import SnapKit
 import RxSwift
 import SafariServices
 import WebKit
+import Alamofire
 
 final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
-    
+    var cookieStore: WKHTTPCookieStore?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -171,19 +172,25 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
     // WKNavigationDelegate 메서드 구현
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
                      decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        
+            
+            // 저장되어 있는 쿠키를 확인 구문
             WKWebsiteDataStore.default().httpCookieStore.getAllCookies { cookies in
                 var accessTokenCheck = false
                 var refreshTokenCheck = false
+                guard let cookieStore = self.cookieStore else {return}
                 
                 for cookie in cookies{
                     if cookie.name == "Access" {
+//                        print(cookie)
                         UserDefaults.standard.set(cookie.value, forKey:"Access")
+                        cookieStore.setCookie(cookie)
                         print("@@@ Access  저장하기: \(cookie.value)")
                         accessTokenCheck = true
                     }
                     if cookie.name == "Refresh" {
+//                        print(cookie)
                         UserDefaults.standard.set(cookie.value, forKey:"Refresh")
+                        cookieStore.setCookie(cookie)
                         print("@@@ Refresh  저장하기: \(cookie.value)")
                         refreshTokenCheck = true
                     }
@@ -191,7 +198,6 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                     if accessTokenCheck && refreshTokenCheck{
                         LoginViewModel.loginService.githubAuthSubject.onNext(true)
                     }
-                    
                 }
             }
             
@@ -200,3 +206,6 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
         }
     
 }
+
+
+
