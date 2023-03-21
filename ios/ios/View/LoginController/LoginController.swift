@@ -92,6 +92,8 @@ final class LoginController: UIViewController{
         let url = URL(string: APIURL.apiUrl.callBackendForGithubLogin(ip: APIURL.ip))!
         print("url \(url)")
         let urlRequest = URLRequest(url: url)
+        webView.navigationDelegate = self
+        
         webView.load(urlRequest)
         
 //        if UIApplication.shared.canOpenURL(url) {
@@ -184,4 +186,22 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate{
         print("called")
         print(webView.url?.absoluteString)
     }
+    
+    // WKNavigationDelegate 메서드 구현
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+                     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            guard let url = navigationAction.request.url else {
+                decisionHandler(.cancel)
+                return
+            }
+            
+            let allHeaders = navigationAction.request.allHTTPHeaderFields
+            
+            // 헤더 정보 출력
+            print("URL: \(url)")
+            print("Headers: \(String(describing: allHeaders))")
+            
+            decisionHandler(.allow)
+        }
+    
 }
