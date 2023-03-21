@@ -24,7 +24,8 @@ public class AuthController {
     public ResponseEntity<String> authorize(
             @CookieValue("Refresh") Cookie refreshCookie,
             @CookieValue("Access") Cookie accessCookie,
+            HttpServletRequest request,
             HttpServletResponse response) {
-        return ResponseEntity.ok(authService.refreshToken(refreshCookie, accessCookie, response));
+        return ResponseEntity.ok(authService.refreshToken(refreshCookie, accessCookie, request, response));
     }
 }

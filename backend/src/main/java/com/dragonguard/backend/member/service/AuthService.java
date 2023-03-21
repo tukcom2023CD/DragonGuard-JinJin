@@ -10,6 +10,7 @@ import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.repository.MemberRepository;
+import com.dragonguard.backend.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -28,9 +30,10 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtSetupService jwtSetupService;
     private final JwtValidator jwtValidator;
+    private final CookieUtil cookieUtil;
 
     @Transactional
-    public String refreshToken(Cookie refreshCookie, Cookie accessCookie, HttpServletResponse response) {
+    public String refreshToken(Cookie refreshCookie, Cookie accessCookie, HttpServletRequest request, HttpServletResponse response) {
         if (refreshCookie == null || accessCookie == null) {
             throw new CookieException();
         }
@@ -57,7 +60,11 @@ public class AuthService {
             throw new JwtProcessingException();
         }
 
+        cookieUtil.deleteCookie(request, response, "Access");
+        cookieUtil.deleteCookie(request, response, "Refresh");
+
         JwtToken jwtToken = jwtSetupService.addJwtTokensInCookie(response, user);
+        
         Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         member.updateRefreshToken(jwtToken.getRefreshToken());
 
