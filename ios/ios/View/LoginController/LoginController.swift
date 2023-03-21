@@ -10,9 +10,11 @@ import UIKit
 import SnapKit
 import RxSwift
 import SafariServices
+import WebKit
 
 final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
+    let webView = WKWebView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,14 +91,19 @@ final class LoginController: UIViewController{
         
         let url = URL(string: APIURL.apiUrl.callBackendForGithubLogin(ip: APIURL.ip))!
         print("url \(url)")
-        if UIApplication.shared.canOpenURL(url) {
-            let github = SFSafariViewController(url: url)
-            self.present(github, animated: true)
-        }
+        let urlRequest = URLRequest(url: url)
+        webView.load(urlRequest)
+        
+//        if UIApplication.shared.canOpenURL(url) {
+//            let github = SFSafariViewController(url: url)
+//            self.present(github, animated: true)
+//        }
+        
         
         
     }
 
+    
     // 사용자가 인증을 완료했는지 확인하는 함수
     func checkClearAuths(){
         let checkGithubAuth = LoginViewModel.loginService.githubAuthSubject
@@ -170,4 +177,11 @@ final class LoginController: UIViewController{
         
     }
     
+}
+
+extension LoginController: UIWebViewDelegate, WKNavigationDelegate{
+    func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+        print("called")
+        print(webView.url?.absoluteString)
+    }
 }
