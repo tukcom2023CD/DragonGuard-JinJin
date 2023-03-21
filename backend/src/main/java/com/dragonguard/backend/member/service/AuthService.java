@@ -33,14 +33,7 @@ public class AuthService {
     private final CookieUtil cookieUtil;
 
     @Transactional
-    public String refreshToken(Cookie refreshCookie, Cookie accessCookie, HttpServletRequest request, HttpServletResponse response) {
-        if (refreshCookie == null || accessCookie == null) {
-            throw new CookieException();
-        }
-
-        String oldRefreshToken = refreshCookie.getValue();
-        String oldAccessToken = accessCookie.getValue();
-
+    public String refreshToken(String oldRefreshToken, String oldAccessToken, HttpServletRequest request, HttpServletResponse response) {
         if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
             throw new IllegalArgumentException();
         }
@@ -64,7 +57,7 @@ public class AuthService {
         cookieUtil.deleteCookie(request, response, "Refresh");
 
         JwtToken jwtToken = jwtSetupService.addJwtTokensInCookie(response, user);
-        
+
         Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         member.updateRefreshToken(jwtToken.getRefreshToken());
 

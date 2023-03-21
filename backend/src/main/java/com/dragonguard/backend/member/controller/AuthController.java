@@ -22,10 +22,10 @@ public class AuthController {
 
     @GetMapping("/refresh")
     public ResponseEntity<String> authorize(
-            @RequestHeader Cookie refresh,
-            @RequestHeader Cookie access,
+            @RequestHeader String refreshToken,
+            @RequestHeader String accessToken,
             HttpServletRequest request,
             HttpServletResponse response) {
-        return ResponseEntity.ok(authService.refreshToken(refresh, access, request, response));
+        return ResponseEntity.ok(authService.refreshToken(refreshToken, accessToken, request, response));
     }
 }
