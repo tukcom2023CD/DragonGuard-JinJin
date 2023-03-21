@@ -13,6 +13,7 @@ import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Member;
+import com.dragonguard.backend.member.entity.Role;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.mapper.MemberMapper;
 import com.dragonguard.backend.member.repository.MemberRepository;
@@ -44,26 +45,27 @@ public class MemberService {
         return authService.getLoginUser().getTier();
     }
 
-    public IdResponse<UUID> saveMember(MemberRequest memberRequest) {
-        return new IdResponse<>(scrapeAndGetId(memberRequest));
+    public IdResponse<UUID> saveMember(MemberRequest memberRequest, Role role) {
+        return new IdResponse<>(scrapeAndGetId(memberRequest, role));
     }
 
-    public UUID scrapeAndGetId(MemberRequest memberRequest) {
-        return scrapeAndGetSavedMember(memberRequest).getId();
+    public UUID scrapeAndGetId(MemberRequest memberRequest, Role role) {
+        return scrapeAndGetSavedMember(memberRequest, role).getId();
     }
 
-    private Member scrapeAndGetSavedMember(MemberRequest memberRequest) {
+    private Member scrapeAndGetSavedMember(MemberRequest memberRequest, Role role) {
         getCommitsByScraping(memberRequest.getGithubId());
-        return saveAndGet(memberRequest);
+        return saveAndGet(memberRequest, role);
+    }
+
+    public Member saveAndGet(MemberRequest memberRequest, Role role) {
+        return memberRepository.findMemberByGithubId(memberRequest.getGithubId())
+                .orElseGet(() -> memberRepository.save(memberMapper.toEntity(memberRequest, role)));
     }
 
     public Member saveAndGet(MemberRequest memberRequest) {
-        if (memberRepository.existsByGithubId(memberRequest.getGithubId())) {
-            return memberRepository.findMemberByGithubId(memberRequest.getGithubId())
-                    .orElseThrow(EntityNotFoundException::new);
-        }
-        return memberRepository
-                .save(memberMapper.toEntity(memberRequest));
+        return memberRepository.findMemberByGithubId(memberRequest.getGithubId())
+                .orElseGet(() -> memberRepository.save(memberMapper.toEntity(memberRequest)));
     }
 
 
@@ -107,7 +109,7 @@ public class MemberService {
 
     public Member findMemberByGithubId(String githubId) {
         return memberRepository.findMemberByGithubId(githubId)
-                .orElseGet(() -> scrapeAndGetSavedMember(new MemberRequest(githubId)));
+                .orElseGet(() -> scrapeAndGetSavedMember(new MemberRequest(githubId), Role.ROLE_USER));
     }
 
     public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
