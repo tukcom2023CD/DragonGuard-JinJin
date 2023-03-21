@@ -126,15 +126,6 @@ public class MemberService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public Member saveIfNone(OAuth2Request oAuth2Request) {
-        String githubId = oAuth2Request.getAccountId();
-        Member member = memberRepository
-                .findMemberByGithubId(githubId)
-                .orElseGet(() -> memberRepository.save(setUpMember(oAuth2Request)));
-        getCommitsByScraping(githubId);
-        return member;
-    }
-
     public void setTransaction(Member member) {
         blockchainService.setTransaction(
                 new ContractRequest(member.getWalletAddress(),

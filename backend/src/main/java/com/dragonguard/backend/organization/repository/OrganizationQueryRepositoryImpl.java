@@ -1,11 +1,7 @@
 package com.dragonguard.backend.organization.repository;
 
-import com.dragonguard.backend.member.entity.QMember;
 import com.dragonguard.backend.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.organization.entity.OrganizationType;
-import com.dragonguard.backend.organization.entity.QOrganization;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

@@ -31,12 +31,16 @@ public class OrganizationService {
     private final OrganizationMapper organizationMapper;
     private final AuthService authService;
 
-    public IdResponse<Long> saveOrganization(OrganizationRequest organizationRequest) {
-        Organization organization = organizationRepository.save(organizationMapper.toEntity(organizationRequest));
+    @Transactional
+    public IdResponse<Long> saveOrganizationAndAddMember(OrganizationRequest organizationRequest) {
+        Organization organization = organizationRepository.findByNameAndOrganizationTypeAndEmailEndpoint(
+                        organizationRequest.getName(), organizationRequest.getOrganizationType(), organizationRequest.getEmailEndpoint())
+                .orElseGet(() -> organizationRepository.save(organizationMapper.toEntity(organizationRequest)));
         addMember(organization);
         return new IdResponse<>(organization.getId());
     }
 
+    @Transactional
     public void findAndAddMember(AddMemberRequest addMemberRequest) {
         Organization organization = getEntity(addMemberRequest.getOrganizationId());
         addMember(organization);
@@ -52,14 +56,8 @@ public class OrganizationService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public void addMember(Organization organization) {
         organization.addMember(authService.getLoginUser());
-    }
-
-    private Organization getEntity(Long id) {
-        return organizationRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
     }
 
     public List<OrganizationResponse> getOrganizationRank(Pageable pageable) {
@@ -72,5 +70,10 @@ public class OrganizationService {
 
     public List<OrganizationResponse> searchOrganization(OrganizationType type, String name, Pageable pageable) {
         return organizationRepository.findBySearchWord(type, name, pageable);
+    }
+
+    private Organization getEntity(Long id) {
+        return organizationRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }
