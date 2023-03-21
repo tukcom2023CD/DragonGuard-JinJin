@@ -37,25 +37,25 @@ public class OrganizationController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/types")
-    public ResponseEntity<List<OrganizationType>> getTypes() {
-        return ResponseEntity.ok(organizationService.getTypes());
-    }
-
     @GetMapping
-    public ResponseEntity<List<OrganizationResponse>> getOrganizations(@RequestParam OrganizationType type) {
-        return ResponseEntity.ok(organizationService.findByType(type));
+    public ResponseEntity<List<OrganizationResponse>> getOrganizations(@RequestParam OrganizationType type, Pageable pageable) {
+        return ResponseEntity.ok(organizationService.findByType(type, pageable));
     }
 
-    @GetMapping("/ranking/organization/all")
+    @GetMapping("/ranking/all")
     public ResponseEntity<List<OrganizationResponse>> getOrganizationRank(Pageable pageable) {
         return ResponseEntity.ok(organizationService.getOrganizationRank(pageable));
     }
 
-    @GetMapping("/ranking/organization")
-    public ResponseEntity<List<OrganizationResponse>> getOrganizationRank(
-            @RequestParam OrganizationType type,
-            @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) Pageable pageable) {
+    @GetMapping("/ranking")
+    public ResponseEntity<List<OrganizationResponse>> getOrganizationRankByType(
+            @RequestParam OrganizationType type, Pageable pageable) {
         return ResponseEntity.ok(organizationService.getOrganizationRankByType(type, pageable));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<OrganizationResponse>> searchOrganization(
+            @RequestParam OrganizationType type, @RequestParam String name, Pageable pageable) {
+        return ResponseEntity.ok(organizationService.searchOrganization(type, name, pageable));
     }
 }

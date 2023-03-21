@@ -53,4 +53,13 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .orderBy(member.sumOfTokens.sum().desc())
                 .fetch();
     }
+
+    @Override
+    public List<OrganizationResponse> findBySearchWord(OrganizationType type, String name, Pageable pageable) {
+        return jpaQueryFactory
+                .select(organizationQDtoFactory.qOrganizationResponse())
+                .from(organization)
+                .where(organization.organizationType.eq(type).and(organization.name.likeIgnoreCase(name)))
+                .fetch();
+    }
 }

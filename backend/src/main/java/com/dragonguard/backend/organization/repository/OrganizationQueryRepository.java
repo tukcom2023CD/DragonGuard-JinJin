@@ -16,4 +16,6 @@ public interface OrganizationQueryRepository {
     List<OrganizationResponse> findRank(Pageable pageable);
 
     List<OrganizationResponse> findRankByType(OrganizationType type, Pageable pageable);
+
+    List<OrganizationResponse> findBySearchWord(OrganizationType type, String name, Pageable pageable);
 }

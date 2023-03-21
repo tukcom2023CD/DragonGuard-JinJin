@@ -46,8 +46,8 @@ public class OrganizationService {
         return Arrays.asList(OrganizationType.values());
     }
 
-    public List<OrganizationResponse> findByType(OrganizationType organizationType) {
-        return organizationRepository.findByType(organizationType).stream()
+    public List<OrganizationResponse> findByType(OrganizationType organizationType, Pageable pageable) {
+        return organizationRepository.findByType(organizationType, pageable).stream()
                 .map(organizationMapper::toResponse)
                 .collect(Collectors.toList());
     }
@@ -68,5 +68,9 @@ public class OrganizationService {
 
     public List<OrganizationResponse> getOrganizationRankByType(OrganizationType type, Pageable pageable) {
         return organizationRepository.findRankByType(type, pageable);
+    }
+
+    public List<OrganizationResponse> searchOrganization(OrganizationType type, String name, Pageable pageable) {
+        return organizationRepository.findBySearchWord(type, name, pageable);
     }
 }

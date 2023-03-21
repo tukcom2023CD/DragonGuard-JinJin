@@ -1,8 +1,8 @@
 package com.dragonguard.backend.organization.repository;
 
-import com.dragonguard.backend.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.organization.entity.Organization;
 import com.dragonguard.backend.organization.entity.OrganizationType;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +15,5 @@ import java.util.List;
 
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, Long>, OrganizationQueryRepository {
-    List<Organization> findByType(OrganizationType organizationType);
+    List<Organization> findByType(OrganizationType organizationType, Pageable pageable);
 }
