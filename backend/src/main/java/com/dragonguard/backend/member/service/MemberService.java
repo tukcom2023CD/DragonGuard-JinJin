@@ -154,4 +154,8 @@ public class MemberService {
     private Member setUpMember(OAuth2Request req) {
         return Member.builder().githubId(req.getAccountId()).build();
     }
+
+    public List<MemberRankResponse> getMemberRankingByOrganization(Long organizationId, Pageable pageable) {
+        return memberRepository.findRankingByOrganization(organizationId, pageable);
+    }
 }

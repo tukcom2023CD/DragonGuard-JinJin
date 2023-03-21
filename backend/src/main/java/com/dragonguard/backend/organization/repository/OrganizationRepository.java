@@ -14,6 +14,6 @@ import java.util.List;
  */
 
 @Repository
-public interface OrganizationRepository extends JpaRepository<Organization, Long> {
+public interface OrganizationRepository extends JpaRepository<Organization, Long>, OrganizationQueryRepository {
     List<Organization> findByType(OrganizationType organizationType);
 }

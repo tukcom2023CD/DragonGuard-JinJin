@@ -5,7 +5,6 @@ import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
-import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -47,9 +46,16 @@ public class MemberController {
     }
 
     @GetMapping("/ranking")
-    public ResponseEntity<List<MemberRankResponse>> getTier(
+    public ResponseEntity<List<MemberRankResponse>> getRank(
             @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(memberService.getMemberRanking(pageable));
+    }
+
+    @GetMapping("/ranking/organization")
+    public ResponseEntity<List<MemberRankResponse>> getOrganizationMemberRank(
+            @RequestParam Long organizationId,
+            @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(memberService.getMemberRankingByOrganization(organizationId, pageable));
     }
 
     @PostMapping("/wallet-address")

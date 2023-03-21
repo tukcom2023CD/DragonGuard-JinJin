@@ -11,6 +11,7 @@ import com.dragonguard.backend.organization.entity.OrganizationType;
 import com.dragonguard.backend.organization.mapper.OrganizationMapper;
 import com.dragonguard.backend.organization.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,5 +60,9 @@ public class OrganizationService {
     private Organization getEntity(Long id) {
         return organizationRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<OrganizationResponse> getOrganizationRank(Pageable pageable) {
+        return organizationRepository.findRank(pageable);
     }
 }

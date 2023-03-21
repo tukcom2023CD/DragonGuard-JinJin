@@ -7,6 +7,9 @@ import com.dragonguard.backend.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.organization.entity.OrganizationType;
 import com.dragonguard.backend.organization.service.OrganizationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,5 +45,17 @@ public class OrganizationController {
     @GetMapping
     public ResponseEntity<List<OrganizationResponse>> getOrganizations(@RequestParam OrganizationType type) {
         return ResponseEntity.ok(organizationService.findByType(type));
+    }
+
+    @GetMapping("/ranking/organization/all")
+    public ResponseEntity<List<OrganizationResponse>> getOrganizationRank(Pageable pageable) {
+        return ResponseEntity.ok(organizationService.getOrganizationRank(pageable));
+    }
+
+    @GetMapping("/ranking/organization")
+    public ResponseEntity<List<OrganizationResponse>> getOrganizationRank(
+            @RequestParam OrganizationType type,
+            @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(organizationService.getOrganizationRankByType(type, pageable));
     }
 }
