@@ -65,4 +65,8 @@ public class OrganizationService {
     public List<OrganizationResponse> getOrganizationRank(Pageable pageable) {
         return organizationRepository.findRank(pageable);
     }
+
+    public List<OrganizationResponse> getOrganizationRankByType(OrganizationType type, Pageable pageable) {
+        return organizationRepository.findRankByType(type, pageable);
+    }
 }

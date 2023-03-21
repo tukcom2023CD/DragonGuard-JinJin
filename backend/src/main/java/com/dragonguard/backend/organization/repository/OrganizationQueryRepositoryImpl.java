@@ -2,6 +2,7 @@ package com.dragonguard.backend.organization.repository;
 
 import com.dragonguard.backend.member.entity.QMember;
 import com.dragonguard.backend.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.organization.entity.OrganizationType;
 import com.dragonguard.backend.organization.entity.QOrganization;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
@@ -33,6 +34,20 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .from(organization, member)
                 .leftJoin(organization.members, member)
                 .fetchJoin()
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(member.sumOfTokens.sum().desc())
+                .fetch();
+    }
+
+    @Override
+    public List<OrganizationResponse> findRankByType(OrganizationType type, Pageable pageable) {
+        return jpaQueryFactory
+                .select(organizationQDtoFactory.qOrganizationResponse())
+                .from(organization, member)
+                .leftJoin(organization.members, member)
+                .fetchJoin()
+                .where(organization.organizationType.eq(type))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(member.sumOfTokens.sum().desc())

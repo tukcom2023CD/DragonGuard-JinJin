@@ -2,6 +2,7 @@ package com.dragonguard.backend.organization.repository;
 
 
 import com.dragonguard.backend.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.organization.entity.OrganizationType;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -13,4 +14,6 @@ import java.util.List;
 
 public interface OrganizationQueryRepository {
     List<OrganizationResponse> findRank(Pageable pageable);
+
+    List<OrganizationResponse> findRankByType(OrganizationType type, Pageable pageable);
 }
