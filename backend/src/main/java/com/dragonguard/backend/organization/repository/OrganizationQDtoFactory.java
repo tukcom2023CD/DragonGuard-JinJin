@@ -1,7 +1,6 @@
 package com.dragonguard.backend.organization.repository;
 
 import com.dragonguard.backend.organization.dto.response.QOrganizationResponse;
-import com.dragonguard.backend.organization.entity.QOrganization;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 

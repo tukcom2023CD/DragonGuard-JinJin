@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author 김승진
@@ -16,4 +17,6 @@ import java.util.List;
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, Long>, OrganizationQueryRepository {
     List<Organization> findByType(OrganizationType organizationType, Pageable pageable);
+
+    Optional<Organization> findByNameAndOrganizationTypeAndEmailEndpoint(String name, OrganizationType organizationType, String emailEndpoint);
 }

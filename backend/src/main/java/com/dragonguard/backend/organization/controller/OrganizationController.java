@@ -8,8 +8,6 @@ import com.dragonguard.backend.organization.entity.OrganizationType;
 import com.dragonguard.backend.organization.service.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +26,7 @@ public class OrganizationController {
 
     @PostMapping
     public ResponseEntity<IdResponse<Long>> postOrganization(@RequestBody OrganizationRequest organizationRequest) {
-        return ResponseEntity.ok(organizationService.saveOrganization(organizationRequest));
+        return ResponseEntity.ok(organizationService.saveOrganizationAndAddMember(organizationRequest));
     }
 
     @PostMapping("/add-member")
