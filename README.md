@@ -15,7 +15,8 @@
 ## 협업 툴
 <a href="https://seoullian.atlassian.net/jira/software/projects/DJ/boards/2/backlog" target="_blank"> Jira URL</a>
 
-## API 명세
+## Docs
+<a href="https://github.com/tukcom2023CD/DragonGuard-JinJin/wiki">GitRank Wiki</a><br>
 <a href="https://ohksj77.github.io/DragonGuard-JinJin-API-Docs/">Backend API Docs</a>
 
 ## 멤버 소개
@@ -23,4 +24,4 @@
 |김관용|심영수|정호진|김승진|
 |:----:|:----:|:----:|:----:|
 |iOS, DevOps|Android, BlockChain|iOS, BlockChain|Backend, DevOps, Scraping|
-|<a href="https://github.com/Sammuelwoojae">Sammuelwoojae</a>|<a href="https://github.com/posite">posite</a>|<a href="https://github.com/HJ39">HJ39</a>|<a href="https://github.com/ohksj77">ohksj77</a>|
+|<a href="https://github.com/Sammuelwoojae">@Sammuelwoojae</a>|<a href="https://github.com/posite">@posite</a>|<a href="https://github.com/HJ39">@HJ39</a>|<a href="https://github.com/ohksj77">@ohksj77</a>|

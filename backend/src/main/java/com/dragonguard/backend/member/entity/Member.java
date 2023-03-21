@@ -71,6 +71,8 @@ public class Member extends BaseTime {
 
     private String githubToken;
 
+    private Long organizationId;
+
     @Builder
     public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage) {
         this.name = name;
@@ -114,5 +116,9 @@ public class Member extends BaseTime {
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void updateOrganization(Long organizationId) {
+        this.organizationId = organizationId;
     }
 }

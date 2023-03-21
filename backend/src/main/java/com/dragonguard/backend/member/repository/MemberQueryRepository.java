@@ -15,4 +15,6 @@ public interface MemberQueryRepository {
     List<MemberRankResponse> findRanking(Pageable pageable);
 
     Integer findRankingById(UUID id);
+
+    List<MemberRankResponse> findRankingByOrganization(Long organizationId, Pageable pageable);
 }

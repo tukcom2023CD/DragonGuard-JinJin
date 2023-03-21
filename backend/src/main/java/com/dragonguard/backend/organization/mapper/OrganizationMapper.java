@@ -1,5 +1,8 @@
 package com.dragonguard.backend.organization.mapper;
 
+import com.dragonguard.backend.organization.dto.request.OrganizationRequest;
+import com.dragonguard.backend.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.organization.entity.Organization;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,4 +12,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrganizationMapper {
+    public Organization toEntity(OrganizationRequest organizationRequest) {
+        return Organization.builder()
+                .name(organizationRequest.getName())
+                .organizationType(organizationRequest.getOrganizationType())
+                .emailEndpoint(organizationRequest.getEmailEndpoint())
+                .build();
+    }
+
+    public OrganizationResponse toResponse(Organization organization) {
+        return OrganizationResponse.builder()
+                .id(organization.getId())
+                .name(organization.getName())
+                .organizationType(organization.getOrganizationType())
+                .emailEndpoint(organization.getEmailEndpoint())
+                .build();
+    }
 }
