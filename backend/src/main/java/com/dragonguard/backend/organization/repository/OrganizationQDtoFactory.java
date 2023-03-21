@@ -22,6 +22,6 @@ public class OrganizationQDtoFactory {
                 organization.id,
                 organization.name,
                 organization.organizationType,
-                organization.email);
+                organization.emailEndpoint);
     }
 }

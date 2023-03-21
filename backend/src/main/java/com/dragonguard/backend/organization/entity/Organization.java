@@ -31,16 +31,16 @@ public class Organization extends BaseTime {
     @Enumerated(EnumType.STRING)
     private OrganizationType organizationType;
 
-    private String email;
+    private String emailEndpoint;
 
     @OneToMany
     private Set<Member> members = new HashSet<>();
 
     @Builder
-    public Organization(String name, OrganizationType organizationType, String email) {
+    public Organization(String name, OrganizationType organizationType, String emailEndpoint) {
         this.name = name;
         this.organizationType = organizationType;
-        this.email = email;
+        this.emailEndpoint = emailEndpoint;
     }
 
     public void addMember(Member member) {

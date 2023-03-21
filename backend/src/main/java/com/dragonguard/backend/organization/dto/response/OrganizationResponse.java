@@ -2,7 +2,6 @@ package com.dragonguard.backend.organization.dto.response;
 
 import com.dragonguard.backend.organization.entity.OrganizationType;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,13 +18,13 @@ public class OrganizationResponse {
     private Long id;
     private String name;
     private OrganizationType organizationType;
-    private String email;
+    private String emailEndpoint;
 
     @QueryProjection
-    public OrganizationResponse(Long id, String name, OrganizationType organizationType, String email) {
+    public OrganizationResponse(Long id, String name, OrganizationType organizationType, String emailEndpoint) {
         this.id = id;
         this.name = name;
         this.organizationType = organizationType;
-        this.email = email;
+        this.emailEndpoint = emailEndpoint;
     }
 }

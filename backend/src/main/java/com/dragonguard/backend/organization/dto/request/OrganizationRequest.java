@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -22,6 +21,6 @@ public class OrganizationRequest {
     private String name;
     @NotNull
     private OrganizationType organizationType;
-    @Email
-    private String email;
+    @NotBlank
+    private String emailEndpoint;
 }
