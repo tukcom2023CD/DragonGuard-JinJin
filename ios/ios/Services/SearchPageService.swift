@@ -23,7 +23,7 @@ final class SearchPageService {
         let url = APIURL.apiUrl.getSearchResult(ip: ip, title: searchWord,page: page, type: type, filtering: filtering)
         print("SearchUrl \(url)")
         return Observable.create(){ observer in
-            AF.request(url, method: .get, headers: ["Authorization": "Bearer \(Environment.jwtToken)"])
+            AF.request(url, method: .get, headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: [SearchPageDecodingData].self) { response in
                     guard let responseResult = response.value else {return}

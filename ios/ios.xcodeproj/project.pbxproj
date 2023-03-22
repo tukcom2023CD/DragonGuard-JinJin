@@ -63,6 +63,7 @@
 		3BA20137299805AE008978A5 /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA20136299805AE008978A5 /* MainModel.swift */; };
 		3BA2013929980661008978A5 /* MainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA2013829980661008978A5 /* MainService.swift */; };
 		3BAEA777299CFD090054DC5D /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAEA776299CFD090054DC5D /* PostService.swift */; };
+		3BC994E629CAD018005150FB /* TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC994E529CAD018005150FB /* TokenModel.swift */; };
 		3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD21298129B8008C05B2 /* SearchPageController.swift */; };
 		3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */; };
 		3BDD718429C075D60018D09B /* FilteringController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD718329C075D60018D09B /* FilteringController.swift */; };
@@ -163,6 +164,7 @@
 		3BA20136299805AE008978A5 /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
 		3BA2013829980661008978A5 /* MainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainService.swift; sourceTree = "<group>"; };
 		3BAEA776299CFD090054DC5D /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
+		3BC994E529CAD018005150FB /* TokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModel.swift; sourceTree = "<group>"; };
 		3BD6DD21298129B8008C05B2 /* SearchPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageController.swift; sourceTree = "<group>"; };
 		3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageTableView.swift; sourceTree = "<group>"; };
 		3BDD718329C075D60018D09B /* FilteringController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringController.swift; sourceTree = "<group>"; };
@@ -482,6 +484,7 @@
 				3B3CE9DB29B47EDF00B2594B /* UserDBId.swift */,
 				3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */,
 				3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */,
+				3BC994E529CAD018005150FB /* TokenModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -716,6 +719,7 @@
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
 				3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */,
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,
+				3BC994E629CAD018005150FB /* TokenModel.swift in Sources */,
 				3B9756F1298A32C700F27094 /* WatchRankingTableView.swift in Sources */,
 				3B0022A32987A9B0003FA5CC /* TierTypes.swift in Sources */,
 				3BDF0FA729A61A4E00816837 /* KlipLoginService.swift in Sources */,
