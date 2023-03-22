@@ -25,7 +25,7 @@ public class JwtTokenProvider {
     private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 14 * 1000; // 14 Days
     private final MemberRepository memberRepository;
 
-    public JwtToken createAccessToken(UserDetailsImpl userDetails) {
+    public JwtToken createToken(UserDetailsImpl userDetails) {
         Claims claims = getClaims(userDetails);
 
         String accessToken = getToken(userDetails, claims, ACCESS_TOKEN_EXPIRE_LENGTH);
