@@ -23,7 +23,7 @@ import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
-import java.net.*
+import java.net.CookieManager
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
@@ -41,13 +41,6 @@ class MainActivity : AppCompatActivity() {
                 if(!NetworkCheck.checkNetworkState(this)) {
                     Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
                 } else {
-                    //쿠키 확인 코드
-                    val cookieManager = CookieManager()
-                    CookieHandler.setDefault(cookieManager)
-                    val cookieList = cookieManager.cookieStore.cookies
-                    for (cookie in cookieList) {
-                        Log.d("cookie", "main cookies :  ${cookie.name} = ${cookie.value}")
-                    }
                     authRequestResult(requestKey!!)
                 }
             } catch(e: Exception) {
@@ -58,13 +51,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         } else if(it.resultCode == 1) {
-            //쿠키 확인 코드
-            val cookieManager = CookieManager()
-            CookieHandler.setDefault(cookieManager)
-            val cookieList = cookieManager.cookieStore.cookies
-            for (cookie in cookieList) {
-                Log.d("cookie", "cookies :  ${cookie.name} = ${cookie.value}")
-            }
+
         }
     }
     companion object {
@@ -82,21 +69,7 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.d("on", "onnewintent")
-        val coroutine = CoroutineScope(Dispatchers.IO)
-        coroutine.launch {
-            val url = URL("${BuildConfig.api}")
-            val connection = url.openConnection() as HttpURLConnection
-            val cookieManager = CookieManager()
-            cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-            val cookies = connection.getHeaderField("Set-Cookie")
-            if (cookies != null) {
-                cookieManager.cookieStore.add(url.toURI(), HttpCookie.parse(cookies)[0])
-            }
-            val storedCookies = cookieManager.cookieStore.get(url.toURI())
-            for (cookie in storedCookies) {
-                Log.d("COOKIE", cookie.toString())
-            }
-        }
+        getNewAccessToken()
         val logout = intent?.getBooleanExtra("logout", false)
         if(logout != null) {
             loginOut = logout
@@ -115,15 +88,18 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
         prefs = IdPreference(applicationContext)
-//        val intent = Intent(applicationContext, LoginActivity::class.java)
-//        startActivity(intent)
         addressPost = prefs.getPostAddress("post", false)
         if(loginOut) {
             prefs.setWalletAddress("wallet_address", "")
         }
+        getNewAccessToken()
 
         count = 0
         val jwtToken = intent?.data?.getQueryParameter("accessToken")
+        val cookie = intent.getStringExtra("cookie")
+        if(cookie != null) {
+            Log.d("cookie", "webview cookie : $cookie")
+        }
 //        Toast.makeText(applicationContext, "jwt token : $jwtToken", Toast.LENGTH_SHORT).show()
         Log.d("jwt token", "jwt Token : $jwtToken")
         if(jwtToken != null) {
@@ -182,8 +158,9 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         searchUser()
+        getNewAccessToken()
         Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 500)
-        Handler(Looper.getMainLooper()).postDelayed({getNewAccessToken()}, 1000)
+        Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 1000)
     }
 
 /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
@@ -295,18 +272,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getNewAccessToken() {
-        val coroutine = CoroutineScope(Dispatchers.Main)
+        Log.d("cookie", "find cookies")
+        val coroutine = CoroutineScope(Dispatchers.IO)
         coroutine.launch {
-            val newTokenDeffered = coroutine.async(Dispatchers.IO){
-                viewmodel.getNewToken()
-            }
-            val newToken = newTokenDeffered.await()
-            if(newToken.isNotBlank()) {
-                Toast.makeText(applicationContext,"refresh 결과 : 성공!! $newToken", Toast.LENGTH_SHORT).show()
-                prefs.setJwtToken("token", newToken)
-                token = prefs.getJwtToken("token", "")
-                searchUser()
-            }
+
+            val cookieManager = CookieManager()
+            val cookieStore = cookieManager.cookieStore
+            val cookies = cookieStore.cookies
+            Log.d("cookie", "cookies: $cookies")
+
         }
     }
 
