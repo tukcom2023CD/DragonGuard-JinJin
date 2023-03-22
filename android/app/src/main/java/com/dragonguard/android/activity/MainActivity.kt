@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.webkit.CookieManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
-import com.dragonguard.android.BuildConfig
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.compare.RepoChooseActivity
 import com.dragonguard.android.activity.menu.MenuActivity
@@ -23,9 +23,7 @@ import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
-import java.net.CookieManager
 import java.util.*
-import kotlin.concurrent.scheduleAtFixedRate
 
 /*
  사용자의 정보를 보여주고 검색, 랭킹등을
@@ -88,6 +86,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
         prefs = IdPreference(applicationContext)
+        CookieManager.getInstance().setAcceptCookie(true)
         addressPost = prefs.getPostAddress("post", false)
         if(loginOut) {
             prefs.setWalletAddress("wallet_address", "")
@@ -95,27 +94,23 @@ class MainActivity : AppCompatActivity() {
         getNewAccessToken()
 
         count = 0
-        val jwtToken = intent?.data?.getQueryParameter("accessToken")
-        val cookie = intent.getStringExtra("cookie")
-        if(cookie != null) {
-            Log.d("cookie", "webview cookie : $cookie")
-        }
-//        Toast.makeText(applicationContext, "jwt token : $jwtToken", Toast.LENGTH_SHORT).show()
-        Log.d("jwt token", "jwt Token : $jwtToken")
-        if(jwtToken != null) {
-            token = jwtToken
-            searchUser()
-            prefs.setJwtToken("token", jwtToken)
-            Log.d("nono", "main token : ${prefs.getJwtToken("token", "")}")
+
+        val refresh = intent.getStringExtra("refresh")
+        val access = intent.getStringExtra("access")
+        Log.d("cookie", "webview cookie : $refresh")
+        if(access != null) {
+            token = access
+            prefs.setJwtToken("token", access)
         } else {
             token = prefs.getJwtToken("token", "")
         }
-
-        val intent = Intent(applicationContext, LoginActivity::class.java)
-        intent.putExtra("wallet_address", prefs.getWalletAddress("wallet_address", ""))
-        intent.putExtra("logout", loginOut)
-        intent.putExtra("token", prefs.getJwtToken("token", ""))
-        activityResultLauncher.launch(intent)
+        if(token.isBlank()) {
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            intent.putExtra("wallet_address", prefs.getWalletAddress("wallet_address", ""))
+            intent.putExtra("logout", loginOut)
+            intent.putExtra("token", prefs.getJwtToken("token", ""))
+            activityResultLauncher.launch(intent)
+        }
 
         if(NetworkCheck.checkNetworkState(this)) {
             searchUser()
@@ -276,13 +271,9 @@ class MainActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.IO)
         coroutine.launch {
 
-            val cookieManager = CookieManager()
-            val cookieStore = cookieManager.cookieStore
-            val cookies = cookieStore.cookies
-            Log.d("cookie", "cookies: $cookies")
-
+            val cookieManager = CookieManager.getInstance()
+            val cookies: String? = cookieManager.getCookie("gitrank://github-auth")
+            Log.d("getCookie", "get new cookie: $cookies")
         }
     }
-
-
 }
