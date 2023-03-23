@@ -30,7 +30,10 @@ final class SearchOraganizationService {
                 switch response.result {
                 case .success(let data):
                     print(data)
-                    result.append(SearchOrganizationListModel(name: data.name))
+                    result.append(SearchOrganizationListModel(id: data.id,
+                                                              name: data.name,
+                                                              type: data.type,
+                                                              emailEndpoint: data.emailEndpoint))
                 case .failure(let error):
                     print("getOrganizationListService error!\n \(error)")
                 }
