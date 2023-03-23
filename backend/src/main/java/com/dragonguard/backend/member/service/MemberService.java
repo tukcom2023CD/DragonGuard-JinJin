@@ -134,6 +134,10 @@ public class MemberService {
                         member.getGithubId()));
     }
 
+    public List<MemberRankResponse> getMemberRankingByOrganization(Long organizationId, Pageable pageable) {
+        return memberRepository.findRankingByOrganization(organizationId, pageable);
+    }
+
     private Member scrapeAndGetSavedMember(MemberRequest memberRequest, Role role) {
         getCommitsByScraping(memberRequest.getGithubId());
         return saveAndGet(memberRequest, role);
@@ -145,13 +149,5 @@ public class MemberService {
 
     private boolean isWalletAddressExist(Member member) {
         return member.getWalletAddress() != null && !member.getWalletAddress().isEmpty();
-    }
-
-    private Member setUpMember(OAuth2Request req) {
-        return Member.builder().githubId(req.getAccountId()).build();
-    }
-
-    public List<MemberRankResponse> getMemberRankingByOrganization(Long organizationId, Pageable pageable) {
-        return memberRepository.findRankingByOrganization(organizationId, pageable);
     }
 }
