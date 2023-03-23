@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -44,8 +45,8 @@ public class Organization extends BaseTime {
     }
 
     public void addMember(Member member, String email) {
-        this.members.add(member);
         if (email.endsWith(emailEndpoint)) {
+            this.members.add(member);
             member.updateOrganization(id, email);
         }
     }

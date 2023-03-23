@@ -26,17 +26,16 @@ public class EmailService {
     private final EmailRepository emailRepository;
     private final JavaMailSender javaMailSender;
     private final AuthService authService;
-    private final MemberService memberService;
     private Integer min = 10000;
     private Integer max = 99999;
 
-    public void sendEmail(UUID memberId) {
-        Member member = memberService.getEntity(memberId);
+    public void sendEmail() {
+        Member member = authService.getLoginUser();
         if (member.getOrganizationEmail() == null) {
             throw new EmailException();
         }
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        int random = new Random().nextInt((max - min) + 1) + min;
+        int random = new Random().nextInt(max - min) + min;
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
             mimeMessageHelper.setTo(member.getOrganizationEmail());

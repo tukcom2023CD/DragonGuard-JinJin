@@ -7,17 +7,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/email")
 public class EmailController {
     private final EmailService emailService;
 
-    @PostMapping("/send/{id}")
-    public ResponseEntity<Void> sendEmail(@PathVariable UUID id) {
-        emailService.sendEmail(id);
+    @PostMapping("/send")
+    public ResponseEntity<Void> sendEmail() {
+        emailService.sendEmail();
         return ResponseEntity.ok().build();
     }
 
