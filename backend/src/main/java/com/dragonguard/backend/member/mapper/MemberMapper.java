@@ -26,6 +26,21 @@ public class MemberMapper {
                 .build();
     }
 
+    public MemberResponse toResponse(Member member, Integer commits, Integer rank, Long amount, String organization) {
+        return MemberResponse.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .githubId(member.getGithubId())
+                .commits(commits)
+                .tier(member.getTier())
+                .authStep(member.getAuthStep())
+                .profileImage(member.getProfileImage())
+                .rank(rank)
+                .tokenAmount(amount)
+                .organization(organization)
+                .build();
+    }
+
     public MemberResponse toResponse(Member member, Integer commits, Integer rank, Long amount) {
         return MemberResponse.builder()
                 .id(member.getId())

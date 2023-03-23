@@ -27,4 +27,5 @@ public class MemberResponse {
     private String profileImage;
     private Integer rank;
     private Long tokenAmount;
+    private String organization;
 }

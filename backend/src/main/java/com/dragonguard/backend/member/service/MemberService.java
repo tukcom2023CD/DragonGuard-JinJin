@@ -17,7 +17,7 @@ import com.dragonguard.backend.member.entity.Role;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.mapper.MemberMapper;
 import com.dragonguard.backend.member.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
+import com.dragonguard.backend.organization.entity.Organization;import com.dragonguard.backend.organization.repository.OrganizationRepository;import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,22 +40,14 @@ public class MemberService {
     private final CommitService commitService;
     private final BlockchainService blockchainService;
     private final AuthService authService;
+    private final OrganizationRepository organizationRepository;
 
     public Tier getTier() {
         return authService.getLoginUser().getTier();
     }
 
     public IdResponse<UUID> saveMember(MemberRequest memberRequest, Role role) {
-        return new IdResponse<>(scrapeAndGetId(memberRequest, role));
-    }
-
-    public UUID scrapeAndGetId(MemberRequest memberRequest, Role role) {
-        return scrapeAndGetSavedMember(memberRequest, role).getId();
-    }
-
-    private Member scrapeAndGetSavedMember(MemberRequest memberRequest, Role role) {
-        getCommitsByScraping(memberRequest.getGithubId());
-        return saveAndGet(memberRequest, role);
+        return new IdResponse<>(scrapeAndGetSavedMember(memberRequest, role).getId());
     }
 
     public Member saveAndGet(MemberRequest memberRequest, Role role) {
@@ -103,7 +95,11 @@ public class MemberService {
         Integer rank = memberRepository.findRankingById(member.getId());
         Long amount = member.getSumOfTokens();
         updateTier(member);
-
+        Long organizationId = member.getOrganizationId();
+        if (organizationId != null) {
+            Organization organization = organizationRepository.findById(member.getOrganizationId()).orElseThrow(EntityNotFoundException::new);
+            return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount, organization.getName());
+        }
         return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount);
     }
 
@@ -134,6 +130,11 @@ public class MemberService {
                         ContributeType.COMMIT.toString(),
                         BigInteger.valueOf(member.getSumOfCommits()),
                         member.getGithubId()));
+    }
+
+    private Member scrapeAndGetSavedMember(MemberRequest memberRequest, Role role) {
+        getCommitsByScraping(memberRequest.getGithubId());
+        return saveAndGet(memberRequest, role);
     }
 
     private void getCommitsByScraping(String githubId) {

@@ -32,11 +32,10 @@ public class OrganizationService {
     private final AuthService authService;
 
     @Transactional
-    public IdResponse<Long> saveOrganizationAndAddMember(OrganizationRequest organizationRequest) {
+    public IdResponse<Long> saveOrganization(OrganizationRequest organizationRequest) {
         Organization organization = organizationRepository.findByNameAndOrganizationTypeAndEmailEndpoint(
                         organizationRequest.getName(), organizationRequest.getOrganizationType(), organizationRequest.getEmailEndpoint())
                 .orElseGet(() -> organizationRepository.save(organizationMapper.toEntity(organizationRequest)));
-        addMember(organization);
         return new IdResponse<>(organization.getId());
     }
 
