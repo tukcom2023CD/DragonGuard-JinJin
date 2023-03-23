@@ -19,10 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Arrays;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
@@ -144,7 +142,7 @@ class GitRepoControllerTest extends RestDocumentTest {
     @Test
     @DisplayName("두 멤버의 레포 기여도 비교")
     void getTwoGitRepoMember() throws Exception {
-        GirRepoMemberCompareResponse expected = new GirRepoMemberCompareResponse(
+        GitRepoMemberCompareResponse expected = new GitRepoMemberCompareResponse(
                 new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
                 new GitRepoMemberResponse("ohksj", 101, 1001, 501));
         given(gitRepoService.findTwoGitRepoMember(any())).willReturn(expected);
