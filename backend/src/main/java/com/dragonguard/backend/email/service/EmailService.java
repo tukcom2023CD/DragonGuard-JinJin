@@ -5,6 +5,7 @@ import com.dragonguard.backend.email.dto.response.CheckCodeResponse;
 import com.dragonguard.backend.email.entity.Email;
 import com.dragonguard.backend.email.exception.EmailException;
 import com.dragonguard.backend.email.repository.EmailRepository;
+import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.service.AuthService;
@@ -29,7 +30,7 @@ public class EmailService {
     private Integer min = 10000;
     private Integer max = 99999;
 
-    public void sendEmail() {
+    public IdResponse<Long> sendEmail() {
         Member member = authService.getLoginUser();
         if (member.getOrganizationEmail() == null) {
             throw new EmailException();
@@ -48,7 +49,9 @@ public class EmailService {
                     .memberId(member.getId())
                     .build();
 
-            emailRepository.save(email);
+            Email entity = emailRepository.save(email);
+
+            return new IdResponse<>(entity.getId());
         } catch (MessagingException e) {
             throw new EmailException();
         }

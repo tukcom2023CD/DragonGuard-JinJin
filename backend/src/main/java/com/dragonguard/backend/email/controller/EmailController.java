@@ -3,6 +3,7 @@ package com.dragonguard.backend.email.controller;
 import com.dragonguard.backend.email.dto.request.EmailRequest;
 import com.dragonguard.backend.email.dto.response.CheckCodeResponse;
 import com.dragonguard.backend.email.service.EmailService;
+import com.dragonguard.backend.global.IdResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,8 @@ public class EmailController {
     private final EmailService emailService;
 
     @PostMapping("/send")
-    public ResponseEntity<Void> sendEmail() {
-        emailService.sendEmail();
-        return ResponseEntity.ok().build();
+    public ResponseEntity<IdResponse<Long>> sendEmail() {
+        return ResponseEntity.ok(emailService.sendEmail());
     }
 
     @GetMapping("/check")
