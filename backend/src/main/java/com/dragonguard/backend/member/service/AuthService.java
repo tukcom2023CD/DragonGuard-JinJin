@@ -1,6 +1,6 @@
 package com.dragonguard.backend.member.service;
 
-import com.dragonguard.backend.config.security.exception.JwtProcessingException;
+import com.dragonguard.backend.member.exception.JwtProcessingException;
 import com.dragonguard.backend.config.security.jwt.JwtToken;
 import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
 import com.dragonguard.backend.config.security.jwt.JwtValidator;

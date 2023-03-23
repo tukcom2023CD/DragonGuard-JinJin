@@ -1,7 +1,7 @@
 package com.dragonguard.backend.blockchain.entity;
 
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
+import com.dragonguard.backend.global.basetime.BaseTime;
+import com.dragonguard.backend.global.basetime.SoftDelete;
 import com.dragonguard.backend.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -21,7 +21,8 @@ import java.math.BigInteger;
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Blockchain extends BaseTime {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @Enumerated(EnumType.STRING)

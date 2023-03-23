@@ -2,9 +2,8 @@ package com.dragonguard.backend.member.entity;
 
 import com.dragonguard.backend.blockchain.entity.Blockchain;
 import com.dragonguard.backend.commit.entity.Commit;
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
-import com.dragonguard.backend.member.exception.InvalidWalletAddressException;
+import com.dragonguard.backend.global.basetime.BaseTime;
+import com.dragonguard.backend.global.basetime.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
