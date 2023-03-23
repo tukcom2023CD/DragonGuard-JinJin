@@ -21,4 +21,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     List<Organization> findByType(OrganizationType organizationType, Pageable pageable);
 
     Optional<Organization> findByNameAndOrganizationTypeAndEmailEndpoint(String name, OrganizationType organizationType, String emailEndpoint);
+
+    Optional<Organization> findByName(String name);
 }

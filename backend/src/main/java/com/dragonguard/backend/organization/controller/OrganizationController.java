@@ -30,6 +30,11 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationService.saveOrganization(organizationRequest));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<IdResponse<Long>> getOrganization(@RequestParam String name) {
+        return ResponseEntity.ok(organizationService.findByName(name));
+    }
+
     @PostMapping("/add-member")
     public ResponseEntity<Void> addMemberToOrganization(@RequestBody @Valid AddMemberRequest addMemberRequest) {
         organizationService.findAndAddMember(addMemberRequest);

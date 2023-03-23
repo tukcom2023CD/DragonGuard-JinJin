@@ -71,4 +71,10 @@ public class OrganizationService {
         return organizationRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
+
+    public IdResponse<Long> findByName(String name) {
+        Organization organization = organizationRepository.findByName(name)
+                .orElseThrow(EntityNotFoundException::new);
+        return new IdResponse<>(organization.getId());
+    }
 }
