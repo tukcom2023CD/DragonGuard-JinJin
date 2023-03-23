@@ -5,7 +5,6 @@ import com.dragonguard.backend.blockchain.entity.ContributeType;
 import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
-import com.dragonguard.backend.config.security.oauth.OAuth2Request;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
@@ -49,12 +48,11 @@ public class MemberService {
     }
 
     public IdResponse<UUID> saveMember(MemberRequest memberRequest, Role role) {
-        return new IdResponse<>(scrapeAndGetSavedMember(memberRequest, role).getId());
+        return new IdResponse<>(scrapeAndGetSavedMember(memberRequest.getGithubId(), role).getId());
     }
 
-    public Member saveAndGet(MemberRequest memberRequest, Role role) {
-        return memberRepository.findMemberByGithubId(memberRequest.getGithubId())
-                .orElseGet(() -> memberRepository.save(memberMapper.toEntity(memberRequest, role)));
+    public Member saveAndGet(String githubId, Role role) {
+        return memberRepository.save(memberMapper.toEntity(githubId, role));
     }
 
     public Member saveAndGet(MemberRequest memberRequest) {
@@ -107,7 +105,7 @@ public class MemberService {
 
     public Member findMemberByGithubId(String githubId) {
         return memberRepository.findMemberByGithubId(githubId)
-                .orElseGet(() -> scrapeAndGetSavedMember(new MemberRequest(githubId), Role.ROLE_USER));
+                .orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER));
     }
 
     public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
@@ -138,9 +136,9 @@ public class MemberService {
         return memberRepository.findRankingByOrganization(organizationId, pageable);
     }
 
-    private Member scrapeAndGetSavedMember(MemberRequest memberRequest, Role role) {
-        getCommitsByScraping(memberRequest.getGithubId());
-        return saveAndGet(memberRequest, role);
+    private Member scrapeAndGetSavedMember(String githubId, Role role) {
+        getCommitsByScraping(githubId);
+        return saveAndGet(githubId, role);
     }
 
     private void getCommitsByScraping(String githubId) {

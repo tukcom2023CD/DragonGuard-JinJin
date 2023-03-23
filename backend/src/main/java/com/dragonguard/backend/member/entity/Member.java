@@ -83,7 +83,7 @@ public class Member extends BaseTime {
         this.tier = Tier.SPROUT;
         this.authStep = AuthStep.GITHUB_ONLY;
         addCommit(commit);
-        if (role.equals(Role.ROLE_ADMIN)) {
+        if (role != null && role.equals(Role.ROLE_ADMIN)) {
             this.role.add(Role.ROLE_ADMIN);
         }
     }

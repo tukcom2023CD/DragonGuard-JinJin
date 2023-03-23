@@ -19,9 +19,9 @@ public class MemberMapper {
                 .build();
     }
 
-    public Member toEntity(MemberRequest memberRequest, Role role) {
+    public Member toEntity(String githubId, Role role) {
         return Member.builder()
-                .githubId(memberRequest.getGithubId())
+                .githubId(githubId)
                 .role(role)
                 .build();
     }

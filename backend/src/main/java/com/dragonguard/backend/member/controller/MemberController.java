@@ -39,7 +39,6 @@ public class MemberController {
         memberService.saveMember(new MemberRequest("ohksj77"), Role.ROLE_ADMIN);
     }
 
-
     @PostMapping
     public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody @Valid MemberRequest memberRequest) {
         return ResponseEntity.ok(memberService.saveMember(memberRequest, Role.ROLE_USER));

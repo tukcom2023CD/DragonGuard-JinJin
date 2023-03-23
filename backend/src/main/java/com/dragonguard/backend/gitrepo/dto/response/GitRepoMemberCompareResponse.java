@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GirRepoMemberCompareResponse {
+public class GitRepoMemberCompareResponse {
     private GitRepoMemberResponse firstMember;
     private GitRepoMemberResponse secondMember;
 }
