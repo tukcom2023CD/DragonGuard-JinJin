@@ -53,12 +53,7 @@ class LoginActivity : AppCompatActivity() {
         Log.d("login", "loginactivity1")
         prefs = IdPreference(applicationContext)
         //쿠키 확인 코드
-//        val cookieManager = CookieManager()
-//        CookieHandler.setDefault(cookieManager)
-//        val cookieList = cookieManager.cookieStore.cookies
-//        for (cookie in cookieList) {
-//            Log.d("cookie", "cookies :  ${cookie.name} = ${cookie.value}")
-//        }
+
         val intent = intent
         val token = intent.getStringExtra("token")
         val logout = intent.getBooleanExtra("logout", false)
@@ -70,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
             binding.githubAuth.isEnabled = true
         }
         if (logout) {
-            prefs.setKey("key", "")
+            prefs.setKey("")
         }
 
         val address = intent.getStringExtra("wallet_address")
@@ -86,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
-        key = prefs.getKey("key", "")
+        key = prefs.getKey("")
         binding.oauthWebView.apply {
             settings.javaScriptEnabled = true // 자바스크립트 허용
             settings.javaScriptCanOpenWindowsAutomatically = false
@@ -123,7 +118,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                val cookies = CookieManager.getInstance().getCookie("http://172.30.1.91/api/oauth2/authorize/github")
+                val cookies = CookieManager.getInstance().getCookie("${BuildConfig.api}oauth2/authorize/github")
                 Log.d("cookie", "onPageFinished original url: $url")
                 Log.d("cookie", "onPageFinished original: $cookies")
                 if(cookies.contains("Access")) {
@@ -131,6 +126,8 @@ class LoginActivity : AppCompatActivity() {
                     val access = splits[1].split("=")[1]
                     val refresh = splits[2].split("=")[1]
                     Log.d("tokens", "access:$access, refresh:$refresh")
+                    prefs.setJwtToken(access)
+                    prefs.setRefreshToken(refresh)
                     val intent = Intent(applicationContext, MainActivity::class.java)
                     intent.putExtra("access", access)
                     intent.putExtra("refresh", refresh)
@@ -229,15 +226,14 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         binding.walletFinish.setOnClickListener {
-            if (key.isNotBlank()) {
+            if (key.isNotBlank() && prefs.getRefreshToken("").isNotBlank() && prefs.getRefreshToken("").isNotBlank() ) {
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 Log.d("info", "key : $key")
                 intent.putExtra("key", key)
                 setResult(0, intent)
                 finish()
             } else {
-                Toast.makeText(applicationContext, "wallet 인증 후 완료를 눌러주세요!!", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(applicationContext, "Github 인증과 wallet 인증 후 완료를 눌러주세요!!", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -254,7 +250,7 @@ class LoginActivity : AppCompatActivity() {
                 handler.postDelayed({ walletAuthRequest() }, 1000)
             } else {
                 key = authResponse.request_key
-                prefs.setKey("key", authResponse.request_key)
+                prefs.setKey(authResponse.request_key)
                 Log.d("key", "key : ${authResponse.request_key}")
                 val intent = Intent(
                     Intent.ACTION_VIEW,

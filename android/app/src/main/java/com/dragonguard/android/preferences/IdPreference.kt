@@ -7,43 +7,43 @@ class IdPreference (context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences("id", Context.MODE_PRIVATE)
 
-    fun getWalletAddress(key:String, defValue: String): String {
-        return prefs.getString(key, defValue)!!
+    fun getWalletAddress(defValue: String): String {
+        return prefs.getString("wallet_address", defValue)!!
     }
-    fun setWalletAddress(key: String, address: String) {
-        prefs.edit().putString(key, address).apply()
-    }
-
-    fun getKey(key:String, defValue: String):String {
-        return prefs.getString(key, defValue)!!
+    fun setWalletAddress(address: String) {
+        prefs.edit().putString("wallet_address", address).apply()
     }
 
-    fun setKey(key:String, requestKey:String) {
-        prefs.edit().putString(key, requestKey).apply()
+    fun getKey(defValue: String):String {
+        return prefs.getString("key", defValue)!!
     }
 
-    fun setJwtToken(key:String, requestKey:String) {
-        prefs.edit().putString(key, requestKey).apply()
+    fun setKey(requestKey:String) {
+        prefs.edit().putString("key", requestKey).apply()
     }
 
-    fun getJwtToken(key:String, defValue: String):String {
-        return prefs.getString(key, defValue)!!
+    fun setJwtToken(requestKey:String) {
+        prefs.edit().putString("token", requestKey).apply()
     }
 
-    fun setRefreshToken(key:String, requestKey:String) {
-        prefs.edit().putString(key, requestKey).apply()
+    fun getJwtToken(defValue: String):String {
+        return prefs.getString("token", defValue)!!
     }
 
-    fun getRefreshToken(key:String, defValue: String):String {
-        return prefs.getString(key, defValue)!!
+    fun setRefreshToken(requestKey:String) {
+        prefs.edit().putString("refresh", requestKey).apply()
     }
 
-    fun setPostAddress(key: String, value: Boolean) {
-        prefs.edit().putBoolean(key, value).apply()
+    fun getRefreshToken(defValue: String):String {
+        return prefs.getString("refresh", defValue)!!
     }
 
-    fun getPostAddress(key:String, defValue: Boolean):Boolean {
-        return prefs.getBoolean(key, defValue)!!
+    fun setPostAddress(value: Boolean) {
+        prefs.edit().putBoolean("post", value).apply()
+    }
+
+    fun getPostAddress(defValue: Boolean):Boolean {
+        return prefs.getBoolean("post", defValue)!!
     }
 
 }

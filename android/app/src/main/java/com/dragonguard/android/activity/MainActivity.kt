@@ -69,14 +69,14 @@ class MainActivity : AppCompatActivity() {
         if(logout != null) {
             loginOut = logout
             if(loginOut) {
-                prefs.setWalletAddress("wallet_address", "")
+                prefs.setWalletAddress("")
                 loginOut = true
-                prefs.setJwtToken("token", "")
-                prefs.setRefreshToken("refresh", "")
-                prefs.setPostAddress("post", false)
+                prefs.setJwtToken("")
+                prefs.setRefreshToken("")
+                prefs.setPostAddress(false)
                 val intent = Intent(applicationContext, LoginActivity::class.java)
-                intent.putExtra("wallet_address", prefs.getWalletAddress("wallet_address", ""))
-                intent.putExtra("token", prefs.getJwtToken("token", ""))
+                intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+                intent.putExtra("token", prefs.getJwtToken(""))
                 intent.putExtra("logout", true)
                 activityResultLauncher.launch(intent)
             }
@@ -89,9 +89,8 @@ class MainActivity : AppCompatActivity() {
         binding.mainViewModel = viewmodel
         prefs = IdPreference(applicationContext)
         CookieManager.getInstance().setAcceptCookie(true)
-        addressPost = prefs.getPostAddress("post", false)
         if(loginOut) {
-            prefs.setWalletAddress("wallet_address", "")
+            prefs.setWalletAddress("")
         }
 
         val refresh = intent.getStringExtra("refresh")
@@ -99,24 +98,21 @@ class MainActivity : AppCompatActivity() {
         Log.d("cookie", "webview cookie : $refresh")
         if(access != null) {
             token = access
-            prefs.setJwtToken("token", access)
+            prefs.setJwtToken(access)
         } else {
-            token = prefs.getJwtToken("token", "")
+            token = prefs.getJwtToken( "")
         }
         if(refresh != null) {
-            prefs.setRefreshToken("refresh", refresh)
+            prefs.setRefreshToken(refresh)
         }
-        if(token.isBlank()) {
+        if(token.isBlank() || prefs.getWalletAddress( "").isBlank()) {
             val intent = Intent(applicationContext, LoginActivity::class.java)
-            intent.putExtra("wallet_address", prefs.getWalletAddress("wallet_address", ""))
+            intent.putExtra("wallet_address", prefs.getWalletAddress(""))
             intent.putExtra("logout", loginOut)
             activityResultLauncher.launch(intent)
         }else {
             if(NetworkCheck.checkNetworkState(this)) {
-                refreshCommits()
-                searchUser()
-                Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 500)
-                Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 1000)
+                multipleSearchUser()
             }
         }
 
@@ -124,7 +120,7 @@ class MainActivity : AppCompatActivity() {
 //        랭킹 보러가기 버튼 눌렀을 때 랭킹 화면으로 전환
         binding.lookRanking.setOnClickListener {
             val intent = Intent(applicationContext, RankingsActivity::class.java)
-            intent.putExtra("token", prefs.getJwtToken("token", ""))
+            intent.putExtra("token", prefs.getJwtToken(""))
             startActivity(intent)
         }
 
@@ -132,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         viewmodel.onUserIconSelected.observe(this, Observer {
             if(viewmodel.onUserIconSelected.value == true){
                 val intent = Intent(applicationContext, MenuActivity::class.java)
-                intent.putExtra("token", prefs.getJwtToken("token", ""))
+                intent.putExtra("token", prefs.getJwtToken(""))
                 startActivity(intent)
             }
         })
@@ -140,9 +136,9 @@ class MainActivity : AppCompatActivity() {
 //        검색창, 검색 아이콘 눌렀을 때 검색화면으로 전환
         viewmodel.onSearchClickListener.observe(this, Observer {
             if(viewmodel.onSearchClickListener.value == true) {
-                if(prefs.getJwtToken("token", "").isNotBlank()) {
+                if(prefs.getJwtToken("").isNotBlank()) {
                     val intent = Intent(applicationContext, SearchActivity::class.java)
-                    intent.putExtra("token", prefs.getJwtToken("token", ""))
+                    intent.putExtra("token", prefs.getJwtToken(""))
                     startActivity(intent)
                 }
             }
@@ -150,13 +146,18 @@ class MainActivity : AppCompatActivity() {
 
         binding.repoCompare.setOnClickListener {
             val intent = Intent(applicationContext, RepoChooseActivity::class.java)
-            intent.putExtra("token", prefs.getJwtToken("token", ""))
+            intent.putExtra("token", prefs.getJwtToken(""))
             startActivity(intent)
         }
     }
 
     override fun onRestart() {
         super.onRestart()
+        multipleSearchUser()
+        refreshCommits()
+    }
+
+    private fun multipleSearchUser() {
         searchUser()
         Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 500)
         Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 1000)
@@ -177,17 +178,19 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
                 if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null) {
                 Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
-                    if(prefs.getRefreshToken("refresh", "").isBlank()) {
-                        Toast.makeText(applicationContext, "refresh token is blank", Toast.LENGTH_SHORT).show()
-                        loginOut = true
-                        prefs.setJwtToken("token", "")
-                        prefs.setRefreshToken("refresh", "")
-                        prefs.setPostAddress("post", false)
-                        val intent = Intent(applicationContext, LoginActivity::class.java)
-                        intent.putExtra("wallet_address", prefs.getWalletAddress("wallet_address", ""))
-                        intent.putExtra("token", prefs.getJwtToken("token", ""))
-                        intent.putExtra("logout", true)
-                        activityResultLauncher.launch(intent)
+                    if(prefs.getRefreshToken("").isBlank()) {
+                        if(!this@MainActivity.isFinishing) {
+                            Toast.makeText(applicationContext, "refresh token is blank", Toast.LENGTH_SHORT).show()
+                            loginOut = true
+                            prefs.setJwtToken("")
+                            prefs.setRefreshToken("")
+                            prefs.setPostAddress(false)
+                            val intent = Intent(applicationContext, LoginActivity::class.java)
+                            intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+                            intent.putExtra("token", prefs.getJwtToken(""))
+                            intent.putExtra("logout", true)
+                            activityResultLauncher.launch(intent)
+                        }
                     } else {
                         refreshToken()
                     }
@@ -196,8 +199,8 @@ class MainActivity : AppCompatActivity() {
                         binding.userId.text = userInfo.githubId
                     }
                     if(userInfo.commits != 0 && userInfo.tier == "SPROUT" ) {
-                        if(prefs.getWalletAddress("wallet_address", "") != "") {
-                            postWalletAddress(prefs.getWalletAddress("wallet_address", ""))
+                        if(prefs.getWalletAddress("") != "") {
+                            postWalletAddress(prefs.getWalletAddress(""))
                         } else {
                             binding.userTier.text = "내 티어 : ${userInfo.tier}"
                         }
@@ -229,12 +232,12 @@ class MainActivity : AppCompatActivity() {
             if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
 //                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
                 val intent = Intent(applicationContext, LoginActivity::class.java)
-                intent.putExtra("wallet_address", prefs.getWalletAddress("wallet_address", ""))
+                intent.putExtra("wallet_address", prefs.getWalletAddress(""))
                 activityResultLauncher.launch(intent)
 
             } else {
 //                Toast.makeText(applicationContext, "key : $key wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
-                prefs.setWalletAddress("wallet_address", authResponse.result.klaytn_address)
+                prefs.setWalletAddress(authResponse.result.klaytn_address)
                 postWalletAddress(authResponse.result.klaytn_address)
             }
         }
@@ -243,16 +246,16 @@ class MainActivity : AppCompatActivity() {
     private fun postWalletAddress(address: String) {
 //        Toast.makeText(applicationContext, "address: $address", Toast.LENGTH_SHORT).show()
         if(!addressPost) {
-            prefs.setPostAddress("post", true)
-            addressPost = prefs.getPostAddress("post", true)
+            prefs.setPostAddress(true)
+            addressPost = prefs.getPostAddress(true)
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
                 val postwalletDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.postWalletAddress(address, prefs.getJwtToken("token", ""))
+                    viewmodel.postWalletAddress(address, prefs.getJwtToken(""))
                 }
                 val postWalletResponse = postwalletDeferred.await()
                 if(postWalletResponse) {
-                    searchUser()
+                    multipleSearchUser()
                 }
             }
         }
@@ -262,28 +265,28 @@ class MainActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val refreshDeffered = coroutine.async(Dispatchers.IO) {
-                viewmodel.getNewToken(prefs.getJwtToken("token", ""), prefs.getRefreshToken("refresh", ""))
+                viewmodel.getNewToken(prefs.getJwtToken(""), prefs.getRefreshToken(""))
             }
             val refresh = refreshDeffered.await()
             if(refresh.refreshToken != null && refresh.accessToken != null) {
-                prefs.setJwtToken("token", refresh.accessToken)
-                prefs.setRefreshToken("refresh", refresh.refreshToken)
+                prefs.setJwtToken(refresh.accessToken)
+                prefs.setRefreshToken(refresh.refreshToken)
                 token = refresh.accessToken
-                searchUser()
+                multipleSearchUser()
             }
         }
     }
 
     private fun refreshCommits() {
-        if(prefs.getRefreshToken("refresh", "").isNotBlank()) {
+        if(prefs.getRefreshToken("").isNotBlank()) {
             Log.d("post", "refresh commits")
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
                 val refreshDeffered = coroutine.async(Dispatchers.IO) {
-                    viewmodel.postCommits(prefs.getJwtToken("token", ""))
+                    viewmodel.postCommits(prefs.getJwtToken(""))
                 }
                 val refresh = refreshDeffered.await()
-                searchUser()
+                multipleSearchUser()
             }
         }
 
