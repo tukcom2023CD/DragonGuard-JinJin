@@ -29,24 +29,27 @@ final class CompareService{
                            parameters: body,
                            encoding: JSONEncoding(options: []),
                            headers: ["Content-type": "application/json",
-                                     "Authorization": "Bearer \(Environment.jwtToken)"])
+                                     "Authorization": "Bearer \(Environment.jwtToken ?? "")"])
                 .validate(statusCode: 200..<201)
-                .responseDecodable(of: CompareUserDecodingModel.self) { response in
-                    print("response USER: \(response)")
-                    guard let responseResult = response.value else {return}
-                    
-                    if responseResult.firstResult.count > 0 || responseResult.secondResult.count > 0 {
-                        timer.invalidate()
-                        for data in responseResult.firstResult{
-                            firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
-                        }
-                        for data in responseResult.secondResult{
-                            secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
-                        }
-                        let compareUser = CompareUserModel(firstResult: firstRepoUserInfo, secondResult: secondRepoUserInfo)
-                        observer.onNext(compareUser)
-                    }
+                .responseJSON { response in
+                    print(response)
                 }
+//                .responseDecodable(of: CompareUserDecodingModel.self) { response in
+//                    print("response USER: \(response)")
+//                    guard let responseResult = response.value else {return}
+//
+//                    if responseResult.firstResult.count > 0 || responseResult.secondResult.count > 0 {
+//                        timer.invalidate()
+//                        for data in responseResult.firstResult{
+//                            firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+//                        }
+//                        for data in responseResult.secondResult{
+//                            secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+//                        }
+//                        let compareUser = CompareUserModel(firstResult: firstRepoUserInfo, secondResult: secondRepoUserInfo)
+//                        observer.onNext(compareUser)
+//                    }
+//                }
                 
             })
             return Disposables.create()

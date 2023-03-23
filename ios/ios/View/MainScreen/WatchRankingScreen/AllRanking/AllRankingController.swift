@@ -28,6 +28,7 @@ final class AllRankingController: UIViewController{
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         self.getData()
     }
     
@@ -67,6 +68,7 @@ final class AllRankingController: UIViewController{
                     self.rankingList.append(info)
                 }
                 self.addUItoView()
+                self.repoTableView.reloadData()
             })
             .disposed(by: self.disposeBag)
     }
