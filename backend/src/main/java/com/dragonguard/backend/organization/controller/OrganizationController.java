@@ -30,7 +30,7 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationService.saveOrganization(organizationRequest));
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search-name")
     public ResponseEntity<IdResponse<Long>> getOrganization(@RequestParam String name) {
         return ResponseEntity.ok(organizationService.findByName(name));
     }
