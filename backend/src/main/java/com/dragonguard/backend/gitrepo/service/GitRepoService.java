@@ -102,7 +102,11 @@ public class GitRepoService {
         String githubToken = authService.getLoginUser().getGithubToken();
         GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(new GitRepoRequest(githubToken, repoName, null))));
         GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
-        if (repo.getClosedIssues() != null) repoResponse.setClosed_issues_count(repo.getClosedIssues());
+        if (repo.getClosedIssues() != null) {
+            repoResponse.setClosed_issues_count(repo.getClosedIssues());
+        } else {
+            requestIssueToScraping(new GitRepoNameRequest(repoName));
+        }
         Map<String, Integer> languages = gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
         IntSummaryStatistics langStats =
                 languages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
