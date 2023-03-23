@@ -29,7 +29,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/members")
 public class MemberController {
-
     private final MemberService memberService;
 
     @PostConstruct

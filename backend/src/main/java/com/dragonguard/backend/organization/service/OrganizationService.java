@@ -42,7 +42,7 @@ public class OrganizationService {
     @Transactional
     public void findAndAddMember(AddMemberRequest addMemberRequest) {
         Organization organization = getEntity(addMemberRequest.getOrganizationId());
-        addMember(organization);
+        organization.addMember(authService.getLoginUser(), addMemberRequest.getEmail());
     }
 
     public List<OrganizationType> getTypes() {
@@ -53,10 +53,6 @@ public class OrganizationService {
         return organizationRepository.findByType(organizationType, pageable).stream()
                 .map(organizationMapper::toResponse)
                 .collect(Collectors.toList());
-    }
-
-    public void addMember(Organization organization) {
-        organization.addMember(authService.getLoginUser());
     }
 
     public List<OrganizationResponse> getOrganizationRank(Pageable pageable) {
