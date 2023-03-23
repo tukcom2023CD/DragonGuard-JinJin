@@ -22,12 +22,13 @@ import java.util.Set;
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GitRepo extends BaseTime {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     private String name;
 
-    private Integer closedIssues; // todo 추후 추가할 Statistics 도메인으로 이동 필요
+    private Integer closedIssues; // TODO 추후 추가할 Statistics 도메인으로 이동 필요
 
     @OneToMany(mappedBy = "gitRepo")
     private Set<GitRepoMember> gitRepoMembers = new HashSet<>();

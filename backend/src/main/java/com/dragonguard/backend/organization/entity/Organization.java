@@ -43,8 +43,10 @@ public class Organization extends BaseTime {
         this.emailEndpoint = emailEndpoint;
     }
 
-    public void addMember(Member member) {
+    public void addMember(Member member, String email) {
         this.members.add(member);
-        member.updateOrganization(id);
+        if (email.endsWith(emailEndpoint)) {
+            member.updateOrganization(id, email);
+        }
     }
 }
