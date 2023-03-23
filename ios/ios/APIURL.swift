@@ -132,5 +132,10 @@ final class APIURL{
         return url
     }
     
+    func searchOrganizationList(ip: String, name: String, type: String,page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/organizations/search?name=\(name)&type=\(type)&page=\(page)&size=\(size)"
+        return url
+    }
+    
 }
 

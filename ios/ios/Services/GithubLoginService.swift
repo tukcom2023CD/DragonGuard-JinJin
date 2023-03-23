@@ -20,7 +20,7 @@ final class GithubLoginService{
                           "client_secret": secretCode,
                           "code": code]
         let headers: HTTPHeaders = ["Accept": "application/json",
-                                    "Authorization": "Bearer \(Environment.jwtToken)"]
+                                    "Authorization": "Bearer \(Environment.jwtToken ?? "")"]
         
         return Observable.create(){ Observer in
             AF.request(url,
