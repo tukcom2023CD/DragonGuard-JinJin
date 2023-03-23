@@ -30,34 +30,37 @@ import java.util.*
  보러가는 화면으로 이동할 수 있는 메인 activity
  */
 class MainActivity : AppCompatActivity() {
-    private val activityResultLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if(it.resultCode == 0 ) {
-            val walletIntent = it.data
-            try{
-                val requestKey = walletIntent!!.getStringExtra("key")
+    private val activityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == 0) {
+                val walletIntent = it.data
+                try {
+                    val requestKey = walletIntent!!.getStringExtra("key")
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
-                if(!NetworkCheck.checkNetworkState(this)) {
-                    Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
-                } else {
-                    authRequestResult(requestKey!!)
-                }
-            } catch(e: Exception) {
+                    if (!NetworkCheck.checkNetworkState(this)) {
+                        Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
+                    } else {
+                        authRequestResult(requestKey!!)
+                    }
+                } catch (e: Exception) {
 //                finishAffinity()
 //                val intent = Intent(this, MainActivity::class.java)
 //                startActivity(intent)
 //                exitProcess(0)
+                }
+
+            } else if (it.resultCode == 1) {
+
             }
-
-        } else if(it.resultCode == 1) {
-
         }
-    }
+
     companion object {
         lateinit var prefs: IdPreference
     }
+
     private lateinit var binding: ActivityMainBinding
     private var viewmodel = Viewmodel()
-    private var backPressed : Long = 0
+    private var backPressed: Long = 0
     private var loginOut = false
     private var addressPost = false
     private var token = ""
@@ -66,9 +69,9 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         Log.d("on", "onnewintent")
         val logout = intent?.getBooleanExtra("logout", false)
-        if(logout != null) {
+        if (logout != null) {
             loginOut = logout
-            if(loginOut) {
+            if (loginOut) {
                 prefs.setWalletAddress("")
                 loginOut = true
                 prefs.setJwtToken("")
@@ -89,29 +92,29 @@ class MainActivity : AppCompatActivity() {
         binding.mainViewModel = viewmodel
         prefs = IdPreference(applicationContext)
         CookieManager.getInstance().setAcceptCookie(true)
-        if(loginOut) {
+        if (loginOut) {
             prefs.setWalletAddress("")
         }
 
         val refresh = intent.getStringExtra("refresh")
         val access = intent.getStringExtra("access")
         Log.d("cookie", "webview cookie : $refresh")
-        if(access != null) {
+        if (access != null) {
             token = access
             prefs.setJwtToken(access)
         } else {
-            token = prefs.getJwtToken( "")
+            token = prefs.getJwtToken("")
         }
-        if(refresh != null) {
+        if (refresh != null) {
             prefs.setRefreshToken(refresh)
         }
-        if(token.isBlank() || prefs.getWalletAddress( "").isBlank()) {
+        if (token.isBlank() || prefs.getWalletAddress("").isBlank()) {
             val intent = Intent(applicationContext, LoginActivity::class.java)
             intent.putExtra("wallet_address", prefs.getWalletAddress(""))
             intent.putExtra("logout", loginOut)
             activityResultLauncher.launch(intent)
-        }else {
-            if(NetworkCheck.checkNetworkState(this)) {
+        } else {
+            if (NetworkCheck.checkNetworkState(this)) {
                 multipleSearchUser()
             }
         }
@@ -126,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
 //        유저 아이디, 프로필을 눌렀을 때 메뉴 화면으로 전환
         viewmodel.onUserIconSelected.observe(this, Observer {
-            if(viewmodel.onUserIconSelected.value == true){
+            if (viewmodel.onUserIconSelected.value == true) {
                 val intent = Intent(applicationContext, MenuActivity::class.java)
                 intent.putExtra("token", prefs.getJwtToken(""))
                 startActivity(intent)
@@ -135,8 +138,8 @@ class MainActivity : AppCompatActivity() {
 
 //        검색창, 검색 아이콘 눌렀을 때 검색화면으로 전환
         viewmodel.onSearchClickListener.observe(this, Observer {
-            if(viewmodel.onSearchClickListener.value == true) {
-                if(prefs.getJwtToken("").isNotBlank()) {
+            if (viewmodel.onSearchClickListener.value == true) {
+                if (prefs.getJwtToken("").isNotBlank()) {
                     val intent = Intent(applicationContext, SearchActivity::class.java)
                     intent.putExtra("token", prefs.getJwtToken(""))
                     startActivity(intent)
@@ -159,16 +162,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun multipleSearchUser() {
         searchUser()
-        Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 500)
-        Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 1000)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 500)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 1000)
     }
 
-/*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
-    무한히 요청을 보내는 버그 해결
- */
-    private fun searchUser(){
+    /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
+        무한히 요청을 보내는 버그 해결
+     */
+    private fun searchUser() {
 //        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
-        if(token.isNotBlank()) {
+        if (token.isNotBlank()) {
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
@@ -176,11 +179,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 val userInfo = resultDeferred.await()
 //                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
-                if(userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits ==null) {
-                Toast.makeText(applicationContext, "id 비어있음", Toast.LENGTH_SHORT).show()
-                    if(prefs.getRefreshToken("").isBlank()) {
-                        if(!this@MainActivity.isFinishing) {
-                            Toast.makeText(applicationContext, "refresh token is blank", Toast.LENGTH_SHORT).show()
+                if (userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits == null) {
+                    if (prefs.getRefreshToken("").isBlank()) {
+                        if (!this@MainActivity.isFinishing) {
+                            Toast.makeText(
+                                applicationContext,
+                                "refresh token is blank",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             loginOut = true
                             prefs.setJwtToken("")
                             prefs.setRefreshToken("")
@@ -195,11 +201,11 @@ class MainActivity : AppCompatActivity() {
                         refreshToken()
                     }
                 } else {
-                    if(userInfo.githubId.isNotBlank()) {
+                    if (userInfo.githubId.isNotBlank()) {
                         binding.userId.text = userInfo.githubId
                     }
-                    if(userInfo.commits != 0 && userInfo.tier == "SPROUT" ) {
-                        if(prefs.getWalletAddress("") != "") {
+                    if (userInfo.commits != 0 && userInfo.tier == "SPROUT") {
+                        if (prefs.getWalletAddress("") != "") {
                             postWalletAddress(prefs.getWalletAddress(""))
                         } else {
                             binding.userTier.text = "내 티어 : ${userInfo.tier}"
@@ -207,14 +213,15 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         binding.userTier.text = "내 티어 : ${userInfo.tier}"
                     }
-                    if(userInfo.tokenAmount == null) {
+                    if (userInfo.tokenAmount == null) {
                         binding.userToken.text = "내 기여도 : ${userInfo.commits}"
                     } else {
                         binding.userToken.text = "내 기여도 : ${userInfo.tokenAmount}"
                     }
                     binding.userRanking.text = userInfo.rank
-                    if(!this@MainActivity.isFinishing) {
-                        Glide.with(binding.githubProfile).load(userInfo.profileImage).into(binding.githubProfile)
+                    if (!this@MainActivity.isFinishing) {
+                        Glide.with(binding.githubProfile).load(userInfo.profileImage)
+                            .into(binding.githubProfile)
                     }
 
                 }
@@ -229,7 +236,7 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.getWalletAuthResult(key)
             }
             val authResponse = authResponseDeferred.await()
-            if(authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
+            if (authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
 //                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
                 val intent = Intent(applicationContext, LoginActivity::class.java)
                 intent.putExtra("wallet_address", prefs.getWalletAddress(""))
@@ -245,7 +252,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun postWalletAddress(address: String) {
 //        Toast.makeText(applicationContext, "address: $address", Toast.LENGTH_SHORT).show()
-        if(!addressPost) {
+        if (!addressPost) {
             prefs.setPostAddress(true)
             addressPost = prefs.getPostAddress(true)
             val coroutine = CoroutineScope(Dispatchers.Main)
@@ -254,7 +261,7 @@ class MainActivity : AppCompatActivity() {
                     viewmodel.postWalletAddress(address, prefs.getJwtToken(""))
                 }
                 val postWalletResponse = postwalletDeferred.await()
-                if(postWalletResponse) {
+                if (postWalletResponse) {
                     multipleSearchUser()
                 }
             }
@@ -268,7 +275,7 @@ class MainActivity : AppCompatActivity() {
                 viewmodel.getNewToken(prefs.getJwtToken(""), prefs.getRefreshToken(""))
             }
             val refresh = refreshDeffered.await()
-            if(refresh.refreshToken != null && refresh.accessToken != null) {
+            if (refresh.refreshToken != null && refresh.accessToken != null) {
                 prefs.setJwtToken(refresh.accessToken)
                 prefs.setRefreshToken(refresh.refreshToken)
                 token = refresh.accessToken
@@ -278,7 +285,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshCommits() {
-        if(prefs.getRefreshToken("").isNotBlank()) {
+        if (prefs.getRefreshToken("").isNotBlank()) {
             Log.d("post", "refresh commits")
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
@@ -292,16 +299,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-//    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
+    //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
     override fun onBackPressed() {
 //        super.onBackPressed()
-        if(System.currentTimeMillis() > backPressed + 2500) {
+        if (System.currentTimeMillis() > backPressed + 2500) {
             backPressed = System.currentTimeMillis()
-            Toast.makeText(applicationContext, "Back 버튼을 한번 더 누르면 종료합니다.",Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "Back 버튼을 한번 더 누르면 종료합니다.", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
-        if(System.currentTimeMillis() <= backPressed + 2500) {
+        if (System.currentTimeMillis() <= backPressed + 2500) {
             finishAffinity()
         }
     }
