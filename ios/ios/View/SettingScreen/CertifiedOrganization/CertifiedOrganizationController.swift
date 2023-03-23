@@ -10,18 +10,27 @@ import UIKit
 import SnapKit
 
 final class CertifiedOrganizationController: UIViewController{
-    var type: String = ""
+    let deviceWidth = UIScreen.main.bounds.width
+    private var type: String = ""
+    var delegate: SendOrganizationInfo?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         addToView()
-        
     }
     
     /*
      UI 코드 작성
      */
+    
+    private lazy var certifiedLabel: UILabel = {
+        let label = UILabel()
+        label.text = "조직 인증하기"
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 40)
+        return label
+    }()
     
     // MARK: 학교 이름 라벨
     private lazy var organizationName: UILabel = {
@@ -119,6 +128,7 @@ final class CertifiedOrganizationController: UIViewController{
         return stackview
     }()
     
+    // MARK: 모든 선택을 마치고 조직 등록 버튼
     private lazy var doneBtn: UIButton = {
         let btn = UIButton()
         btn.setTitle("완료", for: .normal)
@@ -142,18 +152,29 @@ final class CertifiedOrganizationController: UIViewController{
         self.present(chooseOrganizationType, animated: true)
     }
     
+    // MARK: 조직 등록 버튼을 눌렀을 때
     @objc private func clickedDoneBtn(){
         
+        // 조직 인증을 모두 입력한 뒤 전송하는 부분
+        if !(organizationTextField.text?.isEmpty ?? false) &&
+            !(emailTextField.text?.isEmpty ?? false) &&
+            !self.type.isEmpty{
+            
+           
+            
+        }
     }
     
     // MARK: view에 UI 추가
     private func addToView(){
+        
+        self.view.addSubview(certifiedLabel)
+        
         // 조직 이름
         self.view.addSubview(organizationStackView)
         [organizationName,organizationTextField].map{
             self.organizationStackView.addArrangedSubview($0)
         }
-        
         
         // 조직 타입
         self.view.addSubview(typeStackView)
@@ -177,7 +198,14 @@ final class CertifiedOrganizationController: UIViewController{
         settingAutoLayout()
     }
     
+    // MARK: UI AutoLayout 설정
     private func settingAutoLayout(){
+        
+        self.certifiedLabel.snp.makeConstraints({ make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
+            make.centerX.equalToSuperview()
+        })
+        
         self.allStackView.snp.makeConstraints({ make in
             make.center.equalToSuperview()
         })
@@ -185,20 +213,26 @@ final class CertifiedOrganizationController: UIViewController{
         self.doneBtn.snp.makeConstraints({ make in
             make.top.equalTo(self.allStackView.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
+            make.width.equalTo(self.deviceWidth/5)
         })
     }
     
     
 }
 
-
+// MARK: 선택한 조직 타입 가져옴
 extension CertifiedOrganizationController: SendType{
     func sendType(type: String) {
         self.type = type
     }
 }
 
-
+// MARK: 조직 정보 등록했을 때 조직 인증 요청
+protocol SendOrganizationInfo{
+    func sendOrganizationInfo(name: String,
+                              type: String,
+                              emailEndpoint: String)
+}
 
 
 /*
