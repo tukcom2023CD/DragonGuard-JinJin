@@ -266,9 +266,9 @@ class ApiRepository {
         }
     }
 
-    fun getNewAccessToken(): String {
-        var newToken = ""
-        val getToken = api.getNewAccessToken()
+    fun getNewAccessToken(access: String, refresh: String): RefreshTokenModel {
+        var newToken = RefreshTokenModel(null,null,null)
+        val getToken = api.getNewAccessToken(access, refresh)
         try {
             val result = getToken.execute()
             newToken = result.body()!!
@@ -278,5 +278,18 @@ class ApiRepository {
             return newToken
         }
         return newToken
+    }
+
+    fun postCommits(token: String) {
+        val postCommit = api.postCommits("Bearer $token")
+        try{
+            val result = postCommit.execute()
+            if(result.isSuccessful) {
+                Log.d("postCommits", "result ${result.code()}")
+            }
+
+        } catch (e: Exception) {
+            Log.d("e", "error ${e.printStackTrace()}")
+        }
     }
 }
