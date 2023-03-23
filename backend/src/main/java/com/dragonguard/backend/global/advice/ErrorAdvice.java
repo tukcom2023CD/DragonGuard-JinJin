@@ -1,9 +1,12 @@
 package com.dragonguard.backend.global.advice;
 
+import com.dragonguard.backend.blockchain.exception.BlockchainException;
+import com.dragonguard.backend.email.exception.EmailException;
 import com.dragonguard.backend.member.exception.CookieException;
 import com.dragonguard.backend.member.exception.JwtProcessingException;
 import com.dragonguard.backend.member.exception.OAuthProcessingException;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.member.exception.TierNoneMatchException;
 import org.springframework.core.codec.DecodingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,32 +44,47 @@ public class ErrorAdvice {
     }
 
     @ExceptionHandler(CookieException.class)
-    public ResponseEntity<ErrorResponse> decodingException(CookieException e) {
+    public ResponseEntity<ErrorResponse> cookieException(CookieException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(JwtProcessingException.class)
-    public ResponseEntity<ErrorResponse> decodingException(JwtProcessingException e) {
+    public ResponseEntity<ErrorResponse> jwtProcessingException(JwtProcessingException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(OAuthProcessingException.class)
-    public ResponseEntity<ErrorResponse> decodingException(OAuthProcessingException e) {
+    public ResponseEntity<ErrorResponse> oAuthProcessingException(OAuthProcessingException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ErrorResponse> decodingException(IllegalStateException e) {
+    public ResponseEntity<ErrorResponse> illegalStateException(IllegalStateException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> decodingException(IllegalArgumentException e) {
+    public ResponseEntity<ErrorResponse> illegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ErrorResponse> decodingException(ValidationException e) {
+    public ResponseEntity<ErrorResponse> validationException(ValidationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(EmailException.class)
+    public ResponseEntity<ErrorResponse> emailException(EmailException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(TierNoneMatchException.class)
+    public ResponseEntity<ErrorResponse> tierNoneMatchException(TierNoneMatchException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(BlockchainException.class)
+    public ResponseEntity<ErrorResponse> blockchainException(BlockchainException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 }
