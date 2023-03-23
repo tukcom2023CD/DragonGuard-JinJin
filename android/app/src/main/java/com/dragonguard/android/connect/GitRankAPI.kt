@@ -26,9 +26,7 @@ interface GitRankAPI {
     fun getTotalUsersRanking(@QueryMap query: Map<String, String>, @Header("Authorization")token: String) : Call<TotalUsersRankingModel>
 
 //    서버에 해당 정보를 가진 사용자를 등록하는 함수
-    @POST("members")
-    @Headers("accept: application/json", "content-type: application/json")
-    fun postGithubId(@Body register: RegisterGithubIdModel) : Call<RegisterGithubIdResponseModel>
+
 
 //
     @POST("prepare")

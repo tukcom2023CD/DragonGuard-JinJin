@@ -125,23 +125,6 @@ class ApiRepository {
         return rankingResult
     }
 
-    //사용자의 githubid를 등록하는 함수
-    fun postRegister(body: RegisterGithubIdModel): Int {
-        val register = api.postGithubId(body)
-        var registerResult = RegisterGithubIdResponseModel(0)
-        try{
-            val result = register.execute()
-            if(result.isSuccessful) {
-                registerResult = result.body()!!
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.d("error", "유저 등록 에러 ${e.message}")
-            return 0
-        }
-        return registerResult.id
-    }
-
     //사용자의 토큰 부여 내역을 확인하기 위한 함수
     fun getTokenHistory(id: Int, token: String): ArrayList<TokenHistoryModelItem> {
         val tokenHistory = api.getTokenHistory(id, "Bearer $token")

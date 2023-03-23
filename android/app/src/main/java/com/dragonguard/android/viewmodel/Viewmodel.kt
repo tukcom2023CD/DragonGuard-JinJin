@@ -23,10 +23,6 @@ class Viewmodel {
         return repository.getUserInfo(token)
     }
 
-    fun postRegister(body: RegisterGithubIdModel): Int {
-        return repository.postRegister(body)
-    }
-
     fun getSearchRepoResult(name: String, count: Int, type: String, token: String): ArrayList<RepoSearchResultModel> {
         return repository.getRepositoryNames(name, count, type, token)
     }
