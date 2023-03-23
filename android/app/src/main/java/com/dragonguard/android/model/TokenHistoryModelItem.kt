@@ -5,6 +5,6 @@ data class TokenHistoryModelItem(
     val amount: Int?,
     val contributeType: String?,
     val githubId: String?,
-    val id: Int?,
-    val memberId: Int?
+    val id: Long?,
+    val memberId: String?
 )

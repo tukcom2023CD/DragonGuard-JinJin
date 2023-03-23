@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.d("on", "onnewintent")
-        getNewAccessToken()
         val logout = intent?.getBooleanExtra("logout", false)
         if(logout != null) {
             loginOut = logout
@@ -91,7 +90,6 @@ class MainActivity : AppCompatActivity() {
         if(loginOut) {
             prefs.setWalletAddress("wallet_address", "")
         }
-        getNewAccessToken()
 
         count = 0
 
@@ -150,10 +148,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onRestart() {
+        super.onRestart()
         searchUser()
-        getNewAccessToken()
         Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 500)
         Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 1000)
     }
@@ -263,17 +260,6 @@ class MainActivity : AppCompatActivity() {
 
         if(System.currentTimeMillis() <= backPressed + 2500) {
             finishAffinity()
-        }
-    }
-
-    private fun getNewAccessToken() {
-        Log.d("cookie", "find cookies")
-        val coroutine = CoroutineScope(Dispatchers.IO)
-        coroutine.launch {
-
-            val cookieManager = CookieManager.getInstance()
-            val cookies: String? = cookieManager.getCookie("gitrank://github-auth")
-            Log.d("getCookie", "get new cookie: $cookies")
         }
     }
 }
