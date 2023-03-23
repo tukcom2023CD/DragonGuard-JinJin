@@ -1,8 +1,8 @@
 package com.dragonguard.backend.gitrepomember.entity;
 
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
+import com.dragonguard.backend.global.basetime.BaseTime;
+import com.dragonguard.backend.global.basetime.SoftDelete;
 import com.dragonguard.backend.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -22,7 +22,8 @@ import java.util.Objects;
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GitRepoMember extends BaseTime {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

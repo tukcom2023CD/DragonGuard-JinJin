@@ -1,9 +1,8 @@
 package com.dragonguard.backend.result.entity;
 
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
+import com.dragonguard.backend.global.basetime.BaseTime;
+import com.dragonguard.backend.global.basetime.SoftDelete;
 import lombok.*;
-import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

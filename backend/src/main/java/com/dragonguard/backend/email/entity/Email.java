@@ -1,7 +1,7 @@
 package com.dragonguard.backend.email.entity;
 
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
+import com.dragonguard.backend.global.basetime.BaseTime;
+import com.dragonguard.backend.global.basetime.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

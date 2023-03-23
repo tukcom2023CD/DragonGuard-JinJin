@@ -1,8 +1,8 @@
 package com.dragonguard.backend.global.advice;
 
-import com.dragonguard.backend.config.security.exception.CookieException;
-import com.dragonguard.backend.config.security.exception.JwtProcessingException;
-import com.dragonguard.backend.config.security.exception.OAuthProcessingException;
+import com.dragonguard.backend.member.exception.CookieException;
+import com.dragonguard.backend.member.exception.JwtProcessingException;
+import com.dragonguard.backend.member.exception.OAuthProcessingException;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import org.springframework.core.codec.DecodingException;
 import org.springframework.http.HttpStatus;
