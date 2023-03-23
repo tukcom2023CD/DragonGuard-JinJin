@@ -44,6 +44,9 @@
 		3B7B1D38298404C70038BD67 /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 3B7B1D37298404C70038BD67 /* RxTest */; };
 		3B7BFF6A29CBD63200A2F3F4 /* SearchOraganizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7BFF6929CBD63200A2F3F4 /* SearchOraganizationService.swift */; };
 		3B7BFF6C29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7BFF6B29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift */; };
+		3B7BFF7129CBDE7C00A2F3F4 /* CertifiedOrganizationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7BFF7029CBDE7C00A2F3F4 /* CertifiedOrganizationController.swift */; };
+		3B7BFF7329CBE3AC00A2F3F4 /* ChooseOrganizationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7BFF7229CBE3AC00A2F3F4 /* ChooseOrganizationType.swift */; };
+		3B7BFF7529CBE3F100A2F3F4 /* ChooseOrganizationTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7BFF7429CBE3F100A2F3F4 /* ChooseOrganizationTypeCell.swift */; };
 		3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
 		3B80B6DC298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
 		3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B88801F2992881200680F1A /* RepoContributorInfoController.swift */; };
@@ -149,6 +152,9 @@
 		3B781FB229C32871007FBDFA /* FilteringCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringCollectionViewCell.swift; sourceTree = "<group>"; };
 		3B7BFF6929CBD63200A2F3F4 /* SearchOraganizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchOraganizationService.swift; sourceTree = "<group>"; };
 		3B7BFF6B29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchOrganizationListModel.swift; sourceTree = "<group>"; };
+		3B7BFF7029CBDE7C00A2F3F4 /* CertifiedOrganizationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifiedOrganizationController.swift; sourceTree = "<group>"; };
+		3B7BFF7229CBE3AC00A2F3F4 /* ChooseOrganizationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseOrganizationType.swift; sourceTree = "<group>"; };
+		3B7BFF7429CBE3F100A2F3F4 /* ChooseOrganizationTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseOrganizationTypeCell.swift; sourceTree = "<group>"; };
 		3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansKR-SemiBold.otf"; sourceTree = "<group>"; };
 		3B88801F2992881200680F1A /* RepoContributorInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoController.swift; sourceTree = "<group>"; };
 		3B8C165529B7824A00B881F4 /* LanguageFillteringTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageFillteringTableView.swift; sourceTree = "<group>"; };
@@ -392,6 +398,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3B7BFF6D29CBDE1100A2F3F4 /* CertifiedOrganization */ = {
+			isa = PBXGroup;
+			children = (
+				3B7BFF7029CBDE7C00A2F3F4 /* CertifiedOrganizationController.swift */,
+				3B7BFF7229CBE3AC00A2F3F4 /* ChooseOrganizationType.swift */,
+				3B7BFF7429CBE3F100A2F3F4 /* ChooseOrganizationTypeCell.swift */,
+			);
+			path = CertifiedOrganization;
+			sourceTree = "<group>";
+		};
 		3B80B6DD298957DF007FF716 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -437,6 +453,7 @@
 				3B00229E29879F7D003FA5CC /* SettingTableView.swift */,
 				3B0022A22987A9B0003FA5CC /* TierTypes.swift */,
 				3B0022A42987ABA1003FA5CC /* FAQPage.swift */,
+				3B7BFF6D29CBDE1100A2F3F4 /* CertifiedOrganization */,
 			);
 			path = SettingScreen;
 			sourceTree = "<group>";
@@ -703,6 +720,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B6E075A29ABBD64002676DF /* CompareUserModel.swift in Sources */,
+				3B7BFF7129CBDE7C00A2F3F4 /* CertifiedOrganizationController.swift in Sources */,
 				3B8C165829B782CD00B881F4 /* LanguageFillteringTableViewCell.swift in Sources */,
 				3B9CF3D2298F997B00495D35 /* UserInfoModel.swift in Sources */,
 				A37AA6EC29A50F7C002812F6 /* CompareRepositoryController.swift in Sources */,
@@ -712,6 +730,7 @@
 				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
 				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
 				3BDD718929C0932A0018D09B /* StarSelectionCollectionViewCell.swift in Sources */,
+				3B7BFF7329CBE3AC00A2F3F4 /* ChooseOrganizationType.swift in Sources */,
 				A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */,
 				3BE6AD2D2993904D00B22EBD /* RepoContributorTableView.swift in Sources */,
 				3B43B5A329B87FB100EBB379 /* UserDBIdModel.swift in Sources */,
@@ -769,6 +788,7 @@
 				3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */,
 				3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */,
 				3BDD718B29C09E9E0018D09B /* ForkSelectionCollectionViewCell.swift in Sources */,
+				3B7BFF7529CBE3F100A2F3F4 /* ChooseOrganizationTypeCell.swift in Sources */,
 				3B00229D2987998B003FA5CC /* SettingController.swift in Sources */,
 				A37AA6EE29A525C5002812F6 /* TabBarController.swift in Sources */,
 				3B060FD629911158000B2518 /* MainViewModel.swift in Sources */,
