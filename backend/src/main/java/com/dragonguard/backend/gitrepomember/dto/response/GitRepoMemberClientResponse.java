@@ -17,6 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 public class GitRepoMemberClientResponse {
     private Integer total;
-    private List<Week> weeks = new ArrayList<>();
+    private Week[] weeks;
     private Author author;
 }

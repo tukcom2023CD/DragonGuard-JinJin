@@ -7,8 +7,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-@Aspect
 @Slf4j
+@Aspect
 @Component
 public class LogIntroduction {
     @Pointcut("execution(* com.dragonguard.backend..*Controller*.*(..))")

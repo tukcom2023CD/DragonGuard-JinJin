@@ -64,7 +64,7 @@ public class GitRepoService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "gitRepoMemberResponseList", key = "#gitRepoRequest", cacheManager = "cacheManager", unless = "result.empty")
+    @Cacheable(value = "gitRepoMemberResponseList", key = "#gitRepoRequest", cacheManager = "cacheManager", unless = "#result.size() == 0")
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
         if (!StringUtils.hasText(gitRepoRequest.getGithubToken())) {
@@ -79,7 +79,7 @@ public class GitRepoService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "twoRepoMemberResponseList", key = "#request", cacheManager = "cacheManager", unless = "result.firstResult.empty && result.secondResult.empty")
+    @Cacheable(value = "twoRepoMemberResponseList", key = "#request", cacheManager = "cacheManager", unless = "#result.firstResult.empty && result.secondResult.size() == 0")
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(GitRepoCompareRequest request) {
         Integer year = LocalDate.now().getYear();
         String githubToken = authService.getLoginUser().getGithubToken();
@@ -95,7 +95,7 @@ public class GitRepoService {
         return new TwoGitRepoMemberResponse(firstResult, secondResult);
     }
 
-    @Cacheable(value = "gitRepoMemberCompareResponse", key = "#request", cacheManager = "cacheManager", unless = "result.firstMember && result.secondMember")
+    @Cacheable(value = "gitRepoMemberCompareResponse", key = "#request", cacheManager = "cacheManager", unless = "#result.firstMember == null && #result.secondMember == null")
     public GitRepoMemberCompareResponse findTwoGitRepoMember(GitRepoMemberCompareRequest request) {
         GitRepoMember first = gitRepoMemberService.findByNameAndMemberName(request.getFirstRepo(), request.getFirstName());
         GitRepoMember second = gitRepoMemberService.findByNameAndMemberName(request.getSecondRepo(), request.getSecondName());
@@ -103,7 +103,7 @@ public class GitRepoService {
         return new GitRepoMemberCompareResponse(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
     }
 
-    @Cacheable(value = "twoGitRepoResponse", key = "#request", cacheManager = "cacheManager", unless = "result.firstRepo.gitRepo.closed_issues_count && result.secondRepo.gitRepo.closed_issues_count")
+    @Cacheable(value = "twoGitRepoResponse", key = "#request", cacheManager = "cacheManager", unless = "#result.firstRepo.gitRepo.closed_issues_count == null && #result.secondRepo.gitRepo.closed_issues_count == null")
     public TwoGitRepoResponse findTwoGitRepos(GitRepoCompareRequest request) {
         return new TwoGitRepoResponse(getOneRepoResponse(request.getFirstRepo()), getOneRepoResponse(request.getSecondRepo()));
     }
@@ -165,10 +165,10 @@ public class GitRepoService {
         List<GitRepoMemberClientResponse> gitRepoClientResponse = Arrays.asList(clientResponse);
 
         Map<GitRepoMemberClientResponse, Integer> additions = gitRepoClientResponse.stream()
-                .collect(Collectors.toMap(Function.identity(), mem -> mem.getWeeks().stream().mapToInt(w -> w.getA()).sum()));
+                .collect(Collectors.toMap(Function.identity(), mem -> Arrays.asList(mem.getWeeks()).stream().mapToInt(w -> w.getA()).sum()));
 
         Map<GitRepoMemberClientResponse, Integer> deletions = gitRepoClientResponse.stream()
-                .collect(Collectors.toMap(Function.identity(), mem -> mem.getWeeks().stream().mapToInt(w -> w.getD()).sum()));
+                .collect(Collectors.toMap(Function.identity(), mem -> Arrays.asList(mem.getWeeks()).stream().mapToInt(w -> w.getD()).sum()));
 
         List<GitRepoMemberResponse> result = gitRepoClientResponse.stream()
                 .map(member -> new GitRepoMemberResponse(
