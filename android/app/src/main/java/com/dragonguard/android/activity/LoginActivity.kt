@@ -62,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
         val intent = intent
         val token = intent.getStringExtra("token")
         val logout = intent.getBooleanExtra("logout", false)
-        if (token != "") {
+        if (!token.isNullOrEmpty()) {
 //            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
             binding.githubAuth.isEnabled = false
             binding.githubAuth.setTextColor(Color.BLACK)
@@ -123,7 +123,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                val cookies = CookieManager.getInstance().getCookie("http://172.30.1.68/api/oauth2/authorize/github")
+                val cookies = CookieManager.getInstance().getCookie("http://172.30.1.91/api/oauth2/authorize/github")
                 Log.d("cookie", "onPageFinished original url: $url")
                 Log.d("cookie", "onPageFinished original: $cookies")
                 if(cookies.contains("Access")) {

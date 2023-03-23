@@ -25,8 +25,9 @@ interface GitRankAPI {
     @GET("members/ranking")
     fun getTotalUsersRanking(@QueryMap query: Map<String, String>, @Header("Authorization")token: String) : Call<TotalUsersRankingModel>
 
-//    서버에 해당 정보를 가진 사용자를 등록하는 함수
-
+//    서버에 사용자의 활용도 최산화하는 함수
+    @POST("members/commits")
+    fun postCommits(@Header("Authorization")token: String) : Call<Unit>
 
 //
     @POST("prepare")
@@ -65,6 +66,6 @@ interface GitRankAPI {
     fun getOauthUserInfo(@Header("Authorization")token: String): Call<OauthUserInfoModel>
 
     @GET("auth/refresh")
-    fun getNewAccessToken(): Call<String>
+    fun getNewAccessToken(@Header("accessToken")access: String, @Header("refreshToken")refresh: String): Call<RefreshTokenModel>
 
 }

@@ -83,15 +83,11 @@ class Viewmodel {
         return repository.postCompareRepoRequest(body, token)
     }
 
-    fun getOauthToken(code: String):AccessTokenModel {
-        return repository.getAccessToken(code)
+    fun getNewToken(access: String, refresh: String): RefreshTokenModel {
+        return repository.getNewAccessToken(access, refresh)
     }
 
-    fun getOauthUserInfo(token: String): OauthUserInfoModel? {
-        return repository.getOauthUserInfo(token)
-    }
-
-    fun getNewToken(): String {
-        return repository.getNewAccessToken()
+    fun postCommits(token: String) {
+        repository.postCommits(token)
     }
 }
