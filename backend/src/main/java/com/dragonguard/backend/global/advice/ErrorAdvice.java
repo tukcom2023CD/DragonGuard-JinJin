@@ -1,10 +1,12 @@
 package com.dragonguard.backend.global.advice;
 
-import com.dragonguard.backend.config.security.exception.CookieException;
-import com.dragonguard.backend.config.security.exception.JwtProcessingException;
-import com.dragonguard.backend.config.security.exception.OAuthProcessingException;
+import com.dragonguard.backend.blockchain.exception.BlockchainException;
+import com.dragonguard.backend.email.exception.EmailException;
+import com.dragonguard.backend.member.exception.CookieException;
+import com.dragonguard.backend.member.exception.JwtProcessingException;
+import com.dragonguard.backend.member.exception.OAuthProcessingException;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import lombok.extern.slf4j.Slf4j;
+import com.dragonguard.backend.member.exception.TierNoneMatchException;
 import org.springframework.core.codec.DecodingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,46 +14,77 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import javax.validation.ValidationException;
+
 /**
  * @author 김승진
  * @description API 요청을 받아 로직 수행중 나타날 에러에 대한 처리를 담당하는 클래스
  */
 
-@Slf4j
 @RestControllerAdvice
 public class ErrorAdvice {
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> entityNotFound(EntityNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("엔티티를 찾을 수 없습니다.");
+    public ResponseEntity<ErrorResponse> entityNotFound(EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(javax.persistence.EntityNotFoundException.class)
-    public ResponseEntity<String> entityNotFoundException(javax.persistence.EntityNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("엔티티를 찾을 수 없습니다.");
+    public ResponseEntity<ErrorResponse> entityNotFoundException(javax.persistence.EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<String> webClientResponse(WebClientResponseException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("통신 오류가 발생했습니다.");
+    public ResponseEntity<ErrorResponse> webClientResponse(WebClientResponseException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(DecodingException.class)
-    public ResponseEntity<String> decodingException(DecodingException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("디코딩 에러가 발생했습니다.");
+    public ResponseEntity<ErrorResponse> decodingException(DecodingException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(CookieException.class)
-    public ResponseEntity<String> decodingException(CookieException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("쿠키 에러가 발생했습니다.");
+    public ResponseEntity<ErrorResponse> cookieException(CookieException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(JwtProcessingException.class)
-    public ResponseEntity<String> decodingException(JwtProcessingException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JWT 에러가 발생했습니다.");
+    public ResponseEntity<ErrorResponse> jwtProcessingException(JwtProcessingException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(OAuthProcessingException.class)
-    public ResponseEntity<String> decodingException(OAuthProcessingException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OAuth 에러가 발생했습니다.");
+    public ResponseEntity<ErrorResponse> oAuthProcessingException(OAuthProcessingException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> illegalStateException(IllegalStateException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> illegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> validationException(ValidationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(EmailException.class)
+    public ResponseEntity<ErrorResponse> emailException(EmailException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(TierNoneMatchException.class)
+    public ResponseEntity<ErrorResponse> tierNoneMatchException(TierNoneMatchException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(BlockchainException.class)
+    public ResponseEntity<ErrorResponse> blockchainException(BlockchainException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 }

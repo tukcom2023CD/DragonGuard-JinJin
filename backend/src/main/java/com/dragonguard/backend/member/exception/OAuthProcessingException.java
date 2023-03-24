@@ -1,4 +1,4 @@
-package com.dragonguard.backend.config.security.exception;
+package com.dragonguard.backend.member.exception;
 
 /**
  * @author 김승진

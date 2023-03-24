@@ -21,7 +21,7 @@ final class RepoContributorInfoService{
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
                 AF.request(url,
                            method: .get,
-                           headers: ["Authorization": "Bearer \(Environment.jwtToken)"])
+                           headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
                     .validate(statusCode: 200..<201)
                     .responseDecodable(of: [RepoContriInfoDecodingModel].self) { response in
                         print("repoContributor \(response)")

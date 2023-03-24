@@ -1,7 +1,7 @@
 package com.dragonguard.backend.search.entity;
 
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
+import com.dragonguard.backend.global.basetime.BaseTime;
+import com.dragonguard.backend.global.basetime.SoftDelete;
 import lombok.*;
 
 import javax.persistence.*;

@@ -32,6 +32,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
         return jpaQueryFactory
                 .select(qDtoFactory.qMemberRankResponse())
                 .from(member)
+                .where(member.walletAddress.isNotNull())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(memberOrderConverter.convert(pageable.getSort()))
@@ -43,9 +44,9 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
         return jpaQueryFactory
                 .select(member)
                 .from(member)
-                .where(member.sumOfTokens.gt(
+                .where(member.walletAddress.isNotNull().and(member.sumOfTokens.gt(
                         JPAExpressions
-                                .select(member.sumOfTokens).from(member).where(member.id.eq(id))))
+                                .select(member.sumOfTokens).from(member).where(member.id.eq(id)))))
                 .fetch().size() + 1;
     }
 
@@ -54,7 +55,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
         return jpaQueryFactory
                 .select(qDtoFactory.qMemberRankResponse())
                 .from(member)
-                .where(member.organizationId.eq(organizationId))
+                .where(member.walletAddress.isNotNull().and(member.organizationId.eq(organizationId)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(memberOrderConverter.convert(pageable.getSort()))

@@ -77,7 +77,7 @@ async def search(result):
 
         response = {}
         response["result"] = [{"name" : result} for result in results]
-        response["search"] = {"name" : name, "type" : search_type, "page" : int(page)}
+        response["search"] = {"name" : name, "type" : search_type, "page" : int(page.replace(',', ''))}
         sink = app.topic('gitrank.to.backend.result', value_type=dict)
         await sink.send(value=response)
 
@@ -113,7 +113,7 @@ async def issues(issues):
         result.raise_for_status()
         
         soup = BeautifulSoup(result.text, "lxml")
-        issue_result = int(soup.find('a', attrs={"data-ga-click" : "Issues, Table state, Closed"}).text.strip().split(" ")[0].strip())
+        issue_result = int(soup.find('a', attrs={"data-ga-click" : "Issues, Table state, Closed"}).text.strip().split(" ")[0].strip().replace(',', ''))
         
         response = { "name" : name, "closedIssue" : issue_result}
         

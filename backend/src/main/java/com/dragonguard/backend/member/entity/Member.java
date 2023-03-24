@@ -2,9 +2,8 @@ package com.dragonguard.backend.member.entity;
 
 import com.dragonguard.backend.blockchain.entity.Blockchain;
 import com.dragonguard.backend.commit.entity.Commit;
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
-import com.dragonguard.backend.member.exception.InvalidWalletAddressException;
+import com.dragonguard.backend.global.basetime.BaseTime;
+import com.dragonguard.backend.global.basetime.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -84,7 +83,7 @@ public class Member extends BaseTime {
         this.tier = Tier.SPROUT;
         this.authStep = AuthStep.GITHUB_ONLY;
         addCommit(commit);
-        if (role.equals(Role.ROLE_ADMIN)) {
+        if (role != null && role.equals(Role.ROLE_ADMIN)) {
             this.role.add(Role.ROLE_ADMIN);
         }
     }

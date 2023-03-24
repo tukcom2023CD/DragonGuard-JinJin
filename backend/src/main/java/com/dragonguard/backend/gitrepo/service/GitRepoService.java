@@ -20,8 +20,10 @@ import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.webclient.GithubClient;
 import com.dragonguard.backend.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -62,9 +64,12 @@ public class GitRepoService {
                 .collect(Collectors.toList());
     }
 
+    @Cacheable(value = "gitRepoMemberResponseList", key = "#gitRepoRequest", cacheManager = "cacheManager", unless = "#result.size() == 0")
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
-        gitRepoRequest.setGithubToken(authService.getLoginUser().getGithubToken());
+        if (!StringUtils.hasText(gitRepoRequest.getGithubToken())) {
+            gitRepoRequest.setGithubToken(authService.getLoginUser().getGithubToken());
+        }
         if (gitRepo.isEmpty()) {
             gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
             return requestToGithub(gitRepoRequest);
@@ -76,45 +81,57 @@ public class GitRepoService {
                 .collect(Collectors.toList());
     }
 
+    @Cacheable(value = "twoRepoMemberResponseList", key = "#request", cacheManager = "cacheManager", unless = "#result.firstResult.size() == 0 || result.secondResult.size() == 0")
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(GitRepoCompareRequest request) {
         Integer year = LocalDate.now().getYear();
         String githubToken = authService.getLoginUser().getGithubToken();
-        List<GitRepoMemberResponse> firstResult = findMembersByGitRepoWithClient(new GitRepoRequest(githubToken, request.getFirstRepo(), year));
-        List<GitRepoMemberResponse> secondResult = findMembersByGitRepoWithClient(new GitRepoRequest(githubToken, request.getSecondRepo(), year));
-        requestIssueToScraping(new GitRepoNameRequest(request.getFirstRepo()));
-        requestIssueToScraping(new GitRepoNameRequest(request.getSecondRepo()));
+        String firstRepo = request.getFirstRepo();
+        String secondRepo = request.getSecondRepo();
+
+        List<GitRepoMemberResponse> firstResult = findMembersByGitRepoWithClient(new GitRepoRequest(githubToken, firstRepo, year));
+        List<GitRepoMemberResponse> secondResult = findMembersByGitRepoWithClient(new GitRepoRequest(githubToken, secondRepo, year));
+
+        requestIssueToScraping(new GitRepoNameRequest(firstRepo));
+        requestIssueToScraping(new GitRepoNameRequest(secondRepo));
 
         return new TwoGitRepoMemberResponse(firstResult, secondResult);
     }
 
-    public GirRepoMemberCompareResponse findTwoGitRepoMember(GitRepoMemberCompareRequest request) {
+    @Cacheable(value = "gitRepoMemberCompareResponse", key = "#request", cacheManager = "cacheManager", unless = "#result.firstMember == null || #result.secondMember == null")
+    public GitRepoMemberCompareResponse findTwoGitRepoMember(GitRepoMemberCompareRequest request) {
         GitRepoMember first = gitRepoMemberService.findByNameAndMemberName(request.getFirstRepo(), request.getFirstName());
         GitRepoMember second = gitRepoMemberService.findByNameAndMemberName(request.getSecondRepo(), request.getSecondName());
 
-        return new GirRepoMemberCompareResponse(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
+        return new GitRepoMemberCompareResponse(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
     }
 
+    @Cacheable(value = "twoGitRepoResponse", key = "#request", cacheManager = "cacheManager", unless = "#result.firstRepo.gitRepo.closed_issues_count == null || #result.secondRepo.gitRepo.closed_issues_count == null")
     public TwoGitRepoResponse findTwoGitRepos(GitRepoCompareRequest request) {
         return new TwoGitRepoResponse(getOneRepoResponse(request.getFirstRepo()), getOneRepoResponse(request.getSecondRepo()));
-    }
-
-    private GitRepoResponse getOneRepoResponse(String repoName) {
-        String githubToken = authService.getLoginUser().getGithubToken();
-        GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(new GitRepoRequest(githubToken, repoName, null))));
-        GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
-        if (repo.getClosedIssues() != null) repoResponse.setClosed_issues_count(repo.getClosedIssues());
-        Map<String, Integer> languages = gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
-        IntSummaryStatistics langStats =
-                languages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
-                        : languages.keySet().stream().mapToInt(languages::get).summaryStatistics();
-
-        return new GitRepoResponse(repoResponse, getStatistics(repoName), languages, langStats);
     }
 
     @Transactional
     public void updateClosedIssues(String name, Integer closedIssue) {
         GitRepo gitRepo = gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
         gitRepo.updateClosedIssues(closedIssue);
+    }
+
+    private GitRepoResponse getOneRepoResponse(String repoName) {
+        Integer year = LocalDate.now().getYear();
+        String githubToken = authService.getLoginUser().getGithubToken();
+        GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(new GitRepoRequest(repoName, year))));
+        GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
+        if (repo.getClosedIssues() != null) {
+            repoResponse.setClosed_issues_count(repo.getClosedIssues());
+        } else {
+            requestIssueToScraping(new GitRepoNameRequest(repoName));
+        }
+        Map<String, Integer> languages = gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
+        IntSummaryStatistics langStats =
+                languages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
+                        : languages.keySet().stream().mapToInt(languages::get).summaryStatistics();
+
+        return new GitRepoResponse(repoResponse, getStatistics(repoName), languages, langStats);
     }
 
     private StatisticsResponse getStatistics(String name) {
@@ -150,10 +167,10 @@ public class GitRepoService {
         List<GitRepoMemberClientResponse> gitRepoClientResponse = Arrays.asList(clientResponse);
 
         Map<GitRepoMemberClientResponse, Integer> additions = gitRepoClientResponse.stream()
-                .collect(Collectors.toMap(Function.identity(), mem -> mem.getWeeks().stream().mapToInt(w -> w.getA()).sum()));
+                .collect(Collectors.toMap(Function.identity(), mem -> Arrays.asList(mem.getWeeks()).stream().mapToInt(w -> w.getA()).sum()));
 
         Map<GitRepoMemberClientResponse, Integer> deletions = gitRepoClientResponse.stream()
-                .collect(Collectors.toMap(Function.identity(), mem -> mem.getWeeks().stream().mapToInt(w -> w.getD()).sum()));
+                .collect(Collectors.toMap(Function.identity(), mem -> Arrays.asList(mem.getWeeks()).stream().mapToInt(w -> w.getD()).sum()));
 
         List<GitRepoMemberResponse> result = gitRepoClientResponse.stream()
                 .map(member -> new GitRepoMemberResponse(

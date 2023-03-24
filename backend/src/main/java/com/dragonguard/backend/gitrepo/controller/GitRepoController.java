@@ -2,7 +2,7 @@ package com.dragonguard.backend.gitrepo.controller;
 
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
-import com.dragonguard.backend.gitrepo.dto.response.GirRepoMemberCompareResponse;
+import com.dragonguard.backend.gitrepo.dto.response.GitRepoMemberCompareResponse;
 import com.dragonguard.backend.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.gitrepomember.dto.request.GitRepoMemberCompareRequest;
@@ -46,7 +46,8 @@ public class GitRepoController {
     }
 
     @PostMapping("/compare/members")
-    public ResponseEntity<GirRepoMemberCompareResponse> getTwoGitRepoMember(@RequestBody @Valid GitRepoMemberCompareRequest request) {
+    public ResponseEntity<GitRepoMemberCompareResponse> getTwoGitRepoMember(
+            @RequestBody @Valid GitRepoMemberCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findTwoGitRepoMember(request));
     }
 }
