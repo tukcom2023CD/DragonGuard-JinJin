@@ -3,36 +3,27 @@ package com.dragonguard.android.activity
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
+import android.os.*
 import android.util.Log
 import android.view.View
 import android.webkit.*
 import android.webkit.WebView.WebViewTransport
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.BuildConfig
 import com.dragonguard.android.R
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityLoginBinding
 import com.dragonguard.android.model.Bapp
-import com.dragonguard.android.viewmodel.Viewmodel
 import com.dragonguard.android.model.WalletAuthRequestModel
 import com.dragonguard.android.preferences.IdPreference
+import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.io.ByteArrayInputStream
-import java.io.IOException
-import java.net.CookieHandler
-import java.net.HttpURLConnection
-import java.net.URL
+
 
 class LoginActivity : AppCompatActivity() {
     companion object {
@@ -66,6 +57,21 @@ class LoginActivity : AppCompatActivity() {
         }
         if (logout) {
             prefs.setKey("")
+            prefs.setJwtToken("")
+            prefs.setRefreshToken("")
+            binding.oauthWebView.apply {
+                clearHistory()
+                clearCache(true)
+            }
+            val cookieManager = CookieManager.getInstance()
+            cookieManager.removeSessionCookies {
+                cookieManager.removeSessionCookies(ValueCallback<Boolean?> {
+                    Log.d(
+                        "",
+                        "## 롤리팝 이상 버전의 removeSessionCookie() 호출 후"
+                    )
+                })
+            }
         }
 
         val address = intent.getStringExtra("wallet_address")
@@ -118,50 +124,26 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                val cookies = CookieManager.getInstance().getCookie("${BuildConfig.api}oauth2/authorize/github")
-                Log.d("cookie", "onPageFinished original url: $url")
-                Log.d("cookie", "onPageFinished original: $cookies")
-                if(cookies.contains("Access")) {
-                    val splits = cookies.split("; ")
-                    val access = splits[1].split("=")[1]
-                    val refresh = splits[2].split("=")[1]
-                    Log.d("tokens", "access:$access, refresh:$refresh")
-                    prefs.setJwtToken(access)
-                    prefs.setRefreshToken(refresh)
-                    val intent = Intent(applicationContext, MainActivity::class.java)
-                    intent.putExtra("access", access)
-                    intent.putExtra("refresh", refresh)
-                    startActivity(intent)
+                if(!this@LoginActivity.isFinishing) {
+                    val cookies = CookieManager.getInstance().getCookie("${BuildConfig.api}oauth2/authorize/github")
+                    Log.d("cookie", "onPageFinished original url: $url")
+                    Log.d("cookie", "onPageFinished original: $cookies")
+                    if(cookies.contains("Access") && url!!.startsWith("gitrank://github-auth")) {
+                        val splits = cookies.split("; ")
+                        val access = splits[1].split("=")[1]
+                        val refresh = splits[2].split("=")[1]
+                        Log.d("tokens", "access:$access, refresh:$refresh")
+                        prefs.setJwtToken(access)
+                        prefs.setRefreshToken(refresh)
+                        if(walletAddress.isNotBlank()) {
+                            val intentH = Intent(applicationContext, MainActivity::class.java)
+                            intentH.putExtra("access", access)
+                            intentH.putExtra("refresh", refresh)
+                            startActivity(intentH)
+                        }
+                    }
                 }
             }
-//            override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
-//                val url = request.url.toString()
-//
-//                // 서버에서 전송한 쿠키를 추출하는 코드
-//                if (url.contains("gitrank://github-auth")) {
-//                    try {
-//                        val urlObj = URL(url)
-//                        val conn = urlObj.openConnection() as HttpURLConnection
-//                        conn.setRequestProperty("Cookie", CookieManager.getInstance().getCookie(url))
-//                        conn.connect()
-//                        val inputStream = conn.inputStream
-//                        val html = inputStream.readBytes()
-//                        inputStream.close()
-//
-//                        // 추출한 쿠키를 처리하는 코드
-//                        // ...
-//
-//                        // 응답을 반환
-//                        val byteArrayInputStream = ByteArrayInputStream(html)
-//                        return WebResourceResponse("text/html", "UTF-8", byteArrayInputStream)
-//                    } catch (e: IOException) {
-//                        e.printStackTrace()
-//                    }
-//                }
-//
-//                // 기본적인 처리를 위해 null을 반환
-//                return null
-//            }
         }
         binding.oauthWebView.webChromeClient = object : WebChromeClient() {
             override fun onCreateWindow(
