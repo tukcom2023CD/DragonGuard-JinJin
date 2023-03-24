@@ -81,7 +81,7 @@ public class GitRepoService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "twoRepoMemberResponseList", key = "#request", cacheManager = "cacheManager", unless = "#result.firstResult.size() == 0 || result.secondResult.size() == 0")
+    @Cacheable(value = "twoRepoMemberResponseList", key = "#request", cacheManager = "cacheManager", unless = "#result.firstResult.size() == 0 || #result.secondResult.size() == 0")
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(GitRepoCompareRequest request) {
         Integer year = LocalDate.now().getYear();
         String githubToken = authService.getLoginUser().getGithubToken();
