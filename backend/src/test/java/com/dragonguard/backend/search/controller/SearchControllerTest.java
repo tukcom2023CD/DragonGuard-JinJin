@@ -2,12 +2,14 @@ package com.dragonguard.backend.search.controller;
 
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.member.entity.Member;
+import com.dragonguard.backend.member.entity.Role;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import com.dragonguard.backend.member.service.AuthService;
 import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.search.service.SearchService;
 import com.dragonguard.backend.support.DatabaseTest;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
+import com.dragonguard.backend.support.fixture.member.entity.MemberFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +46,7 @@ class SearchControllerTest extends RestDocumentTest {
 
     @BeforeEach
     public void setup() {
-        Member member = new Member("Kim", "ohksj77", new Commit(2023, 100, "ohksj77"), "12341234", "https://github");
+        Member member = MemberFixture.SAMPLE1.toMember();
         loginUser = memberRepository.save(member);
         when(authService.getLoginUser()).thenReturn(loginUser);
     }
