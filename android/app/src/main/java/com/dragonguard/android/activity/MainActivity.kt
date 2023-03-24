@@ -70,19 +70,22 @@ class MainActivity : AppCompatActivity() {
         Log.d("on", "onnewintent")
         val logout = intent?.getBooleanExtra("logout", false)
         if (logout != null) {
-            loginOut = logout
-            if (loginOut) {
-                prefs.setWalletAddress("")
-                loginOut = true
-                prefs.setJwtToken("")
-                prefs.setRefreshToken("")
-                prefs.setPostAddress(false)
-                val intent = Intent(applicationContext, LoginActivity::class.java)
-                intent.putExtra("wallet_address", prefs.getWalletAddress(""))
-                intent.putExtra("token", prefs.getJwtToken(""))
-                intent.putExtra("logout", true)
-                activityResultLauncher.launch(intent)
+            if(!this@MainActivity.isFinishing) {
+                loginOut = logout
+                if (loginOut) {
+                    prefs.setWalletAddress("")
+                    loginOut = true
+                    prefs.setJwtToken("")
+                    prefs.setRefreshToken("")
+                    prefs.setPostAddress(false)
+                    val intent = Intent(applicationContext, LoginActivity::class.java)
+                    intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+                    intent.putExtra("token", prefs.getJwtToken(""))
+                    intent.putExtra("logout", true)
+                    activityResultLauncher.launch(intent)
+                }
             }
+
         }
     }
 
@@ -238,10 +241,11 @@ class MainActivity : AppCompatActivity() {
             val authResponse = authResponseDeferred.await()
             if (authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
 //                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
-                val intent = Intent(applicationContext, LoginActivity::class.java)
-                intent.putExtra("wallet_address", prefs.getWalletAddress(""))
-                activityResultLauncher.launch(intent)
-
+                if(!this@MainActivity.isFinishing) {
+                    val intent = Intent(applicationContext, LoginActivity::class.java)
+                    intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+                    activityResultLauncher.launch(intent)
+                }
             } else {
 //                Toast.makeText(applicationContext, "key : $key wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
                 prefs.setWalletAddress(authResponse.result.klaytn_address)
