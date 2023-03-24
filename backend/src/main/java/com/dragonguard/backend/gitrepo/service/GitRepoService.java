@@ -70,8 +70,10 @@ public class GitRepoService {
         if (!StringUtils.hasText(gitRepoRequest.getGithubToken())) {
             gitRepoRequest.setGithubToken(authService.getLoginUser().getGithubToken());
         }
-        if (gitRepo.isEmpty() || gitRepo.get().getGitRepoMembers().isEmpty()) {
+        if (gitRepo.isEmpty()) {
             gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
+            return requestToGithub(gitRepoRequest);
+        } else if (gitRepo.get().getGitRepoMembers().isEmpty()) {
             return requestToGithub(gitRepoRequest);
         }
         return gitRepoMemberService.findAllByGitRepo(gitRepo.get()).stream()
