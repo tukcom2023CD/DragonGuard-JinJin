@@ -3,36 +3,27 @@ package com.dragonguard.android.activity
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
+import android.os.*
 import android.util.Log
 import android.view.View
 import android.webkit.*
 import android.webkit.WebView.WebViewTransport
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.BuildConfig
 import com.dragonguard.android.R
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityLoginBinding
 import com.dragonguard.android.model.Bapp
-import com.dragonguard.android.viewmodel.Viewmodel
 import com.dragonguard.android.model.WalletAuthRequestModel
 import com.dragonguard.android.preferences.IdPreference
+import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.io.ByteArrayInputStream
-import java.io.IOException
-import java.net.CookieHandler
-import java.net.HttpURLConnection
-import java.net.URL
+
 
 class LoginActivity : AppCompatActivity() {
     companion object {
@@ -53,12 +44,7 @@ class LoginActivity : AppCompatActivity() {
         Log.d("login", "loginactivity1")
         prefs = IdPreference(applicationContext)
         //쿠키 확인 코드
-//        val cookieManager = CookieManager()
-//        CookieHandler.setDefault(cookieManager)
-//        val cookieList = cookieManager.cookieStore.cookies
-//        for (cookie in cookieList) {
-//            Log.d("cookie", "cookies :  ${cookie.name} = ${cookie.value}")
-//        }
+
         val intent = intent
         val token = intent.getStringExtra("token")
         val logout = intent.getBooleanExtra("logout", false)
@@ -70,7 +56,19 @@ class LoginActivity : AppCompatActivity() {
             binding.githubAuth.isEnabled = true
         }
         if (logout) {
-            prefs.setKey("key", "")
+            prefs.setKey("")
+            prefs.setJwtToken("")
+            prefs.setRefreshToken("")
+            binding.oauthWebView.apply {
+                clearHistory()
+                clearCache(true)
+            }
+            val cookieManager = CookieManager.getInstance()
+            cookieManager.removeSessionCookies { aBoolean ->
+            }
+            cookieManager.removeAllCookies(ValueCallback<Boolean?> { value ->
+            })
+            cookieManager.flush()
         }
 
         val address = intent.getStringExtra("wallet_address")
@@ -86,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
-        key = prefs.getKey("key", "")
+        key = prefs.getKey("")
         binding.oauthWebView.apply {
             settings.javaScriptEnabled = true // 자바스크립트 허용
             settings.javaScriptCanOpenWindowsAutomatically = false
@@ -123,48 +121,31 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                val cookies = CookieManager.getInstance().getCookie("http://172.30.1.91/api/oauth2/authorize/github")
-                Log.d("cookie", "onPageFinished original url: $url")
-                Log.d("cookie", "onPageFinished original: $cookies")
-                if(cookies.contains("Access")) {
-                    val splits = cookies.split("; ")
-                    val access = splits[1].split("=")[1]
-                    val refresh = splits[2].split("=")[1]
-                    Log.d("tokens", "access:$access, refresh:$refresh")
-                    val intent = Intent(applicationContext, MainActivity::class.java)
-                    intent.putExtra("access", access)
-                    intent.putExtra("refresh", refresh)
-                    startActivity(intent)
+                if (!this@LoginActivity.isFinishing) {
+                    val cookies = CookieManager.getInstance()
+                        .getCookie("${BuildConfig.api}oauth2/authorize/github")
+                    Log.d("cookie", "onPageFinished original url: $url")
+                    Log.d("cookie", "onPageFinished original: $cookies")
+                    if (cookies.contains("Access") && url!!.startsWith("gitrank://github-auth?")) {
+                        val splits = cookies.split("; ")
+                        val access = splits[1].split("=")[1]
+                        val refresh = splits[2].split("=")[1]
+                        Log.d("tokens", "access:$access, refresh:$refresh")
+                        prefs.setJwtToken(access)
+                        prefs.setRefreshToken(refresh)
+                        if (walletAddress.isNotBlank()) {
+                            val intentH = Intent(applicationContext, MainActivity::class.java)
+                            intentH.putExtra("access", access)
+                            intentH.putExtra("refresh", refresh)
+                            startActivity(intentH)
+                        } else {
+                            binding.loginGithub.visibility = View.GONE
+                            binding.loginMain.visibility = View.VISIBLE
+                            binding.githubAuth.isEnabled = false
+                        }
+                    }
                 }
             }
-//            override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
-//                val url = request.url.toString()
-//
-//                // 서버에서 전송한 쿠키를 추출하는 코드
-//                if (url.contains("gitrank://github-auth")) {
-//                    try {
-//                        val urlObj = URL(url)
-//                        val conn = urlObj.openConnection() as HttpURLConnection
-//                        conn.setRequestProperty("Cookie", CookieManager.getInstance().getCookie(url))
-//                        conn.connect()
-//                        val inputStream = conn.inputStream
-//                        val html = inputStream.readBytes()
-//                        inputStream.close()
-//
-//                        // 추출한 쿠키를 처리하는 코드
-//                        // ...
-//
-//                        // 응답을 반환
-//                        val byteArrayInputStream = ByteArrayInputStream(html)
-//                        return WebResourceResponse("text/html", "UTF-8", byteArrayInputStream)
-//                    } catch (e: IOException) {
-//                        e.printStackTrace()
-//                    }
-//                }
-//
-//                // 기본적인 처리를 위해 null을 반환
-//                return null
-//            }
         }
         binding.oauthWebView.webChromeClient = object : WebChromeClient() {
             override fun onCreateWindow(
@@ -184,7 +165,8 @@ class LoginActivity : AppCompatActivity() {
                         request: WebResourceRequest
                     ): Boolean {
                         if (request.url.toString().startsWith("gitrank://github-auth")) {
-                            val cookies = CookieManager.getInstance().getCookie(request.url.toString())
+                            val cookies =
+                                CookieManager.getInstance().getCookie(request.url.toString())
                             if (cookies != null) {
                                 Log.d("cookie", "shouldoverrideurlloading : $cookies")
                             }
@@ -212,16 +194,6 @@ class LoginActivity : AppCompatActivity() {
             binding.loginGithub.visibility = View.VISIBLE
             binding.oauthWebView.isEnabled = true
             binding.oauthWebView.loadUrl("${BuildConfig.api}oauth2/authorize/github")
-//            val intentAuth = Intent(Intent.ACTION_VIEW, Uri.parse("${BuildConfig.api}oauth2/authorize/github"))
-//            startActivity(intentAuth)
-
-//            val coroutine = CoroutineScope(Dispatchers.Main)
-//            coroutine.launch {
-//                val deffered = coroutine.async(Dispatchers.IO){
-//                    viewmodel.getGithubLogin()
-//                }
-//                val result = deffered.await()
-//            }
         }
         binding.walletAuth.setOnClickListener {
             if (NetworkCheck.checkNetworkState(this)) {
@@ -229,15 +201,23 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         binding.walletFinish.setOnClickListener {
-            if (key.isNotBlank()) {
-                val intent = Intent(applicationContext, MainActivity::class.java)
+            if (key.isNotBlank() && prefs.getRefreshToken("").isNotBlank() && prefs.getRefreshToken(
+                    ""
+                ).isNotBlank()
+            ) {
+                val intentF = Intent(applicationContext, MainActivity::class.java)
                 Log.d("info", "key : $key")
-                intent.putExtra("key", key)
-                setResult(0, intent)
+                intentF.putExtra("key", key)
+                intentF.putExtra("access", prefs.getJwtToken(""))
+                intentF.putExtra("refresh", prefs.getRefreshToken(""))
+                setResult(0, intentF)
                 finish()
             } else {
-                Toast.makeText(applicationContext, "wallet 인증 후 완료를 눌러주세요!!", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(
+                    applicationContext,
+                    "Github 인증과 wallet 인증 후 완료를 눌러주세요!!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -254,7 +234,7 @@ class LoginActivity : AppCompatActivity() {
                 handler.postDelayed({ walletAuthRequest() }, 1000)
             } else {
                 key = authResponse.request_key
-                prefs.setKey("key", authResponse.request_key)
+                prefs.setKey(authResponse.request_key)
                 Log.d("key", "key : ${authResponse.request_key}")
                 val intent = Intent(
                     Intent.ACTION_VIEW,

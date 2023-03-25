@@ -195,14 +195,17 @@ class ApiRepository {
 
     //두 Repository의 구성원들의 기여도를 받아오기 위한 함수
     fun postCompareRepoMembersRequest(body: CompareRepoRequestModel, token: String): CompareRepoMembersResponseModel {
+        Log.d("token", "token: $token")
         var compareRepoResult = CompareRepoMembersResponseModel(null, null)
         val compareRepoMembers = api.postCompareRepoMembers(body, "Bearer $token")
         try{
             val result = compareRepoMembers.execute()
             if(result.isSuccessful) {
                 compareRepoResult = result.body()!!
+                Log.d("token", "1 결과 ${result.code()}")
             }
         } catch (e: Exception) {
+            Log.d("token", "1 결과 ${e.printStackTrace()}")
             return compareRepoResult
         }
         return compareRepoResult
@@ -210,60 +213,20 @@ class ApiRepository {
 
     //두 Repository의 정보를 받아오기 위한 함수
     fun postCompareRepoRequest(body: CompareRepoRequestModel, token: String): CompareRepoResponseModel {
+        Log.d("token", "token: $token")
         var compareRepoResult = CompareRepoResponseModel(null, null)
         val compareRepo = api.postCompareRepo(body, "Bearer $token")
         try{
             val result = compareRepo.execute()
             if(result.isSuccessful) {
                 compareRepoResult = result.body()!!
+                Log.d("token", "2 결과 ${result.code()}")
             }
         } catch (e: Exception) {
+            Log.d("token", "2 결과 ${e.printStackTrace()}")
             return compareRepoResult
         }
         return compareRepoResult
-    }
-
-    fun getAccessToken(code: String):AccessTokenModel {
-        val tokenResult = AccessTokenModel(null,null,null)
-
-        val retrofitAccess = Retrofit.Builder().baseUrl(BuildConfig.oauth)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val queryMap = mutableMapOf<String, String>()
-        queryMap.put("client_id", BuildConfig.clientId)
-        queryMap.put("client_secret", BuildConfig.clientSecret)
-        queryMap.put("code", code)
-
-        val apis = retrofitAccess.create(GitRankAPI::class.java)
-        val token = apis.getAccessToken(queryMap)
-
-        return try {
-            val result = token.execute()
-            Log.d("result", "oauth 토큰 결과 : ${result.code()}, ${result.body()!!.access_token}")
-            result.body()!!
-        }catch (e:Exception) {
-            tokenResult
-        }
-    }
-
-    fun getOauthUserInfo(token: String): OauthUserInfoModel? {
-        val oauthUser: OauthUserInfoModel
-        val retro = Retrofit.Builder().baseUrl("https://api.github.com/")
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apis = retro.create(GitRankAPI::class.java)
-        val oauthInfo = apis.getOauthUserInfo("token $token")
-        return try {
-            val result = oauthInfo.execute()
-            oauthUser = result.body()!!
-            oauthUser
-        } catch (e: Exception) {
-            null
-        }
     }
 
     fun getNewAccessToken(access: String, refresh: String): RefreshTokenModel {

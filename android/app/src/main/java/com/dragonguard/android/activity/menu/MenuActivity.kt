@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.Window
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
@@ -25,6 +26,8 @@ class MenuActivity : AppCompatActivity() {
         versionDialog = Dialog(this)
         versionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         versionDialog.setContentView(R.layout.version_dialog)
+        val version = versionDialog.findViewById<TextView>(R.id.gitrank_version)
+        version.append("v1.0")
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)

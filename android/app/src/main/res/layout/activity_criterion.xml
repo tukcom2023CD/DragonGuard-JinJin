@@ -13,22 +13,158 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context=".activity.menu.CriterionActivity"
-            android:weightSum="3.4">
+            android:weightSum="3.4"
+            tools:context=".activity.menu.CriterionActivity">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.3"
-                android:background="@android:color/transparent"/>
+                android:background="@android:color/transparent"
+                android:textSize="25sp" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3.1" />
+                android:layout_weight="3.1"
+                android:orientation="vertical"
+                android:weightSum="5">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_weight="4.5"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:gravity="center_vertical"
+                        android:text="commit :          1"
+                        android:textColor="@color/black"
+                        android:textSize="25sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_weight="4.5"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:gravity="center_vertical"
+                        android:text="issue :               1"
+                        android:textColor="@color/black"
+                        android:textSize="25sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="left"
+                        android:layout_weight="4.5"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:gravity="center_vertical"
+                        android:text="pull request :  1"
+                        android:textColor="@color/black"
+                        android:textSize="25sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4.7"
+                        android:orientation="vertical"
+                        android:weightSum="5">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="left"
+                            android:layout_weight="1.6"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:gravity="center_vertical"
+                            android:text="토큰 단위는 gtr 이며"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="left"
+                            android:layout_weight="1.6"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:gravity="center_vertical"
+                            android:text="commit, issue, pull request 각각"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="left"
+                            android:layout_weight="1.6"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:gravity="center_vertical"
+                            android:text="1 gtr로 1 : 1: 1 비로 부여하였습니다."
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
