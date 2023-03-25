@@ -36,10 +36,16 @@ class MainActivity : AppCompatActivity() {
                 val walletIntent = it.data
                 try {
                     val requestKey = walletIntent!!.getStringExtra("key")
+                    val accessToken = walletIntent!!.getStringExtra("access")
+                    val refreshToken = walletIntent!!.getStringExtra("refresh")
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
                     if (!NetworkCheck.checkNetworkState(this)) {
                         Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
                     } else {
+                        Toast.makeText(applicationContext, "access : $accessToken, refresh : $refreshToken", Toast.LENGTH_SHORT).show()
+                        token = accessToken!!
+                        prefs.setJwtToken(accessToken)
+                        prefs.setRefreshToken(refreshToken!!)
                         authRequestResult(requestKey!!)
                     }
                 } catch (e: Exception) {
