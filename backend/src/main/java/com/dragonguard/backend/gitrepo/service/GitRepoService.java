@@ -70,8 +70,10 @@ public class GitRepoService {
         if (!StringUtils.hasText(gitRepoRequest.getGithubToken())) {
             gitRepoRequest.setGithubToken(authService.getLoginUser().getGithubToken());
         }
-        if (gitRepo.isEmpty() || gitRepo.get().getGitRepoMembers().isEmpty()) {
+        if (gitRepo.isEmpty()) {
             gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
+            return requestToGithub(gitRepoRequest);
+        } else if (gitRepo.get().getGitRepoMembers().isEmpty()) {
             return requestToGithub(gitRepoRequest);
         }
         return gitRepoMemberService.findAllByGitRepo(gitRepo.get()).stream()
@@ -79,7 +81,7 @@ public class GitRepoService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "twoRepoMemberResponseList", key = "#request", cacheManager = "cacheManager", unless = "#result.firstResult.empty && result.secondResult.size() == 0")
+    @Cacheable(value = "twoRepoMemberResponseList", key = "#request", cacheManager = "cacheManager", unless = "#result.firstResult.size() == 0 || #result.secondResult.size() == 0")
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(GitRepoCompareRequest request) {
         Integer year = LocalDate.now().getYear();
         String githubToken = authService.getLoginUser().getGithubToken();
@@ -95,7 +97,7 @@ public class GitRepoService {
         return new TwoGitRepoMemberResponse(firstResult, secondResult);
     }
 
-    @Cacheable(value = "gitRepoMemberCompareResponse", key = "#request", cacheManager = "cacheManager", unless = "#result.firstMember == null && #result.secondMember == null")
+    @Cacheable(value = "gitRepoMemberCompareResponse", key = "#request", cacheManager = "cacheManager", unless = "#result.firstMember == null || #result.secondMember == null")
     public GitRepoMemberCompareResponse findTwoGitRepoMember(GitRepoMemberCompareRequest request) {
         GitRepoMember first = gitRepoMemberService.findByNameAndMemberName(request.getFirstRepo(), request.getFirstName());
         GitRepoMember second = gitRepoMemberService.findByNameAndMemberName(request.getSecondRepo(), request.getSecondName());
@@ -103,7 +105,7 @@ public class GitRepoService {
         return new GitRepoMemberCompareResponse(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
     }
 
-    @Cacheable(value = "twoGitRepoResponse", key = "#request", cacheManager = "cacheManager", unless = "#result.firstRepo.gitRepo.closed_issues_count == null && #result.secondRepo.gitRepo.closed_issues_count == null")
+    @Cacheable(value = "twoGitRepoResponse", key = "#request", cacheManager = "cacheManager", unless = "#result.firstRepo.gitRepo.closed_issues_count == null || #result.secondRepo.gitRepo.closed_issues_count == null")
     public TwoGitRepoResponse findTwoGitRepos(GitRepoCompareRequest request) {
         return new TwoGitRepoResponse(getOneRepoResponse(request.getFirstRepo()), getOneRepoResponse(request.getSecondRepo()));
     }
