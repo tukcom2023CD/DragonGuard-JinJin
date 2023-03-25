@@ -190,6 +190,7 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                     }
                
                     if accessTokenCheck && refreshTokenCheck{
+                        self.navigationController?.popViewController(animated: true)
                         LoginViewModel.loginService.githubAuthSubject.onNext(true)
                     }
                 }
