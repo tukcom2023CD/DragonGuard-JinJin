@@ -20,9 +20,10 @@ class CriterionActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_criterion)
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.title = "   토큰 부여 기준"
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

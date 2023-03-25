@@ -191,11 +191,6 @@ class MainActivity : AppCompatActivity() {
                 if (userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits == null) {
                     if (prefs.getRefreshToken("").isBlank()) {
                         if (!this@MainActivity.isFinishing) {
-                            Toast.makeText(
-                                applicationContext,
-                                "refresh token is blank",
-                                Toast.LENGTH_SHORT
-                            ).show()
                             loginOut = true
                             prefs.setJwtToken("")
                             prefs.setRefreshToken("")
