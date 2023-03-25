@@ -35,7 +35,7 @@ final class CompareViewModel{
                     self.compareUser = contributorInfo
                     self.sendData.onNext(contributorInfo)
                     if !contributorInfo.firstResult.isEmpty && !contributorInfo.secondResult.isEmpty{
-                        
+//                        self.start()
                     }
                     
                 })
@@ -55,13 +55,24 @@ final class CompareViewModel{
         }
     }
     
+    func start(){
+        self.service.getCompareInfo(firstRepo: self.firstRepo, secondRepo: self.secondRepo)
+            .subscribe(onNext: { repoInfo in
+                print("called")
+                print(repoInfo)
+//                    observer.onNext(repoInfo)
+                self.compareRepo = repoInfo
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
     func getRepositoryInfo()-> Observable<CompareRepoModel>{
         return Observable.create { observer in
             self.service.getCompareInfo(firstRepo: self.firstRepo, secondRepo: self.secondRepo)
                 .subscribe(onNext: { repoInfo in
                     print("called")
                     print(repoInfo)
-                    observer.onNext(repoInfo)
+//                    observer.onNext(repoInfo)
                     self.compareRepo = repoInfo
                 })
                 .disposed(by: self.disposeBag)
@@ -73,18 +84,18 @@ final class CompareViewModel{
     func getRepoInfo() -> Observable<CompareRepoModel>{
         
         return Observable.create(){ observer in
-//            self.service.getCompareInfo(firstRepo: self.firstRepo, secondRepo: self.secondRepo)
-//                .subscribe(onNext: { repoInfo in
-//                    print("called")
-//                    print(repoInfo)
-//                    observer.onNext(repoInfo)
-//                })
-//                .disposed(by: self.disposeBag)
-//
-            if self.compareRepo != nil{
-                print("not nil here")
-                observer.onNext(self.compareRepo!)
-            }
+            self.service.getCompareInfo(firstRepo: self.firstRepo, secondRepo: self.secondRepo)
+                .subscribe(onNext: { repoInfo in
+                    print("called")
+                    print(repoInfo)
+                    observer.onNext(repoInfo)
+                })
+                .disposed(by: self.disposeBag)
+
+//            if self.compareRepo != nil{
+//                print("not nil here")
+//                observer.onNext(self.compareRepo!)
+//            }
             
             return Disposables.create()
         }
