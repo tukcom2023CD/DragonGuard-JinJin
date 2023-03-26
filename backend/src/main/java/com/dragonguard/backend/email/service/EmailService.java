@@ -61,8 +61,15 @@ public class EmailService {
         getEntity(id).delete();
     }
 
+    @Transactional
     public CheckCodeResponse isCodeMatching(EmailRequest emailRequest) {
-        return new CheckCodeResponse(getEntity(emailRequest.getId()).getCode().equals(emailRequest.getCode()));
+        Long id = emailRequest.getId();
+        boolean flag = getEntity(id).getCode().equals(emailRequest.getCode());
+        
+        if (!flag) return new CheckCodeResponse(false);
+
+        deleteCode(id);
+        return new CheckCodeResponse(true);
     }
 
     private Email getEntity(Long id) {

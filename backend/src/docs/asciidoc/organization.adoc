@@ -1,0 +1,48 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Organization
+=== 조직 생성
+==== HTTP request
+include::../../../build/generated-snippets/create organization/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/create organization/http-response.adoc[]
+
+=== 조직 id 조회
+==== HTTP request
+include::../../../build/generated-snippets/get organization id/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/get organization id/http-response.adoc[]
+
+=== 조직에 멤버 추가
+==== HTTP request
+include::../../../build/generated-snippets/add member to organization/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/add member to organization/http-response.adoc[]
+
+=== 타입별 조직 목록 조회
+==== HTTP request
+include::../../../build/generated-snippets/get organization by type/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/get organization by type/http-response.adoc[]
+
+=== 전체 조직 조회
+==== HTTP request
+include::../../../build/generated-snippets/get organization ranking/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/get organization ranking/http-response.adoc[]
+
+=== 타입별 조직 랭킹 조회
+==== HTTP request
+include::../../../build/generated-snippets/get organization ranking by type/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/get organization ranking by type/http-response.adoc[]
+
+=== 조직 검색
+==== HTTP request
+include::../../../build/generated-snippets/search organization/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/search organization/http-response.adoc[]

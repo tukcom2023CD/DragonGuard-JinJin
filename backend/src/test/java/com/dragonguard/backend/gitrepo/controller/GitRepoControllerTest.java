@@ -1,23 +1,14 @@
 package com.dragonguard.backend.gitrepo.controller;
 
-import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.response.*;
 import com.dragonguard.backend.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.dto.response.TwoGitRepoMemberResponse;
-import com.dragonguard.backend.member.entity.Member;
-import com.dragonguard.backend.member.entity.Role;
-import com.dragonguard.backend.member.repository.MemberRepository;
-import com.dragonguard.backend.member.service.AuthService;
-import com.dragonguard.backend.support.DatabaseTest;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
-import com.dragonguard.backend.support.fixture.member.entity.MemberFixture;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -31,7 +22,6 @@ import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentR
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -39,24 +29,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DatabaseTest
 @WebMvcTest(GitRepoController.class)
 class GitRepoControllerTest extends RestDocumentTest {
 
     @MockBean
     private GitRepoService gitRepoService;
-    @MockBean
-    protected AuthService authService;
-    @Autowired
-    private MemberRepository memberRepository;
-    protected Member loginUser;
-
-    @BeforeEach
-    public void setup() {
-        Member member = MemberFixture.SAMPLE1.toMember();
-        loginUser = memberRepository.save(member);
-        when(authService.getLoginUser()).thenReturn(loginUser);
-    }
 
     @Test
     @DisplayName("레포 멤버 조회")
@@ -71,7 +48,8 @@ class GitRepoControllerTest extends RestDocumentTest {
         ResultActions perform =
                 mockMvc.perform(
                         get("/git-repos?name=tukcom2023CD/DragonGuard-JinJin")
-                                .contentType(MediaType.APPLICATION_JSON));
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
@@ -101,7 +79,8 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/"))));
+                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/")))
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 
@@ -133,7 +112,8 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/"))));
+                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/")))
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 
@@ -155,7 +135,8 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoMemberCompareRequest("ohksj77", "tukcom2023CD/DragonGuard-JinJin", "ohksj", "tukcom2023CD/"))));
+                                                new GitRepoMemberCompareRequest("ohksj77", "tukcom2023CD/DragonGuard-JinJin", "ohksj", "tukcom2023CD/")))
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 

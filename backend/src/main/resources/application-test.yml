@@ -33,6 +33,13 @@ spring:
     host: localhost
     port: 6379
   kafka:
-    bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
+    producer:
+      bootstrap-servers: localhost:9092
     consumer:
       group-id: gitrank
+      bootstrap-servers: localhost:9092
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+    listener:
+      ack-mode: manual
+    bootstrap-servers: localhost:9092

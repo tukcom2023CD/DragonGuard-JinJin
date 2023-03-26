@@ -1,4 +1,4 @@
-package com.dragonguard.backend.support;
+package com.dragonguard.backend.support.database;
 
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
