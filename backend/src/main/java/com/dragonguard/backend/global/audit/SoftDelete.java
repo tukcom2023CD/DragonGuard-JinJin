@@ -1,4 +1,4 @@
-package com.dragonguard.backend.global.basetime;
+package com.dragonguard.backend.global.audit;
 
 import org.hibernate.annotations.Where;
 

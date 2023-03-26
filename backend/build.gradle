@@ -69,6 +69,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+	testImplementation 'it.ozimov:embedded-redis'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"

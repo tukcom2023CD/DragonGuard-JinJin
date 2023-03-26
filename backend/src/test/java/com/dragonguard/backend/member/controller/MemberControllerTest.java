@@ -7,14 +7,15 @@ import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.member.entity.Member;
+import com.dragonguard.backend.member.entity.Role;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import com.dragonguard.backend.member.service.AuthService;
 import com.dragonguard.backend.member.service.MemberService;
 import com.dragonguard.backend.support.DatabaseTest;
-import com.dragonguard.backend.support.LoginTest;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import com.dragonguard.backend.support.fixture.member.dto.MemberRequestFixture;
+import com.dragonguard.backend.support.fixture.member.entity.MemberFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,7 +54,8 @@ class MemberControllerTest extends RestDocumentTest {
 
     @BeforeEach
     public void setup() {
-        Member member = new Member("Kim", "ohksj77", new Commit(2023, 100, "ohksj77"), "12341234", "https://github");
+        Member member = MemberFixture.SAMPLE1.toMember();
+
         loginUser = memberRepository.save(member);
         when(authService.getLoginUser()).thenReturn(loginUser);
     }
@@ -107,7 +109,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회")
     void getMember() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L);
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L, "한국공학대학교");
         given(memberService.getMember()).willReturn(expected);
 
         // when
