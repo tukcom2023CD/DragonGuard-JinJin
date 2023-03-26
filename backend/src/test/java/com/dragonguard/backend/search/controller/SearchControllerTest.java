@@ -1,8 +1,5 @@
 package com.dragonguard.backend.search.controller;
 
-import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
-import com.dragonguard.backend.config.security.jwt.JwtValidator;
-import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
 import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.search.service.SearchService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
@@ -30,12 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SearchControllerTest extends RestDocumentTest {
     @MockBean
     private SearchService searchService;
-    @MockBean
-    private JwtValidator jwtValidator;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private UserDetailsMapper userDetailsMapper;
 
     @Test
     @DisplayName("검색 결과 조회")
@@ -55,7 +46,8 @@ class SearchControllerTest extends RestDocumentTest {
         ResultActions perform =
                 mockMvc.perform(
                         get("/search?page=1&name=gitrank&type=REPOSITORIES")
-                                .contentType(MediaType.APPLICATION_JSON));
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
         perform.andExpect(status().isOk())
@@ -84,7 +76,8 @@ class SearchControllerTest extends RestDocumentTest {
         ResultActions perform =
                 mockMvc.perform(
                         get("/search?page=1&name=gitrank&type=REPOSITORIES&filters=language:swift,language:kotlin,language:java")
-                                .contentType(MediaType.APPLICATION_JSON));
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
         perform.andExpect(status().isOk())

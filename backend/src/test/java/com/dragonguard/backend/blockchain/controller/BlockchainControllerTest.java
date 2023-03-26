@@ -4,9 +4,6 @@ import com.dragonguard.backend.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.blockchain.entity.ContributeType;
 import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.blockchain.service.TransactionService;
-import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
-import com.dragonguard.backend.config.security.jwt.JwtValidator;
-import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,12 +31,6 @@ class BlockchainControllerTest extends RestDocumentTest {
     private BlockchainService blockchainService;
     @MockBean
     private TransactionService transactionService;
-    @MockBean
-    private JwtValidator jwtValidator;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private UserDetailsMapper userDetailsMapper;
 
     @Test
     @DisplayName("블록체인 부여 기록 리스트 조회")
@@ -52,7 +43,8 @@ class BlockchainControllerTest extends RestDocumentTest {
         ResultActions perform =
                 mockMvc.perform(
                         get("/blockchain")
-                                .contentType(MediaType.APPLICATION_JSON));
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());

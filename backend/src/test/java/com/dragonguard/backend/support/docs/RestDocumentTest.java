@@ -1,5 +1,8 @@
 package com.dragonguard.backend.support.docs;
 
+import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
+import com.dragonguard.backend.config.security.jwt.JwtValidator;
+import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,9 +30,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @WebMvcTest
 public abstract class RestDocumentTest {
 
-    @Autowired private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
     protected MockMvc mockMvc;
-    @MockBean private JpaMetamodelMappingContext jpaMetamodelMappingContext;
+    @MockBean
+    private JpaMetamodelMappingContext jpaMetamodelMappingContext;
+    @MockBean
+    private JwtValidator jwtValidator;
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+    @MockBean
+    private UserDetailsMapper userDetailsMapper;
 
     protected String toRequestBody(Object value) throws JsonProcessingException {
         return objectMapper.writeValueAsString(value);

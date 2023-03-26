@@ -1,8 +1,5 @@
 package com.dragonguard.backend.gitrepo.controller;
 
-import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
-import com.dragonguard.backend.config.security.jwt.JwtValidator;
-import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.response.*;
 import com.dragonguard.backend.gitrepo.service.GitRepoService;
@@ -37,12 +34,6 @@ class GitRepoControllerTest extends RestDocumentTest {
 
     @MockBean
     private GitRepoService gitRepoService;
-    @MockBean
-    private JwtValidator jwtValidator;
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-    @MockBean
-    private UserDetailsMapper userDetailsMapper;
 
     @Test
     @DisplayName("레포 멤버 조회")
@@ -57,7 +48,8 @@ class GitRepoControllerTest extends RestDocumentTest {
         ResultActions perform =
                 mockMvc.perform(
                         get("/git-repos?name=tukcom2023CD/DragonGuard-JinJin")
-                                .contentType(MediaType.APPLICATION_JSON));
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
@@ -87,7 +79,8 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/"))));
+                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/")))
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 
@@ -119,7 +112,8 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/"))));
+                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/")))
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 
@@ -141,7 +135,8 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoMemberCompareRequest("ohksj77", "tukcom2023CD/DragonGuard-JinJin", "ohksj", "tukcom2023CD/"))));
+                                                new GitRepoMemberCompareRequest("ohksj77", "tukcom2023CD/DragonGuard-JinJin", "ohksj", "tukcom2023CD/")))
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 

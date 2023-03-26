@@ -1,0 +1,12 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Auth
+=== 리프레시 토큰 갱신
+==== HTTP request
+include::../../../build/generated-snippets/refresh jwt token/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/refresh jwt token/http-response.adoc[]

@@ -41,3 +41,15 @@ include::../../../build/generated-snippets/get member ranking/http-response.adoc
 include::../../../build/generated-snippets/update member wallet/http-request.adoc[]
 ==== HTTP response
 include::../../../build/generated-snippets/update member wallet/http-response.adoc[]
+
+=== 조직 내부 멤버 랭킹
+==== HTTP request
+include::../../../build/generated-snippets/get member ranking in a organization/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/get member ranking in a organization/http-response.adoc[]
+
+=== 멤버 Jwt 토큰으로 조회
+==== HTTP request
+include::../../../build/generated-snippets/get member by jwt/http-request.adoc[]
+==== HTTP response
+include::../../../build/generated-snippets/get member by jwt/http-response.adoc[]
