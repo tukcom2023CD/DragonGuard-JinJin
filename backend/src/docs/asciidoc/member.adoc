@@ -12,12 +12,6 @@ include::../../../build/generated-snippets/create member/http-request.adoc[]
 ==== HTTP response
 include::../../../build/generated-snippets/create member/http-response.adoc[]
 
-=== 멤버 조회
-==== HTTP request
-include::../../../build/generated-snippets/get member/http-request.adoc[]
-==== HTTP response
-include::../../../build/generated-snippets/get member/http-response.adoc[]
-
 === 멤버 티어 조회
 ==== HTTP request
 include::../../../build/generated-snippets/get member tier/http-request.adoc[]
