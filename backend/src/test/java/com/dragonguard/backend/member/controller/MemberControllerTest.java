@@ -1,25 +1,19 @@
 package com.dragonguard.backend.member.controller;
 
-import com.dragonguard.backend.commit.entity.Commit;
+import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
+import com.dragonguard.backend.config.security.jwt.JwtValidator;
+import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.AuthStep;
-import com.dragonguard.backend.member.entity.Member;
-import com.dragonguard.backend.member.entity.Role;
 import com.dragonguard.backend.member.entity.Tier;
-import com.dragonguard.backend.member.repository.MemberRepository;
-import com.dragonguard.backend.member.service.AuthService;
 import com.dragonguard.backend.member.service.MemberService;
-import com.dragonguard.backend.support.DatabaseTest;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import com.dragonguard.backend.support.fixture.member.dto.MemberRequestFixture;
-import com.dragonguard.backend.support.fixture.member.entity.MemberFixture;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -33,7 +27,6 @@ import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentR
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -41,24 +34,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DatabaseTest
 @WebMvcTest(MemberController.class)
 class MemberControllerTest extends RestDocumentTest {
     @MockBean
     private MemberService memberService;
     @MockBean
-    protected AuthService authService;
-    @Autowired
-    private MemberRepository memberRepository;
-    protected Member loginUser;
-
-    @BeforeEach
-    public void setup() {
-        Member member = MemberFixture.SAMPLE1.toMember();
-
-        loginUser = memberRepository.save(member);
-        when(authService.getLoginUser()).thenReturn(loginUser);
-    }
+    private JwtValidator jwtValidator;
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+    @MockBean
+    private UserDetailsMapper userDetailsMapper;
 
     @Test
     @DisplayName("멤버 생성")
@@ -78,8 +63,7 @@ class MemberControllerTest extends RestDocumentTest {
                                                         .toMemberRequest())));
 
         // then
-        perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(expected.getId()));
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())

@@ -1,4 +1,4 @@
-package com.dragonguard.backend.support;
+package com.dragonguard.backend.support.config;
 
 import com.dragonguard.backend.config.redis.RedisProperties;
 import org.springframework.boot.test.context.TestConfiguration;
