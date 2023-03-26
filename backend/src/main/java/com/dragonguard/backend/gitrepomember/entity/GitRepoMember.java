@@ -1,8 +1,8 @@
 package com.dragonguard.backend.gitrepomember.entity;
 
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.global.basetime.BaseTime;
-import com.dragonguard.backend.global.basetime.SoftDelete;
+import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import com.dragonguard.backend.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;

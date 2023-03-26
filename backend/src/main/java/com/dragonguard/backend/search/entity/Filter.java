@@ -1,6 +1,6 @@
 package com.dragonguard.backend.search.entity;
 
-import com.dragonguard.backend.global.basetime.SoftDelete;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

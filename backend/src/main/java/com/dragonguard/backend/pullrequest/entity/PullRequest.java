@@ -1,6 +1,6 @@
 package com.dragonguard.backend.pullrequest.entity;
 
-import com.dragonguard.backend.global.basetime.SoftDelete;
+import com.dragonguard.backend.global.audit.SoftDelete;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -1,4 +1,4 @@
-package com.dragonguard.backend.global.basetime;
+package com.dragonguard.backend.global.audit;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
