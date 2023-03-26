@@ -190,7 +190,7 @@ class OrganizationControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/organizations/ranking?type=UNIVERSITY&name=한국공학대학교&page=1&size=20")
+                        get("/organizations/search?type=UNIVERSITY&name=한국공학대학교&page=1&size=20")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
