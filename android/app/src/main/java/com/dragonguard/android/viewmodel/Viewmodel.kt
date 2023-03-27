@@ -90,4 +90,8 @@ class Viewmodel {
     fun postCommits(token: String) {
         repository.postCommits(token)
     }
+
+    fun getOrgNames(name: String, token: String,type: String, page: Int): OrganizationNamesModel {
+        return repository.getOrgNames(name, token, page, type)
+    }
 }

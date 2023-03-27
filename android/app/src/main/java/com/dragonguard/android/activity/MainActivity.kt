@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
     private var addressPost = false
     private var token = ""
     private var refreshState = true
+    private var state = true
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -166,8 +167,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
+        state = true
         multipleSearchUser()
         refreshCommits()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        state = false
     }
 
     private fun multipleSearchUser() {
@@ -192,7 +199,7 @@ class MainActivity : AppCompatActivity() {
                 if (userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits == null) {
                     if (prefs.getRefreshToken("").isBlank()) {
                         Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
-                        if (!this@MainActivity.isFinishing) {
+                        if (!this@MainActivity.isFinishing && state) {
                             loginOut = true
                             prefs.setJwtToken("")
                             prefs.setRefreshToken("")
@@ -289,7 +296,7 @@ class MainActivity : AppCompatActivity() {
                 multipleSearchUser()
             } else {
                 Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
-                if (!this@MainActivity.isFinishing) {
+                if (!this@MainActivity.isFinishing && state) {
                     if(refreshState) {
                         refreshState = false
                         loginOut = true

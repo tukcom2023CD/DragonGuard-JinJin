@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="authOrganizationBinding"
+            name="searchOrganizationBinding"
             type="com.dragonguard.android.viewmodel.Viewmodel" />
     </data>
 
@@ -23,7 +23,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.3"
             android:background="@android:color/transparent"
-            android:textSize="25sp"/>
+            android:textSize="25sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +32,136 @@
             android:orientation="vertical"
             android:weightSum="5">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.4"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.05"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" />
+
+
+                <com.dragonguard.android.customedittext.CustomEdittext
+                    android:id="@+id/search_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:background="@drawable/search_border"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:text="@={searchOrganizationBinding.onSearchListener}"
+                    android:textColor="@color/black"
+                    android:textSize="25dp" />
+
+                <ImageView
+                    android:id="@+id/search_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_baseline_search_24" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.01"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="center_vertical"
+                android:layout_weight="0.5"
+                android:orientation="horizontal"
+                android:weightSum="5">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"/>
+
+                <RadioGroup
+                    android:id="@+id/org_group"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/org_type0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="대학"
+                        android:textSize="20sp" />
+                    <RadioButton
+                        android:id="@+id/org_type1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="회사"
+                        android:textSize="20sp" />
+                    <RadioButton
+                        android:id="@+id/org_type2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="etc"
+                        android:textSize="20sp" />
+
+                </RadioGroup>
+
+                <Button
+                    android:id="@+id/none_organization"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.6"
+                    android:background="@drawable/round_pink"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:text="조직 없음"
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/search_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="6"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/repository_list" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

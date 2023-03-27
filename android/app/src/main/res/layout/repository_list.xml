@@ -14,9 +14,8 @@
         android:layout_marginHorizontal="20dp"
         android:fontFamily="@font/ibm_semibold"
         android:gravity="right"
-        android:text="repo name"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="23sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
