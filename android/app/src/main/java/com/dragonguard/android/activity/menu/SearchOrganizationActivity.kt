@@ -69,6 +69,7 @@ class SearchOrganizationActivity : AppCompatActivity() {
         binding.searchIcon.setOnClickListener {
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
                 if (lastSearch != viewmodel.onSearchListener.value!! || typeChanged) {
+                    Toast.makeText(applicationContext, "변함!!", Toast.LENGTH_SHORT).show()
                     orgNames.clear()
                     binding.searchResult.visibility = View.GONE
                     count = 0
@@ -98,6 +99,7 @@ class SearchOrganizationActivity : AppCompatActivity() {
                     if (search.isNotEmpty()) {
                         closeKeyboard()
                         if (lastSearch != viewmodel.onSearchListener.value!! || typeChanged) {
+                            Toast.makeText(applicationContext, "변함!!", Toast.LENGTH_SHORT).show()
                             orgNames.clear()
                             binding.searchResult.visibility = View.GONE
                             count = 0
@@ -133,14 +135,14 @@ class SearchOrganizationActivity : AppCompatActivity() {
                 type = "UNIVERSITY"
             }
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getOrgNames(token, name, type, count)
+                viewmodel.getOrgNames(name, token, type, count)
             }
             val result = resultDeferred.await()
             if(checkSearchResult(result)) {
                 initRecycler()
             } else {
                 val secondDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getOrgNames(token, name, type, count)
+                    viewmodel.getOrgNames(name, token, type, count)
                 }
                 val second = secondDeferred.await()
                 if (checkSearchResult(second)) {

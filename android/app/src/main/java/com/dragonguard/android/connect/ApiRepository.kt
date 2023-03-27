@@ -240,7 +240,7 @@ class ApiRepository {
         queryMap.put("name",name)
         queryMap.put("type",type)
         queryMap.put("size", "10")
-        val getOrgNames = api.getOrgNames(queryMap, token)
+        val getOrgNames = api.getOrgNames(queryMap, "Bearer $token")
         var orgNames = OrganizationNamesModel()
         orgNames.add(OrganizationNamesModelItem(null, null, null, null))
         return try{

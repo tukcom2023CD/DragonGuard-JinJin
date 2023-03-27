@@ -130,7 +130,7 @@
                     android:fontFamily="@font/ibm_semibold"
                     android:text="조직 없음"
                     android:textColor="@color/black"
-                    android:textSize="25sp" />
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
