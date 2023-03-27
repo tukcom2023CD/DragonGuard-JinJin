@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.MINUTES)
-        .readTimeout(3, TimeUnit.SECONDS)
-        .writeTimeout(3, TimeUnit.SECONDS)
+        .readTimeout(2, TimeUnit.SECONDS)
+        .writeTimeout(2, TimeUnit.SECONDS)
         .cookieJar(JavaNetCookieJar(CookieManager()))
         .retryOnConnectionFailure(false)
         .build()
@@ -43,9 +43,7 @@ class ApiRepository {
         val repoName = api.getRepoName(queryMap, "Bearer $token")
         try{
             val result = repoName.execute()
-            if(result.isSuccessful){
-                repoNames = result.body()!!
-            }
+            repoNames = result.body()!!
         }catch (e : SocketTimeoutException){
             return repoNames
         }
@@ -65,9 +63,7 @@ class ApiRepository {
         val repoName = api.getRepoName(queryMap, "Bearer $token")
         try{
             val result = repoName.execute()
-            if(result.isSuccessful){
-                repoNames = result.body()!!
-            }
+            repoNames = result.body()!!
         }catch (e : SocketTimeoutException){
             return repoNames
         }
@@ -95,9 +91,7 @@ class ApiRepository {
         var repoContResult = arrayListOf(RepoContributorsItem(null,null,null,null))
         try{
             val result = repoContributors.execute()
-            if(result.isSuccessful) {
-                repoContResult = result.body()!!
-            }
+            repoContResult = result.body()!!
         } catch (e: Exception) {
             return repoContResult
         }
@@ -108,15 +102,13 @@ class ApiRepository {
     fun getTotalUsersRankings(page: Int, size: Int, token: String): ArrayList<TotalUsersRankingModelItem> {
         var rankingResult = ArrayList<TotalUsersRankingModelItem>()
         val queryMap = mutableMapOf<String, String>()
-        queryMap.put("page","${page}")
+        queryMap.put("page","$page")
         queryMap.put("size","$size")
         queryMap.put("sort","tokens,DESC")
         val ranking = api.getTotalUsersRanking(queryMap, "Bearer $token")
         try {
             val result = ranking.execute()
-            if(result.isSuccessful) {
-                rankingResult = result.body()!!
-            }
+            rankingResult = result.body()!!
         } catch (e: Exception) {
             Log.d("error", "유저랭킹 api 에러 ${e.message}")
             return rankingResult
@@ -130,9 +122,7 @@ class ApiRepository {
         var tokenHistoryResult = arrayListOf(TokenHistoryModelItem(null,null,null,null, null))
         try {
             val result = tokenHistory.execute()
-            if(result.isSuccessful) {
-                tokenHistoryResult = result.body()!!
-            }
+            tokenHistoryResult = result.body()!!
         } catch (e: Exception) {
             return tokenHistoryResult
         }
@@ -142,13 +132,13 @@ class ApiRepository {
     //klip wallet address를 서버에 등록하기 위한 함수
     fun postWalletAddress(body: WalletAddressModel, token: String): Boolean {
         val walletAddress = api.postWalletAddress(body, "Bearer $token")
-        try{
+        return try{
             val result = walletAddress.execute()
             Log.d("dd", "지갑주소 전송 결과 : ${result.code()} ${body.walletAddress}")
-            return result.isSuccessful
+            result.isSuccessful
         } catch (e: Exception) {
             Log.d("dd", "결과 실패")
-            return false
+            false
         }
     }
 
@@ -163,9 +153,7 @@ class ApiRepository {
         val authWallet = apiWallet.postWalletAuth(body)
         try{
             val result = authWallet.execute()
-            if(result.isSuccessful) {
-                authResult = result.body()!!
-            }
+            authResult = result.body()!!
         } catch (e: Exception) {
             return authResult
         }
@@ -183,9 +171,7 @@ class ApiRepository {
         val authWallet = apiWallet.getAuthResult(key)
         try{
             val result = authWallet.execute()
-            if(result.isSuccessful) {
-                authResult = result.body()!!
-            }
+            authResult = result.body()!!
         } catch (e: Exception) {
             return authResult
         }
@@ -199,10 +185,8 @@ class ApiRepository {
         val compareRepoMembers = api.postCompareRepoMembers(body, "Bearer $token")
         try{
             val result = compareRepoMembers.execute()
-            if(result.isSuccessful) {
-                compareRepoResult = result.body()!!
-                Log.d("token", "1 결과 ${result.code()}")
-            }
+            compareRepoResult = result.body()!!
+            Log.d("token", "1 결과 ${result.code()}")
         } catch (e: Exception) {
             Log.d("token", "1 결과 ${e.printStackTrace()}")
             return compareRepoResult
@@ -217,10 +201,8 @@ class ApiRepository {
         val compareRepo = api.postCompareRepo(body, "Bearer $token")
         try{
             val result = compareRepo.execute()
-            if(result.isSuccessful) {
-                compareRepoResult = result.body()!!
-                Log.d("token", "2 결과 ${result.code()}")
-            }
+            compareRepoResult = result.body()!!
+            Log.d("token", "2 결과 ${result.code()}")
         } catch (e: Exception) {
             Log.d("token", "2 결과 ${e.printStackTrace()}")
             return compareRepoResult
@@ -246,10 +228,7 @@ class ApiRepository {
         val postCommit = api.postCommits("Bearer $token")
         try{
             val result = postCommit.execute()
-            if(result.isSuccessful) {
-                Log.d("postCommits", "result ${result.code()}")
-            }
-
+            Log.d("postCommits", "result ${result.code()}")
         } catch (e: Exception) {
             Log.d("e", "error ${e.printStackTrace()}")
         }
