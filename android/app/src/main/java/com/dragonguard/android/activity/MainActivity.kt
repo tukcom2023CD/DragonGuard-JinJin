@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
     private var loginOut = false
     private var addressPost = false
     private var token = ""
+    private var refreshState = true
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -190,6 +191,7 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
                 if (userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits == null) {
                     if (prefs.getRefreshToken("").isBlank()) {
+                        Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                         if (!this@MainActivity.isFinishing) {
                             loginOut = true
                             prefs.setJwtToken("")
@@ -285,6 +287,22 @@ class MainActivity : AppCompatActivity() {
                 prefs.setRefreshToken(refresh.refreshToken)
                 token = refresh.accessToken
                 multipleSearchUser()
+            } else {
+                Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
+                if (!this@MainActivity.isFinishing) {
+                    if(refreshState) {
+                        refreshState = false
+                        loginOut = true
+                        prefs.setJwtToken("")
+                        prefs.setRefreshToken("")
+                        prefs.setPostAddress(false)
+                        val intent = Intent(applicationContext, LoginActivity::class.java)
+                        intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+                        intent.putExtra("token", prefs.getJwtToken(""))
+                        intent.putExtra("logout", true)
+                        activityResultLauncher.launch(intent)
+                    }
+                }
             }
         }
     }

@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.compare.RepoChooseActivity
 import com.dragonguard.android.databinding.ActivityMenuBinding
 
 /*
@@ -60,6 +61,12 @@ class MenuActivity : AppCompatActivity() {
 //        버전버튼 누르면 dialog 띄움
         binding.version.setOnClickListener {
             showDialog()
+        }
+
+        binding.organizationAuth.setOnClickListener {
+            val intent = Intent(applicationContext, SearchOrganizationActivity::class.java)
+            intent.putExtra("token", token)
+            startActivity(intent)
         }
 
     }

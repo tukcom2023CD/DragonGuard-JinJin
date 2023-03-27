@@ -7,7 +7,6 @@ import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import java.net.CookieManager
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
@@ -18,8 +17,8 @@ import java.util.concurrent.TimeUnit
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.MINUTES)
-        .readTimeout(15, TimeUnit.SECONDS)
-        .writeTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(3, TimeUnit.SECONDS)
+        .writeTimeout(3, TimeUnit.SECONDS)
         .cookieJar(JavaNetCookieJar(CookieManager()))
         .retryOnConnectionFailure(false)
         .build()
