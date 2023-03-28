@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-final class SettingTableView: UITableViewCell{
-    static let identifier = "SettingTableView"
+final class SettingTableViewCell: UITableViewCell{
+    static let identifier = "SettingTableViewCell"
     
     // 클래스 생성자
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

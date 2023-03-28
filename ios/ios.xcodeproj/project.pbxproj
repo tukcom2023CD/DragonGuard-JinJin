@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3B00229D2987998B003FA5CC /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B00229C2987998B003FA5CC /* SettingController.swift */; };
-		3B00229F29879F7D003FA5CC /* SettingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B00229E29879F7D003FA5CC /* SettingTableView.swift */; };
-		3B0022A32987A9B0003FA5CC /* TierTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A22987A9B0003FA5CC /* TierTypes.swift */; };
+		3B00229F29879F7D003FA5CC /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B00229E29879F7D003FA5CC /* SettingTableViewCell.swift */; };
+		3B0022A32987A9B0003FA5CC /* TokenStandards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A22987A9B0003FA5CC /* TokenStandards.swift */; };
 		3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A42987ABA1003FA5CC /* FAQPage.swift */; };
 		3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */; };
 		3B060FD629911158000B2518 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B060FD529911158000B2518 /* MainViewModel.swift */; };
@@ -96,6 +96,7 @@
 		A37AA6EE29A525C5002812F6 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6ED29A525C5002812F6 /* TabBarController.swift */; };
 		A37AA6F629AC988E002812F6 /* CompareUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6F529AC988E002812F6 /* CompareUserController.swift */; };
 		A37AA6F829AD0D95002812F6 /* CompareRepoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6F729AD0D95002812F6 /* CompareRepoTableViewCell.swift */; };
+		A37AA6FA29D35522002812F6 /* TierTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6F929D35522002812F6 /* TierTableViewCell.swift */; };
 		A3ADC9742990210E003D6483 /* MainCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ADC9732990210D003D6483 /* MainCollectionView.swift */; };
 		A3ADC97F29911B50003D6483 /* CompareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ADC97E29911B50003D6483 /* CompareController.swift */; };
 		A3AEEB602975286C00004722 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB5F2975286C00004722 /* RxCocoa */; };
@@ -123,8 +124,8 @@
 
 /* Begin PBXFileReference section */
 		3B00229C2987998B003FA5CC /* SettingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingController.swift; sourceTree = "<group>"; };
-		3B00229E29879F7D003FA5CC /* SettingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableView.swift; sourceTree = "<group>"; };
-		3B0022A22987A9B0003FA5CC /* TierTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierTypes.swift; sourceTree = "<group>"; };
+		3B00229E29879F7D003FA5CC /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
+		3B0022A22987A9B0003FA5CC /* TokenStandards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStandards.swift; sourceTree = "<group>"; };
 		3B0022A42987ABA1003FA5CC /* FAQPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQPage.swift; sourceTree = "<group>"; };
 		3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingController.swift; sourceTree = "<group>"; };
 		3B060FD529911158000B2518 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
@@ -206,6 +207,7 @@
 		A37AA6ED29A525C5002812F6 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		A37AA6F529AC988E002812F6 /* CompareUserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareUserController.swift; sourceTree = "<group>"; };
 		A37AA6F729AD0D95002812F6 /* CompareRepoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoTableViewCell.swift; sourceTree = "<group>"; };
+		A37AA6F929D35522002812F6 /* TierTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierTableViewCell.swift; sourceTree = "<group>"; };
 		A3ADC9732990210D003D6483 /* MainCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionView.swift; sourceTree = "<group>"; };
 		A3ADC97E29911B50003D6483 /* CompareController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareController.swift; sourceTree = "<group>"; };
 		A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageResultModel.swift; sourceTree = "<group>"; };
@@ -454,8 +456,9 @@
 			isa = PBXGroup;
 			children = (
 				3B00229C2987998B003FA5CC /* SettingController.swift */,
-				3B00229E29879F7D003FA5CC /* SettingTableView.swift */,
-				3B0022A22987A9B0003FA5CC /* TierTypes.swift */,
+				3B00229E29879F7D003FA5CC /* SettingTableViewCell.swift */,
+				3B0022A22987A9B0003FA5CC /* TokenStandards.swift */,
+				A37AA6F929D35522002812F6 /* TierTableViewCell.swift */,
 				3B0022A42987ABA1003FA5CC /* FAQPage.swift */,
 				3B7BFF6D29CBDE1100A2F3F4 /* CertifiedOrganization */,
 			);
@@ -753,7 +756,7 @@
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,
 				3BC994E629CAD018005150FB /* TokenModel.swift in Sources */,
 				3B9756F1298A32C700F27094 /* WatchRankingTableView.swift in Sources */,
-				3B0022A32987A9B0003FA5CC /* TierTypes.swift in Sources */,
+				3B0022A32987A9B0003FA5CC /* TokenStandards.swift in Sources */,
 				3BDF0FA729A61A4E00816837 /* KlipLoginService.swift in Sources */,
 				3BAEA777299CFD090054DC5D /* PostService.swift in Sources */,
 				3B5E07FD29BEC0B00090E8A6 /* GithubLoginService.swift in Sources */,
@@ -763,7 +766,7 @@
 				3B7BFF6C29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift in Sources */,
 				3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */,
 				3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */,
-				3B00229F29879F7D003FA5CC /* SettingTableView.swift in Sources */,
+				3B00229F29879F7D003FA5CC /* SettingTableViewCell.swift in Sources */,
 				3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */,
 				3B78E0B129CC2B3900A3F8EA /* CertifiedOrganizationViewModel.swift in Sources */,
 				A37AA6EA299D0BA8002812F6 /* MainRankingCollectionView.swift in Sources */,
@@ -786,6 +789,7 @@
 				3BA2013929980661008978A5 /* MainService.swift in Sources */,
 				3BA20137299805AE008978A5 /* MainModel.swift in Sources */,
 				3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */,
+				A37AA6FA29D35522002812F6 /* TierTableViewCell.swift in Sources */,
 				3B9756EB298A16D900F27094 /* AllRankingController.swift in Sources */,
 				3B5E080129BEFCAB0090E8A6 /* Env.swift in Sources */,
 				3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */,
@@ -972,7 +976,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SN5J3DYFX4;
+				DEVELOPMENT_TEAM = R3B9284796;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ios/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GitRank;
@@ -986,7 +990,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin1.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin.ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1001,7 +1005,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SN5J3DYFX4;
+				DEVELOPMENT_TEAM = R3B9284796;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ios/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GitRank;
@@ -1015,7 +1019,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin1.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin.ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
