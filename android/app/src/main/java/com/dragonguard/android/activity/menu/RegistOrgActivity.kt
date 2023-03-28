@@ -7,16 +7,22 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivityRegistOrgBinding
 import com.dragonguard.android.viewmodel.Viewmodel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class RegistOrgActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegistOrgBinding
     private var token = ""
     private var viewmodel = Viewmodel()
+    private var registLimit = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_regist_org)
@@ -32,7 +38,30 @@ class RegistOrgActivity : AppCompatActivity() {
 
         binding.regitstOrgBtn.setOnClickListener {
             if(binding.orgNameEdit.text.toString().isNotBlank() && binding.orgEmailEdit.text.toString().isNotBlank() && binding.orgTypeSpinner.selectedItem.toString().isBlank()) {
-                
+                registOrg(binding.orgNameEdit.text.toString(), binding.orgTypeSpinner.selectedItem.toString(), binding.orgEmailEdit.text.toString())
+            } else {
+                Toast.makeText(applicationContext, "등록할 조직의 정보를 다 채워주세요!!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun registOrg(name: String, orgType: String, orgEmail: String) {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                viewmodel.registerOrg(name,orgType,orgEmail, token)
+            }
+            val result = resultDeferred.await()
+            if(result.id == 0 && registLimit<3) {
+                registLimit++
+                registOrg(name, orgType, orgEmail)
+            } else {
+                Toast.makeText(applicationContext, "$name 등록 완료!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(applicationContext, MenuActivity::class.java)
+                intent.putExtra("token", token)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                startActivity(intent)
             }
         }
     }
