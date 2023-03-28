@@ -94,4 +94,8 @@ class Viewmodel {
     fun getOrgNames(name: String, token: String,type: String, page: Int): OrganizationNamesModel {
         return repository.getOrgNames(name, token, page, type)
     }
+
+    fun registerOrg(name: String, orgType: String, emailEndPoint: String, token: String): RegistOrgResultModel {
+        return repository.postRegistOrg(RegistOrgModel(emailEndpoint = emailEndPoint, organizationType = orgType, name = name), token)
+    }
 }

@@ -126,6 +126,12 @@ class SearchOrganizationActivity : AppCompatActivity() {
             }
             true
         }
+
+        binding.noneOrganization.setOnClickListener {
+            val intent = Intent(applicationContext, RegistOrgActivity::class.java)
+            intent.putExtra("token", token)
+            startActivity(intent)
+        }
     }
 
     fun getOrganizationNames(name: String) {

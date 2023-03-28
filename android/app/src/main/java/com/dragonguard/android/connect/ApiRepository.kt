@@ -252,4 +252,17 @@ class ApiRepository {
             orgNames
         }
     }
+
+    fun postRegistOrg(body: RegistOrgModel, token: String): RegistOrgResultModel {
+        val postRegist = api.postOrgRegist(body, token)
+        var registResult = RegistOrgResultModel(0)
+        return try {
+            val result = postRegist.execute()
+            registResult = result.body()!!
+            registResult
+        } catch (e: Exception) {
+            Log.d("error", "RegisterOrganization error: ${e.message}")
+            registResult
+        }
+    }
 }
