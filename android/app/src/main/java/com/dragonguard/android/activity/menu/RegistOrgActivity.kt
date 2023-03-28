@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
@@ -27,6 +28,17 @@ class RegistOrgActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_regist_org)
         binding.registOrgViewmodel = viewmodel
+
+        val arr1 : MutableList<String> = mutableListOf("선택하세요")
+        arr1.apply {
+            add("대학교")
+            add("회사")
+            add("etc")
+        }
+        val spinnerAdapter = ArrayAdapter<String>(applicationContext, android.R.layout.simple_list_item_1, arr1)
+        binding.orgTypeSpinner.adapter = spinnerAdapter
+        binding.orgTypeSpinner.setSelection(0)
+
 
         token = intent.getStringExtra("token")!!
 
