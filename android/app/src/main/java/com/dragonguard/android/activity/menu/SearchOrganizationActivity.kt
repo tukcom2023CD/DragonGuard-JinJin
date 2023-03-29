@@ -37,12 +37,32 @@ class SearchOrganizationActivity : AppCompatActivity() {
     private var changable = true
     private var typeChanged = false
     private var orgNames = OrganizationNamesModel()
+    private var chosenType: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search_organization)
         binding.searchOrganizationBinding = viewmodel
 
         token = intent.getStringExtra("token")!!
+        chosenType = intent?.getStringExtra("type")
+        if(chosenType != null) {
+            when (chosenType) {
+                "대학교" -> {
+                    binding.orgGroup.check(R.id.org_type0)
+                    type = "UNIVERSITY"
+                }
+                "회사" -> {
+                    binding.orgGroup.check(R.id.org_type1)
+                    type = "COMPANY"
+                }
+                "etc" -> {
+                    binding.orgGroup.check(R.id.org_type2)
+                    type = "ETC"
+                }
+
+            }
+            binding.orgGroup.isEnabled = false
+        }
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(true)

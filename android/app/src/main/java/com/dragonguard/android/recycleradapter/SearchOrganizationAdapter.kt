@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.menu.AuthOrgActivity
+import com.dragonguard.android.activity.menu.SearchOrganizationActivity
 import com.dragonguard.android.model.OrganizationNamesModel
 import com.dragonguard.android.model.OrganizationNamesModelItem
 
@@ -28,7 +31,11 @@ class SearchOrganizationAdapter(private val datas : OrganizationNamesModel, priv
         fun bind(data: OrganizationNamesModelItem) {
             orgName.text = data.name
             orgName.setOnClickListener {
-
+                val authOrg = context as SearchOrganizationActivity
+                val intentW = Intent(context, AuthOrgActivity::class.java)
+                intentW.putExtra("orgName", data.name)
+                authOrg.setResult(0, intentW)
+                authOrg.finish()
             }
         }
     }
