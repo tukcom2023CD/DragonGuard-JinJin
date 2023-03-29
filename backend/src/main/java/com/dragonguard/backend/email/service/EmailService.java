@@ -26,6 +26,7 @@ public class EmailService {
     private final EmailRepository emailRepository;
     private final JavaMailSender javaMailSender;
     private final AuthService authService;
+    private final MemberService memberService;
     private Integer min = 10000;
     private Integer max = 99999;
 
@@ -65,10 +66,12 @@ public class EmailService {
     public CheckCodeResponse isCodeMatching(EmailRequest emailRequest) {
         Long id = emailRequest.getId();
         boolean flag = getEntity(id).getCode().equals(emailRequest.getCode());
-        
+
         if (!flag) return new CheckCodeResponse(false);
 
         deleteCode(id);
+        memberService.getEntity(authService.getLoginUser().getId()).finishAuth();
+
         return new CheckCodeResponse(true);
     }
 

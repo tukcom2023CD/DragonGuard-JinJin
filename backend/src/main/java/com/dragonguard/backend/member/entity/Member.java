@@ -126,4 +126,8 @@ public class Member extends BaseTime {
         this.organizationId = organizationId;
         this.organizationEmail = organizationEmail;
     }
+
+    public void finishAuth() {
+        this.authStep = AuthStep.ALL;
+    }
 }

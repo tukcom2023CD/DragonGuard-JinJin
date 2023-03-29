@@ -1,5 +1,6 @@
 package com.dragonguard.backend.organization.service;
 
+import com.dragonguard.backend.email.service.EmailService;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.service.AuthService;
@@ -30,6 +31,7 @@ public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final OrganizationMapper organizationMapper;
     private final AuthService authService;
+    private final EmailService emailService;
 
     @Transactional
     public IdResponse<Long> saveOrganization(OrganizationRequest organizationRequest) {
@@ -43,6 +45,7 @@ public class OrganizationService {
     public void findAndAddMember(AddMemberRequest addMemberRequest) {
         Organization organization = getEntity(addMemberRequest.getOrganizationId());
         organization.addMember(authService.getLoginUser(), addMemberRequest.getEmail());
+        emailService.sendEmail();
     }
 
     public List<OrganizationType> getTypes() {
