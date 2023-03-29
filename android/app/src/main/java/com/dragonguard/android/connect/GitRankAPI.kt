@@ -61,10 +61,10 @@ interface GitRankAPI {
     fun getNewAccessToken(@Header("accessToken")access: String, @Header("refreshToken")refresh: String): Call<RefreshTokenModel>
 
     @GET("organizations/search")
-    fun getOrgNames(@QueryMap query: Map<String, String>, @Header("accessToken")access: String): Call<OrganizationNamesModel>
+    fun getOrgNames(@QueryMap query: Map<String, String>, @Header("Authorization")access: String): Call<OrganizationNamesModel>
 
     @POST("organizations")
     @Headers("accept: application/json", "content-type: application/json")
-    fun postOrgRegist(@Body body: RegistOrgModel, @Header("accessToken")access: String): Call<RegistOrgResultModel>
+    fun postOrgRegist(@Body body: RegistOrgModel, @Header("Authorization")access: String): Call<RegistOrgResultModel>
 
 }

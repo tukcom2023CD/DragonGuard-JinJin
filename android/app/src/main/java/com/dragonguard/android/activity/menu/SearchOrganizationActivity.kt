@@ -188,6 +188,7 @@ class SearchOrganizationActivity : AppCompatActivity() {
     private fun initRecycler() {
         Log.d("count", "count: $count")
         if (count == 0) {
+            binding.orgListTitle.text = "$type 목록"
             searchOrgAdapter = SearchOrganizationAdapter(orgNames, this, token)
             binding.searchResult.adapter = searchOrgAdapter
             binding.searchResult.layoutManager = LinearLayoutManager(this)

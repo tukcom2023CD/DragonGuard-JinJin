@@ -96,13 +96,14 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.4"/>
+                    android:layout_weight="0.25"/>
 
                 <Spinner
                     android:id="@+id/org_type_spinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
+                    android:layout_weight="3"
+                    android:background="@drawable/round_pink"
                     android:textSize="20sp"/>
 
             </LinearLayout>
@@ -133,17 +134,18 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"/>
 
-                <com.dragonguard.android.customedittext.CustomEdittext
+                <EditText
                     android:id="@+id/org_email_edit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:background="@drawable/search_border"
                     android:fontFamily="@font/ibm_semibold"
+                    android:hint="뒷부분만 작성바람"
                     android:imeOptions="actionSearch"
                     android:textColor="@color/black"
-                    android:hint="뒷부분만 작성바람"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:importantForAutofill="no" />
 
             </LinearLayout>
 

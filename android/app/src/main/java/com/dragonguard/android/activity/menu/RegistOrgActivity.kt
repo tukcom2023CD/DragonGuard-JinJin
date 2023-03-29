@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -35,10 +37,9 @@ class RegistOrgActivity : AppCompatActivity() {
             add("회사")
             add("etc")
         }
-        val spinnerAdapter = ArrayAdapter<String>(applicationContext, android.R.layout.simple_list_item_1, arr1)
+        val spinnerAdapter = ArrayAdapter<String>(applicationContext, R.layout.spinner_list, arr1)
         binding.orgTypeSpinner.adapter = spinnerAdapter
         binding.orgTypeSpinner.setSelection(0)
-
 
         token = intent.getStringExtra("token")!!
 
@@ -49,10 +50,22 @@ class RegistOrgActivity : AppCompatActivity() {
         supportActionBar?.title = "   조직 등록"
 
         binding.regitstOrgBtn.setOnClickListener {
-            if(binding.orgNameEdit.text.toString().isNotBlank() && binding.orgEmailEdit.text.toString().isNotBlank() && binding.orgTypeSpinner.selectedItem.toString().isBlank()) {
-                registOrg(binding.orgNameEdit.text.toString(), binding.orgTypeSpinner.selectedItem.toString(), binding.orgEmailEdit.text.toString())
+            if(binding.orgNameEdit.text.toString().isNotBlank() && binding.orgEmailEdit.text.toString().isNotBlank() && binding.orgTypeSpinner.selectedItem.toString().isNotBlank()) {
+                var orgType = ""
+                when (binding.orgTypeSpinner.selectedItem.toString()) {
+                    "대학교" -> {
+                        orgType = "UNIVERSITY"
+                    }
+                    "회사" -> {
+                        orgType = "COMPANY"
+                    }
+                    "etc" -> {
+                        orgType = "ETC"
+                    }
+                }
+                registOrg(binding.orgNameEdit.text.toString(), orgType, binding.orgEmailEdit.text.toString())
             } else {
-                Toast.makeText(applicationContext, "등록할 조직의 정보를 다 채워주세요!!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "miss!! name: ${binding.orgNameEdit.text}, email: ${binding.orgEmailEdit.text}, type: ${binding.orgTypeSpinner.selectedItem}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -64,11 +77,13 @@ class RegistOrgActivity : AppCompatActivity() {
                 viewmodel.registerOrg(name,orgType,orgEmail, token)
             }
             val result = resultDeferred.await()
-            if(result.id == 0 && registLimit<3) {
-                registLimit++
-                registOrg(name, orgType, orgEmail)
+            if(result.id == 0) {
+                if(registLimit<3) {
+                    registLimit++
+                    registOrg(name, orgType, orgEmail)
+                }
             } else {
-                Toast.makeText(applicationContext, "$name 등록 완료!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "$name 등록 완료! id = ${result.id} ", Toast.LENGTH_SHORT).show()
                 val intent = Intent(applicationContext, MenuActivity::class.java)
                 intent.putExtra("token", token)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
