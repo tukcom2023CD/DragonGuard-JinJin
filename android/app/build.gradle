@@ -17,9 +17,6 @@ android {
         versionName "1.0"
         buildConfigField("String", "api", properties.getProperty("ipApi"))
         buildConfigField("String", "prepare", properties.getProperty("walletPrepare"))
-        buildConfigField("String", "oauth", properties.getProperty("oAuth"))
-        buildConfigField("String", "clientId", properties.getProperty("clientId"))
-        buildConfigField("String", "clientSecret", properties.getProperty("clientSecret"))
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

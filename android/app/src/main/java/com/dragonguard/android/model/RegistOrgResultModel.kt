@@ -1,5 +1,5 @@
 package com.dragonguard.android.model
 
 data class RegistOrgResultModel(
-    val id: Int
+    val id: Long
 )

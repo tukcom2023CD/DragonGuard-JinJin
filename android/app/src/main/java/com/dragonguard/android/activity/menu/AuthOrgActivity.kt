@@ -18,6 +18,10 @@ import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityAuthOrgBinding
 import com.dragonguard.android.viewmodel.Viewmodel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class AuthOrgActivity : AppCompatActivity() {
     private val activityResultLauncher: ActivityResultLauncher<Intent> =
@@ -26,10 +30,12 @@ class AuthOrgActivity : AppCompatActivity() {
                 val orgIntent = it.data
                 try {
                     val orgName = orgIntent!!.getStringExtra("orgName")
+                    val orgId = orgIntent.getLongExtra("orgId", -1)
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
-                    if(orgName != null) {
+                    if(orgName != null && orgId != -1L) {
                         binding.orgNameEdit.setText(orgName)
                         binding.orgNameEdit.isEnabled = false
+                        organizationId = orgId
                     }
                 } catch (e: Exception) {
 //                finishAffinity()
@@ -43,10 +49,13 @@ class AuthOrgActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthOrgBinding
     private val viewmodel = Viewmodel()
     private var token = ""
+    private var organizationId: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_regist_org)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_auth_org)
         binding.authOrgViewmodel = viewmodel
+
+        token = intent.getStringExtra("token")!!
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(true)
@@ -63,8 +72,11 @@ class AuthOrgActivity : AppCompatActivity() {
         val spinnerAdapter = ArrayAdapter<String>(applicationContext, R.layout.spinner_list, arr1)
         binding.orgTypeSpinner.adapter = spinnerAdapter
         binding.orgTypeSpinner.setSelection(0)
-
-        token = intent.getStringExtra("token")!!
+        binding.orgTypeSpinner.setOnItemClickListener { parent, view, position, id ->
+            if(position != 0) {
+                binding.orgNameEdit.isEnabled = true
+            }
+        }
 
         binding.orgNameEdit.setOnClickListener {
             if(binding.orgTypeSpinner.selectedItem == "선택하세요") {
@@ -91,8 +103,24 @@ class AuthOrgActivity : AppCompatActivity() {
                         orgType = "ETC"
                     }
                 }
+                addOrgMember(organizationId, binding.orgEmailEdit.text.toString(), token)
             } else {
                 Toast.makeText(applicationContext, "miss!! name: ${binding.orgNameEdit.text}, email: ${binding.orgEmailEdit.text}, type: ${binding.orgTypeSpinner.selectedItem}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun addOrgMember(orgId: Long, email: String, token: String) {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                viewmodel.addOrgMember(orgId, email, token)
+            }
+            val result = resultDeferred.await()
+            if(result) {
+
+            } else {
+
             }
         }
     }

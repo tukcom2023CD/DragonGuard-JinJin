@@ -77,7 +77,7 @@ class RegistOrgActivity : AppCompatActivity() {
                 viewmodel.registerOrg(name,orgType,orgEmail, token)
             }
             val result = resultDeferred.await()
-            if(result.id == 0) {
+            if(result.id == 0L) {
                 if(registLimit<3) {
                     registLimit++
                     registOrg(name, orgType, orgEmail)

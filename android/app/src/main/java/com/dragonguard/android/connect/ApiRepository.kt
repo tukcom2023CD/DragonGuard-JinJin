@@ -117,7 +117,7 @@ class ApiRepository {
     }
 
     //사용자의 토큰 부여 내역을 확인하기 위한 함수
-    fun getTokenHistory(id: Int, token: String): ArrayList<TokenHistoryModelItem> {
+    fun getTokenHistory(id: Long, token: String): ArrayList<TokenHistoryModelItem> {
         val tokenHistory = api.getTokenHistory(id, "Bearer $token")
         var tokenHistoryResult = arrayListOf(TokenHistoryModelItem(null,null,null,null, null))
         try {
@@ -254,7 +254,7 @@ class ApiRepository {
     }
 
     fun postRegistOrg(body: RegistOrgModel, token: String): RegistOrgResultModel {
-        val postRegist = api.postOrgRegist(body, token)
+        val postRegist = api.postOrgRegist(body, "Bearer $token")
         var registResult = RegistOrgResultModel(0)
         return try {
             val result = postRegist.execute()
@@ -263,6 +263,55 @@ class ApiRepository {
         } catch (e: Exception) {
             Log.d("error", "RegisterOrganization error: ${e.message}")
             registResult
+        }
+    }
+
+    fun addOrgMember(body: AddOrgMemberModel, token: String): Boolean {
+        val addOrg = api.postAddOrgMember(body, "Bearer $token")
+        return try {
+            val result = addOrg.execute()
+            Log.d("status", "조직 멤버 추가 결과 : ${result.code()}")
+            true
+        } catch (e: Exception) {
+            Log.d("status", "조직 멤버 추가 error : ${e.message}")
+            false
+        }
+    }
+
+    fun sendEmailAuth(token: String): Long {
+        val sendEmail = api.postAuthEmail("Bearer $token")
+        return try{
+            val result = sendEmail.execute()
+            result.body()!!.id
+        } catch (e: Exception) {
+            Log.d("status", "이메일 인증 시도 error : ${e.message}")
+            -1L
+        }
+    }
+
+    fun emailAuthResult(id: Long, code: String, token: String): Boolean {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("id","$id")
+        queryMap.put("code",code)
+        val emailAuth = api.getEmailAuthResult(queryMap, "Bearer $token")
+        return try {
+            val result = emailAuth.execute()
+            result.body()!!.validCode
+        } catch (e: Exception) {
+            Log.d("status", "이메일 인증 결과 error : ${e.message}")
+            false
+        }
+    }
+
+    fun deleteEmailCode(id: Long, token: String): Boolean {
+        val delete = api.deleteEmailCode(id, "Bearer $token")
+        return try {
+            val result = delete.execute()
+            Log.d("status", "이메일 인증 코드 삭제 성공: ${result.code()}")
+            true
+        } catch (e: Exception) {
+            Log.d("status", "이메일 인증 코드 삭제 실패: ${e.message}")
+            false
         }
     }
 }

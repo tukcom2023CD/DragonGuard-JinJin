@@ -14,8 +14,9 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".AuthOrgActivity"
-            android:exported="false" />
+            android:name=".activity.menu.AuthOrgActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.menu.RegistOrgActivity"
             android:exported="false"
