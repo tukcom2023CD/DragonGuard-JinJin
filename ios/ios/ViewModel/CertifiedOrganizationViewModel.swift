@@ -12,7 +12,8 @@ import RxSwift
 final class CertifiedOrganizationViewModel{
     static let viewModel = CertifiedOrganizationViewModel()
     let searchService = SearchOraganizationService()  /// 조직 검색 서비스
-    let addService = AddOrganizationService()
+    let addService = AddOrganizationService()   /// 조직 등록하는 서비스
+    let emailService = EmailService()   /// 이메일 서비스
     let disposeBag = DisposeBag()
     var page = 0
     var size = 20
@@ -62,5 +63,24 @@ final class CertifiedOrganizationViewModel{
         
     }
     
+    // MARK: 이메일 인증번호 유효한지 확인하는 함수
+    /// - Parameters:
+    ///   - id: 조직 아디이
+    ///   - code: 이메일 인증 번호
+    /// - Returns: True, False
+    func checkValidNumber(id: Int, code: Int) -> Observable<Bool>{
+        
+        return Observable.create { observer in
+            self.emailService.checkValidNumber(id: id, code: code)
+                .subscribe { checkValid in
+                    print("checkValidNumber \(checkValid)")
+                    observer.onNext(checkValid)
+                }
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    
+    }
     
 }

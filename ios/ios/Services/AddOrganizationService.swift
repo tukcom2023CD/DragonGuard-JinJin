@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import RxSwift
 
+// MARK: 조직 등록하는 서비스 클래스
 final class AddOrganizationService{
         
     func addOrganization(name: String, type: String, endPoint: String) -> Observable<Int>{

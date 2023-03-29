@@ -85,6 +85,8 @@
 		3BE6AD312993CF8500B22EBD /* RepoContributorInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */; };
 		3BE6AD332993D0D800B22EBD /* RepoContributorInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6AD322993D0D800B22EBD /* RepoContributorInfoModel.swift */; };
 		3BEFEC3329D3E1A100DBBCA8 /* AddOrganizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */; };
+		3BEFEC3529D3FB9500DBBCA8 /* EmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */; };
+		3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */; };
 		3BF2B31329890F1900F20841 /* WatchRankingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */; };
 		3BFF623329CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */; };
 		A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30BA46C298415B8008B594E /* SearchPageViewModel.swift */; };
@@ -195,6 +197,8 @@
 		3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoViewModel.swift; sourceTree = "<group>"; };
 		3BE6AD322993D0D800B22EBD /* RepoContributorInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoModel.swift; sourceTree = "<group>"; };
 		3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrganizationService.swift; sourceTree = "<group>"; };
+		3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailService.swift; sourceTree = "<group>"; };
+		3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailModel.swift; sourceTree = "<group>"; };
 		3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingCollectionView.swift; sourceTree = "<group>"; };
 		3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifiedOrganizationViewModel.swift; sourceTree = "<group>"; };
 		A30BA46C298415B8008B594E /* SearchPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageViewModel.swift; sourceTree = "<group>"; };
@@ -513,6 +517,7 @@
 				3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */,
 				3B7BFF6B29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift */,
 				3BC994E529CAD018005150FB /* TokenModel.swift */,
+				3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -555,6 +560,7 @@
 				3B3B563329A8DA12005034FC /* CompareService.swift */,
 				3B7BFF6929CBD63200A2F3F4 /* SearchOraganizationService.swift */,
 				3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */,
+				3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -749,6 +755,7 @@
 				3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */,
 				3BDD718629C091480018D09B /* LanguageSelectionsCollectionViewCell.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
+				3BEFEC3529D3FB9500DBBCA8 /* EmailService.swift in Sources */,
 				3BFF623329CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift in Sources */,
 				3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */,
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,
@@ -763,6 +770,7 @@
 				3B7BFF6C29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift in Sources */,
 				3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */,
 				3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */,
+				3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */,
 				3B00229F29879F7D003FA5CC /* SettingTableViewCell.swift in Sources */,
 				3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */,
 				A37AA6EA299D0BA8002812F6 /* MainRankingCollectionView.swift in Sources */,
