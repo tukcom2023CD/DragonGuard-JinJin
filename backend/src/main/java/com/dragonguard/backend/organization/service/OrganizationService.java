@@ -42,10 +42,10 @@ public class OrganizationService {
     }
 
     @Transactional
-    public void findAndAddMember(AddMemberRequest addMemberRequest) {
+    public IdResponse<Long> findAndAddMember(AddMemberRequest addMemberRequest) {
         Organization organization = getEntity(addMemberRequest.getOrganizationId());
         organization.addMember(authService.getLoginUser(), addMemberRequest.getEmail());
-        emailService.sendEmail();
+        return emailService.sendEmail();
     }
 
     public List<OrganizationType> getTypes() {

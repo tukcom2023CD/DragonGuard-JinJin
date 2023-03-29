@@ -36,9 +36,8 @@ public class OrganizationController {
     }
 
     @PostMapping("/add-member")
-    public ResponseEntity<Void> addMemberToOrganization(@RequestBody @Valid AddMemberRequest addMemberRequest) {
-        organizationService.findAndAddMember(addMemberRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<IdResponse<Long>> addMemberToOrganization(@RequestBody @Valid AddMemberRequest addMemberRequest) {
+        return ResponseEntity.ok(organizationService.findAndAddMember(addMemberRequest));
     }
 
     @GetMapping

@@ -82,7 +82,7 @@ class OrganizationControllerTest extends RestDocumentTest {
     void addMemberToOrganization() throws Exception {
         // given
         IdResponse<Long> expected = new IdResponse<>(1L);
-        given(organizationService.findByName(any())).willReturn(expected);
+        given(organizationService.findAndAddMember(any())).willReturn(expected);
 
         // when
         ResultActions perform =
