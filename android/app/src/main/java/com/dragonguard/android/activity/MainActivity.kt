@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                     if (!NetworkCheck.checkNetworkState(this)) {
                         Toast.makeText(applicationContext, "인터넷을 연결하세요!!", Toast.LENGTH_LONG).show()
                     } else {
-                        Toast.makeText(applicationContext, "access : $accessToken, refresh : $refreshToken", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(applicationContext, "access : $accessToken, refresh : $refreshToken", Toast.LENGTH_SHORT).show()
                         token = accessToken!!
                         prefs.setJwtToken(accessToken)
                         prefs.setRefreshToken(refreshToken!!)
@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity() {
     private var loginOut = false
     private var addressPost = false
     private var token = ""
+    private var refreshState = true
+    private var state = true
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -165,8 +167,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
+        state = true
         multipleSearchUser()
         refreshCommits()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        state = false
     }
 
     private fun multipleSearchUser() {
@@ -190,7 +198,8 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
                 if (userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits == null) {
                     if (prefs.getRefreshToken("").isBlank()) {
-                        if (!this@MainActivity.isFinishing) {
+                        Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
+                        if (!this@MainActivity.isFinishing && state) {
                             loginOut = true
                             prefs.setJwtToken("")
                             prefs.setRefreshToken("")
@@ -285,6 +294,22 @@ class MainActivity : AppCompatActivity() {
                 prefs.setRefreshToken(refresh.refreshToken)
                 token = refresh.accessToken
                 multipleSearchUser()
+            } else {
+                Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
+                if (!this@MainActivity.isFinishing && state) {
+                    if(refreshState) {
+                        refreshState = false
+                        loginOut = true
+                        prefs.setJwtToken("")
+                        prefs.setRefreshToken("")
+                        prefs.setPostAddress(false)
+                        val intent = Intent(applicationContext, LoginActivity::class.java)
+                        intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+                        intent.putExtra("token", prefs.getJwtToken(""))
+                        intent.putExtra("logout", true)
+                        activityResultLauncher.launch(intent)
+                    }
+                }
             }
         }
     }

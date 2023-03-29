@@ -64,7 +64,7 @@ class Viewmodel {
         return repository.getAuthResult(key)
     }
 
-    fun getTokenHistory(id: Int, token: String): ArrayList<TokenHistoryModelItem> {
+    fun getTokenHistory(id: Long, token: String): ArrayList<TokenHistoryModelItem> {
         return repository.getTokenHistory(id, token)
     }
 
@@ -89,5 +89,29 @@ class Viewmodel {
 
     fun postCommits(token: String) {
         repository.postCommits(token)
+    }
+
+    fun getOrgNames(name: String, token: String,type: String, page: Int): OrganizationNamesModel {
+        return repository.getOrgNames(name, token, page, type)
+    }
+
+    fun registerOrg(name: String, orgType: String, emailEndPoint: String, token: String): RegistOrgResultModel {
+        return repository.postRegistOrg(RegistOrgModel(emailEndpoint = emailEndPoint, organizationType = orgType, name = name), token)
+    }
+
+    fun addOrgMember(orgId: Long, email: String, token: String): Boolean{
+        return repository.addOrgMember(AddOrgMemberModel(email, orgId), token)
+    }
+
+    fun sendEmailAuth(token: String): Long {
+        return repository.sendEmailAuth(token)
+    }
+
+    fun emailAuthResult(id: Long, code: String, token: String): Boolean {
+        return repository.emailAuthResult(id, code, token)
+    }
+
+    fun deleteLateEmailCode(id: Long, token: String): Boolean {
+        return repository.deleteEmailCode(id, token)
     }
 }
