@@ -1,8 +1,8 @@
 package com.dragonguard.backend.search.service;
 
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.webclient.GithubClient;
+import com.dragonguard.backend.util.KafkaProducer;
+import com.dragonguard.backend.util.GithubClient;
 import com.dragonguard.backend.member.service.AuthService;
 import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.result.entity.Result;

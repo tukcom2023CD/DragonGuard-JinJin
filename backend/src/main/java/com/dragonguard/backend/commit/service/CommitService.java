@@ -5,7 +5,7 @@ import com.dragonguard.backend.commit.dto.response.CommitScrapingResponse;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.mapper.CommitMapper;
 import com.dragonguard.backend.commit.repository.CommitRepository;
-import com.dragonguard.backend.global.kafka.KafkaProducer;
+import com.dragonguard.backend.util.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

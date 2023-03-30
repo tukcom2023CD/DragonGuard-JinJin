@@ -2,7 +2,7 @@ package com.dragonguard.backend.search.client;
 
 import com.dragonguard.backend.config.github.GithubProperties;
 import com.dragonguard.backend.global.exception.WebClientException;
-import com.dragonguard.backend.global.webclient.GithubClient;
+import com.dragonguard.backend.util.GithubClient;
 import com.dragonguard.backend.search.dto.request.SearchRequest;
 import com.dragonguard.backend.search.dto.response.SearchUserResponse;
 import org.springframework.http.HttpHeaders;
