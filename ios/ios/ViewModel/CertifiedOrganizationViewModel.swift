@@ -83,4 +83,17 @@ final class CertifiedOrganizationViewModel{
     
     }
     
+    func addMember(organizationId: Int, email: String) -> Observable<Int>{
+        
+        return Observable.create { observer in
+            self.addService.addMemberInOrganization(organizationId: organizationId, email: email)
+                .subscribe { data in
+                    observer.onNext(data)
+                }
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
 }

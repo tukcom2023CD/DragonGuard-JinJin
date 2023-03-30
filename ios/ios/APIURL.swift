@@ -138,6 +138,11 @@ final class APIURL{
         return url
     }
     
+    // MARK: 조직에 멤버 등록
+    func addMemberInOrganization(ip: String) -> String{
+        let url = "http://\(ip)/api/organizations/add-member"
+        return url
+    }
     
     // MARK: 이메일 인증을 위해 이메일 보내기
     func sendEmailToAuth(ip: String) -> String{
@@ -151,6 +156,7 @@ final class APIURL{
         return url
     }
     
+  
     
     
     
