@@ -48,7 +48,7 @@ public class OrganizationService {
     public IdResponse<Long> findAndAddMember(AddMemberRequest addMemberRequest) {
         Organization organization = getEntity(addMemberRequest.getOrganizationId());
         Member member = memberService.getEntity(authService.getLoginUser().getId());
-        organization.addMember(member, addMemberRequest.getEmail());
+        organization.addMember(member, addMemberRequest.getEmail().trim());
         return emailService.sendEmail();
     }
 

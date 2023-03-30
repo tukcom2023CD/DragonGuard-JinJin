@@ -34,14 +34,16 @@ public class EmailService {
     @Transactional
     public IdResponse<Long> sendEmail() {
         Member member = authService.getLoginUser();
-        if (StringUtils.hasText(member.getOrganizationEmail())) {
+        String memberEmail = member.getOrganizationEmail();
+        
+        if (StringUtils.hasText(memberEmail)) {
             throw new EmailException();
         }
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         int random = new Random().nextInt(max - min) + min;
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-            mimeMessageHelper.setTo(member.getOrganizationEmail());
+            mimeMessageHelper.setTo(memberEmail);
             mimeMessageHelper.setSubject("GitRank 조직 인증");
             mimeMessageHelper.setText(getEmailText(random), true);
             javaMailSender.send(mimeMessage);
