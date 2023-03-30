@@ -29,6 +29,9 @@
 		3B3B563429A8DA12005034FC /* CompareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563329A8DA12005034FC /* CompareService.swift */; };
 		3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */; };
 		3B3CE9DC29B47EDF00B2594B /* UserDBId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3CE9DB29B47EDF00B2594B /* UserDBId.swift */; };
+		3B3D2E0929D5C0B8001A702C /* OrganizationCertificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0829D5C0B8001A702C /* OrganizationCertificationController.swift */; };
+		3B3D2E0B29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0A29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift */; };
+		3B3D2E0D29D5DA74001A702C /* OrganizationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0C29D5DA74001A702C /* OrganizationSearchController.swift */; };
 		3B43B5A329B87FB100EBB379 /* UserDBIdModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */; };
 		3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B58A18E29A6164D006A1817 /* LoginController.swift */; };
 		3B5E07FF29BEF7E50090E8A6 /* GithubTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */; };
@@ -147,6 +150,9 @@
 		3B3B563329A8DA12005034FC /* CompareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareService.swift; sourceTree = "<group>"; };
 		3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoModel.swift; sourceTree = "<group>"; };
 		3B3CE9DB29B47EDF00B2594B /* UserDBId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDBId.swift; sourceTree = "<group>"; };
+		3B3D2E0829D5C0B8001A702C /* OrganizationCertificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationCertificationController.swift; sourceTree = "<group>"; };
+		3B3D2E0A29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OraganizationTypeTableViewAndCell.swift; sourceTree = "<group>"; };
+		3B3D2E0C29D5DA74001A702C /* OrganizationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationSearchController.swift; sourceTree = "<group>"; };
 		3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDBIdModel.swift; sourceTree = "<group>"; };
 		3B58A18E29A6164D006A1817 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubTokenModel.swift; sourceTree = "<group>"; };
@@ -399,6 +405,16 @@
 			path = LoginController;
 			sourceTree = "<group>";
 		};
+		3B3D2E0729D5C061001A702C /* Certification */ = {
+			isa = PBXGroup;
+			children = (
+				3B3D2E0829D5C0B8001A702C /* OrganizationCertificationController.swift */,
+				3B3D2E0C29D5DA74001A702C /* OrganizationSearchController.swift */,
+				3B3D2E0A29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift */,
+			);
+			path = Certification;
+			sourceTree = "<group>";
+		};
 		3B7B1D2C298404AE0038BD67 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -458,6 +474,7 @@
 			isa = PBXGroup;
 			children = (
 				3B00229C2987998B003FA5CC /* SettingController.swift */,
+				3B3D2E0729D5C061001A702C /* Certification */,
 				3B00229E29879F7D003FA5CC /* SettingTableViewCell.swift */,
 				3B0022A22987A9B0003FA5CC /* TokenStandards.swift */,
 				A37AA6F929D35522002812F6 /* TierTableViewCell.swift */,
@@ -761,6 +778,7 @@
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,
 				3BC994E629CAD018005150FB /* TokenModel.swift in Sources */,
 				3B9756F1298A32C700F27094 /* WatchRankingTableView.swift in Sources */,
+				3B3D2E0D29D5DA74001A702C /* OrganizationSearchController.swift in Sources */,
 				3B0022A32987A9B0003FA5CC /* TokenStandards.swift in Sources */,
 				3BDF0FA729A61A4E00816837 /* KlipLoginService.swift in Sources */,
 				3BAEA777299CFD090054DC5D /* PostService.swift in Sources */,
@@ -803,6 +821,8 @@
 				A3754FA02995653B00A683A9 /* TierTokenCustomUIView.swift in Sources */,
 				3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */,
 				3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */,
+				3B3D2E0B29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift in Sources */,
+				3B3D2E0929D5C0B8001A702C /* OrganizationCertificationController.swift in Sources */,
 				3BDD718B29C09E9E0018D09B /* ForkSelectionCollectionViewCell.swift in Sources */,
 				3B7BFF7529CBE3F100A2F3F4 /* ChooseOrganizationTypeCell.swift in Sources */,
 				3B00229D2987998B003FA5CC /* SettingController.swift in Sources */,
@@ -980,7 +1000,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R3B9284796;
+				DEVELOPMENT_TEAM = SN5J3DYFX4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ios/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GitRank;
@@ -1009,7 +1029,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R3B9284796;
+				DEVELOPMENT_TEAM = SN5J3DYFX4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ios/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GitRank;

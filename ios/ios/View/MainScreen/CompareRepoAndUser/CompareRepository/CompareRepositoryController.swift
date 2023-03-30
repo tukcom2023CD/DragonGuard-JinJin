@@ -194,37 +194,6 @@ final class CompareRepositoryController : UIViewController {
         })
     }
     
-//    /// ViewModel을 통해 API 통신 후 데이터를 가져오는 함수
-//    func getData(){
-//        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { timer in
-//            self.repo1 = []
-//            self.repo2 = []
-////            self.viewModel.bringRepoInfo()
-//            self.viewModel.repo1Info.subscribe(onNext: {
-//                self.repo1 = $0
-//            }).disposed(by: self.disposebag)
-//            self.viewModel.repo2Info.subscribe(onNext: {
-//                self.repo2 = $0
-//            }).disposed(by: self.disposebag)
-//
-//            if self.repo1.count != 0 && self.repo2.count != 0 {
-//                timer.invalidate()
-//
-//                self.indicator.stopAnimating()
-//
-//                if !self.indicator.isAnimating{
-//                    self.addToView()    // 로딩화면이 사라지고 정보를 보는 데이터 로드
-//
-//                    // label 이름 변경
-//                    self.repo1Label.text = self.repo1[0].gitRepo.full_name
-//                    self.repo2Label.text = self.repo2[0].gitRepo.full_name
-//
-//                }
-//
-//            }
-//
-//        })
-//    }
     
     func getData(){
         
