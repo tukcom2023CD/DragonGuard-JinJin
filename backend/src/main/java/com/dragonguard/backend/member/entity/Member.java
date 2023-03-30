@@ -56,11 +56,6 @@ public class Member extends BaseTime {
 
     @OneToMany(mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
-    @Formula("(SELECT sum(c.commit_num) FROM commit c WHERE c.member_id = id)")
-    private Integer sumOfCommits;
-
-    @Formula("(SELECT sum(b.amount) FROM blockchain b WHERE b.member_id = id)")
-    private Long sumOfTokens;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -70,9 +65,14 @@ public class Member extends BaseTime {
 
     private String githubToken;
 
-    private Long organizationId;
+    @Embedded
+    private OrganizationDetails organizationDetails;
 
-    private String organizationEmail;
+    @Formula("(SELECT sum(c.commit_num) FROM commit c WHERE c.member_id = id)")
+    private Integer sumOfCommits;
+
+    @Formula("(SELECT sum(b.amount) FROM blockchain b WHERE b.member_id = id)")
+    private Long sumOfTokens;
 
     @Builder
     public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage, Role role) {
@@ -123,8 +123,7 @@ public class Member extends BaseTime {
     }
 
     public void updateOrganization(Long organizationId, String organizationEmail) {
-        this.organizationId = organizationId;
-        this.organizationEmail = organizationEmail;
+        this.organizationDetails = new OrganizationDetails(organizationId, organizationEmail);
     }
 
     public void finishAuth() {

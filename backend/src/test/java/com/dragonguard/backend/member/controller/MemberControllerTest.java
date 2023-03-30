@@ -86,7 +86,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회")
     void getMember() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L, "한국공학대학교");
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1000L, "한국공학대학교");
         given(memberService.getMember()).willReturn(expected);
 
         // when

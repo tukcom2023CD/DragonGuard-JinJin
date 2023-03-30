@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/email")
@@ -20,7 +22,7 @@ public class EmailController {
     }
 
     @GetMapping("/check")
-    public ResponseEntity<CheckCodeResponse> checkCode(EmailRequest emailRequest) {
+    public ResponseEntity<CheckCodeResponse> checkCode(@Valid EmailRequest emailRequest) {
         return ResponseEntity.ok(emailService.isCodeMatching(emailRequest));
     }
 

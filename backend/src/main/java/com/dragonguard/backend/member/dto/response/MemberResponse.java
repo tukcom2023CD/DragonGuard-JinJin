@@ -5,7 +5,6 @@ import com.dragonguard.backend.member.entity.Tier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
@@ -15,7 +14,6 @@ import java.util.UUID;
  */
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class MemberResponse {
     private UUID id;

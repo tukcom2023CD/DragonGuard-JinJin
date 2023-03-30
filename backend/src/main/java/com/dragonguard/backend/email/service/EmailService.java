@@ -34,8 +34,8 @@ public class EmailService {
     @Transactional
     public IdResponse<Long> sendEmail() {
         Member member = authService.getLoginUser();
-        String memberEmail = member.getOrganizationEmail();
-        
+        String memberEmail = member.getOrganizationDetails().getOrganizationEmail();
+
         if (StringUtils.hasText(memberEmail)) {
             throw new EmailException();
         }

@@ -2,10 +2,6 @@ package com.dragonguard.backend.gitrepomember.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author 김승진
@@ -13,7 +9,6 @@ import java.util.List;
  */
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoMemberClientResponse {
     private Integer total;
