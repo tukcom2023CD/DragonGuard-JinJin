@@ -4,8 +4,6 @@ lxml
 confluent-kafka
 requests
 beautifulsoup4
-lxml
 webdriver-manager
 jsonschema
 faust
-gunicorn

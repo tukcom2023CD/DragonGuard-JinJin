@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import RxSwift
 
+// MARK: 조직 검색하는 클래스
 final class SearchOraganizationService {
     
     func getOrganizationListService(name: String, type: String, page: Int, size: Int) -> Observable<[SearchOrganizationListModel]>{
@@ -30,7 +31,10 @@ final class SearchOraganizationService {
                 switch response.result {
                 case .success(let data):
                     print(data)
-                    result.append(SearchOrganizationListModel(name: data.name))
+                    result.append(SearchOrganizationListModel(id: data.id,
+                                                              name: data.name,
+                                                              type: data.type,
+                                                              emailEndpoint: data.emailEndpoint))
                 case .failure(let error):
                     print("getOrganizationListService error!\n \(error)")
                 }

@@ -17,25 +17,34 @@ final class RepoContributorInfoService{
         let url = APIURL.apiUrl.getRepoContributorInfo(ip: ip, name: selectedName)
         var resultData = [RepoContributorInfoModel]()
         print(url)
+        
         return Observable.create(){ observer in
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
-                AF.request(url,
+            
+            AF.request(url,
                            method: .get,
                            headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
-                    .validate(statusCode: 200..<201)
-                    .responseDecodable(of: [RepoContriInfoDecodingModel].self) { response in
-                        print("repoContributor \(response)")
-                        guard let responseResult = response.value else {return}
-                        
-                        if responseResult.count > 0 && resultData.count == 0 {
-                            timer.invalidate()
-                            
-                            for data in responseResult{
-                                resultData.append(RepoContributorInfoModel(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
-                                observer.onNext(resultData)
-                            }
-                        }
-                    }
+                .responseString { response in
+                    switch response.result {
+                       case .success(let data):
+                           if let jsonData = data.data(using: .utf8) {
+                               do {
+                                   let decodedData = try JSONDecoder().decode([RepoContriInfoDecodingModel].self, from: jsonData)
+                                   print(decodedData)
+                                   timer.invalidate()
+                                   for data in decodedData{
+                                       resultData.append(RepoContributorInfoModel(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+                                       observer.onNext(resultData)
+                                   }   
+                               } catch {
+                                   print("Error decoding data: \(error)")
+                               }
+                           }
+                       case .failure(let error):
+                           print("Request failed with error: \(error)")
+                       }
+                }
+            
             })
             return Disposables.create()
         }
