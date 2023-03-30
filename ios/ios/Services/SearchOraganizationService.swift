@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 import RxSwift
 
+// MARK: 조직 검색하는 클래스
 final class SearchOraganizationService {
     
     func getOrganizationListService(name: String, type: String, page: Int, size: Int) -> Observable<[SearchOrganizationListModel]>{
