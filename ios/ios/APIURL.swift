@@ -121,8 +121,8 @@ final class APIURL{
     }
     
     // MARK: 조직 검색
-    func searchOrganizationList(ip: String, name: String, type: String,page: Int, size: Int) -> String{
-        let url = "http://\(ip)/api/organizations/search?name=\(name)&type=\(type)&page=\(page)&size=\(size)"
+    func searchOrganizationList(ip: String, name: String, type: String, page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/organizations/search?type=\(type)&name=\(name)&page=\(page)&size=\(size)"
         return url
     }
     

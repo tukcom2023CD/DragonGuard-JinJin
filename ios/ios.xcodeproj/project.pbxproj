@@ -32,6 +32,7 @@
 		3B3D2E0929D5C0B8001A702C /* OrganizationCertificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0829D5C0B8001A702C /* OrganizationCertificationController.swift */; };
 		3B3D2E0B29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0A29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift */; };
 		3B3D2E0D29D5DA74001A702C /* OrganizationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0C29D5DA74001A702C /* OrganizationSearchController.swift */; };
+		3B3D2E0F29D5E252001A702C /* OrganizationSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0E29D5E252001A702C /* OrganizationSearchTableViewCell.swift */; };
 		3B43B5A329B87FB100EBB379 /* UserDBIdModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */; };
 		3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B58A18E29A6164D006A1817 /* LoginController.swift */; };
 		3B5E07FF29BEF7E50090E8A6 /* GithubTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */; };
@@ -153,6 +154,7 @@
 		3B3D2E0829D5C0B8001A702C /* OrganizationCertificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationCertificationController.swift; sourceTree = "<group>"; };
 		3B3D2E0A29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OraganizationTypeTableViewAndCell.swift; sourceTree = "<group>"; };
 		3B3D2E0C29D5DA74001A702C /* OrganizationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationSearchController.swift; sourceTree = "<group>"; };
+		3B3D2E0E29D5E252001A702C /* OrganizationSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationSearchTableViewCell.swift; sourceTree = "<group>"; };
 		3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDBIdModel.swift; sourceTree = "<group>"; };
 		3B58A18E29A6164D006A1817 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubTokenModel.swift; sourceTree = "<group>"; };
@@ -410,6 +412,7 @@
 			children = (
 				3B3D2E0829D5C0B8001A702C /* OrganizationCertificationController.swift */,
 				3B3D2E0C29D5DA74001A702C /* OrganizationSearchController.swift */,
+				3B3D2E0E29D5E252001A702C /* OrganizationSearchTableViewCell.swift */,
 				3B3D2E0A29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift */,
 			);
 			path = Certification;
@@ -769,6 +772,7 @@
 				3BEFEC3329D3E1A100DBBCA8 /* AddOrganizationService.swift in Sources */,
 				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
 				3B29804729ACCCA000967B6E /* CompareSelectedUserView.swift in Sources */,
+				3B3D2E0F29D5E252001A702C /* OrganizationSearchTableViewCell.swift in Sources */,
 				3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */,
 				3BDD718629C091480018D09B /* LanguageSelectionsCollectionViewCell.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,

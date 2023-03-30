@@ -73,6 +73,7 @@ final class OrganizationCertificationController: UIViewController{
         let btn = UIButton()
         btn.setTitle("조직을 선택하세요", for: .normal)
         btn.setTitleColor(.gray, for: .normal)
+        btn.isEnabled = false
         btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.addTarget(self, action: #selector(clickedNameChooseBtnBtn), for: .touchUpInside)
         return btn
@@ -183,9 +184,11 @@ final class OrganizationCertificationController: UIViewController{
     // MARK: 조직 선택 버튼 누른 경우
     @objc
     private func clickedNameChooseBtnBtn(){
-        let searchController = OrganizationSearchController()
-        
-        self.navigationController?.pushViewController(searchController, animated: true)
+        if self.urlType != nil {
+            let searchController = OrganizationSearchController()
+            searchController.type = self.urlType
+            self.navigationController?.pushViewController(searchController, animated: true)
+        }
     }
     
     // MARK: 인증 버튼 누른 경우
@@ -202,6 +205,7 @@ extension OrganizationCertificationController: SendingType{
     func sendType(type: String, urlType: String) {
         self.urlType = urlType
         self.typeBtn.setTitle(type, for: .normal)
+        self.nameChooseBtn.isEnabled = true
     }
     
     
