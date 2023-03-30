@@ -83,6 +83,11 @@ final class CertifiedOrganizationViewModel{
     
     }
     
+    // MARK: 조직에 멤버 추가하는 함수
+    /// - Parameters:
+    ///   - organizationId: 조직 아이디
+    ///   - email: 사용자 이메일 주소
+    /// - Returns: 조직 아이디
     func addMember(organizationId: Int, email: String) -> Observable<Int>{
         
         return Observable.create { observer in
