@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +18,6 @@ import java.util.Map;
  * @description 커밋 정보를 카프카로부터 받아오는 consumer
  */
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class KafkaCommitConsumer {
@@ -32,7 +30,8 @@ public class KafkaCommitConsumer {
         Map<Object, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            map = mapper.readValue(message, new TypeReference<Map<Object, Object>>() {});
+            map = mapper.readValue(message, new TypeReference<Map<Object, Object>>() {
+            });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

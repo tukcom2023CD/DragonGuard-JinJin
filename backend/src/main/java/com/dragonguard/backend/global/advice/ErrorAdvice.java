@@ -7,6 +7,7 @@ import com.dragonguard.backend.member.exception.JwtProcessingException;
 import com.dragonguard.backend.member.exception.OAuthProcessingException;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.exception.TierNoneMatchException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.core.codec.DecodingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,11 @@ public class ErrorAdvice {
 
     @ExceptionHandler(JwtProcessingException.class)
     public ResponseEntity<ErrorResponse> jwtProcessingException(JwtProcessingException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> jwtExpiredException(ExpiredJwtException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 

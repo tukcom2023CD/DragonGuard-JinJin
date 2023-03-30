@@ -20,7 +20,6 @@ import java.util.Map;
  */
 
 @Configuration
-@PropertySource("classpath:application-dev.yml")
 public class KafkaProducerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
