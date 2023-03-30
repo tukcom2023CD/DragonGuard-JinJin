@@ -16,6 +16,7 @@ final class SettingTableViewCell: UITableViewCell{
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
     
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -30,8 +31,8 @@ final class SettingTableViewCell: UITableViewCell{
      UI 작성
      */
     
-    // repo title
-    lazy var customLabel: UILabel = {
+    // MARK: 설정 리스트 버튼 정보
+    private lazy var customLabel: UILabel = {
         let label = UILabel()
         contentView.addSubview(label)
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 23)
@@ -57,7 +58,7 @@ final class SettingTableViewCell: UITableViewCell{
     
     
     // 라벨에 텍스트 입력
-    public func inputDataTableView(text:String, color: UIColor){
+    func inputDataTableView(text:String, color: UIColor){
         self.customLabel.text = text    // text 데이터
         self.customLabel.textColor = color  // 색상 설정
     }

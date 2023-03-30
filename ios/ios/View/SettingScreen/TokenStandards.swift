@@ -9,7 +9,8 @@ import Foundation
 import UIKit
 
 final class TokenStandards : UIViewController {
-    private let tierArray = ["Bronze", "Silver", "Gold", "Platinum"]
+    private let tierArray = ["Bronze", "Silver", "Gold", "Diamond"]
+    private let imageArray = [UIImage(named: "bronze"), UIImage(named: "silver"), UIImage(named: "gold"), UIImage(named: "diamond")]
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -106,9 +107,11 @@ final class TokenStandards : UIViewController {
         return all
     }()
     
+    // MARK: 티어 종류 담는 TableView
     private lazy var tierTableView: UITableView = {
        let tier = UITableView()
-        
+        tier.backgroundColor = .white
+        tier.isScrollEnabled = false
         return tier
     }()
     
@@ -141,6 +144,14 @@ final class TokenStandards : UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(UIScreen.main.bounds.height/12)
         })
+        
+        tierTableView.snp.makeConstraints ({ make in
+            make.top.equalTo(allUp.snp.bottom).offset(20)
+            make.leading.equalTo(20)
+            make.trailing.equalTo(-20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        })
+        
     }
     
     
@@ -151,12 +162,17 @@ extension TokenStandards : UITableViewDelegate, UITableViewDataSource {
         return tierArray.count
     }
     
+    // 중요하니까 한번 더 보고 복습
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TierTableViewCell.identifier, for: indexPath) as! TierTableViewCell
-        
-        
-        
+        cell.inputData(tier: imageArray[indexPath.row]!.resize(newWidth: 100), list: tierArray[indexPath.row])
+        cell.backgroundColor = .white
+        cell.selectionStyle = .none
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return tableView.frame.height/4
     }
     
     
