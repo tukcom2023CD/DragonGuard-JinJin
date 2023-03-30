@@ -69,7 +69,7 @@ interface GitRankAPI {
 
     @POST("organizations/add-member")
     @Headers("accept: application/json", "content-type: application/json")
-    fun postAddOrgMember(@Body body: AddOrgMemberModel, @Header("Authorization")access: String): Call<Unit>
+    fun postAddOrgMember(@Body body: AddOrgMemberModel, @Header("Authorization")access: String): Call<RegistOrgResultModel>
 
     @POST("email/send")
     @Headers("accept: application/json", "content-type: application/json")

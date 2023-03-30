@@ -118,7 +118,7 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
             arr1.addAll(contributors1.flatMap { listOf(it.githubId!!) }.toMutableList())
             arr2.addAll(contributors2.flatMap { listOf(it.githubId!!) }.toMutableList())
 //            Toast.makeText(requireContext(), "$arr1", Toast.LENGTH_SHORT).show()
-            val spinnerAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, arr1)
+            val spinnerAdapter = ArrayAdapter<String>(requireContext(), R.layout.spinner_list, arr1)
 //            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerAdapter.addAll(arr2)
             binding.compareUserSpinner1.adapter = spinnerAdapter

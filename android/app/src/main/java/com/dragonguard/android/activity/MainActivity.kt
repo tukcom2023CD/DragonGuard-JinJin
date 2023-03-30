@@ -181,6 +181,7 @@ class MainActivity : AppCompatActivity() {
         searchUser()
         Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 500)
         Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 1000)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 1500)
     }
 
     /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
@@ -230,6 +231,9 @@ class MainActivity : AppCompatActivity() {
                         binding.userToken.text = "내 기여도 : ${userInfo.commits}"
                     } else {
                         binding.userToken.text = "내 기여도 : ${userInfo.tokenAmount}"
+                    }
+                    if(userInfo.organization != null) {
+                        binding.organizationName.text = userInfo.organization
                     }
                     binding.userRanking.text = userInfo.rank
                     if (!this@MainActivity.isFinishing) {
