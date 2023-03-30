@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit
  */
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
-        .connectTimeout(1, TimeUnit.MINUTES)
-        .readTimeout(2, TimeUnit.SECONDS)
-        .writeTimeout(2, TimeUnit.SECONDS)
+        .connectTimeout(5, TimeUnit.MINUTES)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS)
         .cookieJar(JavaNetCookieJar(CookieManager()))
         .retryOnConnectionFailure(false)
         .build()
@@ -266,15 +266,15 @@ class ApiRepository {
         }
     }
 
-    fun addOrgMember(body: AddOrgMemberModel, token: String): Boolean {
+    fun addOrgMember(body: AddOrgMemberModel, token: String): Long {
         val addOrg = api.postAddOrgMember(body, "Bearer $token")
         return try {
             val result = addOrg.execute()
             Log.d("status", "조직 멤버 추가 결과 : ${result.code()}")
-            true
+            result.body()!!.id
         } catch (e: Exception) {
             Log.d("status", "조직 멤버 추가 error : ${e.message}")
-            false
+            -1
         }
     }
 
@@ -291,8 +291,8 @@ class ApiRepository {
 
     fun emailAuthResult(id: Long, code: String, token: String): Boolean {
         val queryMap = mutableMapOf<String, String>()
-        queryMap.put("id","$id")
-        queryMap.put("code",code)
+        queryMap.put("id", id.toString())
+        queryMap.put("code", code)
         val emailAuth = api.getEmailAuthResult(queryMap, "Bearer $token")
         return try {
             val result = emailAuth.execute()

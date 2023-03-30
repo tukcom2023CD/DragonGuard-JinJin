@@ -16,6 +16,7 @@ class Viewmodel {
     var onUserIconSelected = MutableLiveData<Boolean>()
     var onOptionListener = MutableLiveData<String>()
     var onSearchListener = MutableLiveData<String>()
+    var onAuthEmailListener = MutableLiveData<String>()
 
 //
     fun getUserInfo(token: String): UserInfoModel{
@@ -99,7 +100,7 @@ class Viewmodel {
         return repository.postRegistOrg(RegistOrgModel(emailEndpoint = emailEndPoint, organizationType = orgType, name = name), token)
     }
 
-    fun addOrgMember(orgId: Long, email: String, token: String): Boolean{
+    fun addOrgMember(orgId: Long, email: String, token: String): Long{
         return repository.addOrgMember(AddOrgMemberModel(email, orgId), token)
     }
 

@@ -104,6 +104,7 @@
                     android:fontFamily="@font/ibm_semibold"
                     android:imeOptions="actionSearch"
                     android:textColor="@color/black"
+                    android:focusable="false"
                     android:textSize="20sp" />
 
             </LinearLayout>
@@ -146,7 +147,9 @@
                     android:imeOptions="actionSearch"
                     android:importantForAutofill="no"
                     android:textColor="@color/black"
+                    android:inputType="textEmailAddress"
                     android:textSize="20sp" />
+
 
             </LinearLayout>
 
