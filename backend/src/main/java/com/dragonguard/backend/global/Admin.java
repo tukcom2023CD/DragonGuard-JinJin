@@ -1,4 +1,4 @@
-package com.dragonguard.backend.config.security;
+package com.dragonguard.backend.global;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

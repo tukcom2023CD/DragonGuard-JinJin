@@ -15,6 +15,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -30,9 +31,10 @@ public class EmailService {
     private Integer min = 10000;
     private Integer max = 99999;
 
+    @Transactional
     public IdResponse<Long> sendEmail() {
         Member member = authService.getLoginUser();
-        if (member.getOrganizationEmail() == null) {
+        if (StringUtils.hasText(member.getOrganizationEmail())) {
             throw new EmailException();
         }
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
