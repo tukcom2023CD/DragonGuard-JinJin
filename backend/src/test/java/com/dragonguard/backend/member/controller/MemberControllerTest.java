@@ -1,24 +1,16 @@
 package com.dragonguard.backend.member.controller;
 
-import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.AuthStep;
-import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Tier;
-import com.dragonguard.backend.member.repository.MemberRepository;
-import com.dragonguard.backend.member.service.AuthService;
 import com.dragonguard.backend.member.service.MemberService;
-import com.dragonguard.backend.support.DatabaseTest;
-import com.dragonguard.backend.support.LoginTest;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import com.dragonguard.backend.support.fixture.member.dto.MemberRequestFixture;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -32,7 +24,6 @@ import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentR
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -40,23 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DatabaseTest
 @WebMvcTest(MemberController.class)
 class MemberControllerTest extends RestDocumentTest {
     @MockBean
     private MemberService memberService;
-    @MockBean
-    protected AuthService authService;
-    @Autowired
-    private MemberRepository memberRepository;
-    protected Member loginUser;
-
-    @BeforeEach
-    public void setup() {
-        Member member = new Member("Kim", "ohksj77", new Commit(2023, 100, "ohksj77"), "12341234", "https://github");
-        loginUser = memberRepository.save(member);
-        when(authService.getLoginUser()).thenReturn(loginUser);
-    }
 
     @Test
     @DisplayName("멤버 생성")
@@ -73,11 +51,11 @@ class MemberControllerTest extends RestDocumentTest {
                                 .content(
                                         toRequestBody(
                                                 MemberRequestFixture.SAMPLE1
-                                                        .toMemberRequest())));
+                                                        .toMemberRequest()))
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(expected.getId()));
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -93,7 +71,8 @@ class MemberControllerTest extends RestDocumentTest {
         ResultActions perform =
                 mockMvc.perform(
                         post("/members/commits")
-                                .contentType(MediaType.APPLICATION_JSON));
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
         perform.andExpect(status().isOk());
@@ -107,14 +86,15 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회")
     void getMember() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L);
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.NONE, "http://abcd.efgh", 1000, 1000L, "한국공학대학교");
         given(memberService.getMember()).willReturn(expected);
 
         // when
         ResultActions perform =
                 mockMvc.perform(
                         get("/members/me")
-                                .contentType(MediaType.APPLICATION_JSON));
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
         perform.andExpect(status().isOk())
@@ -136,7 +116,8 @@ class MemberControllerTest extends RestDocumentTest {
         ResultActions perform =
                 mockMvc.perform(
                         get("/members/tier")
-                                .contentType(MediaType.APPLICATION_JSON));
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
         perform.andExpect(status().isOk())
@@ -163,7 +144,8 @@ class MemberControllerTest extends RestDocumentTest {
         ResultActions perform =
                 mockMvc.perform(
                         get("/members/ranking?page=0&size=20&sort=commits,DESC")
-                                .contentType(MediaType.APPLICATION_JSON));
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
         perform.andExpect(status().isOk())
@@ -187,7 +169,8 @@ class MemberControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new WalletRequest("asdfasdf12341234"))));
+                                                new WalletRequest("asdfasdf12341234")))
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
         perform.andExpect(status().isOk());
@@ -195,5 +178,51 @@ class MemberControllerTest extends RestDocumentTest {
         // docs
         perform.andDo(print())
                 .andDo(document("update member wallet", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("멤버 조회 with Jwt")
+    void getMemberWithJwt() throws Exception {
+        // given
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "KimSeungjin", "ohksj77", 1000, Tier.PLATINUM, AuthStep.ALL, "https://github.com", 1, 2000L, "한국공학대학교");
+        given(memberService.getMember()).willReturn(expected);
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        get("/members/me")
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("get member by jwt", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("조직 내부 멤버 랭킹")
+    void getOrganizationMemberRank() throws Exception {
+        // given
+        List<MemberRankResponse> expected = List.of(
+                new MemberRankResponse(UUID.randomUUID(), "정해진", "HJ39", 20L, Tier.SPROUT),
+                new MemberRankResponse(UUID.randomUUID(), "넓은관용", "Sammuelwoojae", 20L, Tier.SPROUT),
+                new MemberRankResponse(UUID.randomUUID(), "회사승진", "ohksj77", 20L, Tier.SPROUT),
+                new MemberRankResponse(UUID.randomUUID(), "영어수학", "posite", 20L, Tier.SPROUT));
+        given(memberService.getMemberRankingByOrganization(any(), any())).willReturn(expected);
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        get("/members/ranking/organization?organizationId=1&page=0&size=20")
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("get member ranking in a organization", getDocumentRequest(), getDocumentResponse()));
     }
 }

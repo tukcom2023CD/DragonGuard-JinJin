@@ -1,7 +1,7 @@
 package com.dragonguard.backend.commit.entity;
 
-import com.dragonguard.backend.global.basetime.BaseTime;
-import com.dragonguard.backend.global.basetime.SoftDelete;
+import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

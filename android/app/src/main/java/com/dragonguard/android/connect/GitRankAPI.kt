@@ -40,7 +40,7 @@ interface GitRankAPI {
 
 //    사용자의 토큰부여 내역을 가져오기 위한 함수
     @GET("blockchain/{id}")
-    fun getTokenHistory(@Path("id") userId: Int, @Header("Authorization")token: String) : Call<TokenHistoryModel>
+    fun getTokenHistory(@Path("id") userId: Long, @Header("Authorization")token: String) : Call<TokenHistoryModel>
 
 //    klip wallet address를 서버로 보내는 함수
     @POST("members/wallet-address")
@@ -57,15 +57,27 @@ interface GitRankAPI {
     @Headers("accept: application/json", "content-type: application/json")
     fun postCompareRepo(@Body compare: CompareRepoRequestModel, @Header("Authorization")token: String) : Call<CompareRepoResponseModel>
 
-    @POST("access_token")
-    @Headers("accept: application/json", "content-type: application/json")
-    fun getAccessToken(@QueryMap query: Map<String, String>): Call<AccessTokenModel>
-
-    @POST("user")
-    @Headers("accept: application/json", "content-type: application/json")
-    fun getOauthUserInfo(@Header("Authorization")token: String): Call<OauthUserInfoModel>
-
     @GET("auth/refresh")
     fun getNewAccessToken(@Header("accessToken")access: String, @Header("refreshToken")refresh: String): Call<RefreshTokenModel>
 
+    @GET("organizations/search")
+    fun getOrgNames(@QueryMap query: Map<String, String>, @Header("Authorization")access: String): Call<OrganizationNamesModel>
+
+    @POST("organizations")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postOrgRegist(@Body body: RegistOrgModel, @Header("Authorization")access: String): Call<RegistOrgResultModel>
+
+    @POST("organizations/add-member")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postAddOrgMember(@Body body: AddOrgMemberModel, @Header("Authorization")access: String): Call<Unit>
+
+    @POST("email/send")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postAuthEmail(@Header("Authorization")access: String): Call<RegistOrgResultModel>
+
+    @GET("email/check")
+    fun getEmailAuthResult(@QueryMap query: Map<String, String> ,@Header("Authorization")access: String): Call<EmailAuthResultModel>
+
+    @DELETE("email/{id}")
+    fun deleteEmailCode(@Path("id") emailId: Long, @Header("Authorization")access: String): Call<Unit>
 }

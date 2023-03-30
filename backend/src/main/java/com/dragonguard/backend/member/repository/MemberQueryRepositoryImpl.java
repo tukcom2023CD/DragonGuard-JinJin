@@ -1,6 +1,7 @@
 package com.dragonguard.backend.member.repository;
 
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
+import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.organization.entity.QOrganization;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -55,7 +56,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
         return jpaQueryFactory
                 .select(qDtoFactory.qMemberRankResponse())
                 .from(member)
-                .where(member.walletAddress.isNotNull().and(member.organizationId.eq(organizationId)))
+                .where(member.walletAddress.isNotNull().and(member.organizationId.eq(organizationId)).and(member.authStep.eq(AuthStep.ALL)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(memberOrderConverter.convert(pageable.getSort()))

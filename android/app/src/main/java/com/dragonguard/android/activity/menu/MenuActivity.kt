@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.Window
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.compare.RepoChooseActivity
 import com.dragonguard.android.databinding.ActivityMenuBinding
 
 /*
@@ -25,6 +27,8 @@ class MenuActivity : AppCompatActivity() {
         versionDialog = Dialog(this)
         versionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         versionDialog.setContentView(R.layout.version_dialog)
+        val version = versionDialog.findViewById<TextView>(R.id.gitrank_version)
+        version.append("v1.0")
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -57,6 +61,12 @@ class MenuActivity : AppCompatActivity() {
 //        버전버튼 누르면 dialog 띄움
         binding.version.setOnClickListener {
             showDialog()
+        }
+
+        binding.organizationAuth.setOnClickListener {
+            val intent = Intent(applicationContext, AuthOrgActivity::class.java)
+            intent.putExtra("token", token)
+            startActivity(intent)
         }
 
     }

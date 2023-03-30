@@ -1,5 +1,6 @@
 package com.dragonguard.backend.organization.repository;
 
+import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.organization.entity.OrganizationType;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -28,6 +29,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
         return jpaQueryFactory
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization, member)
+                .where(member.authStep.eq(AuthStep.ALL))
                 .leftJoin(organization.members, member)
                 .fetchJoin()
                 .offset(pageable.getOffset())
@@ -43,7 +45,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .from(organization, member)
                 .leftJoin(organization.members, member)
                 .fetchJoin()
-                .where(organization.organizationType.eq(type))
+                .where(organization.organizationType.eq(type).and(member.authStep.eq(AuthStep.ALL)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(member.sumOfTokens.sum().desc())
