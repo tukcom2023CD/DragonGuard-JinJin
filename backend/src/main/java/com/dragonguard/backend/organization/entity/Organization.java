@@ -26,6 +26,7 @@ public class Organization extends BaseTime {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     @Enumerated(EnumType.STRING)
