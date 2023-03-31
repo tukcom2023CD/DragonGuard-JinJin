@@ -74,14 +74,14 @@ public class OrganizationService {
         return organizationRepository.findBySearchWord(type, name, pageable);
     }
 
-    private Organization getEntity(Long id) {
-        return organizationRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
-    }
-
     public IdResponse<Long> findByName(String name) {
         Organization organization = organizationRepository.findByName(name)
                 .orElseThrow(EntityNotFoundException::new);
         return new IdResponse<>(organization.getId());
+    }
+
+    private Organization getEntity(Long id) {
+        return organizationRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

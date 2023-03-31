@@ -121,8 +121,8 @@ final class APIURL{
     }
     
     // MARK: 조직 검색
-    func searchOrganizationList(ip: String, name: String, type: String,page: Int, size: Int) -> String{
-        let url = "http://\(ip)/api/organizations/search?name=\(name)&type=\(type)&page=\(page)&size=\(size)"
+    func searchOrganizationList(ip: String, name: String, type: String, page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/organizations/search?type=\(type)&name=\(name)&page=\(page)&size=\(size)"
         return url
     }
     
@@ -138,6 +138,11 @@ final class APIURL{
         return url
     }
     
+    // MARK: 조직에 멤버 등록
+    func addMemberInOrganization(ip: String) -> String{
+        let url = "http://\(ip)/api/organizations/add-member"
+        return url
+    }
     
     // MARK: 이메일 인증을 위해 이메일 보내기
     func sendEmailToAuth(ip: String) -> String{
@@ -151,6 +156,7 @@ final class APIURL{
         return url
     }
     
+  
     
     
     

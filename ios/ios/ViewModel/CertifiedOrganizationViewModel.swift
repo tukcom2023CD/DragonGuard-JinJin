@@ -15,7 +15,7 @@ final class CertifiedOrganizationViewModel{
     let addService = AddOrganizationService()   /// 조직 등록하는 서비스
     let emailService = EmailService()   /// 이메일 서비스
     let disposeBag = DisposeBag()
-    var page = 0
+    var page = 1
     var size = 20
     
     // MARK: 사용자가 검색한 조직 리스트를 서버에서 받아 반환하는 함수
@@ -27,7 +27,7 @@ final class CertifiedOrganizationViewModel{
     func getOrganizationList(name: String, type: String, check: Bool) -> Observable<[SearchOrganizationListModel]>{
         // check가 거짓인 경우 page 초기화
         if !check{
-            self.page = 0
+            self.page = 1
         }
         
         return Observable.create(){ observer in
@@ -81,6 +81,24 @@ final class CertifiedOrganizationViewModel{
             return Disposables.create()
         }
     
+    }
+    
+    // MARK: 조직에 멤버 추가하는 함수
+    /// - Parameters:
+    ///   - organizationId: 조직 아이디
+    ///   - email: 사용자 이메일 주소
+    /// - Returns: 조직 아이디
+    func addMember(organizationId: Int, email: String) -> Observable<Int>{
+        
+        return Observable.create { observer in
+            self.addService.addMemberInOrganization(organizationId: organizationId, email: email)
+                .subscribe { data in
+                    observer.onNext(data)
+                }
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
     }
     
 }

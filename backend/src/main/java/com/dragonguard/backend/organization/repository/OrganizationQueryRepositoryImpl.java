@@ -58,6 +58,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization)
                 .where(organization.organizationType.eq(type).and(organization.name.likeIgnoreCase(name)))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 }

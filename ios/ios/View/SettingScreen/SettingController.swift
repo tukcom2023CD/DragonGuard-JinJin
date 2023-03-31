@@ -10,7 +10,7 @@ import UIKit
 
 final class SettingController: UIViewController{
     // 설정화면에 출력될 종류들
-    let settingData = ["토큰 부여 기준","FAQ","버전 정보","로그아웃"]
+    let settingData = ["토큰 부여 기준","FAQ","버전 정보","조직인증","로그아웃"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,6 +123,8 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
             self.navigationController?.pushViewController(FAQPage(), animated: true)
         case 2:
             versionInfo()   // 버전 정보
+        case 3:
+            self.navigationController?.pushViewController(OrganizationCertificationController(), animated: true)
         default:
             return
         }

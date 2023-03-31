@@ -19,10 +19,12 @@ final class SearchOraganizationService {
                                                        type: type,
                                                        page: page,
                                                        size: size)
-        var result: [SearchOrganizationListModel] = []
         
+        let encodedString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        
+        var result: [SearchOrganizationListModel] = []
         return Observable.create(){ observer in
-            AF.request(url,
+            AF.request(encodedString,
                        method: .get,
                        headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
             .validate(statusCode: 200..<201)
