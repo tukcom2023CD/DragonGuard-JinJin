@@ -236,7 +236,7 @@ class ApiRepository {
 
     fun getOrgNames(name: String, token: String, count: Int, type: String): OrganizationNamesModel {
         val queryMap = mutableMapOf<String, String>()
-        queryMap.put("page","${count+1}")
+        queryMap.put("page","$count")
         queryMap.put("name",name)
         queryMap.put("type",type)
         queryMap.put("size", "10")

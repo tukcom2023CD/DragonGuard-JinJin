@@ -118,7 +118,9 @@ class AuthEmailActivity : AppCompatActivity() {
     private fun setUpCountDownTimer() {
         timer = object : CountDownTimer(MIllIS_IN_FUTURE, TICK_INTERVAL) {
             override fun onTick(millisUntilFinished: Long) {
-                binding.remainTime.text = "${millisUntilFinished/60}:${millisUntilFinished%60}"
+                val minute = millisUntilFinished/60000L
+                val second = millisUntilFinished%60000L/1000L
+                binding.remainTime.text = "${minute}:${second}"
                 viewmodel.timerJob.start()
             }
 
