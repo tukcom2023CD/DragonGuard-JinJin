@@ -15,26 +15,32 @@ final class AddOrganizationService{
     // MARK: 조직이 없는 경우 새롭게 조직 등록하는 함수
     func addOrganization(name: String, type: String, endPoint: String) -> Observable<Int>{
         let url = APIURL.apiUrl.addOrganization(ip: APIURL.ip)
-        let body = [
+        let body: [String: Any] = [
             "name": name,
             "organizationType": type,
             "emailEndpoint": endPoint
         ]
+        
         return Observable.create { observer in
+            print(Environment.jwtToken ?? "")
             
             AF.request(url,
                        method: .post,
                        parameters: body,
-                       headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
-            .responseDecodable(of: Int.self){ response in
-                
+                       encoding: JSONEncoding.default,
+                       headers: [
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer \(Environment.jwtToken ?? "")"])
+            .validate(statusCode: 200..<201)
+            .responseDecodable(of: AddOrganizationCodableModel.self){ response in
+
                 switch response.result{
                 case .success(let data):
-                    observer.onNext(data)
+                    observer.onNext(data.id)
                 case .failure(let error):
                     print("addOrganization error!! \(error)")
                 }
-                
+
             }
             
             return Disposables.create()
@@ -58,6 +64,7 @@ final class AddOrganizationService{
             AF.request(url,
                        parameters: body,
                        headers: ["Authorization" : "Bearer \(Environment.jwtToken ?? "")"])
+            .validate(statusCode: 200..<201)
             .responseDecodable(of: Int.self) { response in
                 
                 switch response.result{

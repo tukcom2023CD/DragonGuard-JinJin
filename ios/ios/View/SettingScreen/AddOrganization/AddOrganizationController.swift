@@ -7,15 +7,28 @@
 
 import Foundation
 import UIKit
+import RxSwift
 import SnapKit
 
-final class CertifiedOrganizationController: UIViewController{
-    let deviceWidth = UIScreen.main.bounds.width
-    private var type: String = ""
+// MARK: 조직 등록화면
+final class AddOrganizationController: UIViewController{
+    private let deviceWidth = UIScreen.main.bounds.width
+    private let typeList = ["대학교", "회사", "고등학교", "기타"]
+    private let urlTypeList = ["UNIVERSITY", "COMPANY", "HIGH_SCHOOL", "ETC"]
+    var type: String?
+    private var viewType: String?
     var delegate: SendOrganizationInfo?
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = .white
+        
+        for index in 0..<urlTypeList.count{
+            if self.type == urlTypeList[index]{
+                self.viewType = typeList[index]
+            }
+        }
         
         addToView()
     }
@@ -26,7 +39,7 @@ final class CertifiedOrganizationController: UIViewController{
     
     private lazy var certifiedLabel: UILabel = {
         let label = UILabel()
-        label.text = "조직 인증하기"
+        label.text = "조직 등록하기"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 40)
         return label
@@ -44,14 +57,16 @@ final class CertifiedOrganizationController: UIViewController{
     // MARK: 학교 이름 입력하는 텍스트 필드
     private lazy var organizationTextField: UITextField = {
         let field = UITextField()
+        field.textColor = .black
         field.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        field.placeholder = "조직 이름을 입력하세요"
+        field.attributedPlaceholder =  NSAttributedString(string: "조직 이름을 입력하세요",
+                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         return field
     }()
     
     // MARK: 학교 UI들 묶는 StackView
     private lazy var organizationStackView: UIStackView = {
-        let stackview = UIStackView()
+        let stackview = UIStackView(arrangedSubviews: [organizationName,organizationTextField])
         stackview.axis = .horizontal
         stackview.alignment = .fill
         stackview.distribution = .equalSpacing
@@ -70,18 +85,17 @@ final class CertifiedOrganizationController: UIViewController{
     }()
     
     // MARK: 타입 선택하는 버튼
-    private lazy var typeButton: UIButton = {
-        let btn = UIButton()
-        btn.setTitle("조직 타입을 선택해주세요", for: .normal)
-        btn.setTitleColor(.lightGray, for: .normal)
-        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        btn.addTarget(self, action: #selector(clickedTypeButton), for: .touchUpInside)
-        return btn
+    private lazy var typeLabel: UILabel = {
+        let label = UILabel()
+        label.text = self.viewType
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return label
     }()
     
     // MARK: 조직 UI들 묶는 StackView
     private lazy var typeStackView: UIStackView = {
-        let stackview = UIStackView()
+        let stackview = UIStackView(arrangedSubviews: [organizationType,typeLabel])
         stackview.axis = .horizontal
         stackview.alignment = .fill
         stackview.distribution = .equalSpacing
@@ -101,14 +115,16 @@ final class CertifiedOrganizationController: UIViewController{
     // MARK: 이메일 입력하는 텍스트 필드
     private lazy var emailTextField: UITextField = {
         let field = UITextField()
+        field.textColor = .black
         field.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        field.placeholder = "이메일을 입력하세요"
+        field.attributedPlaceholder =  NSAttributedString(string: "이메일을 입력하세요",
+                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         return field
     }()
     
     // MARK: 이메일 UI 묶는 Stack View
     private lazy var emailStackView: UIStackView = {
-        let stackview = UIStackView()
+        let stackview = UIStackView(arrangedSubviews: [emailName,emailTextField])
         stackview.axis = .horizontal
         stackview.alignment = .fill
         stackview.distribution = .equalSpacing
@@ -119,7 +135,7 @@ final class CertifiedOrganizationController: UIViewController{
     
     // MARK: 전체 stack view 묶는 vertical stack view
     private lazy var allStackView: UIStackView = {
-        let stackview = UIStackView()
+        let stackview = UIStackView(arrangedSubviews: [typeStackView, organizationStackView, emailStackView])
         stackview.axis = .vertical
         stackview.alignment = .fill
         stackview.distribution = .equalSpacing
@@ -145,22 +161,23 @@ final class CertifiedOrganizationController: UIViewController{
      UI Action 작성
      */
     
-    // MARK: 타입 선택하러 Modal view 방식으로 화면 이동
-    @objc private func clickedTypeButton(){
-        let chooseOrganizationType = ChooseOrganizationType()
-        chooseOrganizationType.delegate = self
-        self.present(chooseOrganizationType, animated: true)
-    }
     
     // MARK: 조직 등록 버튼을 눌렀을 때
-    @objc private func clickedDoneBtn(){
+    @objc
+    private func clickedDoneBtn(){
+        guard let name = organizationTextField.text else { return }
+        guard let email = emailTextField.text else { return }
+        guard let type = self.type else { return }
         
         // 조직 인증을 모두 입력한 뒤 전송하는 부분
-        if !(organizationTextField.text?.isEmpty ?? false) &&
-            !(emailTextField.text?.isEmpty ?? false) &&
-            !self.type.isEmpty{
-            
-           
+        if !name.isEmpty && !email.isEmpty && !type.isEmpty {
+            CertifiedOrganizationViewModel.viewModel.addOrganization(name: name,
+                                                                     type: type,
+                                                                     endPoint: email)
+            .subscribe { id in
+                print("id \(id)")
+            }
+            .disposed(by: self.disposeBag)
             
         }
     }
@@ -170,28 +187,7 @@ final class CertifiedOrganizationController: UIViewController{
         
         self.view.addSubview(certifiedLabel)
         
-        // 조직 이름
-        self.view.addSubview(organizationStackView)
-        [organizationName,organizationTextField].map{
-            self.organizationStackView.addArrangedSubview($0)
-        }
-        
-        // 조직 타입
-        self.view.addSubview(typeStackView)
-        [organizationType,typeButton].map{
-            self.typeStackView.addArrangedSubview($0)
-        }
-        
-        // 이메일 endpoint
-        self.view.addSubview(emailStackView)
-        [emailName,emailTextField].map {
-            self.emailStackView.addArrangedSubview($0)
-        }
-        
         self.view.addSubview(allStackView)
-        [organizationStackView,typeStackView,emailStackView].map {
-            self.allStackView.addArrangedSubview($0)
-        }
         
         self.view.addSubview(doneBtn)
         
@@ -221,11 +217,11 @@ final class CertifiedOrganizationController: UIViewController{
 }
 
 // MARK: 선택한 조직 타입 가져옴
-extension CertifiedOrganizationController: SendType{
-    func sendType(type: String) {
-        self.type = type
-    }
-}
+//extension AddOrganizationController: SendType{
+//    func sendType(type: String) {
+//        self.type = type
+//    }
+//}
 
 // MARK: 조직 정보 등록했을 때 조직 인증 요청
 protocol SendOrganizationInfo{
@@ -235,21 +231,3 @@ protocol SendOrganizationInfo{
 }
 
 
-/*
- preview
- */
-
-import SwiftUI
-
-struct VCPreViewCertifiedOrganizationController:PreviewProvider {
-    static var previews: some View {
-        CertifiedOrganizationController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewCertifiedOrganizationController2:PreviewProvider {
-    static var previews: some View {
-        CertifiedOrganizationController().toPreview().previewDevice("iPad (10th generation)")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
