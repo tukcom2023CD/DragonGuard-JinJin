@@ -9,9 +9,10 @@ import Foundation
 import Alamofire
 import RxSwift
 
-// MARK: 조직 등록하는 서비스 클래스
+// MARK: 조직 등록 과련 서비스 클래스
 final class AddOrganizationService{
         
+    // MARK: 조직이 없는 경우 새롭게 조직 등록하는 함수
     func addOrganization(name: String, type: String, endPoint: String) -> Observable<Int>{
         let url = APIURL.apiUrl.addOrganization(ip: APIURL.ip)
         let body = [
@@ -34,6 +35,38 @@ final class AddOrganizationService{
                     print("addOrganization error!! \(error)")
                 }
                 
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    // MARK: 조직에 멤버 추가하는 함수
+    /// - Parameters:
+    ///   - organizationId: 조직 아이디
+    ///   - email: 사용자 이메일 주소
+    /// - Returns: 조직 아이디
+    func addMemberInOrganization(organizationId: Int, email: String) -> Observable<Int>{
+        let url = APIURL.apiUrl.addMemberInOrganization(ip: APIURL.ip)
+        let body: [String: Any] = [
+            "organizationId" : organizationId,
+              "email" : email
+        ]
+        
+        return Observable.create { observer in
+            
+            AF.request(url,
+                       parameters: body,
+                       headers: ["Authorization" : "Bearer \(Environment.jwtToken ?? "")"])
+            .responseDecodable(of: Int.self) { response in
+                
+                switch response.result{
+                case .success(let data):
+                    observer.onNext(data)
+                    print("addMemberInOrganization data \(data)")
+                case .failure(let error):
+                    print("addMemberInOrganization error!\n \(error)")
+                }
             }
             
             return Disposables.create()
