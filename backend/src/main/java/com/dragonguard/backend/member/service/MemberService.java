@@ -12,6 +12,7 @@ import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Member;
+import com.dragonguard.backend.member.entity.OrganizationDetails;
 import com.dragonguard.backend.member.entity.Role;
 import com.dragonguard.backend.member.entity.Tier;
 import com.dragonguard.backend.member.mapper.MemberMapper;
@@ -26,6 +27,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -91,17 +93,22 @@ public class MemberService {
         updateTier(member);
     }
 
+    @Transactional
     public MemberResponse getMember() {
         Member member = authService.getLoginUser();
         Integer rank = memberRepository.findRankingById(member.getId());
         Long amount = member.getSumOfTokens();
         updateTier(member);
-        Long organizationId = member.getOrganizationDetails().getOrganizationId();
-        if (organizationId != null) {
-            Organization organization = organizationRepository.findById(member.getOrganizationDetails().getOrganizationId()).orElseThrow(EntityNotFoundException::new);
-            return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount, organization.getName());
+        OrganizationDetails organizationDetails = member.getOrganizationDetails();
+
+        if (organizationDetails == null) {
+            return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount);
         }
-        return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount);
+
+        Organization organization = organizationRepository.findById(organizationDetails.getOrganizationId())
+                .orElseThrow(EntityNotFoundException::new);
+        
+        return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount, organization.getName());
     }
 
     public Member findMemberByGithubId(String githubId) {
