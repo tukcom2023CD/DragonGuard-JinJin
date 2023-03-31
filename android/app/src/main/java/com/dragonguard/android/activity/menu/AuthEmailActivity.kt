@@ -3,6 +3,7 @@ package com.dragonguard.android.activity.menu
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,6 +16,8 @@ import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivityAuthEmailBinding
 import com.dragonguard.android.viewmodel.Viewmodel
+import com.dragonguard.android.viewmodel.Viewmodel.Companion.MIllIS_IN_FUTURE
+import com.dragonguard.android.viewmodel.Viewmodel.Companion.TICK_INTERVAL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -25,13 +28,15 @@ class AuthEmailActivity : AppCompatActivity() {
     private val viewmodel = Viewmodel()
     private var token = ""
     private var orgName = ""
-    private var organizationId: Long = 0
+    private var emailAuthId: Long = 0
+    private lateinit var timer: CountDownTimer
+    private var reset = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth_email)
         binding.authEamilViewmodel = viewmodel
 
-        organizationId = intent.getLongExtra("id", -1)
+        emailAuthId = intent.getLongExtra("id", -1)
         token = intent.getStringExtra("token")!!
         orgName = intent.getStringExtra("orgName")!!
 
@@ -41,9 +46,20 @@ class AuthEmailActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
         supportActionBar?.title = "   이메일 인증"
 
+        setUpCountDownTimer()
+        timer.start()
+
+        binding.resendCode.setOnClickListener {
+            if(reset) {
+                sendEmail()
+            } else {
+                deleteEmail()
+                sendEmail()
+            }
+        }
         viewmodel.onAuthEmailListener.observe(this, Observer {
             if(viewmodel.onAuthEmailListener.value.toString().length ==5) {
-                Log.d("request", "code: ${binding.emailCode.text}, token: $token, orgId: $organizationId")
+                Log.d("request", "code: ${binding.emailCode.text}, token: $token, orgId: $emailAuthId")
                 authEmail()
             }
         })
@@ -53,7 +69,7 @@ class AuthEmailActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.emailAuthResult(organizationId, binding.emailCode.text.toString(), token)
+                viewmodel.emailAuthResult(emailAuthId, binding.emailCode.text.toString(), token)
             }
             val result = resultDeferred.await()
             if(result) {
@@ -69,9 +85,48 @@ class AuthEmailActivity : AppCompatActivity() {
         }
     }
 
+    private fun deleteEmail() {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                viewmodel.deleteLateEmailCode(emailAuthId, token)
+            }
+            val result = resultDeferred.await()
+            reset = result
+        }
+    }
+
+    private fun sendEmail() {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                viewmodel.sendEmailAuth(token)
+            }
+            val result = resultDeferred.await()
+            if(result != -1L) {
+                emailAuthId = result
+                reset = false
+            }
+        }
+    }
+
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         closeKeyboard()
         return super.dispatchTouchEvent(ev)
+    }
+
+    private fun setUpCountDownTimer() {
+        timer = object : CountDownTimer(MIllIS_IN_FUTURE, TICK_INTERVAL) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding.remainTime.text = "${millisUntilFinished/60}:${millisUntilFinished%60}"
+                viewmodel.timerJob.start()
+            }
+
+            override fun onFinish() {
+                binding.authStatus.text = "시간초과!! 재전송을 눌러주세요!!"
+                binding.emailCode.isEnabled = false
+            }
+        }
     }
 
     //    edittext의 키보드 제거

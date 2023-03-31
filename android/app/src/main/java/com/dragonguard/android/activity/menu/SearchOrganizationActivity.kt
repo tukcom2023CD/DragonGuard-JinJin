@@ -98,7 +98,6 @@ class SearchOrganizationActivity : AppCompatActivity() {
                 }
                 changable = true
                 lastSearch = viewmodel.onSearchListener.value!!
-                Log.d("api 시도", "callSearchApi 실행")
                 getOrganizationNames(viewmodel.onSearchListener.value!!)
                 binding.searchResult.visibility = View.VISIBLE
                 binding.searchName.isFocusable = true
@@ -128,7 +127,6 @@ class SearchOrganizationActivity : AppCompatActivity() {
                         }
                         changable = true
                         lastSearch = viewmodel.onSearchListener.value!!
-                        Log.d("api 시도", "callSearchApi 실행")
                         getOrganizationNames(viewmodel.onSearchListener.value!!)
                         binding.searchResult.visibility = View.VISIBLE
                         binding.searchName.isFocusable = true
@@ -155,6 +153,7 @@ class SearchOrganizationActivity : AppCompatActivity() {
     }
 
     fun getOrganizationNames(name: String) {
+        Log.d("org 검색", "이름 $name type $type  count $count")
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             if(type.isBlank()) {
@@ -246,7 +245,6 @@ class SearchOrganizationActivity : AppCompatActivity() {
             binding.progressBar.visibility = View.VISIBLE
             changable = true
             CoroutineScope(Dispatchers.Main).launch {
-                Log.d("api 시도", "callSearchApi 실행  load more")
                 getOrganizationNames(lastSearch)
             }
         }
