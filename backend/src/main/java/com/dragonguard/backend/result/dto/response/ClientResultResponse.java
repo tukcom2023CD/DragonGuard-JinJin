@@ -3,7 +3,6 @@ package com.dragonguard.backend.result.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
@@ -14,7 +13,6 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class ClientResultResponse {
     @NotBlank

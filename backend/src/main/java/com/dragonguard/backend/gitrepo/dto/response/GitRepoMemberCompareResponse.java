@@ -3,7 +3,6 @@ package com.dragonguard.backend.gitrepo.dto.response;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * @author 김승진
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
  */
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoMemberCompareResponse {
     private GitRepoMemberResponse firstMember;

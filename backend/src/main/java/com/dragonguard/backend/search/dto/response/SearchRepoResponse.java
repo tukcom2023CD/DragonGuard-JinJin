@@ -3,7 +3,6 @@ package com.dragonguard.backend.search.dto.response;
 import com.dragonguard.backend.result.dto.response.ClientResultResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * @author 김승진
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
  */
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class SearchRepoResponse {
     private ClientResultResponse[] items;

@@ -4,7 +4,6 @@ import com.dragonguard.backend.blockchain.entity.ContributeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 import java.util.UUID;
@@ -16,7 +15,6 @@ import java.util.UUID;
 
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class BlockchainResponse {
     private Long id;

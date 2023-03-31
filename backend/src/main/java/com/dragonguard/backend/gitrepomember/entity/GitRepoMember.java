@@ -33,27 +33,20 @@ public class GitRepoMember extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    private Integer commits;
-
-    private Integer additions;
-
-    private Integer deletions;
+    @Embedded
+    private Contribution contribution;
 
     @Builder
-    public GitRepoMember(GitRepo gitRepo, Member member, Integer commits, Integer additions, Integer deletions) {
+    public GitRepoMember(GitRepo gitRepo, Member member, Contribution contribution) {
         this.gitRepo = gitRepo;
         this.member = member;
-        this.commits = commits;
-        this.additions = additions;
-        this.deletions = deletions;
+        this.contribution = contribution;
     }
 
     public void update(GitRepoMember gitRepoMember) {
         this.gitRepo = gitRepoMember.gitRepo;
         this.member = gitRepoMember.member;
-        this.commits = gitRepoMember.commits;
-        this.additions = gitRepoMember.additions;
-        this.deletions = gitRepoMember.deletions;
+        this.contribution = gitRepoMember.contribution;
     }
 
     @Override
@@ -63,13 +56,11 @@ public class GitRepoMember extends BaseTime {
         GitRepoMember that = (GitRepoMember) o;
         return Objects.equals(gitRepo, that.gitRepo)
                 && Objects.equals(member, that.member)
-                && Objects.equals(commits, that.commits)
-                && Objects.equals(additions, that.additions)
-                && Objects.equals(deletions, that.deletions);
+                && Objects.equals(contribution, that.contribution);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gitRepo, member, commits, additions, deletions);
+        return Objects.hash(gitRepo, member, contribution);
     }
 }

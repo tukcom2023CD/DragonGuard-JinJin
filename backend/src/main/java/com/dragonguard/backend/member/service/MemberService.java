@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -95,9 +96,9 @@ public class MemberService {
         Integer rank = memberRepository.findRankingById(member.getId());
         Long amount = member.getSumOfTokens();
         updateTier(member);
-        Long organizationId = member.getOrganizationId();
+        Long organizationId = member.getOrganizationDetails().getOrganizationId();
         if (organizationId != null) {
-            Organization organization = organizationRepository.findById(member.getOrganizationId()).orElseThrow(EntityNotFoundException::new);
+            Organization organization = organizationRepository.findById(member.getOrganizationDetails().getOrganizationId()).orElseThrow(EntityNotFoundException::new);
             return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount, organization.getName());
         }
         return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount);
@@ -146,6 +147,6 @@ public class MemberService {
     }
 
     private boolean isWalletAddressExist(Member member) {
-        return member.getWalletAddress() != null && !member.getWalletAddress().isEmpty();
+        return StringUtils.hasText(member.getWalletAddress());
     }
 }
