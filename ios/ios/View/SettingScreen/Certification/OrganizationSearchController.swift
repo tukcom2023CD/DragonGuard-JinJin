@@ -43,8 +43,17 @@ final class OrganizationSearchController: UIViewController{
     private lazy var resultTableView: UITableView = {
         let tableview = UITableView()
         tableview.backgroundColor = .white
-        
         return tableview
+    }()
+    
+    // MARK: 사용자의 조직이 없는 경우 조직 등록하는 버튼
+    private lazy var addOrganizationBtn: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("조직 등록하기", for: .normal)
+        btn.setTitleColor(UIColor(red: 100/255, green: 100/255, blue: 200/255, alpha: 1), for: .normal)
+        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15)
+        btn.addTarget(self, action: #selector(clickedAddOrganizationBtn), for: .touchUpInside)
+        return btn
     }()
     
     /*
@@ -60,12 +69,36 @@ final class OrganizationSearchController: UIViewController{
         resultTableView.delegate = self
         resultTableView.dataSource = self
         resultTableView.register(OrganizationSearchTableViewCell.self, forCellReuseIdentifier: OrganizationSearchTableViewCell.identifier)
-        setAutoLayout()
+        
+        self.view.addSubview(addOrganizationBtn)
+        
     }
     
     // MARK: set UI AutoLayout
     private func setAutoLayout(){
+        addOrganizationBtn.snp.makeConstraints({ make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide)
+            make.trailing.equalTo(-10)
+        })
         
+        resultTableView.snp.makeConstraints({ make in
+            make.top.equalTo(self.addOrganizationBtn.snp.bottom).offset(10)
+            make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            make.leading.equalTo(10)
+            make.trailing.equalTo(-10)
+        })
+    }
+    
+    /*
+     UI Action
+     */
+    
+    // MARK: 조직 등록 버튼 누른 경우
+    @objc
+    private func clickedAddOrganizationBtn(){
+        let addOrganization = AddOrganizationController()
+        addOrganization.type = self.type
+        self.navigationController?.pushViewController(addOrganization, animated: true)
     }
     
 }
@@ -75,7 +108,7 @@ extension OrganizationSearchController: UISearchBarDelegate{
     
     // MARK: 검색 바 검색하기 시작할 때
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        
+        searchBar.text = ""
     }
     
     // MARK: Cancel 취소 버튼 눌렀을 때
@@ -98,7 +131,9 @@ extension OrganizationSearchController: UISearchBarDelegate{
                                                                      check: false)
         .subscribe { resultList in
             self.searchResultList = resultList
+            self.setAutoLayout()
             print(resultList)
+            
         }
         .disposed(by: disposeBag)
     }

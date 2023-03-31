@@ -26,10 +26,30 @@ final class SearchOraganizationService {
         return Observable.create(){ observer in
             AF.request(encodedString,
                        method: .get,
+                       encoding: JSONEncoding.default,
                        headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
             .validate(statusCode: 200..<201)
+//            .responseData { response in
+//                switch response.result {
+//                case .success(let data):
+//                    do {
+//                        let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [Any],
+//                        var singleObjectArray = jsonArray?.first as? [String: Any] {
+//
+//                        let decoder = JSONDecoder()
+//                        let object = try decoder.decode(MyObject.self, from: JSONSerialization.data(withJSONObject: singleObjectArray))
+//                        print(object)
+//                        }
+//                    } catch {
+//                        print(error.localizedDescription)
+//                    }
+//                case .failure(let error):
+//                    print(error.localizedDescription)
+//                }
+            
+            
             .responseDecodable (of: SearchOrganizationListDecodingModel.self){ response in
-                
+
                 switch response.result {
                 case .success(let data):
                     print(data)
@@ -40,9 +60,9 @@ final class SearchOraganizationService {
                 case .failure(let error):
                     print("getOrganizationListService error!\n \(error)")
                 }
-                
+
                 observer.onNext(result)
-                
+
             }
             
             return Disposables.create()
