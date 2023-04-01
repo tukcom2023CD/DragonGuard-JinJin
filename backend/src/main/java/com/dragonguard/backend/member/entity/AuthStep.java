@@ -6,5 +6,5 @@ package com.dragonguard.backend.member.entity;
  */
 
 public enum AuthStep {
-    GITHUB_ONLY, GITHUB_AND_KLIP, ALL
+    NONE, GITHUB_ONLY, GITHUB_AND_KLIP, ALL
 }

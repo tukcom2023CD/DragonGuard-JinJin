@@ -2,6 +2,7 @@ package com.dragonguard.backend.gitrepo.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author 김승진
@@ -9,6 +10,7 @@ import lombok.Getter;
  */
 
 @Getter
+@ToString
 @AllArgsConstructor
 public class TwoGitRepoResponse {
     private GitRepoResponse firstRepo;

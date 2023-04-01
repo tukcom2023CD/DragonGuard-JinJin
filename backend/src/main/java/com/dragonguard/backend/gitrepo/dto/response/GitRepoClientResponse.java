@@ -1,9 +1,6 @@
 package com.dragonguard.backend.gitrepo.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author 김승진
@@ -11,6 +8,7 @@ import lombok.Setter;
  */
 
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoClientResponse {
