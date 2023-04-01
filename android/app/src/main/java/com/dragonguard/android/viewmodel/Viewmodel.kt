@@ -25,8 +25,8 @@ class Viewmodel: ViewModel() {
     private var oldTimeMills: Long = 0
 
     companion object {
-        const val MIllIS_IN_FUTURE = 300L
-        const val TICK_INTERVAL = 1L
+        const val MIllIS_IN_FUTURE = 300000L
+        const val TICK_INTERVAL = 1000L
     }
 
     val timerJob: Job = viewModelScope.launch(start = CoroutineStart.LAZY) {
