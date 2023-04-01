@@ -299,8 +299,8 @@ class MainActivity : AppCompatActivity() {
                 token = refresh.accessToken
                 multipleSearchUser()
             } else {
-                Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                 if (!this@MainActivity.isFinishing && state) {
+                    Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                     if(refreshState) {
                         refreshState = false
                         loginOut = true
