@@ -57,6 +57,7 @@ public class GitRepoLanguageClient implements GithubClient<GitRepoClientRequest,
                 .baseUrl(githubProperties.getUrl())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)
                 .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
+                .defaultHeader(githubProperties.getVersionKey(), githubProperties.getVersionValue())
                 .build();
     }
 }

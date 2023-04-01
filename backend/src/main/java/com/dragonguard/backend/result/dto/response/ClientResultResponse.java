@@ -15,6 +15,5 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @AllArgsConstructor
 public class ClientResultResponse {
-    @NotBlank
     private String full_name;
 }
