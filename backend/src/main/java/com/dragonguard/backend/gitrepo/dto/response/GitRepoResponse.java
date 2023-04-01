@@ -13,7 +13,6 @@ import java.util.Map;
  */
 
 @Getter
-@ToString
 @AllArgsConstructor
 public class GitRepoResponse {
     private GitRepoClientResponse gitRepo;

@@ -11,7 +11,6 @@ import lombok.ToString;
  */
 
 @Getter
-@ToString
 @AllArgsConstructor
 public class GitRepoMemberCompareResponse {
     private GitRepoMemberResponse firstMember;

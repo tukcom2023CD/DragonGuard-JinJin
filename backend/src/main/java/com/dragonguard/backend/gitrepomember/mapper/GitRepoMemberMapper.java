@@ -24,11 +24,12 @@ public class GitRepoMemberMapper {
     }
 
     public GitRepoMemberResponse toResponse(GitRepoMember gitRepoMember) {
+        Contribution contribution = gitRepoMember.getContribution();
         return GitRepoMemberResponse.builder()
                 .githubId(gitRepoMember.getMember().getGithubId())
-                .additions(gitRepoMember.getContribution().getAdditions())
-                .deletions(gitRepoMember.getContribution().getDeletions())
-                .commits(gitRepoMember.getContribution().getCommits())
+                .additions(contribution.getAdditions())
+                .deletions(contribution.getDeletions())
+                .commits(contribution.getCommits())
                 .build();
     }
 }

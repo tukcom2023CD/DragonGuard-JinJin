@@ -12,7 +12,6 @@ import lombok.ToString;
 
 @Getter
 @Builder
-@ToString
 @AllArgsConstructor
 public class GitRepoMemberResponse {
     private String githubId;
