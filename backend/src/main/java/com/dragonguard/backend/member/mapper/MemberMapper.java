@@ -2,6 +2,7 @@ package com.dragonguard.backend.member.mapper;
 
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
+import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Role;
 import org.springframework.stereotype.Component;
@@ -13,16 +14,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MemberMapper {
-    public Member toEntity(MemberRequest memberRequest) {
+    public Member toEntity(MemberRequest memberRequest, AuthStep authStep) {
         return Member.builder()
                 .githubId(memberRequest.getGithubId())
+                .authStep(authStep)
                 .build();
     }
 
-    public Member toEntity(String githubId, Role role) {
+    public Member toEntity(String githubId, Role role, AuthStep authStep) {
         return Member.builder()
                 .githubId(githubId)
                 .role(role)
+                .authStep(authStep)
                 .build();
     }
 

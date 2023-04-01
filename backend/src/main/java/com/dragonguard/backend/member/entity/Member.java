@@ -75,13 +75,13 @@ public class Member extends BaseTime {
     private Long sumOfTokens;
 
     @Builder
-    public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage, Role role) {
+    public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage, Role role, AuthStep authStep) {
         this.name = name;
         this.githubId = githubId;
         this.walletAddress = walletAddress;
         this.profileImage = profileImage;
         this.tier = Tier.SPROUT;
-        this.authStep = AuthStep.GITHUB_ONLY;
+        this.authStep = authStep;
         addCommit(commit);
         if (role != null && role.equals(Role.ROLE_ADMIN)) {
             this.role.add(Role.ROLE_ADMIN);
