@@ -25,11 +25,12 @@ public class ResultService {
     private final SearchService searchService;
 
     public void saveAllResult(List<ClientResultResponse> results, SearchRequest searchRequest) {
-        Search search = searchService.getEntityByRequest(searchRequest);
-        List<Result> resultList = resultRepository.findAllBySearchId(search.getId());
+        Long searchId = searchService.getEntityByRequest(searchRequest).getId();
+        List<Result> resultList = resultRepository.findAllBySearchId(searchId);
 
         results.stream()
-                .map(result -> resultMapper.toEntity(result, search.getId()))
+                .filter(entity -> resultRepository.existsByNameAndSearchId(entity.getFull_name(), searchId))
+                .map(result -> resultMapper.toEntity(result, searchId))
                 .filter(r -> !resultList.contains(r))
                 .forEach(resultRepository::save);
     }

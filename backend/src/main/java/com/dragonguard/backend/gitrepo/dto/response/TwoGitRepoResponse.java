@@ -10,7 +10,6 @@ import lombok.ToString;
  */
 
 @Getter
-@ToString
 @AllArgsConstructor
 public class TwoGitRepoResponse {
     private GitRepoResponse firstRepo;
