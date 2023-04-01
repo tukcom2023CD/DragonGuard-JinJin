@@ -44,7 +44,8 @@ class ApiRepository {
         try{
             val result = repoName.execute()
             repoNames = result.body()!!
-        }catch (e : SocketTimeoutException){
+        }catch (e : Exception){
+            Log.d("error", "레포 필터없는 검색: ${e.message}")
             return repoNames
         }
         return repoNames
@@ -64,7 +65,8 @@ class ApiRepository {
         try{
             val result = repoName.execute()
             repoNames = result.body()!!
-        }catch (e : SocketTimeoutException){
+        }catch (e : Exception){
+            Log.d("error", "레포 필터별 검색: ${e.message}")
             return repoNames
         }
         return repoNames
