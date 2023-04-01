@@ -107,7 +107,7 @@ public class MemberService {
 
         Organization organization = organizationRepository.findById(organizationDetails.getOrganizationId())
                 .orElseThrow(EntityNotFoundException::new);
-        
+
         return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount, organization.getName());
     }
 
@@ -127,11 +127,6 @@ public class MemberService {
         setTransaction(member);
     }
 
-    public Member getEntity(UUID id) {
-        return memberRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
-    }
-
     public void setTransaction(Member member) {
         blockchainService.setTransaction(
                 new ContractRequest(member.getWalletAddress(),
@@ -142,6 +137,15 @@ public class MemberService {
 
     public List<MemberRankResponse> getMemberRankingByOrganization(Long organizationId, Pageable pageable) {
         return memberRepository.findRankingByOrganization(organizationId, pageable);
+    }
+
+    public Member getEntity(UUID id) {
+        return memberRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public Member getLoginUserWithDatabase() {
+        return getEntity(authService.getLoginUser().getId());
     }
 
     private Member scrapeAndGetSavedMember(String githubId, Role role) {

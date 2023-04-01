@@ -8,14 +8,13 @@ import com.dragonguard.backend.email.repository.EmailRepository;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.entity.Member;
-import com.dragonguard.backend.member.service.AuthService;
+import com.dragonguard.backend.member.entity.OrganizationDetails;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -26,21 +25,23 @@ import java.util.Random;
 public class EmailService {
     private final EmailRepository emailRepository;
     private final JavaMailSender javaMailSender;
-    private final AuthService authService;
     private final MemberService memberService;
-    private Integer min = 10000;
-    private Integer max = 99999;
+    private static final Integer MIN = 10000;
+    private static final Integer MAX = 99999;
 
     @Transactional
     public IdResponse<Long> sendEmail() {
-        Member member = authService.getLoginUser();
-        String memberEmail = member.getOrganizationDetails().getOrganizationEmail();
+        Member member = memberService.getLoginUserWithDatabase();
+        OrganizationDetails organizationDetails = member.getOrganizationDetails();
 
-        if (StringUtils.hasText(memberEmail)) {
-            throw new EmailException();
+        if (organizationDetails == null) {
+            throw new IllegalStateException();
         }
+
+        String memberEmail = organizationDetails.getOrganizationEmail();
+
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        int random = new Random().nextInt(max - min) + min;
+        int random = new Random().nextInt(MAX - MIN) + MIN;
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
             mimeMessageHelper.setTo(memberEmail);
@@ -53,9 +54,9 @@ public class EmailService {
                     .memberId(member.getId())
                     .build();
 
-            Email entity = emailRepository.save(email);
+            Email savedEmail = emailRepository.save(email);
 
-            return new IdResponse<>(entity.getId());
+            return new IdResponse<>(savedEmail.getId());
         } catch (MessagingException e) {
             throw new EmailException();
         }
@@ -74,7 +75,7 @@ public class EmailService {
         if (!flag) return new CheckCodeResponse(false);
 
         deleteCode(id);
-        memberService.getEntity(authService.getLoginUser().getId()).finishAuth();
+        memberService.getLoginUserWithDatabase().finishAuth();
 
         return new CheckCodeResponse(true);
     }

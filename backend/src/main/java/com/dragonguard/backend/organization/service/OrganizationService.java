@@ -4,7 +4,6 @@ import com.dragonguard.backend.email.service.EmailService;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.entity.Member;
-import com.dragonguard.backend.member.service.AuthService;
 import com.dragonguard.backend.member.service.MemberService;
 import com.dragonguard.backend.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.organization.dto.request.OrganizationRequest;
@@ -32,7 +31,6 @@ import java.util.stream.Collectors;
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final OrganizationMapper organizationMapper;
-    private final AuthService authService;
     private final MemberService memberService;
     private final EmailService emailService;
 
@@ -47,7 +45,7 @@ public class OrganizationService {
     @Transactional
     public IdResponse<Long> findAndAddMember(AddMemberRequest addMemberRequest) {
         Organization organization = getEntity(addMemberRequest.getOrganizationId());
-        Member member = memberService.getEntity(authService.getLoginUser().getId());
+        Member member = memberService.getLoginUserWithDatabase();
         organization.addMember(member, addMemberRequest.getEmail().trim());
         return emailService.sendEmail();
     }
@@ -71,7 +69,7 @@ public class OrganizationService {
     }
 
     public List<OrganizationResponse> searchOrganization(OrganizationType type, String name, Pageable pageable) {
-        return organizationRepository.findBySearchWord(type, name, pageable);
+        return organizationRepository.findByTypeAndSearchWord(type, name, pageable);
     }
 
     public IdResponse<Long> findByName(String name) {

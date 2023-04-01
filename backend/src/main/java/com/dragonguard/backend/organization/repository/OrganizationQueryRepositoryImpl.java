@@ -53,7 +53,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     }
 
     @Override
-    public List<OrganizationResponse> findBySearchWord(OrganizationType type, String name, Pageable pageable) {
+    public List<OrganizationResponse> findByTypeAndSearchWord(OrganizationType type, String name, Pageable pageable) {
         return jpaQueryFactory
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization)
