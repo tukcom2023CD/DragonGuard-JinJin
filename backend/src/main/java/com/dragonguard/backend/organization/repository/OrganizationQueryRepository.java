@@ -5,6 +5,7 @@ import com.dragonguard.backend.organization.entity.OrganizationType;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author 김승진
@@ -12,9 +13,11 @@ import java.util.List;
  */
 
 public interface OrganizationQueryRepository {
-    List<OrganizationResponse> findRank(Pageable pageable);
+    List<OrganizationResponse> findRanking(Pageable pageable);
 
-    List<OrganizationResponse> findRankByType(OrganizationType type, Pageable pageable);
+    List<OrganizationResponse> findRankingByType(OrganizationType type, Pageable pageable);
 
     List<OrganizationResponse> findByTypeAndSearchWord(OrganizationType type, String name, Pageable pageable);
+
+    Integer findRankingByMemberId(UUID memberId);
 }

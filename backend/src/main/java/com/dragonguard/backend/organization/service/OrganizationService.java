@@ -61,11 +61,11 @@ public class OrganizationService {
     }
 
     public List<OrganizationResponse> getOrganizationRank(Pageable pageable) {
-        return organizationRepository.findRank(pageable);
+        return organizationRepository.findRanking(pageable);
     }
 
     public List<OrganizationResponse> getOrganizationRankByType(OrganizationType type, Pageable pageable) {
-        return organizationRepository.findRankByType(type, pageable);
+        return organizationRepository.findRankingByType(type, pageable);
     }
 
     public List<OrganizationResponse> searchOrganization(OrganizationType type, String name, Pageable pageable) {

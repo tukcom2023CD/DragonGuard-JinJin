@@ -24,7 +24,6 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -93,7 +92,8 @@ public class MemberService {
     @Transactional
     public MemberResponse getMember() {
         Member member = authService.getLoginUser();
-        Integer rank = memberRepository.findRankingById(member.getId());
+        UUID memberId = member.getId();
+        Integer rank = memberRepository.findRankingById(memberId);
         Long amount = member.getSumOfTokens();
         updateTier(member);
         OrganizationDetails organizationDetails = member.getOrganizationDetails();
@@ -105,7 +105,9 @@ public class MemberService {
         Organization organization = organizationRepository.findById(organizationDetails.getOrganizationId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount, organization.getName());
+        Integer organizationRank = organizationRepository.findRankingByMemberId(memberId);
+
+        return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount, organization.getName(), organizationRank);
     }
 
     public Member findMemberByGithubId(String githubId, AuthStep authStep) {

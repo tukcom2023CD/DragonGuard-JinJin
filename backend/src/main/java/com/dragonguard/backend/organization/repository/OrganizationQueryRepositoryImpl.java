@@ -3,12 +3,14 @@ package com.dragonguard.backend.organization.repository;
 import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.organization.entity.OrganizationType;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.dragonguard.backend.member.entity.QMember.member;
 import static com.dragonguard.backend.organization.entity.QOrganization.organization;
@@ -25,7 +27,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     private final OrganizationQDtoFactory organizationQDtoFactory;
 
     @Override
-    public List<OrganizationResponse> findRank(Pageable pageable) {
+    public List<OrganizationResponse> findRanking(Pageable pageable) {
         return jpaQueryFactory
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization, member)
@@ -39,7 +41,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     }
 
     @Override
-    public List<OrganizationResponse> findRankByType(OrganizationType type, Pageable pageable) {
+    public List<OrganizationResponse> findRankingByType(OrganizationType type, Pageable pageable) {
         return jpaQueryFactory
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization, member)
@@ -61,5 +63,17 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    @Override
+    public Integer findRankingByMemberId(UUID memberId) {
+        return jpaQueryFactory
+                .select(member)
+                .from(member, organization)
+                .leftJoin(organization.members, member)
+                .where(member.organizationDetails.organizationId.eq(organization.id).and(member.sumOfTokens.gt(
+                        JPAExpressions
+                                .select(member.sumOfTokens).from(member).where(member.id.eq(memberId)))))
+                .fetch().size() + 1;
     }
 }

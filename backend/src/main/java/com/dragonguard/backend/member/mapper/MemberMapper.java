@@ -29,7 +29,7 @@ public class MemberMapper {
                 .build();
     }
 
-    public MemberResponse toResponse(Member member, Integer commits, Integer rank, Long amount, String organization) {
+    public MemberResponse toResponse(Member member, Integer commits, Integer rank, Long amount, String organization, Integer organizationRank) {
         return MemberResponse.builder()
                 .id(member.getId())
                 .name(member.getName())
@@ -41,6 +41,7 @@ public class MemberMapper {
                 .rank(rank)
                 .tokenAmount(amount)
                 .organization(organization)
+                .organizationRank(organizationRank)
                 .build();
     }
 
