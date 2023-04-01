@@ -2,6 +2,7 @@ package com.dragonguard.backend.gitrepo.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.IntSummaryStatistics;
@@ -13,6 +14,7 @@ import java.util.Map;
  */
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoResponse {
     private GitRepoClientResponse gitRepo;
