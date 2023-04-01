@@ -2,6 +2,7 @@ package com.dragonguard.backend.search.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * @author 김승진
@@ -9,6 +10,7 @@ import lombok.Getter;
  */
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse {
     private String login;
