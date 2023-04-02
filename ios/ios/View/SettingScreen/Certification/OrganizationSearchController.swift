@@ -15,6 +15,8 @@ final class OrganizationSearchController: UIViewController{
     private var searchResultList: [SearchOrganizationListModel] = []    /// 검색 결과 저장할 배열
     private let disposeBag = DisposeBag()
     var type: String?   /// 타입 선택한 경우
+    private var isInfiniteScroll = false
+    private var searchText = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,6 +125,7 @@ extension OrganizationSearchController: UISearchBarDelegate{
         searchBar.resignFirstResponder()
         
         guard let searchText = searchBar.text else{ return }
+        self.searchText = searchText
         guard let type = self.type else {return}
         
         /// 검색 api 통신 보냄
@@ -150,6 +153,29 @@ extension OrganizationSearchController: UITableViewDelegate, UITableViewDataSour
         return cell
     }
     
+    // MARK: 무한 스크롤하면서 API 호출하는 기능
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        
+        if position > (resultTableView.contentSize.height - scrollView.frame.size.height){
+            if self.isInfiniteScroll{
+                guard let type = self.type else {return}
+                /// 검색 api 통신 보냄
+                CertifiedOrganizationViewModel.viewModel.getOrganizationList(name: searchText,
+                                                                             type: type,
+                                                                             check: true)
+                .subscribe { resultList in
+                    self.searchResultList = resultList
+                    self.setAutoLayout()
+                    print(resultList)
+                    
+                }
+                .disposed(by: disposeBag)
+                self.isInfiniteScroll = false
+            }
+        }
+        
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
     
