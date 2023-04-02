@@ -106,6 +106,8 @@ class AuthEmailActivity : AppCompatActivity() {
             if(result != -1L) {
                 emailAuthId = result
                 reset = false
+                timer.cancel()
+                setUpCountDownTimer()
             }
         }
     }
