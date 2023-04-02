@@ -172,5 +172,9 @@ final class CertifiedOrganizationViewModel{
         }
     }
     
+    // MARK: 인증번호 삭제
+    func removeCertificatedNumber(){
+        emailService.removeCertificatedNumber()
+    }
     
 }

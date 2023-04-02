@@ -67,7 +67,6 @@ final class EmailService{
         }
     }
     
-    
     // MARK: 인증번호 검사
     /// - Parameters:
     ///   - id: 이메일 Id
@@ -94,6 +93,26 @@ final class EmailService{
             }
             
             return Disposables.create()
+        }
+    }
+    
+    // MARK: 인증번호 삭제
+    func removeCertificatedNumber(){
+        let url = APIURL.apiUrl.removeCertificatedNumber(ip: APIURL.ip)
+        
+        AF.request(url,
+                   method: .delete,
+                   headers: [
+                   "Content-Type" : "application/json",
+                   "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
+                   ])
+        .response{ response in
+            switch response.result {
+            case .success(_):
+                print("success")
+            case .failure(let error):
+                print("removeCertificatedNumber error! \(error)")
+            }
         }
     }
 }
