@@ -15,6 +15,7 @@ final class OrganizationSearchController: UIViewController{
     private var searchResultList: [SearchOrganizationListModel] = []    /// 검색 결과 저장할 배열
     private let disposeBag = DisposeBag()
     var type: String?   /// 타입 선택한 경우
+    var delegate: SendingOrganizationName?
     private var isInfiniteScroll = false
     private var searchText = ""
     
@@ -156,6 +157,11 @@ extension OrganizationSearchController: UITableViewDelegate, UITableViewDataSour
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.delegate?.sendName(name: self.searchResultList[indexPath.section].name)
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     // MARK: 무한 스크롤하면서 API 호출하는 기능
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y
@@ -188,4 +194,8 @@ extension OrganizationSearchController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
     
     func numberOfSections(in tableView: UITableView) -> Int { return self.searchResultList.count }
+}
+
+protocol SendingOrganizationName{
+    func sendName(name: String)
 }

@@ -102,4 +102,41 @@ final class CertifiedOrganizationViewModel{
         }
     }
     
+    // MARK: 이메일 형식 확인하는 함수
+    func checkEmail(userEmail: String) -> Observable<Bool>{
+        return Observable.create { observer in
+            var organizationEndPoint: String = ""
+            print(userEmail)
+            if userEmail.contains("@") {
+                organizationEndPoint = String(userEmail.split(separator: "@")[1])
+                print(organizationEndPoint)
+            }
+            
+            if !organizationEndPoint.isEmpty {
+                observer.onNext(true)
+            }
+            else{
+                observer.onNext(false)
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    // MARK: 조직 타입 및 조직 이름 선택했는지 확인하는 함수
+    func checkTypeAndName(type: String, name: String) -> Observable<Bool>{
+        return Observable.create { observer in
+            
+            if type != "" && name != "" {
+                observer.onNext(true)
+            }
+            else{
+                observer.onNext(false)
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    
 }

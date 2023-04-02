@@ -54,6 +54,7 @@
 		3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B88801F2992881200680F1A /* RepoContributorInfoController.swift */; };
 		3B8C165629B7824A00B881F4 /* LanguageFillteringTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8C165529B7824A00B881F4 /* LanguageFillteringTableView.swift */; };
 		3B8C165829B782CD00B881F4 /* LanguageFillteringTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8C165729B782CD00B881F4 /* LanguageFillteringTableViewCell.swift */; };
+		3B9597A229D98193008E9335 /* CertificationEmailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9597A129D98193008E9335 /* CertificationEmailController.swift */; };
 		3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756E3298A15BB00F27094 /* MyRepositoryRankingController.swift */; };
 		3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756E5298A162200F27094 /* MyOrganizationListController.swift */; };
 		3B9756E8298A166300F27094 /* UnivInRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756E7298A166300F27094 /* UnivInRankingController.swift */; };
@@ -168,6 +169,7 @@
 		3B88801F2992881200680F1A /* RepoContributorInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoController.swift; sourceTree = "<group>"; };
 		3B8C165529B7824A00B881F4 /* LanguageFillteringTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageFillteringTableView.swift; sourceTree = "<group>"; };
 		3B8C165729B782CD00B881F4 /* LanguageFillteringTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageFillteringTableViewCell.swift; sourceTree = "<group>"; };
+		3B9597A129D98193008E9335 /* CertificationEmailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificationEmailController.swift; sourceTree = "<group>"; };
 		3B9756E3298A15BB00F27094 /* MyRepositoryRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRepositoryRankingController.swift; sourceTree = "<group>"; };
 		3B9756E5298A162200F27094 /* MyOrganizationListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOrganizationListController.swift; sourceTree = "<group>"; };
 		3B9756E7298A166300F27094 /* UnivInRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnivInRankingController.swift; sourceTree = "<group>"; };
@@ -413,6 +415,7 @@
 				3B3D2E0E29D5E252001A702C /* OrganizationSearchTableViewCell.swift */,
 				3B3D2E0A29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift */,
 				3B7BFF6D29CBDE1100A2F3F4 /* AddOrganization */,
+				3B9597A029D98150008E9335 /* CertificationEmail */,
 			);
 			path = Certification;
 			sourceTree = "<group>";
@@ -452,6 +455,14 @@
 				3BDD718729C0916D0018D09B /* LanguageFiltering */,
 			);
 			path = Filltering;
+			sourceTree = "<group>";
+		};
+		3B9597A029D98150008E9335 /* CertificationEmail */ = {
+			isa = PBXGroup;
+			children = (
+				3B9597A129D98193008E9335 /* CertificationEmailController.swift */,
+			);
+			path = CertificationEmail;
 			sourceTree = "<group>";
 		};
 		3B9756E9298A16B200F27094 /* WatchRankingScreen */ = {
@@ -824,6 +835,7 @@
 				3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */,
 				3B3D2E0B29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift in Sources */,
 				3B3D2E0929D5C0B8001A702C /* OrganizationCertificationController.swift in Sources */,
+				3B9597A229D98193008E9335 /* CertificationEmailController.swift in Sources */,
 				3BDD718B29C09E9E0018D09B /* ForkSelectionCollectionViewCell.swift in Sources */,
 				3B00229D2987998B003FA5CC /* SettingController.swift in Sources */,
 				A37AA6EE29A525C5002812F6 /* TabBarController.swift in Sources */,
