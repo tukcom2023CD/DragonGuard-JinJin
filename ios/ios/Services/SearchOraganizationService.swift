@@ -12,6 +12,7 @@ import RxSwift
 // MARK: 조직 검색하는 클래스
 final class SearchOraganizationService {
     
+    
     func getOrganizationListService(name: String, type: String, page: Int, size: Int) -> Observable<[SearchOrganizationListModel]>{
         
         let url = APIURL.apiUrl.searchOrganizationList(ip: APIURL.ip,
@@ -29,39 +30,40 @@ final class SearchOraganizationService {
                        encoding: JSONEncoding.default,
                        headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
             .validate(statusCode: 200..<201)
-//            .responseData { response in
-//                switch response.result {
-//                case .success(let data):
-//                    do {
-//                        let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [Any],
-//                        var singleObjectArray = jsonArray?.first as? [String: Any] {
-//
-//                        let decoder = JSONDecoder()
-//                        let object = try decoder.decode(MyObject.self, from: JSONSerialization.data(withJSONObject: singleObjectArray))
-//                        print(object)
-//                        }
-//                    } catch {
-//                        print(error.localizedDescription)
-//                    }
-//                case .failure(let error):
-//                    print(error.localizedDescription)
-//                }
-            
-            
-            .responseDecodable (of: SearchOrganizationListDecodingModel.self){ response in
-
+            .responseData { response in
                 switch response.result {
                 case .success(let data):
-                    print(data)
-                    result.append(SearchOrganizationListModel(id: data.id,
-                                                              name: data.name,
-                                                              type: data.type,
-                                                              emailEndpoint: data.emailEndpoint))
+                    do {
+                        if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [Any],
+                           let singleObjectArray = jsonArray.first as? [String: Any] {
+                                // NSSingleObjectArrayI에서 객체를 가져옴
+                                let jsonData = try JSONSerialization.data(withJSONObject: singleObjectArray)
+                                let decoder = JSONDecoder()
+                                let object = try decoder.decode(SearchOrganizationListDecodingModel.self, from: jsonData)
+                                print(object)
+                            }
+                    } catch {
+                        print(error.localizedDescription)
+                    }
                 case .failure(let error):
-                    print("getOrganizationListService error!\n \(error)")
+                    print(error.localizedDescription)
                 }
-
-                observer.onNext(result)
+            
+            
+//            .responseDecodable (of: SearchOrganizationListDecodingModel.self){ response in
+//
+//                switch response.result {
+//                case .success(let data):
+//                    print(data)
+//                    result.append(SearchOrganizationListModel(id: data.id,
+//                                                              name: data.name,
+//                                                              type: data.type,
+//                                                              emailEndpoint: data.emailEndpoint))
+//                case .failure(let error):
+//                    print("getOrganizationListService error!\n \(error)")
+//                }
+//
+//                observer.onNext(result)
 
             }
             
