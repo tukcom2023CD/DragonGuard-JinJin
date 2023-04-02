@@ -53,7 +53,6 @@ final class MainController: UIViewController {
     // 소속 대학교 이름 label
     lazy var univNameLabel: UILabel = {
         let univName = UILabel()
-        univName.text = "한국공학대학교"
         univName.textColor = .black
         univName.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
         return univName
@@ -197,7 +196,9 @@ final class MainController: UIViewController {
                 let url = URL(string: data.profileImage)!
                 self.img.load(img: self.img, url: url,btn: self.settingUI)
                 self.settingUI.setTitle(data.githubId, for: .normal)
+                self.univNameLabel.text = data.organization
                 self.collectionView.reloadData()
+                
             })
             .disposed(by: disposeBag)
     }

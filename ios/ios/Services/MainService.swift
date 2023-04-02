@@ -34,7 +34,8 @@ final class MainService{
                                              authStep: data.authStep,
                                              profileImage: data.profileImage ?? "",
                                              rank: data.rank,
-                                             tokenAmount: data.tokenAmount ?? 0)
+                                             tokenAmount: data.tokenAmount ?? 0,
+                                             organization: data.organization)
                         observer.onNext(info)
                     case .failure(let error):
                         print("삐리삐리 에러발생 !! \(error)")

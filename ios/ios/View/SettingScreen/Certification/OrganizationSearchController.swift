@@ -137,8 +137,13 @@ extension OrganizationSearchController: UISearchBarDelegate{
                                                                      check: false)
         .subscribe { resultList in
             
-            self.searchResultList = resultList
             self.setAutoLayout()
+            for data in resultList{
+                self.searchResultList.append(SearchOrganizationListModel(id: data.id,
+                                                                         name: data.name,
+                                                                         type: data.type,
+                                                                         emailEndpoint: data.emailEndpoint))
+            }
             self.resultTableView.reloadData()
         }
         .disposed(by: disposeBag)
@@ -158,7 +163,8 @@ extension OrganizationSearchController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.delegate?.sendName(name: self.searchResultList[indexPath.section].name)
+        self.delegate?.sendName(name: self.searchResultList[indexPath.section].name,
+                                organizationId: self.searchResultList[indexPath.section].id)
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -197,5 +203,5 @@ extension OrganizationSearchController: UITableViewDelegate, UITableViewDataSour
 }
 
 protocol SendingOrganizationName{
-    func sendName(name: String)
+    func sendName(name: String, organizationId: Int)
 }
