@@ -14,6 +14,7 @@ import RxSwift
 final class OrganizationCertificationController: UIViewController{
     private var urlType: String? /// api 통신에 사용할 타입
     private var userOrganizationName: String?   /// 사용자 조직 이름
+    private var organizationId: Int?    /// 조직 아이디
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -106,6 +107,7 @@ final class OrganizationCertificationController: UIViewController{
                                                               attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         textField.textColor = .black
         textField.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        textField.textAlignment = .right
         return textField
     }()
     
@@ -208,8 +210,9 @@ final class OrganizationCertificationController: UIViewController{
             .subscribe { first, second in
                 if first && second{
                     let certificatedEmail = CertificationEmailController()
-                    self.navigationController?.pushViewController(certificatedEmail, animated: true)
-                    
+                    certificatedEmail.organizationId = self.organizationId
+                    certificatedEmail.userEmail = self.emailTextField.text ?? ""
+                    self.navigationController?.pushViewController(certificatedEmail, animated: true)   
                 }
                 else{
                     // 팝업창 띄움
@@ -230,8 +233,9 @@ final class OrganizationCertificationController: UIViewController{
 extension OrganizationCertificationController: SendingType, SendingOrganizationName{
     
     // MARK: 검색하고 조직을 선택한 경우
-    func sendName(name: String) {
+    func sendName(name: String, organizationId: Int) {
         self.userOrganizationName = name
+        self.organizationId = organizationId
         self.nameChooseBtn.setTitle(name, for: .normal)
         self.nameChooseBtn.setTitleColor(.black, for: .normal)
     }

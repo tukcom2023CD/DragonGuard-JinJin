@@ -102,14 +102,44 @@ final class CertifiedOrganizationViewModel{
         }
     }
     
+    // MARK: 인증번호 재전송 함수
+    /// - Returns: 이메일 Id
+    func reSendCertifiactedNumber() -> Observable<Int>{
+        return Observable.create { observer in
+            self.emailService.reSendCertificatedNumber()
+                .subscribe { num in
+                    observer.onNext(num)
+                }
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    // MARK: 인증번호 검증
+    /// - Parameters:
+    ///   - id: 이메일 Id
+    ///   - code: 인증 번호
+    /// - Returns: 인증번호가 유효한지, 유효한 경우 true / 유효하지 않는 경우 false
+    func checkCertificatedNumber(id: Int, code: Int) -> Observable<Bool> {
+        return Observable.create { observer in
+            self.emailService.checkValidNumber(id: id, code: code)
+                .subscribe { valid in
+                    observer.onNext(valid)
+                }
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
     // MARK: 이메일 형식 확인하는 함수
+    /// - Parameter userEmail: 유저가 입력한 이메일
+    /// - Returns: 이메일 형식이 맞는 지 확인
     func checkEmail(userEmail: String) -> Observable<Bool>{
         return Observable.create { observer in
             var organizationEndPoint: String = ""
-            print(userEmail)
             if userEmail.contains("@") {
                 organizationEndPoint = String(userEmail.split(separator: "@")[1])
-                print(organizationEndPoint)
             }
             
             if !organizationEndPoint.isEmpty {
@@ -124,6 +154,10 @@ final class CertifiedOrganizationViewModel{
     }
     
     // MARK: 조직 타입 및 조직 이름 선택했는지 확인하는 함수
+    /// - Parameters:
+    ///   - type: 유저가 선택한 타입, ex) UNIVERSITY, COMPANG, ...
+    ///   - name: 유저가 선택한 조직 이름 ex) OOO대학교
+    /// - Returns: 타입과 이름을 모두 선택한 경우 true 반환
     func checkTypeAndName(type: String, name: String) -> Observable<Bool>{
         return Observable.create { observer in
             

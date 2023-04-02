@@ -15,6 +15,7 @@ final class AddOrganizationService{
     // MARK: 조직이 없는 경우 새롭게 조직 등록하는 함수
     func addOrganization(name: String, type: String, endPoint: String) -> Observable<Int>{
         let url = APIURL.apiUrl.addOrganization(ip: APIURL.ip)
+        
         let body: [String: Any] = [
             "name": name,
             "organizationType": type,
@@ -22,8 +23,6 @@ final class AddOrganizationService{
         ]
         
         return Observable.create { observer in
-            print(Environment.jwtToken ?? "")
-            
             AF.request(url,
                        method: .post,
                        parameters: body,
@@ -51,26 +50,31 @@ final class AddOrganizationService{
     /// - Parameters:
     ///   - organizationId: 조직 아이디
     ///   - email: 사용자 이메일 주소
-    /// - Returns: 조직 아이디
+    /// - Returns: 조직 아이디, 이메일로 인증번호 전송
     func addMemberInOrganization(organizationId: Int, email: String) -> Observable<Int>{
         let url = APIURL.apiUrl.addMemberInOrganization(ip: APIURL.ip)
         let body: [String: Any] = [
             "organizationId" : organizationId,
               "email" : email
         ]
-        
+        let encodedString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         return Observable.create { observer in
-            
-            AF.request(url,
+            print(Environment.jwtToken)
+            AF.request(encodedString,
+                       method: .post,
                        parameters: body,
-                       headers: ["Authorization" : "Bearer \(Environment.jwtToken ?? "")"])
+                       encoding: JSONEncoding.default,
+                       headers: [
+                        "Content-Type" : "application/json",
+                        "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
+                       ])
             .validate(statusCode: 200..<201)
-            .responseDecodable(of: Int.self) { response in
-                
+            .responseDecodable(of: EmailIdDecodingModel.self) { response in
+
                 switch response.result{
                 case .success(let data):
-                    observer.onNext(data)
-                    print("addMemberInOrganization data \(data)")
+                    observer.onNext(data.id)
+                    print("addMemberInOrganization data \(data.id)")
                 case .failure(let error):
                     print("addMemberInOrganization error!\n \(error)")
                 }
