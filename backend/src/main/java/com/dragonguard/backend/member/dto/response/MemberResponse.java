@@ -24,6 +24,7 @@ public class MemberResponse {
     private AuthStep authStep;
     private String profileImage;
     private Integer rank;
+    private Integer organizationRank;
     private Long tokenAmount;
     private String organization;
 }

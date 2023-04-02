@@ -1,6 +1,7 @@
 package com.dragonguard.backend.config.security.oauth;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
+import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        Member user = memberService.findMemberByGithubId((String) attributes.get("login"));
+        Member user = memberService.findMemberByGithubId((String) attributes.get("login"), AuthStep.GITHUB_ONLY);
 
         user.updateGithubToken(userRequest.getAccessToken().getTokenValue());
 

@@ -15,4 +15,6 @@ import java.util.List;
 @Repository
 public interface ResultRepository extends JpaRepository<Result, String> {
     List<Result> findAllBySearchId(Long searchId);
+
+    boolean existsByNameAndSearchId(String name, Long searchId);
 }

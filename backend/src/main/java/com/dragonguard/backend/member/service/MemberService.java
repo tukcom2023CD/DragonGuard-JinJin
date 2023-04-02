@@ -11,10 +11,7 @@ import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
-import com.dragonguard.backend.member.entity.Member;
-import com.dragonguard.backend.member.entity.OrganizationDetails;
-import com.dragonguard.backend.member.entity.Role;
-import com.dragonguard.backend.member.entity.Tier;
+import com.dragonguard.backend.member.entity.*;
 import com.dragonguard.backend.member.mapper.MemberMapper;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import com.dragonguard.backend.organization.entity.Organization;
@@ -27,7 +24,6 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -51,23 +47,23 @@ public class MemberService {
     }
 
     public IdResponse<UUID> saveMember(MemberRequest memberRequest, Role role) {
-        return new IdResponse<>(scrapeAndGetSavedMember(memberRequest.getGithubId(), role).getId());
+        return new IdResponse<>(scrapeAndGetSavedMember(memberRequest.getGithubId(), role, AuthStep.GITHUB_ONLY).getId());
     }
 
-    public Member saveAndGet(String githubId, Role role) {
-        return memberRepository.save(memberMapper.toEntity(githubId, role));
+    public Member saveAndGet(String githubId, Role role, AuthStep authStep) {
+        return memberRepository.save(memberMapper.toEntity(githubId, role, authStep));
     }
 
-    public Member saveAndGet(MemberRequest memberRequest) {
+    public Member saveAndGet(MemberRequest memberRequest, AuthStep authStep) {
         return memberRepository.findMemberByGithubId(memberRequest.getGithubId())
-                .orElseGet(() -> memberRepository.save(memberMapper.toEntity(memberRequest)));
+                .orElseGet(() -> memberRepository.save(memberMapper.toEntity(memberRequest, authStep)));
     }
 
 
     @Transactional
     public void addMemberCommitAndUpdate(String githubId, String name, String profileImage) {
         List<Commit> commits = commitService.findCommits(githubId);
-        Member member = findMemberByGithubId(githubId);
+        Member member = findMemberByGithubId(githubId, AuthStep.NONE);
         member.updateNameAndImage(name, profileImage);
         if (commits.isEmpty()) return;
         commits.forEach(member::addCommit);
@@ -96,7 +92,8 @@ public class MemberService {
     @Transactional
     public MemberResponse getMember() {
         Member member = authService.getLoginUser();
-        Integer rank = memberRepository.findRankingById(member.getId());
+        UUID memberId = member.getId();
+        Integer rank = memberRepository.findRankingById(memberId);
         Long amount = member.getSumOfTokens();
         updateTier(member);
         OrganizationDetails organizationDetails = member.getOrganizationDetails();
@@ -107,13 +104,15 @@ public class MemberService {
 
         Organization organization = organizationRepository.findById(organizationDetails.getOrganizationId())
                 .orElseThrow(EntityNotFoundException::new);
-        
-        return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount, organization.getName());
+
+        Integer organizationRank = organizationRepository.findRankingByMemberId(memberId);
+
+        return memberMapper.toResponse(member, member.getSumOfCommits(), rank, amount, organization.getName(), organizationRank);
     }
 
-    public Member findMemberByGithubId(String githubId) {
+    public Member findMemberByGithubId(String githubId, AuthStep authStep) {
         return memberRepository.findMemberByGithubId(githubId)
-                .orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER));
+                .orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, authStep));
     }
 
     public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
@@ -125,11 +124,6 @@ public class MemberService {
         Member member = getEntity(authService.getLoginUser().getId());
         member.updateWalletAddress(walletRequest.getWalletAddress());
         setTransaction(member);
-    }
-
-    public Member getEntity(UUID id) {
-        return memberRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
     }
 
     public void setTransaction(Member member) {
@@ -144,9 +138,18 @@ public class MemberService {
         return memberRepository.findRankingByOrganization(organizationId, pageable);
     }
 
-    private Member scrapeAndGetSavedMember(String githubId, Role role) {
+    public Member getEntity(UUID id) {
+        return memberRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public Member getLoginUserWithDatabase() {
+        return getEntity(authService.getLoginUser().getId());
+    }
+
+    private Member scrapeAndGetSavedMember(String githubId, Role role, AuthStep authStep) {
         getCommitsByScraping(githubId);
-        return saveAndGet(githubId, role);
+        return saveAndGet(githubId, role, authStep);
     }
 
     private void getCommitsByScraping(String githubId) {

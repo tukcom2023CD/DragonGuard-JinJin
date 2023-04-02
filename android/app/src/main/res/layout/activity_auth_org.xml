@@ -143,7 +143,7 @@
                     android:layout_weight="4"
                     android:background="@drawable/search_border"
                     android:fontFamily="@font/ibm_semibold"
-                    android:hint="뒷부분만 작성바람"
+                    android:hint="이메일"
                     android:imeOptions="actionSearch"
                     android:importantForAutofill="no"
                     android:textColor="@color/black"

@@ -54,9 +54,7 @@ public class GitRepoMember extends BaseTime {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GitRepoMember that = (GitRepoMember) o;
-        return Objects.equals(gitRepo, that.gitRepo)
-                && Objects.equals(member, that.member)
-                && Objects.equals(contribution, that.contribution);
+        return Objects.equals(gitRepo, that.gitRepo) && Objects.equals(member, that.member) && Objects.equals(contribution, that.contribution);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.dragonguard.backend.gitrepomember.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * @author 김승진
@@ -9,6 +10,7 @@ import lombok.Getter;
  */
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class Author {
     private String login;

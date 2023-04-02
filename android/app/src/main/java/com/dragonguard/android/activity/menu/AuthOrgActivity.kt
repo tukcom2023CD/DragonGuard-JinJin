@@ -38,7 +38,7 @@ class AuthOrgActivity : AppCompatActivity() {
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
                     if(orgName != null && orgId != -1L) {
                         binding.orgNameEdit.setText(orgName)
-                        binding.orgNameEdit.isEnabled = false
+                        binding.orgNameEdit.isEnabled = true
                         organizationId = orgId
                         Log.d("id", "orgId = $orgId")
                     }
