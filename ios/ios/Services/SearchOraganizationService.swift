@@ -22,7 +22,7 @@ final class SearchOraganizationService {
                                                        size: size)
         
         let encodedString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        
+        print(url)
         var result: [SearchOrganizationListModel] = []
         return Observable.create(){ observer in
             AF.request(encodedString,
@@ -34,37 +34,28 @@ final class SearchOraganizationService {
                 switch response.result {
                 case .success(let data):
                     do {
-                        if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [Any],
-                           let singleObjectArray = jsonArray.first as? [String: Any] {
-                                // NSSingleObjectArrayI에서 객체를 가져옴
-                                let jsonData = try JSONSerialization.data(withJSONObject: singleObjectArray)
-                                let decoder = JSONDecoder()
-                                let object = try decoder.decode(SearchOrganizationListDecodingModel.self, from: jsonData)
-                                print(object)
+                        if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [Any] {
+                            
+                            let jsonData = try JSONSerialization.data(withJSONObject: jsonArray,options: [])
+                            
+                            let object = try JSONDecoder().decode([SearchOrganizationListDecodingModel].self, from: jsonData)
+                            
+                            object.forEach { data in
+                                result.append(SearchOrganizationListModel(id: data.id,
+                                                                          name: data.name,
+                                                                          type: data.organizationType,
+                                                                          emailEndpoint: data.emailEndpoint))
+                                
                             }
+                        }
                     } catch {
                         print(error.localizedDescription)
                     }
+                    
+                    observer.onNext(result)
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
-            
-            
-//            .responseDecodable (of: SearchOrganizationListDecodingModel.self){ response in
-//
-//                switch response.result {
-//                case .success(let data):
-//                    print(data)
-//                    result.append(SearchOrganizationListModel(id: data.id,
-//                                                              name: data.name,
-//                                                              type: data.type,
-//                                                              emailEndpoint: data.emailEndpoint))
-//                case .failure(let error):
-//                    print("getOrganizationListService error!\n \(error)")
-//                }
-//
-//                observer.onNext(result)
-
             }
             
             return Disposables.create()

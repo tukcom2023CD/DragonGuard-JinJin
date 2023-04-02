@@ -21,6 +21,7 @@ final class OrganizationSearchController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        self.searchResultList = []
         addUIToView()
     }
     
@@ -127,16 +128,17 @@ extension OrganizationSearchController: UISearchBarDelegate{
         guard let searchText = searchBar.text else{ return }
         self.searchText = searchText
         guard let type = self.type else {return}
+        self.searchResultList = []
         
         /// 검색 api 통신 보냄
         CertifiedOrganizationViewModel.viewModel.getOrganizationList(name: searchText,
                                                                      type: type,
                                                                      check: false)
         .subscribe { resultList in
+            
             self.searchResultList = resultList
             self.setAutoLayout()
-            print(resultList)
-            
+            self.resultTableView.reloadData()
         }
         .disposed(by: disposeBag)
     }
@@ -148,8 +150,9 @@ extension OrganizationSearchController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: OrganizationSearchTableViewCell.identifier, for: indexPath) as! OrganizationSearchTableViewCell
     
-        cell.backgroundColor = .white
-        
+        cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+        cell.layer.cornerRadius = 20
+        cell.inputName(name: self.searchResultList[indexPath.section].name)
         return cell
     }
     
@@ -165,10 +168,13 @@ extension OrganizationSearchController: UITableViewDelegate, UITableViewDataSour
                                                                              type: type,
                                                                              check: true)
                 .subscribe { resultList in
-                    self.searchResultList = resultList
-                    self.setAutoLayout()
-                    print(resultList)
-                    
+                    for data in resultList{
+                        self.searchResultList.append(SearchOrganizationListModel(id: data.id,
+                                                                                 name: data.name,
+                                                                                 type: data.type,
+                                                                                 emailEndpoint: data.emailEndpoint))
+                    }
+                    self.resultTableView.reloadData()
                 }
                 .disposed(by: disposeBag)
                 self.isInfiniteScroll = false

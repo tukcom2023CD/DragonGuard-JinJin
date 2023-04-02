@@ -11,7 +11,7 @@ import Foundation
 struct SearchOrganizationListDecodingModel: Codable{
     var id: Int
     var name: String
-    var type: String
+    var organizationType: String
     var emailEndpoint: String
 }
 
