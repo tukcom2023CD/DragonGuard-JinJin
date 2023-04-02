@@ -15,7 +15,7 @@ final class CertifiedOrganizationViewModel{
     let addService = AddOrganizationService()   /// 조직 등록하는 서비스
     let emailService = EmailService()   /// 이메일 서비스
     let disposeBag = DisposeBag()
-    var page = 1
+    var page = 0
     var size = 20
     
     // MARK: 사용자가 검색한 조직 리스트를 서버에서 받아 반환하는 함수
@@ -27,7 +27,7 @@ final class CertifiedOrganizationViewModel{
     func getOrganizationList(name: String, type: String, check: Bool) -> Observable<[SearchOrganizationListModel]>{
         // check가 거짓인 경우 page 초기화
         if !check{
-            self.page = 1
+            self.page = 0
         }
         
         return Observable.create(){ observer in
@@ -56,6 +56,7 @@ final class CertifiedOrganizationViewModel{
                                             endPoint: endPoint)
             .subscribe { data in
                 print("addOrganization viewModel \(data)")
+                observer.onNext(data)
             }
             .disposed(by: self.disposeBag)
             return Disposables.create()
@@ -99,6 +100,81 @@ final class CertifiedOrganizationViewModel{
             
             return Disposables.create()
         }
+    }
+    
+    // MARK: 인증번호 재전송 함수
+    /// - Returns: 이메일 Id
+    func reSendCertifiactedNumber() -> Observable<Int>{
+        return Observable.create { observer in
+            self.emailService.reSendCertificatedNumber()
+                .subscribe { num in
+                    observer.onNext(num)
+                }
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    // MARK: 인증번호 검증
+    /// - Parameters:
+    ///   - id: 이메일 Id
+    ///   - code: 인증 번호
+    /// - Returns: 인증번호가 유효한지, 유효한 경우 true / 유효하지 않는 경우 false
+    func checkCertificatedNumber(id: Int, code: Int) -> Observable<Bool> {
+        return Observable.create { observer in
+            self.emailService.checkValidNumber(id: id, code: code)
+                .subscribe { valid in
+                    observer.onNext(valid)
+                }
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
+    
+    // MARK: 이메일 형식 확인하는 함수
+    /// - Parameter userEmail: 유저가 입력한 이메일
+    /// - Returns: 이메일 형식이 맞는 지 확인
+    func checkEmail(userEmail: String) -> Observable<Bool>{
+        return Observable.create { observer in
+            var organizationEndPoint: String = ""
+            if userEmail.contains("@") {
+                organizationEndPoint = String(userEmail.split(separator: "@")[1])
+            }
+            
+            if !organizationEndPoint.isEmpty {
+                observer.onNext(true)
+            }
+            else{
+                observer.onNext(false)
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    // MARK: 조직 타입 및 조직 이름 선택했는지 확인하는 함수
+    /// - Parameters:
+    ///   - type: 유저가 선택한 타입, ex) UNIVERSITY, COMPANG, ...
+    ///   - name: 유저가 선택한 조직 이름 ex) OOO대학교
+    /// - Returns: 타입과 이름을 모두 선택한 경우 true 반환
+    func checkTypeAndName(type: String, name: String) -> Observable<Bool>{
+        return Observable.create { observer in
+            
+            if type != "" && name != "" {
+                observer.onNext(true)
+            }
+            else{
+                observer.onNext(false)
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    // MARK: 인증번호 삭제
+    func removeCertificatedNumber(){
+        emailService.removeCertificatedNumber()
     }
     
 }

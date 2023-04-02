@@ -12,6 +12,7 @@ import RxSwift
 // MARK: 조직 검색하는 클래스
 final class SearchOraganizationService {
     
+    
     func getOrganizationListService(name: String, type: String, page: Int, size: Int) -> Observable<[SearchOrganizationListModel]>{
         
         let url = APIURL.apiUrl.searchOrganizationList(ip: APIURL.ip,
@@ -21,28 +22,40 @@ final class SearchOraganizationService {
                                                        size: size)
         
         let encodedString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        
+        print(url)
         var result: [SearchOrganizationListModel] = []
         return Observable.create(){ observer in
             AF.request(encodedString,
                        method: .get,
+                       encoding: JSONEncoding.default,
                        headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
             .validate(statusCode: 200..<201)
-            .responseDecodable (of: SearchOrganizationListDecodingModel.self){ response in
-                
+            .responseData { response in
                 switch response.result {
                 case .success(let data):
-                    print(data)
-                    result.append(SearchOrganizationListModel(id: data.id,
-                                                              name: data.name,
-                                                              type: data.type,
-                                                              emailEndpoint: data.emailEndpoint))
+                    do {
+                        if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [Any] {
+                            
+                            let jsonData = try JSONSerialization.data(withJSONObject: jsonArray,options: [])
+                            
+                            let object = try JSONDecoder().decode([SearchOrganizationListDecodingModel].self, from: jsonData)
+                            
+                            object.forEach { data in
+                                result.append(SearchOrganizationListModel(id: data.id,
+                                                                          name: data.name,
+                                                                          type: data.organizationType,
+                                                                          emailEndpoint: data.emailEndpoint))
+                                
+                            }
+                        }
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                    
+                    observer.onNext(result)
                 case .failure(let error):
-                    print("getOrganizationListService error!\n \(error)")
+                    print(error.localizedDescription)
                 }
-                
-                observer.onNext(result)
-                
             }
             
             return Disposables.create()

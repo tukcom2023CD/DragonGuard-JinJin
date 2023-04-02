@@ -8,10 +8,14 @@
 import Foundation
 import UIKit
 import SnapKit
+import RxSwift
 
 // MARK:  조직 인증 클래스
 final class OrganizationCertificationController: UIViewController{
     private var urlType: String? /// api 통신에 사용할 타입
+    private var userOrganizationName: String?   /// 사용자 조직 이름
+    private var organizationId: Int?    /// 조직 아이디
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,6 +107,7 @@ final class OrganizationCertificationController: UIViewController{
                                                               attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         textField.textColor = .black
         textField.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        textField.textAlignment = .right
         return textField
     }()
     
@@ -187,6 +192,7 @@ final class OrganizationCertificationController: UIViewController{
         if self.urlType != nil {
             let searchController = OrganizationSearchController()
             searchController.type = self.urlType
+            searchController.delegate = self
             self.navigationController?.pushViewController(searchController, animated: true)
         }
     }
@@ -194,17 +200,52 @@ final class OrganizationCertificationController: UIViewController{
     // MARK: 인증 버튼 누른 경우
     @objc
     private func clickedCertifiedBtn(){
+        /// 이메일 형식 확인하는 구문
+        let emailCheck = CertifiedOrganizationViewModel.viewModel.checkEmail(userEmail: self.emailTextField.text ?? "")
+        /// 타입 및 조직 이름 선택했는지 확인
+        let otherCheck = CertifiedOrganizationViewModel.viewModel.checkTypeAndName(type: self.urlType ?? "",
+                                                                                   name: self.userOrganizationName ?? "")
+        /// 모두 다 선택했는지 확인하는 코드
+        Observable.combineLatest(emailCheck, otherCheck)
+            .subscribe { first, second in
+                if first && second{
+                    let certificatedEmail = CertificationEmailController()
+                    certificatedEmail.organizationId = self.organizationId
+                    certificatedEmail.userEmail = self.emailTextField.text ?? ""
+                    self.navigationController?.pushViewController(certificatedEmail, animated: true)   
+                }
+                else{
+                    // 팝업창 띄움
+                    let sheet = UIAlertController(title: "오류!", message: "잘못된 정보 입니다.", preferredStyle: .alert)
+                    // 팝업창 확인 버튼
+                    sheet.addAction(UIAlertAction(title: "확인", style: .default))
+                    // 화면에 표시
+                    self.present(sheet,animated: true)
+                }
+                
+            }
+            .disposed(by: self.disposeBag)
         
     }
     
 }
 
-extension OrganizationCertificationController: SendingType{
+extension OrganizationCertificationController: SendingType, SendingOrganizationName{
+    
+    // MARK: 검색하고 조직을 선택한 경우
+    func sendName(name: String, organizationId: Int) {
+        self.userOrganizationName = name
+        self.organizationId = organizationId
+        self.nameChooseBtn.setTitle(name, for: .normal)
+        self.nameChooseBtn.setTitleColor(.black, for: .normal)
+    }
+    
     
     // MARK: 사용자가 선택한 타입 받아옴
     func sendType(type: String, urlType: String) {
         self.urlType = urlType
         self.typeBtn.setTitle(type, for: .normal)
+        self.typeBtn.setTitleColor(.black, for: .normal)
         self.nameChooseBtn.isEnabled = true
     }
     

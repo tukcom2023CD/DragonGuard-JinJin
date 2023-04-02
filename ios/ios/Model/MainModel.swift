@@ -17,8 +17,18 @@ final class MainModel{
     var profileImage: String
     var rank: Int
     var tokenAmount: Int
+    var organization: String
     
-    init(id: String, name: String, githubId: String, commits: Int, tier: String, authStep: String, profileImage: String,rank: Int, tokenAmount: Int ) {
+    init(id: String,
+         name: String,
+         githubId: String,
+         commits: Int,
+         tier: String,
+         authStep: String,
+         profileImage: String,
+         rank: Int,
+         tokenAmount: Int,
+         organization: String ) {
         self.id = id
         self.name = name
         self.githubId = githubId
@@ -28,6 +38,7 @@ final class MainModel{
         self.profileImage = profileImage
         self.rank = rank
         self.tokenAmount = tokenAmount
+        self.organization = organization
     }
 }
 
@@ -41,4 +52,5 @@ struct MainDecodingModel: Codable{
     var profileImage: String?
     var rank: Int
     var tokenAmount: Int?
+    var organization: String
 }
