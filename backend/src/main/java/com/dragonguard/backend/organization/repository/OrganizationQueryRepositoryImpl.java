@@ -59,7 +59,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
         return jpaQueryFactory
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization)
-                .where(organization.organizationType.eq(type).and(organization.name.likeIgnoreCase(name)))
+                .where(organization.organizationType.eq(type).and(organization.name.containsIgnoreCase(name)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
