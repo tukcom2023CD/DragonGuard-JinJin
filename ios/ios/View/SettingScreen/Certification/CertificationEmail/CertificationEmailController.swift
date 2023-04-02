@@ -26,7 +26,7 @@ final class CertificationEmailController: UIViewController{
         
         addUIToView()
         sendEmailForAddMember()
-        validNumberTimer()
+        timer = validNumberTimer()
     }
     
     // MARK: UI가 로드 된 후 레이아웃 설정 적용
@@ -147,6 +147,9 @@ final class CertificationEmailController: UIViewController{
                                                                       code: certificatedNumber)
             .subscribe { valid in
                 if valid{
+                    self.timer?.invalidate()
+                    self.timecount = 0
+                    self.recordTime = 0
                     // 팝업창 띄움
                     let sheet = UIAlertController(title: "조직이 인증되었습니다.", message: "", preferredStyle: .alert)
                     // 팝업창 확인 버튼
@@ -157,23 +160,17 @@ final class CertificationEmailController: UIViewController{
                     self.present(sheet,animated: true)
                 }
                 else{
-                    // 팝업창 띄움
-                    let sheet = UIAlertController(title: "틀렸습니다.", message: "인증번호를 다시 입력하세요", preferredStyle: .alert)
-                    // 팝업창 확인 버튼
-                    sheet.addAction(UIAlertAction(title: "확인", style: .default))
-                    // 화면에 표시
-                    self.present(sheet,animated: true)
+                    self.showAlert(title: "틀렸습니다.",
+                              message: "인증번호를 다시 입력하세요",
+                              btnTitle: "확인")
                 }
             }
             .disposed(by: self.disposeBag)
         }
         else{
-            // 팝업창 띄움
-            let sheet = UIAlertController(title: "인증번호 자리 수가 맞지 않습니다.", message: "다시 입력하세요", preferredStyle: .alert)
-            // 팝업창 확인 버튼
-            sheet.addAction(UIAlertAction(title: "확인", style: .default))
-            // 화면에 표시
-            self.present(sheet,animated: true)
+            showAlert(title: "인증번호 자리 수가 맞지 않습니다.",
+                      message: "다시 입력하세요",
+                      btnTitle: "확인")
         }
         
     }
@@ -181,6 +178,11 @@ final class CertificationEmailController: UIViewController{
     // MARK: 재전송 버튼 누른 경우
     @objc
     private func clickedReSend(){
+        timer?.invalidate()
+        self.timecount = 0
+        self.recordTime = 0
+        let _ = validNumberTimer()
+        
         CertifiedOrganizationViewModel.viewModel.reSendCertifiactedNumber()
             .subscribe { num in
                 self.emailId = num
@@ -200,16 +202,16 @@ final class CertificationEmailController: UIViewController{
     }
     
     // MARK: 인증번호 타이머
-    private func validNumberTimer(){
+    private func validNumberTimer() -> Timer{
         
-        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true){ t in
+        let timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true){ t in
             self.timecount += t.timeInterval
             
             let digit: Double = pow(10, 1) // 10의 3제곱
             let timerCount = floor(self.timecount * digit) / digit
             self.recordTime = timerCount
             
-            let minute = 5 - (Int)(fmod((timerCount/60), 60))
+            let minute = 4 - (Int)(fmod((timerCount/60), 60))
             let second = 59 - (Int)(fmod(timerCount, 60))
 
             
@@ -225,8 +227,28 @@ final class CertificationEmailController: UIViewController{
             
             self.timerLabel.text = "\(strMinute):" + "\(strSecond)"
             
+            if minute == 0 && second == 0{
+                t.invalidate()
+                self.showAlert(title: "시간 초과",
+                          message: "인증 번호를 재전송 해주세요.",
+                          btnTitle: "확인")
+                /// 인증번호 삭제
+                CertifiedOrganizationViewModel.viewModel.removeCertificatedNumber()
+            }
+
         }
+        return timer
         
+    }
+    
+    // MARK: 알림 띄우는 함수
+    private func showAlert(title: String, message: String, btnTitle: String){
+        // 팝업창 띄움
+        let sheet = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        // 팝업창 확인 버튼
+        sheet.addAction(UIAlertAction(title: btnTitle, style: .default))
+        // 화면에 표시
+        self.present(sheet,animated: true)
     }
     
 }
