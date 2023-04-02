@@ -17,7 +17,6 @@ final class AddOrganizationController: UIViewController{
     private let urlTypeList = ["UNIVERSITY", "COMPANY", "HIGH_SCHOOL", "ETC"]
     var type: String?
     private var viewType: String?
-    var delegate: SendOrganizationInfo?
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -176,6 +175,9 @@ final class AddOrganizationController: UIViewController{
                                                                      endPoint: email)
             .subscribe { id in
                 print("id \(id)")
+                if id != 0 {
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
             }
             .disposed(by: self.disposeBag)
             
@@ -215,19 +217,4 @@ final class AddOrganizationController: UIViewController{
     
     
 }
-
-// MARK: 선택한 조직 타입 가져옴
-//extension AddOrganizationController: SendType{
-//    func sendType(type: String) {
-//        self.type = type
-//    }
-//}
-
-// MARK: 조직 정보 등록했을 때 조직 인증 요청
-protocol SendOrganizationInfo{
-    func sendOrganizationInfo(name: String,
-                              type: String,
-                              emailEndpoint: String)
-}
-
 
