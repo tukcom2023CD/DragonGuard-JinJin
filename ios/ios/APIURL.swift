@@ -144,7 +144,7 @@ final class APIURL{
         return url
     }
     
-    // MARK: 이메일 인증을 위해 이메일 보내기
+    // MARK: 인증 번호 재전송
     func sendEmailToAuth(ip: String) -> String{
         let url = "http://\(ip)/api/email/send"
         return url
@@ -156,7 +156,11 @@ final class APIURL{
         return url
     }
     
-  
+    // MARK: 인증 번호 삭제
+    func removeCertificatedNumber(ip: String) -> String{
+        let url = "http://\(ip)/api/email/1"
+        return url
+    }
     
     
     
