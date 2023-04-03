@@ -2,18 +2,16 @@ package com.dragonguard.android.recycleradapter
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.activity.menu.AuthOrgActivity
 import com.dragonguard.android.activity.menu.SearchOrganizationActivity
-import com.dragonguard.android.model.OrganizationNamesModel
-import com.dragonguard.android.model.OrganizationNamesModelItem
+import com.dragonguard.android.model.org.OrganizationNamesModel
+import com.dragonguard.android.model.org.OrganizationNamesModelItem
 
 class SearchOrganizationAdapter(private val datas : OrganizationNamesModel, private val context: Context, private val token: String) : RecyclerView.Adapter<SearchOrganizationAdapter.ViewHolder>() {
 

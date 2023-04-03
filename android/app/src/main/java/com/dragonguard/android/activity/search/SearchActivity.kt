@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
-import com.dragonguard.android.model.RepoSearchResultModel
+import com.dragonguard.android.model.search.RepoSearchResultModel
 import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.dialog.FilterDialog
 import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
