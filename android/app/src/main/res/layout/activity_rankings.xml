@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
                     android:background="@drawable/roundc"
-                    android:text="대학교 내 랭킹"
+                    android:text="조직 내 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
@@ -123,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
                     android:background="@drawable/roundc"
-                    android:text="전국 대학교 랭킹"
+                    android:text="조직 전체 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
@@ -148,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
                     android:background="@drawable/roundc"
-                    android:text="전체 랭킹"
+                    android:text="사용자 전체 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
