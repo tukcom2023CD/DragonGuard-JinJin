@@ -80,8 +80,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.2"
-            android:weightSum="5"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="5">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -256,21 +256,11 @@
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/ibm_semibold"
                         android:gravity="center"
-                        android:text="등수"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="30sp" />
 
-                    <TextView
-                        android:id="@+id/user_percent"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.25"
-                        android:background="@android:color/transparent"
-                        android:fontFamily="@font/ibm_semibold"
-                        android:gravity="top|center_horizontal"
-                        android:text="(비율)"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -288,31 +278,23 @@
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/ibm_semibold"
                         android:gravity="bottom|center_horizontal"
-                        android:text="대학교 내 랭킹"
+                        android:text="조직내 나의 랭킹"
                         android:textColor="@color/black"
                         android:textSize="20sp" />
 
                     <TextView
+                        android:id="@+id/my_org_ranking"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="0.5"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/ibm_semibold"
                         android:gravity="center"
-                        android:text="등수"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="30sp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.25"
-                        android:background="@android:color/transparent"
-                        android:fontFamily="@font/ibm_semibold"
-                        android:gravity="top|center_horizontal"
-                        android:text="(비율)"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
+
                 </LinearLayout>
             </LinearLayout>
 

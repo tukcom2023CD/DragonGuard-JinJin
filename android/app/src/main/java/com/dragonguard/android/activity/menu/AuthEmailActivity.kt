@@ -50,6 +50,9 @@ class AuthEmailActivity : AppCompatActivity() {
         timer.start()
 
         binding.resendCode.setOnClickListener {
+            reset = false
+            timer.cancel()
+            setUpCountDownTimer()
             if(reset) {
                 sendEmail()
             } else {
@@ -105,9 +108,7 @@ class AuthEmailActivity : AppCompatActivity() {
             val result = resultDeferred.await()
             if(result != -1L) {
                 emailAuthId = result
-                reset = false
-                timer.cancel()
-                setUpCountDownTimer()
+                timer.start()
             }
         }
     }

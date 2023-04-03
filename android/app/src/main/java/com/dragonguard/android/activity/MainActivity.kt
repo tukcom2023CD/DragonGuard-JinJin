@@ -135,6 +135,7 @@ class MainActivity : AppCompatActivity() {
         binding.lookRanking.setOnClickListener {
             val intent = Intent(applicationContext, RankingsActivity::class.java)
             intent.putExtra("token", prefs.getJwtToken(""))
+            intent.putExtra("organization", binding.organizationName.text.toString())
             startActivity(intent)
         }
 
@@ -240,7 +241,9 @@ class MainActivity : AppCompatActivity() {
                         Glide.with(binding.githubProfile).load(userInfo.profileImage)
                             .into(binding.githubProfile)
                     }
-
+                    if(userInfo.organizationRank !=null) {
+                        binding.myOrgRanking.text = userInfo.organizationRank.toString()
+                    }
                 }
             }
         }
