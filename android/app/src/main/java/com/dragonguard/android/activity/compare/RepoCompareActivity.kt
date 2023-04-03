@@ -15,7 +15,7 @@ import com.dragonguard.android.viewmodel.Viewmodel
 import com.dragonguard.android.databinding.ActivityRepoCompareBinding
 import com.dragonguard.android.fragment.CompareRepoFragment
 import com.dragonguard.android.fragment.CompareUserFragment
-import com.dragonguard.android.model.CompareRepoMembersResponseModel
+import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

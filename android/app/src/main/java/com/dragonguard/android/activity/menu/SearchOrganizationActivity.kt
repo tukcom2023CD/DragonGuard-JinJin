@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivitySearchOrganizationBinding
-import com.dragonguard.android.model.OrganizationNamesModel
+import com.dragonguard.android.model.org.OrganizationNamesModel
 import com.dragonguard.android.recycleradapter.SearchOrganizationAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope

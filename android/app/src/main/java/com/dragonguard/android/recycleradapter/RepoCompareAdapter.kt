@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.model.RepoStats
+import com.dragonguard.android.model.compare.RepoStats
 import kotlin.math.round
 
 class RepoCompareAdapter(private val data1 : RepoStats, private val data2 : RepoStats, private val compareItems: ArrayList<String>) : RecyclerView.Adapter<RepoCompareAdapter.ViewHolder>() {

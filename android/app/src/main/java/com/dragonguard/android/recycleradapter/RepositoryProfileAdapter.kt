@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.search.RepoContributorsActivity
-import com.dragonguard.android.model.RepoSearchResultModel
+import com.dragonguard.android.model.search.RepoSearchResultModel
 
 //검색한 레포지토리 나열하는 리사이클러뷰 어댑터 구현
 class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultModel>, private val context: Context, private val token: String) : RecyclerView.Adapter<RepositoryProfileAdapter.ViewHolder>() {
