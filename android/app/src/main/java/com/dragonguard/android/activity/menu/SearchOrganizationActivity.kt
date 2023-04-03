@@ -89,7 +89,6 @@ class SearchOrganizationActivity : AppCompatActivity() {
         binding.searchIcon.setOnClickListener {
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
                 if (lastSearch != viewmodel.onSearchListener.value!! || typeChanged) {
-                    Toast.makeText(applicationContext, "변함!!", Toast.LENGTH_SHORT).show()
                     orgNames.clear()
                     binding.searchResult.visibility = View.GONE
                     count = 0
@@ -118,7 +117,6 @@ class SearchOrganizationActivity : AppCompatActivity() {
                     if (search.isNotEmpty()) {
                         closeKeyboard()
                         if (lastSearch != viewmodel.onSearchListener.value!! || typeChanged) {
-                            Toast.makeText(applicationContext, "변함!!", Toast.LENGTH_SHORT).show()
                             orgNames.clear()
                             binding.searchResult.visibility = View.GONE
                             count = 0
