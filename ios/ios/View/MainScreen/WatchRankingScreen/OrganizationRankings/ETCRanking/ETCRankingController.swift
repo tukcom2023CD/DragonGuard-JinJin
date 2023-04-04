@@ -1,18 +1,18 @@
 //
-//  AllUnivRankingController.swift
+//  ETCRankingController.swift
 //  ios
 //
-//  Created by 정호진 on 2023/02/01.
+//  Created by 정호진 on 2023/04/05.
 //
 
 import Foundation
 import UIKit
-import RxCocoa
+import SnapKit
 import RxSwift
 
-// MARK: 전제 조직 랭킹
-final class AllOrganiRankingController: UIViewController{
-    let disposeBag = DisposeBag()
+// MARK: 그외 조직 랭킹
+final class ETCRankingController: UIViewController{
+    private let disposeBag = DisposeBag()
     private var allRankingList: [AllOrganizationRankingModel] = []
     var myOrganization: String?
     
@@ -21,7 +21,7 @@ final class AllOrganiRankingController: UIViewController{
         self.view.backgroundColor = .white
         
         self.navigationController?.navigationBar.isHidden = false
-        self.navigationItem.title = "전체 조직 랭킹"
+        self.navigationItem.title = "그외 조직 랭킹"
         
         addUItoView()
         settingAutoLayout()
@@ -78,11 +78,10 @@ final class AllOrganiRankingController: UIViewController{
      UI Action
      */
     
-    // MARK: 전체 랭킹 가져오는 함수
+    // MARK: 대학교 랭킹 가져오는 함수
     private func getData(){
-        OrganizationRankingViewModel.viewModel
-            .getAllOraganizationRanking()
-            .subscribe(onNext: { rankingList in
+        OrganizationRankingViewModel.viewModel.getTypeRanking(type: "ETC")
+            .subscribe (onNext: { rankingList in
                 rankingList.forEach { data in
                     self.allRankingList.append(data)
                 }
@@ -94,7 +93,7 @@ final class AllOrganiRankingController: UIViewController{
 }
 
 
-extension AllOrganiRankingController: UITableViewDelegate, UITableViewDataSource {
+extension ETCRankingController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier,for: indexPath) as! WatchRankingTableView
@@ -105,6 +104,7 @@ extension AllOrganiRankingController: UITableViewDelegate, UITableViewDataSource
                      count: self.allRankingList[indexPath.row].tokenSum)
         
         if organizationName == self.myOrganization ?? ""{
+            print(organizationName)
             cell.backgroundColor = .yellow
         }
         
@@ -126,4 +126,5 @@ extension AllOrganiRankingController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
     
 }
+
 

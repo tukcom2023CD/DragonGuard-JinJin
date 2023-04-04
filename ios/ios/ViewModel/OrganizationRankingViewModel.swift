@@ -12,7 +12,11 @@ import RxSwift
 final class OrganizationRankingViewModel{
     static let viewModel = OrganizationRankingViewModel()
     private let allOrganizationRankingService = AllOrganizationRankingService()
+    private let typeOrganizationRankingService = TypeOrganizationRankingService()
     let disposeBag = DisposeBag()
+    private var typePage: Int = 0
+    private var typeSize: Int = 20
+    
     
     // MARK: 전체 조직 랭킹 가져오는 함수
     func getAllOraganizationRanking() -> Observable<[AllOrganizationRankingModel]>{
@@ -28,5 +32,20 @@ final class OrganizationRankingViewModel{
         }
     }
     
+    // MARK: 타입 별 랭킹 가져오는 함수
+    func getTypeRanking(type: String) -> Observable<[AllOrganizationRankingModel]> {
+        
+        return Observable.create{ observer in
+            self.typeOrganizationRankingService.getTypeOrganizationRanking(type: type,
+                                                                           page: self.typePage,
+                                                                           size: self.typeSize)
+            .subscribe { rankingList in
+                observer.onNext(rankingList)
+            }
+            .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
     
 }

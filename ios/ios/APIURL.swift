@@ -168,6 +168,17 @@ final class APIURL{
         return url
     }
     
+    // MARK: 타입 필터링 후 랭킹 조회
+    func typeFilterOrganiRanking(ip: String, type: String, page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/organizations/ranking?type=\(type)&page=\(page)&size=\(size)"
+        return url
+    }
+    
+    // MARK: 조직 내부 나의 랭킹 조회
+    func organizationInMyRanking(ip: String, id: Int ,type: String, page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/members/ranking/organization?organizationId=\(id)&page=\(page)&size=\(size)"
+        return url
+    }
     
 }
 

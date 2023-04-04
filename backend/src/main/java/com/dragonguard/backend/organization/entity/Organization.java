@@ -38,7 +38,7 @@ public class Organization extends BaseTime {
     @OneToMany
     private Set<Member> members = new HashSet<>();
 
-    @Formula("(SELECT sum(m.sum_of_tokens) FROM organization o, member m WHERE m.organization_id = id)")
+    @Formula("(SELECT sum(token) FROM (SELECT sum(b.amount) token FROM blockchain b, member m WHERE m.organization_id = id) t)")
     private Long sumOfMemberTokens;
 
     @Builder
