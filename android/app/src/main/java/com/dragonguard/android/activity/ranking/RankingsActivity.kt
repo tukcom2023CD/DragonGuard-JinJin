@@ -49,7 +49,7 @@ class RankingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
         binding.totalUniversitiesRanking.setOnClickListener {
-            val intent = Intent(applicationContext, TotalUniversitiesRankingActivity::class.java)
+            val intent = Intent(applicationContext, TotalOrgsRankingActivity::class.java)
             intent.putExtra("token", token)
             startActivity(intent)
         }

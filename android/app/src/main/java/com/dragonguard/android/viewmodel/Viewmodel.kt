@@ -12,11 +12,9 @@ import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsItem
 import com.dragonguard.android.model.klip.*
-import com.dragonguard.android.model.org.AddOrgMemberModel
-import com.dragonguard.android.model.org.OrganizationNamesModel
-import com.dragonguard.android.model.org.RegistOrgModel
-import com.dragonguard.android.model.org.RegistOrgResultModel
+import com.dragonguard.android.model.org.*
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
+import com.dragonguard.android.model.rankings.OrganizationRankingModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
 import com.dragonguard.android.model.search.RepoSearchResultModel
 import com.dragonguard.android.model.token.RefreshTokenModel
@@ -160,5 +158,9 @@ class Viewmodel: ViewModel() {
 
     fun orgInterRankings(id: Long, page: Int, token: String): OrgInternalRankingModel {
         return repository.orgInternalRankings(id, page, token)
+    }
+
+    fun totalOrgRankings(type: String, page: Int, token: String): OrganizationRankingModel {
+        return repository.typeOrgRanking(type, page, token)
     }
 }

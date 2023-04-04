@@ -8,6 +8,7 @@ import com.dragonguard.android.model.contributors.RepoContributorsModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
+import com.dragonguard.android.model.rankings.OrganizationRankingModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModel
 import com.dragonguard.android.model.search.RepoNameModel
 import com.dragonguard.android.model.token.RefreshTokenModel
@@ -96,4 +97,7 @@ interface GitRankAPI {
 
     @GET("members/ranking/organization")
     fun getOrgInternalRankings(@QueryMap query: Map<String, String> ,@Header("Authorization")access: String): Call<OrgInternalRankingModel>
+
+    @GET("organizations/ranking")
+    fun getOrgRankings(@QueryMap query: Map<String, String> ,@Header("Authorization")access: String): Call<OrganizationRankingModel>
 }
