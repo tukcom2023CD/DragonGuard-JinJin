@@ -24,6 +24,6 @@ public class OrganizationQDtoFactory {
                 organization.name,
                 organization.organizationType,
                 organization.emailEndpoint,
-                member.sumOfTokens.sum());
+                organization.sumOfMemberTokens);
     }
 }
