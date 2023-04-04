@@ -30,7 +30,7 @@ public class GitRepo extends BaseTime {
 
     private Integer closedIssues; // TODO 추후 추가할 Statistics 도메인으로 이동 필요
 
-    @OneToMany(mappedBy = "gitRepo")
+    @OneToMany(mappedBy = "gitRepo", cascade = CascadeType.ALL)
     private Set<GitRepoMember> gitRepoMembers = new HashSet<>();
 
     @Builder

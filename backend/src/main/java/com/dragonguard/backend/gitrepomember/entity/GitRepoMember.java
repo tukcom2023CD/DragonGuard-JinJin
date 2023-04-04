@@ -31,6 +31,7 @@ public class GitRepoMember extends BaseTime {
     private GitRepo gitRepo;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Embedded

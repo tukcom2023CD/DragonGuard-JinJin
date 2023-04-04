@@ -1,9 +1,11 @@
 package com.dragonguard.backend.organization.repository;
 
+import com.dragonguard.backend.member.entity.QMember;
 import com.dragonguard.backend.organization.dto.response.QOrganizationResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import static com.dragonguard.backend.member.entity.QMember.member;
 import static com.dragonguard.backend.organization.entity.QOrganization.organization;
 
 
@@ -21,6 +23,7 @@ public class OrganizationQDtoFactory {
                 organization.id,
                 organization.name,
                 organization.organizationType,
-                organization.emailEndpoint);
+                organization.emailEndpoint,
+                member.sumOfTokens.sum());
     }
 }

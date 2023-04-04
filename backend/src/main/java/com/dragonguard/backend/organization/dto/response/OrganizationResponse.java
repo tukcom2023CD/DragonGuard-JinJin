@@ -19,12 +19,14 @@ public class OrganizationResponse {
     private String name;
     private OrganizationType organizationType;
     private String emailEndpoint;
+    private Long tokenSum;
 
     @QueryProjection
-    public OrganizationResponse(Long id, String name, OrganizationType organizationType, String emailEndpoint) {
+    public OrganizationResponse(Long id, String name, OrganizationType organizationType, String emailEndpoint, Long tokenSum) {
         this.id = id;
         this.name = name;
         this.organizationType = organizationType;
         this.emailEndpoint = emailEndpoint;
+        this.tokenSum = tokenSum;
     }
 }

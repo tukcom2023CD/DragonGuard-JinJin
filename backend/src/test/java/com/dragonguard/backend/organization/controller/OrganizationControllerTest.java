@@ -107,9 +107,9 @@ class OrganizationControllerTest extends RestDocumentTest {
     void getOrganizations() throws Exception {
         // given
         List<OrganizationResponse> expected = List.of(
-                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"),
-                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr"),
-                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr"));
+                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr", 100000L),
+                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
+                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
         given(organizationService.findByType(any(), any())).willReturn(expected);
 
         // when
@@ -128,13 +128,13 @@ class OrganizationControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("전체 조직 조회")
+    @DisplayName("전체 조직 랭킹 조회")
     void getOrganizationRank() throws Exception {
         // given
         List<OrganizationResponse> expected = List.of(
-                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"),
-                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr"),
-                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr"));
+                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr", 100000L),
+                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
+                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
         given(organizationService.getOrganizationRank(any())).willReturn(expected);
 
         // when
@@ -157,9 +157,9 @@ class OrganizationControllerTest extends RestDocumentTest {
     void getOrganizationRankByType() throws Exception {
         // given
         List<OrganizationResponse> expected = List.of(
-                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"),
-                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr"),
-                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr"));
+                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr", 100000L),
+                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
+                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
         given(organizationService.getOrganizationRankByType(any(), any())).willReturn(expected);
 
         // when
@@ -182,9 +182,9 @@ class OrganizationControllerTest extends RestDocumentTest {
     void searchOrganization() throws Exception {
         // given
         List<OrganizationResponse> expected = List.of(
-                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"),
-                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr"),
-                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr"));
+                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr", 100000L),
+                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
+                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
         given(organizationService.searchOrganization(any(), any(), any())).willReturn(expected);
 
         // when

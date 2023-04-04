@@ -29,7 +29,7 @@ include::../../../build/generated-snippets/get organization by type/http-request
 ==== HTTP response
 include::../../../build/generated-snippets/get organization by type/http-response.adoc[]
 
-=== 전체 조직 조회
+=== 전체 조직 랭킹 조회
 ==== HTTP request
 include::../../../build/generated-snippets/get organization ranking/http-request.adoc[]
 ==== HTTP response
