@@ -28,12 +28,11 @@ class TotalOrgRankingAdapter(private val datas : ArrayList<TotalOrganizationMode
             if(ranking.text.isNullOrEmpty() && githubId.text.isNullOrEmpty() && contribution.text.isNullOrEmpty()) {
                 ranking.text = data.ranking.toString()
                 githubId.text = data.name
-//                Toast.makeText(context, "${data.tokens}", Toast.LENGTH_SHORT).show()
-//                if(data.tokens == null) {
-//                    contribution.text = "NONE"
-//                } else {
-//                    contribution.text = data.tokens.toString()
-//                }
+                if(data.tokenSum == null) {
+                    contribution.text = "NONE"
+                } else {
+                    contribution.text = data.tokenSum.toString()
+                }
             }
         }
 //        fun bind(data1: TotalUsersRankingsModel, data2: TotalUsersRankingsModel) {

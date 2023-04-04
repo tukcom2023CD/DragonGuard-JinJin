@@ -44,9 +44,10 @@ class TotalOrgRankingActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
         token = intent.getStringExtra("token")!!
+        totalOrgRankings()
     }
 
-    private fun typeOrgRankings() {
+    private fun totalOrgRankings() {
         binding.progressBar.visibility = View.VISIBLE
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -60,9 +61,9 @@ class TotalOrgRankingActivity : AppCompatActivity() {
 
     private fun checkRankings(result: OrganizationRankingModel) {
         if (result.isNotEmpty()) {
-            Log.d("조직 내 랭킹", "결과 : ${result[0].name}")
+            Log.d("조직 내 랭킹", "토큰 : ${result[0].tokenSum}")
             result.forEach {
-                Log.d("조직 내 랭킹", "결과 : ${it.name}")
+                Log.d("조직 내 랭킹", "토큰 : ${it.tokenSum}")
                 if (ranking != 0) {
                     if (totalOrgRankings[ranking - 1].tokenSum == it.tokenSum) {
                         totalOrgRankings.add(
@@ -105,7 +106,7 @@ class TotalOrgRankingActivity : AppCompatActivity() {
             if (changed) {
                 changed = false
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ typeOrgRankings() }, 2000)
+                handler.postDelayed({ totalOrgRankings() }, 2000)
             } else {
                 binding.progressBar.visibility = View.GONE
             }
@@ -134,7 +135,7 @@ class TotalOrgRankingActivity : AppCompatActivity() {
             changed = true
             CoroutineScope(Dispatchers.Main).launch {
                 Log.d("api 시도", "getTotalUsersRanking 실행  load more")
-                typeOrgRankings()
+                totalOrgRankings()
             }
         }
     }
