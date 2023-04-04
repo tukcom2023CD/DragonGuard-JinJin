@@ -14,11 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
-import com.dragonguard.android.databinding.ActivityTotalOrgsRankingBinding
+import com.dragonguard.android.databinding.ActivityTotalOrgRankingBinding
 import com.dragonguard.android.model.rankings.OrganizationRankingModel
-import com.dragonguard.android.model.rankings.OrgInternalRankingsModel
 import com.dragonguard.android.model.rankings.TotalOrganizationModel
-import com.dragonguard.android.recycleradapter.OrgInternalRankingAdapter
 import com.dragonguard.android.recycleradapter.TotalOrgRankingAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
@@ -26,25 +24,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-/*
- 모든 대학교들의 랭킹을 보여주는 activity
- */
-class TotalOrgsRankingActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityTotalOrgsRankingBinding
+class TotalOrgRankingActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityTotalOrgRankingBinding
     private var viewmodel = Viewmodel()
     private var token = ""
-    private var type = ""
     private var page = 0
-    private var id = 0L
     private var position = 0
     private var changed = true
     private var ranking = 0
     private var totalOrgRankings = ArrayList<TotalOrganizationModel>()
     private lateinit var totalOrgAdapter : TotalOrgRankingAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_total_orgs_ranking)
-        binding.totalOrganizationViewmodel = viewmodel
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_total_org_ranking)
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -53,12 +46,11 @@ class TotalOrgsRankingActivity : AppCompatActivity() {
         token = intent.getStringExtra("token")!!
     }
 
-    private fun totalOrgRankings() {
-        binding.orgNameType.text = type
+    private fun typeOrgRankings() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.totalOrgRankings(type, page, token)
+                viewmodel.totalOrgRankings(page, token)
             }
             val result = resultDeferred.await()
             checkRankings(result)
@@ -71,38 +63,38 @@ class TotalOrgsRankingActivity : AppCompatActivity() {
             result.forEach {
                 Log.d("조직 내 랭킹", "결과 : ${it.name}")
                 if (ranking != 0) {
-//                    if (totalOrgRankings[ranking - 1].tokens == it.tokens) {
-//                        orgInternalRankings.add(
-//                            OrgInternalRankingsModel(
-//                                it.githubId, it.id, it.name, it.tier, it.tokens,
-//                                orgInternalRankings[ranking - 1].ranking
-//                            )
-//                        )
-//                    } else {
-//                        orgInternalRankings.add(
-//                            OrgInternalRankingsModel(
-//                                it.githubId,
-//                                it.id,
-//                                it.name,
-//                                it.tier,
-//                                it.tokens,
-//                                ranking + 1
-//                            )
-//                        )
-//                    }
+                    if (totalOrgRankings[ranking - 1].tokenSum == it.tokenSum) {
+                        totalOrgRankings.add(
+                            TotalOrganizationModel(
+                                it.emailEndpoint, it.id, it.name, it.organizationType, it.tokenSum,
+                                totalOrgRankings[ranking - 1].ranking
+                            )
+                        )
+                    } else {
+                        totalOrgRankings.add(
+                            TotalOrganizationModel(
+                                it.emailEndpoint,
+                                it.id,
+                                it.name,
+                                it.organizationType,
+                                it.tokenSum,
+                                ranking + 1
+                            )
+                        )
+                    }
                 } else {
-//                    orgInternalRankings.add(
-//                        OrgInternalRankingsModel(
-//                            it.githubId,
-//                            it.id,
-//                            it.name,
-//                            it.tier,
-//                            it.tokens,
-//                            1
-//                        )
-//                    )
+                    totalOrgRankings.add(
+                        TotalOrganizationModel(
+                            it.emailEndpoint,
+                            it.id,
+                            it.name,
+                            it.organizationType,
+                            it.tokenSum,
+                            1
+                        )
+                    )
                 }
-//                Log.d("유져", "랭킹 ${ranking+1} 추가")
+                Log.d("유져", "랭킹 ${ranking+1} 추가")
                 ranking++
             }
             Log.d("뷰 보이기 전", "initrecycler 전")
@@ -112,7 +104,7 @@ class TotalOrgsRankingActivity : AppCompatActivity() {
             if (changed) {
                 changed = false
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ totalOrgRankings() }, 4000)
+                handler.postDelayed({ typeOrgRankings() }, 2000)
             } else {
                 binding.progressBar.visibility = View.GONE
             }
@@ -141,7 +133,7 @@ class TotalOrgsRankingActivity : AppCompatActivity() {
             changed = true
             CoroutineScope(Dispatchers.Main).launch {
                 Log.d("api 시도", "getTotalUsersRanking 실행  load more")
-                totalOrgRankings()
+                typeOrgRankings()
             }
         }
     }

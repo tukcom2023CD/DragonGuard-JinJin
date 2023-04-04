@@ -373,4 +373,19 @@ class ApiRepository {
             return orgRankings
         }
     }
+
+    fun allOrgRanking(page: Int, token: String): OrganizationRankingModel {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("page", page.toString())
+        queryMap.put("size", "20")
+        val orgRankings = OrganizationRankingModel()
+        val orgTotal = api.getAllOrgRankings(queryMap,"Bearer $token")
+        return try{
+            val result = orgTotal.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
+            return orgRankings
+        }
+    }
 }

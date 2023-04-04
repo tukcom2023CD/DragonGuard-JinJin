@@ -5,5 +5,6 @@ data class TotalOrganizationModel(
     val id: Long?,
     val name: String?,
     val organizationType: String?,
+    val tokenSum: Long?,
     val ranking: Int
 )

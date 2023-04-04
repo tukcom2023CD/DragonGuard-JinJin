@@ -8,59 +8,58 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
-import com.dragonguard.android.databinding.ActivityRankingsBinding
+import com.dragonguard.android.databinding.ActivityOrganizationRankingsBinding
 
-/*
- 보고싶은 랭킹을 보러 가기 위한 activity
- */
-class RankingsActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityRankingsBinding
+class OrganizationRankingsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityOrganizationRankingsBinding
     private var token = ""
     private var orgName = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_rankings)
-
-        token = intent.getStringExtra("token")!!
-        orgName = intent.getStringExtra("organization")!!
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_organization_rankings)
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
-//        각각 버튼을 누르면 원하는 랭킹을 보러 가게 화면 전환
-        binding.myRepoRanking.setOnClickListener {
-            val intent = Intent(applicationContext, MyRepoRankingActivity::class.java)
-            intent.putExtra("token", token)
-            startActivity(intent)
-        }
+        token = intent.getStringExtra("token")!!
+        orgName = intent.getStringExtra("organization")!!
 
-        binding.myOrganizationList.setOnClickListener {
-            val intent = Intent(applicationContext, MyOrganizationListActivity::class.java)
+        binding.internalRanking.setOnClickListener {
+            val intent = Intent(applicationContext, MyOrganizationInternalActivity::class.java)
             intent.putExtra("token", token)
-            startActivity(intent)
-        }
-
-        binding.orgRelatedRankings.setOnClickListener {
-            val intent = Intent(applicationContext, OrganizationRankingsActivity::class.java)
             intent.putExtra("organization", orgName)
+            startActivity(intent)
+        }
+
+        binding.totalOrgRanking.setOnClickListener {
+            val intent = Intent(applicationContext, TotalOrgRankingActivity::class.java)
             intent.putExtra("token", token)
             startActivity(intent)
         }
 
-        binding.userRanking.setOnClickListener {
-            val intent = Intent(applicationContext, TotalUsersRankingActivity::class.java)
+        binding.universityRanking.setOnClickListener {
+            val intent = Intent(applicationContext, TypeOrgRankingActivity::class.java)
             intent.putExtra("token", token)
+            intent.putExtra("orgType", "UNIVERSITY")
             startActivity(intent)
         }
 
-        binding.totalRepoRanking.setOnClickListener {
-            val intent = Intent(applicationContext, TotalRepoRankingActivity::class.java)
+        binding.companyRanking.setOnClickListener {
+            val intent = Intent(applicationContext, TypeOrgRankingActivity::class.java)
             intent.putExtra("token", token)
+            intent.putExtra("orgType", "COMPANY")
             startActivity(intent)
         }
 
+
+        binding.etcRanking.setOnClickListener {
+            val intent = Intent(applicationContext, TypeOrgRankingActivity::class.java)
+            intent.putExtra("token", token)
+            intent.putExtra("orgType", "ETC")
+            startActivity(intent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

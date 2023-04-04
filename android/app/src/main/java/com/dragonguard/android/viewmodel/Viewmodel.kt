@@ -160,7 +160,11 @@ class Viewmodel: ViewModel() {
         return repository.orgInternalRankings(id, page, token)
     }
 
-    fun totalOrgRankings(type: String, page: Int, token: String): OrganizationRankingModel {
+    fun typeOrgRankings(type: String, page: Int, token: String): OrganizationRankingModel {
         return repository.typeOrgRanking(type, page, token)
+    }
+
+    fun totalOrgRankings(page: Int, token: String): OrganizationRankingModel {
+        return repository.allOrgRanking(page, token)
     }
 }

@@ -100,4 +100,7 @@ interface GitRankAPI {
 
     @GET("organizations/ranking")
     fun getOrgRankings(@QueryMap query: Map<String, String> ,@Header("Authorization")access: String): Call<OrganizationRankingModel>
+
+    @GET("organizations/ranking/all")
+    fun getAllOrgRankings(@QueryMap query: Map<String, String>, @Header("Authorization")access: String): Call<OrganizationRankingModel>
 }

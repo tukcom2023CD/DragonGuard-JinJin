@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
-import com.dragonguard.android.databinding.ActivityOrganizationInternalRankingBinding
-import com.dragonguard.android.model.rankings.OrgInternalRankingModel
-import com.dragonguard.android.model.rankings.OrgInternalRankingsModel
-import com.dragonguard.android.recycleradapter.OrgInternalRankingAdapter
+import com.dragonguard.android.databinding.ActivityTypeOrgRankingBinding
+import com.dragonguard.android.model.rankings.OrganizationRankingModel
+import com.dragonguard.android.model.rankings.TotalOrganizationModel
+import com.dragonguard.android.recycleradapter.TotalOrgRankingAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,102 +25,84 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 /*
- 사용자의 대학교 내의 랭킹을 보여주는 activity
+ 모든 대학교들의 랭킹을 보여주는 activity
  */
-class MyOrganizationInternalActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityOrganizationInternalRankingBinding
+class TypeOrgRankingActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityTypeOrgRankingBinding
     private var viewmodel = Viewmodel()
     private var token = ""
-    private var orgName = ""
+    private var type = "COMPANY"
     private var page = 0
     private var position = 0
-    private var id = 0L
     private var changed = true
     private var ranking = 0
-    private var orgInternalRankings = ArrayList<OrgInternalRankingsModel>()
-    private lateinit var organizationInternalRankingAdapter: OrgInternalRankingAdapter
+    private var totalOrgRankings = ArrayList<TotalOrganizationModel>()
+    private lateinit var totalOrgAdapter : TotalOrgRankingAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding =
-            DataBindingUtil.setContentView(this, R.layout.activity_organization_internal_ranking)
-        binding.organizationInternalViewmodel = viewmodel
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_type_org_ranking)
+        binding.typeOrganizationViewmodel = viewmodel
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
-
         token = intent.getStringExtra("token")!!
-        orgName = intent.getStringExtra("organization")!!
-        searchOrgId()
+        type = intent.getStringExtra("orgType")!!
+
+        typeOrgRankings()
     }
 
-    private fun searchOrgId() {
-        binding.progressBar.visibility = View.VISIBLE
+    private fun typeOrgRankings() {
+        binding.orgNameType.text = type
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.searchOrgId(orgName, token)
-            }
-            val result = resultDeferred.await()
-            Log.d("조직 id", "조직 id: $result")
-            if (result != 0L) {
-                id = result
-                orgInternalRankings(result)
-            }
-        }
-    }
-
-    private fun orgInternalRankings(id: Long) {
-        binding.orgInternalName.text = orgName
-        val coroutine = CoroutineScope(Dispatchers.Main)
-        coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.orgInterRankings(id, page, token)
+                viewmodel.typeOrgRankings(type, page, token)
             }
             val result = resultDeferred.await()
             checkRankings(result)
         }
     }
 
-    private fun checkRankings(result: OrgInternalRankingModel) {
+    private fun checkRankings(result: OrganizationRankingModel) {
         if (result.isNotEmpty()) {
-            Log.d("조직 내 랭킹", "결과 : ${result[0].githubId}")
+            Log.d("조직 내 랭킹", "결과 : ${result[0].name}")
             result.forEach {
-                Log.d("조직 내 랭킹", "결과 : ${it.githubId}")
+                Log.d("조직 내 랭킹", "결과 : ${it.name}")
                 if (ranking != 0) {
-                    if (orgInternalRankings[ranking - 1].tokens == it.tokens) {
-                        orgInternalRankings.add(
-                            OrgInternalRankingsModel(
-                                it.githubId, it.id, it.name, it.tier, it.tokens,
-                                orgInternalRankings[ranking - 1].ranking
+                    if (totalOrgRankings[ranking - 1].tokenSum == it.tokenSum) {
+                        totalOrgRankings.add(
+                            TotalOrganizationModel(
+                                it.emailEndpoint, it.id, it.name, it.organizationType, it.tokenSum,
+                                totalOrgRankings[ranking - 1].ranking
                             )
                         )
                     } else {
-                        orgInternalRankings.add(
-                            OrgInternalRankingsModel(
-                                it.githubId,
+                        totalOrgRankings.add(
+                            TotalOrganizationModel(
+                                it.emailEndpoint,
                                 it.id,
                                 it.name,
-                                it.tier,
-                                it.tokens,
+                                it.organizationType,
+                                it.tokenSum,
                                 ranking + 1
                             )
                         )
                     }
                 } else {
-                    orgInternalRankings.add(
-                        OrgInternalRankingsModel(
-                            it.githubId,
+                    totalOrgRankings.add(
+                        TotalOrganizationModel(
+                            it.emailEndpoint,
                             it.id,
                             it.name,
-                            it.tier,
-                            it.tokens,
+                            it.organizationType,
+                            it.tokenSum,
                             1
                         )
                     )
                 }
-//                Log.d("유져", "랭킹 ${ranking+1} 추가")
+                Log.d("유져", "랭킹 ${ranking+1} 추가")
                 ranking++
             }
             Log.d("뷰 보이기 전", "initrecycler 전")
@@ -130,7 +112,7 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
             if (changed) {
                 changed = false
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ orgInternalRankings(id) }, 4000)
+                handler.postDelayed({ typeOrgRankings() }, 2000)
             } else {
                 binding.progressBar.visibility = View.GONE
             }
@@ -139,13 +121,13 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
 
     private fun initRecycler() {
         Log.d("recycler", "initrecycler()")
-        binding.orgInternalRanking.setItemViewCacheSize(orgInternalRankings.size)
+        binding.typeOrgRanking.setItemViewCacheSize(totalOrgRankings.size)
         if (page == 0) {
-            organizationInternalRankingAdapter =
-                OrgInternalRankingAdapter(orgInternalRankings, this)
-            binding.orgInternalRanking.adapter = organizationInternalRankingAdapter
-            binding.orgInternalRanking.layoutManager = LinearLayoutManager(this)
-            binding.orgInternalRanking.visibility = View.VISIBLE
+            totalOrgAdapter =
+                TotalOrgRankingAdapter(totalOrgRankings, this)
+            binding.typeOrgRanking.adapter = totalOrgAdapter
+            binding.typeOrgRanking.layoutManager = LinearLayoutManager(this)
+            binding.typeOrgRanking.visibility = View.VISIBLE
         }
         page++
         Log.d("api 횟수", "$page 페이지 검색")
@@ -159,25 +141,25 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
             changed = true
             CoroutineScope(Dispatchers.Main).launch {
                 Log.d("api 시도", "getTotalUsersRanking 실행  load more")
-                orgInternalRankings(id)
+                typeOrgRankings()
             }
         }
     }
 
     private fun initScrollListener() {
-        binding.orgInternalRanking.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.typeOrgRanking.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                val layoutManager = binding.orgInternalRanking.layoutManager
+                val layoutManager = binding.typeOrgRanking.layoutManager
                 val lastVisibleItem = (layoutManager as LinearLayoutManager)
                     .findLastCompletelyVisibleItemPosition()
                 val itemTotalCount = recyclerView.adapter!!.itemCount - 1
                 position = recyclerView.adapter!!.itemCount - 1
                 // 마지막으로 보여진 아이템 position 이
                 // 전체 아이템 개수보다 1개 모자란 경우, 데이터를 loadMore 한다
-                if (!binding.orgInternalRanking.canScrollVertically(1) && lastVisibleItem == itemTotalCount) {
+                if (!binding.typeOrgRanking.canScrollVertically(1) && lastVisibleItem == itemTotalCount) {
                     loadMorePosts()
                 }
             }
@@ -190,11 +172,11 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
+        when(item.itemId){
+            android.R.id.home->{
                 finish()
             }
-            R.id.home_menu -> {
+            R.id.home_menu->{
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
