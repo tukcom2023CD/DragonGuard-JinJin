@@ -14,7 +14,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".TotalOrgRankingActivity"
+            android:name=".activity.ranking.TotalOrgRankingActivity"
             android:exported="false" />
         <activity
             android:name=".activity.ranking.OrganizationRankingsActivity"

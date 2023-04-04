@@ -49,11 +49,12 @@ class TypeOrgRankingActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
         token = intent.getStringExtra("token")!!
         type = intent.getStringExtra("orgType")!!
-
+        binding.orgTypeTitle.text = type
         typeOrgRankings()
     }
 
     private fun typeOrgRankings() {
+        binding.progressBar.visibility = View.VISIBLE
         binding.orgNameType.text = type
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {

@@ -47,6 +47,7 @@ class TotalOrgRankingActivity : AppCompatActivity() {
     }
 
     private fun typeOrgRankings() {
+        binding.progressBar.visibility = View.VISIBLE
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
