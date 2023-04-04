@@ -10,6 +10,7 @@ import com.dragonguard.android.model.contributors.RepoContributorsItem
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
+import com.dragonguard.android.model.rankings.OrganizationRankingModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
 import com.dragonguard.android.model.search.RepoSearchResultModel
 import com.dragonguard.android.model.token.RefreshTokenModel
@@ -351,9 +352,25 @@ class ApiRepository {
             val result = orgInternal.execute()
             return result.body()!!
         } catch (e: Exception) {
-            Log.d("error", "조직 랭킹 조회 실패: ${e.message} ")
+            Log.d("error", "조직 내 사용자들의 랭킹 조회 실패: ${e.message} ")
             return orgRankings
         }
+    }
 
+    fun typeOrgRanking(type: String, page: Int, token:String): OrganizationRankingModel {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("type", type)
+        queryMap.put("page", page.toString())
+        queryMap.put("size", "20")
+
+        val orgRankings = OrganizationRankingModel()
+        val orgTotal = api.getOrgRankings(queryMap, "Bearer $token")
+        return try{
+            val result = orgTotal.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
+            return orgRankings
+        }
     }
 }

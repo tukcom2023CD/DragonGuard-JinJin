@@ -54,7 +54,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ranking.TotalUniversitiesRankingActivity"
+            android:name=".activity.ranking.TotalOrgsRankingActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

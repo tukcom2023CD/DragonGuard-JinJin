@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
-            name="organizationInternalViewmodel"
+            name="totalOrganizationViewmodel"
             type="com.dragonguard.android.viewmodel.Viewmodel" />
     </data>
 
@@ -14,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="3.4"
-        tools:context=".activity.ranking.MyOrganizationInternalActivity">
+        tools:context=".activity.ranking.TotalOrgsRankingActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -31,24 +32,70 @@
             android:orientation="vertical"
             android:weightSum="5">
 
-            <TextView
-                android:id="@+id/org_internal_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:fontFamily="@font/ibm_semibold"
-                android:gravity="center_horizontal"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="30sp" />
+                android:layout_weight="0.4"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1" />
+
+                <RadioGroup
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3.2"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="대학교"
+                        android:textSize="20sp"/>
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="회사"
+                        android:textSize="20sp"/>
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:text="etc"
+                        android:textSize="20sp"/>
+
+                </RadioGroup>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:text="선택"
+                    android:background="@drawable/round_pink"
+                    android:id="@+id/choose_type"/>
+
+            </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.3"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:weightSum="5">
 
                 <TextView
@@ -68,6 +115,7 @@
                     android:background="@color/black" />
 
                 <TextView
+                    android:id="@+id/org_name_type"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3.3"
@@ -76,7 +124,6 @@
                     android:gravity="center"
                     android:maxLength="15"
                     android:maxLines="1"
-                    android:text="Github ID"
                     android:textColor="#000000"
                     android:textSize="15sp" />
 
@@ -105,8 +152,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.02"
                 android:layout_marginHorizontal="5dp"
+                android:layout_weight="0.02"
                 android:background="#000000" />
 
             <LinearLayout
@@ -117,7 +164,7 @@
                 android:weightSum="5">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/org_internal_ranking"
+                    android:id="@+id/total_org_ranking"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center_horizontal"
@@ -127,6 +174,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="invisible"
                     tools:listitem="@layout/total_users_ranking_list" />
 
                 <ProgressBar
