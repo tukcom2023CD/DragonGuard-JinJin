@@ -10,9 +10,10 @@ import UIKit
 
 final class WatchRankingController: UIViewController{
     
-    let rankingBtns = ["내 Repository 랭킹", "내 Organization 목록", "대학교 내부 랭킹", "전국 대학교 랭킹", "전체 랭킹", "전체 Repository랭킹"]
+    let rankingBtns = ["내 Repository 랭킹", "내 Organization 목록", "조직 내부 랭킹", "전체 조직 랭킹", "전체 랭킹", "전체 Repository랭킹"]
     let deviceWidth = UIScreen.main.bounds.width
     let deviceHeight = UIScreen.main.bounds.height
+    var myOrganization: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,7 +107,9 @@ extension WatchRankingController: UITableViewDelegate, UITableViewDataSource{
         case 2:
             self.navigationController?.pushViewController(UnivInRankingController(), animated: true)
         case 3:
-            self.navigationController?.pushViewController(AllUnivRankingController(), animated: true)
+            let allRanking = AllOrganiRankingController()
+            allRanking.myOrganization = self.myOrganization
+            self.navigationController?.pushViewController(allRanking, animated: true)
         case 4:
             self.navigationController?.pushViewController(AllRankingController(), animated: true)
         case 5:

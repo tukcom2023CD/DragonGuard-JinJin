@@ -162,6 +162,11 @@ final class APIURL{
         return url
     }
     
+    // MARK: 전체 조직 랭킹 조회
+    func allOrganizationRanking(ip: String) -> String{
+        let url = "http://\(ip)/api/organizations/ranking/all"
+        return url
+    }
     
     
 }

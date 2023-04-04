@@ -17,7 +17,7 @@ final class MainModel{
     var profileImage: String
     var rank: Int
     var tokenAmount: Int
-    var organization: String
+    var organization: String?
     
     init(id: String,
          name: String,
@@ -52,5 +52,5 @@ struct MainDecodingModel: Codable{
     var profileImage: String?
     var rank: Int
     var tokenAmount: Int?
-    var organization: String
+    var organization: String?
 }

@@ -19,6 +19,7 @@ final class MainController: UIViewController {
     var id: Int?
     var jwtToken: String?
     var rank = 0
+    var myOrganization: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -197,6 +198,7 @@ final class MainController: UIViewController {
                 self.img.load(img: self.img, url: url,btn: self.settingUI)
                 self.settingUI.setTitle(data.githubId, for: .normal)
                 self.univNameLabel.text = data.organization
+                self.myOrganization = data.organization
                 self.collectionView.reloadData()
                 
             })
@@ -246,7 +248,9 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
         switch indexPath.row{
             
         case 2:
-            self.navigationController?.pushViewController(WatchRankingController(), animated: true)
+            let watchRanking = WatchRankingController()
+            watchRanking.myOrganization = self.myOrganization
+            self.navigationController?.pushViewController(watchRanking, animated: true)
         case 3:
             self.navigationController?.pushViewController(CompareController(), animated: true)
         default:
