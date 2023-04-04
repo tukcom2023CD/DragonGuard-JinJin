@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -36,6 +37,9 @@ public class Organization extends BaseTime {
 
     @OneToMany
     private Set<Member> members = new HashSet<>();
+
+    @Formula("(SELECT sum(m.sum_of_tokens) FROM organization o, member m WHERE m.organization_id = id)")
+    private Long sumOfMemberTokens;
 
     @Builder
     public Organization(String name, OrganizationType organizationType, String emailEndpoint) {
