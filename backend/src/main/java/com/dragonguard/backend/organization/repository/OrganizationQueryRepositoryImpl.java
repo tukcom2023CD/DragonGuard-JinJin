@@ -35,7 +35,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .leftJoin(organization.members, member)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(member.sumOfTokens.sum().desc())
+                .orderBy(organization.sumOfMemberTokens.desc())
+                .distinct()
                 .fetch();
     }
 
@@ -48,7 +49,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .where(organization.organizationType.eq(type).and(member.authStep.eq(AuthStep.ALL)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(member.sumOfTokens.sum().desc())
+                .orderBy(organization.sumOfMemberTokens.desc())
+                .distinct()
                 .fetch();
     }
 
@@ -60,6 +62,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .where(organization.organizationType.eq(type).and(organization.name.containsIgnoreCase(name)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .distinct()
                 .fetch();
     }
 
@@ -72,6 +75,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .where(member.organizationDetails.organizationId.eq(organization.id).and(member.sumOfTokens.gt(
                         JPAExpressions
                                 .select(member.sumOfTokens).from(member).where(member.id.eq(memberId)))))
+                .distinct()
                 .fetch().size() + 1;
     }
 }
