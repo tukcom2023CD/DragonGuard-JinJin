@@ -26,15 +26,18 @@ final class TypeOrganizationRankingService{
                         "Content-Type": "application/json",
                         "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
                        ])
-            .responseDecodable(of: AllOrganizationRankingDecodingModel.self) { response in
-                
+            .responseDecodable(of: [AllOrganizationRankingDecodingModel].self) { response in
+                print(response)
                 switch response.result{
                 case .success(let data):
-                    result.append(AllOrganizationRankingModel(id: data.id,
-                                                              name: data.name,
-                                                              organizationType: data.organizationType,
-                                                              emailEndpoint: data.emailEndpoint,
-                                                              tokenSum: data.tokenSum))
+                    data.forEach { data in
+                        result.append(AllOrganizationRankingModel(id: data.id,
+                                                                  name: data.name,
+                                                                  organizationType: data.organizationType,
+                                                                  emailEndpoint: data.emailEndpoint,
+                                                                  tokenSum: data.tokenSum))
+                    }
+                    
                 case .failure(let error):
                     print("getTypeOrganizationRanking error!\n \(error)")
                 }

@@ -103,9 +103,14 @@ extension CompanyRankingController: UITableViewDelegate, UITableViewDataSource {
                      text: organizationName,
                      count: self.allRankingList[indexPath.row].tokenSum)
         
+        cell.layer.cornerRadius = 20
+        cell.layer.borderWidth = 1
+        
         if organizationName == self.myOrganization ?? ""{
-            print(organizationName)
             cell.backgroundColor = .yellow
+        }
+        else{
+            cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
         }
         
         return cell
@@ -125,5 +130,6 @@ extension CompanyRankingController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
     
+    func numberOfSections(in tableView: UITableView) -> Int { return allRankingList.count }
 }
 

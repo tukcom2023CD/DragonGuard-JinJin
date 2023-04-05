@@ -16,6 +16,7 @@ final class OrganizationRankingsController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = .white
         addUIToView()
     }
     
@@ -37,6 +38,7 @@ final class OrganizationRankingsController: UIViewController{
         self.view.addSubview(listTableView)
         listTableView.dataSource = self
         listTableView.delegate = self
+        listTableView.register(WatchRankingCollectionView.self, forCellReuseIdentifier: WatchRankingCollectionView.identifier)
         setAutoLayout()
     }
     

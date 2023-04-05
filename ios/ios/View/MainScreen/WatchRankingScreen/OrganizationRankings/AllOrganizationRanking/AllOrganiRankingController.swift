@@ -20,8 +20,8 @@ final class AllOrganiRankingController: UIViewController{
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "전체 조직 랭킹"
+        self.navigationItem.titleView?.tintColor = .black
         
         addUItoView()
         settingAutoLayout()
@@ -36,6 +36,7 @@ final class AllOrganiRankingController: UIViewController{
     lazy var repoTableView: UITableView = {
         let repoTableView = UITableView()
         repoTableView.backgroundColor = .white
+        repoTableView.separatorStyle = .none
         return repoTableView
     }()
     
@@ -86,6 +87,7 @@ final class AllOrganiRankingController: UIViewController{
                 rankingList.forEach { data in
                     self.allRankingList.append(data)
                 }
+                self.navigationItem.title = "전체 조직 랭킹"
                 self.repoTableView.reloadData()
             })
             .disposed(by: self.disposeBag)
@@ -103,10 +105,14 @@ extension AllOrganiRankingController: UITableViewDelegate, UITableViewDataSource
         cell.prepare(rank: indexPath.row + 1,
                      text: organizationName,
                      count: self.allRankingList[indexPath.row].tokenSum)
+        cell.layer.cornerRadius = 20
+        cell.layer.borderWidth = 1
         
         if organizationName == self.myOrganization ?? ""{
-            print(organizationName)
             cell.backgroundColor = .yellow
+        }
+        else{
+            cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
         }
         
         return cell
@@ -126,5 +132,6 @@ extension AllOrganiRankingController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
     
+    func numberOfSections(in tableView: UITableView) -> Int { return self.allRankingList.count }
 }
 

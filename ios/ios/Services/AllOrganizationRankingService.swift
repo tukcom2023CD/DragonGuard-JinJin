@@ -16,7 +16,6 @@ final class AllOrganizationRankingService{
     func getAllOrganiRanking() -> Observable<[AllOrganizationRankingModel]>{
         let url = APIURL.apiUrl.allOrganizationRanking(ip: APIURL.ip)
         var result: [AllOrganizationRankingModel] = []
-        
         return Observable.create { observer in
             
             AF.request(url,
@@ -26,21 +25,23 @@ final class AllOrganizationRankingService{
                        "Content-Type" : "application/json",
                        "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
                        ])
-            .responseDecodable(of: AllOrganizationRankingDecodingModel.self) { response in
+            .responseDecodable(of: [AllOrganizationRankingDecodingModel].self) { response in
                 print(response)
                 switch response.result{
                 case .success(let data):
-                    result.append(AllOrganizationRankingModel(id: data.id,
-                                                              name: data.name,
-                                                              organizationType: data.organizationType,
-                                                              emailEndpoint: data.emailEndpoint,
-                                                              tokenSum: data.tokenSum))
-                    
+                    data.forEach { data in
+                        result.append(AllOrganizationRankingModel(id: data.id,
+                                                                  name: data.name,
+                                                                  organizationType: data.organizationType,
+                                                                  emailEndpoint: data.emailEndpoint,
+                                                                  tokenSum: data.tokenSum))
+                    }
+                    observer.onNext(result)
                 case .failure(let error):
                     print("getAllOrganiRanking error!\n \(error)")
                 }
             }
-            observer.onNext(result)
+            
             
             return Disposables.create()
         }
