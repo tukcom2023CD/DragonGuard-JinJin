@@ -14,9 +14,10 @@ final class OrganizationRankingViewModel{
     private let allOrganizationRankingService = AllOrganizationRankingService()
     private let typeOrganizationRankingService = TypeOrganizationRankingService()
     let disposeBag = DisposeBag()
+    /// 타입 필터링 랭킹
     private var typePage: Int = 0
     private var typeSize: Int = 20
-    
+
     
     // MARK: 전체 조직 랭킹 가져오는 함수
     func getAllOraganizationRanking() -> Observable<[AllOrganizationRankingModel]>{
@@ -47,5 +48,7 @@ final class OrganizationRankingViewModel{
             return Disposables.create()
         }
     }
+    
+    
     
 }

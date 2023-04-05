@@ -10,16 +10,18 @@ import SnapKit
 import RxSwift
 
 final class MainController: UIViewController {
-    let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
-    let deviceWidth = UIScreen.main.bounds.width
-    let deviceHeight = UIScreen.main.bounds.height
-    let viewModel = MainViewModel()
-    let disposeBag = DisposeBag()
-    let img = UIImageView()
-    var id: Int?
+    private let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
+    private let deviceWidth = UIScreen.main.bounds.width
+    private let deviceHeight = UIScreen.main.bounds.height
+    private let viewModel = MainViewModel()
+    private let disposeBag = DisposeBag()
+    private let img = UIImageView()
+    private var id: Int?
     var jwtToken: String?
-    var rank = 0
-    var myOrganization: String?
+    private var rank = 0
+    private var myOrganization: String?
+    private var githubId: String?
+    private var rankingInOrganization: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -197,8 +199,10 @@ final class MainController: UIViewController {
                 let url = URL(string: data.profileImage)!
                 self.img.load(img: self.img, url: url,btn: self.settingUI)
                 self.settingUI.setTitle(data.githubId, for: .normal)
+                self.githubId = data.githubId
                 self.univNameLabel.text = data.organization
                 self.myOrganization = data.organization
+                self.rankingInOrganization = data.organizationRank
                 self.collectionView.reloadData()
                 
             })
@@ -218,7 +222,7 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
             cell.labelText(indexBtns[indexPath.row], rankingNum: "\(self.rank)", "상위 0%")
         }
         else if indexPath.row == 1 {
-            cell.labelText(indexBtns[indexPath.row], rankingNum: "00", "상위 0%")
+            cell.labelText(indexBtns[indexPath.row], rankingNum: "\(self.rankingInOrganization ?? 0)", "상위 0%")
         }
         else {
             cell.labelText("", rankingNum: indexBtns[indexPath.row], "")
@@ -246,10 +250,10 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
     // cell 선택되었을 때
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.row{
-            
         case 2:
             let watchRanking = WatchRankingController()
             watchRanking.myOrganization = self.myOrganization
+            watchRanking.githubId = self.githubId
             self.navigationController?.pushViewController(watchRanking, animated: true)
         case 3:
             self.navigationController?.pushViewController(CompareController(), animated: true)

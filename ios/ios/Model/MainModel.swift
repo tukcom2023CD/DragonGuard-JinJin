@@ -16,6 +16,7 @@ final class MainModel{
     var authStep: String
     var profileImage: String
     var rank: Int
+    var organizationRank: Int
     var tokenAmount: Int
     var organization: String?
     
@@ -27,6 +28,7 @@ final class MainModel{
          authStep: String,
          profileImage: String,
          rank: Int,
+         organizationRank: Int,
          tokenAmount: Int,
          organization: String ) {
         self.id = id
@@ -37,6 +39,7 @@ final class MainModel{
         self.authStep = authStep
         self.profileImage = profileImage
         self.rank = rank
+        self.organizationRank = organizationRank
         self.tokenAmount = tokenAmount
         self.organization = organization
     }
@@ -51,6 +54,7 @@ struct MainDecodingModel: Codable{
     var authStep: String
     var profileImage: String?
     var rank: Int
+    var organizationRank: Int?
     var tokenAmount: Int?
     var organization: String?
 }
