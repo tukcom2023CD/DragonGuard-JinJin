@@ -10,3 +10,7 @@ import Foundation
 struct AddOrganizationCodableModel: Codable{
     var id: Int
 }
+
+struct OrganizatoinIdCodableModel: Codable{
+    var id: Int
+}

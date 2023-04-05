@@ -175,10 +175,12 @@ final class APIURL{
     }
     
     // MARK: 조직 내부 나의 랭킹 조회
-    func organizationInMyRanking(ip: String, id: Int ,type: String, page: Int, size: Int) -> String{
+    func organizationInMyRanking(ip: String, id: Int, page: Int, size: Int) -> String{
         let url = "http://\(ip)/api/members/ranking/organization?organizationId=\(id)&page=\(page)&size=\(size)"
         return url
     }
+    
+    
     
 }
 

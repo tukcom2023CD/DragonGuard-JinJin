@@ -12,10 +12,11 @@ import RxSwift
 
 // MARK: 조직 내부에서의 사용자 랭킹 
 final class OrganizationInRankingController: UIViewController{
-    
+    let viewModel = MemberInOrganizationViewModel()
     let disposeBag = DisposeBag()
-    private var allRankingList: [AllOrganizationRankingModel] = []
+    private var allRankingList: [MemberInOrganizationModel] = []
     var myOrganization: String?
+    var githubId: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,7 +82,20 @@ final class OrganizationInRankingController: UIViewController{
     
     // MARK: 조직 내부 나의 랭킹 가져오는 함수
     private func getData(){
-        
+        self.viewModel.getOrganizationId(name: self.myOrganization ?? "")
+            .subscribe(onNext: { id in
+                    
+                self.viewModel.getMemberInOrganization(id: id)
+                    .subscribe(onNext: { rankingList in
+                        rankingList.forEach { list in
+                            self.allRankingList.append(list)
+                        }
+                        self.repoTableView.reloadData()
+                    })
+                    .disposed(by: self.disposeBag)
+                
+            })
+            .disposed(by: self.disposeBag)
     }
     
 }
@@ -95,8 +109,16 @@ extension OrganizationInRankingController: UITableViewDelegate, UITableViewDataS
         
         cell.prepare(rank: indexPath.row + 1,
                      text: organizationName,
-                     count: self.allRankingList[indexPath.row].tokenSum)
+                     count: self.allRankingList[indexPath.row].tokens)
+        cell.layer.cornerRadius = 20
+        cell.layer.borderWidth = 1
         
+        if self.githubId ==  self.allRankingList[indexPath.row].githubId{
+            cell.backgroundColor = .yellow
+        }
+        else{
+            cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)
+        }
      
         
         return cell

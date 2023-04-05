@@ -35,6 +35,7 @@ final class MainService{
                                              authStep: data.authStep,
                                              profileImage: data.profileImage ?? "",
                                              rank: data.rank,
+                                             organizationRank: data.organizationRank ?? 0,
                                              tokenAmount: data.tokenAmount ?? 0,
                                              organization: data.organization ?? "")
                         observer.onNext(info)

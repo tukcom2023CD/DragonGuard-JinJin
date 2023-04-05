@@ -82,6 +82,9 @@
 		3BC994E629CAD018005150FB /* TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC994E529CAD018005150FB /* TokenModel.swift */; };
 		3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD21298129B8008C05B2 /* SearchPageController.swift */; };
 		3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */; };
+		3BD6EDDA29DD646D00DEF7E0 /* RankingInOrganizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6EDD929DD646D00DEF7E0 /* RankingInOrganizationService.swift */; };
+		3BD6EDDC29DD664600DEF7E0 /* MemberInOrganizationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6EDDB29DD664600DEF7E0 /* MemberInOrganizationModel.swift */; };
+		3BD6EDDE29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6EDDD29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift */; };
 		3BDD718429C075D60018D09B /* FilteringController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD718329C075D60018D09B /* FilteringController.swift */; };
 		3BDD718629C091480018D09B /* LanguageSelectionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD718529C091480018D09B /* LanguageSelectionsCollectionViewCell.swift */; };
 		3BDD718929C0932A0018D09B /* StarSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD718829C0932A0018D09B /* StarSelectionCollectionViewCell.swift */; };
@@ -204,6 +207,9 @@
 		3BC994E529CAD018005150FB /* TokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModel.swift; sourceTree = "<group>"; };
 		3BD6DD21298129B8008C05B2 /* SearchPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageController.swift; sourceTree = "<group>"; };
 		3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageTableView.swift; sourceTree = "<group>"; };
+		3BD6EDD929DD646D00DEF7E0 /* RankingInOrganizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingInOrganizationService.swift; sourceTree = "<group>"; };
+		3BD6EDDB29DD664600DEF7E0 /* MemberInOrganizationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberInOrganizationModel.swift; sourceTree = "<group>"; };
+		3BD6EDDD29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberInOrganizationViewModel.swift; sourceTree = "<group>"; };
 		3BDD718329C075D60018D09B /* FilteringController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringController.swift; sourceTree = "<group>"; };
 		3BDD718529C091480018D09B /* LanguageSelectionsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionsCollectionViewCell.swift; sourceTree = "<group>"; };
 		3BDD718829C0932A0018D09B /* StarSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -578,6 +584,7 @@
 				3B29804429AC85A800967B6E /* CompareViewModel.swift */,
 				3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */,
 				3B5B174E29DC595D00571A8D /* OrganizationRankingViewModel.swift */,
+				3BD6EDDD29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -596,6 +603,7 @@
 				3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */,
 				3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */,
 				3B7BFF6B29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift */,
+				3BD6EDDB29DD664600DEF7E0 /* MemberInOrganizationModel.swift */,
 				3BC994E529CAD018005150FB /* TokenModel.swift */,
 				3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */,
 				3B87E56F29D7173D000734BE /* AddOrganizationModel.swift */,
@@ -645,6 +653,7 @@
 				3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */,
 				3B5B174C29DC593100571A8D /* AllOrganizationRankingService.swift */,
 				3B5B175C29DC7B2900571A8D /* TypeOrganizationRankingService.swift */,
+				3BD6EDD929DD646D00DEF7E0 /* RankingInOrganizationService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -859,10 +868,12 @@
 				3B7BFF6C29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift in Sources */,
 				3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */,
 				3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */,
+				3BD6EDDE29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift in Sources */,
 				3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */,
 				3B00229F29879F7D003FA5CC /* SettingTableViewCell.swift in Sources */,
 				3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */,
 				A37AA6EA299D0BA8002812F6 /* MainRankingCollectionView.swift in Sources */,
+				3BD6EDDA29DD646D00DEF7E0 /* RankingInOrganizationService.swift in Sources */,
 				3B5B175D29DC7B2900571A8D /* TypeOrganizationRankingService.swift in Sources */,
 				3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */,
 				3B18AA1E29A7B1E90051C086 /* KlipModel.swift in Sources */,
@@ -884,6 +895,7 @@
 				3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */,
 				3BA2013929980661008978A5 /* MainService.swift in Sources */,
 				3BA20137299805AE008978A5 /* MainModel.swift in Sources */,
+				3BD6EDDC29DD664600DEF7E0 /* MemberInOrganizationModel.swift in Sources */,
 				3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */,
 				A37AA6FA29D35522002812F6 /* TierTableViewCell.swift in Sources */,
 				3B9756EB298A16D900F27094 /* AllRankingController.swift in Sources */,

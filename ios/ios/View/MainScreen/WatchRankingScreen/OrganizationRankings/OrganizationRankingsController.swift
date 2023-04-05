@@ -13,6 +13,7 @@ import UIKit
 final class OrganizationRankingsController: UIViewController{
     private let rankingBtns = ["조직 내 나의 랭킹", "조직 전체 랭킹", "대학교 랭킹", "회사 랭킹", "그외 조직 랭킹"]
     var myOrganization: String?
+    var githubId: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +68,10 @@ extension OrganizationRankingsController: UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section{
         case 0:
-            self.navigationController?.pushViewController(OrganizationInRankingController(), animated: true)
+            let organizationInRankingController = OrganizationInRankingController()
+            organizationInRankingController.myOrganization = self.myOrganization
+            organizationInRankingController.githubId = self.githubId
+            self.navigationController?.pushViewController(organizationInRankingController, animated: true)
         case 1:
             let allOrganiRankingController = AllOrganiRankingController()
             allOrganiRankingController.myOrganization = self.myOrganization

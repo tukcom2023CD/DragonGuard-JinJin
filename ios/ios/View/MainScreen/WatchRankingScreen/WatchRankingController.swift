@@ -14,6 +14,7 @@ final class WatchRankingController: UIViewController{
     private let deviceWidth = UIScreen.main.bounds.width
     private let deviceHeight = UIScreen.main.bounds.height
     var myOrganization: String?
+    var githubId: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,6 +108,7 @@ extension WatchRankingController: UITableViewDelegate, UITableViewDataSource{
         case 2:
             let organizationRankingsController = OrganizationRankingsController()
             organizationRankingsController.myOrganization = self.myOrganization
+            organizationRankingsController.githubId = self.githubId
             self.navigationController?.pushViewController(organizationRankingsController, animated: true)
         case 3:
             self.navigationController?.pushViewController(AllRankingController(), animated: true)
