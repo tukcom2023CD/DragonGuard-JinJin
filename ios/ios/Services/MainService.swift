@@ -22,6 +22,7 @@ final class MainService{
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: MainDecodingModel.self) { response in
                     print("main service")
+                    print("used accessToken \(Environment.jwtToken )")
                     print(response)
                     
                     switch response.result{
@@ -35,7 +36,7 @@ final class MainService{
                                              profileImage: data.profileImage ?? "",
                                              rank: data.rank,
                                              tokenAmount: data.tokenAmount ?? 0,
-                                             organization: data.organization)
+                                             organization: data.organization ?? "")
                         observer.onNext(info)
                     case .failure(let error):
                         print("삐리삐리 에러발생 !! \(error)")
