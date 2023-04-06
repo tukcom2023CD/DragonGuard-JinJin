@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivityTotalUsersRankingBinding
-import com.dragonguard.android.model.TotalUsersRankingsModel
-import com.dragonguard.android.model.TotalUsersRankingModelItem
+import com.dragonguard.android.model.rankings.TotalUsersRankingsModel
+import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
 import com.dragonguard.android.recycleradapter.TotalUsersRankingAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope

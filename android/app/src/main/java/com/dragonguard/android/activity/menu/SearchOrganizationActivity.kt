@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivitySearchOrganizationBinding
-import com.dragonguard.android.model.OrganizationNamesModel
+import com.dragonguard.android.model.org.OrganizationNamesModel
 import com.dragonguard.android.recycleradapter.SearchOrganizationAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
@@ -89,7 +89,6 @@ class SearchOrganizationActivity : AppCompatActivity() {
         binding.searchIcon.setOnClickListener {
             if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
                 if (lastSearch != viewmodel.onSearchListener.value!! || typeChanged) {
-                    Toast.makeText(applicationContext, "변함!!", Toast.LENGTH_SHORT).show()
                     orgNames.clear()
                     binding.searchResult.visibility = View.GONE
                     count = 0
@@ -118,7 +117,6 @@ class SearchOrganizationActivity : AppCompatActivity() {
                     if (search.isNotEmpty()) {
                         closeKeyboard()
                         if (lastSearch != viewmodel.onSearchListener.value!! || typeChanged) {
-                            Toast.makeText(applicationContext, "변함!!", Toast.LENGTH_SHORT).show()
                             orgNames.clear()
                             binding.searchResult.visibility = View.GONE
                             count = 0

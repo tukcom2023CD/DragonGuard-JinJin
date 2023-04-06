@@ -5,9 +5,19 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dragonguard.android.connect.ApiRepository
 import com.dragonguard.android.model.*
+import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
+import com.dragonguard.android.model.compare.CompareRepoRequestModel
+import com.dragonguard.android.model.compare.CompareRepoResponseModel
+import com.dragonguard.android.model.contributors.RepoContributorsItem
+import com.dragonguard.android.model.klip.*
+import com.dragonguard.android.model.org.*
+import com.dragonguard.android.model.rankings.OrgInternalRankingModel
+import com.dragonguard.android.model.rankings.OrganizationRankingModel
+import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
+import com.dragonguard.android.model.search.RepoSearchResultModel
+import com.dragonguard.android.model.token.RefreshTokenModel
 import kotlinx.coroutines.*
 
 /*
@@ -138,5 +148,23 @@ class Viewmodel: ViewModel() {
 
     fun deleteLateEmailCode(id: Long, token: String): Boolean {
         return repository.deleteEmailCode(id, token)
+    }
+
+    fun searchOrgId(name: String, token: String): Long {
+        Log.d("name", "조직이름: $name")
+        Log.d("토큰", "토큰 : $token")
+        return repository.searchOrgId(name, token)
+    }
+
+    fun orgInterRankings(id: Long, page: Int, token: String): OrgInternalRankingModel {
+        return repository.orgInternalRankings(id, page, token)
+    }
+
+    fun typeOrgRankings(type: String, page: Int, token: String): OrganizationRankingModel {
+        return repository.typeOrgRanking(type, page, token)
+    }
+
+    fun totalOrgRankings(page: Int, token: String): OrganizationRankingModel {
+        return repository.allOrgRanking(page, token)
     }
 }

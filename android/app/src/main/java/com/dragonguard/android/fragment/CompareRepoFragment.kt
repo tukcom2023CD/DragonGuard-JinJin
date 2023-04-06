@@ -1,33 +1,27 @@
 package com.dragonguard.android.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.support.constraint.ConstraintLayout
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentCompareRepoBinding
-import com.dragonguard.android.model.CompareRepoMembersResponseModel
-import com.dragonguard.android.model.CompareRepoResponseModel
-import com.dragonguard.android.model.RepoContributorsItem
+import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
+import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.recycleradapter.RepoCompareAdapter
 import com.dragonguard.android.recycleradapter.RepoCompareChartAdapter
-import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.lang.invoke.ConstantCallSite
 
 //선택한 두 Repository를 비교하기 위한 fragment
 class CompareRepoFragment(repoName1: String, repoName2: String, token: String) : Fragment() {

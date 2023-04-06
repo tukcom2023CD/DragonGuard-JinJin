@@ -15,8 +15,8 @@ import com.dragonguard.android.BuildConfig
 import com.dragonguard.android.R
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityLoginBinding
-import com.dragonguard.android.model.Bapp
-import com.dragonguard.android.model.WalletAuthRequestModel
+import com.dragonguard.android.model.klip.Bapp
+import com.dragonguard.android.model.klip.WalletAuthRequestModel
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope

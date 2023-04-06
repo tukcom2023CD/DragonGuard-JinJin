@@ -93,37 +93,12 @@
                     android:layout_weight="0.1" />
 
                 <Button
-                    android:id="@+id/my_university_internal_ranking"
+                    android:id="@+id/org_related_rankings"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
                     android:background="@drawable/roundc"
-                    android:text="대학교 내 랭킹"
-                    android:textColor="@color/black"
-                    android:textSize="25sp"
-                    android:fontFamily="@font/ibm_semibold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1" />
-
-                <Button
-                    android:id="@+id/total_universities_ranking"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
-                    android:background="@drawable/roundc"
-                    android:text="전국 대학교 랭킹"
+                    android:text="조직 관련 랭킹들"
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />
@@ -148,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
                     android:background="@drawable/roundc"
-                    android:text="전체 랭킹"
+                    android:text="사용자 전체 랭킹"
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:fontFamily="@font/ibm_semibold" />

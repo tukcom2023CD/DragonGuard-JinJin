@@ -8,14 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.graphics.blue
-import androidx.core.graphics.green
-import androidx.core.graphics.red
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.model.RepoContributorsItem
-import kotlin.math.absoluteValue
+import com.dragonguard.android.model.contributors.RepoContributorsItem
 
 /*
  선택한 repo의 contributor들의 정보를 나열하기 위한 recycleradapter

@@ -3,12 +3,22 @@ package com.dragonguard.android.connect
 import android.util.Log
 import com.dragonguard.android.BuildConfig
 import com.dragonguard.android.model.*
+import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
+import com.dragonguard.android.model.compare.CompareRepoRequestModel
+import com.dragonguard.android.model.compare.CompareRepoResponseModel
+import com.dragonguard.android.model.contributors.RepoContributorsItem
+import com.dragonguard.android.model.klip.*
+import com.dragonguard.android.model.org.*
+import com.dragonguard.android.model.rankings.OrgInternalRankingModel
+import com.dragonguard.android.model.rankings.OrganizationRankingModel
+import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
+import com.dragonguard.android.model.search.RepoSearchResultModel
+import com.dragonguard.android.model.token.RefreshTokenModel
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.CookieManager
-import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 /*
@@ -75,7 +85,7 @@ class ApiRepository {
     //사용자의 정보를 받아오기 위한 함수
     fun getUserInfo(token: String): UserInfoModel {
         val userInfo = api.getUserInfo("Bearer $token")
-        var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null, null)
+        var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null, null, null)
         try {
             val result = userInfo.execute()
             Log.d("no", "사용자 정보 요청 결과 : ${result.code()}")
@@ -145,7 +155,7 @@ class ApiRepository {
     }
 
     //kilp wallet address의 정보제공을 위한 함수
-    fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel  {
+    fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel {
         var authResult = WalletAuthResponseModel(null, null,null)
         val retrofitWallet = Retrofit.Builder().baseUrl(BuildConfig.prepare)
             .client(okHttpClient)
@@ -314,6 +324,68 @@ class ApiRepository {
         } catch (e: Exception) {
             Log.d("status", "이메일 인증 코드 삭제 실패: ${e.message}")
             false
+        }
+    }
+
+    fun searchOrgId(orgName: String, token: String): Long {
+        val searchId = api.getOrgId(orgName, "Bearer $token")
+        val resultId = 0L
+        return try{
+            val result = searchId.execute()
+            return result.body()!!.id
+        }catch (e: Exception) {
+            Log.d("status", "조직 id 검색 실패: ${e.message}")
+            resultId
+        }
+    }
+
+    fun orgInternalRankings(id: Long, count: Int, token: String): OrgInternalRankingModel {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("organizationId", id.toString())
+        queryMap.put("page", count.toString())
+        queryMap.put("size", "20")
+
+        val orgRankings = OrgInternalRankingModel()
+        val orgInternal = api.getOrgInternalRankings(queryMap, "Bearer $token")
+
+        return try {
+            val result = orgInternal.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "조직 내 사용자들의 랭킹 조회 실패: ${e.message} ")
+            return orgRankings
+        }
+    }
+
+    fun typeOrgRanking(type: String, page: Int, token:String): OrganizationRankingModel {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("type", type)
+        queryMap.put("page", page.toString())
+        queryMap.put("size", "20")
+
+        val orgRankings = OrganizationRankingModel()
+        val orgTotal = api.getOrgRankings(queryMap, "Bearer $token")
+        return try{
+            val result = orgTotal.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
+            return orgRankings
+        }
+    }
+
+    fun allOrgRanking(page: Int, token: String): OrganizationRankingModel {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("page", page.toString())
+        queryMap.put("size", "20")
+        val orgRankings = OrganizationRankingModel()
+        val orgTotal = api.getAllOrgRankings(queryMap,"Bearer $token")
+        return try{
+            val result = orgTotal.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
+            return orgRankings
         }
     }
 }

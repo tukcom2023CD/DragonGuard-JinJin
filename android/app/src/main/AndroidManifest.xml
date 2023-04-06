@@ -14,6 +14,13 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.ranking.TotalOrgRankingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ranking.OrganizationRankingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.menu.AuthEmailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -46,7 +53,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ranking.MyUniversityInternalActivity"
+            android:name=".activity.ranking.MyOrganizationInternalActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
@@ -54,7 +61,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ranking.TotalUniversitiesRankingActivity"
+            android:name=".activity.ranking.TypeOrgRankingActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

@@ -1,19 +1,13 @@
 package com.dragonguard.android.recycleradapter
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.model.RepoContributorsItem
-import com.dragonguard.android.model.TotalUsersRankingModelItem
-import com.dragonguard.android.model.TotalUsersRankingsModel
+import com.dragonguard.android.model.rankings.TotalUsersRankingsModel
 
 /*
  모든 사용자들을 랭킹 순서대로 나열하기 위한 recycleradapter
