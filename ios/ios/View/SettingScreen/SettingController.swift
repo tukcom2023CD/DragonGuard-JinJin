@@ -56,8 +56,6 @@ final class SettingController: UIViewController{
     private func logOut(){
         UserDefaults.standard.removeObject(forKey: "Access")
         UserDefaults.standard.removeObject(forKey: "Refresh")
-        Environment.jwtToken = ""
-        Environment.refreshToken = ""
         
         LoginViewModel.loginService.logOutDone()
             .subscribe(onNext: { check in

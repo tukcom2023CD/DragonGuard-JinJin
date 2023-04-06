@@ -21,10 +21,8 @@ final class CompareService{
         let body = ["firstRepo": firstRepo, "secondRepo": secondRepo]
         var firstRepoUserInfo: [FirstRepoResult] = []   // 첫 번째 레포 내부 유저 리스트
         var secondRepoUserInfo: [SecondRepoResult] = []  // 두 번째 레포 내부 유저 리스트
+        let access = UserDefaults.standard.string(forKey: "Access")
 
-        print(Environment.jwtToken ?? "")
-        print("body \(body)")
-        
         return Observable.create(){ observer in
             Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { timer in
                 print("sending url1")
@@ -33,7 +31,7 @@ final class CompareService{
                            parameters: body,
                            encoding: JSONEncoding(options: []),
                            headers: ["Content-type": "application/json",
-                                     "Authorization": "Bearer \(Environment.jwtToken ?? "")"])
+                                     "Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
                 .responseString { response in
                     switch response.result {
@@ -76,7 +74,8 @@ final class CompareService{
     func getCompareInfo(firstRepo: String, secondRepo: String) -> Observable<CompareRepoModel> {
         let url = APIURL.apiUrl.compareRepoAPI(ip: ip)
         let body = ["firstRepo": firstRepo, "secondRepo": secondRepo]
-        
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create() { observer in
             Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { timer in
                 print("sending url22")
@@ -85,7 +84,7 @@ final class CompareService{
                            parameters: body,
                            encoding: JSONEncoding(options: []),
                            headers: ["Content-type": "application/json",
-                                     "Authorization": "Bearer \(Environment.jwtToken ?? "")"])
+                                     "Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: CompareRepoDecodingModel.self) { response in
                     print("response REPO: \(response)")
@@ -180,26 +179,4 @@ final class CompareService{
         
     }
     
-}//
-
-
-
-
-/*
- 
- 
- 
- 
- 
- 
- 
- 
- 
- =========================
- 
- 
- 
- 
- 
- 
- */
+}

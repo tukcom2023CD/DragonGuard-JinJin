@@ -24,11 +24,13 @@ final class SearchOraganizationService {
         let encodedString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         print(url)
         var result: [SearchOrganizationListModel] = []
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create(){ observer in
             AF.request(encodedString,
                        method: .get,
                        encoding: JSONEncoding.default,
-                       headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
+                       headers: ["Authorization": "Bearer \(access ?? "")"])
             .validate(statusCode: 200..<201)
             .responseData { response in
                 switch response.result {

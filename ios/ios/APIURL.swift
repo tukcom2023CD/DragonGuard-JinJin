@@ -12,7 +12,7 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL() 
-    static let ip = Environment.ip
+    static let ip = ""
     
     
     private init(){}

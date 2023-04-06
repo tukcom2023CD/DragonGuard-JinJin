@@ -119,8 +119,6 @@ final class LoginController: UIViewController{
                 if first && second{
                     
                     let rootView = MainController()
-                    rootView.jwtToken = Environment.jwtToken
-                    print("loginhere \(Environment.jwtToken)")
                     
                     for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
                        print("\(key): \(value)")

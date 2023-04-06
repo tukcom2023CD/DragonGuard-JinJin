@@ -18,13 +18,15 @@ final class TypeOrganizationRankingService{
                                                         page: page,
                                                         size: size)
         var result: [AllOrganizationRankingModel] = []
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create{ observer in
           
             AF.request(url,
                        method: .get,
                        headers: [
                         "Content-Type": "application/json",
-                        "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
+                        "Authorization" : "Bearer \(access ?? "")"
                        ])
             .responseDecodable(of: [AllOrganizationRankingDecodingModel].self) { response in
                 print(response)

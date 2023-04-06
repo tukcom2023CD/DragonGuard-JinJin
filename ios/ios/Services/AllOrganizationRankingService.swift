@@ -16,6 +16,8 @@ final class AllOrganizationRankingService{
     func getAllOrganiRanking() -> Observable<[AllOrganizationRankingModel]>{
         let url = APIURL.apiUrl.allOrganizationRanking(ip: APIURL.ip)
         var result: [AllOrganizationRankingModel] = []
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create { observer in
             
             AF.request(url,
@@ -23,7 +25,7 @@ final class AllOrganizationRankingService{
                        encoding: JSONEncoding.default,
                        headers: [
                        "Content-Type" : "application/json",
-                       "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
+                       "Authorization" : "Bearer \(access ?? "")"
                        ])
             .responseDecodable(of: [AllOrganizationRankingDecodingModel].self) { response in
                 print(response)

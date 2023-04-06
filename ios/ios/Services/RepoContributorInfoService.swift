@@ -17,13 +17,14 @@ final class RepoContributorInfoService{
         let url = APIURL.apiUrl.getRepoContributorInfo(ip: ip, name: selectedName)
         var resultData = [RepoContributorInfoModel]()
         print(url)
-        
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create(){ observer in
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
             
             AF.request(url,
                            method: .get,
-                           headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
+                       headers: ["Authorization": "Bearer \(access ?? "")"])
                 .responseString { response in
                     switch response.result {
                        case .success(let data):
