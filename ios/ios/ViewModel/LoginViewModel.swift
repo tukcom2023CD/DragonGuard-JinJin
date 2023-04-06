@@ -74,7 +74,16 @@ final class LoginViewModel {
             .subscribe(onNext: { msg in print(msg)})
             .disposed(by: disposeBag)
     }
-    
+        
+    // MARK: 로그아웃 확인하는 함수
+    func logOutDone() -> Observable<Bool>{
+        return Observable.create { observer in
+            self.checkKlipAuth = false
+            self.checkGithubAuth = false
+            observer.onNext(true)
+            return Disposables.create()
+        }
+    }
 }
 
 

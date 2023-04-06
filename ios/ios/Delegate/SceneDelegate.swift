@@ -37,7 +37,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     
     // MARK: If success User, go to MainController
     func moveMainController(){
-        let rootView = MainController()
+        let rootView = LoginController()
+        rootView.autoLoginCheck = true
         let nc = UINavigationController(rootViewController: rootView)
         window?.rootViewController = nc
         window?.makeKeyAndVisible()

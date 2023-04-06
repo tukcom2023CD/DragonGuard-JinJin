@@ -15,6 +15,7 @@ import Alamofire
 
 final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
+    var autoLoginCheck: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,11 @@ final class LoginController: UIViewController{
         
         addUItoView()
         checkClearAuths()
+        
+        if autoLoginCheck ?? false{
+            print("???")
+            self.navigationController?.pushViewController(MainController(), animated: true)
+        }
         
     }
     
@@ -114,9 +120,22 @@ final class LoginController: UIViewController{
                     
                     let rootView = MainController()
                     rootView.jwtToken = Environment.jwtToken
-                    let nc = UINavigationController(rootViewController: rootView)
-                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-                    sceneDelegate.window?.rootViewController = nc
+                    print("loginhere \(Environment.jwtToken)")
+                    
+                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
+                       print("\(key): \(value)")
+                     }
+
+                    self.klipLoginBtn.isEnabled = false
+                    self.goGithubBtn.isEnabled = true
+                    self.goGithubBtn.backgroundColor = .white
+                    self.klipLoginBtn.backgroundColor = .white
+                    
+                    self.navigationController?.pushViewController(rootView, animated: true)
+                    
+//                    let nc = UINavigationController(rootViewController: rootView)
+//                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+//                    sceneDelegate.window?.rootViewController = nc
                     
                 }
                 else if first{
@@ -127,6 +146,12 @@ final class LoginController: UIViewController{
                 else if second{
                     self.klipLoginBtn.backgroundColor = .lightGray
                     self.klipLoginBtn.isEnabled = false
+                }
+                else{
+                    self.klipLoginBtn.isEnabled = false
+                    self.goGithubBtn.isEnabled = true
+                    self.goGithubBtn.backgroundColor = .white
+                    self.klipLoginBtn.backgroundColor = .white
                 }
             })
             .disposed(by: disposeBag)
