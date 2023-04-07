@@ -18,6 +18,8 @@ final class RankingInOrganizationService{
                                                   name: name)
         
         let encodedString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create{ observer in
             
             AF.request(encodedString,
@@ -25,7 +27,7 @@ final class RankingInOrganizationService{
                        encoding: JSONEncoding.default,
                        headers: [
                         "Content-Type": "application/json",
-                        "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
+                        "Authorization" : "Bearer \(access ?? "")"
                        ])
             .responseDecodable(of: OrganizatoinIdCodableModel.self){ response in
                 switch response.result{
@@ -47,13 +49,15 @@ final class RankingInOrganizationService{
                                                         page: page,
                                                         size: size)
         var result: [MemberInOrganizationModel] = []
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create{ observer in
           
             AF.request(url,
                        method: .get,
                        encoding: JSONEncoding.default
                        ,headers: [
-                        "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
+                        "Authorization" : "Bearer \(access ?? "")"
                        ])
             .responseDecodable(of: [MemberInOrganizationDecodingModel].self) { response in
                 print(response)

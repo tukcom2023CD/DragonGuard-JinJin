@@ -28,7 +28,8 @@ final class MainController: UIViewController {
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = true    // navigation bar 삭제
         self.navigationItem.backButtonTitle = "Home"    //다른 화면에서 BackBtn title 설정
-        
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+
         // UI view에 적용
         addUItoView()
         
@@ -190,9 +191,9 @@ final class MainController: UIViewController {
     
     // 내 티어, 내 토큰 가져오는 함수
     private func getMyData(){
-        guard let jwtToken = Environment.jwtToken else {return}
-        
-        self.viewModel.getMyInformation(token: jwtToken)
+        let access = UserDefaults.standard.string(forKey: "Access")
+
+        self.viewModel.getMyInformation(token: access ?? "")
             .subscribe(onNext: { data in
                 self.rank = data.rank
                 self.tierTokenUI.inputText(myTier: data.tier, tokens: data.tokenAmount)

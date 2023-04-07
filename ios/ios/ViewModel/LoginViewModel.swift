@@ -70,11 +70,22 @@ final class LoginViewModel {
 
     // 사용자 지갑 주소 서버로 전송
     func userWalletAddress(){
-        post.sendMyWalletAddress(token: Environment.jwtToken!, walletAddress: self.walletAddress)
+        let access = UserDefaults.standard.string(forKey: "Access")
+
+        post.sendMyWalletAddress(token: access ?? "", walletAddress: self.walletAddress)
             .subscribe(onNext: { msg in print(msg)})
             .disposed(by: disposeBag)
     }
-    
+        
+    // MARK: 로그아웃 확인하는 함수
+    func logOutDone() -> Observable<Bool>{
+        return Observable.create { observer in
+            self.checkKlipAuth = false
+            self.checkGithubAuth = false
+            observer.onNext(true)
+            return Disposables.create()
+        }
+    }
 }
 
 

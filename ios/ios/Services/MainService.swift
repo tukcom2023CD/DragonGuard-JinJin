@@ -16,13 +16,14 @@ final class MainService{
     /// 사용자 정보 받아옴
     func getUserInfo(token: String) -> Observable<MainModel>{
         let url = APIURL.apiUrl.getMembersInfo(ip: ip)
+        let access = UserDefaults.standard.string(forKey: "Access")
         
         return Observable.create(){ observer in
-            AF.request(url, headers: ["Authorization": "Bearer \(token)"])
+            AF.request(url, headers: ["Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: MainDecodingModel.self) { response in
                     print("main service")
-                    print("used accessToken \(Environment.jwtToken )")
+                    print("used accessToken \(access ?? "") ")
                     print(response)
                     
                     switch response.result{

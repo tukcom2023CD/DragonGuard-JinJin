@@ -7,10 +7,12 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 final class SettingController: UIViewController{
     // 설정화면에 출력될 종류들
     let settingData = ["토큰 부여 기준","FAQ","버전 정보","조직인증","로그아웃"]
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +50,21 @@ final class SettingController: UIViewController{
         sheet.addAction(UIAlertAction(title: "확인", style: .default))
         // 화면에 표시
         present(sheet,animated: true)
+    }
+    
+    // MARK: 로그아웃
+    private func logOut(){
+        UserDefaults.standard.removeObject(forKey: "Access")
+        UserDefaults.standard.removeObject(forKey: "Refresh")
+        
+        LoginViewModel.loginService.logOutDone()
+            .subscribe(onNext: { check in
+                if check{
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+            })
+            .disposed(by: self.disposeBag)
+
     }
     
     /*
@@ -125,6 +142,8 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
             versionInfo()   // 버전 정보
         case 3:
             self.navigationController?.pushViewController(OrganizationCertificationController(), animated: true)
+        case 4:
+            self.logOut()
         default:
             return
         }

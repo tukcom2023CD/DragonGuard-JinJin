@@ -21,12 +21,14 @@ final class EmailService{
         let url = APIURL.apiUrl.checkEmailValidCode(ip: APIURL.ip,
                                                     id: id,
                                                     code: code)
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         
         return Observable.create { observer in
             
             AF.request(url,
                        method: .get,
-                       headers: ["Authorization": "Bearer \(Environment.jwtToken ?? "")"])
+                       headers: ["Authorization": "Bearer \(access ?? "")"])
             .responseDecodable(of: CheckEmailModel.self){ response in
                 
                 switch response.result{
@@ -45,13 +47,15 @@ final class EmailService{
     /// - Returns: 이메일 Id
     func reSendCertificatedNumber() -> Observable<Int>{
         let url = APIURL.apiUrl.sendEmailToAuth(ip: APIURL.ip)
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         
         return Observable.create { observer in
             AF.request(url,
                        method: .post,
                        headers: [
                         "Content-Type" : "application/json",
-                        "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
+                        "Authorization" : "Bearer \(access ?? "")"
                        ])
             .responseDecodable(of: EmailResendDecodingModel.self) { response in
                 switch response.result{
@@ -76,12 +80,14 @@ final class EmailService{
         let url = APIURL.apiUrl.checkEmailValidCode(ip: APIURL.ip,
                                                     id: id,
                                                     code: code)
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create{ observer in
             AF.request(url,
                        method: .get,
                        headers: [
                         "Content-Type" : "application/json",
-                        "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
+                        "Authorization" : "Bearer \(access ?? "")"
                        ])
             .responseDecodable(of: CheckValidCodeDecodingModel.self) { response in
                 switch response.result{
@@ -99,12 +105,13 @@ final class EmailService{
     // MARK: 인증번호 삭제
     func removeCertificatedNumber(){
         let url = APIURL.apiUrl.removeCertificatedNumber(ip: APIURL.ip)
-        
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         AF.request(url,
                    method: .delete,
                    headers: [
                    "Content-Type" : "application/json",
-                   "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
+                   "Authorization" : "Bearer \(access ?? "")"
                    ])
         .response{ response in
             switch response.result {

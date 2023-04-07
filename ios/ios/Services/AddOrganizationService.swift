@@ -21,7 +21,8 @@ final class AddOrganizationService{
             "organizationType": type,
             "emailEndpoint": endPoint
         ]
-        
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create { observer in
             AF.request(url,
                        method: .post,
@@ -29,7 +30,7 @@ final class AddOrganizationService{
                        encoding: JSONEncoding.default,
                        headers: [
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer \(Environment.jwtToken ?? "")"])
+                        "Authorization": "Bearer \(access ?? "")"])
             .validate(statusCode: 200..<201)
             .responseDecodable(of: AddOrganizationCodableModel.self){ response in
 
@@ -58,15 +59,16 @@ final class AddOrganizationService{
               "email" : email
         ]
         let encodedString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create { observer in
-            print(Environment.jwtToken)
             AF.request(encodedString,
                        method: .post,
                        parameters: body,
                        encoding: JSONEncoding.default,
                        headers: [
                         "Content-Type" : "application/json",
-                        "Authorization" : "Bearer \(Environment.jwtToken ?? "")"
+                        "Authorization" : "Bearer \(access ?? "")"
                        ])
             .validate(statusCode: 200..<201)
             .responseDecodable(of: EmailIdDecodingModel.self) { response in
