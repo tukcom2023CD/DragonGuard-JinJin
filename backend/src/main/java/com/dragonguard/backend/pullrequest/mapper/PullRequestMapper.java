@@ -1,5 +1,6 @@
 package com.dragonguard.backend.pullrequest.mapper;
 
+import com.dragonguard.backend.pullrequest.entity.PullRequest;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,4 +10,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PullRequestMapper {
+    public PullRequest toEntity(String githubId, Integer pullRequestNum, Integer year) {
+        return PullRequest.builder()
+                .githubId(githubId)
+                .amount(pullRequestNum)
+                .year(year)
+                .build();
+    }
 }

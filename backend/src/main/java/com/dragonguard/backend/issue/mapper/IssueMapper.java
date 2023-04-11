@@ -1,5 +1,6 @@
 package com.dragonguard.backend.issue.mapper;
 
+import com.dragonguard.backend.issue.entity.Issue;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,4 +10,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class IssueMapper {
+    public Issue toEntity(String githubId, Integer issueNum, Integer year) {
+        return Issue.builder()
+                .githubId(githubId)
+                .issueNum(issueNum)
+                .year(year)
+                .build();
+    }
 }

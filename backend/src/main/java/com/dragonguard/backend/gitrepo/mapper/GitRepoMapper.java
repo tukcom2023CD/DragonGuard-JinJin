@@ -16,4 +16,10 @@ public class GitRepoMapper {
                 .name(gitRepoRequest.getName())
                 .build();
     }
+
+    public GitRepo toEntity(String name) {
+        return GitRepo.builder()
+                .name(name)
+                .build();
+    }
 }

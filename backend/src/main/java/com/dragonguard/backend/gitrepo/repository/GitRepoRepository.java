@@ -15,4 +15,6 @@ import java.util.Optional;
 @Repository
 public interface GitRepoRepository extends JpaRepository<GitRepo, Long> {
     Optional<GitRepo> findByName(String name);
+
+    boolean existsByName(String name);
 }
