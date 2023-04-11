@@ -13,7 +13,7 @@ public class IssueMapper {
     public Issue toEntity(String githubId, Integer issueNum, Integer year) {
         return Issue.builder()
                 .githubId(githubId)
-                .issueNum(issueNum)
+                .amount(issueNum)
                 .year(year)
                 .build();
     }

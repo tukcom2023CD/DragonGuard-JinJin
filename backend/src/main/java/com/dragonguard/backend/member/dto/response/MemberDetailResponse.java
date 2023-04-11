@@ -1,6 +1,5 @@
 package com.dragonguard.backend.member.dto.response;
 
-import com.dragonguard.backend.gitorganization.dto.response.GitOrganizationResponse;
 import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.member.entity.Tier;
 import lombok.AllArgsConstructor;
