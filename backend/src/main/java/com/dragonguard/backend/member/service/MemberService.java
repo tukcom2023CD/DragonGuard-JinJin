@@ -175,28 +175,28 @@ public class MemberService {
                     new ContractRequest(walletAddress,
                             ContributeType.COMMIT.toString(),
                             BigInteger.valueOf(commit),
-                            githubId));
+                            githubId), member);
         }
         if (issue > 0) {
             blockchainService.setTransaction(
                     new ContractRequest(walletAddress,
                             ContributeType.ISSUE.toString(),
                             BigInteger.valueOf(issue),
-                            githubId));
+                            githubId), member);
         }
         if (pullRequest > 0) {
             blockchainService.setTransaction(
                     new ContractRequest(walletAddress,
                             ContributeType.PULL_REQUEST.toString(),
                             BigInteger.valueOf(pullRequest),
-                            githubId));
+                            githubId), member);
         }
         if (comment > 0) {
             blockchainService.setTransaction(
                     new ContractRequest(walletAddress,
                             ContributeType.COMMENT.toString(),
                             BigInteger.valueOf(comment),
-                            githubId));
+                            githubId), member);
         }
     }
 
