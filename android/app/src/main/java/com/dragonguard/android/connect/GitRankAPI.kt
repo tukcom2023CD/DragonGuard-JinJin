@@ -5,6 +5,7 @@ import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsModel
+import com.dragonguard.android.model.detail.UserDetailModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
@@ -103,4 +104,7 @@ interface GitRankAPI {
 
     @GET("organizations/ranking/all")
     fun getAllOrgRankings(@QueryMap query: Map<String, String>, @Header("Authorization")access: String): Call<OrganizationRankingModel>
+
+    @GET("members")
+    fun getUserDetail(@Query("githubId")id: String, @Header("Authorization")access: String): Call<UserDetailModel>
 }

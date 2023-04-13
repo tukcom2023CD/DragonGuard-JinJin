@@ -15,5 +15,8 @@ data class UserInfoModel(
     val rank: String?,
     val tokenAmount: Int?,
     val organization: String?,
-    val organizationRank: Int?
+    val organizationRank: Int?,
+    val issues: Int?,
+    val pullRequests: Int?,
+    val comments: Int?
 )
