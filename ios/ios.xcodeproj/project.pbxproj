@@ -43,6 +43,11 @@
 		3B5B175829DC769100571A8D /* CompanyRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B175729DC769100571A8D /* CompanyRankingController.swift */; };
 		3B5B175B29DC76C500571A8D /* ETCRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B175A29DC76C500571A8D /* ETCRankingController.swift */; };
 		3B5B175D29DC7B2900571A8D /* TypeOrganizationRankingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B175C29DC7B2900571A8D /* TypeOrganizationRankingService.swift */; };
+		3B5B5F5E29E8228F0017C5C9 /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B5F5D29E8228F0017C5C9 /* UserProfileController.swift */; };
+		3B5B5F6029E84C000017C5C9 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B5F5F29E84C000017C5C9 /* StoreView.swift */; };
+		3B5B5F6429E84FDF0017C5C9 /* ETCCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B5F6329E84FDF0017C5C9 /* ETCCollectionViewCell.swift */; };
+		3B5B5F6629E869F40017C5C9 /* RepoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B5F6529E869F40017C5C9 /* RepoTableViewCell.swift */; };
+		3B5B5F6929E86BA90017C5C9 /* RepositoryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B5F6829E86BA90017C5C9 /* RepositoryListView.swift */; };
 		3B5E07FF29BEF7E50090E8A6 /* GithubTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */; };
 		3B6E075A29ABBD64002676DF /* CompareUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6E075929ABBD64002676DF /* CompareUserModel.swift */; };
 		3B781FB329C32871007FBDFA /* FilteringCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B781FB229C32871007FBDFA /* FilteringCollectionViewCell.swift */; };
@@ -176,6 +181,11 @@
 		3B5B175729DC769100571A8D /* CompanyRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyRankingController.swift; sourceTree = "<group>"; };
 		3B5B175A29DC76C500571A8D /* ETCRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ETCRankingController.swift; sourceTree = "<group>"; };
 		3B5B175C29DC7B2900571A8D /* TypeOrganizationRankingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeOrganizationRankingService.swift; sourceTree = "<group>"; };
+		3B5B5F5D29E8228F0017C5C9 /* UserProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
+		3B5B5F5F29E84C000017C5C9 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
+		3B5B5F6329E84FDF0017C5C9 /* ETCCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ETCCollectionViewCell.swift; sourceTree = "<group>"; };
+		3B5B5F6529E869F40017C5C9 /* RepoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoTableViewCell.swift; sourceTree = "<group>"; };
+		3B5B5F6829E86BA90017C5C9 /* RepositoryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListView.swift; sourceTree = "<group>"; };
 		3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubTokenModel.swift; sourceTree = "<group>"; };
 		3B6E075929ABBD64002676DF /* CompareUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareUserModel.swift; sourceTree = "<group>"; };
 		3B781FB229C32871007FBDFA /* FilteringCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -406,6 +416,7 @@
 				3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */,
 				3B8C165429B7821100B881F4 /* Filltering */,
 				3B3CE9D929B46A7E00B2594B /* RepositoryContritubutorInfo */,
+				3B5B5F6129E84FBC0017C5C9 /* UserDetailProfile */,
 			);
 			path = SearchController;
 			sourceTree = "<group>";
@@ -476,6 +487,34 @@
 				3B5B175A29DC76C500571A8D /* ETCRankingController.swift */,
 			);
 			path = ETCRanking;
+			sourceTree = "<group>";
+		};
+		3B5B5F6129E84FBC0017C5C9 /* UserDetailProfile */ = {
+			isa = PBXGroup;
+			children = (
+				3B5B5F5D29E8228F0017C5C9 /* UserProfileController.swift */,
+				3B5B5F6729E86B8A0017C5C9 /* RepositoryList */,
+				3B5B5F6529E869F40017C5C9 /* RepoTableViewCell.swift */,
+				3B5B5F6229E84FCC0017C5C9 /* Store */,
+			);
+			path = UserDetailProfile;
+			sourceTree = "<group>";
+		};
+		3B5B5F6229E84FCC0017C5C9 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				3B5B5F5F29E84C000017C5C9 /* StoreView.swift */,
+				3B5B5F6329E84FDF0017C5C9 /* ETCCollectionViewCell.swift */,
+			);
+			path = Store;
+			sourceTree = "<group>";
+		};
+		3B5B5F6729E86B8A0017C5C9 /* RepositoryList */ = {
+			isa = PBXGroup;
+			children = (
+				3B5B5F6829E86BA90017C5C9 /* RepositoryListView.swift */,
+			);
+			path = RepositoryList;
 			sourceTree = "<group>";
 		};
 		3B7B1D2C298404AE0038BD67 /* Frameworks */ = {
@@ -855,6 +894,7 @@
 				3BFF623329CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift in Sources */,
 				3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */,
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,
+				3B5B5F6429E84FDF0017C5C9 /* ETCCollectionViewCell.swift in Sources */,
 				3B5B175829DC769100571A8D /* CompanyRankingController.swift in Sources */,
 				3BC994E629CAD018005150FB /* TokenModel.swift in Sources */,
 				3B9756F1298A32C700F27094 /* WatchRankingTableView.swift in Sources */,
@@ -872,7 +912,9 @@
 				3BD6EDDE29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift in Sources */,
 				3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */,
 				3B00229F29879F7D003FA5CC /* SettingTableViewCell.swift in Sources */,
+				3B5B5F5E29E8228F0017C5C9 /* UserProfileController.swift in Sources */,
 				3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */,
+				3B5B5F6929E86BA90017C5C9 /* RepositoryListView.swift in Sources */,
 				A37AA6EA299D0BA8002812F6 /* MainRankingCollectionView.swift in Sources */,
 				3BD6EDDA29DD646D00DEF7E0 /* RankingInOrganizationService.swift in Sources */,
 				3B5B175D29DC7B2900571A8D /* TypeOrganizationRankingService.swift in Sources */,
@@ -881,6 +923,7 @@
 				3B1DB87C2963428A00308F43 /* MainController.swift in Sources */,
 				3B9CF3D6298FB5A700495D35 /* ALLUserInfoViewModel.swift in Sources */,
 				A3ADC9742990210E003D6483 /* MainCollectionView.swift in Sources */,
+				3B5B5F6629E869F40017C5C9 /* RepoTableViewCell.swift in Sources */,
 				3B9CF3D4298F9B8C00495D35 /* ALLUserInfoService.swift in Sources */,
 				3B9756E8298A166300F27094 /* OrganizationInRankingController.swift in Sources */,
 				3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */,
@@ -905,6 +948,7 @@
 				3BF2B31329890F1900F20841 /* WatchRankingCollectionView.swift in Sources */,
 				3B7BFF6A29CBD63200A2F3F4 /* SearchOraganizationService.swift in Sources */,
 				3B9756EF298A171300F27094 /* AllOrganiRankingController.swift in Sources */,
+				3B5B5F6029E84C000017C5C9 /* StoreView.swift in Sources */,
 				A3754FA02995653B00A683A9 /* TierTokenCustomUIView.swift in Sources */,
 				3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */,
 				3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */,
