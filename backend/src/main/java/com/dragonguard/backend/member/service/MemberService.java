@@ -7,6 +7,8 @@ import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
 import com.dragonguard.backend.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.gitorganization.service.GitOrganizationService;
+import com.dragonguard.backend.gitrepo.entity.GitRepo;
+import com.dragonguard.backend.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.issue.entity.Issue;
@@ -49,6 +51,7 @@ public class MemberService {
     private final PullRequestService pullRequestService;
     private final IssueService issueService;
     private final GitOrganizationService gitOrganizationService;
+    private final GitRepoService gitRepoService;
     private final MemberClientService memberClientService;
 
     public Tier getTier() {
@@ -230,7 +233,8 @@ public class MemberService {
         Member member = memberRepository.findMemberByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
         MemberResponse memberResponse = getMemberResponse(member);
         List<GitOrganization> gitOrganizations = gitOrganizationService.findGitOrganizationByGithubId(githubId);
-        return memberMapper.toDetailResponse(memberResponse, gitOrganizations);
+        List<GitRepo> gitRepos = gitRepoService.findByGithubId(githubId);
+        return memberMapper.toDetailResponse(memberResponse, gitOrganizations, gitRepos);
     }
 
     private void getCommitsByScraping(String githubId) {

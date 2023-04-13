@@ -116,6 +116,10 @@ public class GitRepoService {
         gitRepo.updateClosedIssueNum(closedIssue);
     }
 
+    public List<GitRepo> findByGithubId(String githubId) {
+        return gitRepoRepository.findByGithubId(githubId);
+    }
+
     private GitRepoResponse getOneRepoResponse(String repoName) {
         Integer year = LocalDate.now().getYear();
         String githubToken = authService.getLoginUser().getGithubToken();
