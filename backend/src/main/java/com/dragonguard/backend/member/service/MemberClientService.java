@@ -3,6 +3,9 @@ package com.dragonguard.backend.member.service;
 import com.dragonguard.backend.commit.dto.response.CommitScrapingResponse;
 import com.dragonguard.backend.commit.service.CommitService;
 import com.dragonguard.backend.gitorganization.service.GitOrganizationService;
+import com.dragonguard.backend.gitrepo.entity.GitRepo;
+import com.dragonguard.backend.gitrepo.mapper.GitRepoMapper;
+import com.dragonguard.backend.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.issue.service.IssueService;
 import com.dragonguard.backend.member.dto.request.MemberClientRequest;
@@ -35,7 +38,8 @@ public class MemberClientService {
     private final GithubClient<MemberClientRequest, MemberOrganizationResponse[]> memberOrganizationClient;
     private final GithubClient<MemberClientRequest, OrganizationRepoResponse[]> organizationRepoClient;
     private final GitOrganizationService gitOrganizationService;
-    private final GitRepoService gitRepoService;
+    private final GitRepoRepository gitRepoRepository;
+    private final GitRepoMapper gitRepoMapper;
     private final CommitService commitService;
     private final IssueService issueService;
     private final PullRequestService pullRequestService;
@@ -60,11 +64,20 @@ public class MemberClientService {
                 .map(OrganizationRepoResponse::getFull_name)
                 .collect(Collectors.toList());
 
-        gitRepoService.saveGitRepos(memberRepoNames);
-        gitRepoService.saveGitRepos(organizationRepoNames);
+        saveGitRepos(memberRepoNames);
+        saveGitRepos(organizationRepoNames);
         gitOrganizationService.saveGitOrganizations(memberOrganizationNames);
         commitService.saveCommits(new CommitScrapingResponse(githubId, commitNum));
         issueService.saveIssues(githubId, issueNum, year);
         pullRequestService.savePullRequests(githubId, pullRequestNum, year);
+    }
+
+    public void saveGitRepos(List<String> gitRepoNames) {
+        List<GitRepo> gitRepos = gitRepoNames.stream()
+                .filter(gitRepoRepository::existsByName)
+                .map(gitRepoMapper::toEntity)
+                .collect(Collectors.toList());
+
+        gitRepoRepository.saveAll(gitRepos);
     }
 }

@@ -116,15 +116,6 @@ public class GitRepoService {
         gitRepo.updateClosedIssueNum(closedIssue);
     }
 
-    public void saveGitRepos(List<String> gitRepoNames) {
-        List<GitRepo> gitRepos = gitRepoNames.stream()
-                .filter(gitRepoRepository::existsByName)
-                .map(gitRepoMapper::toEntity)
-                .collect(Collectors.toList());
-
-        gitRepoRepository.saveAll(gitRepos);
-    }
-
     private GitRepoResponse getOneRepoResponse(String repoName) {
         Integer year = LocalDate.now().getYear();
         String githubToken = authService.getLoginUser().getGithubToken();

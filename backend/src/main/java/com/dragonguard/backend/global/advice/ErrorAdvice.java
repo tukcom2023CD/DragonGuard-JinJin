@@ -2,11 +2,8 @@ package com.dragonguard.backend.global.advice;
 
 import com.dragonguard.backend.blockchain.exception.BlockchainException;
 import com.dragonguard.backend.email.exception.EmailException;
-import com.dragonguard.backend.member.exception.CookieException;
-import com.dragonguard.backend.member.exception.JwtProcessingException;
-import com.dragonguard.backend.member.exception.OAuthProcessingException;
+import com.dragonguard.backend.member.exception.*;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.member.exception.TierNoneMatchException;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.core.codec.DecodingException;
 import org.springframework.http.HttpStatus;
@@ -91,6 +88,11 @@ public class ErrorAdvice {
 
     @ExceptionHandler(BlockchainException.class)
     public ResponseEntity<ErrorResponse> blockchainException(BlockchainException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalContributionException.class)
+    public ResponseEntity<ErrorResponse> illegalContributionException(IllegalContributionException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 }
