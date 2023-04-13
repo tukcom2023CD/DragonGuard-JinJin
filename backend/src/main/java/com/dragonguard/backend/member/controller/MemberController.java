@@ -32,14 +32,6 @@ import java.util.UUID;
 public class MemberController {
     private final MemberService memberService;
 
-    @PostConstruct
-    public void init() {
-        memberService.saveMember(new MemberRequest("Sammuelwoojae"), Role.ROLE_ADMIN);
-        memberService.saveMember(new MemberRequest("posite"), Role.ROLE_ADMIN);
-        memberService.saveMember(new MemberRequest("HJ39"), Role.ROLE_ADMIN);
-        memberService.saveMember(new MemberRequest("ohksj77"), Role.ROLE_ADMIN);
-    }
-
     @PostMapping
     public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody @Valid MemberRequest memberRequest) {
         return ResponseEntity.ok(memberService.saveMember(memberRequest, Role.ROLE_USER));

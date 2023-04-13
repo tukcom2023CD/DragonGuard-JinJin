@@ -15,6 +15,7 @@ import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.*;
 import com.dragonguard.backend.member.entity.*;
+import com.dragonguard.backend.member.exception.IllegalContributionException;
 import com.dragonguard.backend.member.mapper.MemberMapper;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import com.dragonguard.backend.organization.entity.Organization;
@@ -80,12 +81,17 @@ public class MemberService {
         List<PullRequest> pullRequests = pullRequestService.findPullrequestByGithubId(githubId);
         List<Issue> issues = issueService.findIssuesByGithubId(githubId);
 
-        if (!commits.isEmpty()) commits.forEach(member::addCommit);
-        if (!pullRequests.isEmpty()) pullRequests.forEach(member::addPullRequest);
-        if (!issues.isEmpty()) issues.forEach(member::addIssue);
+        if (commits.isEmpty() || pullRequests.isEmpty() || issues.isEmpty()) return;
 
-        member.updateSumOfComments(contributions -
-                (member.getSumOfCommits() + member.getSumOfPullRequests() + member.getSumOfIssues()));
+        commits.forEach(member::addCommit);
+        pullRequests.forEach(member::addPullRequest);
+        issues.forEach(member::addIssue);
+
+        int sumWithoutComments = member.getSumOfCommits() + member.getSumOfPullRequests() + member.getSumOfIssues();
+
+        if (sumWithoutComments > contributions) throw new IllegalContributionException();
+
+        member.updateSumOfComments(contributions - sumWithoutComments);
 
         if (!isWalletAddressExist(member)) {
             updateTier(member);
