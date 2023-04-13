@@ -11,13 +11,11 @@ import RxSwift
 
 final class MainController: UIViewController {
     private let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
-    private let deviceWidth = UIScreen.main.bounds.width
-    private let deviceHeight = UIScreen.main.bounds.height
     private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
     private let img = UIImageView()
     private var id: Int?
-    var jwtToken: String?
+    private var jwtToken: String?
     private var rank = 0
     private var myOrganization: String?
     private var githubId: String?
@@ -46,24 +44,25 @@ final class MainController: UIViewController {
      UI 코드 작성
      */
     
-    // 버튼들 나열할 collectionView
-    lazy var collectionView: UICollectionView = {
+    // MARK: 버튼들 나열할 collectionView
+    private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.backgroundColor = .white
         return cv
     }()
     
-    // 소속 대학교 이름 label
-    lazy var univNameLabel: UILabel = {
+    // MARK: 소속 대학교 이름 label
+    private lazy var univNameLabel: UILabel = {
         let univName = UILabel()
         univName.textColor = .black
+        univName.text = "Unknown"
         univName.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
         return univName
     }()
     
-    // 검색 버튼 UI
-    lazy var searchUI: UIButton = {
+    // MARK: 검색 버튼 UI
+    private lazy var searchUI: UIButton = {
         let searchUI = UIButton()
         searchUI.titleColor(for: .normal)
         searchUI.tintColor = .black
@@ -77,8 +76,8 @@ final class MainController: UIViewController {
         return searchUI
     }()
     
-    // 내 티어, 토큰 띄우는 UI
-    lazy var tierTokenUI: TierTokenCustomUIView = {
+    // MARK: 내 티어, 토큰 띄우는 UI
+    private lazy var tierTokenUI: TierTokenCustomUIView = {
         let tierTokenUI = TierTokenCustomUIView()
         tierTokenUI.backgroundColor  = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
         tierTokenUI.layer.cornerRadius = 20
@@ -88,25 +87,34 @@ final class MainController: UIViewController {
         return tierTokenUI
     }()
     
-    // 유지 이름 버튼 누르면 설정 화면으로 이동
-    lazy var settingUI: UIButton = {
-        let settingUI = UIButton()
+    // MARK: 설정 화면으로 이동
+    private lazy var settingUI: UIButton = {
+        let btn = UIButton()
         
-        settingUI.setImage(img.image, for: .normal)
-        settingUI.imageView?.layer.cornerRadius = 20
-        settingUI.setTitle("unknown", for: .normal)
-        settingUI.setTitleColor(.black, for: .normal)
-        settingUI.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        settingUI.addTarget(self, action: #selector(settingUIClicked), for: .touchUpInside)
-        return settingUI
+        btn.setImage(UIImage(systemName: "gearshape.fill")?.resize(newWidth: view.safeAreaLayoutGuide.layoutFrame.width/25), for: .normal)
+        btn.imageView?.layer.cornerRadius = 20
+        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        btn.addTarget(self, action: #selector(settingUIClicked), for: .touchUpInside)
+        return btn
     }()
     
+    // MARK: 유저 프로필 버튼
+    private lazy var profileBtn: UIButton = {
+        let btn = UIButton()
+        
+        btn.setImage(img.image, for: .normal)
+        btn.imageView?.layer.cornerRadius = 20
+        btn.setTitleColor(.black, for: .normal)
+        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        btn.addTarget(self, action: #selector(clickedProfileBtn), for: .touchUpInside)
+        return btn
+    }()
     
     /*
      UI Action 작성
      */
     
-    // collectionView 설정
+    // MARK: collectionView 설정
     private func configureCollectionView(){
         collectionView.register(MainCollectionView.self, forCellWithReuseIdentifier: MainCollectionView.identifier)
         collectionView.dataSource = self
@@ -114,8 +122,9 @@ final class MainController: UIViewController {
         collectionView.register(MainRankingCollectionView.self, forCellWithReuseIdentifier: MainRankingCollectionView.identifier)
     }
     
-    // 검색 버튼 누르는 경우 네비게이션 뷰 방식으로 이동
-    @objc func searchUIClicked(){
+    // MARK: 검색 버튼 누르는 경우 네비게이션 뷰 방식으로 이동
+    @objc
+    private func searchUIClicked(){
         let searchPage = SearchPageController()
         searchPage.beforePage = "Main"
         searchPage.jwtToken = self.jwtToken
@@ -123,8 +132,17 @@ final class MainController: UIViewController {
         self.navigationController?.pushViewController(searchPage, animated: true)
     }
     
-    // 유저 이름 누르는 경우 네비게이션 뷰 방식으로 이동
-    @objc func settingUIClicked(){
+    // MARK: 유저 이름 누르는 경우 네비게이션 뷰 방식으로 이동
+    @objc
+    private func clickedProfileBtn(){
+        print("clicked")
+//        self.navigationController?.pushViewController((), animated: true)
+    }
+    
+    
+    // MARK: 설정 버튼 누르는 경우 네비게이션 뷰 방식으로 이동
+    @objc
+    private func settingUIClicked(){
         self.navigationController?.pushViewController(SettingController(), animated: true)
     }
     
@@ -132,12 +150,14 @@ final class MainController: UIViewController {
      UI 추가할 때 작성하는 함수
      */
     
+    // MARK:  Add To UI
     private func addUItoView(){
         self.view.addSubview(collectionView)
         self.view.addSubview(univNameLabel)
         self.view.addSubview(searchUI)
         self.view.addSubview(settingUI)
         self.view.addSubview(tierTokenUI)
+        self.view.addSubview(profileBtn)
         configureCollectionView()
     }
     
@@ -147,39 +167,46 @@ final class MainController: UIViewController {
      함수 실행시 private으로 시작할 것
      */
     
+    // MARK: Set AutoLayout
     private func settingAutoLayout(){
         
-        // 소속 대학교 이름 AutoLayout
+        /// 소속 대학교 이름 AutoLayout
         univNameLabel.snp.makeConstraints({ make in
             make.top.equalTo(settingUI.snp.bottom).offset(30)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
-            make.bottom.equalTo(searchUI.snp.top).offset(-20)
+            
         })
         
-        // 검색 버튼 AutoLayout
+        /// 검색 버튼 AutoLayout
         searchUI.snp.makeConstraints({ make in
-            make.trailing.equalTo(-100)
-            make.leading.equalTo(100)
+            make.top.equalTo(univNameLabel.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.width*2/3)
         })
         
-        // 사용자 이름 버튼 AutoLayout
+        profileBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.leading.equalTo(20)
+        }
+        
+        /// 설정 버튼 AutoLayout
         settingUI.snp.makeConstraints({ make in
-            make.top.equalTo(60)
-            make.leading.equalTo(10)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.trailing.equalTo(-20)
         })
         
-        // 내 티어, 토큰 띄우는 UI AutoLayout
+        /// 내 티어, 토큰 띄우는 UI AutoLayout
         tierTokenUI.snp.makeConstraints({ make in
             make.top.equalTo(searchUI.snp.bottom).offset(10)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
-            make.height.equalTo(deviceHeight/6)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/6)
             make.bottom.equalTo(collectionView.snp.top).offset(-10)
         })
         
         
-        // CollectionView AutoLayout
+        /// CollectionView AutoLayout
         collectionView.snp.makeConstraints({ make in
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
@@ -189,7 +216,7 @@ final class MainController: UIViewController {
         
     }
     
-    // 내 티어, 내 토큰 가져오는 함수
+    // MARK: 내 티어, 내 토큰 가져오는 함수
     private func getMyData(){
         let access = UserDefaults.standard.string(forKey: "Access")
 
@@ -198,8 +225,8 @@ final class MainController: UIViewController {
                 self.rank = data.rank
                 self.tierTokenUI.inputText(myTier: data.tier, tokens: data.tokenAmount)
                 let url = URL(string: data.profileImage)!
-                self.img.load(img: self.img, url: url,btn: self.settingUI)
-                self.settingUI.setTitle(data.githubId, for: .normal)
+                self.img.load(img: self.img, url: url,btn: self.profileBtn)
+                self.profileBtn.setTitle(data.githubId, for: .normal)
                 self.githubId = data.githubId
                 self.univNameLabel.text = data.organization
                 self.myOrganization = data.organization
@@ -214,7 +241,7 @@ final class MainController: UIViewController {
 
 
 
-// CollectionView DataSouce, Delegate 설정
+// MARK: CollectionView DataSouce, Delegate 설정
 extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainRankingCollectionView.identifier, for: indexPath) as! MainRankingCollectionView
@@ -236,19 +263,17 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return indexBtns.count
-    }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return indexBtns.count }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellHeight = deviceHeight*24/100
+        let cellHeight = view.safeAreaLayoutGuide.layoutFrame.height*24/100
         let cellWidth = collectionView.bounds.width*48/100
         
         return CGSize(width: cellWidth, height: cellHeight)
     }
     
-    // cell 선택되었을 때
+    // MARK:  cell 선택되었을 때
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.row{
         case 2:
@@ -266,7 +291,7 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
 }
 
-// 사용자 github 프로필 로딩
+// MARK: 사용자 github 프로필 로딩
 extension UIImageView {
     func load(img: UIImageView, url: URL, btn: UIButton){
         DispatchQueue.global().async {
@@ -283,7 +308,7 @@ extension UIImageView {
 }
 
 extension UIImage {
-    //이미지 크기 재배치 하는 함수
+    // MARK: 이미지 크기 재배치 하는 함수
     func resize(newWidth: CGFloat) -> UIImage {
         let scale = newWidth / self.size.width
         let newHeight = self.size.height * scale

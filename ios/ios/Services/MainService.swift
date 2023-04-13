@@ -38,7 +38,7 @@ final class MainService{
                                              rank: data.rank,
                                              organizationRank: data.organizationRank ?? 0,
                                              tokenAmount: data.tokenAmount ?? 0,
-                                             organization: data.organization ?? "")
+                                             organization: data.organization ?? "UnKnown")
                         observer.onNext(info)
                     case .failure(let error):
                         print("삐리삐리 에러발생 !! \(error)")
