@@ -17,7 +17,7 @@ public class CommitMapper {
 
     public Commit toEntity(CommitScrapingResponse commitScrapingResponse) {
         return Commit.builder()
-                .commitNum(commitScrapingResponse.getCommitNum())
+                .amount(commitScrapingResponse.getCommitNum())
                 .year(LocalDate.now().getYear())
                 .githubId(commitScrapingResponse.getGithubId())
                 .build();

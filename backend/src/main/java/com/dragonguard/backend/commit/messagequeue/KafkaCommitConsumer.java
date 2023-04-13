@@ -41,11 +41,9 @@ public class KafkaCommitConsumer {
 
         String githubId = (String) map.get("githubId");
         String name = (String) map.get("name");
-        int commitNum = (Integer) map.get("commitNum");
+        int contribution = (Integer) map.get("contribution");
         String profileImage = (String) map.get("profileImage");
 
-        CommitScrapingResponse response = new CommitScrapingResponse(githubId, commitNum);
-        commitService.saveCommit(response);
-        memberService.addMemberCommitAndUpdate(githubId, name, profileImage);
+        memberService.addMemberCommitAndUpdate(githubId, name, profileImage, contribution);
     }
 }

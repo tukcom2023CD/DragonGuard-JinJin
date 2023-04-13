@@ -24,22 +24,19 @@ public class CommitService {
         kafkaCommitProducer.send(commitMapper.toRequest(githubId));
     }
 
-    public void saveCommit(CommitScrapingResponse commitScrapingResponse) {
+    public void saveCommits(CommitScrapingResponse commitScrapingResponse) {
         List<Commit> commits
                 = commitRepository.findCommitsByGithubId(commitScrapingResponse.getGithubId());
         Commit commit = commitMapper.toEntity(commitScrapingResponse);
+
         if (commits.isEmpty()) {
             commitRepository.save(commit);
-        } else {
-            commits.stream()
-                    .filter(c -> !c.equals(commit))
-                    .findFirst()
-                    .ifPresent(commitRepository::save);
+            return;
         }
-    }
-
-    public void saveAllCommits(List<Commit> commits) {
-        commitRepository.saveAll(commits);
+        commits.stream()
+                .filter(c -> !c.equals(commit))
+                .findFirst()
+                .ifPresent(commitRepository::save);
     }
 
     public List<Commit> findCommits(String githubId) {

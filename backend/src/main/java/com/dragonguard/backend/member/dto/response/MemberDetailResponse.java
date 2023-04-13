@@ -6,16 +6,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
  * @author 김승진
- * @description 멤버 응답 정보를 담는 dto
+ * @description 멤버 상세 조회를 위한 dto
  */
+
 @Getter
 @Builder
 @AllArgsConstructor
-public class MemberResponse {
+public class MemberDetailResponse {
     private UUID id;
     private String name;
     private String githubId;
@@ -30,4 +32,5 @@ public class MemberResponse {
     private Integer organizationRank;
     private Long tokenAmount;
     private String organization;
+    private List<String> gitOrganizations;
 }

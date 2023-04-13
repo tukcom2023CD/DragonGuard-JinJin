@@ -113,7 +113,16 @@ public class GitRepoService {
     @Transactional
     public void updateClosedIssues(String name, Integer closedIssue) {
         GitRepo gitRepo = gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
-        gitRepo.updateClosedIssues(closedIssue);
+        gitRepo.updateClosedIssueNum(closedIssue);
+    }
+
+    public void saveGitRepos(List<String> gitRepoNames) {
+        List<GitRepo> gitRepos = gitRepoNames.stream()
+                .filter(gitRepoRepository::existsByName)
+                .map(gitRepoMapper::toEntity)
+                .collect(Collectors.toList());
+
+        gitRepoRepository.saveAll(gitRepos);
     }
 
     private GitRepoResponse getOneRepoResponse(String repoName) {
@@ -121,8 +130,8 @@ public class GitRepoService {
         String githubToken = authService.getLoginUser().getGithubToken();
         GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(new GitRepoRequest(repoName, year))));
         GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
-        if (repo.getClosedIssues() != null) {
-            repoResponse.setClosed_issues_count(repo.getClosedIssues());
+        if (repo.getClosedIssueNum() != null) {
+            repoResponse.setClosed_issues_count(repo.getClosedIssueNum());
         } else {
             requestIssueToScraping(new GitRepoNameRequest(repoName));
         }
