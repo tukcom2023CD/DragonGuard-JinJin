@@ -11,7 +11,7 @@ import Foundation
 
 final class APIURL{
     
-    static let apiUrl = APIURL() 
+    static let apiUrl = APIURL()
     static let ip = ""
     
     
@@ -93,7 +93,7 @@ final class APIURL{
         return url
     }
     
-
+    
     // KLIP result get API
     func klipResultGetAPI(requestKey: String) -> String{
         let url = "https://a2a-api.klipwallet.com/v2/a2a/result?request_key=\(requestKey)"
@@ -180,6 +180,11 @@ final class APIURL{
         return url
     }
     
+    // MARK: 내 프로필 정보
+    func myProfile(ip: String) -> String{
+        let url = "http://localhost/api/members/me"
+        return url
+    }
     
     
 }
