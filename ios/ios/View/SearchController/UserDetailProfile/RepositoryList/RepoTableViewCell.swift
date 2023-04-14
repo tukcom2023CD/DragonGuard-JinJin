@@ -25,6 +25,7 @@ final class RepoTableViewCell: UITableViewCell{
     private lazy var repoTitleLabel: UILabel = {
         let label = UILabel()
          label.backgroundColor = .white
+        label.textColor = .black
          label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
          return label
     }()

@@ -494,7 +494,6 @@
 			children = (
 				3B5B5F5D29E8228F0017C5C9 /* UserProfileController.swift */,
 				3B5B5F6729E86B8A0017C5C9 /* RepositoryList */,
-				3B5B5F6529E869F40017C5C9 /* RepoTableViewCell.swift */,
 				3B5B5F6229E84FCC0017C5C9 /* Store */,
 			);
 			path = UserDetailProfile;
@@ -513,6 +512,7 @@
 			isa = PBXGroup;
 			children = (
 				3B5B5F6829E86BA90017C5C9 /* RepositoryListView.swift */,
+				3B5B5F6529E869F40017C5C9 /* RepoTableViewCell.swift */,
 			);
 			path = RepositoryList;
 			sourceTree = "<group>";

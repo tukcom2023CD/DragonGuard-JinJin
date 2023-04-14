@@ -33,6 +33,24 @@ final class UserProfileController: UIViewController{
         return btn
     }()
     
+    // MARK: 전체 랭킹 타이틀 '나무꾼 랭킹'
+    private lazy var titleRanking: UILabel = {
+        let label = UILabel()
+         label.text = "나무꾼 랭킹"
+         label.backgroundColor = .white
+         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 23)
+         return label
+    }()
+    
+    // MARK: 전체 랭킹, 나무꾼 랭킹
+    private lazy var userRanking: UILabel = {
+        let label = UILabel()
+         label.text = "1"
+         label.backgroundColor = .white
+         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+         return label
+    }()
+    
     // MARK: 창고 뷰 테두리
     private lazy var sideStoreView: UIView = {
         let view = UIView()
@@ -86,6 +104,7 @@ final class UserProfileController: UIViewController{
     // MARK: 소유한 레포지토리 tableView
     private lazy var repoTableView: UITableView = {
         let tableview = UITableView()
+        tableview.separatorStyle = .none
         tableview.backgroundColor = .white
         return tableview
     }()
@@ -97,6 +116,9 @@ final class UserProfileController: UIViewController{
     
     private func addUIToView(){
         self.view.addSubview(profileBtn)
+        
+        self.view.addSubview(titleRanking)
+        self.view.addSubview(userRanking)
         
         self.view.addSubview(sideStoreView)
         sideStoreView.addSubview(storeView)
@@ -119,6 +141,16 @@ final class UserProfileController: UIViewController{
         profileBtn.snp.makeConstraints { make in
             make.top.equalTo(self.view.safeAreaLayoutGuide).offset(10)
             make.leading.equalTo(20)
+        }
+        
+        titleRanking.snp.makeConstraints { make in
+            make.bottom.equalTo(profileBtn.snp.centerY).offset(10)
+            make.trailing.equalTo(-20)
+        }
+        
+        userRanking.snp.makeConstraints { make in
+            make.top.equalTo(titleRanking.snp.bottom)
+            make.centerX.equalTo(titleRanking.snp.centerX)
         }
         
         /// side View
@@ -179,12 +211,25 @@ extension UserProfileController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RepoTableViewCell.identifier,for: indexPath) as! RepoTableViewCell
-        cell.backgroundColor = .white
+        cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+        
+        
+        cell.layer.cornerRadius = 20
         cell.inputInfo(title: "1")
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return 1 }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int { return 2 }
 }
 
 
