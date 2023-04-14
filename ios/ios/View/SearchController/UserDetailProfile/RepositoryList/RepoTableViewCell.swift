@@ -24,9 +24,15 @@ final class RepoTableViewCell: UITableViewCell{
     // MARK: repo 이름
     private lazy var repoTitleLabel: UILabel = {
         let label = UILabel()
-         label.backgroundColor = .white
         label.textColor = .black
-         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        
+        self.addSubview(label)
+        label.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(30)
+        }
+        
          return label
     }()
     

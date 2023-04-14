@@ -16,12 +16,32 @@ final class UserProfileController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
+        
+        self.view.backgroundColor = UIColor(red: 127/255, green: 78/255, blue: 31/255, alpha: 1.0) /* #7f4e1f */
         imageView.image = UIImage(named: "pomi")?.resize(newWidth: 50)  // sample
         profileBtn.setTitle("HJ39", for: .normal)
+    
         
         addUIToView()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+//        storeView.setGradient(color1: UIColor(red: 245/255, green: 245/255, blue: 220/255, alpha: 1.0),
+//                              color2: UIColor(red: 150/255, green: 75/255, blue: 0/255, alpha: 1.0),
+//                              zPosition: -1,
+//                              cornerRadius: 20)
+        
+        
+    }
+    
+    // MARK: safe Area 색칠 view
+    private lazy var safeAreaColorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 127/255, green: 78/255, blue: 31/255, alpha: 1.0)
+        return view
+    }()
     
     // MARK: 유저 프로필 버튼
     private lazy var profileBtn: UIButton = {
@@ -37,7 +57,6 @@ final class UserProfileController: UIViewController{
     private lazy var titleRanking: UILabel = {
         let label = UILabel()
          label.text = "나무꾼 랭킹"
-         label.backgroundColor = .white
          label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 23)
          return label
     }()
@@ -46,7 +65,6 @@ final class UserProfileController: UIViewController{
     private lazy var userRanking: UILabel = {
         let label = UILabel()
          label.text = "1"
-         label.backgroundColor = .white
          label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
          return label
     }()
@@ -54,7 +72,7 @@ final class UserProfileController: UIViewController{
     // MARK: 창고 뷰 테두리
     private lazy var sideStoreView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -62,7 +80,7 @@ final class UserProfileController: UIViewController{
     private lazy var storeTitleLabel: UILabel = {
        let label = UILabel()
         label.text = " 창고 "
-        label.backgroundColor = .white
+        label.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 220/255, alpha: 1.0)
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
         return label
     }()
@@ -72,14 +90,14 @@ final class UserProfileController: UIViewController{
         let view = StoreView()
         view.layer.cornerRadius = 20
         view.layer.borderWidth = 1
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 220/255, alpha: 1.0)
         return view
     }()
     
     // MARK: 소유한 레포지토리 테두리
     private lazy var siderepoView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -87,7 +105,7 @@ final class UserProfileController: UIViewController{
     private lazy var repoTitleLabel: UILabel = {
         let label = UILabel()
          label.text = "  소유한 숲  "
-         label.backgroundColor = .white
+         label.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 220/255, alpha: 1.0)
          label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
          return label
     }()
@@ -97,7 +115,7 @@ final class UserProfileController: UIViewController{
         let view = UIView()
         view.layer.borderWidth = 1
         view.layer.cornerRadius = 20
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 220/255, alpha: 1.0)
         return view
     }()
     
@@ -105,7 +123,7 @@ final class UserProfileController: UIViewController{
     private lazy var repoTableView: UITableView = {
         let tableview = UITableView()
         tableview.separatorStyle = .none
-        tableview.backgroundColor = .white
+        tableview.backgroundColor = .clear
         return tableview
     }()
     
@@ -115,6 +133,8 @@ final class UserProfileController: UIViewController{
      */
     
     private func addUIToView(){
+        self.view.addSubview(safeAreaColorView)
+        
         self.view.addSubview(profileBtn)
         
         self.view.addSubview(titleRanking)
@@ -128,7 +148,6 @@ final class UserProfileController: UIViewController{
         siderepoView.addSubview(repoView)
         siderepoView.addSubview(repoTitleLabel)
         
-        
         repoView.addSubview(repoTableView)
         repoTableView.dataSource = self
         repoTableView.delegate = self
@@ -138,6 +157,13 @@ final class UserProfileController: UIViewController{
     }
     
     private func setAutoLayout(){
+        
+        safeAreaColorView.snp.makeConstraints { make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(-60)
+            make.leading.trailing.equalTo(0)
+            make.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(60)
+        }
+        
         profileBtn.snp.makeConstraints { make in
             make.top.equalTo(self.view.safeAreaLayoutGuide).offset(10)
             make.leading.equalTo(20)
@@ -213,25 +239,41 @@ extension UserProfileController: UITableViewDelegate, UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: RepoTableViewCell.identifier,for: indexPath) as! RepoTableViewCell
         cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
         
-        
         cell.layer.cornerRadius = 20
         cell.inputInfo(title: "1")
         return cell
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int { return repoList.count }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return 1 }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int { return 2 }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
 }
 
+extension UIView{
+    func setGradient(color1: UIColor, color2: UIColor, zPosition: CGFloat, cornerRadius: CGFloat){
+        let colors: [CGColor] = [color1.cgColor,
+                                 UIColor(red: 221/255, green: 146/255, blue: 55/255, alpha: 1.0).cgColor,
+                                 ]
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.type = .radial
+//        gradientLayer.locations = [0.9]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
+        gradientLayer.zPosition = zPosition
+        gradientLayer.colors = colors
+        gradientLayer.cornerRadius = cornerRadius
+        gradientLayer.frame = bounds
+        layer.addSublayer(gradientLayer)
+    }
+}
 
 
 import SwiftUI

@@ -71,7 +71,6 @@ final class StoreView: UIView{
     // MARK: 조직 UI View
     private lazy var organizationView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
         return view
     }()
     
@@ -113,7 +112,7 @@ final class StoreView: UIView{
         let collectionLayout = UICollectionViewFlowLayout()
         collectionLayout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
-        
+        cv.backgroundColor = .clear
         return cv
     }()
     

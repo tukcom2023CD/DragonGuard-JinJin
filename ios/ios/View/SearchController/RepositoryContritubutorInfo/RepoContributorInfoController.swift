@@ -27,7 +27,6 @@ final class RepoContributorInfoController: UIViewController{
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        
         // 로딩화면 추가
         addIndicator()
         getData()
@@ -181,6 +180,15 @@ extension RepoContributorInfoController: UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        /// 유저 프로필 누른 경우
+        for index in 0..<userName.count{
+            if index == indexPath.row{
+                let userProfileController = UserProfileController()
+                self.navigationController?.pushViewController(userProfileController, animated: true)
+            }
+        }
+        
     }
     
 }
