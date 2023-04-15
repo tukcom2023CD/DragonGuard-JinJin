@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     private var token = ""
     private var refreshState = true
     private var state = true
-
+    private var count = 0
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Log.d("on", "onnewintent")
@@ -196,7 +196,8 @@ class MainActivity : AppCompatActivity() {
      */
     private fun searchUser() {
 //        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
-        if (token.isNotBlank()) {
+        if (token.isNotBlank() && count<=4) {
+            count++
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
@@ -206,8 +207,8 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
                 if (userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits == null) {
                     if (prefs.getRefreshToken("").isBlank()) {
-                        Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                         if (!this@MainActivity.isFinishing && state) {
+                            Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                             loginOut = true
                             prefs.setJwtToken("")
                             prefs.setRefreshToken("")
@@ -250,6 +251,7 @@ class MainActivity : AppCompatActivity() {
                     if(userInfo.organizationRank !=null) {
                         binding.myOrgRanking.text = userInfo.organizationRank.toString()
                     }
+                    count = 0
                 }
             }
         }
