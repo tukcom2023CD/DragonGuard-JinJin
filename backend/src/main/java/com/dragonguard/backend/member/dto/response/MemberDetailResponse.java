@@ -33,4 +33,5 @@ public class MemberDetailResponse {
     private Long tokenAmount;
     private String organization;
     private List<String> gitOrganizations;
+    private List<String> gitRepos;
 }
