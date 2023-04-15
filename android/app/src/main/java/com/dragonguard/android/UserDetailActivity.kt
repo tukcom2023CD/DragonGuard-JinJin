@@ -32,7 +32,7 @@ class UserDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_detail)
 
-        try{
+        try {
             token = intent.getStringExtra("token")!!
             githubId = intent.getStringExtra("githubId")!!
             userDetailInfo()
@@ -57,8 +57,9 @@ class UserDetailActivity : AppCompatActivity() {
             val userDetails = resultDeferred.await()
 
             // 실제 데이터 왔는지 확인    왔으면 깃허브 프로필 이미지, githubId, 사용자의 깃허브 랭킹 commit, issue pr, comment등을 보여줌
-            if(userDetails.githubId != null && userDetails.commits != null && userDetails.issues != null && userDetails.profileImage != null &&
-                userDetails.pullRequests != null && userDetails.comments != null) {
+            if (userDetails.githubId != null && userDetails.commits != null && userDetails.issues != null && userDetails.profileImage != null &&
+                userDetails.pullRequests != null && userDetails.comments != null
+            ) {
                 if (!this@UserDetailActivity.isFinishing) {
                     Glide.with(binding.githubProfile).load(userDetails.profileImage)
                         .into(binding.githubProfile)
@@ -85,8 +86,8 @@ class UserDetailActivity : AppCompatActivity() {
                 }
                 binding.userTier.text = userDetails.tier
 
-                if(userDetails.tokenAmount != null) {
-                    when(userDetails.tokenAmount) {
+                if (userDetails.tokenAmount != null) {
+                    when (userDetails.tokenAmount) {
                         0 -> {
                             binding.userArc.visibility = View.INVISIBLE
                         }
@@ -100,7 +101,7 @@ class UserDetailActivity : AppCompatActivity() {
                             binding.progressStart.text = "50"
                             binding.progressEnd.text = "199"
                             binding.userArc.max = 150
-                            binding.userArc.progress = userDetails.tokenAmount-50
+                            binding.userArc.progress = userDetails.tokenAmount - 50
                         }
                         in 200..499 -> {
                             binding.progressStart.text = "200"
@@ -116,24 +117,27 @@ class UserDetailActivity : AppCompatActivity() {
                         }
                     }
                 }
+                binding.userArc.isEnabled = false
 
                 // 조직 인증 완료시 속한 조직 이름과 전체 조직에서의 속한 조직의 랭킹 출력
-                if(userDetails.organization != null) {
+                if (userDetails.organization != null) {
                     binding.orgName.text = userDetails.organization
                     binding.orgRanking.text = userDetails.organizationRank.toString()
                 }
 
-                if(!userDetails.gitRepos.isNullOrEmpty()) {
+                if (!userDetails.gitRepos.isNullOrEmpty()) {
                     binding.userRepositoryList.adapter = UserRepoAdapter(userDetails.gitRepos,applicationContext, token)
                     binding.userRepositoryList.layoutManager = LinearLayoutManager(applicationContext)
                     binding.userRepositoryList.visibility = View.VISIBLE
                 } else {
+
                     binding.userForest.visibility = View.GONE
                     binding.userRepos.visibility = View.GONE
+
                 }
 
             } else {
-                if(count <4) {
+                if (count < 4) {
                     count++
                     userDetailInfo()
                 }
@@ -148,11 +152,11 @@ class UserDetailActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            android.R.id.home->{
+        when (item.itemId) {
+            android.R.id.home -> {
                 finish()
             }
-            R.id.home_menu->{
+            R.id.home_menu -> {
                 val intent = Intent(applicationContext, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)

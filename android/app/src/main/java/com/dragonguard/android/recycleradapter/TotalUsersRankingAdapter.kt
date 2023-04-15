@@ -1,18 +1,21 @@
 package com.dragonguard.android.recycleradapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.search.RepoContributorsActivity
 import com.dragonguard.android.model.rankings.TotalUsersRankingsModel
 
 /*
  모든 사용자들을 랭킹 순서대로 나열하기 위한 recycleradapter
  */
-class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankingsModel>, private val context: Context) : RecyclerView.Adapter<TotalUsersRankingAdapter.ViewHolder>() {
+class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankingsModel>,
+                                private val context: Context, private val token: String) : RecyclerView.Adapter<TotalUsersRankingAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.total_users_ranking_list,parent,false)
@@ -26,15 +29,21 @@ class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankings
         private val githubId : TextView = itemView.findViewById(R.id.ranker_id)
         private val contribution : TextView = itemView.findViewById(R.id.ranker_contribution)
 
-        fun bind(data: TotalUsersRankingsModel) {
+        fun bind(data1: TotalUsersRankingsModel) {
             if(ranking.text.isNullOrEmpty() && githubId.text.isNullOrEmpty() && contribution.text.isNullOrEmpty()) {
-                ranking.text = data.ranking.toString()
-                githubId.text = data.githubId
+                ranking.text = data1.ranking.toString()
+                githubId.text = data1.githubId
 //                Toast.makeText(context, "${data.tokens}", Toast.LENGTH_SHORT).show()
-                if(data.tokens == null) {
+                if(data1.tokens == null) {
                     contribution.text = "NONE"
                 } else {
-                    contribution.text = data.tokens.toString()
+                    contribution.text = data1.tokens.toString()
+                }
+                githubId.setOnClickListener {
+                    Intent(context, RepoContributorsActivity::class.java).apply{
+                        putExtra("githubId", data1.githubId)
+                        putExtra("token", token)
+                    }.run{context.startActivity(this)}
                 }
             }
         }

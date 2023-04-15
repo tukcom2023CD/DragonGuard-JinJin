@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
+import com.dragonguard.android.UserDetailActivity
 import com.dragonguard.android.activity.search.RepoContributorsActivity
 import com.dragonguard.android.model.search.RepoSearchResultModel
 
 //검색한 레포지토리 나열하는 리사이클러뷰 어댑터 구현
-class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultModel>, private val context: Context, private val token: String) : RecyclerView.Adapter<RepositoryProfileAdapter.ViewHolder>() {
+class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultModel>, private val context: Context,
+                                private val token: String, private val type: String) : RecyclerView.Adapter<RepositoryProfileAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.repository_list,parent,false)
@@ -31,10 +33,17 @@ class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultMo
             Log.d("name", "$data.name")
             itemView.setOnClickListener{
 //                Toast.makeText(context, "${repoName.text} 눌림", Toast.LENGTH_SHORT).show()
-                Intent(context, RepoContributorsActivity::class.java).apply{
-                    putExtra("repoName", data.name)
-                    putExtra("token", token)
-                }.run{context.startActivity(this)}
+                if(type == "USERS") {
+                    Intent(context, UserDetailActivity::class.java).apply{
+                        putExtra("githubId", data.id)
+                        putExtra("token", token)
+                    }.run{context.startActivity(this)}
+                } else {
+                    Intent(context, RepoContributorsActivity::class.java).apply{
+                        putExtra("repoName", data.name)
+                        putExtra("token", token)
+                    }.run{context.startActivity(this)}
+                }
             }
         }
     }

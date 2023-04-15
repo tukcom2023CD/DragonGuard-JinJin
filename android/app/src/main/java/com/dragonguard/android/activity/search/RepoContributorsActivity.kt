@@ -103,7 +103,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.repoContributors.setItemViewCacheSize(contributors.size)
 //        Toast.makeText(applicationContext, "리사이클러뷰 시작", Toast.LENGTH_SHORT).show()
 //        Toast.makeText(applicationContext, "contributors 수 : ${contributors.size}", Toast.LENGTH_SHORT).show()
-        contributorsAdapter = ContributorsAdapter(contributors, this, colorsets)
+        contributorsAdapter = ContributorsAdapter(contributors, this, colorsets, token, repoName)
         binding.repoContributors.adapter = contributorsAdapter
         binding.repoContributors.layoutManager = LinearLayoutManager(this)
         binding.repoContributors.visibility = View.VISIBLE

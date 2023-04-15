@@ -468,7 +468,11 @@ class SearchActivity : AppCompatActivity() {
     private fun initRecycler() {
         Log.d("count", "count: $count")
         if (count == 0) {
-            repositoryProfileAdapter = RepositoryProfileAdapter(repoNames, this, token)
+            repositoryProfileAdapter = if(type.isBlank()) {
+                RepositoryProfileAdapter(repoNames, this, token, "REPOSITORIES")
+            } else {
+                RepositoryProfileAdapter(repoNames, this, token, type)
+            }
             binding.searchResult.adapter = repositoryProfileAdapter
             binding.searchResult.layoutManager = LinearLayoutManager(this)
             repositoryProfileAdapter.notifyDataSetChanged()

@@ -99,7 +99,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
         binding.totalUsersRankings.setItemViewCacheSize(usersRanking.size)
 //        Toast.makeText(applicationContext, "개수 : ${usersRanking.size}",Toast.LENGTH_SHORT).show()
         if(page == 0) {
-            totalUserRankingAdapter = TotalUsersRankingAdapter(usersRanking, this)
+            totalUserRankingAdapter = TotalUsersRankingAdapter(usersRanking, this, token)
             binding.totalUsersRankings.adapter = totalUserRankingAdapter
             binding.totalUsersRankings.layoutManager = LinearLayoutManager(this)
 //            totalUserRankingAdapter.notifyDataSetChanged()

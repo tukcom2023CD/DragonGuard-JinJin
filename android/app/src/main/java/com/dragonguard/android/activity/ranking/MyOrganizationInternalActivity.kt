@@ -142,7 +142,7 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
         binding.orgInternalRanking.setItemViewCacheSize(orgInternalRankings.size)
         if (page == 0) {
             organizationInternalRankingAdapter =
-                OrgInternalRankingAdapter(orgInternalRankings, this)
+                OrgInternalRankingAdapter(orgInternalRankings, this, token)
             binding.orgInternalRanking.adapter = organizationInternalRankingAdapter
             binding.orgInternalRanking.layoutManager = LinearLayoutManager(this)
             binding.orgInternalRanking.visibility = View.VISIBLE
