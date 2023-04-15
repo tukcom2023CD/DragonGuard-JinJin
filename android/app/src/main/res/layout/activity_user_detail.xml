@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.25"
             android:background="@android:color/transparent"
             android:textSize="25sp" />
 
@@ -24,7 +24,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3.1">
+            android:layout_weight="3.15">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -32,59 +32,133 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/linearLayout"
+                    android:id="@+id/user_profile"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_marginTop="22dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.15"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal" />
+
+                    <ImageView
+                        android:id="@+id/github_profile"
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="0.8"
+                        android:adjustViewBounds="true" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal" />
+
+                    <TextView
+                        android:id="@+id/user_id"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:gravity="center"
+                            android:text="나무꾼 랭킹"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/user_total_ranking"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/user_inventory"
+                    android:layout_width="match_parent"
+                    android:layout_height="270dp"
                     android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="22dp"
                     android:foreground="@drawable/user_inventory"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/user_profile">
 
                 </LinearLayout>
 
                 <ImageView
                     android:id="@+id/tier_img"
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_width="90dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="30dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@id/user_inventory" />
 
                 <TextView
+                    android:id="@+id/org_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginTop="30dp"
                     android:fontFamily="@font/ibm_semibold"
                     android:text="나무꾼 협회"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:id="@+id/org_text"
                     app:layout_constraintStart_toEndOf="@+id/tier_img"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@id/user_inventory" />
 
                 <TextView
+                    android:id="@+id/org_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginStart="15dp"
                     android:fontFamily="@font/ibm_semibold"
                     android:text="Unknown"
-                    android:id="@+id/org_name"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintStart_toEndOf="@+id/org_text"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@+id/org_text" />
 
                 <TextView
                     android:id="@+id/org_ranking"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_marginTop="-10dp"
                     android:fontFamily="@font/ibm_semibold"
                     android:text="협회 랭킹"
                     android:textColor="@color/black"
@@ -96,54 +170,147 @@
                     android:id="@+id/user_org_ranking"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="15dp"
                     android:fontFamily="@font/ibm_semibold"
                     android:text="Unknown"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintStart_toEndOf="@+id/org_ranking"
-                    app:layout_constraintTop_toBottomOf="@+id/org_name" />
+                    app:layout_constraintTop_toTopOf="@+id/org_ranking" />
 
 
                 <TextView
-                    android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:layout_marginTop="-15dp"
+                    android:background="#dfd9bb"
                     android:fontFamily="@font/ibm_semibold"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
                     android:text="창고"
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@id/user_inventory" />
+
+                <TextView
+                    android:id="@+id/user_tier_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="-10dp"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:text="tier"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/tier_img"
+                    app:layout_constraintTop_toBottomOf="@+id/org_ranking" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:text="Unknown"
+                    android:id="@+id/user_tier"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/user_tier_title"
+                    app:layout_constraintTop_toTopOf="@+id/user_tier_title" />
 
                 <androidx.appcompat.widget.AppCompatSeekBar
                     android:id="@+id/user_arc"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginHorizontal="30dp"
-                    android:layout_marginTop="170dp"
+                    android:layout_height="20dp"
+                    android:layout_marginHorizontal="40dp"
+                    android:layout_marginTop="10dp"
+                    android:clickable="false"
+                    android:padding="0dp"
+                    android:progressDrawable="@drawable/custom_seekbark"
                     android:thumb="@null"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/tier_img" />
+
+                <TextView
+                    android:id="@+id/progress_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-3dp"
+                    android:layout_marginEnd="-10dp"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:text="100"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    app:layout_constraintEnd_toStartOf="@+id/user_arc"
+                    app:layout_constraintTop_toTopOf="@+id/user_arc" />
+
+                <TextView
+                    android:id="@+id/progress_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-10dp"
+                    android:layout_marginTop="-3dp"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:text="100"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    app:layout_constraintStart_toEndOf="@+id/user_arc"
+                    app:layout_constraintTop_toTopOf="@+id/user_arc" />
+
+                <LinearLayout
+                    android:id="@+id/user_forest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="50dp"
+                    android:foreground="@drawable/user_inventory"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/user_inventory">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/user_repository_list"
+                        android:visibility="invisible"
+                        tools:listitem="@layout/repository_list"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-15dp"
+                    android:background="#dfd9bb"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:includeFontPadding="false"
+                    android:text="소유한 숲"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:id="@+id/user_repos"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/user_forest" />
 
                 <ScrollView
+                    android:id="@+id/user_contribute"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginHorizontal="30dp"
-                    android:layout_marginTop="215dp"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/user_arc">
 
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/user_stat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
-                </ScrollView>
 
+                </ScrollView>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

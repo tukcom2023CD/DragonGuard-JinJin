@@ -6,6 +6,7 @@ data class UserDetailModel(
     val commits: Int?,
     val gitOrganizations: List<String>?,
     val githubId: String?,
+    val gitRepos: List<String>?,
     val id: String?,
     val issues: Int?,
     val name: String?,

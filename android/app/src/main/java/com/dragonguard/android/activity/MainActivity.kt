@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
+import com.dragonguard.android.UserDetailActivity
 import com.dragonguard.android.activity.compare.RepoChooseActivity
 import com.dragonguard.android.activity.menu.MenuActivity
 import com.dragonguard.android.activity.ranking.RankingsActivity
@@ -148,8 +149,9 @@ class MainActivity : AppCompatActivity() {
 //        유저 아이디, 프로필을 눌렀을 때 메뉴 화면으로 전환
         viewmodel.onUserIconSelected.observe(this, Observer {
             if (viewmodel.onUserIconSelected.value == true) {
-                val intent = Intent(applicationContext, MenuActivity::class.java)
+                val intent = Intent(applicationContext, UserDetailActivity::class.java)
                 intent.putExtra("token", prefs.getJwtToken(""))
+                intent.putExtra("githubId", binding.userId.text.toString())
                 startActivity(intent)
             }
         })

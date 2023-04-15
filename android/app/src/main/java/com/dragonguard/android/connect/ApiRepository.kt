@@ -391,7 +391,7 @@ class ApiRepository {
     }
 
     fun userDetail(githubId: String, token: String): UserDetailModel{
-        val details = UserDetailModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+        val details = UserDetailModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
         val userDetails = api.getUserDetail(githubId, "Bearer $token")
         return try {
             val result = userDetails.execute()
