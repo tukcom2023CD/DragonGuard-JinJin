@@ -4,6 +4,7 @@ import com.dragonguard.backend.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.blockchain.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@DependsOn("blockchainConfig")
 @RequestMapping("/blockchain")
 public class BlockchainController {
     private final BlockchainService blockchainService;
