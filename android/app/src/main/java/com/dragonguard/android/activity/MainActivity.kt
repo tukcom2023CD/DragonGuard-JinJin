@@ -148,6 +148,7 @@ class MainActivity : AppCompatActivity() {
             if (viewmodel.onUserIconSelected.value == true) {
                 val intent = Intent(applicationContext, UserDetailActivity::class.java)
                 intent.putExtra("token", prefs.getJwtToken(""))
+                intent.putExtra("userName", binding.userId.text.toString())
                 intent.putExtra("githubId", binding.userId.text.toString())
                 startActivity(intent)
             }
