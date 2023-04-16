@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.UserDetailActivity
+import com.dragonguard.android.activity.UserDetailActivity
 import com.dragonguard.android.model.rankings.OrgInternalRankingsModel
 
 class OrgInternalRankingAdapter (private val datas : ArrayList<OrgInternalRankingsModel>,

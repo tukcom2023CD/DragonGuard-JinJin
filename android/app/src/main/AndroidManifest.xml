@@ -14,7 +14,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".UserDetailActivity"
+            android:name=".activity.UserDetailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

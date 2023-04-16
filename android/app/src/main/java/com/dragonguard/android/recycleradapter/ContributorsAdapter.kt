@@ -12,8 +12,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.UserDetailActivity
-import com.dragonguard.android.activity.search.RepoContributorsActivity
+import com.dragonguard.android.activity.UserDetailActivity
 import com.dragonguard.android.model.contributors.RepoContributorsItem
 
 /*

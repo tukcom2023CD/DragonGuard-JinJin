@@ -1,4 +1,4 @@
-package com.dragonguard.android
+package com.dragonguard.android.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,10 +10,9 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.R
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.dragonguard.android.databinding.ActivityUserDetailBinding
-import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
 import com.dragonguard.android.recycleradapter.UserRepoAdapter
 import com.google.android.material.chip.Chip
 import kotlinx.coroutines.CoroutineScope
