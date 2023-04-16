@@ -3,9 +3,11 @@ package com.dragonguard.android.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -115,6 +117,23 @@ class UserDetailActivity : AppCompatActivity() {
                             binding.userArc.progress = userDetails.tokenAmount - 500
                         }
                     }
+                    binding.userArc.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                        override fun onProgressChanged(seekBar: SeekBar?, p1: Int, p2: Boolean) {
+                            val value = seekBar?.progress
+                            binding.currentProgress.text = userDetails.tokenAmount.toString()
+                            if (value != 0) {
+                                val cur = seekBar!!.width / seekBar.max
+                                binding.currentProgress.x = (cur * value!!).toFloat() + 10
+                            }
+                            binding.currentProgress.y = seekBar?.pivotY!! + 10
+                            Log.d(
+                                "Pos",
+                                binding.currentProgress.x.toString() + ": " + seekBar!!.width + ":" + seekBar.x
+                            )
+                        }
+                        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+                        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+                    })
                 }
                 binding.userArc.isEnabled = false
 

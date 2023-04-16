@@ -108,7 +108,7 @@
                 <LinearLayout
                     android:id="@+id/user_inventory"
                     android:layout_width="match_parent"
-                    android:layout_height="270dp"
+                    android:layout_height="280dp"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="22dp"
                     android:foreground="@drawable/user_inventory"
@@ -219,7 +219,7 @@
                     app:layout_constraintStart_toEndOf="@+id/user_tier_title"
                     app:layout_constraintTop_toTopOf="@+id/user_tier_title" />
 
-                <androidx.appcompat.widget.AppCompatSeekBar
+                <com.dragonguard.android.custom.seekbar.CustomSeekBar
                     android:id="@+id/user_arc"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
@@ -230,7 +230,7 @@
                     android:progressDrawable="@drawable/custom_seekbark"
                     android:thumb="@null"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tier_img" />
+                    app:layout_constraintTop_toBottomOf="@+id/current_progress" />
 
                 <TextView
                     android:id="@+id/progress_start"
@@ -258,13 +258,42 @@
                     app:layout_constraintStart_toEndOf="@+id/user_arc"
                     app:layout_constraintTop_toTopOf="@+id/user_arc" />
 
+                <TextView
+                    android:id="@+id/current_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tier_img" />
+
+                <ScrollView
+                    android:id="@+id/user_contribute"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/current_progress">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/user_stat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+
+                </ScrollView>
+
                 <LinearLayout
                     android:id="@+id/user_forest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="50dp"
-                    android:foreground="@drawable/user_inventory"
+                    android:background="@drawable/user_inventory"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -274,7 +303,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/user_repository_list"
-                        android:visibility="invisible"
+                        android:visibility="visible"
                         tools:listitem="@layout/repository_list"/>
 
                 </LinearLayout>
@@ -294,23 +323,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/user_forest" />
 
-                <ScrollView
-                    android:id="@+id/user_contribute"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginHorizontal="30dp"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/user_arc">
 
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/user_stat"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-
-                </ScrollView>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

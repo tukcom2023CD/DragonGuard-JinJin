@@ -47,7 +47,7 @@
                     android:orientation="horizontal" />
 
 
-                <com.dragonguard.android.customedittext.CustomEdittext
+                <com.dragonguard.android.custom.edittext.CustomEdittext
                     android:id="@+id/search_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

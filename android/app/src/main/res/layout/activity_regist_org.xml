@@ -59,7 +59,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"/>
 
-                <com.dragonguard.android.customedittext.CustomEdittext
+                <com.dragonguard.android.custom.edittext.CustomEdittext
                     android:id="@+id/org_name_edit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"/>
 
-                <com.dragonguard.android.customedittext.CustomEdittext
+                <com.dragonguard.android.custom.edittext.CustomEdittext
                     android:id="@+id/org_email_edit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
