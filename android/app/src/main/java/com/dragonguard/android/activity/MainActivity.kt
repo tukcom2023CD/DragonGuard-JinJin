@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.compare.RepoChooseActivity
+import com.dragonguard.android.activity.menu.MenuActivity
 import com.dragonguard.android.activity.ranking.RankingsActivity
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.connect.NetworkCheck
@@ -251,6 +252,7 @@ class MainActivity : AppCompatActivity() {
                     if(userInfo.organizationRank !=null) {
                         binding.myOrgRanking.text = userInfo.organizationRank.toString()
                     }
+                    Log.d("userInfo", "id:${userInfo.githubId}")
                     count = 0
                 }
             }
@@ -352,7 +354,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.menus->{
-                val intent = Intent(applicationContext, SearchActivity::class.java)
+                val intent = Intent(applicationContext, MenuActivity::class.java)
                 intent.putExtra("token", prefs.getJwtToken(""))
                 startActivity(intent)
             }
