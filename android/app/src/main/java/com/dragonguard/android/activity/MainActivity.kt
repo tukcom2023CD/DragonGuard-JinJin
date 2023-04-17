@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
             } else if (it.resultCode == 1) {
-                refreshCommits()
+
             }
         }
 
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         if (token.isBlank() || prefs.getWalletAddress("").isBlank()) {
             val intent = Intent(applicationContext, LoginActivity::class.java)
             intent.putExtra("wallet_address", prefs.getWalletAddress(""))
-            intent.putExtra("logout", loginOut)
+            intent.putExtra("logout", true)
             activityResultLauncher.launch(intent)
         } else {
             if (NetworkCheck.checkNetworkState(this)) {
@@ -210,7 +210,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 val userInfo = resultDeferred.await()
 //                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
-                if (userInfo.githubId == null || userInfo.id == null || userInfo.rank == null || userInfo.commits == null) {
+                if (userInfo.githubId == null) {
                     if (prefs.getRefreshToken("").isBlank()) {
                         if (!this@MainActivity.isFinishing && state) {
                             Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
@@ -218,6 +218,7 @@ class MainActivity : AppCompatActivity() {
                             prefs.setJwtToken("")
                             prefs.setRefreshToken("")
                             prefs.setPostAddress(false)
+                            prefs.setWalletAddress("")
                             val intent = Intent(applicationContext, LoginActivity::class.java)
                             intent.putExtra("wallet_address", prefs.getWalletAddress(""))
                             intent.putExtra("token", prefs.getJwtToken(""))
@@ -286,7 +287,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun postWalletAddress(address: String) {
-//        Toast.makeText(applicationContext, "address: $address", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "address: $address", Toast.LENGTH_SHORT).show()
         if (!addressPost && count<4) {
             prefs.setPostAddress(true)
             addressPost = prefs.getPostAddress(true)
