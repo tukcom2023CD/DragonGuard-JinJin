@@ -42,6 +42,12 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/blockchains")
+    public ResponseEntity<Void> updateBlockchains() {
+        memberService.updateBlockchains();
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/tier")
     public ResponseEntity<Tier> getTier() {
         return ResponseEntity.ok(memberService.getTier());

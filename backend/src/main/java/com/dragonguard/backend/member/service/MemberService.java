@@ -28,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -103,8 +102,7 @@ public class MemberService {
             updateTier(member);
             return;
         }
-        setTransaction(member);
-        updateTier(member);
+        transactionAndUpdateTier(member);
     }
 
     @Transactional
@@ -119,8 +117,7 @@ public class MemberService {
         getCommitsByScraping(member.getGithubId());
         memberClientService.addMemberContribution(member);
         if (!member.isWallAddressExist()) return;
-        setTransaction(member);
-        updateTier(member);
+        transactionAndUpdateTier(member);
     }
 
     @Transactional
@@ -245,6 +242,17 @@ public class MemberService {
         memberRepository.findAll().stream()
                 .map(member -> scrapeAndGetSavedMember(member.getGithubId(), Role.ROLE_ADMIN, AuthStep.GITHUB_ONLY))
                 .forEach(m -> m.updateAuthStep(AuthStep.GITHUB_ONLY));
+    }
+
+    @Transactional
+    public void updateBlockchains() {
+        transactionAndUpdateTier(getLoginUserWithDatabase());
+    }
+
+    @Transactional
+    public void transactionAndUpdateTier(Member member) {
+        setTransaction(member);
+        updateTier(member);
     }
 
     private void getCommitsByScraping(String githubId) {
