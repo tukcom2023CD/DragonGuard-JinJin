@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity() {
     private var state = true
     private var count = 0
     override fun onNewIntent(intent: Intent?) {
+        count = 0
         super.onNewIntent(intent)
         Log.d("on", "onnewintent")
         val logout = intent?.getBooleanExtra("logout", false)
@@ -101,6 +102,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        count = 0
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainViewModel = viewmodel
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
@@ -175,6 +177,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onRestart() {
+        count = 0
         super.onRestart()
         state = true
         multipleSearchUser()
