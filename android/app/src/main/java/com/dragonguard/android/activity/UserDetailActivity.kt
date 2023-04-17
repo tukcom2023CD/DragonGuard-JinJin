@@ -64,7 +64,7 @@ class UserDetailActivity : AppCompatActivity() {
 
                 // 실제 데이터 왔는지 확인    왔으면 깃허브 프로필 이미지, githubId, 사용자의 깃허브 랭킹 commit, issue pr, comment등을 보여줌
                 if (userDetails.githubId != null && userDetails.commits != null && userDetails.issues != null && userDetails.profileImage != null &&
-                    userDetails.pullRequests != null && userDetails.comments != null
+                    userDetails.pullRequests != null && userDetails.review != null
                 ) {
                     if (!this@UserDetailActivity.isFinishing) {
                         Glide.with(binding.githubProfile).load(userDetails.profileImage)
@@ -82,7 +82,7 @@ class UserDetailActivity : AppCompatActivity() {
                     chipPR.text = "PR ${userDetails.pullRequests}"
 
                     val chipComment = Chip(applicationContext)
-                    chipComment.text = "Comments ${userDetails.comments}"
+                    chipComment.text = "Comments ${userDetails.review}"
 
                     binding.userContribute.apply {
                         addView(chipCommit)
@@ -174,7 +174,7 @@ class UserDetailActivity : AppCompatActivity() {
 
                 // 실제 데이터 왔는지 확인    왔으면 깃허브 프로필 이미지, githubId, 사용자의 깃허브 랭킹 commit, issue pr, comment등을 보여줌
                 if (userDetails.githubId != null && userDetails.commits != null && userDetails.issues != null && userDetails.profileImage != null &&
-                    userDetails.pullRequests != null && userDetails.comments != null
+                    userDetails.pullRequests != null && userDetails.review != null
                 ) {
                     if (!this@UserDetailActivity.isFinishing) {
                         Glide.with(binding.githubProfile).load(userDetails.profileImage)
@@ -192,7 +192,7 @@ class UserDetailActivity : AppCompatActivity() {
                     chipPR.text = "PR ${userDetails.pullRequests}"
 
                     val chipComment = Chip(applicationContext)
-                    chipComment.text = "Comments ${userDetails.comments}"
+                    chipComment.text = "Comments ${userDetails.review}"
 
                     binding.userContribute.apply {
                         addView(chipCommit)
