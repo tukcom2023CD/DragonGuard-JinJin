@@ -40,4 +40,22 @@ class PostService {
             return Disposables.create()
         }
     }
+    
+    // MARK: 자기 DB 업데이트하는 함수
+    func updateMyDB(){
+        let url = APIURL.apiUrl.updateMyDB(ip: APIURL.ip)
+        guard let accessToken = UserDefaults.standard.string(forKey: "Access") else {return}
+        
+        AF.request(url,
+                   method: .get,
+                   headers: ["Authorization" : "Bearer \(accessToken)"])
+        .response{ res in
+            switch res.result{
+            case .success(_):
+                print("success update")
+            case .failure(let error):
+                print("updateMyDB error! \(error)")
+            }
+        }
+    }
 }

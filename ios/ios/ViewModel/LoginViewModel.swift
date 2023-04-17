@@ -73,9 +73,14 @@ final class LoginViewModel {
         let access = UserDefaults.standard.string(forKey: "Access")
 
         post.sendMyWalletAddress(token: access ?? "", walletAddress: self.walletAddress)
-            .subscribe(onNext: { msg in print(msg)})
+            .subscribe(onNext: { msg in
+                self.post.updateMyDB()
+                print(msg)
+            })
             .disposed(by: disposeBag)
     }
+    
+    
         
     // MARK: 로그아웃 확인하는 함수
     func logOutDone() -> Observable<Bool>{

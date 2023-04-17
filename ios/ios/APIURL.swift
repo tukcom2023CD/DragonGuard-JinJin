@@ -115,6 +115,12 @@ final class APIURL{
         return getMemberInfoUrl
     }
     
+    // MARK: 내 DB 업데이트 url
+    func updateMyDB(ip: String) -> String{
+        let url = "http://\(ip)/api/members/contributions"
+        return url
+    }
+    
     func getRefreshToken(ip: String) -> String{
         let url = "http://\(ip)/api/auth/refresh"
         return url
