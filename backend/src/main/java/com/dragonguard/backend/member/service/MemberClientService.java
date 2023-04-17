@@ -70,7 +70,7 @@ public class MemberClientService {
                 .forEach(this::saveGitRepos);
 
         saveGitRepos(memberRepoNames);
-        gitOrganizationService.saveGitOrganizations(memberOrganizationNames);
+        gitOrganizationService.saveGitOrganizations(memberOrganizationNames, member);
         commitService.saveCommits(new CommitScrapingResponse(githubId, commitNum));
         issueService.saveIssues(githubId, issueNum, year);
         pullRequestService.savePullRequests(githubId, pullRequestNum, year);
@@ -78,7 +78,7 @@ public class MemberClientService {
 
     public void saveGitRepos(List<String> gitRepoNames) {
         List<GitRepo> gitRepos = gitRepoNames.stream()
-                .filter(gitRepoRepository::existsByName)
+                .filter(name -> !gitRepoRepository.existsByName(name))
                 .map(gitRepoMapper::toEntity)
                 .collect(Collectors.toList());
 

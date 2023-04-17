@@ -1,6 +1,7 @@
 package com.dragonguard.backend.gitorganization.mapper;
 
 import com.dragonguard.backend.gitorganization.entity.GitOrganization;
+import com.dragonguard.backend.member.entity.Member;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,9 +11,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GitOrganizationMapper {
-    public GitOrganization toEntity(String name) {
+    public GitOrganization toEntity(String name, Member member) {
         return GitOrganization.builder()
                 .name(name)
+                .member(member)
                 .build();
     }
 }
