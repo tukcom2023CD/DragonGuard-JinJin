@@ -115,7 +115,7 @@ public class MemberService {
 
     @Transactional
     public void updateContributions() {
-        Member member = authService.getLoginUser();
+        Member member = getLoginUserWithDatabase();
         getCommitsByScraping(member.getGithubId());
         memberClientService.addMemberContribution(member);
         if (!member.isWallAddressExist()) return;
@@ -125,7 +125,7 @@ public class MemberService {
 
     @Transactional
     public MemberResponse getMember() {
-        Member member = authService.getLoginUser();
+        Member member = getLoginUserWithDatabase();
         return getMemberResponse(member);
     }
 
@@ -168,7 +168,7 @@ public class MemberService {
 
     @Transactional
     public void updateWalletAddress(WalletRequest walletRequest) {
-        Member member = getEntity(authService.getLoginUser().getId());
+        Member member = getLoginUserWithDatabase();
         member.updateWalletAddress(walletRequest.getWalletAddress());
     }
 
