@@ -1,4 +1,4 @@
-package com.dragonguard.backend.search.dto.request;
+package com.dragonguard.backend.search.dto.request.kafka;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

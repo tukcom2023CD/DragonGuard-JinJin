@@ -1,7 +1,7 @@
 package com.dragonguard.backend.search.messagequeue;
 
 import com.dragonguard.backend.util.KafkaProducer;
-import com.dragonguard.backend.search.dto.request.KafkaSearchRequest;
+import com.dragonguard.backend.search.dto.request.kafka.KafkaSearchRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

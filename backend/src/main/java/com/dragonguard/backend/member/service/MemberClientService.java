@@ -6,10 +6,9 @@ import com.dragonguard.backend.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.gitrepo.repository.GitRepoRepository;
-import com.dragonguard.backend.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.issue.service.IssueService;
-import com.dragonguard.backend.member.dto.request.MemberClientRequest;
-import com.dragonguard.backend.member.dto.response.*;
+import com.dragonguard.backend.member.dto.request.client.MemberClientRequest;
+import com.dragonguard.backend.member.dto.response.client.*;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.util.GithubClient;
@@ -29,6 +28,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberClientService {
     private final GithubClient<MemberClientRequest, MemberCommitResponse> memberCommitClient;
@@ -44,7 +44,6 @@ public class MemberClientService {
     private final IssueService issueService;
     private final PullRequestService pullRequestService;
 
-    @Transactional
     public void addMemberContribution(Member member) {
         int year = LocalDate.now().getYear();
         String githubId = member.getGithubId();
@@ -66,22 +65,23 @@ public class MemberClientService {
         String githubToken = member.getGithubToken();
         MemberClientRequest request = new MemberClientRequest(githubId, githubToken, year);
 
-        List<String> memberRepoNames = Arrays.asList(memberRepoClient.requestToGithub(request)).stream()
+        List<String> memberRepoNames = Arrays.stream(memberRepoClient.requestToGithub(request))
                 .map(MemberRepoResponse::getFull_name)
                 .collect(Collectors.toList());
-        List<String> memberOrganizationNames = Arrays.asList(memberOrganizationClient.requestToGithub(request)).stream()
+        List<String> memberOrganizationNames = Arrays.stream(memberOrganizationClient.requestToGithub(request))
                 .map(MemberOrganizationResponse::getLogin)
                 .collect(Collectors.toList());
 
-        memberOrganizationNames.stream()
-                .map(orgName -> new MemberClientRequest(orgName, githubToken, year))
-                .map(orgDto -> Arrays.asList(organizationRepoClient.requestToGithub(orgDto)).stream()
-                        .map(OrganizationRepoResponse::getFull_name)
-                        .collect(Collectors.toList()))
-                .forEach(this::saveGitRepos);
-
         saveGitRepos(memberRepoNames);
         gitOrganizationService.saveGitOrganizations(memberOrganizationNames, member);
+    }
+
+    public void addGitOrganizationRepo(String orgName, Member member) {
+        List<String> repoNames = Arrays.stream(organizationRepoClient.requestToGithub(new MemberClientRequest(orgName, member.getGithubToken(), LocalDate.now().getYear())))
+                .map(OrganizationRepoResponse::getFull_name)
+                .collect(Collectors.toList());
+
+        saveGitRepos(repoNames);
     }
 
     public void saveGitRepos(List<String> gitRepoNames) {

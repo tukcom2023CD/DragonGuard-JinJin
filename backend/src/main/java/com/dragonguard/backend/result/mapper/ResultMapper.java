@@ -1,9 +1,9 @@
 package com.dragonguard.backend.result.mapper;
 
-import com.dragonguard.backend.result.dto.response.ClientResultResponse;
+import com.dragonguard.backend.result.dto.response.client.ClientResultResponse;
 import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.result.entity.Result;
-import com.dragonguard.backend.search.dto.response.UserResponse;
+import com.dragonguard.backend.search.dto.response.client.UserResponse;
 import org.springframework.stereotype.Component;
 
 /**

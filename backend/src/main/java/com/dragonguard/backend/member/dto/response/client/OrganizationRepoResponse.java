@@ -1,4 +1,4 @@
-package com.dragonguard.backend.member.dto.response;
+package com.dragonguard.backend.member.dto.response.client;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author 김승진
- * @description WebClient 응답에서 레포지토리 명을 가져오는 dto
+ * @description WebClient 응답에서 조직명을 가져오는 dto
  */
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberRepoResponse {
+public class OrganizationRepoResponse {
     private String full_name;
 }

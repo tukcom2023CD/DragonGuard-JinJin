@@ -13,14 +13,14 @@ import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.issue.entity.Issue;
 import com.dragonguard.backend.issue.service.IssueService;
+import com.dragonguard.backend.member.dto.request.kafka.KafkaContributionRequest;
+import com.dragonguard.backend.member.dto.request.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
 import com.dragonguard.backend.member.dto.response.*;
 import com.dragonguard.backend.member.entity.*;
 import com.dragonguard.backend.member.exception.IllegalContributionException;
 import com.dragonguard.backend.member.mapper.MemberMapper;
-import com.dragonguard.backend.member.messagequeue.KafkaContributionProducer;
-import com.dragonguard.backend.member.messagequeue.KafkaRepositoryProducer;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import com.dragonguard.backend.organization.entity.Organization;
 import com.dragonguard.backend.organization.repository.OrganizationRepository;
@@ -55,8 +55,8 @@ public class MemberService {
     private final GitOrganizationService gitOrganizationService;
     private final GitRepoRepository gitRepoRepository;
     private final MemberClientService memberClientService;
-    private final KafkaContributionProducer kafkaContributionProducer;
-    private final KafkaRepositoryProducer kafkaRepositoryProducer;
+    private final KafkaProducer<KafkaContributionRequest> kafkaContributionProducer;
+    private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
 
     public Tier getTier() {
         return authService.getLoginUser().getTier();
@@ -71,7 +71,7 @@ public class MemberService {
     public Member saveAndRequestClient(String githubId, Role role, AuthStep authStep) {
         Member member = memberRepository.findMemberByGithubId(githubId)
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, role, authStep)));
-        kafkaContributionProducer.send(member.getGithubId());
+        kafkaContributionProducer.send(new KafkaContributionRequest(member.getGithubId()));
         return member;
     }
 
@@ -119,9 +119,9 @@ public class MemberService {
     @Transactional
     public void updateContributions() {
         Member member = getLoginUserWithDatabase();
-        getCommitsByScraping(member.getGithubId());
+        getContributionSumByScraping(member.getGithubId());
         memberClientService.addMemberContribution(member);
-        kafkaContributionProducer.send(member.getGithubId());
+        kafkaContributionProducer.send(new KafkaContributionRequest(member.getGithubId()));
         if (!member.isWallAddressExist()) return;
         transactionAndUpdateTier(member);
     }
@@ -230,7 +230,7 @@ public class MemberService {
 
     @Transactional
     public Member scrapeAndGetSavedMember(String githubId, Role role, AuthStep authStep) {
-        getCommitsByScraping(githubId);
+        getContributionSumByScraping(githubId);
         return saveAndRequestClient(githubId, role, authStep);
     }
 
@@ -241,9 +241,9 @@ public class MemberService {
         List<GitOrganization> gitOrganizations = gitOrganizationService.findGitOrganizationByGithubId(githubId);
         List<GitRepo> gitRepos = gitRepoRepository.findByGithubId(githubId);
 
-        kafkaRepositoryProducer.send(member.getGithubId());
-        kafkaContributionProducer.send(member.getGithubId());
-        
+        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(member.getGithubId()));
+        kafkaContributionProducer.send(new KafkaContributionRequest(member.getGithubId()));
+
         return memberMapper.toDetailResponse(memberResponse, gitOrganizations, gitRepos);
     }
 
@@ -265,7 +265,7 @@ public class MemberService {
         updateTier(member);
     }
 
-    private void getCommitsByScraping(String githubId) {
+    public void getContributionSumByScraping(String githubId) {
         commitService.scrapingCommits(githubId);
     }
 }

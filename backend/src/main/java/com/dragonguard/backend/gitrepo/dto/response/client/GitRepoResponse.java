@@ -1,9 +1,10 @@
-package com.dragonguard.backend.gitrepo.dto.response;
+package com.dragonguard.backend.gitrepo.dto.response.client;
 
+import com.dragonguard.backend.gitrepo.dto.response.StatisticsResponse;
+import com.dragonguard.backend.gitrepo.dto.response.client.GitRepoClientResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.IntSummaryStatistics;
 import java.util.Map;

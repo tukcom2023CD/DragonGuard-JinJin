@@ -1,4 +1,4 @@
-package com.dragonguard.backend.gitrepo.dto.response;
+package com.dragonguard.backend.gitrepo.dto.response.client;
 
 import lombok.*;
 

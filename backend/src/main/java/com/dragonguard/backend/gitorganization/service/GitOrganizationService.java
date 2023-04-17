@@ -6,6 +6,7 @@ import com.dragonguard.backend.gitorganization.repository.GitOrganizationReposit
 import com.dragonguard.backend.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ public class GitOrganizationService {
     private final GitOrganizationRepository gitOrganizationRepository;
     private final GitOrganizationMapper gitOrganizationMapper;
 
+    @Transactional
     public void saveGitOrganizations(List<String> gitOrganizationNames, Member member) {
         List<GitOrganization> gitOrganizations = gitOrganizationNames.stream()
                 .filter(name -> !gitOrganizationRepository.existsByName(name))

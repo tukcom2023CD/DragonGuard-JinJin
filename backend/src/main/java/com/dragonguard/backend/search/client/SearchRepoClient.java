@@ -4,7 +4,7 @@ import com.dragonguard.backend.config.github.GithubProperties;
 import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.util.GithubClient;
 import com.dragonguard.backend.search.dto.request.SearchRequest;
-import com.dragonguard.backend.search.dto.response.SearchRepoResponse;
+import com.dragonguard.backend.search.dto.response.client.SearchRepoResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

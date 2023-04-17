@@ -1,15 +1,17 @@
 package com.dragonguard.backend.gitrepo.service;
 
-import com.dragonguard.backend.gitrepo.dto.request.GitRepoClientRequest;
+import com.dragonguard.backend.gitrepo.dto.request.client.GitRepoClientRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.gitrepo.dto.response.*;
+import com.dragonguard.backend.gitrepo.dto.response.client.GitRepoClientResponse;
+import com.dragonguard.backend.gitrepo.dto.response.client.GitRepoResponse;
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.gitrepomember.dto.request.GitRepoMemberCompareRequest;
-import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberClientResponse;
+import com.dragonguard.backend.gitrepomember.dto.response.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.dto.response.TwoGitRepoMemberResponse;
 import com.dragonguard.backend.gitrepomember.entity.GitRepoMember;

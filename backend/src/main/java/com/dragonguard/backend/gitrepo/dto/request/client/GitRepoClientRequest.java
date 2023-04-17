@@ -1,4 +1,4 @@
-package com.dragonguard.backend.gitrepo.dto.request;
+package com.dragonguard.backend.gitrepo.dto.request.client;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

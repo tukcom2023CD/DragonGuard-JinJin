@@ -1,4 +1,4 @@
-package com.dragonguard.backend.member.dto.request;
+package com.dragonguard.backend.member.dto.request.client;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

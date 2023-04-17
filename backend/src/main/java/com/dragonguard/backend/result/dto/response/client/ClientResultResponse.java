@@ -1,4 +1,4 @@
-package com.dragonguard.backend.result.dto.response;
+package com.dragonguard.backend.result.dto.response.client;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

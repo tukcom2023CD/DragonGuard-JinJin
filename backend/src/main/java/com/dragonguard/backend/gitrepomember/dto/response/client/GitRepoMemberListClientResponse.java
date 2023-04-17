@@ -1,5 +1,6 @@
-package com.dragonguard.backend.gitrepomember.dto.response;
+package com.dragonguard.backend.gitrepomember.dto.response.client;
 
+import com.dragonguard.backend.gitrepomember.dto.response.client.GitRepoMemberClientResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

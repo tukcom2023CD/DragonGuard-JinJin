@@ -1,6 +1,8 @@
 package com.dragonguard.backend.config.security.oauth;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
+import com.dragonguard.backend.member.dto.request.kafka.KafkaContributionRequest;
+import com.dragonguard.backend.member.dto.request.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Role;
@@ -41,8 +43,9 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
         Member user = memberRepository.findMemberByGithubId(githubId)
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY)));
-        kafkaContributionProducer.send(githubId);
-        kafkaRepositoryProducer.send(githubId);
+        
+        kafkaContributionProducer.send(new KafkaContributionRequest(githubId));
+        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
 
         user.updateGithubToken(userRequest.getAccessToken().getTokenValue());
 

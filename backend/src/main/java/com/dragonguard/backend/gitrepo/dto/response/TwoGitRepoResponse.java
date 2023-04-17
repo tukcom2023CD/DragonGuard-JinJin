@@ -1,9 +1,9 @@
 package com.dragonguard.backend.gitrepo.dto.response;
 
+import com.dragonguard.backend.gitrepo.dto.response.client.GitRepoResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 /**
  * @author 김승진

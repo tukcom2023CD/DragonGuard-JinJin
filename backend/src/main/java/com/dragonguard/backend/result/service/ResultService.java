@@ -1,11 +1,10 @@
 package com.dragonguard.backend.result.service;
 
-import com.dragonguard.backend.result.dto.response.ClientResultResponse;
+import com.dragonguard.backend.result.dto.response.client.ClientResultResponse;
 import com.dragonguard.backend.result.entity.Result;
 import com.dragonguard.backend.result.mapper.ResultMapper;
 import com.dragonguard.backend.result.repository.ResultRepository;
 import com.dragonguard.backend.search.dto.request.SearchRequest;
-import com.dragonguard.backend.search.entity.Search;
 import com.dragonguard.backend.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
