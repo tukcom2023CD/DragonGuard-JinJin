@@ -55,6 +55,17 @@ public class MemberClientService {
         int issueNum = memberIssueClient.requestToGithub(request).getTotal_count();
         int pullRequestNum = memberPullRequestClient.requestToGithub(request).getTotal_count();
 
+        commitService.saveCommits(new CommitScrapingResponse(githubId, commitNum));
+        issueService.saveIssues(githubId, issueNum, year);
+        pullRequestService.savePullRequests(githubId, pullRequestNum, year);
+    }
+
+    public void addMemberGitRepoAndGitOrganization(Member member) {
+        int year = LocalDate.now().getYear();
+        String githubId = member.getGithubId();
+        String githubToken = member.getGithubToken();
+        MemberClientRequest request = new MemberClientRequest(githubId, githubToken, year);
+
         List<String> memberRepoNames = Arrays.asList(memberRepoClient.requestToGithub(request)).stream()
                 .map(MemberRepoResponse::getFull_name)
                 .collect(Collectors.toList());
@@ -71,9 +82,6 @@ public class MemberClientService {
 
         saveGitRepos(memberRepoNames);
         gitOrganizationService.saveGitOrganizations(memberOrganizationNames, member);
-        commitService.saveCommits(new CommitScrapingResponse(githubId, commitNum));
-        issueService.saveIssues(githubId, issueNum, year);
-        pullRequestService.savePullRequests(githubId, pullRequestNum, year);
     }
 
     public void saveGitRepos(List<String> gitRepoNames) {

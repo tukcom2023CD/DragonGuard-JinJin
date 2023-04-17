@@ -5,6 +5,8 @@ import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.entity.Role;
 import com.dragonguard.backend.member.mapper.MemberMapper;
+import com.dragonguard.backend.member.messagequeue.KafkaContributionProducer;
+import com.dragonguard.backend.member.messagequeue.KafkaRepositoryProducer;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -27,6 +29,8 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
     private final UserDetailsMapper userDetailsMapper;
     private final MemberMapper memberMapper;
+    private final KafkaContributionProducer kafkaContributionProducer;
+    private final KafkaRepositoryProducer kafkaRepositoryProducer;
 
     @Override
     @Transactional
@@ -37,6 +41,8 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
         Member user = memberRepository.findMemberByGithubId(githubId)
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY)));
+        kafkaContributionProducer.send(githubId);
+        kafkaRepositoryProducer.send(githubId);
 
         user.updateGithubToken(userRequest.getAccessToken().getTokenValue());
 

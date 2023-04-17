@@ -19,11 +19,14 @@ import com.dragonguard.backend.member.dto.response.*;
 import com.dragonguard.backend.member.entity.*;
 import com.dragonguard.backend.member.exception.IllegalContributionException;
 import com.dragonguard.backend.member.mapper.MemberMapper;
+import com.dragonguard.backend.member.messagequeue.KafkaContributionProducer;
+import com.dragonguard.backend.member.messagequeue.KafkaRepositoryProducer;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import com.dragonguard.backend.organization.entity.Organization;
 import com.dragonguard.backend.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.pullrequest.service.PullRequestService;
+import com.dragonguard.backend.util.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -52,6 +55,8 @@ public class MemberService {
     private final GitOrganizationService gitOrganizationService;
     private final GitRepoRepository gitRepoRepository;
     private final MemberClientService memberClientService;
+    private final KafkaContributionProducer kafkaContributionProducer;
+    private final KafkaRepositoryProducer kafkaRepositoryProducer;
 
     public Tier getTier() {
         return authService.getLoginUser().getTier();
@@ -66,7 +71,7 @@ public class MemberService {
     public Member saveAndRequestClient(String githubId, Role role, AuthStep authStep) {
         Member member = memberRepository.findMemberByGithubId(githubId)
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, role, authStep)));
-        memberClientService.addMemberContribution(member);
+        kafkaContributionProducer.send(member.getGithubId());
         return member;
     }
 
@@ -116,6 +121,7 @@ public class MemberService {
         Member member = getLoginUserWithDatabase();
         getCommitsByScraping(member.getGithubId());
         memberClientService.addMemberContribution(member);
+        kafkaContributionProducer.send(member.getGithubId());
         if (!member.isWallAddressExist()) return;
         transactionAndUpdateTier(member);
     }
@@ -234,6 +240,10 @@ public class MemberService {
         MemberResponse memberResponse = getMemberResponse(member);
         List<GitOrganization> gitOrganizations = gitOrganizationService.findGitOrganizationByGithubId(githubId);
         List<GitRepo> gitRepos = gitRepoRepository.findByGithubId(githubId);
+
+        kafkaRepositoryProducer.send(member.getGithubId());
+        kafkaContributionProducer.send(member.getGithubId());
+        
         return memberMapper.toDetailResponse(memberResponse, gitOrganizations, gitRepos);
     }
 

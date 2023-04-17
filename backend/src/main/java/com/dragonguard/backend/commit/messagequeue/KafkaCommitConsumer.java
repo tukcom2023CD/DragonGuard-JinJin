@@ -22,7 +22,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class KafkaCommitConsumer {
 
-    private final CommitService commitService;
     private final MemberService memberService;
 
     @KafkaListener(topics = "gitrank.to.backend.commit", containerFactory = "kafkaListenerContainerFactory")
