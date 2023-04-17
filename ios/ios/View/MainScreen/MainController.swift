@@ -10,7 +10,7 @@ import SnapKit
 import RxSwift
 
 final class MainController: UIViewController {
-    private let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
+    private let indexBtns = ["전체 사용자 랭킹", "조직 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
     private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
     private let img = UIImageView()
@@ -224,7 +224,7 @@ final class MainController: UIViewController {
             .subscribe(onNext: { data in
                 self.rank = data.rank
                 self.tierTokenUI.inputText(myTier: data.tier, tokens: data.tokenAmount)
-                let url = URL(string: data.profileImage)!
+                let url = URL(string: data.profileImage ?? "")!
                 self.img.load(img: self.img, url: url,btn: self.profileBtn)
                 self.profileBtn.setTitle(data.githubId, for: .normal)
                 self.githubId = data.githubId

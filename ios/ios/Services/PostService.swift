@@ -47,7 +47,7 @@ class PostService {
         guard let accessToken = UserDefaults.standard.string(forKey: "Access") else {return}
         
         AF.request(url,
-                   method: .get,
+                   method: .post,
                    headers: ["Authorization" : "Bearer \(accessToken)"])
         .response{ res in
             switch res.result{
