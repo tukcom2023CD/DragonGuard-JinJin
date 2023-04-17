@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
             } else if (it.resultCode == 1) {
-
+                refreshCommits()
             }
         }
 
@@ -294,6 +294,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 val postWalletResponse = postwalletDeferred.await()
                 if (postWalletResponse) {
+                    refreshCommits()
                     multipleSearchUser()
                 }
             }

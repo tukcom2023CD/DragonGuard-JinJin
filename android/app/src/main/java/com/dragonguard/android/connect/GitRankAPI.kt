@@ -38,7 +38,7 @@ interface GitRankAPI {
     fun getTotalUsersRanking(@QueryMap query: Map<String, String>, @Header("Authorization")token: String) : Call<TotalUsersRankingModel>
 
 //    서버에 사용자의 활용도 최산화하는 함수
-    @POST("members/commits")
+    @POST("members/contributions")
     fun postCommits(@Header("Authorization")token: String) : Call<Unit>
 
 //
