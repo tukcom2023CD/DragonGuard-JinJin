@@ -41,8 +41,8 @@ public class BlockchainConfig {
                 .toString());
 
         try {
-            String abiJson = Files.readAllLines(abiPath, Charsets.UTF_8).stream().collect(Collectors.joining());
-            String keyRingJson = Files.readAllLines(keyringPath, Charsets.UTF_8).stream().collect(Collectors.joining());
+            String abiJson = String.join("", Files.readAllLines(abiPath, Charsets.UTF_8));
+            String keyRingJson = String.join("", Files.readAllLines(keyringPath, Charsets.UTF_8));
             return new BlockchainJson(abiJson, keyRingJson);
         } catch (IOException e) {
             throw new BlockchainException();

@@ -2,8 +2,12 @@ package com.dragonguard.backend.member.entity;
 
 import com.dragonguard.backend.blockchain.entity.Blockchain;
 import com.dragonguard.backend.commit.entity.Commit;
+import com.dragonguard.backend.gitorganization.entity.GitOrganizationMember;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+import com.dragonguard.backend.issue.entity.Issue;
+import com.dragonguard.backend.member.exception.TierNoneMatchException;
+import com.dragonguard.backend.pullrequest.entity.PullRequest;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -46,6 +51,14 @@ public class Member extends BaseTime {
     @JoinColumn(name = "member_id")
     private List<Commit> commits = new ArrayList<>();
 
+    @OneToMany
+    @JoinColumn(name = "member_id")
+    private List<Issue> issues = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "member_id")
+    private List<PullRequest> pullRequests = new ArrayList<>();
+
     private String walletAddress;
 
     @Enumerated(EnumType.STRING)
@@ -61,6 +74,9 @@ public class Member extends BaseTime {
     @Enumerated(EnumType.STRING)
     private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gitOrganization")
+    private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
+
     private String refreshToken;
 
     private String githubToken;
@@ -68,8 +84,16 @@ public class Member extends BaseTime {
     @Embedded
     private OrganizationDetails organizationDetails;
 
-    @Formula("(SELECT sum(c.commit_num) FROM commit c WHERE c.member_id = id)")
+    private Integer sumOfReviews;
+
+    @Formula("(SELECT sum(c.amount) FROM commit c WHERE c.member_id = id)")
     private Integer sumOfCommits;
+
+    @Formula("(SELECT sum(i.amount) FROM issue i WHERE i.member_id = id)")
+    private Integer sumOfIssues;
+
+    @Formula("(SELECT sum(pr.amount) FROM pull_request pr WHERE pr.member_id = id)")
+    private Integer sumOfPullRequests;
 
     @Formula("(SELECT sum(b.amount) FROM blockchain b WHERE b.member_id = id)")
     private Long sumOfTokens;
@@ -96,13 +120,40 @@ public class Member extends BaseTime {
         this.commits.add(commit);
     }
 
+    public void addIssue(Issue issue) {
+        if (issue == null || this.issues.stream().anyMatch(issue::equals)) return;
+        else if (this.issues.stream().anyMatch(issue::equals)) {
+            this.issues.stream().filter(issue::customEquals).findFirst().ifPresent(this.issues::remove);
+        }
+        this.issues.add(issue);
+    }
+
+    public void addPullRequest(PullRequest pullRequest) {
+        if (pullRequest == null || this.pullRequests.stream().anyMatch(pullRequest::equals)) return;
+        else if (this.pullRequests.stream().anyMatch(pullRequest::customEquals)) {
+            this.pullRequests.stream().filter(pullRequest::customEquals).findFirst().ifPresent(this.commits::remove);
+        }
+        this.pullRequests.add(pullRequest);
+    }
+
     public void updateNameAndImage(String name, String profileImage) {
         this.name = name;
         this.profileImage = profileImage;
     }
 
     public void updateTier() {
-        this.tier = Tier.checkTier(sumOfTokens);
+        if (sumOfTokens != null) {
+            this.tier = Tier.checkTier(sumOfTokens);
+            return;
+        }
+        Long amount = this.blockchains.stream()
+                .map(Blockchain::getAmount)
+                .mapToLong(b -> Long.parseLong(b.toString()))
+                .sum();
+        try {
+            this.tier = Tier.checkTier(amount);
+        } catch (TierNoneMatchException e) {
+        }
     }
 
     public void updateWalletAddress(String walletAddress) {
@@ -128,5 +179,37 @@ public class Member extends BaseTime {
 
     public void finishAuth() {
         this.authStep = AuthStep.ALL;
+    }
+
+    public void organizeGitOrganizationMember(GitOrganizationMember gitOrganizationMembers) {
+        this.gitOrganizationMembers.add(gitOrganizationMembers);
+    }
+
+    public void updateSumOfReviews(Integer sumOfReviews) {
+        this.sumOfReviews = sumOfReviews;
+    }
+
+    public void updateAuthStep(AuthStep authStep) {
+        this.authStep = authStep;
+    }
+
+    public int getCommitSumWithRelation() {
+        return this.commits.stream().mapToInt(Commit::getAmount).sum();
+    }
+
+    public int getIssueSumWithRelation() {
+        return this.issues.stream().mapToInt(Issue::getAmount).sum();
+    }
+
+    public int getPullRequestSumWithRelation() {
+        return this.pullRequests.stream().mapToInt(PullRequest::getAmount).sum();
+    }
+
+    public boolean isWallAddressExist() {
+        return StringUtils.hasText(this.getWalletAddress());
+    }
+
+    public String getBlockchainUrl() {
+        return "https://baobab.scope.klaytn.com/account/" + this.walletAddress + "?tabId=txList";
     }
 }

@@ -3,7 +3,9 @@ package com.dragonguard.backend.config.security.oauth;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
 import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.member.entity.Member;
-import com.dragonguard.backend.member.service.MemberService;
+import com.dragonguard.backend.member.entity.Role;
+import com.dragonguard.backend.member.mapper.MemberMapper;
+import com.dragonguard.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -22,16 +24,19 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final UserDetailsMapper userDetailsMapper;
+    private final MemberMapper memberMapper;
 
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
+        String githubId = (String) attributes.get("login");
 
-        Member user = memberService.findMemberByGithubId((String) attributes.get("login"), AuthStep.GITHUB_ONLY);
+        Member user = memberRepository.findMemberByGithubId(githubId)
+                .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY)));
 
         user.updateGithubToken(userRequest.getAccessToken().getTokenValue());
 

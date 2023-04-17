@@ -1,5 +1,6 @@
 package com.dragonguard.backend.search.entity;
 
+import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,7 +18,7 @@ import javax.persistence.*;
 @Entity
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Filter {
+public class Filter extends BaseTime {
     @Id
     @GeneratedValue
     private Long id;

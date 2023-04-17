@@ -27,14 +27,14 @@ public class Commit extends BaseTime {
     @Column(nullable = false)
     private Integer year;
     @Column(nullable = false)
-    private Integer commitNum;
+    private Integer amount;
 
     private String githubId;
 
     @Builder
-    public Commit(Integer year, Integer commitNum, String githubId) {
+    public Commit(Integer year, Integer amount, String githubId) {
         this.year = year;
-        this.commitNum = commitNum;
+        this.amount = amount;
         this.githubId = githubId;
     }
 
@@ -43,12 +43,12 @@ public class Commit extends BaseTime {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Commit commit = (Commit) o;
-        return year.equals(commit.year) && commitNum.equals(commit.commitNum) && githubId.equals(commit.githubId);
+        return year.equals(commit.year) && amount.equals(commit.amount) && githubId.equals(commit.githubId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(year, commitNum, githubId);
+        return Objects.hash(year, amount, githubId);
     }
 
     public boolean customEquals(Commit commit) {
