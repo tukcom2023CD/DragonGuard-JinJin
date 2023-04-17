@@ -119,6 +119,7 @@ public class MemberService {
         getCommitsByScraping(member.getGithubId());
         memberClientService.addMemberContribution(member);
         if (!member.isWallAddressExist()) return;
+        setTransaction(member);
         updateTier(member);
     }
 
@@ -169,7 +170,6 @@ public class MemberService {
     public void updateWalletAddress(WalletRequest walletRequest) {
         Member member = getEntity(authService.getLoginUser().getId());
         member.updateWalletAddress(walletRequest.getWalletAddress());
-        setTransaction(member);
     }
 
     public void setTransaction(Member member) {
