@@ -24,7 +24,7 @@ public class MemberDetailResponse {
     private Integer commits;
     private Integer issues;
     private Integer pullRequests;
-    private Integer comments;
+    private Integer reviews;
     private Tier tier;
     private AuthStep authStep;
     private String profileImage;
@@ -32,6 +32,7 @@ public class MemberDetailResponse {
     private Integer organizationRank;
     private Long tokenAmount;
     private String organization;
+    private String blockchainUrl;
     private List<String> gitOrganizations;
     private List<String> gitRepos;
 }

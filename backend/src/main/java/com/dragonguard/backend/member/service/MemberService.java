@@ -65,7 +65,8 @@ public class MemberService {
 
     @Transactional
     public Member saveAndRequestClient(String githubId, Role role, AuthStep authStep) {
-        Member member = memberRepository.save(memberMapper.toEntity(githubId, role, authStep));
+        Member member = memberRepository.findMemberByGithubId(githubId)
+                .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, role, authStep)));
         memberClientService.addMemberContribution(member);
         return member;
     }
@@ -90,13 +91,15 @@ public class MemberService {
         pullRequests.forEach(member::addPullRequest);
         issues.forEach(member::addIssue);
 
-        int sumWithoutComments = member.getSumOfCommits() + member.getSumOfPullRequests() + member.getSumOfIssues();
+        int sumWithoutReviews = member.getCommitSumWithRelation()
+                + member.getPullRequestSumWithRelation()
+                + member.getIssueSumWithRelation();
 
-        if (sumWithoutComments > contributions) throw new IllegalContributionException();
+        if (sumWithoutReviews > contributions) throw new IllegalContributionException();
 
-        member.updateSumOfComments(contributions - sumWithoutComments);
+        member.updateSumOfReviews(contributions - sumWithoutReviews);
 
-        if (!isWalletAddressExist(member)) {
+        if (!member.isWallAddressExist()) {
             updateTier(member);
             return;
         }
@@ -106,7 +109,7 @@ public class MemberService {
 
     @Transactional
     public void updateTier(Member member) {
-        if (!isWalletAddressExist(member)) return;
+        if (!member.isWallAddressExist()) return;
         member.updateTier();
     }
 
@@ -115,7 +118,7 @@ public class MemberService {
         Member member = authService.getLoginUser();
         getCommitsByScraping(member.getGithubId());
         memberClientService.addMemberContribution(member);
-        if (!isWalletAddressExist(member)) return;
+        if (!member.isWallAddressExist()) return;
         updateTier(member);
     }
 
@@ -139,7 +142,7 @@ public class MemberService {
                     member.getSumOfIssues(),
                     member.getSumOfIssues(),
                     member.getSumOfPullRequests(),
-                    member.getSumOfComments(),
+                    member.getSumOfReviews(),
                     rank,
                     amount);
         }
@@ -171,10 +174,10 @@ public class MemberService {
 
     public void setTransaction(Member member) {
 
-        int commit = member.getSumOfCommits();
-        int issue = member.getSumOfIssues();
-        int pullRequest = member.getSumOfPullRequests();
-        int comment = member.getSumOfComments();
+        int commit = member.getCommitSumWithRelation();
+        int issue = member.getIssueSumWithRelation();
+        int pullRequest = member.getPullRequestSumWithRelation();
+        int review = member.getSumOfReviews();
 
         String walletAddress = member.getWalletAddress();
         String githubId = member.getGithubId();
@@ -200,11 +203,11 @@ public class MemberService {
                             BigInteger.valueOf(pullRequest),
                             githubId), member);
         }
-        if (comment > 0) {
+        if (review > 0) {
             blockchainService.setTransaction(
                     new ContractRequest(walletAddress,
-                            ContributeType.COMMENT.toString(),
-                            BigInteger.valueOf(comment),
+                            ContributeType.CODE_REVIEW.toString(),
+                            BigInteger.valueOf(review),
                             githubId), member);
         }
     }
@@ -237,11 +240,14 @@ public class MemberService {
         return memberMapper.toDetailResponse(memberResponse, gitOrganizations, gitRepos);
     }
 
-    private void getCommitsByScraping(String githubId) {
-        commitService.scrapingCommits(githubId);
+    @Transactional
+    public void initMember() {
+        memberRepository.findAll().stream()
+                .map(member -> scrapeAndGetSavedMember(member.getGithubId(), Role.ROLE_ADMIN, AuthStep.GITHUB_ONLY))
+                .forEach(m -> m.updateAuthStep(AuthStep.GITHUB_ONLY));
     }
 
-    private boolean isWalletAddressExist(Member member) {
-        return StringUtils.hasText(member.getWalletAddress());
+    private void getCommitsByScraping(String githubId) {
+        commitService.scrapingCommits(githubId);
     }
 }

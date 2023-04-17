@@ -30,6 +30,6 @@ public enum Tier {
         return Arrays.stream(values())
                 .filter(i -> i.getMaxCommits() >= amount)
                 .findFirst()
-                .orElseThrow(TierNoneMatchException::new);
+                .orElse(MASTER);
     }
 }

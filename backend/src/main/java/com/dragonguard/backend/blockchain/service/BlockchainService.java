@@ -51,7 +51,11 @@ public class BlockchainService {
         transactionService.transfer(request);
         BigInteger amount = transactionService.balanceOf(request.getAddress());
 
-        blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));
+        if (amount.equals(request.getAmount())) {
+            blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));
+            return;
+        }
+        blockchainRepository.save(blockchainMapper.toEntity(request.getAmount(), member, request));
     }
 
     public List<BlockchainResponse> getBlockchainList() {

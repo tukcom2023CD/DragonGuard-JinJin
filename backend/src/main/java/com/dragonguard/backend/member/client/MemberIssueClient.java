@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -52,7 +53,12 @@ public class MemberIssueClient implements GithubClient<MemberClientRequest, Memb
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1))
                 .build();
+
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(githubProperties.getUrl());
+        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
+
         return WebClient.builder()
+                .uriBuilderFactory(factory)
                 .exchangeStrategies(exchangeStrategies)
                 .baseUrl(githubProperties.getUrl())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)

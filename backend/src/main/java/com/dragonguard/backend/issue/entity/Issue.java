@@ -1,7 +1,7 @@
 package com.dragonguard.backend.issue.entity;
 
+import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
-import com.dragonguard.backend.pullrequest.entity.PullRequest;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +22,7 @@ import java.util.Objects;
 @Entity
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Issue {
+public class Issue extends BaseTime {
     @Id
     @GeneratedValue
     private Long id;

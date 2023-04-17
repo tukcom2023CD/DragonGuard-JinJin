@@ -2,15 +2,12 @@ package com.dragonguard.backend.blockchain.controller;
 
 import com.dragonguard.backend.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.blockchain.service.BlockchainService;
-import com.dragonguard.backend.blockchain.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -20,16 +17,9 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@DependsOn("blockchainConfig")
 @RequestMapping("/blockchain")
 public class BlockchainController {
     private final BlockchainService blockchainService;
-    private final TransactionService transactionService;
-
-    @PostConstruct
-    public void initDeploy() {
-        transactionService.deploy();
-    }
 
     @GetMapping
     public ResponseEntity<List<BlockchainResponse>> getBlockchainInfo() {
