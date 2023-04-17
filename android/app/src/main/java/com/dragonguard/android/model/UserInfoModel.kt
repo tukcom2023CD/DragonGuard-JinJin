@@ -18,5 +18,5 @@ data class UserInfoModel(
     val organizationRank: Int?,
     val issues: Int?,
     val pullRequests: Int?,
-    val comments: Int?
+    val review: Int?
 )

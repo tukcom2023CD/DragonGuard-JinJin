@@ -33,6 +33,7 @@ import kotlinx.coroutines.*
 class MainActivity : AppCompatActivity() {
     private val activityResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            count = 0
             if (it.resultCode == 0) {
                 val walletIntent = it.data
                 try {
@@ -187,9 +188,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun multipleSearchUser() {
         searchUser()
-        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 500)
         Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 1000)
-        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 1500)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 2000)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 3000)
     }
 
     /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
@@ -197,7 +198,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun searchUser() {
 //        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
-        if (token.isNotBlank() && count<=4) {
+        if (token.isNotBlank() && count<4) {
             count++
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
@@ -283,7 +284,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun postWalletAddress(address: String) {
 //        Toast.makeText(applicationContext, "address: $address", Toast.LENGTH_SHORT).show()
-        if (!addressPost) {
+        if (!addressPost && count<4) {
             prefs.setPostAddress(true)
             addressPost = prefs.getPostAddress(true)
             val coroutine = CoroutineScope(Dispatchers.Main)
@@ -320,6 +321,7 @@ class MainActivity : AppCompatActivity() {
                         prefs.setJwtToken("")
                         prefs.setRefreshToken("")
                         prefs.setPostAddress(false)
+                        count = 4
                         val intent = Intent(applicationContext, LoginActivity::class.java)
                         intent.putExtra("wallet_address", prefs.getWalletAddress(""))
                         intent.putExtra("token", prefs.getJwtToken(""))
