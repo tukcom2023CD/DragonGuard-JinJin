@@ -298,7 +298,6 @@ class MainActivity : AppCompatActivity() {
                 val postWalletResponse = postwalletDeferred.await()
                 if (postWalletResponse) {
                     refreshCommits()
-                    multipleSearchUser()
                 }
             }
         }
