@@ -156,7 +156,7 @@ final class OrganizationCertificationController: UIViewController{
     private func setAutoLayout(){
         self.titleLabel.snp.makeConstraints({ make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(UIScreen.main.bounds.height/5)
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(UIScreen.main.bounds.height/20)
         })
         
         self.verticalStackView.snp.makeConstraints({ make in
@@ -250,4 +250,19 @@ extension OrganizationCertificationController: SendingType, SendingOrganizationN
     }
     
     
+}
+
+import SwiftUI
+
+struct VCPreViewOrganizationCertificationController:PreviewProvider {
+    static var previews: some View {
+        OrganizationCertificationController().toPreview().previewDevice("iPhone 14 Pro")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
+}
+struct VCPreViewOrganizationCertificationController2:PreviewProvider {
+    static var previews: some View {
+        OrganizationCertificationController().toPreview().previewDevice("iPad (10th generation)")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
 }

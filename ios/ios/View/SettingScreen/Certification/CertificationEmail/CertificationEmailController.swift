@@ -154,7 +154,7 @@ final class CertificationEmailController: UIViewController{
                     let sheet = UIAlertController(title: "조직이 인증되었습니다.", message: "", preferredStyle: .alert)
                     // 팝업창 확인 버튼
                     sheet.addAction(UIAlertAction(title: "인증 마치기", style: .default,handler: { action in
-                        self.navigationController?.popToRootViewController(animated: true)
+                        self.navigationController?.popToViewController(MainController(), animated: true)
                     }))
                     // 화면에 표시
                     self.present(sheet,animated: true)
