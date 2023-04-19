@@ -176,8 +176,13 @@ final class AddOrganizationController: UIViewController{
             .subscribe { id in
                 print("id \(id)")
                 if id != 0 {
-//                    self.navigationController?.popToRootViewController(animated: true)
-                    self.navigationController?.popToViewController(MainController(), animated: true)
+                    guard let viewControllerStack = self.navigationController?.viewControllers else { return }
+                    
+                    for viewController in viewControllerStack {
+                        if let mainView = viewController as? MainController {
+                            self.navigationController?.popToViewController(mainView, animated: true)
+                        }
+                    }
                 }
             }
             .disposed(by: self.disposeBag)
