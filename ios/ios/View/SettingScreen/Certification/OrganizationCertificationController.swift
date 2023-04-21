@@ -162,7 +162,7 @@ final class OrganizationCertificationController: UIViewController{
         self.verticalStackView.snp.makeConstraints({ make in
             make.top.equalTo(titleLabel.snp.top).offset(50)
             make.centerX.equalToSuperview()
-            make.height.equalTo(UIScreen.main.bounds.height/3)
+            make.height.equalTo(UIScreen.main.bounds.height/4)
         })
         
         self.certifiedBtn.snp.makeConstraints({ make in

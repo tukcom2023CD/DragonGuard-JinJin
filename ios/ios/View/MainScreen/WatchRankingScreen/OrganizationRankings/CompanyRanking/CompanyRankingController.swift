@@ -22,6 +22,7 @@ final class CompanyRankingController: UIViewController{
         
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "회사 랭킹"
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         
         addUItoView()
         settingAutoLayout()
@@ -97,11 +98,11 @@ extension CompanyRankingController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WatchRankingTableView.identifier,for: indexPath) as! WatchRankingTableView
-        let organizationName = self.allRankingList[indexPath.row].name
+        let organizationName = self.allRankingList[indexPath.section].name
         
-        cell.prepare(rank: indexPath.row + 1,
-                     text: organizationName,
-                     count: self.allRankingList[indexPath.row].tokenSum)
+        cell.prepare(rank: indexPath.section + 1,
+                     text: self.allRankingList[indexPath.section].name,
+                     count: self.allRankingList[indexPath.section].tokenSum)
         
         cell.layer.cornerRadius = 20
         cell.layer.borderWidth = 1
@@ -129,6 +130,8 @@ extension CompanyRankingController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {  return 1 }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
     
     func numberOfSections(in tableView: UITableView) -> Int { return allRankingList.count }
 }
