@@ -126,7 +126,7 @@ class AuthOrgActivity : AppCompatActivity() {
                     }
                 }
                 if(binding.orgEmailEdit.text.toString().contains("@")) {
-                    addOrgMember(organizationId, binding.orgEmailEdit.text.toString(), token)
+                    addOrgMember()
                 }
             } else {
                 Toast.makeText(applicationContext, "miss!! name: ${binding.orgNameEdit.text}, email: ${binding.orgEmailEdit.text}, type: ${binding.orgTypeSpinner.selectedItem}", Toast.LENGTH_SHORT).show()
@@ -134,26 +134,16 @@ class AuthOrgActivity : AppCompatActivity() {
         }
     }
 
-    private fun addOrgMember(orgId: Long, email: String, token: String) {
+    private fun addOrgMember() {
         Log.d("request","miss!! name: ${binding.orgNameEdit.text}, email: ${binding.orgEmailEdit.text}" )
-        val coroutine = CoroutineScope(Dispatchers.Main)
-        coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.addOrgMember(orgId, email, token)
-            }
-            val result = resultDeferred.await()
-            if(result != -1L) {
-                moveToEmailAuth(result)
-            } else {
-
-            }
-        }
+        moveToEmailAuth()
     }
 
-    private fun moveToEmailAuth(id: Long) {
+    private fun moveToEmailAuth() {
         val intent = Intent(applicationContext, AuthEmailActivity::class.java)
         intent.putExtra("token", token)
-        intent.putExtra("id", id)
+        intent.putExtra("orgId", organizationId)
+        intent.putExtra("email", binding.orgEmailEdit.text.toString())
         intent.putExtra("orgName", binding.orgNameEdit.text.toString())
         startActivity(intent)
     }

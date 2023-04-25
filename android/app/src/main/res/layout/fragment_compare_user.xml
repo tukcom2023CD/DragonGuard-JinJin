@@ -104,7 +104,7 @@
                 android:layout_weight="0.3"
                 android:orientation="vertical">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/user_compare_choice"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

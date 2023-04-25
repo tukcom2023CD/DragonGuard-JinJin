@@ -56,6 +56,7 @@ class UserDetailActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             //본인 프로필 확인
+            Log.d("userDetails", "detail 시작")
             if(userName != null) {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
                     viewmodel.userDetails(githubId, token)
@@ -64,27 +65,32 @@ class UserDetailActivity : AppCompatActivity() {
 
                 // 실제 데이터 왔는지 확인    왔으면 깃허브 프로필 이미지, githubId, 사용자의 깃허브 랭킹 commit, issue pr, comment등을 보여줌
                 if (userDetails.githubId != null && userDetails.commits != null && userDetails.issues != null && userDetails.profileImage != null &&
-                    userDetails.pullRequests != null && userDetails.review != null
+                    userDetails.pullRequests != null && userDetails.reviews != null
                 ) {
+                    Log.d("userDetails", "$userDetails")
                     if (!this@UserDetailActivity.isFinishing) {
                         Glide.with(binding.githubProfile).load(userDetails.profileImage)
                             .into(binding.githubProfile)
                     }
 
+                    if(userDetails.rank != null) {
+                        binding.userTotalRanking.text = userDetails.rank.toString()
+                    }
+
                     binding.userId.text = userDetails.githubId
-                    val chipCommit = Chip(applicationContext)
+                    val chipCommit = Chip(this@UserDetailActivity)
                     chipCommit.text = "Commit ${userDetails.commits}"
 
-                    val chipIssues = Chip(applicationContext)
+                    val chipIssues = Chip(this@UserDetailActivity)
                     chipIssues.text = "Issues ${userDetails.issues}"
 
-                    val chipPR = Chip(applicationContext)
+                    val chipPR = Chip(this@UserDetailActivity)
                     chipPR.text = "PR ${userDetails.pullRequests}"
 
-                    val chipComment = Chip(applicationContext)
-                    chipComment.text = "Comments ${userDetails.review}"
+                    val chipComment = Chip(this@UserDetailActivity)
+                    chipComment.text = "Comments ${userDetails.reviews}"
 
-                    binding.userContribute.apply {
+                    binding.userStat.apply {
                         addView(chipCommit)
                         addView(chipIssues)
                         addView(chipPR)
@@ -102,43 +108,31 @@ class UserDetailActivity : AppCompatActivity() {
                                 binding.progressEnd.text = "49"
                                 binding.userArc.max = 49
                                 binding.userArc.progress = userDetails.tokenAmount
+                                binding.tierImg.setImageResource(R.drawable.bronze)
                             }
                             in 50..199 -> {
                                 binding.progressStart.text = "50"
                                 binding.progressEnd.text = "199"
                                 binding.userArc.max = 150
                                 binding.userArc.progress = userDetails.tokenAmount - 50
+                                binding.tierImg.setImageResource(R.drawable.silver)
                             }
                             in 200..499 -> {
                                 binding.progressStart.text = "200"
                                 binding.progressEnd.text = "499"
                                 binding.userArc.max = 300
                                 binding.userArc.progress = userDetails.tokenAmount - 200
+                                binding.tierImg.setImageResource(R.drawable.gold)
                             }
                             in 500..1000 -> {
                                 binding.progressStart.text = "500"
                                 binding.progressEnd.text = "1000"
                                 binding.userArc.max = 501
                                 binding.userArc.progress = userDetails.tokenAmount - 500
+                                binding.tierImg.setImageResource(R.drawable.diamond)
                             }
                         }
-                        binding.userArc.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                            override fun onProgressChanged(seekBar: SeekBar?, p1: Int, p2: Boolean) {
-                                val value = seekBar?.progress
-                                binding.currentProgress.text = userDetails.tokenAmount.toString()
-                                if (value != 0) {
-                                    val cur = seekBar!!.width / seekBar.max
-                                    binding.currentProgress.x = (cur * value!!).toFloat() + 10
-                                }
-                                binding.currentProgress.y = seekBar?.pivotY!! + 10
-                                Log.d(
-                                    "Pos",
-                                    binding.currentProgress.x.toString() + ": " + seekBar!!.width + ":" + seekBar.x
-                                )
-                            }
-                            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-                            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-                        })
+                        binding.currentProgress.text = userDetails.tokenAmount.toString()
                     }
                     binding.userArc.isEnabled = false
 
@@ -153,10 +147,8 @@ class UserDetailActivity : AppCompatActivity() {
                         binding.userRepositoryList.layoutManager = LinearLayoutManager(applicationContext)
                         binding.userRepositoryList.visibility = View.VISIBLE
                     } else {
-
-                        binding.userForest.visibility = View.GONE
                         binding.userRepos.visibility = View.GONE
-
+                        binding.userForest.visibility = View.GONE
                     }
 
                 } else {
@@ -174,27 +166,31 @@ class UserDetailActivity : AppCompatActivity() {
 
                 // 실제 데이터 왔는지 확인    왔으면 깃허브 프로필 이미지, githubId, 사용자의 깃허브 랭킹 commit, issue pr, comment등을 보여줌
                 if (userDetails.githubId != null && userDetails.commits != null && userDetails.issues != null && userDetails.profileImage != null &&
-                    userDetails.pullRequests != null && userDetails.review != null
+                    userDetails.pullRequests != null && userDetails.reviews != null
                 ) {
+                    Log.d("userDetails", "$userDetails")
                     if (!this@UserDetailActivity.isFinishing) {
                         Glide.with(binding.githubProfile).load(userDetails.profileImage)
                             .into(binding.githubProfile)
                     }
+                    if(userDetails.rank != null) {
+                        binding.userTotalRanking.text = userDetails.rank.toString()
+                    }
 
                     binding.userId.text = userDetails.githubId
-                    val chipCommit = Chip(applicationContext)
+                    val chipCommit = Chip(this@UserDetailActivity)
                     chipCommit.text = "Commit ${userDetails.commits}"
 
-                    val chipIssues = Chip(applicationContext)
+                    val chipIssues = Chip(this@UserDetailActivity)
                     chipIssues.text = "Issues ${userDetails.issues}"
 
-                    val chipPR = Chip(applicationContext)
+                    val chipPR = Chip(this@UserDetailActivity)
                     chipPR.text = "PR ${userDetails.pullRequests}"
 
-                    val chipComment = Chip(applicationContext)
-                    chipComment.text = "Comments ${userDetails.review}"
+                    val chipComment = Chip(this@UserDetailActivity)
+                    chipComment.text = "Comments ${userDetails.reviews}"
 
-                    binding.userContribute.apply {
+                    binding.userStat.apply {
                         addView(chipCommit)
                         addView(chipIssues)
                         addView(chipPR)
@@ -232,23 +228,7 @@ class UserDetailActivity : AppCompatActivity() {
                                 binding.userArc.progress = userDetails.tokenAmount - 500
                             }
                         }
-                        binding.userArc.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                            override fun onProgressChanged(seekBar: SeekBar?, p1: Int, p2: Boolean) {
-                                val value = seekBar?.progress
-                                binding.currentProgress.text = userDetails.tokenAmount.toString()
-                                if (value != 0) {
-                                    val cur = seekBar!!.width / seekBar.max
-                                    binding.currentProgress.x = (cur * value!!).toFloat() + 10
-                                }
-                                binding.currentProgress.y = seekBar?.pivotY!! + 10
-                                Log.d(
-                                    "Pos",
-                                    binding.currentProgress.x.toString() + ": " + seekBar!!.width + ":" + seekBar.x
-                                )
-                            }
-                            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-                            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-                        })
+                        binding.currentProgress.text = userDetails.tokenAmount.toString()
                     }
                     binding.userArc.isEnabled = false
 
@@ -263,10 +243,8 @@ class UserDetailActivity : AppCompatActivity() {
                         binding.userRepositoryList.layoutManager = LinearLayoutManager(applicationContext)
                         binding.userRepositoryList.visibility = View.VISIBLE
                     } else {
-
-                        binding.userForest.visibility = View.GONE
                         binding.userRepos.visibility = View.GONE
-
+                        binding.userForest.visibility = View.GONE
                     }
 
                 } else {

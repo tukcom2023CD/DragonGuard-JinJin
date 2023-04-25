@@ -83,7 +83,7 @@ class RegistOrgActivity : AppCompatActivity() {
                     registOrg(name, orgType, orgEmail)
                 }
             } else {
-//                Toast.makeText(applicationContext, "$name 등록 완료! id = ${result.id} ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "$name 등록 완료!", Toast.LENGTH_SHORT).show()
                 val intent = Intent(applicationContext, MenuActivity::class.java)
                 intent.putExtra("token", token)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

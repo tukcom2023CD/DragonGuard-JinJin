@@ -315,7 +315,7 @@
                 android:paddingVertical="5dp"
                 android:weightSum="2">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/look_ranking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -328,7 +328,7 @@
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/repo_compare"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

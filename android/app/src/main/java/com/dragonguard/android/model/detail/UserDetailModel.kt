@@ -2,7 +2,7 @@ package com.dragonguard.android.model.detail
 
 data class UserDetailModel(
     val authStep: String?,
-    val review: Int?,
+    val reviews: Int?,
     val commits: Int?,
     val gitOrganizations: List<String>?,
     val githubId: String?,

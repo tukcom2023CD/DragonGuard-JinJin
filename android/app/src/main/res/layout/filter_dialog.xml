@@ -322,7 +322,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.75" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/filter_cancel"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -337,7 +337,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.5" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/filter_choose"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

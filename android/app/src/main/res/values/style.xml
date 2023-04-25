@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@color/white</item> <!-- 배경 색상 -->
+        <item name="colorPrimaryDark">@color/white</item> <!-- 상태바 색상 -->
+        <item name="android:windowLightStatusBar" tools:targetApi="33">true</item> <!-- 상태바 아이콘 색상 -->
+    </style>
+</resources>
