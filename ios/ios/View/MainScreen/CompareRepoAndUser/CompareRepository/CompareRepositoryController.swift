@@ -268,16 +268,19 @@ extension CompareRepositoryController : UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompareRepoCollectionViewCell.identifier, for: indexPath) as? CompareRepoCollectionViewCell ?? CompareRepoCollectionViewCell()
         
-        let repo1Info: [Double] = [self.firstRepo?.statistics.additionStats.average ?? 0, Double(self.firstRepo?.languagesStats.min ?? 0), self.firstRepo?.statistics.deletionStats.average ?? 0]
-        let repo2Info: [Double] = [self.secondRepo?.statistics.additionStats.average ?? 0, Double(self.secondRepo?.languagesStats.min ?? 0), self.secondRepo?.statistics.deletionStats.average ?? 0]
+        let repo1Info: [Double] = [self.firstRepo?.statistics.additionStats.average ?? 0, Double(self.firstRepo?.languagesStats.average ?? 0), self.firstRepo?.statistics.deletionStats.average ?? 0]
+        let repo2Info: [Double] = [self.secondRepo?.statistics.additionStats.average ?? 0, Double(self.secondRepo?.languagesStats.average ?? 0), self.secondRepo?.statistics.deletionStats.average ?? 0]
+        
         let repo1Language: [String] = self.firstRepo?.languages.language ?? []
         var repo1LanguagesCount: [Double] = []
+        
         for count in self.firstRepo?.languages.count ?? []{
             repo1LanguagesCount.append(Double(count))
         }
         
         let repo2Language: [String] = self.secondRepo?.languages.language ?? []
         var repo2LanguagesCount: [Double] = []
+        
         for count in self.secondRepo?.languages.count ?? []{
             repo2LanguagesCount.append(Double(count))
         }
