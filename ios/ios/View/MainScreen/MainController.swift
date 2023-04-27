@@ -10,7 +10,7 @@ import SnapKit
 import RxSwift
 
 final class MainController: UIViewController {
-    private let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
+    private let indexBtns = ["전체 사용자 랭킹", "조직내 나의 랭킹", "랭킹 보러가기", "Repository 비교"]
     private let deviceWidth = UIScreen.main.bounds.width
     private let deviceHeight = UIScreen.main.bounds.height
     private let viewModel = MainViewModel()

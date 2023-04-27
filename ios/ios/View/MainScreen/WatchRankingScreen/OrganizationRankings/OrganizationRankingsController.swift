@@ -18,6 +18,8 @@ final class OrganizationRankingsController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        self.navigationItem.title = "조직 관련 랭킹들"
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
         addUIToView()
     }
     
