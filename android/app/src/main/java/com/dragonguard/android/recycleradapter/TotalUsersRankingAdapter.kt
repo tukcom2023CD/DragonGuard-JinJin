@@ -27,7 +27,7 @@ class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankings
         private val contribution : TextView = itemView.findViewById(R.id.ranker_contribution)
 
         fun bind(data: TotalUsersRankingsModel) {
-            if(ranking.text.isNullOrEmpty() && githubId.text.isNullOrEmpty() && contribution.text.isNullOrEmpty()) {
+            if(data.githubId != null && data.ranking != null && data.tokens !=null) {
                 ranking.text = data.ranking.toString()
                 githubId.text = data.githubId
 //                Toast.makeText(context, "${data.tokens}", Toast.LENGTH_SHORT).show()
