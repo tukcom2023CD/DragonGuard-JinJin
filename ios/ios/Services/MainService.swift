@@ -56,7 +56,7 @@ final class MainService{
                                                  tokenAmount: data.tokenAmount ?? -1,
                                                  organization: data.organization ?? "UnKnown")
                             
-                            if info.profileImage != nil && info.tokenAmount > -1 && info.tier != "" {
+                            if info.profileImage != "" && info.tokenAmount > -1 && info.tier != "" {
                                 timer.invalidate()
                                 observer.onNext(info)
                             }
