@@ -1,7 +1,7 @@
 package com.dragonguard.backend.commit.mapper;
 
-import com.dragonguard.backend.commit.dto.request.CommitScrapingRequest;
-import com.dragonguard.backend.commit.dto.response.CommitScrapingResponse;
+import com.dragonguard.backend.contribution.dto.request.CommitScrapingRequest;
+import com.dragonguard.backend.contribution.dto.response.CommitScrapingResponse;
 import com.dragonguard.backend.commit.entity.Commit;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +20,6 @@ public class CommitMapper {
                 .amount(commitScrapingResponse.getCommitNum())
                 .year(LocalDate.now().getYear())
                 .githubId(commitScrapingResponse.getGithubId())
-                .build();
-    }
-
-    public CommitScrapingRequest toRequest(String githubId) {
-        return CommitScrapingRequest.builder()
-                .githubId(githubId)
-                .year(LocalDate.now().getYear())
                 .build();
     }
 }

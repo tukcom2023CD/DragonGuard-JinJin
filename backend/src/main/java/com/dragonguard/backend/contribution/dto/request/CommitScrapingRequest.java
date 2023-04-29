@@ -1,4 +1,4 @@
-package com.dragonguard.backend.commit.dto.request;
+package com.dragonguard.backend.contribution.dto.request;
 
 import lombok.*;
 

@@ -5,6 +5,7 @@ import com.dragonguard.backend.blockchain.entity.ContributeType;
 import com.dragonguard.backend.blockchain.service.BlockchainService;
 import com.dragonguard.backend.commit.entity.Commit;
 import com.dragonguard.backend.commit.service.CommitService;
+import com.dragonguard.backend.contribution.service.ContributionService;
 import com.dragonguard.backend.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
@@ -47,6 +48,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
     private final CommitService commitService;
+    private final ContributionService contributionService;
     private final BlockchainService blockchainService;
     private final AuthService authService;
     private final OrganizationRepository organizationRepository;
@@ -72,6 +74,7 @@ public class MemberService {
         Member member = memberRepository.findMemberByGithubId(githubId)
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, role, authStep)));
         kafkaContributionProducer.send(new KafkaContributionRequest(member.getGithubId()));
+        kafkaRepositoryProducer.send();
         return member;
     }
 
@@ -262,6 +265,6 @@ public class MemberService {
     }
 
     public void getContributionSumByScraping(String githubId) {
-        commitService.scrapingCommits(githubId);
+        contributionService.scrapingCommits(githubId);
     }
 }

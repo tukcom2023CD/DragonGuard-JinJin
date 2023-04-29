@@ -17,7 +17,7 @@ public class KafkaTopicConfig {
     @Bean
     public NewTopic commitTopic() {
         return TopicBuilder
-                .name("gitrank.to.scrape.commit")
+                .name("gitrank.to.scrape.contribution")
                 .build();
     }
 

@@ -51,6 +51,8 @@ public class BlockchainService {
             request.setAmount(BigInteger.valueOf(num));
         }
 
+        if (request.getAmount().equals(BigInteger.ZERO)) return;
+
         transactionService.transfer(request);
         BigInteger amount = transactionService.balanceOf(request.getAddress());
 

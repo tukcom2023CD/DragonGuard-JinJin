@@ -1,7 +1,5 @@
-package com.dragonguard.backend.commit.messagequeue;
+package com.dragonguard.backend.contribution.messagequeue;
 
-import com.dragonguard.backend.commit.dto.response.CommitScrapingResponse;
-import com.dragonguard.backend.commit.service.CommitService;
 import com.dragonguard.backend.member.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -20,11 +18,11 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaCommitConsumer {
+public class KafkaContributionConsumer {
 
     private final MemberService memberService;
 
-    @KafkaListener(topics = "gitrank.to.backend.commit", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.contribution", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         Map<String, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();

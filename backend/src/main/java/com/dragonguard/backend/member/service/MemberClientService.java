@@ -1,6 +1,6 @@
 package com.dragonguard.backend.member.service;
 
-import com.dragonguard.backend.commit.dto.response.CommitScrapingResponse;
+import com.dragonguard.backend.contribution.dto.response.CommitScrapingResponse;
 import com.dragonguard.backend.commit.service.CommitService;
 import com.dragonguard.backend.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
