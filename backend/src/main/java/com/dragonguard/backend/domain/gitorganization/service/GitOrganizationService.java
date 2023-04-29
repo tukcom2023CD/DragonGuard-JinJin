@@ -25,10 +25,10 @@ public class GitOrganizationService {
 
     @Transactional
     public void saveGitOrganizations(Set<String> gitOrganizationNames, Member member) {
-        List<GitOrganization> gitOrganizations = gitOrganizationNames.stream()
+        Set<GitOrganization> gitOrganizations = gitOrganizationNames.stream()
                 .filter(name -> !gitOrganizationRepository.existsByName(name))
                 .map(name -> gitOrganizationMapper.toEntity(name, member))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         gitOrganizationRepository.saveAll(gitOrganizations);
     }

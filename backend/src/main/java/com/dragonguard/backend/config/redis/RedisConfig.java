@@ -17,6 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.Duration;
+import java.util.Objects;
 
 
 /**
@@ -57,7 +58,7 @@ public class RedisConfig {
 
     @Scheduled(fixedRate = 1000 * 60 * 60 * 3) // 3시간
     public void evictAll() {
-        cacheManager(redisConnectionFactory()).getCacheNames().stream()
-                .forEach(cacheName -> cacheManager(redisConnectionFactory()).getCache(cacheName).clear());
+        cacheManager(redisConnectionFactory()).getCacheNames()
+                .forEach(cacheName -> Objects.requireNonNull(cacheManager(redisConnectionFactory()).getCache(cacheName)).clear());
     }
 }

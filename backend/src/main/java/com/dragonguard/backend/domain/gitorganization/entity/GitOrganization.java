@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author 김승진
@@ -37,5 +38,18 @@ public class GitOrganization extends BaseTime {
 
     public void addGitOrganizationMember(Member member) {
         this.gitOrganizationMembers.add(new GitOrganizationMember(this, member));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GitOrganization that = (GitOrganization) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
