@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.gitrepomember.mapper;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
-import com.dragonguard.backend.domain.gitrepomember.entity.Contribution;
+import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoContribution;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.member.entity.Member;
 import org.springframework.stereotype.Component;
@@ -17,19 +17,19 @@ public class GitRepoMemberMapper {
 
     public GitRepoMember toEntity(GitRepoMemberResponse dto, Member member, GitRepo gitRepo) {
         return GitRepoMember.builder()
-                .contribution(new Contribution(dto.getCommits(), dto.getAdditions(), dto.getDeletions()))
+                .gitRepoContribution(new GitRepoContribution(dto.getCommits(), dto.getAdditions(), dto.getDeletions()))
                 .gitRepo(gitRepo)
                 .member(member)
                 .build();
     }
 
     public GitRepoMemberResponse toResponse(GitRepoMember gitRepoMember) {
-        Contribution contribution = gitRepoMember.getContribution();
+        GitRepoContribution gitRepoContribution = gitRepoMember.getGitRepoContribution();
         return GitRepoMemberResponse.builder()
                 .githubId(gitRepoMember.getMember().getGithubId())
-                .additions(contribution.getAdditions())
-                .deletions(contribution.getDeletions())
-                .commits(contribution.getCommits())
+                .additions(gitRepoContribution.getAdditions())
+                .deletions(gitRepoContribution.getDeletions())
+                .commits(gitRepoContribution.getCommits())
                 .build();
     }
 }

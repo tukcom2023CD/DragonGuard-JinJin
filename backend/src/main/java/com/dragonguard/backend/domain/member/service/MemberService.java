@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -104,7 +105,10 @@ public class MemberService {
                 + member.getPullRequestSumWithRelation()
                 + member.getIssueSumWithRelation();
 
-        if (sumWithoutReviews > contributions) throw new IllegalContributionException();
+        if (sumWithoutReviews > contributions) {
+            member.deleteAllContributions();
+            return;
+        }
 
         member.updateSumOfReviews(contributions - sumWithoutReviews);
 
@@ -125,7 +129,6 @@ public class MemberService {
     public void updateContributions() {
         Member member = getLoginUserWithDatabase();
         getContributionSumByScraping(member.getGithubId());
-        memberClientService.addMemberContribution(member);
         kafkaContributionProducer.send(new KafkaContributionRequest(member.getGithubId()));
         if (!member.isWallAddressExist()) return;
         transactionAndUpdateTier(member);
@@ -176,44 +179,64 @@ public class MemberService {
         member.updateWalletAddress(walletRequest.getWalletAddress());
     }
 
+    @Transactional
     public void setTransaction(Member member) {
 
-        int commit = member.getCommitSumWithRelation();
-        int issue = member.getIssueSumWithRelation();
-        int pullRequest = member.getPullRequestSumWithRelation();
-        int review = member.getSumOfReviews();
+        Optional<Integer> commit = member.getSumOfCommits();
+        Optional<Integer> issue = member.getSumOfIssues();
+        Optional<Integer> pullRequest = member.getSumOfPullRequests();
+        Optional<Integer> review = member.getSumOfReviews();
 
         String walletAddress = member.getWalletAddress();
         String githubId = member.getGithubId();
 
-        if (commit > 0) {
-            blockchainService.setTransaction(
-                    new ContractRequest(walletAddress,
-                            ContributeType.COMMIT.toString(),
-                            BigInteger.valueOf(commit),
-                            githubId), member);
-        }
-        if (issue > 0) {
-            blockchainService.setTransaction(
-                    new ContractRequest(walletAddress,
-                            ContributeType.ISSUE.toString(),
-                            BigInteger.valueOf(issue),
-                            githubId), member);
-        }
-        if (pullRequest > 0) {
-            blockchainService.setTransaction(
-                    new ContractRequest(walletAddress,
-                            ContributeType.PULL_REQUEST.toString(),
-                            BigInteger.valueOf(pullRequest),
-                            githubId), member);
-        }
-        if (review > 0) {
-            blockchainService.setTransaction(
-                    new ContractRequest(walletAddress,
-                            ContributeType.CODE_REVIEW.toString(),
-                            BigInteger.valueOf(review),
-                            githubId), member);
-        }
+        commit.ifPresent(
+                c -> {
+                    if (c <= 0) {
+                        return;
+                    }
+                    blockchainService.setTransaction(
+                            new ContractRequest(walletAddress,
+                                    ContributeType.COMMIT.toString(),
+                                    BigInteger.valueOf(c),
+                                    githubId), member);
+                });
+
+        issue.ifPresent(
+                i -> {
+                    if (i <= 0) {
+                        return;
+                    }
+                    blockchainService.setTransaction(
+                            new ContractRequest(walletAddress,
+                                    ContributeType.ISSUE.toString(),
+                                    BigInteger.valueOf(i),
+                                    githubId), member);
+                });
+
+        pullRequest.ifPresent(
+                pr -> {
+                    if (pr <= 0) {
+                        return;
+                    }
+                    blockchainService.setTransaction(
+                            new ContractRequest(walletAddress,
+                                    ContributeType.PULL_REQUEST.toString(),
+                                    BigInteger.valueOf(pr),
+                                    githubId), member);
+                });
+
+        review.ifPresent(
+                rv -> {
+                    if (rv <= 0) {
+                        return;
+                    }
+                    blockchainService.setTransaction(
+                            new ContractRequest(walletAddress,
+                                    ContributeType.CODE_REVIEW.toString(),
+                                    BigInteger.valueOf(rv),
+                                    githubId), member);
+                });
     }
 
     public List<MemberRankResponse> getMemberRankingByOrganization(Long organizationId, Pageable pageable) {
@@ -231,8 +254,9 @@ public class MemberService {
 
     @Transactional
     public Member scrapeAndGetSavedMember(String githubId, Role role, AuthStep authStep) {
+        Member member = saveAndRequestClient(githubId, role, authStep);
         getContributionSumByScraping(githubId);
-        return saveAndRequestClient(githubId, role, authStep);
+        return member;
     }
 
     @Transactional
@@ -249,14 +273,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void initMember() {
-        memberRepository.findAll().stream()
-                .map(member -> scrapeAndGetSavedMember(member.getGithubId(), Role.ROLE_ADMIN, AuthStep.GITHUB_ONLY))
-                .forEach(m -> m.updateAuthStep(AuthStep.GITHUB_ONLY));
-    }
-
-    @Transactional
-    public void updateBlockchains() {
+    public void updateBlockchain() {
         transactionAndUpdateTier(getLoginUserWithDatabase());
     }
 
@@ -268,5 +285,9 @@ public class MemberService {
 
     public void getContributionSumByScraping(String githubId) {
         contributionService.scrapingCommits(githubId);
+    }
+
+    public List<Member> getAll() {
+        return memberRepository.findAll();
     }
 }

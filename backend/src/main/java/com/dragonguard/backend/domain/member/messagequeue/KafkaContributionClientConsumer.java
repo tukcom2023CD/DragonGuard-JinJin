@@ -24,7 +24,7 @@ public class KafkaContributionClientConsumer {
     private final MemberRepository memberRepository;
 
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.contribution", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.contribution.client", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         Map<String, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
@@ -41,8 +41,7 @@ public class KafkaContributionClientConsumer {
         String githubId = (String) map.get("githubId");
         Member member = memberRepository.findMemberByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
 
-        memberService.getContributionSumByScraping(githubId);
         memberClientService.addMemberContribution(member);
-        memberService.updateBlockchains();
+        memberService.transactionAndUpdateTier(member);
     }
 }

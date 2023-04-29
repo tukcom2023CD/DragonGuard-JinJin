@@ -11,10 +11,8 @@ import javax.persistence.Embeddable;
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Contribution {
+public class GitRepoContribution {
     private Integer commits;
-
     private Integer additions;
-
     private Integer deletions;
 }

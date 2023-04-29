@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.commit.mapper;
 
-import com.dragonguard.backend.domain.contribution.dto.response.CommitScrapingResponse;
+import com.dragonguard.backend.domain.contribution.dto.response.ContributionScrapingResponse;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +14,11 @@ import java.time.LocalDate;
 @Component
 public class CommitMapper {
 
-    public Commit toEntity(CommitScrapingResponse commitScrapingResponse) {
+    public Commit toEntity(ContributionScrapingResponse contributionScrapingResponse) {
         return Commit.builder()
-                .amount(commitScrapingResponse.getCommitNum())
+                .amount(contributionScrapingResponse.getCommitNum())
                 .year(LocalDate.now().getYear())
-                .githubId(commitScrapingResponse.getGithubId())
+                .githubId(contributionScrapingResponse.getGithubId())
                 .build();
     }
 }

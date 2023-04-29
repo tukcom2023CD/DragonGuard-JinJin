@@ -23,7 +23,7 @@ public class OrganizationRepoClient implements GithubClient<MemberClientRequest,
     private final GithubProperties githubProperties;
     private final WebClient webClient;
     private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";
-    private static final String USER_AGENT = "SPRING BOOT WEB CLIENT";
+    private static final String USER_AGENT = "GITRANK WEB CLIENT";
 
     public OrganizationRepoClient(GithubProperties githubProperties) {
         this.githubProperties = githubProperties;

@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 @Component
 @RequiredArgsConstructor
 @DependsOn("blockchainConfig")
-public class BlockchainDeployInit {
+public class BlockchainDeploy {
     private final TransactionService transactionService;
 
     @PostConstruct

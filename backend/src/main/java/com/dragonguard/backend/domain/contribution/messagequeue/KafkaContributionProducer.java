@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.contribution.messagequeue;
 
-import com.dragonguard.backend.domain.contribution.dto.request.CommitScrapingRequest;
+import com.dragonguard.backend.domain.contribution.dto.request.ContributionScrapingRequest;
 import com.dragonguard.backend.util.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaContributionProducer implements KafkaProducer<CommitScrapingRequest> {
+public class KafkaContributionProducer implements KafkaProducer<ContributionScrapingRequest> {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void send(CommitScrapingRequest request) {
+    public void send(ContributionScrapingRequest request) {
         kafkaTemplate.send("gitrank.to.scrape.contribution", "commit", request);
     }
 }

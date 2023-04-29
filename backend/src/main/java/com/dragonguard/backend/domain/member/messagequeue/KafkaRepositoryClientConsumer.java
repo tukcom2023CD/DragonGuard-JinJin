@@ -22,7 +22,7 @@ public class KafkaRepositoryClientConsumer {
     private final MemberRepository memberRepository;
 
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.repository", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.repository.client", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         Map<String, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();

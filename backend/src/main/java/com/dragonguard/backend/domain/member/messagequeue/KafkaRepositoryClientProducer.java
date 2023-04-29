@@ -13,6 +13,6 @@ public class KafkaRepositoryClientProducer implements KafkaProducer<KafkaReposit
 
     @Override
     public void send(KafkaRepositoryRequest request) {
-        kafkaTemplate.send("gitrank.to.backend.repository", "repository", request);
+        kafkaTemplate.send("gitrank.to.backend.repository.client", "repository", request);
     }
 }

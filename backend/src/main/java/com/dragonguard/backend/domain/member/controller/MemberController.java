@@ -37,14 +37,14 @@ public class MemberController {
     }
 
     @PostMapping("/contributions")
-    public ResponseEntity<Void> updateContributions() {
+    public ResponseEntity<Void> updateContribution() {
         memberService.updateContributions();
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/blockchains")
-    public ResponseEntity<Void> updateBlockchains() {
-        memberService.updateBlockchains();
+    public ResponseEntity<Void> updateBlockchain() {
+        memberService.updateBlockchain();
         return ResponseEntity.ok().build();
     }
 

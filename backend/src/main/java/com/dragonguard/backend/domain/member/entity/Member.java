@@ -4,7 +4,6 @@ import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
 import com.dragonguard.backend.domain.issue.entity.Issue;
-import com.dragonguard.backend.domain.member.exception.TierNoneMatchException;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
@@ -20,6 +19,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -86,16 +86,16 @@ public class Member extends BaseTime {
 
     private Integer sumOfReviews;
 
-    @Formula("(SELECT sum(c.amount) FROM commit c WHERE c.member_id = id)")
+    @Formula("(SELECT IFNULL(sum(c.amount), 0) FROM commit c WHERE c.member_id = id)")
     private Integer sumOfCommits;
 
-    @Formula("(SELECT sum(i.amount) FROM issue i WHERE i.member_id = id)")
+    @Formula("(SELECT IFNULL(sum(i.amount), 0) FROM issue i WHERE i.member_id = id)")
     private Integer sumOfIssues;
 
-    @Formula("(SELECT sum(pr.amount) FROM pull_request pr WHERE pr.member_id = id)")
+    @Formula("(SELECT IFNULL(sum(pr.amount), 0) FROM pull_request pr WHERE pr.member_id = id)")
     private Integer sumOfPullRequests;
 
-    @Formula("(SELECT sum(b.amount) FROM blockchain b WHERE b.member_id = id)")
+    @Formula("(SELECT IFNULL(sum(b.amount), 0) FROM blockchain b WHERE b.member_id = id)")
     private Long sumOfTokens;
 
     @Builder
@@ -146,14 +146,15 @@ public class Member extends BaseTime {
             this.tier = Tier.checkTier(sumOfTokens);
             return;
         }
+        if (blockchains.isEmpty()) {
+            this.tier = Tier.checkTier(0L);
+            return;
+        }
         Long amount = this.blockchains.stream()
                 .map(Blockchain::getAmount)
                 .mapToLong(b -> Long.parseLong(b.toString()))
                 .sum();
-        try {
-            this.tier = Tier.checkTier(amount);
-        } catch (TierNoneMatchException e) {
-        }
+        this.tier = Tier.checkTier(amount);
     }
 
     public void updateWalletAddress(String walletAddress) {
@@ -214,5 +215,28 @@ public class Member extends BaseTime {
             return null;
         }
         return "https://baobab.scope.klaytn.com/account/" + this.walletAddress + "?tabId=txList";
+    }
+
+    public Optional<Integer> getSumOfReviews() {
+        return Optional.ofNullable(sumOfReviews);
+    }
+
+    public Optional<Integer> getSumOfCommits() {
+        return Optional.ofNullable(sumOfCommits);
+    }
+
+    public Optional<Integer> getSumOfIssues() {
+        return Optional.ofNullable(sumOfIssues);
+    }
+
+    public Optional<Integer> getSumOfPullRequests() {
+        return Optional.ofNullable(sumOfPullRequests);
+    }
+
+    public void deleteAllContributions() {
+        this.commits.forEach(Commit::delete);
+        this.issues.forEach(Issue::delete);
+        this.pullRequests.forEach(PullRequest::delete);
+        updateTier();
     }
 }

@@ -11,6 +11,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -36,14 +37,19 @@ public class MemberMapper {
     }
 
     public MemberResponse toResponse(Member member, Integer rank, Long amount, String organization, Integer organizationRank) {
+        Optional<Integer> sumOfCommits = member.getSumOfCommits();
+        Optional<Integer> sumOfIssues = member.getSumOfIssues();
+        Optional<Integer> sumOfPullRequests = member.getSumOfPullRequests();
+        Optional<Integer> sumOfReviews = member.getSumOfReviews();
+
         return MemberResponse.builder()
                 .id(member.getId())
                 .name(member.getName())
                 .githubId(member.getGithubId())
-                .commits(member.getSumOfCommits())
-                .issues(member.getSumOfIssues())
-                .pullRequests(member.getSumOfPullRequests())
-                .reviews(member.getSumOfReviews())
+                .commits(sumOfCommits.orElse(null))
+                .issues(sumOfIssues.orElse(null))
+                .pullRequests(sumOfPullRequests.orElse(null))
+                .reviews(sumOfReviews.orElse(null))
                 .tier(member.getTier())
                 .authStep(member.getAuthStep())
                 .profileImage(member.getProfileImage())
@@ -56,14 +62,19 @@ public class MemberMapper {
     }
 
     public MemberResponse toResponse(Member member, Integer rank, Long amount) {
+        Optional<Integer> sumOfCommits = member.getSumOfCommits();
+        Optional<Integer> sumOfIssues = member.getSumOfIssues();
+        Optional<Integer> sumOfPullRequests = member.getSumOfPullRequests();
+        Optional<Integer> sumOfReviews = member.getSumOfReviews();
+
         return MemberResponse.builder()
                 .id(member.getId())
                 .name(member.getName())
                 .githubId(member.getGithubId())
-                .commits(member.getSumOfCommits())
-                .issues(member.getSumOfIssues())
-                .pullRequests(member.getSumOfPullRequests())
-                .reviews(member.getSumOfReviews())
+                .commits(sumOfCommits.orElse(null))
+                .issues(sumOfIssues.orElse(null))
+                .pullRequests(sumOfPullRequests.orElse(null))
+                .reviews(sumOfReviews.orElse(null))
                 .tier(member.getTier())
                 .authStep(member.getAuthStep())
                 .profileImage(member.getProfileImage())

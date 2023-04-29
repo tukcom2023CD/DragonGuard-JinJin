@@ -35,19 +35,19 @@ public class GitRepoMember extends BaseTime {
     private Member member;
 
     @Embedded
-    private Contribution contribution;
+    private GitRepoContribution gitRepoContribution;
 
     @Builder
-    public GitRepoMember(GitRepo gitRepo, Member member, Contribution contribution) {
+    public GitRepoMember(GitRepo gitRepo, Member member, GitRepoContribution gitRepoContribution) {
         this.gitRepo = gitRepo;
         this.member = member;
-        this.contribution = contribution;
+        this.gitRepoContribution = gitRepoContribution;
     }
 
     public void update(GitRepoMember gitRepoMember) {
         this.gitRepo = gitRepoMember.gitRepo;
         this.member = gitRepoMember.member;
-        this.contribution = gitRepoMember.contribution;
+        this.gitRepoContribution = gitRepoMember.gitRepoContribution;
     }
 
     @Override
@@ -55,11 +55,11 @@ public class GitRepoMember extends BaseTime {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GitRepoMember that = (GitRepoMember) o;
-        return Objects.equals(gitRepo, that.gitRepo) && Objects.equals(member, that.member) && Objects.equals(contribution, that.contribution);
+        return Objects.equals(gitRepo, that.gitRepo) && Objects.equals(member, that.member) && Objects.equals(gitRepoContribution, that.gitRepoContribution);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gitRepo, member, contribution);
+        return Objects.hash(gitRepo, member, gitRepoContribution);
     }
 }

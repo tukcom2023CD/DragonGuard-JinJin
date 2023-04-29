@@ -45,14 +45,14 @@ public class KafkaTopicConfig {
     @Bean
     public NewTopic contributionTopic() {
         return TopicBuilder
-                .name("gitrank.to.backend.contribution")
+                .name("gitrank.to.backend.contribution.client")
                 .build();
     }
 
     @Bean
     public NewTopic repositoryTopic() {
         return TopicBuilder
-                .name("gitrank.to.backend.repository")
+                .name("gitrank.to.backend.repository.client")
                 .build();
     }
 }

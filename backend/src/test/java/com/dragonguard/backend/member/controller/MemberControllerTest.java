@@ -87,7 +87,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회")
     void getMember() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교");
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh");
         given(memberService.getMember()).willReturn(expected);
 
         // when
@@ -185,7 +185,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회 with Jwt")
     void getMemberWithJwt() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "KimSeungjin", "ohksj77", 1000, Tier.PLATINUM, AuthStep.ALL, "https://github.com", 1, 1, 2000L, "한국공학대학교");
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh");
         given(memberService.getMember()).willReturn(expected);
 
         // when

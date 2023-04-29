@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.commit.service;
 
-import com.dragonguard.backend.domain.contribution.dto.response.CommitScrapingResponse;
+import com.dragonguard.backend.domain.contribution.dto.response.ContributionScrapingResponse;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.commit.mapper.CommitMapper;
 import com.dragonguard.backend.domain.commit.repository.CommitRepository;
@@ -17,10 +17,10 @@ public class CommitService {
     private final CommitRepository commitRepository;
     private final CommitMapper commitMapper;
 
-    public void saveCommits(CommitScrapingResponse commitScrapingResponse) {
+    public void saveCommits(ContributionScrapingResponse contributionScrapingResponse) {
         List<Commit> commits
-                = commitRepository.findCommitsByGithubId(commitScrapingResponse.getGithubId());
-        Commit commit = commitMapper.toEntity(commitScrapingResponse);
+                = commitRepository.findCommitsByGithubId(contributionScrapingResponse.getGithubId());
+        Commit commit = commitMapper.toEntity(contributionScrapingResponse);
 
         if (commits.isEmpty()) {
             commitRepository.save(commit);

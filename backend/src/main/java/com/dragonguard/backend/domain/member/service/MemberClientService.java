@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.member.service;
 
-import com.dragonguard.backend.domain.contribution.dto.response.CommitScrapingResponse;
+import com.dragonguard.backend.domain.contribution.dto.response.ContributionScrapingResponse;
 import com.dragonguard.backend.domain.commit.service.CommitService;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
@@ -54,7 +54,7 @@ public class MemberClientService {
         int issueNum = memberIssueClient.requestToGithub(request).getTotal_count();
         int pullRequestNum = memberPullRequestClient.requestToGithub(request).getTotal_count();
 
-        commitService.saveCommits(new CommitScrapingResponse(githubId, commitNum));
+        commitService.saveCommits(new ContributionScrapingResponse(githubId, commitNum));
         issueService.saveIssues(githubId, issueNum, year);
         pullRequestService.savePullRequests(githubId, pullRequestNum, year);
     }

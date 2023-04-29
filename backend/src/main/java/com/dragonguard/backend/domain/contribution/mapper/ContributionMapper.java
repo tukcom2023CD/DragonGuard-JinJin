@@ -1,14 +1,14 @@
 package com.dragonguard.backend.domain.contribution.mapper;
 
-import com.dragonguard.backend.domain.contribution.dto.request.CommitScrapingRequest;
+import com.dragonguard.backend.domain.contribution.dto.request.ContributionScrapingRequest;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
 @Component
 public class ContributionMapper {
-    public CommitScrapingRequest toRequest(String githubId) {
-        return CommitScrapingRequest.builder()
+    public ContributionScrapingRequest toRequest(String githubId) {
+        return ContributionScrapingRequest.builder()
                 .githubId(githubId)
                 .year(LocalDate.now().getYear())
                 .build();

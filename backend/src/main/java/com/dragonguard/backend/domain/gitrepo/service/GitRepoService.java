@@ -144,9 +144,9 @@ public class GitRepoService {
 
     private StatisticsResponse getStatistics(String name) {
         GitRepo gitRepo = getEntityByName(name);
-        List<Integer> commits = gitRepo.getGitRepoMembers().stream().map(g -> g.getContribution().getCommits()).collect(Collectors.toList());
-        List<Integer> additions = gitRepo.getGitRepoMembers().stream().map(g -> g.getContribution().getAdditions()).collect(Collectors.toList());
-        List<Integer> deletions = gitRepo.getGitRepoMembers().stream().map(g -> g.getContribution().getDeletions()).collect(Collectors.toList());
+        List<Integer> commits = gitRepo.getGitRepoMembers().stream().map(g -> g.getGitRepoContribution().getCommits()).collect(Collectors.toList());
+        List<Integer> additions = gitRepo.getGitRepoMembers().stream().map(g -> g.getGitRepoContribution().getAdditions()).collect(Collectors.toList());
+        List<Integer> deletions = gitRepo.getGitRepoMembers().stream().map(g -> g.getGitRepoContribution().getDeletions()).collect(Collectors.toList());
 
         return new StatisticsResponse(
                 commits.isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0) : commits.stream().mapToInt(Integer::intValue).summaryStatistics(),
