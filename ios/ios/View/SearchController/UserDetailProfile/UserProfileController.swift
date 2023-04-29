@@ -8,21 +8,25 @@
 import Foundation
 import UIKit
 import SnapKit
+import RxSwift
 
 // MARK: 검색한 사용자 프로필 상세 조회
 final class UserProfileController: UIViewController{
     private let imageView = UIImageView()
     private var repoList: [String] = []
+    private let disposeBag = DisposeBag()
+    var githubId: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = UIColor(red: 127/255, green: 78/255, blue: 31/255, alpha: 1.0) /* #7f4e1f */
-        imageView.image = UIImage(named: "pomi")?.resize(newWidth: 50)  // sample
-        profileBtn.setTitle("HJ39", for: .normal)
     
-        
         addUIToView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        getData()
     }
     
     override func viewDidLayoutSubviews() {
@@ -32,7 +36,6 @@ final class UserProfileController: UIViewController{
 //                              color2: UIColor(red: 150/255, green: 75/255, blue: 0/255, alpha: 1.0),
 //                              zPosition: -1,
 //                              cornerRadius: 20)
-        
         
     }
     
@@ -228,6 +231,18 @@ final class UserProfileController: UIViewController{
             make.bottom.equalTo(repoView.safeAreaLayoutGuide).offset(-10)
         }
         
+    }
+    
+    private func getData(){
+        MyProfileviewModel.viewModel
+            .getMyProfile(githubId: self.githubId ?? "")
+            .subscribe(onNext: { data in
+                
+                self.profileBtn.setTitle(self.githubId, for: .normal)
+                
+            })
+            .disposed(by: self.disposeBag)
+
     }
     
 }

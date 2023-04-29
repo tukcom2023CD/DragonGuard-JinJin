@@ -12,10 +12,9 @@ import RxSwift
 final class MyProfileService{
     
     // MARK: 자기 자신 정보 받아오는 함수
-    func getMyProfileInfo() -> Observable<MyProfileInfoModel>{
-        let url = APIURL.apiUrl.myProfile(ip: APIURL.ip)
+    func getMyProfileInfo(githubId: String) -> Observable<MyProfileInfoModel>{
+        let url = APIURL.apiUrl.myProfile(ip: APIURL.ip, githubId: githubId)
         let access = UserDefaults.standard.string(forKey: "Access")
-        
         return Observable.create { observer in
          
             AF.request(url,
@@ -28,20 +27,24 @@ final class MyProfileService{
             .responseDecodable(of: MyProfileInfoDecodingModel.self) { response in
                 switch response.result{
                 case .success(let data):
-                    observer.onNext(MyProfileInfoModel(id: data.id,
-                                                       name: data.name,
-                                                       githubId: data.githubId,
-                                                       commits: data.commits,
-                                                       issues: data.issues,
-                                                       pullRequests: data.pullRequests,
-                                                       comments: data.comments,
-                                                       tier: data.tier,
-                                                       authStep: data.authStep,
-                                                       profileImage: data.profileImage,
-                                                       rank: data.rank,
-                                                       organizationRank: data.organizationRank,
-                                                       tokenAmount: data.tokenAmount,
-                                                       organization: data.organization))
+                    print(data)
+                    observer.onNext(MyProfileInfoModel(id: data.id ?? "",
+                                                       name: data.name ?? "",
+                                                       githubId: data.githubId ?? "",
+                                                       commits: data.commits ?? 0,
+                                                       issues: data.issues ?? 0,
+                                                       pullRequests: data.pullRequests ?? 0,
+                                                       comments: data.comments ?? 0,
+                                                       tier: data.tier ?? "",
+                                                       authStep: data.authStep ?? "",
+                                                       profileImage: data.profileImage ?? "",
+                                                       rank: data.rank ?? 0,
+                                                       organizationRank: data.organizationRank ?? 0,
+                                                       tokenAmount: data.tokenAmount ?? 0,
+                                                       organization: data.organization ?? "",
+                                                       gitOrganizations: data.gitOrganizations ?? [],
+                                                       gitRepos: data.gitRepos ?? []))
+                    
                 case .failure(let error):
                     print("getMyProfileInfo error!\n\(error)")
                 }

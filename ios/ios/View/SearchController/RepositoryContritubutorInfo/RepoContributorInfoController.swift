@@ -185,6 +185,7 @@ extension RepoContributorInfoController: UITableViewDelegate, UITableViewDataSou
         for index in 0..<userName.count{
             if index == indexPath.row{
                 let userProfileController = UserProfileController()
+                userProfileController.githubId = userName[indexPath.row]
                 self.navigationController?.pushViewController(userProfileController, animated: true)
             }
         }

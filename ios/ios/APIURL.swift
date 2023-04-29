@@ -187,8 +187,8 @@ final class APIURL{
     }
     
     // MARK: 내 프로필 정보
-    func myProfile(ip: String) -> String{
-        let url = "http://localhost/api/members/me"
+    func myProfile(ip: String, githubId: String) -> String{
+        let url = "http://\(ip)/api/members?githubId=\(githubId)"
         return url
     }
     
