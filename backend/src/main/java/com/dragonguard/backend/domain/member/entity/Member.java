@@ -86,16 +86,16 @@ public class Member extends BaseTime {
 
     private Integer sumOfReviews;
 
-    @Formula("(SELECT IFNULL(sum(c.amount), 0) FROM commit c WHERE c.member_id = id)")
+    @Formula("(SELECT COALESCE(sum(c.amount), 0) FROM commit c WHERE c.member_id = id)")
     private Integer sumOfCommits;
 
-    @Formula("(SELECT IFNULL(sum(i.amount), 0) FROM issue i WHERE i.member_id = id)")
+    @Formula("(SELECT COALESCE(sum(i.amount), 0) FROM issue i WHERE i.member_id = id)")
     private Integer sumOfIssues;
 
-    @Formula("(SELECT IFNULL(sum(pr.amount), 0) FROM pull_request pr WHERE pr.member_id = id)")
+    @Formula("(SELECT COALESCE(sum(pr.amount), 0) FROM pull_request pr WHERE pr.member_id = id)")
     private Integer sumOfPullRequests;
 
-    @Formula("(SELECT IFNULL(sum(b.amount), 0) FROM blockchain b WHERE b.member_id = id)")
+    @Formula("(SELECT COALESCE(sum(b.amount), 0) FROM blockchain b WHERE b.member_id = id)")
     private Long sumOfTokens;
 
     @Builder

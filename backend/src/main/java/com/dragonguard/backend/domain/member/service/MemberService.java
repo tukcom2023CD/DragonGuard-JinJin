@@ -182,49 +182,40 @@ public class MemberService {
     @Transactional
     public void setTransaction(Member member) {
 
-        Optional<Integer> commit = member.getSumOfCommits();
-        Optional<Integer> issue = member.getSumOfIssues();
-        Optional<Integer> pullRequest = member.getSumOfPullRequests();
+        Integer commit = member.getCommitSumWithRelation();
+        Integer issue = member.getIssueSumWithRelation();
+        Integer pullRequest = member.getPullRequestSumWithRelation();
         Optional<Integer> review = member.getSumOfReviews();
 
         String walletAddress = member.getWalletAddress();
         String githubId = member.getGithubId();
 
-        commit.ifPresent(
-                c -> {
-                    if (c <= 0) {
-                        return;
-                    }
-                    blockchainService.setTransaction(
-                            new ContractRequest(walletAddress,
-                                    ContributeType.COMMIT.toString(),
-                                    BigInteger.valueOf(c),
-                                    githubId), member);
-                });
+        if (commit <= 0) {
+            return;
+        }
+        blockchainService.setTransaction(
+                new ContractRequest(walletAddress,
+                        ContributeType.COMMIT.toString(),
+                        BigInteger.valueOf(commit),
+                        githubId), member);
 
-        issue.ifPresent(
-                i -> {
-                    if (i <= 0) {
-                        return;
-                    }
-                    blockchainService.setTransaction(
-                            new ContractRequest(walletAddress,
-                                    ContributeType.ISSUE.toString(),
-                                    BigInteger.valueOf(i),
-                                    githubId), member);
-                });
+        if (issue <= 0) {
+            return;
+        }
+        blockchainService.setTransaction(
+                new ContractRequest(walletAddress,
+                        ContributeType.ISSUE.toString(),
+                        BigInteger.valueOf(issue),
+                        githubId), member);
 
-        pullRequest.ifPresent(
-                pr -> {
-                    if (pr <= 0) {
-                        return;
-                    }
-                    blockchainService.setTransaction(
-                            new ContractRequest(walletAddress,
-                                    ContributeType.PULL_REQUEST.toString(),
-                                    BigInteger.valueOf(pr),
-                                    githubId), member);
-                });
+        if (pullRequest <= 0) {
+            return;
+        }
+        blockchainService.setTransaction(
+                new ContractRequest(walletAddress,
+                        ContributeType.PULL_REQUEST.toString(),
+                        BigInteger.valueOf(pullRequest),
+                        githubId), member);
 
         review.ifPresent(
                 rv -> {
