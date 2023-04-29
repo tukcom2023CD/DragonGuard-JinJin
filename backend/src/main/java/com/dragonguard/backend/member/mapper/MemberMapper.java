@@ -35,12 +35,15 @@ public class MemberMapper {
                 .build();
     }
 
-    public MemberResponse toResponse(Member member, Integer commits, Integer rank, Long amount, String organization, Integer organizationRank) {
+    public MemberResponse toResponse(Member member, Integer rank, Long amount, String organization, Integer organizationRank) {
         return MemberResponse.builder()
                 .id(member.getId())
                 .name(member.getName())
                 .githubId(member.getGithubId())
-                .commits(commits)
+                .commits(member.getSumOfCommits())
+                .issues(member.getSumOfIssues())
+                .pullRequests(member.getSumOfPullRequests())
+                .reviews(member.getSumOfReviews())
                 .tier(member.getTier())
                 .authStep(member.getAuthStep())
                 .profileImage(member.getProfileImage())
@@ -52,20 +55,21 @@ public class MemberMapper {
                 .build();
     }
 
-    public MemberResponse toResponse(Member member, Integer commits, Integer issues, Integer pullRequests, Integer reviews, Integer rank, Long amount) {
+    public MemberResponse toResponse(Member member, Integer rank, Long amount) {
         return MemberResponse.builder()
                 .id(member.getId())
                 .name(member.getName())
                 .githubId(member.getGithubId())
-                .commits(commits)
-                .issues(issues)
-                .pullRequests(pullRequests)
-                .reviews(reviews)
+                .commits(member.getSumOfCommits())
+                .issues(member.getSumOfIssues())
+                .pullRequests(member.getSumOfPullRequests())
+                .reviews(member.getSumOfReviews())
                 .tier(member.getTier())
                 .authStep(member.getAuthStep())
                 .profileImage(member.getProfileImage())
                 .rank(rank)
                 .tokenAmount(amount)
+                .blockchainUrl(member.getBlockchainUrl())
                 .build();
     }
 

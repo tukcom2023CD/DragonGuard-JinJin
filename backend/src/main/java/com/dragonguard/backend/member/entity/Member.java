@@ -210,6 +210,9 @@ public class Member extends BaseTime {
     }
 
     public String getBlockchainUrl() {
+        if (!StringUtils.hasText(this.walletAddress)) {
+            return null;
+        }
         return "https://baobab.scope.klaytn.com/account/" + this.walletAddress + "?tabId=txList";
     }
 }

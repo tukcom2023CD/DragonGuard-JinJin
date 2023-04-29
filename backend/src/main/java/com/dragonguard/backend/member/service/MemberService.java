@@ -143,10 +143,6 @@ public class MemberService {
         if (organizationDetails == null) {
             return memberMapper.toResponse(
                     member,
-                    member.getSumOfIssues(),
-                    member.getSumOfIssues(),
-                    member.getSumOfPullRequests(),
-                    member.getSumOfReviews(),
                     rank,
                     amount);
         }
@@ -156,7 +152,7 @@ public class MemberService {
 
         Integer organizationRank = organizationRepository.findRankingByMemberId(memberId);
 
-        return memberMapper.toResponse(member, member.getSumOfIssues(), rank, amount, organization.getName(), organizationRank);
+        return memberMapper.toResponse(member, rank, amount, organization.getName(), organizationRank);
     }
 
     @Transactional
