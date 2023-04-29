@@ -11,6 +11,7 @@ import WebKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     var window: UIWindow?
+    private let mainService = MainService()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -54,6 +55,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
                 switch response.result{
                 case .success(let data):
                     if data.id != ""{
+                        self.mainService.updateProfile()
                         complete()
                     }
                     else{

@@ -17,6 +17,8 @@ final class MainViewModel {
     func getMyInformation(token: String) -> Observable<MainModel>{
         return Observable<MainModel>.create(){ observer in
             
+            
+            
             self.service.getUserInfo(token: token)
                 .subscribe(onNext: { info in
                     observer.onNext(info)
