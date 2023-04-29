@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -59,6 +60,8 @@ class RepoContributorsActivity : AppCompatActivity() {
     //    repo의 contributors 검색
     fun repoContributors(repoName: String) {
         if(!this@RepoContributorsActivity.isFinishing){
+            Log.d("check", "repoName $repoName")
+            Log.d("check", "token $token")
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
