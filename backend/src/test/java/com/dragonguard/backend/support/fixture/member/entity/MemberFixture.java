@@ -1,9 +1,9 @@
 package com.dragonguard.backend.support.fixture.member.entity;
 
-import com.dragonguard.backend.commit.entity.Commit;
-import com.dragonguard.backend.member.entity.AuthStep;
-import com.dragonguard.backend.member.entity.Member;
-import com.dragonguard.backend.member.entity.Role;
+import com.dragonguard.backend.domain.commit.entity.Commit;
+import com.dragonguard.backend.domain.member.entity.AuthStep;
+import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.entity.Role;
 
 public enum MemberFixture {
     SAMPLE1("Kim", "ohksj77", new Commit(2023, 100, "ohksj77"), "12341234", "https://github", Role.ROLE_USER, AuthStep.ALL);

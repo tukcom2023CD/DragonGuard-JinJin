@@ -1,15 +1,15 @@
 package com.dragonguard.backend.config.security.oauth;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
-import com.dragonguard.backend.member.dto.request.kafka.KafkaContributionRequest;
-import com.dragonguard.backend.member.dto.request.kafka.KafkaRepositoryRequest;
-import com.dragonguard.backend.member.entity.AuthStep;
-import com.dragonguard.backend.member.entity.Member;
-import com.dragonguard.backend.member.entity.Role;
-import com.dragonguard.backend.member.mapper.MemberMapper;
-import com.dragonguard.backend.member.messagequeue.KafkaContributionProducer;
-import com.dragonguard.backend.member.messagequeue.KafkaRepositoryProducer;
-import com.dragonguard.backend.member.repository.MemberRepository;
+import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaContributionRequest;
+import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaRepositoryRequest;
+import com.dragonguard.backend.domain.member.entity.AuthStep;
+import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.entity.Role;
+import com.dragonguard.backend.domain.member.mapper.MemberMapper;
+import com.dragonguard.backend.domain.member.messagequeue.KafkaRepositoryClientProducer;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
+import com.dragonguard.backend.util.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -31,8 +31,8 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
     private final UserDetailsMapper userDetailsMapper;
     private final MemberMapper memberMapper;
-    private final KafkaContributionProducer kafkaContributionProducer;
-    private final KafkaRepositoryProducer kafkaRepositoryProducer;
+    private final KafkaProducer<KafkaContributionRequest> kafkaContributionClientProducer;
+    private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryClientProducer;
 
     @Override
     @Transactional
@@ -43,9 +43,9 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
         Member user = memberRepository.findMemberByGithubId(githubId)
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY)));
-        
-        kafkaContributionProducer.send(new KafkaContributionRequest(githubId));
-        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
+
+        kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
+        kafkaRepositoryClientProducer.send(new KafkaRepositoryRequest(githubId));
 
         user.updateGithubToken(userRequest.getAccessToken().getTokenValue());
 

@@ -1,6 +1,6 @@
 package com.dragonguard.backend.config.init;
 
-import com.dragonguard.backend.blockchain.service.TransactionService;
+import com.dragonguard.backend.domain.blockchain.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;

@@ -1,9 +1,10 @@
 package com.dragonguard.backend.blockchain.controller;
 
-import com.dragonguard.backend.blockchain.dto.response.BlockchainResponse;
-import com.dragonguard.backend.blockchain.entity.ContributeType;
-import com.dragonguard.backend.blockchain.service.BlockchainService;
-import com.dragonguard.backend.blockchain.service.TransactionService;
+import com.dragonguard.backend.domain.blockchain.controller.BlockchainController;
+import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
+import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
+import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
+import com.dragonguard.backend.domain.blockchain.service.TransactionService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,8 @@
 package com.dragonguard.backend.email.controller;
 
-import com.dragonguard.backend.email.dto.response.CheckCodeResponse;
-import com.dragonguard.backend.email.service.EmailService;
+import com.dragonguard.backend.domain.email.controller.EmailController;
+import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
+import com.dragonguard.backend.domain.email.service.EmailService;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;

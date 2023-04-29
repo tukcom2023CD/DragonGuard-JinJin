@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
 from selenium import webdriver
 from config.firefox_config import DRIVER, FIREFOX_OPTS
-from .faust.faust import app, result_topic, contribution_topic, git_repos_topic, issue_topic
+from config.faust import app, result_topic, contribution_topic, git_repos_topic, issue_topic
 import requests, selenium
 
 @app.agent(result_topic)

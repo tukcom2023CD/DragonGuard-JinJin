@@ -1,6 +1,6 @@
 package com.dragonguard.backend.config.blockchain;
 
-import com.dragonguard.backend.blockchain.exception.BlockchainException;
+import com.dragonguard.backend.domain.blockchain.exception.BlockchainException;
 import com.klaytn.caver.Caver;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
 
 /**
  * @author 김승진

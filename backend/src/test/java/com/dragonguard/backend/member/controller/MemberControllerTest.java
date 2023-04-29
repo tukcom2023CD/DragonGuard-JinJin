@@ -1,12 +1,13 @@
 package com.dragonguard.backend.member.controller;
 
+import com.dragonguard.backend.domain.member.controller.MemberController;
 import com.dragonguard.backend.global.IdResponse;
-import com.dragonguard.backend.member.dto.request.WalletRequest;
-import com.dragonguard.backend.member.dto.response.MemberRankResponse;
-import com.dragonguard.backend.member.dto.response.MemberResponse;
-import com.dragonguard.backend.member.entity.AuthStep;
-import com.dragonguard.backend.member.entity.Tier;
-import com.dragonguard.backend.member.service.MemberService;
+import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
+import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
+import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
+import com.dragonguard.backend.domain.member.entity.AuthStep;
+import com.dragonguard.backend.domain.member.entity.Tier;
+import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import com.dragonguard.backend.support.fixture.member.dto.MemberRequestFixture;
 import org.junit.jupiter.api.DisplayName;

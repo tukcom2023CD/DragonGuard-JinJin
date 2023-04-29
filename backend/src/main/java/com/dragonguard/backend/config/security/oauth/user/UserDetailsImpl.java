@@ -1,6 +1,6 @@
 package com.dragonguard.backend.config.security.oauth.user;
 
-import com.dragonguard.backend.member.entity.Member;
+import com.dragonguard.backend.domain.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

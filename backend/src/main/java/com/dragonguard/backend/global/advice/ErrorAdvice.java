@@ -1,8 +1,8 @@
 package com.dragonguard.backend.global.advice;
 
-import com.dragonguard.backend.blockchain.exception.BlockchainException;
-import com.dragonguard.backend.email.exception.EmailException;
-import com.dragonguard.backend.member.exception.*;
+import com.dragonguard.backend.domain.blockchain.exception.BlockchainException;
+import com.dragonguard.backend.domain.email.exception.EmailException;
+import com.dragonguard.backend.domain.member.exception.*;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.core.codec.DecodingException;
