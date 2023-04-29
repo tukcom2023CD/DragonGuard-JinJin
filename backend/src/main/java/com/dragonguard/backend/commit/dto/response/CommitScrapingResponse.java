@@ -11,6 +11,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class CommitScrapingResponse {
-    String githubId;
-    Integer commitNum;
+    private String githubId;
+    private Integer commitNum;
 }

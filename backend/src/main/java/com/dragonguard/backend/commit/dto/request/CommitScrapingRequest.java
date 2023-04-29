@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CommitScrapingRequest {
     @NotEmpty
-    String githubId;
+    private String githubId;
     @NotNull
-    Integer year;
+    private Integer year;
 }

@@ -17,5 +17,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoMemberListClientResponse {
-    List<GitRepoMemberClientResponse> members = new ArrayList<>();
+    private List<GitRepoMemberClientResponse> members = new ArrayList<>();
 }

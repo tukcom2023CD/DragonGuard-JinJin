@@ -17,6 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TwoGitRepoMemberResponse {
-    List<GitRepoMemberResponse> firstResult;
-    List<GitRepoMemberResponse> secondResult;
+    private List<GitRepoMemberResponse> firstResult;
+    private List<GitRepoMemberResponse> secondResult;
 }
