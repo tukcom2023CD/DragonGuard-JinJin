@@ -79,6 +79,9 @@ public class GitRepoService {
             return requestToGithub(gitRepoRequest);
         } else if (gitRepo.get().getGitRepoMembers().isEmpty()) {
             return requestToGithub(gitRepoRequest);
+        } else if (gitRepo.get().getGitRepoMembers().stream().findFirst().isPresent() &&
+                gitRepo.get().getGitRepoMembers().stream().findFirst().get().getGitRepoContribution() == null) {
+            return requestToGithub(gitRepoRequest);
         }
         return gitRepoMemberService.findAllByGitRepo(gitRepo.get()).stream()
                 .map(gitRepoMemberMapper::toResponse)

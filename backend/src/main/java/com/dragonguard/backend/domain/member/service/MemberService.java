@@ -252,7 +252,7 @@ public class MemberService {
 
     @Transactional
     public MemberDetailResponse findMemberDetailByGithubId(String githubId) {
-        Member member = memberRepository.findMemberByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findMemberByGithubId(githubId).orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
         MemberResponse memberResponse = getMemberResponse(member);
         List<GitOrganization> gitOrganizations = gitOrganizationService.findGitOrganizationByGithubId(githubId);
         List<GitRepo> gitRepos = gitRepoRepository.findByGithubId(githubId);
