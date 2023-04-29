@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +24,7 @@ public class GitOrganizationService {
     private final GitOrganizationMapper gitOrganizationMapper;
 
     @Transactional
-    public void saveGitOrganizations(List<String> gitOrganizationNames, Member member) {
+    public void saveGitOrganizations(Set<String> gitOrganizationNames, Member member) {
         List<GitOrganization> gitOrganizations = gitOrganizationNames.stream()
                 .filter(name -> !gitOrganizationRepository.existsByName(name))
                 .map(name -> gitOrganizationMapper.toEntity(name, member))

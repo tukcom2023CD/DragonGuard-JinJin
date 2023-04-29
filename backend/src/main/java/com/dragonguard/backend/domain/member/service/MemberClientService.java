@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -71,35 +72,35 @@ public class MemberClientService {
         String githubToken = member.getGithubToken();
         MemberClientRequest request = new MemberClientRequest(githubId, githubToken, year);
 
-        List<String> memberRepoNames = Arrays.stream(memberRepoClient.requestToGithub(request))
+        Set<String> memberRepoNames = Arrays.stream(memberRepoClient.requestToGithub(request))
                 .map(MemberRepoResponse::getFull_name)
-                .collect(Collectors.toList());
-        List<String> memberOrganizationNames = Arrays.stream(memberOrganizationClient.requestToGithub(request))
+                .collect(Collectors.toSet());
+        Set<String> memberOrganizationNames = Arrays.stream(memberOrganizationClient.requestToGithub(request))
                 .map(MemberOrganizationResponse::getLogin)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         saveGitRepos(memberRepoNames, member);
         gitOrganizationService.saveGitOrganizations(memberOrganizationNames, member);
     }
 
     public void addGitOrganizationRepo(String orgName, Member member) {
-        List<String> repoNames = Arrays.stream(organizationRepoClient.requestToGithub(new MemberClientRequest(orgName, member.getGithubToken(), LocalDate.now().getYear())))
+        Set<String> repoNames = Arrays.stream(organizationRepoClient.requestToGithub(new MemberClientRequest(orgName, member.getGithubToken(), LocalDate.now().getYear())))
                 .map(OrganizationRepoResponse::getFull_name)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         saveGitRepos(repoNames, member);
     }
 
-    public void saveGitRepos(List<String> gitRepoNames, Member member) {
-        List<GitRepo> gitRepos = gitRepoNames.stream()
+    public void saveGitRepos(Set<String> gitRepoNames, Member member) {
+        Set<GitRepo> gitRepos = gitRepoNames.stream()
                 .filter(name -> !gitRepoRepository.existsByName(name))
                 .map(gitRepoMapper::toEntity)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         gitRepoRepository.saveAll(gitRepos);
-        List<GitRepoMember> list = gitRepos.stream()
+        Set<GitRepoMember> list = gitRepos.stream()
                 .map(gr -> gitRepoMemberMapper.toEntity(member, gr))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         gitRepoMemberRepository.saveAll(list);
     }
