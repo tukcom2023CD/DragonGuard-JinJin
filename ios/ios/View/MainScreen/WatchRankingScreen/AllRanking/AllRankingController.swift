@@ -23,7 +23,7 @@ final class AllRankingController: UIViewController{
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = "전체 랭킹"
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
         
     }
     
@@ -106,6 +106,7 @@ extension AllRankingController: UITableViewDelegate, UITableViewDataSource {
     
     // tableview cell이 선택된 경우
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
     

@@ -176,7 +176,13 @@ final class AddOrganizationController: UIViewController{
             .subscribe { id in
                 print("id \(id)")
                 if id != 0 {
-                    self.navigationController?.popToRootViewController(animated: true)
+                    guard let viewControllerStack = self.navigationController?.viewControllers else { return }
+                    
+                    for viewController in viewControllerStack {
+                        if let mainView = viewController as? MainController {
+                            self.navigationController?.popToViewController(mainView, animated: true)
+                        }
+                    }
                 }
             }
             .disposed(by: self.disposeBag)
@@ -205,7 +211,9 @@ final class AddOrganizationController: UIViewController{
         })
         
         self.allStackView.snp.makeConstraints({ make in
-            make.center.equalToSuperview()
+//            make.center.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.top.equalTo(certifiedLabel.snp.bottom).offset(10)
         })
         
         self.doneBtn.snp.makeConstraints({ make in
@@ -218,3 +226,18 @@ final class AddOrganizationController: UIViewController{
     
 }
 
+
+import SwiftUI
+
+struct VCPreViewAddOrganizationController:PreviewProvider {
+    static var previews: some View {
+        AddOrganizationController().toPreview().previewDevice("iPhone 14 Pro")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
+}
+struct VCPreViewAddOrganizationController2:PreviewProvider {
+    static var previews: some View {
+        AddOrganizationController().toPreview().previewDevice("iPad (10th generation)")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
+}
