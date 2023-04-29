@@ -191,10 +191,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun multipleSearchUser() {
         searchUser()
-        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 1000)
         Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 3000)
-        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 5000)
         Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 7000)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 9000)
     }
 
     /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)

@@ -2,6 +2,7 @@ package com.dragonguard.android.recycleradapter
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,7 @@ class UserRepoAdapter (private val datas : List<String>, private val context: Co
                 Intent(context, RepoContributorsActivity::class.java).apply{
                     putExtra("repoName", data)
                     putExtra("token", token)
+                    addFlags(FLAG_ACTIVITY_NEW_TASK)
                 }.run{context.startActivity(this)}
             }
         }

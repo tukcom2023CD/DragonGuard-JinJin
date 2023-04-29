@@ -56,7 +56,9 @@ class AuthEmailActivity : AppCompatActivity() {
                 viewmodel.addOrgMember(orgId, email, token)
             }
             val result = resultDeferred.await()
+            Toast.makeText(applicationContext, result.toString(), Toast.LENGTH_SHORT).show()
             if(result != -1L) {
+                emailAuthId = result
                 setUpCountDownTimer()
                 timer.start()
             }
