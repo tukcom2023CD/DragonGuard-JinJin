@@ -64,8 +64,13 @@ public class GitRepoMemberService {
             GitRepo gitRepoEntity = gitRepoRepository.findByName(gitRepo)
                     .orElseThrow(EntityNotFoundException::new);
 
+            if (gitRepoMemberRepository.existsByGitRepoAndMember(gitRepoEntity, member)) {
+                return null;
+            }
+
             return gitRepoMemberMapper.toEntity(gitRepository, member, gitRepoEntity);
-        }).collect(Collectors.toList());
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+
         gitRepoMemberRepository.saveAll(list);
     }
 
