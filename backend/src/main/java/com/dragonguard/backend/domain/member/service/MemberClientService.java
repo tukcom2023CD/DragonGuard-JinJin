@@ -4,6 +4,10 @@ import com.dragonguard.backend.domain.contribution.dto.response.ContributionScra
 import com.dragonguard.backend.domain.commit.service.CommitService;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
+import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
+import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
+import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
+import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
 import com.dragonguard.backend.domain.issue.service.IssueService;
 import com.dragonguard.backend.domain.member.dto.response.client.*;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
@@ -43,6 +47,8 @@ public class MemberClientService {
     private final CommitService commitService;
     private final IssueService issueService;
     private final PullRequestService pullRequestService;
+    private final GitRepoMemberRepository gitRepoMemberRepository;
+    private final GitRepoMemberMapper gitRepoMemberMapper;
 
     public void addMemberContribution(Member member) {
         int year = LocalDate.now().getYear();
@@ -72,7 +78,7 @@ public class MemberClientService {
                 .map(MemberOrganizationResponse::getLogin)
                 .collect(Collectors.toList());
 
-        saveGitRepos(memberRepoNames);
+        saveGitRepos(memberRepoNames, member);
         gitOrganizationService.saveGitOrganizations(memberOrganizationNames, member);
     }
 
@@ -81,15 +87,20 @@ public class MemberClientService {
                 .map(OrganizationRepoResponse::getFull_name)
                 .collect(Collectors.toList());
 
-        saveGitRepos(repoNames);
+        saveGitRepos(repoNames, member);
     }
 
-    public void saveGitRepos(List<String> gitRepoNames) {
+    public void saveGitRepos(List<String> gitRepoNames, Member member) {
         List<GitRepo> gitRepos = gitRepoNames.stream()
                 .filter(name -> !gitRepoRepository.existsByName(name))
                 .map(gitRepoMapper::toEntity)
                 .collect(Collectors.toList());
 
         gitRepoRepository.saveAll(gitRepos);
+        List<GitRepoMember> list = gitRepos.stream()
+                .map(gr -> gitRepoMemberMapper.toEntity(member, gr))
+                .collect(Collectors.toList());
+
+        gitRepoMemberRepository.saveAll(list);
     }
 }

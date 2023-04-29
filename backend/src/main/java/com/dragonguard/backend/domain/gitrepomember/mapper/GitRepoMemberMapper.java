@@ -23,6 +23,13 @@ public class GitRepoMemberMapper {
                 .build();
     }
 
+    public GitRepoMember toEntity(Member member, GitRepo gitRepo) {
+        return GitRepoMember.builder()
+                .gitRepo(gitRepo)
+                .member(member)
+                .build();
+    }
+
     public GitRepoMemberResponse toResponse(GitRepoMember gitRepoMember) {
         GitRepoContribution gitRepoContribution = gitRepoMember.getGitRepoContribution();
         return GitRepoMemberResponse.builder()

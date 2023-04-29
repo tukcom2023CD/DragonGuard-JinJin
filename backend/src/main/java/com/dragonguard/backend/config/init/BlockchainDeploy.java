@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * @author 김승진
+ * @description 블록체인 스마트 컨트랙트 배포를 위한 클래스
+ */
+
 @Component
 @RequiredArgsConstructor
 @DependsOn("blockchainConfig")

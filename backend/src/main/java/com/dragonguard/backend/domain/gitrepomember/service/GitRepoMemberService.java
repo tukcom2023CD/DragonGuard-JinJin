@@ -76,4 +76,12 @@ public class GitRepoMemberService {
     public GitRepoMember findByNameAndMemberName(String repoName, String memberName) {
         return gitRepoMemberRepository.findByNameAndMemberName(repoName, memberName);
     }
+
+    public void saveAll(List<GitRepo> gitRepos, Member member) {
+        List<GitRepoMember> list = gitRepos.stream()
+                .map(gr -> gitRepoMemberMapper.toEntity(member, gr))
+                .collect(Collectors.toList());
+
+        gitRepoMemberRepository.saveAll(list);
+    }
 }

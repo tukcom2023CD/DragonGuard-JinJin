@@ -26,6 +26,7 @@ public class GitRepo extends BaseTime {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     private Integer closedIssueNum;
