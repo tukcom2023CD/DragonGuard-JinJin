@@ -274,7 +274,8 @@
                 android:orientation="horizontal"
                 android:foregroundGravity="center_vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/user_arc">
+                app:layout_constraintTop_toBottomOf="@+id/user_arc"
+                android:scrollbars="none">
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/user_stat"
@@ -287,11 +288,13 @@
             <LinearLayout
                 android:id="@+id/user_forest"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="250dp"
                 android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/user_inventory"
                 android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/user_inventory">
@@ -299,7 +302,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/user_repository_list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     tools:listitem="@layout/repository_list" />
 
             </LinearLayout>
