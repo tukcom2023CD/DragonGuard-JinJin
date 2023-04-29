@@ -192,7 +192,8 @@ class MainActivity : AppCompatActivity() {
     private fun multipleSearchUser() {
         searchUser()
         Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 1000)
-        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 4000)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 3000)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 5000)
         Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 7000)
     }
 
@@ -289,8 +290,7 @@ class MainActivity : AppCompatActivity() {
     private fun postWalletAddress(address: String) {
 //        Toast.makeText(applicationContext, "address: $address", Toast.LENGTH_SHORT).show()
         if (!addressPost && count<4) {
-            prefs.setPostAddress(true)
-            addressPost = prefs.getPostAddress(true)
+            addressPost = true
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
                 val postwalletDeferred = coroutine.async(Dispatchers.IO) {
