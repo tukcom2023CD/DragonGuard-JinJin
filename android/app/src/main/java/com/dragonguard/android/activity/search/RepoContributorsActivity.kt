@@ -217,10 +217,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
 //    뒤로가기 누르면 화면 전환하게 함
     override fun onBackPressed() {
-        val intent = Intent(applicationContext, SearchActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startActivity(intent)
+        finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
