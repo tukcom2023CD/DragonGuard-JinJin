@@ -34,7 +34,7 @@ class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultMo
 //                Toast.makeText(context, "${repoName.text} 눌림", Toast.LENGTH_SHORT).show()
                 if(type == "USERS") {
                     Intent(context, UserDetailActivity::class.java).apply{
-                        putExtra("githubId", data.id)
+                        putExtra("githubId", data.name)
                         putExtra("token", token)
                     }.run{context.startActivity(this)}
                 } else {

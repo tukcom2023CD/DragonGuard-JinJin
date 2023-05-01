@@ -64,11 +64,11 @@ class UserDetailActivity : AppCompatActivity() {
                 val userDetails = resultDeferred.await()
 
                 // 실제 데이터 왔는지 확인    왔으면 깃허브 프로필 이미지, githubId, 사용자의 깃허브 랭킹 commit, issue pr, comment등을 보여줌
-                if (userDetails.githubId != null && userDetails.commits != null && userDetails.issues != null && userDetails.profileImage != null &&
-                    userDetails.pullRequests != null && userDetails.reviews != null
+                if (userDetails.githubId != null && userDetails.commits != null && userDetails.issues != null &&
+                    userDetails.pullRequests != null
                 ) {
                     Log.d("userDetails", "$userDetails")
-                    if (!this@UserDetailActivity.isFinishing) {
+                    if (!this@UserDetailActivity.isFinishing && userDetails.profileImage != null) {
                         Glide.with(binding.githubProfile).load(userDetails.profileImage)
                             .into(binding.githubProfile)
                     }
@@ -88,7 +88,11 @@ class UserDetailActivity : AppCompatActivity() {
                     chipPR.text = "PR ${userDetails.pullRequests}"
 
                     val chipComment = Chip(this@UserDetailActivity)
-                    chipComment.text = "Comments ${userDetails.reviews}"
+                    if(userDetails.reviews != null) {
+                        chipComment.text = "Comments ${userDetails.reviews.toString()}"
+                    } else {
+                        chipComment.text = "Comments 0"
+                    }
 
                     binding.userStat.apply {
                         addView(chipCommit)
@@ -165,14 +169,15 @@ class UserDetailActivity : AppCompatActivity() {
                 val userDetails = resultDeferred.await()
 
                 // 실제 데이터 왔는지 확인    왔으면 깃허브 프로필 이미지, githubId, 사용자의 깃허브 랭킹 commit, issue pr, comment등을 보여줌
-                if (userDetails.githubId != null && userDetails.commits != null && userDetails.issues != null && userDetails.profileImage != null &&
-                    userDetails.pullRequests != null && userDetails.reviews != null
+                if (userDetails.githubId != null && userDetails.commits != null && userDetails.issues != null &&
+                    userDetails.pullRequests != null
                 ) {
                     Log.d("userDetails", "$userDetails")
-                    if (!this@UserDetailActivity.isFinishing) {
+                    if (!this@UserDetailActivity.isFinishing && userDetails.profileImage != null) {
                         Glide.with(binding.githubProfile).load(userDetails.profileImage)
                             .into(binding.githubProfile)
                     }
+
                     if(userDetails.rank != null) {
                         binding.userTotalRanking.text = userDetails.rank.toString()
                     }
@@ -188,7 +193,11 @@ class UserDetailActivity : AppCompatActivity() {
                     chipPR.text = "PR ${userDetails.pullRequests}"
 
                     val chipComment = Chip(this@UserDetailActivity)
-                    chipComment.text = "Comments ${userDetails.reviews}"
+                    if(userDetails.reviews != null) {
+                        chipComment.text = "Comments ${userDetails.reviews.toString()}"
+                    } else {
+                        chipComment.text = "Comments 0"
+                    }
 
                     binding.userStat.apply {
                         addView(chipCommit)
