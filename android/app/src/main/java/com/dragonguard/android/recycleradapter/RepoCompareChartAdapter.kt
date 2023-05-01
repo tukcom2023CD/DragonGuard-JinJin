@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
+import com.dragonguard.android.databinding.RepoCompareChartBinding
 import com.dragonguard.android.model.compare.RepoStats
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.charts.RadarChart
@@ -21,19 +22,16 @@ import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 //viewpager의 슬라이딩 구현을 위한 adapter
 class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: RepoStats, private val context: Context) :
     RecyclerView.Adapter<RepoCompareChartAdapter.ViewHolder>() {
-
+    private lateinit var binding: RepoCompareChartBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.repo_compare_chart, parent, false)
-        return ViewHolder(view)
+        binding = RepoCompareChartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding.root)
     }
 
     override fun getItemCount(): Int = 3
 
     //리사이클러 뷰의 요소들을 넣어줌
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val radar: RadarChart = itemView.findViewById(R.id.repo_compare_chart)
-        private val pie: PieChart = itemView.findViewById(R.id.repo_compare_language)
         fun bind(data1: RepoStats, data2: RepoStats, position1: Int, context: Context) {
             data1.languages!!
             data1.gitRepo!!
@@ -70,14 +68,14 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
                 dataSet.setDrawValues(false)
                 dataSet.colors = colors
                 val data = PieData(dataSet)
-                pie.setTouchEnabled(false)
-                pie.description.isEnabled = false
-                pie.data = data
-                pie.setDrawEntryLabels(false)
+                binding.repoCompareLanguage.setTouchEnabled(false)
+                binding.repoCompareLanguage.description.isEnabled = false
+                binding.repoCompareLanguage.data = data
+                binding.repoCompareLanguage.setDrawEntryLabels(false)
 //                pie.setEntryLabelColor(Color.BLACK)
-                pie.invalidate()
-                radar.visibility = View.GONE
-                pie.visibility = View.VISIBLE
+                binding.repoCompareLanguage.invalidate()
+                binding.repoCompareChart.visibility = View.GONE
+                binding.repoCompareLanguage.visibility = View.VISIBLE
 
             } else if (position1 % 3 == 2) {
                 val entries = ArrayList<PieEntry>()
@@ -94,14 +92,14 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
                 dataSet.colors = colors
                 dataSet.setDrawValues(false)
                 val data = PieData(dataSet)
-                pie.setTouchEnabled(false)
-                pie.description.isEnabled = false
-                pie.data = data
-                pie.setDrawEntryLabels(false)
-                pie.setEntryLabelColor(Color.BLACK)
-                pie.invalidate()
-                radar.visibility = View.GONE
-                pie.visibility = View.VISIBLE
+                binding.repoCompareLanguage.setTouchEnabled(false)
+                binding.repoCompareLanguage.description.isEnabled = false
+                binding.repoCompareLanguage.data = data
+                binding.repoCompareLanguage.setDrawEntryLabels(false)
+                binding.repoCompareLanguage.setEntryLabelColor(Color.BLACK)
+                binding.repoCompareLanguage.invalidate()
+                binding.repoCompareChart.visibility = View.GONE
+                binding.repoCompareLanguage.visibility = View.VISIBLE
 
             } else {
                 val entries1 = ArrayList<RadarEntry>()
@@ -153,13 +151,13 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
                 dataSets1.add(set1)
                 val data1 = RadarData(dataSets1)
                 data1.addDataSet(set2)
-                radar.setExtraOffsets(0f, 0f, 0f, 0f)
-                radar.animateY(500)
+                binding.repoCompareChart.setExtraOffsets(0f, 0f, 0f, 0f)
+                binding.repoCompareChart.animateY(500)
 
-                radar.xAxis.setAvoidFirstLastClipping(true)
-                radar.scaleX = 1.3f
-                radar.scaleY = 1.3f
-                radar.apply {
+                binding.repoCompareChart.xAxis.setAvoidFirstLastClipping(true)
+                binding.repoCompareChart.scaleX = 1.3f
+                binding.repoCompareChart.scaleY = 1.3f
+                binding.repoCompareChart.apply {
                     setTouchEnabled(false) // 차트 터치 막기
                     description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
                     legend.isEnabled = false // 차트 범례 설정(legend object chart)
@@ -185,11 +183,11 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
                         setDrawLabels(true)
                     }
                 }
-                radar.rotation = 0f
-                radar.data = data1
-                radar.invalidate()
-                pie.visibility = View.GONE
-                radar.visibility = View.VISIBLE
+                binding.repoCompareChart.rotation = 0f
+                binding.repoCompareChart.data = data1
+                binding.repoCompareChart.invalidate()
+                binding.repoCompareLanguage.visibility = View.GONE
+                binding.repoCompareChart.visibility = View.VISIBLE
             }
         }
     }

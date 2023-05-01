@@ -11,23 +11,22 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.search.RepoContributorsActivity
+import com.dragonguard.android.databinding.RepositoryListBinding
 import com.dragonguard.android.model.search.RepoSearchResultModel
 
 class UserRepoAdapter (private val datas : List<String>, private val context: Context, private val token: String) : RecyclerView.Adapter<UserRepoAdapter.ViewHolder>() {
-
+    private lateinit var binding: RepositoryListBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.repository_list,parent,false)
-        return ViewHolder(view)
+        binding = RepositoryListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding.root)
     }
     override fun getItemCount(): Int = datas.size
 
     //리사이클러 뷰의 요소들을 넣어줌
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val repoName: TextView = itemView.findViewById(R.id.repo_name)
-
         //클릭리스너 구현
         fun bind(data: String) {
-            repoName.text = data
+            binding.repoName.text = data
             Log.d("name", "$data.name")
             itemView.setOnClickListener{
 //                Toast.makeText(context, "${repoName.text} 눌림", Toast.LENGTH_SHORT).show()
