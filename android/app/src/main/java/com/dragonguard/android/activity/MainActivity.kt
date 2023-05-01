@@ -324,7 +324,7 @@ class MainActivity : AppCompatActivity() {
                         prefs.setJwtToken("")
                         prefs.setRefreshToken("")
                         prefs.setPostAddress(false)
-                        count = 4
+                        count = 7
                         val intent = Intent(applicationContext, LoginActivity::class.java)
                         intent.putExtra("wallet_address", prefs.getWalletAddress(""))
                         intent.putExtra("token", prefs.getJwtToken(""))
