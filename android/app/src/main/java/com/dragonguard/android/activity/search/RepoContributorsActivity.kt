@@ -64,12 +64,14 @@ class RepoContributorsActivity : AppCompatActivity() {
             Log.d("check", "token $token")
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
-                val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getRepoContributors(repoName, token)
-                }
-                val result = resultDeferred.await()
+                if(!this@RepoContributorsActivity.isFinishing) {
+                    val resultDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getRepoContributors(repoName, token)
+                    }
+                    val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()
-                checkContributors(result)
+                    checkContributors(result)
+                }
             }
         }
     }

@@ -374,35 +374,56 @@ class SearchActivity : AppCompatActivity() {
         Log.d("필터", filterResult.toString())
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            if(type.isNotBlank()) {
-                if(filterResult.toString().isNotEmpty()) {
-                    val resultDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
-                    }
-                    val result = resultDeferred.await()
-                    delay(1000)
-                    if (!checkSearchResult(result)) {
-                        val secondDeferred = coroutine.async(Dispatchers.IO) {
+            if(!this@SearchActivity.isFinishing) {
+                if(type.isNotBlank()) {
+                    if(filterResult.toString().isNotEmpty()) {
+                        val resultDeferred = coroutine.async(Dispatchers.IO) {
                             viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
                         }
-                        val second = secondDeferred.await()
-                        if (checkSearchResult(second)) {
-                            initRecycler()
+                        val result = resultDeferred.await()
+                        delay(1000)
+                        if (!checkSearchResult(result)) {
+                            val secondDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
+                            }
+                            val second = secondDeferred.await()
+                            if (checkSearchResult(second)) {
+                                initRecycler()
+                            } else {
+                                binding.progressBar.visibility = View.GONE
+                            }
                         } else {
-                            binding.progressBar.visibility = View.GONE
+                            initRecycler()
                         }
                     } else {
-                        initRecycler()
+                        val resultDeferred = coroutine.async(Dispatchers.IO) {
+                            viewmodel.getSearchRepoResult(name, count, type, token)
+                        }
+                        val result = resultDeferred.await()
+                        delay(1000)
+                        if (!checkSearchResult(result)) {
+                            val secondDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.getSearchRepoResult(name, count, type, token)
+                            }
+                            val second = secondDeferred.await()
+                            if (checkSearchResult(second)) {
+                                initRecycler()
+                            } else {
+                                binding.progressBar.visibility = View.GONE
+                            }
+                        } else {
+                            initRecycler()
+                        }
                     }
                 } else {
                     val resultDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getSearchRepoResult(name, count, type, token)
+                        viewmodel.getSearchRepoResult(name, count, "REPOSITORIES", token)
                     }
                     val result = resultDeferred.await()
                     delay(1000)
                     if (!checkSearchResult(result)) {
                         val secondDeferred = coroutine.async(Dispatchers.IO) {
-                            viewmodel.getSearchRepoResult(name, count, type, token)
+                            viewmodel.getSearchRepoResult(name, count, "REPOSITORIES", token)
                         }
                         val second = secondDeferred.await()
                         if (checkSearchResult(second)) {
@@ -413,25 +434,6 @@ class SearchActivity : AppCompatActivity() {
                     } else {
                         initRecycler()
                     }
-                }
-            } else {
-                val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getSearchRepoResult(name, count, "REPOSITORIES", token)
-                }
-                val result = resultDeferred.await()
-                delay(1000)
-                if (!checkSearchResult(result)) {
-                    val secondDeferred = coroutine.async(Dispatchers.IO) {
-                        viewmodel.getSearchRepoResult(name, count, "REPOSITORIES", token)
-                    }
-                    val second = secondDeferred.await()
-                    if (checkSearchResult(second)) {
-                        initRecycler()
-                    } else {
-                        binding.progressBar.visibility = View.GONE
-                    }
-                } else {
-                    initRecycler()
                 }
             }
         }

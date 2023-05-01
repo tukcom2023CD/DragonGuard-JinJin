@@ -205,60 +205,62 @@ class MainActivity : AppCompatActivity() {
             count++
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
-                val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getUserInfo(token)
-                }
-                val userInfo = resultDeferred.await()
+                if(!this@MainActivity.isFinishing) {
+                    val resultDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getUserInfo(token)
+                    }
+                    val userInfo = resultDeferred.await()
 //                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
-                if (userInfo.githubId == null) {
-                    if (prefs.getRefreshToken("").isBlank()) {
-                        if (!this@MainActivity.isFinishing && state) {
-                            Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
-                            loginOut = true
-                            prefs.setJwtToken("")
-                            prefs.setRefreshToken("")
-                            prefs.setPostAddress(false)
-                            prefs.setWalletAddress("")
-                            val intent = Intent(applicationContext, LoginActivity::class.java)
-                            intent.putExtra("wallet_address", prefs.getWalletAddress(""))
-                            intent.putExtra("token", prefs.getJwtToken(""))
-                            intent.putExtra("logout", true)
-                            activityResultLauncher.launch(intent)
+                    if (userInfo.githubId == null) {
+                        if (prefs.getRefreshToken("").isBlank()) {
+                            if (!this@MainActivity.isFinishing && state) {
+                                Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
+                                loginOut = true
+                                prefs.setJwtToken("")
+                                prefs.setRefreshToken("")
+                                prefs.setPostAddress(false)
+                                prefs.setWalletAddress("")
+                                val intent = Intent(applicationContext, LoginActivity::class.java)
+                                intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+                                intent.putExtra("token", prefs.getJwtToken(""))
+                                intent.putExtra("logout", true)
+                                activityResultLauncher.launch(intent)
+                            }
+                        } else {
+                            refreshToken()
                         }
                     } else {
-                        refreshToken()
-                    }
-                } else {
-                    if (userInfo.githubId.isNotBlank()) {
-                        binding.userId.text = userInfo.githubId
-                    }
-                    if (userInfo.commits != 0 && userInfo.tier == "SPROUT") {
-                        if (prefs.getWalletAddress("") != "") {
-                            postWalletAddress(prefs.getWalletAddress(""))
+                        if (userInfo.githubId.isNotBlank()) {
+                            binding.userId.text = userInfo.githubId
+                        }
+                        if (userInfo.commits != 0 && userInfo.tier == "SPROUT") {
+                            if (prefs.getWalletAddress("") != "") {
+                                postWalletAddress(prefs.getWalletAddress(""))
+                            } else {
+                                binding.userTier.text = "내 티어 : ${userInfo.tier}"
+                            }
                         } else {
                             binding.userTier.text = "내 티어 : ${userInfo.tier}"
                         }
-                    } else {
-                        binding.userTier.text = "내 티어 : ${userInfo.tier}"
+                        if (userInfo.tokenAmount == null) {
+                            binding.userToken.text = "내 기여도 : ${userInfo.commits}"
+                        } else {
+                            binding.userToken.text = "내 기여도 : ${userInfo.tokenAmount}"
+                        }
+                        if(userInfo.organization != null) {
+                            binding.organizationName.text = userInfo.organization
+                        }
+                        binding.userRanking.text = userInfo.rank
+                        if (!this@MainActivity.isFinishing) {
+                            Glide.with(binding.githubProfile).load(userInfo.profileImage)
+                                .into(binding.githubProfile)
+                        }
+                        if(userInfo.organizationRank !=null) {
+                            binding.myOrgRanking.text = userInfo.organizationRank.toString()
+                        }
+                        Log.d("userInfo", "id:${userInfo.githubId}")
+                        count = 0
                     }
-                    if (userInfo.tokenAmount == null) {
-                        binding.userToken.text = "내 기여도 : ${userInfo.commits}"
-                    } else {
-                        binding.userToken.text = "내 기여도 : ${userInfo.tokenAmount}"
-                    }
-                    if(userInfo.organization != null) {
-                        binding.organizationName.text = userInfo.organization
-                    }
-                    binding.userRanking.text = userInfo.rank
-                    if (!this@MainActivity.isFinishing) {
-                        Glide.with(binding.githubProfile).load(userInfo.profileImage)
-                            .into(binding.githubProfile)
-                    }
-                    if(userInfo.organizationRank !=null) {
-                        binding.myOrgRanking.text = userInfo.organizationRank.toString()
-                    }
-                    Log.d("userInfo", "id:${userInfo.githubId}")
-                    count = 0
                 }
             }
         }
@@ -267,21 +269,23 @@ class MainActivity : AppCompatActivity() {
     private fun authRequestResult(key: String) {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val authResponseDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getWalletAuthResult(key)
-            }
-            val authResponse = authResponseDeferred.await()
-            if (authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
-//                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
-                if(!this@MainActivity.isFinishing) {
-                    val intent = Intent(applicationContext, LoginActivity::class.java)
-                    intent.putExtra("wallet_address", prefs.getWalletAddress(""))
-                    activityResultLauncher.launch(intent)
+            if(!this@MainActivity.isFinishing) {
+                val authResponseDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getWalletAuthResult(key)
                 }
-            } else {
+                val authResponse = authResponseDeferred.await()
+                if (authResponse.request_key.isNullOrEmpty() || authResponse.status != "completed" || authResponse.result == null) {
+//                Toast.makeText(applicationContext, "auth 결과 : 재전송", Toast.LENGTH_SHORT).show()
+                    if(!this@MainActivity.isFinishing) {
+                        val intent = Intent(applicationContext, LoginActivity::class.java)
+                        intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+                        activityResultLauncher.launch(intent)
+                    }
+                } else {
 //                Toast.makeText(applicationContext, "key : $key wallet 주소 : ${authResponse.result.klaytn_address}", Toast.LENGTH_SHORT).show()
-                prefs.setWalletAddress(authResponse.result.klaytn_address)
-                postWalletAddress(authResponse.result.klaytn_address)
+                    prefs.setWalletAddress(authResponse.result.klaytn_address)
+                    postWalletAddress(authResponse.result.klaytn_address)
+                }
             }
         }
     }
@@ -292,12 +296,14 @@ class MainActivity : AppCompatActivity() {
             addressPost = true
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
-                val postwalletDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.postWalletAddress(address, prefs.getJwtToken(""))
-                }
-                val postWalletResponse = postwalletDeferred.await()
-                if (postWalletResponse) {
-                    refreshCommits()
+                if(!this@MainActivity.isFinishing) {
+                    val postwalletDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.postWalletAddress(address, prefs.getJwtToken(""))
+                    }
+                    val postWalletResponse = postwalletDeferred.await()
+                    if (postWalletResponse) {
+                        refreshCommits()
+                    }
                 }
             }
         }
@@ -306,30 +312,32 @@ class MainActivity : AppCompatActivity() {
     private fun refreshToken() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val refreshDeffered = coroutine.async(Dispatchers.IO) {
-                viewmodel.getNewToken(prefs.getJwtToken(""), prefs.getRefreshToken(""))
-            }
-            val refresh = refreshDeffered.await()
-            if (refresh.refreshToken != null && refresh.accessToken != null) {
-                prefs.setJwtToken(refresh.accessToken)
-                prefs.setRefreshToken(refresh.refreshToken)
-                token = refresh.accessToken
-                multipleSearchUser()
-            } else {
-                if (!this@MainActivity.isFinishing && state) {
-                    Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
-                    if(refreshState) {
-                        refreshState = false
-                        loginOut = true
-                        prefs.setJwtToken("")
-                        prefs.setRefreshToken("")
-                        prefs.setPostAddress(false)
-                        count = 7
-                        val intent = Intent(applicationContext, LoginActivity::class.java)
-                        intent.putExtra("wallet_address", prefs.getWalletAddress(""))
-                        intent.putExtra("token", prefs.getJwtToken(""))
-                        intent.putExtra("logout", true)
-                        activityResultLauncher.launch(intent)
+            if(!this@MainActivity.isFinishing) {
+                val refreshDeffered = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getNewToken(prefs.getJwtToken(""), prefs.getRefreshToken(""))
+                }
+                val refresh = refreshDeffered.await()
+                if (refresh.refreshToken != null && refresh.accessToken != null) {
+                    prefs.setJwtToken(refresh.accessToken)
+                    prefs.setRefreshToken(refresh.refreshToken)
+                    token = refresh.accessToken
+                    multipleSearchUser()
+                } else {
+                    if (!this@MainActivity.isFinishing && state) {
+                        Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
+                        if(refreshState) {
+                            refreshState = false
+                            loginOut = true
+                            prefs.setJwtToken("")
+                            prefs.setRefreshToken("")
+                            prefs.setPostAddress(false)
+                            count = 7
+                            val intent = Intent(applicationContext, LoginActivity::class.java)
+                            intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+                            intent.putExtra("token", prefs.getJwtToken(""))
+                            intent.putExtra("logout", true)
+                            activityResultLauncher.launch(intent)
+                        }
                     }
                 }
             }
@@ -342,11 +350,13 @@ class MainActivity : AppCompatActivity() {
             Log.d("post", "refresh commits")
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
-                val refreshDeffered = coroutine.async(Dispatchers.IO) {
-                    viewmodel.postCommits(prefs.getJwtToken(""))
+                if(!this@MainActivity.isFinishing) {
+                    val refreshDeffered = coroutine.async(Dispatchers.IO) {
+                        viewmodel.postCommits(prefs.getJwtToken(""))
+                    }
+                    val refresh = refreshDeffered.await()
+                    multipleSearchUser()
                 }
-                val refresh = refreshDeffered.await()
-                multipleSearchUser()
             }
         }
 

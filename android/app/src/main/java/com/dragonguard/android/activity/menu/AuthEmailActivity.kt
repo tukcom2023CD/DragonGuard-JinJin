@@ -52,15 +52,17 @@ class AuthEmailActivity : AppCompatActivity() {
 
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.addOrgMember(orgId, email, token)
-            }
-            val result = resultDeferred.await()
-            Toast.makeText(applicationContext, result.toString(), Toast.LENGTH_SHORT).show()
-            if(result != -1L) {
-                emailAuthId = result
-                setUpCountDownTimer()
-                timer.start()
+            if(!this@AuthEmailActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.addOrgMember(orgId, email, token)
+                }
+                val result = resultDeferred.await()
+                Toast.makeText(applicationContext, result.toString(), Toast.LENGTH_SHORT).show()
+                if(result != -1L) {
+                    emailAuthId = result
+                    setUpCountDownTimer()
+                    timer.start()
+                }
             }
         }
 
@@ -107,24 +109,28 @@ class AuthEmailActivity : AppCompatActivity() {
     private fun deleteEmail() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.deleteLateEmailCode(emailAuthId, token)
+            if(!this@AuthEmailActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.deleteLateEmailCode(emailAuthId, token)
+                }
+                val result = resultDeferred.await()
+                reset = result
             }
-            val result = resultDeferred.await()
-            reset = result
         }
     }
 
     private fun sendEmail() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.sendEmailAuth(token)
-            }
-            val result = resultDeferred.await()
-            if(result != -1L) {
-                emailAuthId = result
-                timer.start()
+            if(!this@AuthEmailActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.sendEmailAuth(token)
+                }
+                val result = resultDeferred.await()
+                if(result != -1L) {
+                    emailAuthId = result
+                    timer.start()
+                }
             }
         }
     }

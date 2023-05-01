@@ -73,22 +73,24 @@ class RegistOrgActivity : AppCompatActivity() {
     private fun registOrg(name: String, orgType: String, orgEmail: String) {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.registerOrg(name,orgType,orgEmail, token)
-            }
-            val result = resultDeferred.await()
-            if(result.id == 0L) {
-                if(registLimit<3) {
-                    registLimit++
-                    registOrg(name, orgType, orgEmail)
+            if(!this@RegistOrgActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.registerOrg(name,orgType,orgEmail, token)
                 }
-            } else {
-                Toast.makeText(applicationContext, "$name 등록 완료!", Toast.LENGTH_SHORT).show()
-                val intent = Intent(applicationContext, MenuActivity::class.java)
-                intent.putExtra("token", token)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
+                val result = resultDeferred.await()
+                if(result.id == 0L) {
+                    if(registLimit<3) {
+                        registLimit++
+                        registOrg(name, orgType, orgEmail)
+                    }
+                } else {
+                    Toast.makeText(applicationContext, "$name 등록 완료!", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(applicationContext, MenuActivity::class.java)
+                    intent.putExtra("token", token)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    startActivity(intent)
+                }
             }
         }
     }

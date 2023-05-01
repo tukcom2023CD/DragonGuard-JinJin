@@ -225,22 +225,24 @@ class LoginActivity : AppCompatActivity() {
     private fun walletAuthRequest() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val authResponseDeffered = coroutine.async(Dispatchers.IO) {
-                viewmodel.postWalletAuth(body)
-            }
-            val authResponse = authResponseDeffered.await()
-            if (authResponse.request_key.isNullOrEmpty() || authResponse.status != "prepared") {
-                val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ walletAuthRequest() }, 1000)
-            } else {
-                key = authResponse.request_key
-                prefs.setKey(authResponse.request_key)
-                Log.d("key", "key : ${authResponse.request_key}")
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://klipwallet.com/?target=/a2a?request_key=${authResponse.request_key}")
-                )
-                startActivity(intent)
+            if(!this@LoginActivity.isFinishing) {
+                val authResponseDeffered = coroutine.async(Dispatchers.IO) {
+                    viewmodel.postWalletAuth(body)
+                }
+                val authResponse = authResponseDeffered.await()
+                if (authResponse.request_key.isNullOrEmpty() || authResponse.status != "prepared") {
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({ walletAuthRequest() }, 1000)
+                } else {
+                    key = authResponse.request_key
+                    prefs.setKey(authResponse.request_key)
+                    Log.d("key", "key : ${authResponse.request_key}")
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://klipwallet.com/?target=/a2a?request_key=${authResponse.request_key}")
+                    )
+                    startActivity(intent)
+                }
             }
         }
     }

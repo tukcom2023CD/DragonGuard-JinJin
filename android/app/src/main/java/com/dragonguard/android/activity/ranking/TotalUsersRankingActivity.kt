@@ -57,11 +57,13 @@ class TotalUsersRankingActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getTotalUserRanking(page, size, token)
+            if(!this@TotalUsersRankingActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getTotalUserRanking(page, size, token)
+                }
+                val result = resultDeferred.await()
+                checkRankings(result)
             }
-            val result = resultDeferred.await()
-            checkRankings(result)
         }
     }
 
