@@ -47,6 +47,13 @@ class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultMo
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        return super.getItemId(position)
+    }
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(datas[position])
     }

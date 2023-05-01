@@ -28,6 +28,9 @@ class LanguagesAdapter(private val languages: ArrayList<String>, private val lan
         }
 
     }
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 
     override fun onBindViewHolder(holder: LanguagesAdapter.ViewHolder, position: Int) {
         holder.bind(position)

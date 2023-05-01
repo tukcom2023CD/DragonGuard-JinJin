@@ -54,7 +54,7 @@ class ContributorsAdapter (private val datas : ArrayList<RepoContributorsItem>, 
         return super.getItemId(position)
     }
     override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
+        return position
     }
     
 }

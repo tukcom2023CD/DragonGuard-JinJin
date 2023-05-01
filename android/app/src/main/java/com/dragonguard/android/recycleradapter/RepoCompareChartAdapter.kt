@@ -191,6 +191,9 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
             }
         }
     }
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 
     //x축 label을 수정하기 위한 valueformatter
     class MyXAxisFormatter() : ValueFormatter() {

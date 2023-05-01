@@ -38,7 +38,12 @@ class UserRepoAdapter (private val datas : List<String>, private val context: Co
             }
         }
     }
-
+    override fun getItemId(position: Int): Long {
+        return super.getItemId(position)
+    }
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(datas[position])
     }

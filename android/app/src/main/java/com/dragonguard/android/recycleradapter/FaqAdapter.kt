@@ -38,6 +38,9 @@ class FaqAdapter(private val faqList: ArrayList<FaqModel>) : RecyclerView.Adapte
         }
 
     }
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 
     override fun onBindViewHolder(holder: FaqAdapter.ViewHolder, position: Int) {
         holder.bind(position)

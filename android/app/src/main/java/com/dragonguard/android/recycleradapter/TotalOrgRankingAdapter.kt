@@ -53,7 +53,7 @@ class TotalOrgRankingAdapter(private val datas : ArrayList<TotalOrganizationMode
         return super.getItemId(position)
     }
     override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
+        return position
     }
 
 }

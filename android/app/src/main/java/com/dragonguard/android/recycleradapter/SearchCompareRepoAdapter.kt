@@ -40,7 +40,9 @@ class SearchCompareRepoAdapter (private val datas : ArrayList<RepoSearchResultMo
             }
         }
     }
-
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(datas[position], repoCount)
     }
