@@ -201,7 +201,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun searchUser() {
 //        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
-        if (token.isNotBlank() && count<4) {
+        if (token.isNotBlank() && count<7) {
             count++
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
@@ -288,7 +288,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun postWalletAddress(address: String) {
 //        Toast.makeText(applicationContext, "address: $address", Toast.LENGTH_SHORT).show()
-        if (!addressPost && count<4) {
+        if (!addressPost && count<7) {
             addressPost = true
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
