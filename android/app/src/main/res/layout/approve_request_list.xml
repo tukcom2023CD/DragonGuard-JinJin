@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="5dp">
+
+    <TextView
+        android:layout_marginStart="5dp"
+        android:id="@+id/request_org_name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/ibm_semibold"
+        android:maxLines="1"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/approve_org_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/request_org_name"
+        app:layout_constraintStart_toEndOf="@+id/request_org_name"
+        android:textSize="20sp"
+        android:fontFamily="@font/ibm_semibold"
+        android:textColor="@color/black"
+        android:background="@drawable/round_approve"
+        android:text="승인"
+        app:layout_constraintTop_toTopOf="@+id/request_org_name" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/reject_org_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_reject"
+        android:fontFamily="@font/ibm_semibold"
+        android:text="반려"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/approve_org_btn"
+        app:layout_constraintStart_toEndOf="@+id/approve_org_btn"
+        app:layout_constraintTop_toTopOf="@+id/approve_org_btn"
+        app:layout_constraintVertical_bias="0.0" />
+
+</android.support.constraint.ConstraintLayout>

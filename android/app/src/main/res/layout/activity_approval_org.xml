@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="approvalOrgViewmodel"
+            type="com.dragonguard.android.viewmodel.Viewmodel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.menu.ApprovalOrgActivity"
+        android:orientation="vertical"
+        android:weightSum="3.4">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:textSize="25sp"
+            android:background="@android:color/transparent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3.15"
+            android:weightSum="5"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/approve_org_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4.5" />
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@color/white"
+                android:elevation="10dp"
+                app:item="@drawable/approve_menu_selector"
+                app:menu="@menu/admin_org_approve_menu" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

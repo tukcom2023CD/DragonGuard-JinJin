@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.webkit.CookieManager
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -110,7 +111,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
         prefs = IdPreference(applicationContext)
-        CookieManager.getInstance().setAcceptCookie(true)
+        this.onBackPressedDispatcher.addCallback(this, callback)
+
         if (loginOut) {
             prefs.setWalletAddress("")
         }
@@ -380,17 +382,19 @@ class MainActivity : AppCompatActivity() {
 
 
     //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
-    override fun onBackPressed() {
-//        super.onBackPressed()
-        if (System.currentTimeMillis() > backPressed + 2500) {
-            backPressed = System.currentTimeMillis()
-            Toast.makeText(applicationContext, "Back 버튼을 한번 더 누르면 종료합니다.", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (System.currentTimeMillis() > backPressed + 2500) {
+                backPressed = System.currentTimeMillis()
+                Toast.makeText(applicationContext, "Back 버튼을 한번 더 누르면 종료합니다.", Toast.LENGTH_SHORT)
+                    .show()
+                return
+            }
 
-        if (System.currentTimeMillis() <= backPressed + 2500) {
-            finishAffinity()
+            if (System.currentTimeMillis() <= backPressed + 2500) {
+                finishAffinity()
+            }
         }
     }
+
 }

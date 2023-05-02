@@ -217,10 +217,6 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
     }
 
-//    뒤로가기 누르면 화면 전환하게 함
-    override fun onBackPressed() {
-        finish()
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home, binding.toolbar.menu)

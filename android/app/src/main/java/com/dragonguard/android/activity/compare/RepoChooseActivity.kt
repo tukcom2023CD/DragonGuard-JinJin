@@ -77,13 +77,6 @@ class RepoChooseActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        val intent = Intent(applicationContext, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startActivity(intent)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home, binding.toolbar.menu)
         return true

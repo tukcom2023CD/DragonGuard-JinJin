@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/approve_request_btn"
+        android:enabled="true"
+        android:title="승인 요청중"
+        android:textAllCaps="false"
+        android:icon="@drawable/choose"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/approve_finished_btn"
+        android:title="승인 완료"
+        android:icon="@drawable/stamp"
+        android:textAllCaps="false"
+        app:showAsAction="ifRoom"/>
+
+</menu>
