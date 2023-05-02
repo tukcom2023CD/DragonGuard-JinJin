@@ -1,7 +1,8 @@
 package com.dragonguard.backend.search.controller;
 
-import com.dragonguard.backend.result.dto.response.ResultResponse;
-import com.dragonguard.backend.search.service.SearchService;
+import com.dragonguard.backend.domain.result.dto.response.ResultResponse;
+import com.dragonguard.backend.domain.search.controller.SearchController;
+import com.dragonguard.backend.domain.search.service.SearchService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

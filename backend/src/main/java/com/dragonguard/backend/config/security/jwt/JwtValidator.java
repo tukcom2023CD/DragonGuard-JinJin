@@ -2,9 +2,8 @@ package com.dragonguard.backend.config.security.jwt;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.member.entity.Member;
-import com.dragonguard.backend.member.repository.MemberRepository;
+import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -29,9 +29,11 @@ public class JwtValidator {
 
     public Authentication getAuthentication(String accessToken) {
         Claims claims = getTokenBodyClaims(accessToken);
-        Member member = memberRepository.findById(extractUUID(claims))
-                .orElseThrow(EntityNotFoundException::new);
-        UserDetailsImpl loginUser = userDetailsMapper.mapToLoginUser(member);
+        Optional<Member> member = memberRepository.findById(extractUUID(claims));
+        if (member.isEmpty()) {
+            return null;
+        }
+        UserDetailsImpl loginUser = userDetailsMapper.mapToLoginUser(member.get());
 
         return new UsernamePasswordAuthenticationToken(loginUser, "", loginUser.getAuthorities());
     }

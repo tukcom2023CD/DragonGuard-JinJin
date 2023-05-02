@@ -1,6 +1,6 @@
 package com.dragonguard.backend.support.fixture.member.dto;
 
-import com.dragonguard.backend.member.dto.request.MemberRequest;
+import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 
 public enum MemberRequestFixture {
     SAMPLE1(

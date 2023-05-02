@@ -1,7 +1,7 @@
 package com.dragonguard.backend.config.security.jwt;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
-import com.dragonguard.backend.member.repository.MemberRepository;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,11 +1,12 @@
 package com.dragonguard.backend.organization.controller;
 
+import com.dragonguard.backend.domain.organization.controller.OrganizationController;
 import com.dragonguard.backend.global.IdResponse;
-import com.dragonguard.backend.organization.dto.request.AddMemberRequest;
-import com.dragonguard.backend.organization.dto.request.OrganizationRequest;
-import com.dragonguard.backend.organization.dto.response.OrganizationResponse;
-import com.dragonguard.backend.organization.entity.OrganizationType;
-import com.dragonguard.backend.organization.service.OrganizationService;
+import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
+import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
+import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.domain.organization.entity.OrganizationType;
+import com.dragonguard.backend.domain.organization.service.OrganizationService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

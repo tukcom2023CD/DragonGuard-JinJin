@@ -5,50 +5,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
 from selenium import webdriver
 from config.firefox_config import DRIVER, FIREFOX_OPTS
-import requests, selenium, faust
-
-app = faust.App('dragonguard-jinjin', broker='kafka://kafka:9092', key_serializer='raw')
-
-result_schema = faust.Schema(
-    key_type=str,
-    value_type=bytes
-)
-
-result_topic = app.topic(
-    'gitrank.to.scrape.result',
-    schema=result_schema,
-)
-
-commit_chema = faust.Schema(
-    key_type=str,
-    value_type=bytes
-)
-
-commit_topic = app.topic(
-    'gitrank.to.scrape.commit',
-    schema=commit_chema,
-)
-
-repo_schema = faust.Schema(
-    key_type=str,
-    value_type=bytes
-)
-
-git_repos_topic = app.topic(
-    'gitrank.to.scrape.git-repos',
-    schema=repo_schema,
-    retention=17
-)
-
-issue_schema = faust.Schema(
-    key_type=str,
-    value_type=bytes
-)
-
-issue_topic = app.topic(
-    'gitrank.to.scrape.issues',
-    schema=issue_schema,
-)
+from config.faust import app, result_topic, contribution_topic, git_repos_topic, issue_topic
+import requests, selenium
 
 @app.agent(result_topic)
 async def search(result):
@@ -82,7 +40,7 @@ async def search(result):
         await sink.send(value=response)
 
 
-@app.agent(commit_topic)
+@app.agent(contribution_topic)
 async def commits(member):
     async for mem in member:
         
@@ -100,7 +58,7 @@ async def commits(member):
         
         response = { "name" : name, "contribution" : contribution, "githubId" : m, "profileImage" : image}
         
-        sink = app.topic('gitrank.to.backend.commit', value_type=dict)
+        sink = app.topic('gitrank.to.backend.contribution', value_type=dict)
         await sink.send(value=response)
         
 

@@ -1,11 +1,16 @@
 package com.dragonguard.backend.gitrepo.controller;
 
-import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
-import com.dragonguard.backend.gitrepo.dto.response.*;
-import com.dragonguard.backend.gitrepo.service.GitRepoService;
-import com.dragonguard.backend.gitrepomember.dto.request.GitRepoMemberCompareRequest;
-import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberResponse;
-import com.dragonguard.backend.gitrepomember.dto.response.TwoGitRepoMemberResponse;
+import com.dragonguard.backend.domain.gitrepo.controller.GitRepoController;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.client.GitRepoClientResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.client.GitRepoResponse;
+import com.dragonguard.backend.domain.gitrepo.service.GitRepoService;
+import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCompareRequest;
+import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
+import com.dragonguard.backend.domain.gitrepomember.dto.response.TwoGitRepoMemberResponse;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
