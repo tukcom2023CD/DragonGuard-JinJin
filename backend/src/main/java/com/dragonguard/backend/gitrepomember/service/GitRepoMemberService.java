@@ -8,6 +8,7 @@ import com.dragonguard.backend.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
+import com.dragonguard.backend.member.entity.AuthStep;
 import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class GitRepoMemberService {
 
     public void updateOrSaveAll(List<GitRepoMemberResponse> gitRepoResponses, String gitRepo) {
         List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepository -> {
-            Member member = memberService.saveAndGet(new MemberRequest(gitRepository.getGithubId()));
+            Member member = memberService.saveAndGet(new MemberRequest(gitRepository.getGithubId()), AuthStep.NONE);
 
             GitRepo gitRepoEntity = gitRepoRepository.findByName(gitRepo)
                     .orElseThrow(EntityNotFoundException::new);
@@ -58,7 +59,7 @@ public class GitRepoMemberService {
 
     public void saveAll(List<GitRepoMemberResponse> gitRepoResponses, String gitRepo) {
         List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepository -> {
-            Member member = memberService.saveAndGet(new MemberRequest(gitRepository.getGithubId()));
+            Member member = memberService.saveAndGet(new MemberRequest(gitRepository.getGithubId()), AuthStep.NONE);
 
             GitRepo gitRepoEntity = gitRepoRepository.findByName(gitRepo)
                     .orElseThrow(EntityNotFoundException::new);

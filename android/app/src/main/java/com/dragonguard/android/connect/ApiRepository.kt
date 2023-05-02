@@ -3,11 +3,22 @@ package com.dragonguard.android.connect
 import android.util.Log
 import com.dragonguard.android.BuildConfig
 import com.dragonguard.android.model.*
+import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
+import com.dragonguard.android.model.compare.CompareRepoRequestModel
+import com.dragonguard.android.model.compare.CompareRepoResponseModel
+import com.dragonguard.android.model.contributors.RepoContributorsItem
+import com.dragonguard.android.model.klip.*
+import com.dragonguard.android.model.org.*
+import com.dragonguard.android.model.rankings.OrgInternalRankingModel
+import com.dragonguard.android.model.rankings.OrganizationRankingModel
+import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
+import com.dragonguard.android.model.search.RepoSearchResultModel
+import com.dragonguard.android.model.token.RefreshTokenModel
+import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
-import java.net.SocketTimeoutException
+import java.net.CookieManager
 import java.util.concurrent.TimeUnit
 
 /*
@@ -15,9 +26,10 @@ import java.util.concurrent.TimeUnit
  */
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
-        .connectTimeout(1, TimeUnit.MINUTES)
+        .connectTimeout(5, TimeUnit.MINUTES)
         .readTimeout(15, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
+        .cookieJar(JavaNetCookieJar(CookieManager()))
         .retryOnConnectionFailure(false)
         .build()
 
@@ -41,10 +53,9 @@ class ApiRepository {
         val repoName = api.getRepoName(queryMap, "Bearer $token")
         try{
             val result = repoName.execute()
-            if(result.isSuccessful){
-                repoNames = result.body()!!
-            }
-        }catch (e : SocketTimeoutException){
+            repoNames = result.body()!!
+        }catch (e : Exception){
+            Log.d("error", "레포 필터없는 검색: ${e.message}")
             return repoNames
         }
         return repoNames
@@ -63,10 +74,9 @@ class ApiRepository {
         val repoName = api.getRepoName(queryMap, "Bearer $token")
         try{
             val result = repoName.execute()
-            if(result.isSuccessful){
-                repoNames = result.body()!!
-            }
-        }catch (e : SocketTimeoutException){
+            repoNames = result.body()!!
+        }catch (e : Exception){
+            Log.d("error", "레포 필터별 검색: ${e.message}")
             return repoNames
         }
         return repoNames
@@ -75,11 +85,10 @@ class ApiRepository {
     //사용자의 정보를 받아오기 위한 함수
     fun getUserInfo(token: String): UserInfoModel {
         val userInfo = api.getUserInfo("Bearer $token")
-        var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null)
+        var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null, null, null)
         try {
             val result = userInfo.execute()
             Log.d("no", "사용자 정보 요청 결과 : ${result.code()}")
-            Log.d("결과", "사용자 정보 : $userResult")
             userResult = result.body()!!
         } catch (e: Exception) {
             Log.d("exception", "exception : ${e.printStackTrace()}")
@@ -94,9 +103,7 @@ class ApiRepository {
         var repoContResult = arrayListOf(RepoContributorsItem(null,null,null,null))
         try{
             val result = repoContributors.execute()
-            if(result.isSuccessful) {
-                repoContResult = result.body()!!
-            }
+            repoContResult = result.body()!!
         } catch (e: Exception) {
             return repoContResult
         }
@@ -107,15 +114,13 @@ class ApiRepository {
     fun getTotalUsersRankings(page: Int, size: Int, token: String): ArrayList<TotalUsersRankingModelItem> {
         var rankingResult = ArrayList<TotalUsersRankingModelItem>()
         val queryMap = mutableMapOf<String, String>()
-        queryMap.put("page","${page}")
+        queryMap.put("page","$page")
         queryMap.put("size","$size")
         queryMap.put("sort","tokens,DESC")
         val ranking = api.getTotalUsersRanking(queryMap, "Bearer $token")
         try {
             val result = ranking.execute()
-            if(result.isSuccessful) {
-                rankingResult = result.body()!!
-            }
+            rankingResult = result.body()!!
         } catch (e: Exception) {
             Log.d("error", "유저랭킹 api 에러 ${e.message}")
             return rankingResult
@@ -123,32 +128,13 @@ class ApiRepository {
         return rankingResult
     }
 
-    //사용자의 githubid를 등록하는 함수
-    fun postRegister(body: RegisterGithubIdModel): Int {
-        val register = api.postGithubId(body)
-        var registerResult = RegisterGithubIdResponseModel(0)
-        try{
-            val result = register.execute()
-            if(result.isSuccessful) {
-                registerResult = result.body()!!
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.d("error", "유저 등록 에러 ${e.message}")
-            return 0
-        }
-        return registerResult.id
-    }
-
     //사용자의 토큰 부여 내역을 확인하기 위한 함수
-    fun getTokenHistory(id: Int, token: String): ArrayList<TokenHistoryModelItem> {
+    fun getTokenHistory(id: Long, token: String): ArrayList<TokenHistoryModelItem> {
         val tokenHistory = api.getTokenHistory(id, "Bearer $token")
         var tokenHistoryResult = arrayListOf(TokenHistoryModelItem(null,null,null,null, null))
         try {
             val result = tokenHistory.execute()
-            if(result.isSuccessful) {
-                tokenHistoryResult = result.body()!!
-            }
+            tokenHistoryResult = result.body()!!
         } catch (e: Exception) {
             return tokenHistoryResult
         }
@@ -158,18 +144,18 @@ class ApiRepository {
     //klip wallet address를 서버에 등록하기 위한 함수
     fun postWalletAddress(body: WalletAddressModel, token: String): Boolean {
         val walletAddress = api.postWalletAddress(body, "Bearer $token")
-        try{
+        return try{
             val result = walletAddress.execute()
             Log.d("dd", "지갑주소 전송 결과 : ${result.code()} ${body.walletAddress}")
-            return result.isSuccessful
+            result.isSuccessful
         } catch (e: Exception) {
             Log.d("dd", "결과 실패")
-            return false
+            false
         }
     }
 
     //kilp wallet address의 정보제공을 위한 함수
-    fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel  {
+    fun postWalletAuth(body: WalletAuthRequestModel): WalletAuthResponseModel {
         var authResult = WalletAuthResponseModel(null, null,null)
         val retrofitWallet = Retrofit.Builder().baseUrl(BuildConfig.prepare)
             .client(okHttpClient)
@@ -179,9 +165,7 @@ class ApiRepository {
         val authWallet = apiWallet.postWalletAuth(body)
         try{
             val result = authWallet.execute()
-            if(result.isSuccessful) {
-                authResult = result.body()!!
-            }
+            authResult = result.body()!!
         } catch (e: Exception) {
             return authResult
         }
@@ -199,9 +183,7 @@ class ApiRepository {
         val authWallet = apiWallet.getAuthResult(key)
         try{
             val result = authWallet.execute()
-            if(result.isSuccessful) {
-                authResult = result.body()!!
-            }
+            authResult = result.body()!!
         } catch (e: Exception) {
             return authResult
         }
@@ -210,14 +192,15 @@ class ApiRepository {
 
     //두 Repository의 구성원들의 기여도를 받아오기 위한 함수
     fun postCompareRepoMembersRequest(body: CompareRepoRequestModel, token: String): CompareRepoMembersResponseModel {
+        Log.d("token", "token: $token")
         var compareRepoResult = CompareRepoMembersResponseModel(null, null)
         val compareRepoMembers = api.postCompareRepoMembers(body, "Bearer $token")
         try{
             val result = compareRepoMembers.execute()
-            if(result.isSuccessful) {
-                compareRepoResult = result.body()!!
-            }
+            compareRepoResult = result.body()!!
+            Log.d("token", "1 결과 ${result.code()}")
         } catch (e: Exception) {
+            Log.d("token", "1 결과 ${e.printStackTrace()}")
             return compareRepoResult
         }
         return compareRepoResult
@@ -225,59 +208,184 @@ class ApiRepository {
 
     //두 Repository의 정보를 받아오기 위한 함수
     fun postCompareRepoRequest(body: CompareRepoRequestModel, token: String): CompareRepoResponseModel {
+        Log.d("token", "token: $token")
         var compareRepoResult = CompareRepoResponseModel(null, null)
         val compareRepo = api.postCompareRepo(body, "Bearer $token")
         try{
             val result = compareRepo.execute()
-            if(result.isSuccessful) {
-                compareRepoResult = result.body()!!
-            }
+            compareRepoResult = result.body()!!
+            Log.d("token", "2 결과 ${result.code()}")
         } catch (e: Exception) {
+            Log.d("token", "2 결과 ${e.printStackTrace()}")
             return compareRepoResult
         }
         return compareRepoResult
     }
 
-    fun getAccessToken(code: String):AccessTokenModel {
-        val tokenResult = AccessTokenModel(null,null,null)
+    fun getNewAccessToken(access: String, refresh: String): RefreshTokenModel {
+        var newToken = RefreshTokenModel(null,null,null)
+        val getToken = api.getNewAccessToken(access, refresh)
+        try {
+            val result = getToken.execute()
+            newToken = result.body()!!
+            Log.d("e", "result ${result.code()}  ${result.message()}")
+        } catch (e: Exception) {
+            Log.d("e", "error ${e.printStackTrace()}")
+            return newToken
+        }
+        return newToken
+    }
 
-        val retrofitAccess = Retrofit.Builder().baseUrl(BuildConfig.oauth)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val queryMap = mutableMapOf<String, String>()
-        queryMap.put("client_id", BuildConfig.clientId)
-        queryMap.put("client_secret", BuildConfig.clientSecret)
-        queryMap.put("code", code)
-
-        val apis = retrofitAccess.create(GitRankAPI::class.java)
-        val token = apis.getAccessToken(queryMap)
-
-        return try {
-            val result = token.execute()
-            Log.d("result", "oauth 토큰 결과 : ${result.code()}, ${result.body()!!.access_token}")
-            result.body()!!
-        }catch (e:Exception) {
-            tokenResult
+    fun postCommits(token: String) {
+        val postCommit = api.postCommits("Bearer $token")
+        try{
+            val result = postCommit.execute()
+            Log.d("postCommits", "result ${result.code()}")
+        } catch (e: Exception) {
+            Log.d("e", "error ${e.printStackTrace()}")
         }
     }
 
-    fun getOauthUserInfo(token: String): OauthUserInfoModel? {
-        val oauthUser: OauthUserInfoModel
-        val retro = Retrofit.Builder().baseUrl("https://api.github.com/")
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apis = retro.create(GitRankAPI::class.java)
-        val oauthInfo = apis.getOauthUserInfo("token $token")
-        return try {
-            val result = oauthInfo.execute()
-            oauthUser = result.body()!!
-            oauthUser
+    fun getOrgNames(name: String, token: String, count: Int, type: String): OrganizationNamesModel {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("page","$count")
+        queryMap.put("name",name)
+        queryMap.put("type",type)
+        queryMap.put("size", "10")
+        val getOrgNames = api.getOrgNames(queryMap, "Bearer $token")
+        var orgNames = OrganizationNamesModel()
+        orgNames.add(OrganizationNamesModelItem(null, null, null, null))
+        return try{
+            val result = getOrgNames.execute()
+            orgNames = result.body()!!
+            orgNames
         } catch (e: Exception) {
-            null
+            Log.d("error", "error : ${e.printStackTrace()}")
+            orgNames
+        }
+    }
+
+    fun postRegistOrg(body: RegistOrgModel, token: String): RegistOrgResultModel {
+        val postRegist = api.postOrgRegist(body, "Bearer $token")
+        var registResult = RegistOrgResultModel(0)
+        return try {
+            val result = postRegist.execute()
+            registResult = result.body()!!
+            registResult
+        } catch (e: Exception) {
+            Log.d("error", "RegisterOrganization error: ${e.message}")
+            registResult
+        }
+    }
+
+    fun addOrgMember(body: AddOrgMemberModel, token: String): Long {
+        val addOrg = api.postAddOrgMember(body, "Bearer $token")
+        return try {
+            val result = addOrg.execute()
+            Log.d("status", "조직 멤버 추가 결과 : ${result.code()}")
+            result.body()!!.id
+        } catch (e: Exception) {
+            Log.d("status", "조직 멤버 추가 error : ${e.message}")
+            -1
+        }
+    }
+
+    fun sendEmailAuth(token: String): Long {
+        val sendEmail = api.postAuthEmail("Bearer $token")
+        return try{
+            val result = sendEmail.execute()
+            result.body()!!.id
+        } catch (e: Exception) {
+            Log.d("status", "이메일 인증 시도 error : ${e.message}")
+            -1L
+        }
+    }
+
+    fun emailAuthResult(id: Long, code: String, token: String): Boolean {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("id", id.toString())
+        queryMap.put("code", code)
+        val emailAuth = api.getEmailAuthResult(queryMap, "Bearer $token")
+        return try {
+            val result = emailAuth.execute()
+            result.body()!!.validCode
+        } catch (e: Exception) {
+            Log.d("status", "이메일 인증 결과 error : ${e.message}")
+            false
+        }
+    }
+
+    fun deleteEmailCode(id: Long, token: String): Boolean {
+        val delete = api.deleteEmailCode(id, "Bearer $token")
+        return try {
+            val result = delete.execute()
+            Log.d("status", "이메일 인증 코드 삭제 성공: ${result.code()}")
+            true
+        } catch (e: Exception) {
+            Log.d("status", "이메일 인증 코드 삭제 실패: ${e.message}")
+            false
+        }
+    }
+
+    fun searchOrgId(orgName: String, token: String): Long {
+        val searchId = api.getOrgId(orgName, "Bearer $token")
+        val resultId = 0L
+        return try{
+            val result = searchId.execute()
+            return result.body()!!.id
+        }catch (e: Exception) {
+            Log.d("status", "조직 id 검색 실패: ${e.message}")
+            resultId
+        }
+    }
+
+    fun orgInternalRankings(id: Long, count: Int, token: String): OrgInternalRankingModel {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("organizationId", id.toString())
+        queryMap.put("page", count.toString())
+        queryMap.put("size", "20")
+
+        val orgRankings = OrgInternalRankingModel()
+        val orgInternal = api.getOrgInternalRankings(queryMap, "Bearer $token")
+
+        return try {
+            val result = orgInternal.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "조직 내 사용자들의 랭킹 조회 실패: ${e.message} ")
+            return orgRankings
+        }
+    }
+
+    fun typeOrgRanking(type: String, page: Int, token:String): OrganizationRankingModel {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("type", type)
+        queryMap.put("page", page.toString())
+        queryMap.put("size", "20")
+
+        val orgRankings = OrganizationRankingModel()
+        val orgTotal = api.getOrgRankings(queryMap, "Bearer $token")
+        return try{
+            val result = orgTotal.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
+            return orgRankings
+        }
+    }
+
+    fun allOrgRanking(page: Int, token: String): OrganizationRankingModel {
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("page", page.toString())
+        queryMap.put("size", "20")
+        val orgRankings = OrganizationRankingModel()
+        val orgTotal = api.getAllOrgRankings(queryMap,"Bearer $token")
+        return try{
+            val result = orgTotal.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
+            return orgRankings
         }
     }
 }

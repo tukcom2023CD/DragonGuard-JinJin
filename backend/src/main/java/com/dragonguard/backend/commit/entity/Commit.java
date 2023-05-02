@@ -1,7 +1,7 @@
 package com.dragonguard.backend.commit.entity;
 
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
+import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +20,8 @@ import java.util.Objects;
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Commit extends BaseTime {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @Column(nullable = false)

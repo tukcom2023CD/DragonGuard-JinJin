@@ -2,7 +2,7 @@ package com.dragonguard.backend.gitrepo.controller;
 
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
-import com.dragonguard.backend.gitrepo.dto.response.GirRepoMemberCompareResponse;
+import com.dragonguard.backend.gitrepo.dto.response.GitRepoMemberCompareResponse;
 import com.dragonguard.backend.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.gitrepomember.dto.request.GitRepoMemberCompareRequest;
@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,18 +35,19 @@ public class GitRepoController {
 
     @PostMapping("/compare")
     public ResponseEntity<TwoGitRepoResponse> getTwoGitRepos(
-            @RequestBody GitRepoCompareRequest request) {
+            @RequestBody @Valid GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findTwoGitRepos(request));
     }
 
     @PostMapping("/compare/git-repos-members")
     public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(
-            @RequestBody GitRepoCompareRequest request) {
+            @RequestBody @Valid GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompare(request));
     }
 
     @PostMapping("/compare/members")
-    public ResponseEntity<GirRepoMemberCompareResponse> getTwoGitRepoMember(@RequestBody GitRepoMemberCompareRequest request) {
+    public ResponseEntity<GitRepoMemberCompareResponse> getTwoGitRepoMember(
+            @RequestBody @Valid GitRepoMemberCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findTwoGitRepoMember(request));
     }
 }

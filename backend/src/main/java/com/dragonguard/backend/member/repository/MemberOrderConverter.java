@@ -1,6 +1,6 @@
 package com.dragonguard.backend.member.repository;
 
-import com.dragonguard.backend.global.converter.OrderConverter;
+import com.dragonguard.backend.util.OrderConverter;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import org.springframework.data.domain.Sort;

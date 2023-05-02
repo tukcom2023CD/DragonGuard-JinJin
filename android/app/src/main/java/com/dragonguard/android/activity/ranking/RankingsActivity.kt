@@ -16,12 +16,13 @@ import com.dragonguard.android.databinding.ActivityRankingsBinding
 class RankingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRankingsBinding
     private var token = ""
+    private var orgName = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_rankings)
 
         token = intent.getStringExtra("token")!!
-
+        orgName = intent.getStringExtra("organization")!!
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -41,13 +42,9 @@ class RankingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.myUniversityInternalRanking.setOnClickListener {
-            val intent = Intent(applicationContext, MyUniversityInternalActivity::class.java)
-            intent.putExtra("token", token)
-            startActivity(intent)
-        }
-        binding.totalUniversitiesRanking.setOnClickListener {
-            val intent = Intent(applicationContext, TotalUniversitiesRankingActivity::class.java)
+        binding.orgRelatedRankings.setOnClickListener {
+            val intent = Intent(applicationContext, OrganizationRankingsActivity::class.java)
+            intent.putExtra("organization", orgName)
             intent.putExtra("token", token)
             startActivity(intent)
         }

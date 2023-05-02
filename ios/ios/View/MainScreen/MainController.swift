@@ -10,24 +10,26 @@ import SnapKit
 import RxSwift
 
 final class MainController: UIViewController {
-    let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
-    let deviceWidth = UIScreen.main.bounds.width
-    let deviceHeight = UIScreen.main.bounds.height
-    let viewModel = MainViewModel()
-    let disposeBag = DisposeBag()
-    let img = UIImageView()
-    var id: Int?
+    private let indexBtns = ["전체 사용자 랭킹", "대학교 내부 랭킹", "랭킹 보러가기", "Repository 비교"]
+    private let deviceWidth = UIScreen.main.bounds.width
+    private let deviceHeight = UIScreen.main.bounds.height
+    private let viewModel = MainViewModel()
+    private let disposeBag = DisposeBag()
+    private let img = UIImageView()
+    private var id: Int?
     var jwtToken: String?
-    var rank = 0
+    private var rank = 0
+    private var myOrganization: String?
+    private var githubId: String?
+    private var rankingInOrganization: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = true    // navigation bar 삭제
         self.navigationItem.backButtonTitle = "Home"    //다른 화면에서 BackBtn title 설정
-        
-        getMyData() // 내 토큰, 내 티어 데이터 불러오기
-        
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+
         // UI view에 적용
         addUItoView()
         
@@ -36,6 +38,7 @@ final class MainController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        getMyData() // 내 토큰, 내 티어 데이터 불러오기
         self.navigationController?.navigationBar.isHidden = true // navigation bar 삭제
     }
     
@@ -54,7 +57,6 @@ final class MainController: UIViewController {
     // 소속 대학교 이름 label
     lazy var univNameLabel: UILabel = {
         let univName = UILabel()
-        univName.text = "한국공학대학교"
         univName.textColor = .black
         univName.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
         return univName
@@ -189,16 +191,21 @@ final class MainController: UIViewController {
     
     // 내 티어, 내 토큰 가져오는 함수
     private func getMyData(){
-        guard let jwtToken = self.jwtToken else {return}
-        
-        self.viewModel.getMyInformation(token: jwtToken)
+        let access = UserDefaults.standard.string(forKey: "Access")
+
+        self.viewModel.getMyInformation(token: access ?? "")
             .subscribe(onNext: { data in
                 self.rank = data.rank
                 self.tierTokenUI.inputText(myTier: data.tier, tokens: data.tokenAmount)
                 let url = URL(string: data.profileImage)!
                 self.img.load(img: self.img, url: url,btn: self.settingUI)
                 self.settingUI.setTitle(data.githubId, for: .normal)
+                self.githubId = data.githubId
+                self.univNameLabel.text = data.organization
+                self.myOrganization = data.organization
+                self.rankingInOrganization = data.organizationRank
                 self.collectionView.reloadData()
+                
             })
             .disposed(by: disposeBag)
     }
@@ -216,7 +223,7 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
             cell.labelText(indexBtns[indexPath.row], rankingNum: "\(self.rank)", "상위 0%")
         }
         else if indexPath.row == 1 {
-            cell.labelText(indexBtns[indexPath.row], rankingNum: "00", "상위 0%")
+            cell.labelText(indexBtns[indexPath.row], rankingNum: "\(self.rankingInOrganization ?? 0)", "상위 0%")
         }
         else {
             cell.labelText("", rankingNum: indexBtns[indexPath.row], "")
@@ -244,9 +251,11 @@ extension MainController: UICollectionViewDataSource, UICollectionViewDelegate, 
     // cell 선택되었을 때
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.row{
-            
         case 2:
-            self.navigationController?.pushViewController(WatchRankingController(), animated: true)
+            let watchRanking = WatchRankingController()
+            watchRanking.myOrganization = self.myOrganization
+            watchRanking.githubId = self.githubId
+            self.navigationController?.pushViewController(watchRanking, animated: true)
         case 3:
             self.navigationController?.pushViewController(CompareController(), animated: true)
         default:

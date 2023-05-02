@@ -1,5 +1,6 @@
 package com.dragonguard.backend.util;
 
+import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
 import javax.servlet.http.Cookie;
@@ -13,21 +14,22 @@ import java.util.Optional;
  * @description 클라이언트의 Cookie를 다루는 Util 클래스
  */
 
+@Component
 public class CookieUtil {
 
-    public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
+    public Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(name)) {
-                    return Optional.of(cookie);
+                    return Optional.ofNullable(cookie);
                 }
             }
         }
         return Optional.empty();
     }
 
-    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
+    public void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
@@ -35,7 +37,7 @@ public class CookieUtil {
         response.addCookie(cookie);
     }
 
-    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
+    public void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
@@ -49,12 +51,12 @@ public class CookieUtil {
         }
     }
 
-    public static String serialize(Object object) {
+    public String serialize(Object object) {
         return Base64.getUrlEncoder()
                 .encodeToString(SerializationUtils.serialize(object));
     }
 
-    public static <T> T deserialize(Cookie cookie, Class<T> cls) {
+    public <T> T deserialize(Cookie cookie, Class<T> cls) {
         return cls.cast(SerializationUtils.deserialize(
                 Base64.getUrlDecoder().decode(cookie.getValue())));
     }

@@ -10,9 +10,12 @@ import UIKit
 import SnapKit
 import RxSwift
 import SafariServices
+import WebKit
+import Alamofire
 
 final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
+    var autoLoginCheck: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +23,11 @@ final class LoginController: UIViewController{
         
         addUItoView()
         checkClearAuths()
+        
+        if autoLoginCheck ?? false{
+            print("???")
+            self.navigationController?.pushViewController(MainController(), animated: true)
+        }
         
     }
     
@@ -86,53 +94,62 @@ final class LoginController: UIViewController{
     }
     
     @objc func clickedGoGihbubBtn(){
-        
         let url = URL(string: APIURL.apiUrl.callBackendForGithubLogin(ip: APIURL.ip))!
         print("url \(url)")
-        if UIApplication.shared.canOpenURL(url) {
-            let github = SFSafariViewController(url: url)
-            self.present(github, animated: true)
-        }
+        let urlRequest = URLRequest(url: url)
+        let newViewController = UIViewController()
+        let webView = WKWebView(frame: newViewController.view.bounds)
+        newViewController.view.addSubview(webView)
         
+        webView.navigationDelegate = self
+        webView.goBack()
+        webView.load(urlRequest)
+        self.navigationController?.pushViewController(newViewController,animated: true)
         
     }
 
+    
     // 사용자가 인증을 완료했는지 확인하는 함수
     func checkClearAuths(){
         let checkGithubAuth = LoginViewModel.loginService.githubAuthSubject
         let checkklipAuth = LoginViewModel.loginService.klipAuthSubject
-        let jwtTokenSubject = LoginViewModel.loginService.jwtTokenSubject
-        var jwtToken = ""
-        
-        jwtTokenSubject.subscribe(onNext: {
-            if !$0.isEmpty{
-                jwtToken = $0
-                self.klipLoginBtn.isEnabled = true
-            }
-        })
-        .disposed(by: self.disposeBag)
-        
-        
-        
         
         Observable.combineLatest(checkGithubAuth, checkklipAuth)
             .subscribe(onNext: { first, second in
                 if first && second{
                     
                     let rootView = MainController()
-                    rootView.jwtToken = jwtToken
-                    let nc = UINavigationController(rootViewController: rootView)
-                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-                    sceneDelegate.window?.rootViewController = nc
+                    
+                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
+                       print("\(key): \(value)")
+                     }
+
+                    self.klipLoginBtn.isEnabled = false
+                    self.goGithubBtn.isEnabled = true
+                    self.goGithubBtn.backgroundColor = .white
+                    self.klipLoginBtn.backgroundColor = .white
+                    
+                    self.navigationController?.pushViewController(rootView, animated: true)
+                    
+//                    let nc = UINavigationController(rootViewController: rootView)
+//                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+//                    sceneDelegate.window?.rootViewController = nc
                     
                 }
                 else if first{
                     self.goGithubBtn.backgroundColor = .lightGray
+                    self.klipLoginBtn.isEnabled = true
                     self.goGithubBtn.isEnabled = false
                 }
                 else if second{
                     self.klipLoginBtn.backgroundColor = .lightGray
                     self.klipLoginBtn.isEnabled = false
+                }
+                else{
+                    self.klipLoginBtn.isEnabled = false
+                    self.goGithubBtn.isEnabled = true
+                    self.goGithubBtn.backgroundColor = .white
+                    self.klipLoginBtn.backgroundColor = .white
                 }
             })
             .disposed(by: disposeBag)
@@ -171,3 +188,41 @@ final class LoginController: UIViewController{
     }
     
 }
+
+extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate{
+    
+    // WKNavigationDelegate 메서드 구현
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+                     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            
+            // 저장되어 있는 쿠키를 확인 구문
+            WKWebsiteDataStore.default().httpCookieStore.getAllCookies { cookies in
+                var accessTokenCheck = false
+                var refreshTokenCheck = false
+                
+                for cookie in cookies{
+                    if cookie.name == "Access" {
+                        UserDefaults.standard.set(cookie.value, forKey:"Access")
+                        print("@@@ Access  저장하기: \(cookie.value)")
+                        accessTokenCheck = true
+                    }
+                    if cookie.name == "Refresh" {
+                        UserDefaults.standard.set(cookie.value, forKey:"Refresh")
+                        print("@@@ Refresh  저장하기: \(cookie.value)")
+                        refreshTokenCheck = true
+                    }
+               
+                    if accessTokenCheck && refreshTokenCheck{
+                        self.navigationController?.popViewController(animated: true)
+                        LoginViewModel.loginService.githubAuthSubject.onNext(true)
+                    }
+                }
+            }
+          
+            decisionHandler(.allow)
+        }
+    
+}
+
+
+

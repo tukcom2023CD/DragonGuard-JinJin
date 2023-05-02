@@ -21,31 +21,42 @@ final class CompareService{
         let body = ["firstRepo": firstRepo, "secondRepo": secondRepo]
         var firstRepoUserInfo: [FirstRepoResult] = []   // 첫 번째 레포 내부 유저 리스트
         var secondRepoUserInfo: [SecondRepoResult] = []  // 두 번째 레포 내부 유저 리스트
-        
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create(){ observer in
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+            Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { timer in
+                print("sending url1")
                 AF.request(url,
                            method: .post,
                            parameters: body,
                            encoding: JSONEncoding(options: []),
                            headers: ["Content-type": "application/json",
-                                     "Authorization": "Bearer \(Environment.jwtToken)"])
+                                     "Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
-                .responseDecodable(of: CompareUserDecodingModel.self) { response in
-                    print("response USER: \(response)")
-                    guard let responseResult = response.value else {return}
-                    
-                    if responseResult.firstResult.count > 0 || responseResult.secondResult.count > 0 {
-                        timer.invalidate()
-                        for data in responseResult.firstResult{
-                            firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+                .responseString { response in
+                    switch response.result {
+                    case .success(let data):
+                        if let jsonData = data.data(using: .utf8) {
+                            do {
+                                let decodedData = try JSONDecoder().decode(CompareUserDecodingModel.self, from: jsonData)
+                                print(decodedData)
+                                timer.invalidate()
+                                for data in decodedData.firstResult{
+                                    firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+                                }
+                                for data in decodedData.secondResult{
+                                    secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+                                }
+                                let compareUser = CompareUserModel(firstResult: firstRepoUserInfo, secondResult: secondRepoUserInfo)
+                                observer.onNext(compareUser)
+                            }
+                            catch {
+                                print("Error decoding data: \(error)")
+                            }
                         }
-                        for data in responseResult.secondResult{
-                            secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
-                        }
-                        let compareUser = CompareUserModel(firstResult: firstRepoUserInfo, secondResult: secondRepoUserInfo)
-                        observer.onNext(compareUser)
-                    }
+                    case .failure(let error):
+                        print("Request failed with error: \(error)")
+                       }
                 }
                 
             })
@@ -63,16 +74,17 @@ final class CompareService{
     func getCompareInfo(firstRepo: String, secondRepo: String) -> Observable<CompareRepoModel> {
         let url = APIURL.apiUrl.compareRepoAPI(ip: ip)
         let body = ["firstRepo": firstRepo, "secondRepo": secondRepo]
-        
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         return Observable.create() { observer in
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
-                
+            Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { timer in
+                print("sending url22")
                 AF.request(url,
                            method: .post,
                            parameters: body,
                            encoding: JSONEncoding(options: []),
                            headers: ["Content-type": "application/json",
-                                     "Authorization": "Bearer \(Environment.jwtToken)"])
+                                     "Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: CompareRepoDecodingModel.self) { response in
                     print("response REPO: \(response)")
@@ -167,26 +179,4 @@ final class CompareService{
         
     }
     
-}//
-
-
-
-
-/*
- 
- 
- 
- 
- 
- 
- 
- 
- 
- =========================
- 
- 
- 
- 
- 
- 
- */
+}

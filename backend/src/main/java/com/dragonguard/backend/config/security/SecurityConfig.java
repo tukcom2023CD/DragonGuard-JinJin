@@ -1,7 +1,6 @@
 package com.dragonguard.backend.config.security;
 
 import com.dragonguard.backend.config.security.jwt.JwtAuthenticationFilter;
-import com.dragonguard.backend.config.security.oauth.CookieAuthorizationRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -37,9 +35,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService;
-    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
-    private final AuthenticationFailureHandler authenticationFailureHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
@@ -61,7 +57,7 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .authorizeRequests(requests -> requests.requestMatchers(CorsUtils::isPreFlightRequest)
                         .permitAll()
-                        .antMatchers("/auth/**")
+                        .antMatchers("/oauth2/**", "/auth/**")
                         .permitAll()
                         .antMatchers("/admin/**")
                         .hasRole("ADMIN")
@@ -83,11 +79,10 @@ public class SecurityConfig {
 
     private Customizer<OAuth2LoginConfigurer<HttpSecurity>> oAuth2LoginConfigurer() {
         return o -> o.authorizationEndpoint(a ->
-                        a.baseUri("/oauth2/authorize").authorizationRequestRepository(cookieAuthorizationRequestRepository)
+                        a.baseUri("/oauth2/authorize")
                                 .and().redirectionEndpoint().baseUri("/oauth2/callback/*"))
                 .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler);
+                .successHandler(authenticationSuccessHandler);
     }
 
     @Bean

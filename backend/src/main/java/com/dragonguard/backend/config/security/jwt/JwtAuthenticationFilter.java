@@ -24,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtValidator jwtValidator;
-    @Value("${app.auth.token.access-header}")
+    @Value("${app.auth.token.auth-header}")
     private String tokenTag;
 
     @Override

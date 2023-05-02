@@ -10,9 +10,11 @@ import UIKit
 
 final class WatchRankingController: UIViewController{
     
-    let rankingBtns = ["내 Repository 랭킹", "내 Organization 목록", "대학교 내부 랭킹", "전국 대학교 랭킹", "전체 랭킹", "전체 Repository랭킹"]
-    let deviceWidth = UIScreen.main.bounds.width
-    let deviceHeight = UIScreen.main.bounds.height
+    private let rankingBtns = ["내 Repository 랭킹", "내 Organization 목록", "조직 관련 랭킹들", "전체 랭킹", "전체 Repository랭킹"]
+    private let deviceWidth = UIScreen.main.bounds.width
+    private let deviceHeight = UIScreen.main.bounds.height
+    var myOrganization: String?
+    var githubId: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,12 +106,13 @@ extension WatchRankingController: UITableViewDelegate, UITableViewDataSource{
         case 1:
             self.navigationController?.pushViewController(MyOraganizationListController(), animated: true)
         case 2:
-            self.navigationController?.pushViewController(UnivInRankingController(), animated: true)
+            let organizationRankingsController = OrganizationRankingsController()
+            organizationRankingsController.myOrganization = self.myOrganization
+            organizationRankingsController.githubId = self.githubId
+            self.navigationController?.pushViewController(organizationRankingsController, animated: true)
         case 3:
-            self.navigationController?.pushViewController(AllUnivRankingController(), animated: true)
-        case 4:
             self.navigationController?.pushViewController(AllRankingController(), animated: true)
-        case 5:
+        case 4:
             self.navigationController?.pushViewController(AllRepositoryRankingController(), animated: true)
         default:
             return

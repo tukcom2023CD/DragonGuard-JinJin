@@ -1,9 +1,8 @@
 package com.dragonguard.backend.result.entity;
 
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
+import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
-import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +12,7 @@ import java.util.Objects;
 
 /**
  * @author 김승진
- * @description 검색 결과를 담는 Redis Entity
+ * @description 검색 결과를 담는 Entity
  */
 
 @Getter
@@ -22,7 +21,8 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Result extends BaseTime {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @Column(nullable = false)

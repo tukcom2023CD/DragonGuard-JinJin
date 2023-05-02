@@ -3,6 +3,9 @@ package com.dragonguard.backend.gitrepomember.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author 김승진
@@ -10,11 +13,16 @@ import lombok.NoArgsConstructor;
  */
 
 @Getter
+@ToString // Redis를 위해 넣은 toString
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoMemberCompareRequest {
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String firstRepo;
+    @NotBlank
     private String secondName;
+    @NotBlank
     private String secondRepo;
 }

@@ -196,18 +196,18 @@ final class SearchPageController: UIViewController {
 // SearchController Delegate
 extension SearchPageController: UISearchBarDelegate{
     
-    // 검색 바 검색하기 시작할 때
+    // MARK: 검색 바 검색하기 시작할 때
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchResultList = []
     }
     
-    // Cancel 취소 버튼 눌렀을 때
+    // MARK: Cancel 취소 버튼 눌렀을 때
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchUI.text = ""
         searchUI.resignFirstResponder()
     }
     
-    //검색 버튼을 눌렀을 때 실행
+    // MARK: 검색 버튼을 눌렀을 때 실행
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchUI.resignFirstResponder()
         
@@ -220,6 +220,7 @@ extension SearchPageController: UISearchBarDelegate{
         getData(searchWord: searchText, type: self.type, change: true, filtering: self.filtering)    // API 감지 스레드
     }
     
+    // MARK: 레포지토리 필터링 결과
     func repositoryfiltering(){
         
         if !self.filteringArray.isEmpty{

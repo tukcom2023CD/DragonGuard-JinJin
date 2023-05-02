@@ -7,10 +7,12 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 final class SettingController: UIViewController{
     // 설정화면에 출력될 종류들
-    let settingData = ["티어 종류","FAQ","버전 정보","로그아웃"]
+    let settingData = ["토큰 부여 기준","FAQ","버전 정보","조직인증","로그아웃"]
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +52,21 @@ final class SettingController: UIViewController{
         present(sheet,animated: true)
     }
     
+    // MARK: 로그아웃
+    private func logOut(){
+        UserDefaults.standard.removeObject(forKey: "Access")
+        UserDefaults.standard.removeObject(forKey: "Refresh")
+        
+        LoginViewModel.loginService.logOutDone()
+            .subscribe(onNext: { check in
+                if check{
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+            })
+            .disposed(by: self.disposeBag)
+
+    }
+    
     /*
      UI 추가할 때 작성하는 함수
      */
@@ -59,7 +76,7 @@ final class SettingController: UIViewController{
         
         self.settingTableView.delegate = self
         self.settingTableView.dataSource = self
-        self.settingTableView.register(SettingTableView.self, forCellReuseIdentifier: SettingTableView.identifier)
+        self.settingTableView.register(SettingTableViewCell.self, forCellReuseIdentifier: SettingTableViewCell.identifier)
         self.settingTableView.rowHeight = 50    //셀 높이 각 설정
     }
     
@@ -91,7 +108,7 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
     // 셀 속성 설정
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var color = UIColor.black   // label textColor 변경
-        let cell = tableView.dequeueReusableCell(withIdentifier: SettingTableView.identifier,for: indexPath) as? SettingTableView ?? SettingTableView()
+        let cell = tableView.dequeueReusableCell(withIdentifier: SettingTableViewCell.identifier,for: indexPath) as? SettingTableViewCell ?? SettingTableViewCell()
         
         
         // 셀 속성 설정
@@ -118,11 +135,15 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
         // 셀 눌렀을 때 기능
         switch indexPath.section{
         case 0:
-            self.navigationController?.pushViewController(TierTypes(), animated: true)
+            self.navigationController?.pushViewController(TokenStandards(), animated: true)
         case 1:
             self.navigationController?.pushViewController(FAQPage(), animated: true)
         case 2:
             versionInfo()   // 버전 정보
+        case 3:
+            self.navigationController?.pushViewController(OrganizationCertificationController(), animated: true)
+        case 4:
+            self.logOut()
         default:
             return
         }

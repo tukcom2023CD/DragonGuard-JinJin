@@ -99,7 +99,6 @@ struct StatisticsStats: Codable{
 }
 
 struct Languages: Decodable{
-//    var lang: [String : Any] = [:]
     var language: [String] = []
     var count: [Int] = []
     

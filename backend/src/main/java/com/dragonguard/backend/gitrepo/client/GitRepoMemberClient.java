@@ -4,10 +4,11 @@ import com.dragonguard.backend.config.github.GithubProperties;
 import com.dragonguard.backend.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.gitrepomember.dto.response.GitRepoMemberClientResponse;
 import com.dragonguard.backend.global.exception.WebClientException;
-import com.dragonguard.backend.global.webclient.GithubClient;
+import com.dragonguard.backend.util.GithubClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.charset.StandardCharsets;
@@ -49,10 +50,15 @@ public class GitRepoMemberClient implements GithubClient<GitRepoRequest, GitRepo
     }
 
     private WebClient generateWebClient() {
+        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1))
+                .build();
         return WebClient.builder()
+                .exchangeStrategies(exchangeStrategies)
                 .baseUrl(githubProperties.getUrl())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)
                 .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
+                .defaultHeader(githubProperties.getVersionKey(), githubProperties.getVersionValue())
                 .build();
     }
 }

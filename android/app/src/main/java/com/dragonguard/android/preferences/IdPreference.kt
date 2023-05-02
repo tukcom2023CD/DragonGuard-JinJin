@@ -7,51 +7,43 @@ class IdPreference (context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences("id", Context.MODE_PRIVATE)
 
-    fun getId(key: String, defValue: Int): Int {
-        return prefs.getInt(key, defValue)
+    fun getWalletAddress(defValue: String): String {
+        return prefs.getString("wallet_address", defValue)!!
+    }
+    fun setWalletAddress(address: String) {
+        prefs.edit().putString("wallet_address", address).apply()
     }
 
-    fun setId(key: String, id: Int) {
-        prefs.edit().putInt(key, id).apply()
+    fun getKey(defValue: String):String {
+        return prefs.getString("key", defValue)!!
     }
 
-    fun getWalletAddress(key:String, defValue: String): String {
-        return prefs.getString(key, defValue)!!
-    }
-    fun setWalletAddress(key: String, address: String) {
-        prefs.edit().putString(key, address).apply()
+    fun setKey(requestKey:String) {
+        prefs.edit().putString("key", requestKey).apply()
     }
 
-    fun getGithubId(key:String, defValue: String):String{
-        return prefs.getString(key, defValue)!!
+    fun setJwtToken(requestKey:String) {
+        prefs.edit().putString("token", requestKey).apply()
     }
 
-    fun setGithubId(key:String, githubId: String) {
-        prefs.edit().putString(key, githubId).apply()
+    fun getJwtToken(defValue: String):String {
+        return prefs.getString("token", defValue)!!
     }
 
-    fun getKey(key:String, defValue: String):String {
-        return prefs.getString(key, defValue)!!
+    fun setRefreshToken(requestKey:String) {
+        prefs.edit().putString("refresh", requestKey).apply()
     }
 
-    fun setKey(key:String, requestKey:String) {
-        prefs.edit().putString(key, requestKey).apply()
+    fun getRefreshToken(defValue: String):String {
+        return prefs.getString("refresh", defValue)!!
     }
 
-    fun setJwtToken(key:String, requestKey:String) {
-        prefs.edit().putString(key, requestKey).apply()
+    fun setPostAddress(value: Boolean) {
+        prefs.edit().putBoolean("post", value).apply()
     }
 
-    fun getJwtToken(key:String, defValue: String):String {
-        return prefs.getString(key, defValue)!!
-    }
-
-    fun setGithubToken(key:String, requestKey:String) {
-        prefs.edit().putString(key, requestKey).apply()
-    }
-
-    fun getGithubToken(key:String, defValue: String):String {
-        return prefs.getString(key, defValue)!!
+    fun getPostAddress(defValue: Boolean):Boolean {
+        return prefs.getBoolean("post", defValue)!!
     }
 
 }

@@ -43,10 +43,12 @@ final class WatchRankingTableView: UITableViewCell {
         let rankingLabel = UILabel()
         rankingLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 23)
         rankingLabel.textColor = .black
+        rankingLabel.textAlignment = .center
         contentView.addSubview(rankingLabel)
         
         rankingLabel.snp.makeConstraints({ make in
             make.center.equalTo(contentView.center)
+            make.centerX.equalTo(self.center)
         })
 
         return rankingLabel

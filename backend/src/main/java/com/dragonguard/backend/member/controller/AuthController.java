@@ -1,16 +1,14 @@
 package com.dragonguard.backend.member.controller;
 
+import com.dragonguard.backend.config.security.jwt.JwtToken;
 import com.dragonguard.backend.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author 김승진
- * @description OAuth2를 위한 임시 컨트롤러
+ * @description 토큰 재발급을 위한 컨트롤러
  */
 
 @RestController
@@ -20,7 +18,9 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("/refresh")
-    public ResponseEntity<String> authorize(HttpServletRequest request, HttpServletResponse response, @RequestParam String accessToken) {
-        return ResponseEntity.ok(authService.refreshToken(request, response, accessToken));
+    public ResponseEntity<JwtToken> authorize(
+            @RequestHeader String refreshToken,
+            @RequestHeader String accessToken) {
+        return ResponseEntity.ok(authService.refreshToken(refreshToken, accessToken));
     }
 }

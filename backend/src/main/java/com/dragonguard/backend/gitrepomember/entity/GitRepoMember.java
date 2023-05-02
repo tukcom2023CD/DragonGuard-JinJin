@@ -1,8 +1,8 @@
 package com.dragonguard.backend.gitrepomember.entity;
 
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
+import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import com.dragonguard.backend.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -22,7 +22,8 @@ import java.util.Objects;
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GitRepoMember extends BaseTime {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,29 +31,23 @@ public class GitRepoMember extends BaseTime {
     private GitRepo gitRepo;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    private Integer commits;
-
-    private Integer additions;
-
-    private Integer deletions;
+    @Embedded
+    private Contribution contribution;
 
     @Builder
-    public GitRepoMember(GitRepo gitRepo, Member member, Integer commits, Integer additions, Integer deletions) {
+    public GitRepoMember(GitRepo gitRepo, Member member, Contribution contribution) {
         this.gitRepo = gitRepo;
         this.member = member;
-        this.commits = commits;
-        this.additions = additions;
-        this.deletions = deletions;
+        this.contribution = contribution;
     }
 
     public void update(GitRepoMember gitRepoMember) {
         this.gitRepo = gitRepoMember.gitRepo;
         this.member = gitRepoMember.member;
-        this.commits = gitRepoMember.commits;
-        this.additions = gitRepoMember.additions;
-        this.deletions = gitRepoMember.deletions;
+        this.contribution = gitRepoMember.contribution;
     }
 
     @Override
@@ -60,15 +55,11 @@ public class GitRepoMember extends BaseTime {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GitRepoMember that = (GitRepoMember) o;
-        return Objects.equals(gitRepo, that.gitRepo)
-                && Objects.equals(member, that.member)
-                && Objects.equals(commits, that.commits)
-                && Objects.equals(additions, that.additions)
-                && Objects.equals(deletions, that.deletions);
+        return Objects.equals(gitRepo, that.gitRepo) && Objects.equals(member, that.member) && Objects.equals(contribution, that.contribution);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gitRepo, member, commits, additions, deletions);
+        return Objects.hash(gitRepo, member, contribution);
     }
 }

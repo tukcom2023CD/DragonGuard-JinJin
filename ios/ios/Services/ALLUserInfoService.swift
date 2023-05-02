@@ -20,17 +20,22 @@ final class ALLUserInfoService{
     func getMemberInfo(page: Int, size: Int) -> Observable<[UserInfoModel]>{
         let url = APIURL.apiUrl.getUserInfo(ip: ip, page: page, size: size)
         var resultArray = [UserInfoModel]()
+        let access = UserDefaults.standard.string(forKey: "Access")
+
         
         return Observable.create(){ observer in
-            AF.request(url,headers: ["Authorization": "Bearer \(Environment.jwtToken)"])
+            AF.request(url,
+                       headers: ["Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: [UserInfoDecodingData].self) { response in
                     guard let responseResult = response.value else {return}
-                    if(responseResult.count != 0 && resultArray.count == 0){
+                    
+                    if responseResult.count != 0 && resultArray.count == 0{
                         for data in responseResult {
                             let dataBundle = UserInfoModel(id: data.id, name: data.name ?? "unknown", githubId: data.githubId, tokens: data.tokens ?? 0, tier: data.tier)
                             resultArray.append(dataBundle)
                         }
+                        
                         print(resultArray)
                         observer.onNext(resultArray)
                     }

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BlockchainConfig {
     private final BlockchainProperties properties;
-    private final static String BAOBAB_TESTNET = "https://api.baobab.klaytn.net:8651";
+    private static final String BAOBAB_TESTNET = "https://api.baobab.klaytn.net:8651";
 
     @Bean
     public BlockchainJson blockchainJson() {

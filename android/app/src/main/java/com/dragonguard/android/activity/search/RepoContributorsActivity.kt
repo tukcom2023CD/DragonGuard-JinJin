@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivityRepoContributorsBinding
-import com.dragonguard.android.model.RepoContributorsItem
+import com.dragonguard.android.model.contributors.RepoContributorsItem
 import com.dragonguard.android.recycleradapter.ContributorsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
@@ -58,14 +58,16 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    repo의 contributors 검색
     fun repoContributors(repoName: String) {
-        val coroutine = CoroutineScope(Dispatchers.Main)
-        coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getRepoContributors(repoName, token)
-            }
-            val result = resultDeferred.await()
+        if(!this@RepoContributorsActivity.isFinishing){
+            val coroutine = CoroutineScope(Dispatchers.Main)
+            coroutine.launch {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getRepoContributors(repoName, token)
+                }
+                val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()
-            checkContributors(result)
+                checkContributors(result)
+            }
         }
     }
 

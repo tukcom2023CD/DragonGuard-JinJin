@@ -8,8 +8,6 @@ import lombok.Getter;
  * @description 검색 유형을 구분하는 enum
  */
 
-@Getter
-@AllArgsConstructor
 public enum SearchType {
     USERS, REPOSITORIES
 }

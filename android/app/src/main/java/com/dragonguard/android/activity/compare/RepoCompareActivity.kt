@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
@@ -14,7 +15,7 @@ import com.dragonguard.android.viewmodel.Viewmodel
 import com.dragonguard.android.databinding.ActivityRepoCompareBinding
 import com.dragonguard.android.fragment.CompareRepoFragment
 import com.dragonguard.android.fragment.CompareUserFragment
-import com.dragonguard.android.model.CompareRepoMembersResponseModel
+import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -38,6 +39,7 @@ class RepoCompareActivity : AppCompatActivity() {
         repo1 = intent.getStringExtra("repo1")!!
         repo2 = intent.getStringExtra("repo2")!!
         token = intent.getStringExtra("token")!!
+        Toast.makeText(applicationContext, "token : $token", Toast.LENGTH_SHORT).show()
         repoContributors()
 
 //        Toast.makeText(applicationContext, "repo1 : $repo1 repo2 : $repo2", Toast.LENGTH_SHORT).show()

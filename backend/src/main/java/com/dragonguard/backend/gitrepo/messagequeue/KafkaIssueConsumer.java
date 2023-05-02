@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,8 @@ public class KafkaIssueConsumer {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            map = mapper.readValue(message, new TypeReference<Map<String, Object>>() {});
+            map = mapper.readValue(message, new TypeReference<Map<String, Object>>() {
+            });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

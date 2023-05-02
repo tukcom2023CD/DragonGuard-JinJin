@@ -15,11 +15,9 @@ final class LoginViewModel {
     static let loginService = LoginViewModel()
     let service = KlipLoginService()
     let post = PostService()
-    let githubService = GithubLoginService()
     private let disposeBag = DisposeBag()
     private var walletAddress = "" // 사용자 지갑 주소
     private var requestKey = "" // 사용자 Klip request Key
-    private var jwtToken = ""   // JWT Token
     
     var githubAuthSubject = BehaviorSubject(value: false)   // github OAuth 완료 시 true 전송
     var jwtTokenSubject = BehaviorSubject(value: "")    // jwt Token 전송
@@ -72,20 +70,22 @@ final class LoginViewModel {
 
     // 사용자 지갑 주소 서버로 전송
     func userWalletAddress(){
-        post.sendMyWalletAddress(token: self.jwtToken, walletAddress: self.walletAddress)
+        let access = UserDefaults.standard.string(forKey: "Access")
+
+        post.sendMyWalletAddress(token: access ?? "", walletAddress: self.walletAddress)
             .subscribe(onNext: { msg in print(msg)})
             .disposed(by: disposeBag)
     }
-    
-    // MARK:
-    func saveJWTToken(token: String){
-        self.jwtToken = token
-        self.checkGithubAuth = true
-        jwtTokenSubject.onNext(token)
+        
+    // MARK: 로그아웃 확인하는 함수
+    func logOutDone() -> Observable<Bool>{
+        return Observable.create { observer in
+            self.checkKlipAuth = false
+            self.checkGithubAuth = false
+            observer.onNext(true)
+            return Disposables.create()
+        }
     }
-    
-
-    
 }
 
 

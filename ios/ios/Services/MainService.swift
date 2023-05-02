@@ -16,12 +16,14 @@ final class MainService{
     /// 사용자 정보 받아옴
     func getUserInfo(token: String) -> Observable<MainModel>{
         let url = APIURL.apiUrl.getMembersInfo(ip: ip)
+        let access = UserDefaults.standard.string(forKey: "Access")
         
         return Observable.create(){ observer in
-            AF.request(url, headers: ["Authorization": "Bearer \(token)"])
+            AF.request(url, headers: ["Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: MainDecodingModel.self) { response in
                     print("main service")
+                    print("used accessToken \(access ?? "") ")
                     print(response)
                     
                     switch response.result{
@@ -34,7 +36,9 @@ final class MainService{
                                              authStep: data.authStep,
                                              profileImage: data.profileImage ?? "",
                                              rank: data.rank,
-                                             tokenAmount: data.tokenAmount ?? 0)
+                                             organizationRank: data.organizationRank ?? 0,
+                                             tokenAmount: data.tokenAmount ?? 0,
+                                             organization: data.organization ?? "")
                         observer.onNext(info)
                     case .failure(let error):
                         print("삐리삐리 에러발생 !! \(error)")

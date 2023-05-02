@@ -1,10 +1,9 @@
 package com.dragonguard.backend.search.service;
 
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.webclient.GithubClient;
+import com.dragonguard.backend.util.KafkaProducer;
+import com.dragonguard.backend.util.GithubClient;
 import com.dragonguard.backend.member.service.AuthService;
-import com.dragonguard.backend.member.service.MemberService;
 import com.dragonguard.backend.result.dto.response.ResultResponse;
 import com.dragonguard.backend.result.entity.Result;
 import com.dragonguard.backend.result.mapper.ResultMapper;
@@ -22,9 +21,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
+@Validated
 @RequiredArgsConstructor
 public class SearchService {
     private final SearchRepository searchRepository;
@@ -60,7 +61,7 @@ public class SearchService {
 
     @Transactional
     @Cacheable(value = "results", key = "#searchRequest", cacheManager = "cacheManager")
-    public List<ResultResponse> getSearchResultByClient(SearchRequest searchRequest) {
+    public List<ResultResponse> getSearchResultByClient(@Valid SearchRequest searchRequest) {
         Search search = findOrSaveSearch(searchRequest);
         List<Result> results = resultRepository.findAllBySearchId(search.getId());
         results.forEach(Result::delete);

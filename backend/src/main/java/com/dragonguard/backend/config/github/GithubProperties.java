@@ -16,4 +16,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class GithubProperties {
     private String url;
+    private String versionKey;
+    private String versionValue;
 }

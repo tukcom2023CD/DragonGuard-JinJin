@@ -14,8 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentCompareUserBinding
-import com.dragonguard.android.model.CompareRepoMembersResponseModel
-import com.dragonguard.android.model.RepoContributorsItem
+import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
+import com.dragonguard.android.model.contributors.RepoContributorsItem
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -81,8 +81,10 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
                 for (i in 0 until result.firstResult.size) {
                     compare1 = contributors1.filter { it.githubId == result.firstResult[i].githubId }.toMutableList()
                     if (compare1.isEmpty()) {
-                        contributors1.add(RepoContributorsItem(result.firstResult[i].additions,result.firstResult[i].commits,
-                            result.firstResult[i].deletions, result.firstResult[i].githubId))
+                        contributors1.add(
+                            RepoContributorsItem(result.firstResult[i].additions,result.firstResult[i].commits,
+                            result.firstResult[i].deletions, result.firstResult[i].githubId)
+                        )
                     } else {
                         compare1.clear()
                     }
@@ -91,8 +93,10 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
                 for (i in 0 until result.secondResult.size) {
                     compare2 = contributors2.filter { it.githubId == result.secondResult[i].githubId }.toMutableList()
                     if (compare2.isEmpty()) {
-                        contributors2.add(RepoContributorsItem(result.secondResult[i].additions,result.secondResult[i].commits,
-                            result.secondResult[i].deletions, result.secondResult[i].githubId))
+                        contributors2.add(
+                            RepoContributorsItem(result.secondResult[i].additions,result.secondResult[i].commits,
+                            result.secondResult[i].deletions, result.secondResult[i].githubId)
+                        )
                     } else {
                         compare2.clear()
                     }
@@ -118,7 +122,7 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
             arr1.addAll(contributors1.flatMap { listOf(it.githubId!!) }.toMutableList())
             arr2.addAll(contributors2.flatMap { listOf(it.githubId!!) }.toMutableList())
 //            Toast.makeText(requireContext(), "$arr1", Toast.LENGTH_SHORT).show()
-            val spinnerAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, arr1)
+            val spinnerAdapter = ArrayAdapter<String>(requireContext(), R.layout.spinner_list, arr1)
 //            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerAdapter.addAll(arr2)
             binding.compareUserSpinner1.adapter = spinnerAdapter

@@ -3,8 +3,8 @@ package com.dragonguard.backend.gitrepo.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.util.HashMap;
 import java.util.IntSummaryStatistics;
 import java.util.Map;
 
@@ -19,6 +19,6 @@ import java.util.Map;
 public class GitRepoResponse {
     private GitRepoClientResponse gitRepo;
     private StatisticsResponse statistics;
-    private Map<String, Integer> languages = new HashMap<>();
+    private Map<String, Integer> languages;
     private IntSummaryStatistics languagesStats;
 }

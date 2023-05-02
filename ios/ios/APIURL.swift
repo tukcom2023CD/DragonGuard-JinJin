@@ -12,7 +12,7 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL() 
-    static let ip = Environment.ip
+    static let ip = ""
     
     
     private init(){}
@@ -40,12 +40,13 @@ final class APIURL{
         return inputUserUrl
     }
     
+    // MARK: 지갑 주소 전송
     func inputWalletAddress(ip: String) -> String{
         let inputUserUrl = "http://\(ip)/api/members/wallet-address"
         return inputUserUrl
     }
     
-    /// 유저 전체 랭킹 받는 함수
+    // MARK:  유저 전체 랭킹 받는 함수
     /// - Parameters:
     ///   - page: 다음 유저 페이지
     ///   - size: 한 번에 받을 크기
@@ -55,37 +56,38 @@ final class APIURL{
         return url
     }
     
+    // MARK:
     func getRepoContributorInfo(ip: String, name: String) -> String {
         let url = "http://\(ip)/api/git-repos?name=\(name)"
         return url
     }
     
-    // 비교하기 -> 유저비교
+    // MARK: 비교하기 -> 유저비교
     func compareUserAPI(ip: String) -> String{
         let url = "http://\(ip)/api/git-repos/compare/members"
         return url
     }
     
-    // 비교하기 -> 레포지토리 비교
+    // MARK: 비교하기 -> 레포지토리 비교
     func compareRepoAPI(ip: String) -> String{
         let url = "http://\(ip)/api/git-repos/compare"
         return url
     }
     
-    // 비교하기 전에 보내야함
+    // MARK: 비교하기 전에 보내야함
     func compareBeforeAPI(ip: String) -> String{
         let url = "http://\(ip)/api/git-repos/compare/git-repos-members"
         return url
     }
     
     
-    // KLIP prepare post API
+    // MARK: KLIP prepare post API
     func klipPreparePostAPI() -> String{
         let url = "https://a2a-api.klipwallet.com/v2/a2a/prepare"
         return url
     }
     
-    // KLIP DeepLink API
+    // MARK: KLIP DeepLink API
     func klipDeepLinkAPI(requestKey: String) -> String{
         let url = "https://klipwallet.com/?target=/a2a?request_key=\(requestKey)"
         return url
@@ -113,20 +115,72 @@ final class APIURL{
         return getMemberInfoUrl
     }
     
-    
-    
-    
-    
-    // Github get
-    func githubGetAPI()-> String{
-        let url = "https://github.com/login/oauth/authorize"
+    func getRefreshToken(ip: String) -> String{
+        let url = "http://\(ip)/api/auth/refresh"
         return url
     }
-
-    func githubPostAPI() -> String{
-        let url = "https://github.com/login/oauth/access_token"
+    
+    // MARK: 조직 검색
+    func searchOrganizationList(ip: String, name: String, type: String, page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/organizations/search?type=\(type)&name=\(name)&page=\(page)&size=\(size)"
         return url
     }
+    
+    // MARK: 조직 등록
+    func addOrganization(ip: String) -> String{
+        let url = "http://\(ip)/api/organizations"
+        return url
+    }
+    
+    // MARK: 조직 아이디 조회
+    func getOrganizationId(ip: String, name: String) -> String{
+        let url = "http://\(ip)/api/organizations/search-id?name=\(name)"
+        return url
+    }
+    
+    // MARK: 조직에 멤버 등록
+    func addMemberInOrganization(ip: String) -> String{
+        let url = "http://\(ip)/api/organizations/add-member"
+        return url
+    }
+    
+    // MARK: 인증 번호 재전송
+    func sendEmailToAuth(ip: String) -> String{
+        let url = "http://\(ip)/api/email/send"
+        return url
+    }
+    
+    // MARK: 유효한 인증 번호인지 확인
+    func checkEmailValidCode(ip: String, id: Int, code: Int) -> String{
+        let url = "http://\(ip)/api/email/check?id=\(id)&code=\(code)"
+        return url
+    }
+    
+    // MARK: 인증 번호 삭제
+    func removeCertificatedNumber(ip: String) -> String{
+        let url = "http://\(ip)/api/email/1"
+        return url
+    }
+    
+    // MARK: 전체 조직 랭킹 조회
+    func allOrganizationRanking(ip: String) -> String{
+        let url = "http://\(ip)/api/organizations/ranking/all"
+        return url
+    }
+    
+    // MARK: 타입 필터링 후 랭킹 조회
+    func typeFilterOrganiRanking(ip: String, type: String, page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/organizations/ranking?type=\(type)&page=\(page)&size=\(size)"
+        return url
+    }
+    
+    // MARK: 조직 내부 나의 랭킹 조회
+    func organizationInMyRanking(ip: String, id: Int, page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/members/ranking/organization?organizationId=\(id)&page=\(page)&size=\(size)"
+        return url
+    }
+    
+    
     
 }
 

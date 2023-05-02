@@ -2,9 +2,8 @@ package com.dragonguard.backend.member.entity;
 
 import com.dragonguard.backend.blockchain.entity.Blockchain;
 import com.dragonguard.backend.commit.entity.Commit;
-import com.dragonguard.backend.global.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
-import com.dragonguard.backend.member.exception.InvalidWalletAddressException;
+import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,11 +56,6 @@ public class Member extends BaseTime {
 
     @OneToMany(mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
-    @Formula("(SELECT sum(c.commit_num) FROM commit c WHERE c.member_id = id)")
-    private Integer sumOfCommits;
-
-    @Formula("(SELECT sum(b.amount) FROM blockchain b WHERE b.member_id = id)")
-    private Long sumOfTokens;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -71,15 +65,27 @@ public class Member extends BaseTime {
 
     private String githubToken;
 
+    @Embedded
+    private OrganizationDetails organizationDetails;
+
+    @Formula("(SELECT sum(c.commit_num) FROM commit c WHERE c.member_id = id)")
+    private Integer sumOfCommits;
+
+    @Formula("(SELECT sum(b.amount) FROM blockchain b WHERE b.member_id = id)")
+    private Long sumOfTokens;
+
     @Builder
-    public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage) {
+    public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage, Role role, AuthStep authStep) {
         this.name = name;
         this.githubId = githubId;
         this.walletAddress = walletAddress;
         this.profileImage = profileImage;
         this.tier = Tier.SPROUT;
-        this.authStep = AuthStep.GITHUB_ONLY;
+        this.authStep = authStep;
         addCommit(commit);
+        if (role != null && role.equals(Role.ROLE_ADMIN)) {
+            this.role.add(Role.ROLE_ADMIN);
+        }
     }
 
     public void addCommit(Commit commit) {
@@ -110,5 +116,17 @@ public class Member extends BaseTime {
 
     public void updateGithubToken(String githubToken) {
         this.githubToken = githubToken;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void updateOrganization(Long organizationId, String organizationEmail) {
+        this.organizationDetails = new OrganizationDetails(organizationId, organizationEmail);
+    }
+
+    public void finishAuth() {
+        this.authStep = AuthStep.ALL;
     }
 }

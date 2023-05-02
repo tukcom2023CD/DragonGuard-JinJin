@@ -1,6 +1,17 @@
 package com.dragonguard.android.connect
 
 import com.dragonguard.android.model.*
+import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
+import com.dragonguard.android.model.compare.CompareRepoRequestModel
+import com.dragonguard.android.model.compare.CompareRepoResponseModel
+import com.dragonguard.android.model.contributors.RepoContributorsModel
+import com.dragonguard.android.model.klip.*
+import com.dragonguard.android.model.org.*
+import com.dragonguard.android.model.rankings.OrgInternalRankingModel
+import com.dragonguard.android.model.rankings.OrganizationRankingModel
+import com.dragonguard.android.model.rankings.TotalUsersRankingModel
+import com.dragonguard.android.model.search.RepoNameModel
+import com.dragonguard.android.model.token.RefreshTokenModel
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -25,10 +36,9 @@ interface GitRankAPI {
     @GET("members/ranking")
     fun getTotalUsersRanking(@QueryMap query: Map<String, String>, @Header("Authorization")token: String) : Call<TotalUsersRankingModel>
 
-//    서버에 해당 정보를 가진 사용자를 등록하는 함수
-    @POST("members")
-    @Headers("accept: application/json", "content-type: application/json")
-    fun postGithubId(@Body register: RegisterGithubIdModel) : Call<RegisterGithubIdResponseModel>
+//    서버에 사용자의 활용도 최산화하는 함수
+    @POST("members/commits")
+    fun postCommits(@Header("Authorization")token: String) : Call<Unit>
 
 //
     @POST("prepare")
@@ -41,7 +51,7 @@ interface GitRankAPI {
 
 //    사용자의 토큰부여 내역을 가져오기 위한 함수
     @GET("blockchain/{id}")
-    fun getTokenHistory(@Path("id") userId: Int, @Header("Authorization")token: String) : Call<TokenHistoryModel>
+    fun getTokenHistory(@Path("id") userId: Long, @Header("Authorization")token: String) : Call<TokenHistoryModel>
 
 //    klip wallet address를 서버로 보내는 함수
     @POST("members/wallet-address")
@@ -58,12 +68,39 @@ interface GitRankAPI {
     @Headers("accept: application/json", "content-type: application/json")
     fun postCompareRepo(@Body compare: CompareRepoRequestModel, @Header("Authorization")token: String) : Call<CompareRepoResponseModel>
 
-    @POST("access_token")
-    @Headers("accept: application/json", "content-type: application/json")
-    fun getAccessToken(@QueryMap query: Map<String, String>): Call<AccessTokenModel>
+    @GET("auth/refresh")
+    fun getNewAccessToken(@Header("accessToken")access: String, @Header("refreshToken")refresh: String): Call<RefreshTokenModel>
 
-    @POST("user")
-    @Headers("accept: application/json", "content-type: application/json")
-    fun getOauthUserInfo(@Header("Authorization")token: String): Call<OauthUserInfoModel>
+    @GET("organizations/search")
+    fun getOrgNames(@QueryMap query: Map<String, String>, @Header("Authorization")access: String): Call<OrganizationNamesModel>
 
+    @POST("organizations")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postOrgRegist(@Body body: RegistOrgModel, @Header("Authorization")access: String): Call<RegistOrgResultModel>
+
+    @POST("organizations/add-member")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postAddOrgMember(@Body body: AddOrgMemberModel, @Header("Authorization")access: String): Call<RegistOrgResultModel>
+
+    @POST("email/send")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postAuthEmail(@Header("Authorization")access: String): Call<RegistOrgResultModel>
+
+    @GET("email/check")
+    fun getEmailAuthResult(@QueryMap query: Map<String, String> ,@Header("Authorization")access: String): Call<EmailAuthResultModel>
+
+    @DELETE("email/{id}")
+    fun deleteEmailCode(@Path("id") emailId: Long, @Header("Authorization")access: String): Call<Unit>
+
+    @GET("organizations/search-id")
+    fun getOrgId(@Query("name") key: String, @Header("Authorization")access: String): Call<RegistOrgResultModel>
+
+    @GET("members/ranking/organization")
+    fun getOrgInternalRankings(@QueryMap query: Map<String, String> ,@Header("Authorization")access: String): Call<OrgInternalRankingModel>
+
+    @GET("organizations/ranking")
+    fun getOrgRankings(@QueryMap query: Map<String, String> ,@Header("Authorization")access: String): Call<OrganizationRankingModel>
+
+    @GET("organizations/ranking/all")
+    fun getAllOrgRankings(@QueryMap query: Map<String, String>, @Header("Authorization")access: String): Call<OrganizationRankingModel>
 }
