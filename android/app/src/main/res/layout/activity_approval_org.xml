@@ -44,7 +44,6 @@
                 android:layout_weight="0.5"
                 android:background="@color/white"
                 android:elevation="10dp"
-                app:item="@drawable/approve_menu_selector"
                 app:menu="@menu/admin_org_approve_menu" />
         </LinearLayout>
 

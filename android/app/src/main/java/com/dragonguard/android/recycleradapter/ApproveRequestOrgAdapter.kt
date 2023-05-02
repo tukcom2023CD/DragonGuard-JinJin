@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.databinding.ApproveRequestListBinding
 import com.dragonguard.android.model.contributors.RepoContributorsItem
 
+//승인 요청중인 조직 목록 adapter
 class ApproveRequestOrgAdapter (private val datas : ArrayList<RepoContributorsItem>, private val context: Context,
                                 private val token: String) : RecyclerView.Adapter<ApproveRequestOrgAdapter.ViewHolder>() {
     private lateinit var binding: ApproveRequestListBinding

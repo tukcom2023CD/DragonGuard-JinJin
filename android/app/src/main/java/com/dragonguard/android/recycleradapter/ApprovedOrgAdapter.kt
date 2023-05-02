@@ -9,6 +9,7 @@ import com.dragonguard.android.databinding.ApproveRequestListBinding
 import com.dragonguard.android.databinding.ApprovedOrgListBinding
 import com.dragonguard.android.model.contributors.RepoContributorsItem
 
+//승인된 조직 목록 adapter
 class ApprovedOrgAdapter (private val datas : ArrayList<RepoContributorsItem>, private val context: Context,
                           private val token: String) : RecyclerView.Adapter<ApprovedOrgAdapter.ViewHolder>() {
     private lateinit var binding: ApprovedOrgListBinding
