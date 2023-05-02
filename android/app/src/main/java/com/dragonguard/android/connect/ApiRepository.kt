@@ -7,6 +7,7 @@ import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsItem
+import com.dragonguard.android.model.detail.UserDetailModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
@@ -85,7 +86,7 @@ class ApiRepository {
     //사용자의 정보를 받아오기 위한 함수
     fun getUserInfo(token: String): UserInfoModel {
         val userInfo = api.getUserInfo("Bearer $token")
-        var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null, null, null)
+        var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null, null, null, null, null, null)
         try {
             val result = userInfo.execute()
             Log.d("no", "사용자 정보 요청 결과 : ${result.code()}")
@@ -386,6 +387,19 @@ class ApiRepository {
         } catch (e: Exception) {
             Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
             return orgRankings
+        }
+    }
+
+    fun userDetail(githubId: String, token: String): UserDetailModel{
+        val details = UserDetailModel(null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null)
+        val userDetails = api.getUserDetail(githubId, "Bearer $token")
+        return try {
+            val result = userDetails.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "사용자 $githubId 의 상세조회 실패: ${e.message} ")
+            return details
         }
     }
 }

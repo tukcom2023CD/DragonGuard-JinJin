@@ -28,7 +28,9 @@ class AuthEmailActivity : AppCompatActivity() {
     private val viewmodel = Viewmodel()
     private var token = ""
     private var orgName = ""
+    private var email = ""
     private var emailAuthId: Long = 0
+    private var orgId: Long = 0
     private lateinit var timer: CountDownTimer
     private var reset = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,9 +38,11 @@ class AuthEmailActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth_email)
         binding.authEamilViewmodel = viewmodel
 
-        emailAuthId = intent.getLongExtra("id", -1)
+        orgId = intent.getLongExtra("orgId", -1)
+        email = intent.getStringExtra("email")!!
         token = intent.getStringExtra("token")!!
         orgName = intent.getStringExtra("orgName")!!
+
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(true)
@@ -46,8 +50,22 @@ class AuthEmailActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
         supportActionBar?.title = "   이메일 인증"
 
-        setUpCountDownTimer()
-        timer.start()
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            if(!this@AuthEmailActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.addOrgMember(orgId, email, token)
+                }
+                val result = resultDeferred.await()
+                Toast.makeText(applicationContext, result.toString(), Toast.LENGTH_SHORT).show()
+                if(result != -1L) {
+                    emailAuthId = result
+                    setUpCountDownTimer()
+                    timer.start()
+                }
+            }
+        }
+
 
         binding.resendCode.setOnClickListener {
             reset = false
@@ -91,24 +109,28 @@ class AuthEmailActivity : AppCompatActivity() {
     private fun deleteEmail() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.deleteLateEmailCode(emailAuthId, token)
+            if(!this@AuthEmailActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.deleteLateEmailCode(emailAuthId, token)
+                }
+                val result = resultDeferred.await()
+                reset = result
             }
-            val result = resultDeferred.await()
-            reset = result
         }
     }
 
     private fun sendEmail() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.sendEmailAuth(token)
-            }
-            val result = resultDeferred.await()
-            if(result != -1L) {
-                emailAuthId = result
-                timer.start()
+            if(!this@AuthEmailActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.sendEmailAuth(token)
+                }
+                val result = resultDeferred.await()
+                if(result != -1L) {
+                    emailAuthId = result
+                    timer.start()
+                }
             }
         }
     }

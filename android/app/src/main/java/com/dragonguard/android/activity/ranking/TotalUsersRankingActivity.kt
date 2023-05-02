@@ -57,11 +57,13 @@ class TotalUsersRankingActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getTotalUserRanking(page, size, token)
+            if(!this@TotalUsersRankingActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getTotalUserRanking(page, size, token)
+                }
+                val result = resultDeferred.await()
+                checkRankings(result)
             }
-            val result = resultDeferred.await()
-            checkRankings(result)
         }
     }
 
@@ -99,7 +101,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
         binding.totalUsersRankings.setItemViewCacheSize(usersRanking.size)
 //        Toast.makeText(applicationContext, "개수 : ${usersRanking.size}",Toast.LENGTH_SHORT).show()
         if(page == 0) {
-            totalUserRankingAdapter = TotalUsersRankingAdapter(usersRanking, this)
+            totalUserRankingAdapter = TotalUsersRankingAdapter(usersRanking, this, token)
             binding.totalUsersRankings.adapter = totalUserRankingAdapter
             binding.totalUsersRankings.layoutManager = LinearLayoutManager(this)
 //            totalUserRankingAdapter.notifyDataSetChanged()

@@ -11,6 +11,7 @@ import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsItem
+import com.dragonguard.android.model.detail.UserDetailModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
@@ -166,5 +167,9 @@ class Viewmodel: ViewModel() {
 
     fun totalOrgRankings(page: Int, token: String): OrganizationRankingModel {
         return repository.allOrgRanking(page, token)
+    }
+
+    fun userDetails(id: String, token: String): UserDetailModel {
+        return repository.userDetail(id, token)
     }
 }

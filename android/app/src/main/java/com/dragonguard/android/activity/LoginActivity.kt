@@ -71,17 +71,17 @@ class LoginActivity : AppCompatActivity() {
             cookieManager.flush()
         }
 
-        val address = intent.getStringExtra("wallet_address")
-        address?.let {
-            walletAddress = address
-            if (walletAddress.isNotBlank() && !token.isNullOrEmpty()) {
+//        val address = intent.getStringExtra("wallet_address")
+//        address?.let {
+//            walletAddress = address
+//            if (walletAddress.isNotBlank() && !token.isNullOrEmpty()) {
 //                Log.d("wallet", "지갑주소 이미 있음 $walletAddress")
 //                Toast.makeText(applicationContext, "wallet : $walletAddress", Toast.LENGTH_SHORT).show()
-                val intentW = Intent(applicationContext, MainActivity::class.java)
-                setResult(1, intentW)
-                finish()
-            }
-        }
+//                val intentW = Intent(applicationContext, MainActivity::class.java)
+//                setResult(1, intentW)
+//                finish()
+//            }
+//        }
 
 
         key = prefs.getKey("")
@@ -225,22 +225,24 @@ class LoginActivity : AppCompatActivity() {
     private fun walletAuthRequest() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val authResponseDeffered = coroutine.async(Dispatchers.IO) {
-                viewmodel.postWalletAuth(body)
-            }
-            val authResponse = authResponseDeffered.await()
-            if (authResponse.request_key.isNullOrEmpty() || authResponse.status != "prepared") {
-                val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ walletAuthRequest() }, 1000)
-            } else {
-                key = authResponse.request_key
-                prefs.setKey(authResponse.request_key)
-                Log.d("key", "key : ${authResponse.request_key}")
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://klipwallet.com/?target=/a2a?request_key=${authResponse.request_key}")
-                )
-                startActivity(intent)
+            if(!this@LoginActivity.isFinishing) {
+                val authResponseDeffered = coroutine.async(Dispatchers.IO) {
+                    viewmodel.postWalletAuth(body)
+                }
+                val authResponse = authResponseDeffered.await()
+                if (authResponse.request_key.isNullOrEmpty() || authResponse.status != "prepared") {
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({ walletAuthRequest() }, 1000)
+                } else {
+                    key = authResponse.request_key
+                    prefs.setKey(authResponse.request_key)
+                    Log.d("key", "key : ${authResponse.request_key}")
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://klipwallet.com/?target=/a2a?request_key=${authResponse.request_key}")
+                    )
+                    startActivity(intent)
+                }
             }
         }
     }

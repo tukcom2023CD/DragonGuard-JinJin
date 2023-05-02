@@ -20,6 +20,9 @@ public class MemberResponse {
     private String name;
     private String githubId;
     private Integer commits;
+    private Integer issues;
+    private Integer pullRequests;
+    private Integer comments;
     private Tier tier;
     private AuthStep authStep;
     private String profileImage;

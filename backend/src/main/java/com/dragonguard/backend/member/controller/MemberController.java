@@ -3,6 +3,7 @@ package com.dragonguard.backend.member.controller;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.member.dto.request.MemberRequest;
 import com.dragonguard.backend.member.dto.request.WalletRequest;
+import com.dragonguard.backend.member.dto.response.MemberDetailResponse;
 import com.dragonguard.backend.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.member.dto.response.MemberResponse;
 import com.dragonguard.backend.member.entity.Role;
@@ -31,22 +32,14 @@ import java.util.UUID;
 public class MemberController {
     private final MemberService memberService;
 
-    @PostConstruct
-    public void init() {
-        memberService.saveMember(new MemberRequest("Sammuelwoojae"), Role.ROLE_ADMIN);
-        memberService.saveMember(new MemberRequest("posite"), Role.ROLE_ADMIN);
-        memberService.saveMember(new MemberRequest("HJ39"), Role.ROLE_ADMIN);
-        memberService.saveMember(new MemberRequest("ohksj77"), Role.ROLE_ADMIN);
-    }
-
     @PostMapping
     public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody @Valid MemberRequest memberRequest) {
         return ResponseEntity.ok(memberService.saveMember(memberRequest, Role.ROLE_USER));
     }
 
-    @PostMapping("/commits")
-    public ResponseEntity<Void> updateCommits() {
-        memberService.updateCommits();
+    @PostMapping("/contributions")
+    public ResponseEntity<Void> updateContributions() {
+        memberService.updateContributions();
         return ResponseEntity.ok().build();
     }
 
@@ -77,5 +70,10 @@ public class MemberController {
     @GetMapping("/me")
     public ResponseEntity<MemberResponse> getCurrentUser() {
         return ResponseEntity.ok(memberService.getMember());
+    }
+
+    @GetMapping
+    public ResponseEntity<MemberDetailResponse> getMemberDetail(@RequestParam String githubId) {
+        return ResponseEntity.ok(memberService.findMemberDetailByGithubId(githubId));
     }
 }

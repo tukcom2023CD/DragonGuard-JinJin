@@ -154,24 +154,26 @@ class SearchOrganizationActivity : AppCompatActivity() {
         Log.d("org 검색", "이름 $name type $type  count $count")
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            if(type.isBlank()) {
-                type = "UNIVERSITY"
-            }
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getOrgNames(name, token, type, count)
-            }
-            val result = resultDeferred.await()
-            if(checkSearchResult(result)) {
-                initRecycler()
-            } else {
-                val secondDeferred = coroutine.async(Dispatchers.IO) {
+            if(!this@SearchOrganizationActivity.isFinishing) {
+                if(type.isBlank()) {
+                    type = "UNIVERSITY"
+                }
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
                     viewmodel.getOrgNames(name, token, type, count)
                 }
-                val second = secondDeferred.await()
-                if (checkSearchResult(second)) {
+                val result = resultDeferred.await()
+                if(checkSearchResult(result)) {
                     initRecycler()
                 } else {
-                    binding.progressBar.visibility = View.GONE
+                    val secondDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getOrgNames(name, token, type, count)
+                    }
+                    val second = secondDeferred.await()
+                    if (checkSearchResult(second)) {
+                        initRecycler()
+                    } else {
+                        binding.progressBar.visibility = View.GONE
+                    }
                 }
             }
         }

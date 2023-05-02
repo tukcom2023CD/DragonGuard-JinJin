@@ -49,7 +49,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/github_auth"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -62,7 +62,7 @@
                         android:textColor="@color/white"
                         android:textSize="20sp" />
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/wallet_auth"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -75,7 +75,7 @@
                         android:textColor="@color/white"
                         android:textSize="20sp" />
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/wallet_finish"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"

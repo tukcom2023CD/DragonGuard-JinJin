@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -59,14 +60,18 @@ class RepoContributorsActivity : AppCompatActivity() {
     //    repo의 contributors 검색
     fun repoContributors(repoName: String) {
         if(!this@RepoContributorsActivity.isFinishing){
+            Log.d("check", "repoName $repoName")
+            Log.d("check", "token $token")
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
-                val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getRepoContributors(repoName, token)
-                }
-                val result = resultDeferred.await()
+                if(!this@RepoContributorsActivity.isFinishing) {
+                    val resultDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getRepoContributors(repoName, token)
+                    }
+                    val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()
-                checkContributors(result)
+                    checkContributors(result)
+                }
             }
         }
     }
@@ -103,7 +108,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.repoContributors.setItemViewCacheSize(contributors.size)
 //        Toast.makeText(applicationContext, "리사이클러뷰 시작", Toast.LENGTH_SHORT).show()
 //        Toast.makeText(applicationContext, "contributors 수 : ${contributors.size}", Toast.LENGTH_SHORT).show()
-        contributorsAdapter = ContributorsAdapter(contributors, this, colorsets)
+        contributorsAdapter = ContributorsAdapter(contributors, this, colorsets, token, repoName)
         binding.repoContributors.adapter = contributorsAdapter
         binding.repoContributors.layoutManager = LinearLayoutManager(this)
         binding.repoContributors.visibility = View.VISIBLE
@@ -214,10 +219,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
 //    뒤로가기 누르면 화면 전환하게 함
     override fun onBackPressed() {
-        val intent = Intent(applicationContext, SearchActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startActivity(intent)
+        finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

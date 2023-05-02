@@ -7,27 +7,29 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
+import com.dragonguard.android.databinding.LanguageListBinding
 
 class LanguagesAdapter(private val languages: ArrayList<String>, private val languagesCheckBox: ArrayList<Boolean>): RecyclerView.Adapter<LanguagesAdapter.ViewHolder>() {
-
+    private lateinit var binding: LanguageListBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LanguagesAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.language_list,parent,false)
-        return ViewHolder(view)
+        binding = LanguageListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding.root)
     }
 
     override fun getItemCount(): Int = languages.size
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val checkBox = view.findViewById<CheckBox>(R.id.language_check)
-        private val language = view.findViewById<TextView>(R.id.language_text)
         fun bind(position: Int){
-            checkBox.isChecked = languagesCheckBox[position]
-            language.text = languages[position]
-            checkBox.setOnClickListener {
-                languagesCheckBox[position] = checkBox.isChecked
+            binding.languageCheck.isChecked = languagesCheckBox[position]
+            binding.languageText.text = languages[position]
+            binding.languageCheck.setOnClickListener {
+                languagesCheckBox[position] = binding.languageCheck.isChecked
             }
         }
 
+    }
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
 
     override fun onBindViewHolder(holder: LanguagesAdapter.ViewHolder, position: Int) {

@@ -167,23 +167,25 @@ class CompareSearchActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.getSearchRepoResult(name, count, "REPOSITORIES", token)
-            }
-            val result = resultDeferred.await()
-            delay(1000)
-            if (!checkSearchResult(result)) {
-                val secondDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.getSearchRepoResult(name, count,"REPOSITORIES", token)
+            if(!this@CompareSearchActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.getSearchRepoResult(name, count, "REPOSITORIES", token)
                 }
-                val second = secondDeferred.await()
-                if (checkSearchResult(second)) {
-                    initRecycler()
+                val result = resultDeferred.await()
+                delay(1000)
+                if (!checkSearchResult(result)) {
+                    val secondDeferred = coroutine.async(Dispatchers.IO) {
+                        viewmodel.getSearchRepoResult(name, count,"REPOSITORIES", token)
+                    }
+                    val second = secondDeferred.await()
+                    if (checkSearchResult(second)) {
+                        initRecycler()
+                    } else {
+                        binding.progressBar.visibility = View.GONE
+                    }
                 } else {
-                    binding.progressBar.visibility = View.GONE
+                    initRecycler()
                 }
-            } else {
-                initRecycler()
             }
         }
     }

@@ -96,9 +96,9 @@ async def commits(member):
         h2 = soup.find('h2', attrs={"class" : "f4 text-normal mb-2"})
         name = soup.find('span', attrs={"class" : "p-name vcard-fullname d-block overflow-hidden"}).text.strip()
         image = soup.find('img', attrs={ "class" : "avatar avatar-user width-full border color-bg-default"})['src']
-        commit_num = int(h2.text.strip().split(' ')[0].rstrip().replace(',', ''))
+        contribution = int(h2.text.strip().split(' ')[0].rstrip().replace(',', ''))
         
-        response = { "name" : name, "commitNum" : commit_num, "githubId" : m, "profileImage" : image}
+        response = { "name" : name, "contribution" : contribution, "githubId" : m, "profileImage" : image}
         
         sink = app.topic('gitrank.to.backend.commit', value_type=dict)
         await sink.send(value=response)

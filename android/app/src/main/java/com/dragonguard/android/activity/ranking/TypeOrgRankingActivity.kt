@@ -58,11 +58,13 @@ class TypeOrgRankingActivity : AppCompatActivity() {
         binding.orgNameType.text = type
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.typeOrgRankings(type, page, token)
+            if(!this@TypeOrgRankingActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.typeOrgRankings(type, page, token)
+                }
+                val result = resultDeferred.await()
+                checkRankings(result)
             }
-            val result = resultDeferred.await()
-            checkRankings(result)
         }
     }
 

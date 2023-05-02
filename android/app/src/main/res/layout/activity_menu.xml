@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/logout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/faq"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/token_criterion"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/version"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/organization_auth"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

@@ -46,7 +46,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4.8">
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="Repository 1"
@@ -83,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="4">
-                        <Button
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/repo_compare2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                             />
                     </LinearLayout>
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/repo_choose"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

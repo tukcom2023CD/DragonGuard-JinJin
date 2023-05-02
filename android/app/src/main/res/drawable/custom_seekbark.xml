@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--시크바 배경-->
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <!-- 시크바 선 굵기 : 길이 10dp -->
+            <stroke android:width="10dp" android:color="#00ff00" />
+            <!-- 시크바 내용 색상 -->
+            <solid android:color="#00ff00"/>
+            <!-- 테두리 둥글게 설정 -->
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+
+    <!-- 시크바 진행 프로그레스 -->
+    <item android:id="@android:id/progress" >
+        <clip>
+            <shape android:shape="rectangle">
+                <!-- 시크바 선 굵기 : 길이 10dp -->
+                <stroke android:width="10dp" android:color="#ff0000" />
+                <!-- 시크바 내용 색상 -->
+                <solid android:color="#ff0000"/>
+                <!-- 테두리 둥글게 설정 -->
+                <corners android:radius="20dp"/>
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>
+

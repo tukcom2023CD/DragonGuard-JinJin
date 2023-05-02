@@ -2,6 +2,7 @@ package com.dragonguard.backend.gitrepo.repository;
 
 import com.dragonguard.backend.gitrepo.entity.GitRepo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +16,9 @@ import java.util.Optional;
 @Repository
 public interface GitRepoRepository extends JpaRepository<GitRepo, Long> {
     Optional<GitRepo> findByName(String name);
+
+    boolean existsByName(String name);
+
+    @Query("SELECT gr FROM GitRepo gr JOIN FETCH GitRepoMember grm JOIN FETCH Member m WHERE m.githubId = :githubId")
+    List<GitRepo> findByGithubId(String githubId);
 }

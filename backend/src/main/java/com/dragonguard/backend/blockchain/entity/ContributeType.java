@@ -9,5 +9,5 @@ import lombok.Getter;
  */
 
 public enum ContributeType {
-    COMMIT, ISSUE, PULL_REQUEST
+    COMMIT, ISSUE, PULL_REQUEST, COMMENT
 }

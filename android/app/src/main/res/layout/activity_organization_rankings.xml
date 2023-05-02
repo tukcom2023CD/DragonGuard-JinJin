@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/internal_ranking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/total_org_ranking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/university_ranking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/company_ranking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -147,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/etc_ranking"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

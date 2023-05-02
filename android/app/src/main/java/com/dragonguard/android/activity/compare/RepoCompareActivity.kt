@@ -56,12 +56,14 @@ class RepoCompareActivity : AppCompatActivity() {
     fun repoContributors() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.postCompareRepoMembersRequest(repo1, repo2, token)
-            }
-            val result = resultDeferred.await()
+            if(!this@RepoCompareActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.postCompareRepoMembersRequest(repo1, repo2, token)
+                }
+                val result = resultDeferred.await()
 //            Toast.makeText(applicationContext, "result = ${result.size}",Toast.LENGTH_SHORT).show()
-            checkContributors(result)
+                checkContributors(result)
+            }
         }
     }
 

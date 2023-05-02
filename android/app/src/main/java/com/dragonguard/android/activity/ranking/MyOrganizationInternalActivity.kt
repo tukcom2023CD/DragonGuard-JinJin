@@ -59,14 +59,16 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.searchOrgId(orgName, token)
-            }
-            val result = resultDeferred.await()
-            Log.d("조직 id", "조직 id: $result")
-            if (result != 0L) {
-                id = result
-                orgInternalRankings(result)
+            if(!this@MyOrganizationInternalActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.searchOrgId(orgName, token)
+                }
+                val result = resultDeferred.await()
+                Log.d("조직 id", "조직 id: $result")
+                if (result != 0L) {
+                    id = result
+                    orgInternalRankings(result)
+                }
             }
         }
     }
@@ -75,11 +77,13 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
         binding.orgInternalName.text = orgName
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
-            val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.orgInterRankings(id, page, token)
+            if(!this@MyOrganizationInternalActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.orgInterRankings(id, page, token)
+                }
+                val result = resultDeferred.await()
+                checkRankings(result)
             }
-            val result = resultDeferred.await()
-            checkRankings(result)
         }
     }
 
@@ -142,7 +146,7 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
         binding.orgInternalRanking.setItemViewCacheSize(orgInternalRankings.size)
         if (page == 0) {
             organizationInternalRankingAdapter =
-                OrgInternalRankingAdapter(orgInternalRankings, this)
+                OrgInternalRankingAdapter(orgInternalRankings, this, token)
             binding.orgInternalRanking.adapter = organizationInternalRankingAdapter
             binding.orgInternalRanking.layoutManager = LinearLayoutManager(this)
             binding.orgInternalRanking.visibility = View.VISIBLE
