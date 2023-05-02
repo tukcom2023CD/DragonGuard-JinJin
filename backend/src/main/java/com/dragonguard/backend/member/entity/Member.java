@@ -6,6 +6,7 @@ import com.dragonguard.backend.gitorganization.entity.GitOrganizationMember;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
 import com.dragonguard.backend.issue.entity.Issue;
+import com.dragonguard.backend.member.exception.TierNoneMatchException;
 import com.dragonguard.backend.pullrequest.entity.PullRequest;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -82,7 +84,7 @@ public class Member extends BaseTime {
     @Embedded
     private OrganizationDetails organizationDetails;
 
-    private Integer sumOfComments;
+    private Integer sumOfReviews;
 
     @Formula("(SELECT sum(c.amount) FROM commit c WHERE c.member_id = id)")
     private Integer sumOfCommits;
@@ -140,7 +142,18 @@ public class Member extends BaseTime {
     }
 
     public void updateTier() {
-        this.tier = Tier.checkTier(sumOfTokens);
+        if (sumOfTokens != null) {
+            this.tier = Tier.checkTier(sumOfTokens);
+            return;
+        }
+        Long amount = this.blockchains.stream()
+                .map(Blockchain::getAmount)
+                .mapToLong(b -> Long.parseLong(b.toString()))
+                .sum();
+        try {
+            this.tier = Tier.checkTier(amount);
+        } catch (TierNoneMatchException e) {
+        }
     }
 
     public void updateWalletAddress(String walletAddress) {
@@ -172,7 +185,31 @@ public class Member extends BaseTime {
         this.gitOrganizationMembers.add(gitOrganizationMembers);
     }
 
-    public void updateSumOfComments(Integer sumOfComments) {
-        this.sumOfComments = sumOfComments;
+    public void updateSumOfReviews(Integer sumOfReviews) {
+        this.sumOfReviews = sumOfReviews;
+    }
+
+    public void updateAuthStep(AuthStep authStep) {
+        this.authStep = authStep;
+    }
+
+    public int getCommitSumWithRelation() {
+        return this.commits.stream().mapToInt(Commit::getAmount).sum();
+    }
+
+    public int getIssueSumWithRelation() {
+        return this.issues.stream().mapToInt(Issue::getAmount).sum();
+    }
+
+    public int getPullRequestSumWithRelation() {
+        return this.pullRequests.stream().mapToInt(PullRequest::getAmount).sum();
+    }
+
+    public boolean isWallAddressExist() {
+        return StringUtils.hasText(this.getWalletAddress());
+    }
+
+    public String getBlockchainUrl() {
+        return "https://baobab.scope.klaytn.com/account/" + this.walletAddress + "?tabId=txList";
     }
 }

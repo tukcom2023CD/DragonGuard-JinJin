@@ -14,7 +14,7 @@ final class MainModel{
     var commits: Int
     var tier: String
     var authStep: String
-    var profileImage: String
+    var profileImage: String?
     var rank: Int
     var organizationRank: Int
     var tokenAmount: Int

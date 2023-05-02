@@ -1,5 +1,6 @@
 package com.dragonguard.backend.gitorganization.entity;
 
+import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GitOrganization {
+public class GitOrganization extends BaseTime {
     @Id
     @GeneratedValue
     private Long id;

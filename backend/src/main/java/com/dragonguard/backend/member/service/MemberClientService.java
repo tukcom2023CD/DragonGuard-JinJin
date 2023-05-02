@@ -48,7 +48,8 @@ public class MemberClientService {
     public void addMemberContribution(Member member) {
         int year = LocalDate.now().getYear();
         String githubId = member.getGithubId();
-        MemberClientRequest request = new MemberClientRequest(githubId, member.getGithubToken(), year);
+        String githubToken = member.getGithubToken();
+        MemberClientRequest request = new MemberClientRequest(githubId, githubToken, year);
 
         int commitNum = memberCommitClient.requestToGithub(request).getTotal_count();
         int issueNum = memberIssueClient.requestToGithub(request).getTotal_count();
@@ -60,13 +61,16 @@ public class MemberClientService {
         List<String> memberOrganizationNames = Arrays.asList(memberOrganizationClient.requestToGithub(request)).stream()
                 .map(MemberOrganizationResponse::getLogin)
                 .collect(Collectors.toList());
-        List<String> organizationRepoNames = Arrays.asList(organizationRepoClient.requestToGithub(request)).stream()
-                .map(OrganizationRepoResponse::getFull_name)
-                .collect(Collectors.toList());
+
+        memberOrganizationNames.stream()
+                .map(orgName -> new MemberClientRequest(orgName, githubToken, year))
+                .map(orgDto -> Arrays.asList(organizationRepoClient.requestToGithub(orgDto)).stream()
+                        .map(OrganizationRepoResponse::getFull_name)
+                        .collect(Collectors.toList()))
+                .forEach(this::saveGitRepos);
 
         saveGitRepos(memberRepoNames);
-        saveGitRepos(organizationRepoNames);
-        gitOrganizationService.saveGitOrganizations(memberOrganizationNames);
+        gitOrganizationService.saveGitOrganizations(memberOrganizationNames, member);
         commitService.saveCommits(new CommitScrapingResponse(githubId, commitNum));
         issueService.saveIssues(githubId, issueNum, year);
         pullRequestService.savePullRequests(githubId, pullRequestNum, year);
@@ -74,7 +78,7 @@ public class MemberClientService {
 
     public void saveGitRepos(List<String> gitRepoNames) {
         List<GitRepo> gitRepos = gitRepoNames.stream()
-                .filter(gitRepoRepository::existsByName)
+                .filter(name -> !gitRepoRepository.existsByName(name))
                 .map(gitRepoMapper::toEntity)
                 .collect(Collectors.toList());
 

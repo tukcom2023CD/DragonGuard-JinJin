@@ -11,6 +11,7 @@ import com.dragonguard.backend.member.entity.Member;
 import com.dragonguard.backend.member.repository.MemberRepository;
 import com.dragonguard.backend.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -31,6 +32,8 @@ public class BlockchainService {
     private final TransactionService transactionService;
     private final BlockchainMapper blockchainMapper;
     private final AuthService authService;
+    @Value("#{'${admin}'.split(',')}")
+    private List<String> admins;
 
     public void setTransaction(ContractRequest request, Member member) {
         UUID memberId = member.getId();
@@ -51,7 +54,13 @@ public class BlockchainService {
         transactionService.transfer(request);
         BigInteger amount = transactionService.balanceOf(request.getAddress());
 
-        blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));
+        if (amount.equals(request.getAmount())) {
+            blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));
+            return;
+        }
+        if (admins.stream().anyMatch(admin -> admin.trim().equals(member.getGithubId()))) {
+            blockchainRepository.save(blockchainMapper.toEntity(request.getAmount(), member, request));
+        }
     }
 
     public List<BlockchainResponse> getBlockchainList() {

@@ -349,11 +349,18 @@ extension SearchPageController: UITableViewDelegate, UITableViewDataSource{
         let comparePage = CompareController()
 
         if beforePage == "Main"{
-            let nextPage = RepoContributorInfoController()
-            nextPage.selectedTitle = searchResultList[indexPath.section].name
-            self.searchResultList = []
-            tableView.reloadData()
-            self.navigationController?.pushViewController(nextPage, animated: true)
+            if self.type == "REPOSITORIES"{
+                let nextPage = RepoContributorInfoController()
+                nextPage.selectedTitle = searchResultList[indexPath.section].name
+                self.searchResultList = []
+                tableView.reloadData()
+                self.navigationController?.pushViewController(nextPage, animated: true)
+            }
+            else if self.type == "USER"{
+                let userProfileController = UserProfileController()
+                
+                self.navigationController?.pushViewController(userProfileController, animated: true)
+            }
         }
         else if beforePage == "CompareRepo1"{
             comparePage.repository1 = searchResultList[indexPath.section].name

@@ -25,7 +25,6 @@ final class LoginController: UIViewController{
         checkClearAuths()
         
         if autoLoginCheck ?? false{
-            print("???")
             self.navigationController?.pushViewController(MainController(), animated: true)
         }
         
@@ -120,9 +119,9 @@ final class LoginController: UIViewController{
                     
                     let rootView = MainController()
                     
-                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
-                       print("\(key): \(value)")
-                     }
+//                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
+//                       print("\(key): \(value)")
+//                     }
 
                     self.klipLoginBtn.isEnabled = false
                     self.goGithubBtn.isEnabled = true
@@ -130,10 +129,6 @@ final class LoginController: UIViewController{
                     self.klipLoginBtn.backgroundColor = .white
                     
                     self.navigationController?.pushViewController(rootView, animated: true)
-                    
-//                    let nc = UINavigationController(rootViewController: rootView)
-//                    let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-//                    sceneDelegate.window?.rootViewController = nc
                     
                 }
                 else if first{

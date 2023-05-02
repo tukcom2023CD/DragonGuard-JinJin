@@ -48,10 +48,11 @@ public class MemberMapper {
                 .tokenAmount(amount)
                 .organization(organization)
                 .organizationRank(organizationRank)
+                .blockchainUrl(member.getBlockchainUrl())
                 .build();
     }
 
-    public MemberResponse toResponse(Member member, Integer commits, Integer issues, Integer pullRequests, Integer comments, Integer rank, Long amount) {
+    public MemberResponse toResponse(Member member, Integer commits, Integer issues, Integer pullRequests, Integer reviews, Integer rank, Long amount) {
         return MemberResponse.builder()
                 .id(member.getId())
                 .name(member.getName())
@@ -59,7 +60,7 @@ public class MemberMapper {
                 .commits(commits)
                 .issues(issues)
                 .pullRequests(pullRequests)
-                .comments(comments)
+                .reviews(reviews)
                 .tier(member.getTier())
                 .authStep(member.getAuthStep())
                 .profileImage(member.getProfileImage())
@@ -76,7 +77,7 @@ public class MemberMapper {
                 .commits(dto.getCommits())
                 .issues(dto.getIssues())
                 .pullRequests(dto.getPullRequests())
-                .comments(dto.getComments())
+                .reviews(dto.getReviews())
                 .tier(dto.getTier())
                 .authStep(dto.getAuthStep())
                 .profileImage(dto.getProfileImage())

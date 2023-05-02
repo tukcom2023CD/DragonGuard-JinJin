@@ -27,10 +27,10 @@ public class KafkaCommitConsumer {
 
     @KafkaListener(topics = "gitrank.to.backend.commit", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        Map<Object, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            map = mapper.readValue(message, new TypeReference<Map<Object, Object>>() {
+            map = mapper.readValue(message, new TypeReference<Map<String, Object>>() {
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();

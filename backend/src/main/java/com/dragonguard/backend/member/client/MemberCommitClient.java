@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.nio.charset.StandardCharsets;
 
@@ -36,7 +37,7 @@ public class MemberCommitClient implements GithubClient<MemberClientRequest, Mem
                 .uri(
                         uriBuilder -> uriBuilder
                                 .path("search/commits?q=author:")
-                                .path(request.getGithubId() + "+committer-date:>" + request.getYear() + "-01-01")
+                                .path(request.getGithubId() + "+committer-date:%3E" + request.getYear() + "-01-01")
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
@@ -51,7 +52,12 @@ public class MemberCommitClient implements GithubClient<MemberClientRequest, Mem
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1))
                 .build();
+
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(githubProperties.getUrl());
+        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
+
         return WebClient.builder()
+                .uriBuilderFactory(factory)
                 .exchangeStrategies(exchangeStrategies)
                 .baseUrl(githubProperties.getUrl())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)

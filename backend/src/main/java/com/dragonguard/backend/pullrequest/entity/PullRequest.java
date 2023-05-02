@@ -1,6 +1,7 @@
 package com.dragonguard.backend.pullrequest.entity;
 
 import com.dragonguard.backend.commit.entity.Commit;
+import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Objects;
 
 /**
  * @author 김승진
@@ -21,7 +23,7 @@ import javax.persistence.Id;
 @Entity
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PullRequest {
+public class PullRequest extends BaseTime {
     @Id
     @GeneratedValue
     private Long id;
@@ -41,6 +43,19 @@ public class PullRequest {
 
     public void updatePullRequestNum(Integer amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PullRequest that = (PullRequest) o;
+        return Objects.equals(githubId, that.githubId) && Objects.equals(amount, that.amount) && Objects.equals(year, that.year);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(githubId, amount, year);
     }
 
     public boolean customEquals(PullRequest pullRequest) {

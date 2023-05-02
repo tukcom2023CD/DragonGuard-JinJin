@@ -47,7 +47,7 @@ final class TierTokenCustomUIView : UIView {
     lazy var myTokenLabel : UILabel = {
         let myTokenLabel = UILabel()
         myTokenLabel.textColor = .black
-        myTokenLabel.text = "내 토큰 : "
+        myTokenLabel.text = "내 기여도 : "
         myTokenLabel.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 17)
         return myTokenLabel
     }()

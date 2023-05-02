@@ -13,6 +13,7 @@ import com.klaytn.caver.contract.SendOptions;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.math.BigInteger;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class TransactionService {
             options.setGas(BigInteger.valueOf(3000000));
             options.setFeeDelegation(true);
             options.setFeePayer(keyring.getAddress());
-            contract.deploy(options, properties.getByteCode(), "Gitter", "GTR", new BigInteger("10000000000000"));
+            contract.deploy(options, properties.getByteCode(), "Gitter", "GTR", BigInteger.valueOf(10000000000000L));
         } catch (Exception e) {
             e.printStackTrace();
             throw new BlockchainException();
@@ -53,7 +54,7 @@ public class TransactionService {
         options.setFeePayer(keyring.getAddress());
 
         try {
-            contract.send(options, "set", request.getAddress(), request.getAmount(), request.getContributeType().toString());
+            contract.send(options, "set", request.getAddress(), request.getAmount(), request.getContributeType());
         } catch (Exception e) {
             e.printStackTrace();
             throw new BlockchainException();
