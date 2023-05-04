@@ -20,6 +20,7 @@ public class AdminMapper {
         return AdminOrganizationResponse.builder()
                 .id(entity.getId())
                 .name(entity.getName())
+                .type(entity.getOrganizationType())
                 .build();
     }
 }

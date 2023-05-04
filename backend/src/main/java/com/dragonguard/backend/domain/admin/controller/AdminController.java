@@ -24,7 +24,7 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/decide")
+    @PostMapping("/organizations/decide")
     public ResponseEntity<List<AdminOrganizationResponse>> decideRequest(@RequestBody AdminDecideRequest adminDecideRequest) {
         return ResponseEntity.ok(adminService.decideRequestedOrganization(adminDecideRequest));
     }
