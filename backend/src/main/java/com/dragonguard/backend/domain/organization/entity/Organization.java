@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -37,6 +38,9 @@ public class Organization extends BaseTime {
 
     @OneToMany
     private Set<Member> members = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    private OrganizationStatus organizationStatus = OrganizationStatus.REQUESTED;
 
     @Formula("(SELECT sum(b.amount) FROM blockchain b INNER JOIN member m ON m.id = b.member_id WHERE m.organization_id = id)")
     private Long sumOfMemberTokens;

@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.organization.repository;
 
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -31,7 +32,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
         return jpaQueryFactory
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization, member)
-                .where(member.authStep.eq(AuthStep.ALL))
+                .where(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED)
+                        .and(member.authStep.eq(AuthStep.ALL)))
                 .leftJoin(organization.members, member)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -46,7 +48,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization, member)
                 .leftJoin(organization.members, member)
-                .where(organization.organizationType.eq(type).and(member.authStep.eq(AuthStep.ALL)))
+                .where(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED)
+                        .and(organization.organizationType.eq(type).and(member.authStep.eq(AuthStep.ALL))))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(organization.sumOfMemberTokens.desc())
@@ -59,7 +62,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
         return jpaQueryFactory
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization)
-                .where(organization.organizationType.eq(type).and(organization.name.containsIgnoreCase(name)))
+                .where(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED)
+                        .and(organization.organizationType.eq(type).and(organization.name.containsIgnoreCase(name))))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .distinct()
@@ -73,9 +77,9 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .from(member, organization)
                 .leftJoin(organization.members, member)
                 .on(member.organizationDetails.organizationId.eq(organization.id))
-                .where(member.sumOfTokens.gt(
+                .where(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED).and(member.sumOfTokens.gt(
                         JPAExpressions
-                                .select(member.sumOfTokens).from(member).where(member.id.eq(memberId))))
+                                .select(member.sumOfTokens).from(member).where(member.id.eq(memberId)))))
                 .distinct()
                 .fetch().size() + 1;
     }
