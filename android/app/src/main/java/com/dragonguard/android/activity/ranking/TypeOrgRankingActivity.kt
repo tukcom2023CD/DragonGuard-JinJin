@@ -132,6 +132,7 @@ class TypeOrgRankingActivity : AppCompatActivity() {
             binding.typeOrgRanking.layoutManager = LinearLayoutManager(this)
             binding.typeOrgRanking.visibility = View.VISIBLE
         }
+        binding.typeOrgRanking.adapter?.notifyDataSetChanged()
         page++
         Log.d("api 횟수", "$page 페이지 검색")
         binding.progressBar.visibility = View.GONE

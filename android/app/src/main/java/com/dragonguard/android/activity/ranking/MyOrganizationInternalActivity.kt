@@ -151,6 +151,7 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
             binding.orgInternalRanking.layoutManager = LinearLayoutManager(this)
             binding.orgInternalRanking.visibility = View.VISIBLE
         }
+        binding.orgInternalRanking.adapter?.notifyDataSetChanged()
         page++
         Log.d("api 횟수", "$page 페이지 검색")
         binding.progressBar.visibility = View.GONE
