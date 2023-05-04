@@ -58,4 +58,8 @@ public class Organization extends BaseTime {
             member.updateOrganization(id, email);
         }
     }
+
+    public void updateStatus(OrganizationStatus organizationStatus) {
+        this.organizationStatus = organizationStatus;
+    }
 }

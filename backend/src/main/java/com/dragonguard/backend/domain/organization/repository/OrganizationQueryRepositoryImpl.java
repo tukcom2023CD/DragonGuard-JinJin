@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.organization.repository;
 
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.querydsl.jpa.JPAExpressions;
@@ -82,5 +83,15 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                                 .select(member.sumOfTokens).from(member).where(member.id.eq(memberId)))))
                 .distinct()
                 .fetch().size() + 1;
+    }
+
+    @Override
+    public List<Organization> findAllByOrganizationStatus(OrganizationStatus organizationStatus, Pageable pageable) {
+        return jpaQueryFactory
+                .selectFrom(organization)
+                .where(organization.organizationStatus.eq(organizationStatus))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 }

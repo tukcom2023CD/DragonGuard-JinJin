@@ -1,6 +1,8 @@
 package com.dragonguard.backend.domain.organization.repository;
 
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.domain.organization.entity.Organization;
+import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import org.springframework.data.domain.Pageable;
 
@@ -20,4 +22,6 @@ public interface OrganizationQueryRepository {
     List<OrganizationResponse> findByTypeAndSearchWord(OrganizationType type, String name, Pageable pageable);
 
     Integer findRankingByMemberId(UUID memberId);
+
+    List<Organization> findAllByOrganizationStatus(OrganizationStatus organizationStatus, Pageable pageable);
 }
