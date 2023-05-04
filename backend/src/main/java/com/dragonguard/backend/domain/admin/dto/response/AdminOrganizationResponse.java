@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class OrganizationAdminResponse {
+public class AdminOrganizationResponse {
     private Long id;
     private String name;
 }

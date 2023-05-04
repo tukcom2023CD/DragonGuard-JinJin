@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DecideRequest {
+public class AdminDecideRequest {
     private Long id;
     private OrganizationStatus decide;
 }

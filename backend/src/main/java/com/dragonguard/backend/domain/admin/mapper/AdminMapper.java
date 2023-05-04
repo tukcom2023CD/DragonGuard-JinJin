@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.admin.mapper;
 
-import com.dragonguard.backend.domain.admin.dto.response.OrganizationAdminResponse;
+import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationResponse;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import org.springframework.stereotype.Component;
 
@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 @Component
 public class AdminMapper {
 
-    public List<OrganizationAdminResponse> toResponseList(List<Organization> entityList) {
+    public List<AdminOrganizationResponse> toResponseList(List<Organization> entityList) {
         return entityList.stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
-    private OrganizationAdminResponse toResponse(Organization entity) {
-        return OrganizationAdminResponse.builder()
+    private AdminOrganizationResponse toResponse(Organization entity) {
+        return AdminOrganizationResponse.builder()
                 .id(entity.getId())
                 .name(entity.getName())
                 .build();

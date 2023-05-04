@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.admin.service;
 
-import com.dragonguard.backend.domain.admin.dto.request.DecideRequest;
-import com.dragonguard.backend.domain.admin.dto.response.OrganizationAdminResponse;
+import com.dragonguard.backend.domain.admin.dto.request.AdminDecideRequest;
+import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationResponse;
 import com.dragonguard.backend.domain.admin.mapper.AdminMapper;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
@@ -22,11 +22,11 @@ public class AdminService {
     private final AdminMapper adminMapper;
 
     @Transactional
-    public List<OrganizationAdminResponse> decideRequestedOrganization(DecideRequest decideRequest) {
-        Organization organization = organizationRepository.findById(decideRequest.getId())
+    public List<AdminOrganizationResponse> decideRequestedOrganization(AdminDecideRequest adminDecideRequest) {
+        Organization organization = organizationRepository.findById(adminDecideRequest.getId())
                 .orElseThrow(EntityNotFoundException::new);
         OrganizationStatus beforeStatus = organization.getOrganizationStatus();
-        organization.updateStatus(decideRequest.getDecide());
+        organization.updateStatus(adminDecideRequest.getDecide());
 
         List<Organization> organizations = organizationRepository
                 .findAllByOrganizationStatus(beforeStatus, PageRequest.of(0, 20));
@@ -34,7 +34,7 @@ public class AdminService {
         return adminMapper.toResponseList(organizations);
     }
 
-    public List<OrganizationAdminResponse> getOrganizationsByStatus(OrganizationStatus status, Pageable pageable) {
+    public List<AdminOrganizationResponse> getOrganizationsByStatus(OrganizationStatus status, Pageable pageable) {
         List<Organization> organizations = organizationRepository
                 .findAllByOrganizationStatus(status, pageable);
 

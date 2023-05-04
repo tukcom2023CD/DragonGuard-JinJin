@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.admin.controller;
 
-import com.dragonguard.backend.domain.admin.dto.request.DecideRequest;
-import com.dragonguard.backend.domain.admin.dto.response.OrganizationAdminResponse;
+import com.dragonguard.backend.domain.admin.dto.request.AdminDecideRequest;
+import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationResponse;
 import com.dragonguard.backend.domain.admin.service.AdminService;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.global.Admin;
@@ -25,12 +25,12 @@ public class AdminController {
     }
 
     @PostMapping("/decide")
-    public ResponseEntity<List<OrganizationAdminResponse>> decideRequest(@RequestBody DecideRequest decideRequest) {
-        return ResponseEntity.ok(adminService.decideRequestedOrganization(decideRequest));
+    public ResponseEntity<List<AdminOrganizationResponse>> decideRequest(@RequestBody AdminDecideRequest adminDecideRequest) {
+        return ResponseEntity.ok(adminService.decideRequestedOrganization(adminDecideRequest));
     }
 
     @GetMapping("/organizations")
-    public ResponseEntity<List<OrganizationAdminResponse>> getOrganizationsByStatus(
+    public ResponseEntity<List<AdminOrganizationResponse>> getOrganizationsByStatus(
             @RequestParam OrganizationStatus status, Pageable pageable) {
         return ResponseEntity.ok(adminService.getOrganizationsByStatus(status, pageable));
     }
