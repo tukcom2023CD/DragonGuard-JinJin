@@ -1,4 +1,4 @@
-package com.dragonguard.backend.organization.controller;
+package com.dragonguard.backend.domain.organization.controller;
 
 import com.dragonguard.backend.domain.organization.controller.OrganizationController;
 import com.dragonguard.backend.global.IdResponse;

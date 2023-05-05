@@ -15,6 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description 관리자 기능을 수행하는 Service
+ */
+
 @Service
 @RequiredArgsConstructor
 public class AdminService {

@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author 김승진
+ * @description 관리자의 조직 로직 관련 dto와 조직을 매핑해주는 Mapper
+ */
+
 @Component
 public class AdminMapper {
 

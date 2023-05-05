@@ -7,6 +7,6 @@
 == Blockchain
 === 블록체인 부여 기록 리스트 조회
 ==== HTTP request
-include::../../../build/generated-snippets/get blockchain list/http-request.adoc[]
+include::../../build/generated-snippets/get blockchain list/http-request.adoc[]
 ==== HTTP response
-include::../../../build/generated-snippets/get blockchain list/http-response.adoc[]
+include::../../build/generated-snippets/get blockchain list/http-response.adoc[]

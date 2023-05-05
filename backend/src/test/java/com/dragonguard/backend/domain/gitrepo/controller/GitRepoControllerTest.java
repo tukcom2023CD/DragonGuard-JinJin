@@ -1,6 +1,5 @@
-package com.dragonguard.backend.gitrepo.controller;
+package com.dragonguard.backend.domain.gitrepo.controller;
 
-import com.dragonguard.backend.domain.gitrepo.controller.GitRepoController;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
