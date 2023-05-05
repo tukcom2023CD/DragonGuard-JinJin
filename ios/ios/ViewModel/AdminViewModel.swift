@@ -41,4 +41,15 @@ final class AdminViewModel {
         }
     }
     
+    // MARK: 승인된 리스트 중 특정 조직이 반려된 리스트를 받는 함수
+    func updateOrganizationList(id: Int, decide: String) -> Observable<[AdminModel]>{
+        return Observable.create { obsever in
+            self.adminService.deciceOrganization(id: id, decide: decide )
+                .subscribe { data in
+                    obsever.onNext(data)
+                }
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
 }

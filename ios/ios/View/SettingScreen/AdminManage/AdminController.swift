@@ -20,10 +20,11 @@ final class AdminController: UIViewController{
         self.view.backgroundColor = .white
         self.navigationItem.title = "요청 리스트"
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
-        
+        addUIToView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         getData()
-        
-        
     }
     
     // MARK: 요청된 리스트 표현할 tableview
@@ -55,6 +56,7 @@ final class AdminController: UIViewController{
         
     }
     
+    // MARK: 요청된 조직 리스트 가져오는 함수
     private func getData(){
         AdminViewModel.admin.getOrganizationList(status: "REQUESTED")
             .subscribe(onNext: { data in
@@ -77,9 +79,17 @@ extension AdminController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // 팝업창 띄움
-        let sheet = UIAlertController(title: "승인", message: "\(self.requestList[indexPath.section])을 승인하시겠습니까?", preferredStyle: .alert)
+        let sheet = UIAlertController(title: "승인", message: "\(self.requestList[indexPath.section].name ?? "")을 승인하시겠습니까?", preferredStyle: .alert)
         // 팝업창 확인 버튼
         let success = UIAlertAction(title: "확인", style: .default){ action in
+            AdminViewModel.admin.updateOrganizationList(id: self.requestList[indexPath.section].id ?? 0,
+                                                        decide: "ACCEPTED")
+            .subscribe { data in
+                self.requestList = []
+                self.requestList = data
+                tableView.reloadData()
+            }
+            .disposed(by: self.disposeBag)
             print("called")
         }
         
