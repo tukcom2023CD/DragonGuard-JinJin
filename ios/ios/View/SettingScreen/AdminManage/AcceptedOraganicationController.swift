@@ -72,10 +72,13 @@ extension AcceptedOraganicationController: UITableViewDelegate, UITableViewDataS
         let cell = tableView.dequeueReusableCell(withIdentifier: AdminTableViewCell.identifier,for: indexPath) as! AdminTableViewCell
         
         cell.inputText(text: requestList[indexPath.section].name ?? "")
+        cell.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
+        cell.layer.cornerRadius = 20
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         // 팝업창 띄움
         let sheet = UIAlertController(title: "승인", message: "\(self.requestList[indexPath.section].name ?? "")을 승인하시겠습니까?", preferredStyle: .alert)
         // 팝업창 확인 버튼

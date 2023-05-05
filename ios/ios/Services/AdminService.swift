@@ -25,6 +25,7 @@ final class AdminService{
             AF.request(url,
                        method: .post,
                        parameters: body,
+                       encoding: JSONEncoding.default,
                        headers: [
                         "Content-type": "application/json",
                         "Authorization" : "Bearer \(access ?? "")"
@@ -57,6 +58,7 @@ final class AdminService{
         return Observable.create { observer in
             AF.request(url,
                        method: .get,
+                       encoding: JSONEncoding.default,
                        headers: [
                         "Content-type": "application/json",
                         "Authorization" : "Bearer \(access ?? "")"

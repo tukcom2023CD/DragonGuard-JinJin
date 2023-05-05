@@ -15,6 +15,7 @@ final class AdminTableViewCell: UITableViewCell{
     private lazy var label: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        label.textColor = .black
         self.addSubview(label)
         label.snp.makeConstraints { make in
             make.center.equalToSuperview()
