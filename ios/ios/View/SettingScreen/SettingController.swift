@@ -35,6 +35,7 @@ final class SettingController: UIViewController{
         AdminViewModel.admin.checkAdmin()
             .subscribe { check in
                 self.checkAdmin = check
+                self.settingTableView.reloadData()
             }
             .disposed(by: self.disposeBag)
     }
@@ -161,6 +162,8 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
         case 3:
             self.navigationController?.pushViewController(OrganizationCertificationController(), animated: true)
         case 4:
+            self.navigationController?.pushViewController(AdminTabbarController(), animated: true)
+        case 5:
             self.logOut()
         default:
             return

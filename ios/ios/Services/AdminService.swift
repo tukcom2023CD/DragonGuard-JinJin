@@ -49,8 +49,8 @@ final class AdminService{
     }
     
     // MARK: Get REQUESTED, ACCEPTED, DENIED List
-    func getOrganizationList() -> Observable<[AdminModel]>{
-        let url = "http://localhost/api/admin/organizations?status=REQUESTED"
+    func getOrganizationList(status: String) -> Observable<[AdminModel]>{
+        let url = APIURL.apiUrl.getListAbout_REQUEST_ACCEPT_DENIED(ip: APIURL.ip, status: status)
         let access = UserDefaults.standard.string(forKey: "Access")
         var resultList: [AdminModel] = []
         
