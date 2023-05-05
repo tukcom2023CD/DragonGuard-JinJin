@@ -21,6 +21,8 @@ final class AdminController: UIViewController{
         self.navigationItem.title = "요청 리스트"
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
         
+        getData()
+        
         
     }
     
@@ -53,6 +55,15 @@ final class AdminController: UIViewController{
         
     }
     
+    private func getData(){
+        AdminViewModel.admin.getOrganizationList(status: "REQUESTED")
+            .subscribe(onNext: { data in
+                self.requestList = data
+                self.requestTableView.reloadData()
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
 }
 
 extension AdminController: UITableViewDelegate, UITableViewDataSource{
@@ -69,7 +80,7 @@ extension AdminController: UITableViewDelegate, UITableViewDataSource{
         let sheet = UIAlertController(title: "승인", message: "\(self.requestList[indexPath.section])을 승인하시겠습니까?", preferredStyle: .alert)
         // 팝업창 확인 버튼
         let success = UIAlertAction(title: "확인", style: .default){ action in
-            
+            print("called")
         }
         
         sheet.addAction(success)
