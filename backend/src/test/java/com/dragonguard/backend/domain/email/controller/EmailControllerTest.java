@@ -1,4 +1,4 @@
-package com.dragonguard.backend.email.controller;
+package com.dragonguard.backend.domain.email.controller;
 
 import com.dragonguard.backend.domain.email.controller.EmailController;
 import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;

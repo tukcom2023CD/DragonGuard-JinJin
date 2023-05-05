@@ -1,7 +1,6 @@
 package com.dragonguard.backend.domain.organization.repository;
 
 import com.dragonguard.backend.domain.organization.entity.Organization;
-import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

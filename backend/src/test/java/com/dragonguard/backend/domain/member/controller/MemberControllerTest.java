@@ -1,6 +1,7 @@
-package com.dragonguard.backend.member.controller;
+package com.dragonguard.backend.domain.member.controller;
 
 import com.dragonguard.backend.domain.member.controller.MemberController;
+import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
@@ -64,14 +65,14 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("멤버 커밋 내역 업데이트")
-    void updateCommits() throws Exception {
+    @DisplayName("멤버 기여도 내역 업데이트")
+    void updateContributions() throws Exception {
         // given
 
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        post("/members/commits")
+                        post("/members/contributions")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
@@ -80,7 +81,27 @@ class MemberControllerTest extends RestDocumentTest {
 
         // docs
         perform.andDo(print())
-                .andDo(document("update member commits", getDocumentRequest(), getDocumentResponse()));
+                .andDo(document("update member contributions", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("멤버 기여도 내역 업데이트")
+    void updateBlockchains() throws Exception {
+        // given
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        post("/members/blockchains")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("update member blockchains", getDocumentRequest(), getDocumentResponse()));
     }
 
     @Test
@@ -104,6 +125,29 @@ class MemberControllerTest extends RestDocumentTest {
         // docs
         perform.andDo(print())
                 .andDo(document("get member", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("멤버 조회")
+    void getMemberDetails() throws Exception {
+        // given
+        MemberDetailResponse expected = new MemberDetailResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh", List.of("tukcom2023CD"), List.of("DragonGuard-JinJin", "DragonGuard", "Jin-Jin"));
+        given(memberService.findMemberDetailByGithubId(any())).willReturn(expected);
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        get("/members?githubId=ohksj77")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.githubId").value("ohksj77"));
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("get member details", getDocumentRequest(), getDocumentResponse()));
     }
 
     @Test

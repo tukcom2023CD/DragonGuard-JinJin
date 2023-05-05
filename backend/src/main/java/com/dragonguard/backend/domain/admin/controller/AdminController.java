@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description 관리자 기능을 담당하는 controller
+ */
+
 @Admin
 @RestController
 @RequiredArgsConstructor

@@ -43,3 +43,6 @@ spring:
     listener:
       ack-mode: manual
     bootstrap-servers: localhost:9092
+  sql:
+    init:
+      mode: never

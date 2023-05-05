@@ -1,4 +1,4 @@
-package com.dragonguard.backend.search.controller;
+package com.dragonguard.backend.domain.search.controller;
 
 import com.dragonguard.backend.domain.result.dto.response.ResultResponse;
 import com.dragonguard.backend.domain.search.controller.SearchController;

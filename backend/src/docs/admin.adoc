@@ -1,0 +1,24 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+== Admin
+=== 관리자 권한 확인
+==== HTTP request
+include::../../build/generated-snippets/check admin/http-request.adoc[]
+==== HTTP response
+include::../../build/generated-snippets/check admin/http-response.adoc[]
+
+=== 조직 요청 승인 혹은 반려
+==== HTTP request
+include::../../build/generated-snippets/accept or deny organization request/http-request.adoc[]
+==== HTTP response
+include::../../build/generated-snippets/accept or deny organization request/http-response.adoc[]
+
+=== 상태에 따른 조직 조회
+==== HTTP request
+include::../../build/generated-snippets/get organization list with admin authority/http-request.adoc[]
+==== HTTP response
+include::../../build/generated-snippets/get organization list with admin authority/http-response.adoc[]

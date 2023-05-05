@@ -1,4 +1,4 @@
-package com.dragonguard.backend.member.controller;
+package com.dragonguard.backend.domain.member.controller;
 
 import com.dragonguard.backend.config.security.jwt.JwtToken;
 import com.dragonguard.backend.domain.member.controller.AuthController;
