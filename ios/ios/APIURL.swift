@@ -94,20 +94,20 @@ final class APIURL{
     }
     
     
-    // KLIP result get API
+    // MARK: KLIP result get API
     func klipResultGetAPI(requestKey: String) -> String{
         let url = "https://a2a-api.klipwallet.com/v2/a2a/result?request_key=\(requestKey)"
         return url
     }
     
-    // Github 로그인 하기 위해 백엔드에 요청
+    // MARK: Github 로그인 하기 위해 백엔드에 요청
     func callBackendForGithubLogin(ip: String) -> String{
         let url = "http://\(ip)/api/oauth2/authorize/github"
         return url
     }
     
     
-    /// 멤버 정보 조회하는 함수
+    // MARK: 멤버 정보 조회하는 함수
     /// - Parameter id:inputDBMembers 함수 return값, DB에 저장되는 Id
     /// - Returns: URL
     func getMembersInfo(ip:String) -> String{
@@ -121,6 +121,7 @@ final class APIURL{
         return url
     }
     
+    // MARK: Refresh Token Update
     func getRefreshToken(ip: String) -> String{
         let url = "http://\(ip)/api/auth/refresh"
         return url
@@ -189,6 +190,24 @@ final class APIURL{
     // MARK: 내 프로필 정보
     func myProfile(ip: String, githubId: String) -> String{
         let url = "http://\(ip)/api/members?githubId=\(githubId)"
+        return url
+    }
+    
+    // MARK: 관리자인지 확인
+    func checkAdmin(ip: String) -> String{
+        let url = "http://\(ip)/api/admin/check"
+        return url
+    }
+    
+    // MARK: 요청, 반려하는 API
+    func requestAccept(ip:String) -> String{
+        let url = "http://\(ip)/api/admin/organizations/decide"
+        return url
+    }
+    
+    // MARK: 요청, 승인, 반려된 조직 리스트 받는 API
+    func getListAbout_REQUEST_ACCEPT_DENIED(ip:String, status: String) -> String{
+        let url = "http://\(ip)/api/admin/organizations?status=\(status)"
         return url
     }
     

@@ -12,13 +12,16 @@ import RxSwift
 final class SettingController: UIViewController{
     // 설정화면에 출력될 종류들
     let settingData = ["토큰 부여 기준","FAQ","버전 정보","조직인증","로그아웃"]
+    let adminSettingData = ["토큰 부여 기준","FAQ","버전 정보","조직인증","관리자","로그아웃"]
     private let disposeBag = DisposeBag()
+    private var checkAdmin: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.isHidden = false   // navigation bar 생성
         self.navigationItem.title = "설정"
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         // UI view에 추가
         addUIToView()
@@ -26,6 +29,14 @@ final class SettingController: UIViewController{
         // table View AutoLayout
         settingTableViewSetLayout()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        AdminViewModel.admin.checkAdmin()
+            .subscribe { check in
+                self.checkAdmin = check
+            }
+            .disposed(by: self.disposeBag)
     }
     
     /*
@@ -116,15 +127,22 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
         cell.layer.cornerRadius = 15    //셀 모서리 둥글게
         cell.layer.borderWidth = 1  // 셀 바깥 선
         
-        // textColor 변경
-        switch indexPath.row {
-        case 3:
-            color = UIColor.red
-        default:
-            color = UIColor.black
+//        // textColor 변경
+//        switch indexPath.row {
+//        case 4:
+//            color = UIColor.red
+//        default:
+//            color = UIColor.black
+//        }
+        
+        if checkAdmin{
+            cell.inputDataTableView(text: adminSettingData[indexPath.section],color: color)
+        }
+        else{
+            cell.inputDataTableView(text: settingData[indexPath.section],color: color)
         }
         
-        cell.inputDataTableView(text: settingData[indexPath.section],color: color)
+        
         return cell
     }
     
@@ -154,7 +172,11 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {return " " }
     
     // Section 개수
-    func numberOfSections(in tableView: UITableView) -> Int { settingData.count }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if checkAdmin{ return adminSettingData.count }
+        else{ return settingData.count }
+    }
+
     
     //Section 간격 설정
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return 1 }
@@ -183,7 +205,7 @@ struct VCPreViewSetting:PreviewProvider {
 
 struct VCPreViewSetting2:PreviewProvider {
     static var previews: some View {
-        SettingController().toPreview().previewDevice("iPad (10th generation)")
+        SettingController().toPreview().previewDevice("iPhone 11")
         // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }

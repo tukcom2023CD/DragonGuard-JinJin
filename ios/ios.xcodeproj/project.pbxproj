@@ -85,6 +85,10 @@
 		3BA0EEE62979A16700B9E952 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 3BA0EEE52979A16700B9E952 /* Charts */; };
 		3BA20137299805AE008978A5 /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA20136299805AE008978A5 /* MainModel.swift */; };
 		3BA2013929980661008978A5 /* MainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA2013829980661008978A5 /* MainService.swift */; };
+		3BA78D942A04EED9000ACAD1 /* AdminCheckService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA78D932A04EED9000ACAD1 /* AdminCheckService.swift */; };
+		3BA78D962A04F112000ACAD1 /* AdminViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA78D952A04F112000ACAD1 /* AdminViewModel.swift */; };
+		3BA78D982A04F346000ACAD1 /* AdminService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA78D972A04F346000ACAD1 /* AdminService.swift */; };
+		3BA78D9A2A04F3D3000ACAD1 /* AdminModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA78D992A04F3D3000ACAD1 /* AdminModel.swift */; };
 		3BAEA777299CFD090054DC5D /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAEA776299CFD090054DC5D /* PostService.swift */; };
 		3BC994E629CAD018005150FB /* TokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC994E529CAD018005150FB /* TokenModel.swift */; };
 		3BD6DD22298129B8008C05B2 /* SearchPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD6DD21298129B8008C05B2 /* SearchPageController.swift */; };
@@ -218,6 +222,10 @@
 		3BA08A8329C362C1004359A9 /* TypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		3BA20136299805AE008978A5 /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
 		3BA2013829980661008978A5 /* MainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainService.swift; sourceTree = "<group>"; };
+		3BA78D932A04EED9000ACAD1 /* AdminCheckService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminCheckService.swift; sourceTree = "<group>"; };
+		3BA78D952A04F112000ACAD1 /* AdminViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminViewModel.swift; sourceTree = "<group>"; };
+		3BA78D972A04F346000ACAD1 /* AdminService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminService.swift; sourceTree = "<group>"; };
+		3BA78D992A04F3D3000ACAD1 /* AdminModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminModel.swift; sourceTree = "<group>"; };
 		3BAEA776299CFD090054DC5D /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
 		3BC994E529CAD018005150FB /* TokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModel.swift; sourceTree = "<group>"; };
 		3BD6DD21298129B8008C05B2 /* SearchPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageController.swift; sourceTree = "<group>"; };
@@ -631,6 +639,7 @@
 				3B5B174E29DC595D00571A8D /* OrganizationRankingViewModel.swift */,
 				3BD6EDDD29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift */,
 				3B61080929E9A0F5000D7A5A /* MyProfileviewModel.swift */,
+				3BA78D952A04F112000ACAD1 /* AdminViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -655,6 +664,7 @@
 				3B87E56F29D7173D000734BE /* AddOrganizationModel.swift */,
 				3B5B174A29DC584800571A8D /* AllOrganizationRankingModel.swift */,
 				3B61080D29E9A142000D7A5A /* MyProfileInfoModel.swift */,
+				3BA78D992A04F3D3000ACAD1 /* AdminModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -702,6 +712,8 @@
 				3B5B175C29DC7B2900571A8D /* TypeOrganizationRankingService.swift */,
 				3BD6EDD929DD646D00DEF7E0 /* RankingInOrganizationService.swift */,
 				3B61080B29E9A10F000D7A5A /* MyProfileService.swift */,
+				3BA78D932A04EED9000ACAD1 /* AdminCheckService.swift */,
+				3BA78D972A04F346000ACAD1 /* AdminService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -882,6 +894,7 @@
 				3B5B174B29DC584800571A8D /* AllOrganizationRankingModel.swift in Sources */,
 				A35F1FB029DECEFB00A4ABD0 /* FAQTableViewCell.swift in Sources */,
 				A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */,
+				3BA78D942A04EED9000ACAD1 /* AdminCheckService.swift in Sources */,
 				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
 				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
 				3BDD718929C0932A0018D09B /* StarSelectionCollectionViewCell.swift in Sources */,
@@ -896,6 +909,7 @@
 				3B29804729ACCCA000967B6E /* CompareSelectedUserView.swift in Sources */,
 				3B3D2E0F29D5E252001A702C /* OrganizationSearchTableViewCell.swift in Sources */,
 				3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */,
+				3BA78D9A2A04F3D3000ACAD1 /* AdminModel.swift in Sources */,
 				3BDD718629C091480018D09B /* LanguageSelectionsCollectionViewCell.swift in Sources */,
 				3B87E57029D7173D000734BE /* AddOrganizationModel.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
@@ -939,6 +953,7 @@
 				3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */,
 				3B9756ED298A16FF00F27094 /* AllRepositoryRankingController.swift in Sources */,
 				3B29804929ACCDC800967B6E /* CompareSelectedUserTableView.swift in Sources */,
+				3BA78D962A04F112000ACAD1 /* AdminViewModel.swift in Sources */,
 				3BA08A8429C362C1004359A9 /* TypeCollectionViewCell.swift in Sources */,
 				3B5B174F29DC595D00571A8D /* OrganizationRankingViewModel.swift in Sources */,
 				3B61080E29E9A142000D7A5A /* MyProfileInfoModel.swift in Sources */,
@@ -956,6 +971,7 @@
 				3B9756EB298A16D900F27094 /* AllRankingController.swift in Sources */,
 				3B5B174D29DC593100571A8D /* AllOrganizationRankingService.swift in Sources */,
 				3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */,
+				3BA78D982A04F346000ACAD1 /* AdminService.swift in Sources */,
 				3BF2B31329890F1900F20841 /* WatchRankingCollectionView.swift in Sources */,
 				3B7BFF6A29CBD63200A2F3F4 /* SearchOraganizationService.swift in Sources */,
 				3B9756EF298A171300F27094 /* AllOrganiRankingController.swift in Sources */,
