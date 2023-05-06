@@ -32,11 +32,11 @@ class ApprovalOrgActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
         supportActionBar?.title = "조직 등록 요청 승인"
 
-        approveFragment = ApproveOrgFragment()
-        approvedFragment = ApprovedOrgFragment()
+        approveFragment = ApproveOrgFragment(token)
+        approvedFragment = ApprovedOrgFragment(token)
 
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.compare_frame, approveFragment)
+        transaction.add(R.id.approve_org_list, approveFragment)
             .add(R.id.approve_org_list, approvedFragment)
             .hide(approvedFragment)
             .commit()
@@ -44,14 +44,14 @@ class ApprovalOrgActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.approve_request_btn -> {
-                    supportActionBar?.title = "Repository 비교"
+                    supportActionBar?.title = "승인 대기중인 조직 목록"
                     val transactionN = supportFragmentManager.beginTransaction()
                     transactionN.hide(approvedFragment)
                         .show(approveFragment)
                         .commit()
                 }
                 R.id.approve_finished_btn -> {
-                    supportActionBar?.title = "Repository 구성원 비교"
+                    supportActionBar?.title = "승인된 조직 목록"
                     val transactionN = supportFragmentManager.beginTransaction()
                     transactionN.show(approvedFragment)
                         .hide(approveFragment)

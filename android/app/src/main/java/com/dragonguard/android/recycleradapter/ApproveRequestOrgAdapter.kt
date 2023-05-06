@@ -4,14 +4,25 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.databinding.ApproveRequestListBinding
+import com.dragonguard.android.enums.RequestStatus
+import com.dragonguard.android.fragment.ApproveOrgFragment
 import com.dragonguard.android.model.contributors.RepoContributorsItem
+import com.dragonguard.android.model.org.ApproveRequestOrgModelItem
+import com.dragonguard.android.viewmodel.Viewmodel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 //승인 요청중인 조직 목록 adapter
-class ApproveRequestOrgAdapter (private val datas : ArrayList<RepoContributorsItem>, private val context: Context,
-                                private val token: String) : RecyclerView.Adapter<ApproveRequestOrgAdapter.ViewHolder>() {
+class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgModelItem>, private val context: Context,
+                                private val token: String, private val viewmodel: Viewmodel, private val frag: ApproveOrgFragment
+) : RecyclerView.Adapter<ApproveRequestOrgAdapter.ViewHolder>() {
     private lateinit var binding: ApproveRequestListBinding
+    private var count = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         binding = ApproveRequestListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding.root)
@@ -20,9 +31,11 @@ class ApproveRequestOrgAdapter (private val datas : ArrayList<RepoContributorsIt
 
     //리사이클러 뷰의 요소들을 넣어줌
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(data1: RepoContributorsItem) {
+        fun bind(data1: ApproveRequestOrgModelItem, currentPosition: Int) {
+            binding.requestOrgName.text = data1.name
+            binding.requestOrgType.text = data1.type
             binding.approveOrgBtn.setOnClickListener {
-
+                decideApproval(currentPosition, RequestStatus.ACCEPTED)
             }
             binding.requestOrgName.setOnClickListener {
 
@@ -31,13 +44,28 @@ class ApproveRequestOrgAdapter (private val datas : ArrayList<RepoContributorsIt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(datas[position])
+        holder.bind(datas[position], position)
     }
     override fun getItemId(position: Int): Long {
         return super.getItemId(position)
     }
     override fun getItemViewType(position: Int): Int {
         return position
+    }
+
+    private fun decideApproval(current: Int, status: RequestStatus) {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            if (count < 5) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.approveOrgRequest(datas[current].id, status.status, token)
+                }
+                val result = resultDeferred.await()
+                datas = result
+                frag.page = 1
+                notifyDataSetChanged()
+            }
+        }
     }
 
 }

@@ -412,6 +412,7 @@ class ApiRepository {
             if(result.isSuccessful){
                 return true
             } else if(result.code() == 403) {
+                Log.d("error", "admin error result ${result.code()}")
                 return false
             }
         } catch (e: HttpException) {

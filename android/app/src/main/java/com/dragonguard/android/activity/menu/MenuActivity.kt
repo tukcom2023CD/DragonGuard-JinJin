@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
@@ -32,6 +33,7 @@ class MenuActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_menu)
         binding.menuViewmodel = viewmodel
 
+        checkAdmin()
         versionDialog = Dialog(this)
         versionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         versionDialog.setContentView(R.layout.version_dialog)
@@ -88,9 +90,10 @@ class MenuActivity : AppCompatActivity() {
         coroutine.launch {
             if(!this@MenuActivity.isFinishing) {
                 val resultDeferred = coroutine.async(Dispatchers.IO){
-                    binding.menuViewmodel.checkAdmin(token)
+                    viewmodel.checkAdmin(token)
                 }
                 val result = resultDeferred.await()
+                Log.d("admin", "admin: $result")
                 if(result) {
                     binding.adminFun.visibility = View.VISIBLE
                 } else {
@@ -100,7 +103,7 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 
-//    버전 정보 보여주는 dialog 띄우기
+    //    버전 정보 보여주는 dialog 띄우기
     private fun showDialog() {
         versionDialog.show()
     }
