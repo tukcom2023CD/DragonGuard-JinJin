@@ -38,9 +38,11 @@ class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgM
             binding.requestOrgType.text = data1.type
             binding.approveOrgBtn.setOnClickListener {
                 decideApproval(data1, RequestStatus.ACCEPTED, currentPosition)
+                notifyDataSetChanged()
             }
             binding.rejectOrgBtn.setOnClickListener {
                 decideApproval(data1, RequestStatus.DENIED, currentPosition)
+                notifyDataSetChanged()
             }
         }
     }
@@ -65,7 +67,6 @@ class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgM
                 val result = resultDeferred.await()
                 datas.removeAt(currentPosition)
                 notifyItemRemoved(currentPosition)
-                notifyItemMoved(0, datas.size-1)
             }
         }
     }
