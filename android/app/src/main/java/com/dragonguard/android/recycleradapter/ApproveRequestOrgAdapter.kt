@@ -65,7 +65,7 @@ class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgM
                 val result = resultDeferred.await()
                 datas.removeAt(currentPosition)
                 notifyItemRemoved(currentPosition)
-
+                notifyItemMoved(0, datas.size-1)
             }
         }
     }
