@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="menuViewmodel"
+            type="com.dragonguard.android.viewmodel.Viewmodel" />
+    </data>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -154,7 +160,32 @@
                     android:fontFamily="@font/ibm_semibold" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/admin_fun"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:visibility="gone">
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/organization_approve"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:background="@drawable/roundc"
+                    android:text="조직 승인"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:fontFamily="@font/ibm_semibold" />
+            </LinearLayout>
 
         </LinearLayout>
 

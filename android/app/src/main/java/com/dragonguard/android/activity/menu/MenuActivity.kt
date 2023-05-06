@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
@@ -12,17 +13,24 @@ import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.activity.compare.RepoChooseActivity
 import com.dragonguard.android.databinding.ActivityMenuBinding
+import com.dragonguard.android.viewmodel.Viewmodel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 /*
  메인화면에서 프로필 사진이나 id를 눌렀을 때 메뉴를 보여주는 activity
  */
 class MenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
+    private var viewmodel = Viewmodel()
     private lateinit var versionDialog : Dialog
     private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_menu)
+        binding.menuViewmodel = viewmodel
 
         versionDialog = Dialog(this)
         versionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -68,7 +76,28 @@ class MenuActivity : AppCompatActivity() {
             intent.putExtra("token", token)
             startActivity(intent)
         }
+        binding.organizationApprove.setOnClickListener {
+            val intent = Intent(applicationContext, ApprovalOrgActivity::class.java)
+            intent.putExtra("token", token)
+            startActivity(intent)
+        }
+    }
 
+    private fun checkAdmin() {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            if(!this@MenuActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO){
+                    binding.menuViewmodel.checkAdmin(token)
+                }
+                val result = resultDeferred.await()
+                if(result) {
+                    binding.adminFun.visibility = View.VISIBLE
+                } else {
+                    binding.adminFun.visibility = View.GONE
+                }
+            }
+        }
     }
 
 //    버전 정보 보여주는 dialog 띄우기

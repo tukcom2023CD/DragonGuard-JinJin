@@ -18,10 +18,13 @@ class ApprovalOrgActivity : AppCompatActivity() {
     private var viewmodel = Viewmodel()
     private lateinit var approveFragment: ApproveOrgFragment
     private lateinit var approvedFragment: ApprovedOrgFragment
+    private var token = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding  = DataBindingUtil.setContentView(this, R.layout.activity_approval_org)
         binding.approvalOrgViewmodel = viewmodel
+
+        token = intent.getStringExtra("token")!!
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(true)

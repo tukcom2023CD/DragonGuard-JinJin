@@ -172,4 +172,17 @@ class Viewmodel: ViewModel() {
     fun userDetails(id: String, token: String): UserDetailModel {
         return repository.userDetail(id, token)
     }
+
+    fun checkAdmin(token: String): Boolean {
+        return repository.checkAdmin(token)
+    }
+
+    fun approveOrgRequest(id:Long, decide: String, token: String): ApproveRequestOrgModel {
+        val body = OrgApprovalModel(decide, id)
+        return repository.approveOrgRequest(body, token)
+    }
+
+    fun statusOrgList(status: String, page: Int, token: String): ApproveRequestOrgModel {
+        return repository.statusOrgList(status, page, token)
+    }
 }
