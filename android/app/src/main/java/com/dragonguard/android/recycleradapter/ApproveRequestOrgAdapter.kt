@@ -1,6 +1,7 @@
 package com.dragonguard.android.recycleradapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import okhttp3.internal.notifyAll
 
 //승인 요청중인 조직 목록 adapter
 class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgModelItem>, private val context: Context,
@@ -35,10 +37,10 @@ class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgM
             binding.requestOrgName.text = data1.name
             binding.requestOrgType.text = data1.type
             binding.approveOrgBtn.setOnClickListener {
-                decideApproval(currentPosition, RequestStatus.ACCEPTED)
+                decideApproval(data1, RequestStatus.ACCEPTED, currentPosition)
             }
-            binding.requestOrgName.setOnClickListener {
-                decideApproval(currentPosition, RequestStatus.DENIED)
+            binding.rejectOrgBtn.setOnClickListener {
+                decideApproval(data1, RequestStatus.DENIED, currentPosition)
             }
         }
     }
@@ -53,17 +55,17 @@ class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgM
         return position
     }
 
-    private fun decideApproval(current: Int, status: RequestStatus) {
+    private fun decideApproval(data1: ApproveRequestOrgModelItem, status: RequestStatus, currentPosition: Int) {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             if (count < 5) {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
-                    viewmodel.approveOrgRequest(datas[current].id, status.status, token)
+                    viewmodel.approveOrgRequest(data1.id, status.status, token)
                 }
                 val result = resultDeferred.await()
-                datas = result
-                frag.page = 1
-                notifyDataSetChanged()
+                datas.removeAt(currentPosition)
+                notifyItemRemoved(currentPosition)
+
             }
         }
     }

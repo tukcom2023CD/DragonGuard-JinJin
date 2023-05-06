@@ -36,9 +36,7 @@ class ApprovalOrgActivity : AppCompatActivity() {
         approvedFragment = ApprovedOrgFragment(token)
 
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.approve_org_list, approveFragment)
-            .add(R.id.approve_org_list, approvedFragment)
-            .hide(approvedFragment)
+        transaction.add(R.id.approve_org_list, ApproveOrgFragment(token))
             .commit()
 
         binding.bottomNavigation.setOnItemSelectedListener {
@@ -46,15 +44,13 @@ class ApprovalOrgActivity : AppCompatActivity() {
                 R.id.approve_request_btn -> {
                     supportActionBar?.title = "승인 대기중인 조직 목록"
                     val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.hide(approvedFragment)
-                        .show(approveFragment)
+                    transactionN.replace(R.id.approve_org_list, ApproveOrgFragment(token))
                         .commit()
                 }
                 R.id.approve_finished_btn -> {
                     supportActionBar?.title = "승인된 조직 목록"
                     val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.show(approvedFragment)
-                        .hide(approveFragment)
+                    transactionN.replace(R.id.approve_org_list, ApprovedOrgFragment(token))
                         .commit()
                 }
             }
