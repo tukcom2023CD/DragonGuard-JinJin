@@ -38,7 +38,7 @@ class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgM
                 decideApproval(currentPosition, RequestStatus.ACCEPTED)
             }
             binding.requestOrgName.setOnClickListener {
-
+                decideApproval(currentPosition, RequestStatus.DENIED)
             }
         }
     }
