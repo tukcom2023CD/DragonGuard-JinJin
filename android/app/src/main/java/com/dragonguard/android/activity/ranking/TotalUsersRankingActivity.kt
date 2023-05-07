@@ -107,6 +107,7 @@ class TotalUsersRankingActivity : AppCompatActivity() {
 //            totalUserRankingAdapter.notifyDataSetChanged()
             binding.totalUsersRankings.visibility = View.VISIBLE
         }
+        binding.totalUsersRankings.adapter?.notifyDataSetChanged()
         page++
         Log.d("api 횟수", "$page 페이지 검색")
         binding.progressBar.visibility = View.GONE

@@ -228,6 +228,7 @@ class CompareSearchActivity : AppCompatActivity() {
             binding.searchResult.visibility = View.VISIBLE
         }
         count++
+        binding.searchResult.adapter?.notifyDataSetChanged()
         Log.d("api 횟수", "$count 페이지 검색")
         binding.progressBar.visibility = View.GONE
         initScrollListener()

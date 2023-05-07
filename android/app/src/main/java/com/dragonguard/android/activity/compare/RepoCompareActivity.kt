@@ -115,16 +115,6 @@ class RepoCompareActivity : AppCompatActivity() {
         }
     }
 
-
-    //    뒤로가기 누르면 화면 전환하게 함
-    override fun onBackPressed() {
-        val intent = Intent(applicationContext, RepoChooseActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startActivity(intent)
-    }
-
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home, binding.toolbar.menu)
         return true

@@ -107,4 +107,13 @@ interface GitRankAPI {
 
     @GET("members")
     fun getUserDetail(@Query("githubId")id: String, @Header("Authorization")access: String): Call<UserDetailModel>
+
+    @GET("admin/check")
+    fun getPermissionState(@Header("Authorization")access: String): Call<Unit>
+
+    @POST("admin/organizations/decide")
+    fun postOrgApproval(@Body body: OrgApprovalModel, @Header("Authorization")access: String): Call<ApproveRequestOrgModel>
+
+    @GET("admin/organizations")
+    fun getOrgStatus(@QueryMap query: Map<String, String> ,@Header("Authorization")access: String): Call<ApproveRequestOrgModel>
 }

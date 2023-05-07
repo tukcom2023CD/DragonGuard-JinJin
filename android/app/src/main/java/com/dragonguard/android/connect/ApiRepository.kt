@@ -17,6 +17,8 @@ import com.dragonguard.android.model.search.RepoSearchResultModel
 import com.dragonguard.android.model.token.RefreshTokenModel
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
+import retrofit2.HttpException
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.CookieManager
@@ -400,6 +402,55 @@ class ApiRepository {
         } catch (e: Exception) {
             Log.d("error", "사용자 $githubId 의 상세조회 실패: ${e.message} ")
             return details
+        }
+    }
+
+    fun checkAdmin(token: String): Boolean {
+        val check = api.getPermissionState("Bearer $token")
+        try {
+            val result = check.execute()
+            if(result.isSuccessful){
+                return true
+            } else if(result.code() == 403) {
+                Log.d("error", "admin error result ${result.code()}")
+                return false
+            }
+        } catch (e: HttpException) {
+            if (e.code() == 403) {
+                Log.d("error", "admin error ${e.code()}")
+                return false
+            }
+        }catch (e: Exception) {
+            Log.d("error", "admin error")
+        }
+        return false
+    }
+
+    fun approveOrgRequest(body: OrgApprovalModel, token: String): ApproveRequestOrgModel {
+        val approve = api.postOrgApproval(body, "Bearer $token")
+        try{
+            val result = approve.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "admin error ${e.message}")
+        }
+        return ApproveRequestOrgModel()
+    }
+
+    fun statusOrgList(status: String, page: Int, token: String): ApproveRequestOrgModel{
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("status", status)
+        queryMap.put("page", page.toString())
+        queryMap.put("size", "20")
+
+        val statusOrg = ApproveRequestOrgModel()
+        val orgList = api.getOrgStatus(queryMap,"Bearer $token")
+        return try{
+            val result = orgList.execute()
+            return result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
+            return statusOrg
         }
     }
 }

@@ -9,6 +9,7 @@ import android.view.View
 import android.webkit.*
 import android.webkit.WebView.WebViewTransport
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.BuildConfig
@@ -44,6 +45,7 @@ class LoginActivity : AppCompatActivity() {
         Log.d("login", "loginactivity1")
         prefs = IdPreference(applicationContext)
         //쿠키 확인 코드
+        this.onBackPressedDispatcher.addCallback(this, callback)
 
         val intent = intent
         val token = intent.getStringExtra("token")
@@ -246,23 +248,23 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (System.currentTimeMillis() > backPressed + 2500) {
+                backPressed = System.currentTimeMillis()
+                binding.loginGithub.visibility = View.GONE
+                binding.loginMain.visibility = View.VISIBLE
+                binding.oauthWebView.isEnabled = false
+                Toast.makeText(applicationContext, "Back 버튼을 한번 더 누르면 종료합니다.", Toast.LENGTH_SHORT)
+                    .show()
+                return
+            }
 
-    //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
-    override fun onBackPressed() {
-//        super.onBackPressed()
-        if (System.currentTimeMillis() > backPressed + 2500) {
-            backPressed = System.currentTimeMillis()
-            binding.loginGithub.visibility = View.GONE
-            binding.loginMain.visibility = View.VISIBLE
-            binding.oauthWebView.isEnabled = false
-            Toast.makeText(applicationContext, "Back 버튼을 한번 더 누르면 종료합니다.", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
-
-        if (System.currentTimeMillis() <= backPressed + 2500) {
-            finishAffinity()
+            if (System.currentTimeMillis() <= backPressed + 2500) {
+                finishAffinity()
+            }
         }
     }
+    //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료
 
 }
