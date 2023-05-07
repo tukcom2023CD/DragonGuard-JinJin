@@ -31,6 +31,7 @@ class Viewmodel: ViewModel() {
     var onOptionListener = MutableLiveData<String>()
     var onSearchListener = MutableLiveData<String>()
     var onAuthEmailListener = MutableLiveData<String>()
+    var onApproveOrgListener = MutableLiveData<Boolean>()
 
     val customTimerDuration: MutableLiveData<Long> = MutableLiveData(MIllIS_IN_FUTURE)
     private var oldTimeMills: Long = 0

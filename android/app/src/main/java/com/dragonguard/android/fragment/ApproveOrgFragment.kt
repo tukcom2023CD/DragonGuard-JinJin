@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
@@ -41,6 +43,13 @@ class ApproveOrgFragment(private val token: String) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewmodel.onApproveOrgListener.observe(requireActivity(), Observer {
+            if(viewmodel.onApproveOrgListener.value == true) {
+                Toast.makeText(requireContext(), "승인됨", Toast.LENGTH_SHORT).show()
+                binding.waitingOrgList.adapter?.notifyDataSetChanged()
+                viewmodel.onApproveOrgListener.value = false
+            }
+        })
     }
 
     override fun onResume() {
@@ -81,6 +90,7 @@ class ApproveOrgFragment(private val token: String) : Fragment() {
             binding.waitingOrgList.visibility = View.VISIBLE
         }
         page++
+        count = 0
         binding.waitingOrgList.adapter?.notifyDataSetChanged()
         initScrollListener()
     }
