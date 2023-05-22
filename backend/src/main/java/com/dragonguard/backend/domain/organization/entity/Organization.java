@@ -1,14 +1,13 @@
 package com.dragonguard.backend.domain.organization.entity;
 
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.audit.SoftDelete;
+import com.dragonguard.backend.global.SoftDelete;
 import com.dragonguard.backend.domain.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.HashSet;

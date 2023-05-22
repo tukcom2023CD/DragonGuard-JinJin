@@ -4,7 +4,7 @@ import com.dragonguard.backend.config.github.GithubProperties;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.global.exception.WebClientException;
-import com.dragonguard.backend.util.GithubClient;
+import com.dragonguard.backend.global.GithubClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

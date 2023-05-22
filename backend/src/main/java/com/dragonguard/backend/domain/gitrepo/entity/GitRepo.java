@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.gitrepo.entity;
 
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.audit.SoftDelete;
+import com.dragonguard.backend.global.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class GitRepo extends BaseTime {
     @Id
     @GeneratedValue
     private Long id;
-    
+
     private String name;
 
     private Integer closedIssueNum;

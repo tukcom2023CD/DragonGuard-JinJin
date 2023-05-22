@@ -1,4 +1,4 @@
-package com.dragonguard.backend.util;
+package com.dragonguard.backend.global;
 
 import com.querydsl.core.types.OrderSpecifier;
 import org.springframework.data.domain.Sort;

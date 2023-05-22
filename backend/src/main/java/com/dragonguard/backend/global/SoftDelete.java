@@ -1,4 +1,4 @@
-package com.dragonguard.backend.global.audit;
+package com.dragonguard.backend.global;
 
 import org.hibernate.annotations.Where;
 

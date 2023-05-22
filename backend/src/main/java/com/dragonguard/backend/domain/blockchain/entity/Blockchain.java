@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.blockchain.entity;
 
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.audit.SoftDelete;
+import com.dragonguard.backend.global.SoftDelete;
 import com.dragonguard.backend.domain.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;

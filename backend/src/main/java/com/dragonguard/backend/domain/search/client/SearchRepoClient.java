@@ -3,7 +3,7 @@ package com.dragonguard.backend.domain.search.client;
 import com.dragonguard.backend.config.github.GithubProperties;
 import com.dragonguard.backend.domain.search.dto.response.client.SearchRepoResponse;
 import com.dragonguard.backend.global.exception.WebClientException;
-import com.dragonguard.backend.util.GithubClient;
+import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

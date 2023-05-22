@@ -13,18 +13,17 @@ import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCompareRequest;
+import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
+import com.dragonguard.backend.domain.gitrepomember.dto.response.TwoGitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
 import com.dragonguard.backend.domain.member.service.AuthService;
-import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
-import com.dragonguard.backend.domain.gitrepomember.dto.response.TwoGitRepoMemberResponse;
+import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.KafkaProducer;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.util.KafkaProducer;
-import com.dragonguard.backend.util.GithubClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -68,7 +67,7 @@ public class GitRepoService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "gitRepoMemberResponseList", key = "#gitRepoRequest", cacheManager = "cacheManager", unless = "#result.size() == 0")
+    //@Cacheable(value = "gitRepoMemberResponseList", key = "#gitRepoRequest", cacheManager = "cacheManager", unless = "#result.size() == 0")
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
         if (!StringUtils.hasText(gitRepoRequest.getGithubToken())) {
@@ -88,7 +87,7 @@ public class GitRepoService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "twoRepoMemberResponseList", key = "#gitRepoCompareRequest", cacheManager = "cacheManager", unless = "#result.firstResult.size() == 0 || #result.secondResult.size() == 0")
+    //@Cacheable(value = "twoRepoMemberResponseList", key = "#gitRepoCompareRequest", cacheManager = "cacheManager", unless = "#result.firstResult.size() == 0 || #result.secondResult.size() == 0")
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(GitRepoCompareRequest gitRepoCompareRequest) {
         Integer year = LocalDate.now().getYear();
         String githubToken = authService.getLoginUser().getGithubToken();
@@ -104,7 +103,7 @@ public class GitRepoService {
         return new TwoGitRepoMemberResponse(firstResult, secondResult);
     }
 
-    @Cacheable(value = "gitRepoMemberCompareResponse", key = "#gitRepoMemberCompareRequest", cacheManager = "cacheManager", unless = "#result.firstMember == null || #result.secondMember == null")
+    //@Cacheable(value = "gitRepoMemberCompareResponse", key = "#gitRepoMemberCompareRequest", cacheManager = "cacheManager", unless = "#result.firstMember == null || #result.secondMember == null")
     public GitRepoMemberCompareResponse findTwoGitRepoMember(GitRepoMemberCompareRequest gitRepoMemberCompareRequest) {
         GitRepoMember first = gitRepoMemberService.findByNameAndMemberName(gitRepoMemberCompareRequest.getFirstRepo(), gitRepoMemberCompareRequest.getFirstName());
         GitRepoMember second = gitRepoMemberService.findByNameAndMemberName(gitRepoMemberCompareRequest.getSecondRepo(), gitRepoMemberCompareRequest.getSecondName());
@@ -112,7 +111,7 @@ public class GitRepoService {
         return new GitRepoMemberCompareResponse(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
     }
 
-    @Cacheable(value = "twoGitRepoResponse", key = "#twoGitRepoCompareRequest", cacheManager = "cacheManager", unless = "#result.firstRepo.gitRepo.closed_issues_count == null || #result.secondRepo.gitRepo.closed_issues_count == null")
+    //@Cacheable(value = "twoGitRepoResponse", key = "#twoGitRepoCompareRequest", cacheManager = "cacheManager", unless = "#result.firstRepo.gitRepo.closed_issues_count == null || #result.secondRepo.gitRepo.closed_issues_count == null")
     public TwoGitRepoResponse findTwoGitRepos(GitRepoCompareRequest twoGitRepoCompareRequest) {
         return new TwoGitRepoResponse(getOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()), getOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
     }

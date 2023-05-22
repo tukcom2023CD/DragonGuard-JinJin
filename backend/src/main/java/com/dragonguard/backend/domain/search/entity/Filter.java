@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.search.entity;
 
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.audit.SoftDelete;
+import com.dragonguard.backend.global.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

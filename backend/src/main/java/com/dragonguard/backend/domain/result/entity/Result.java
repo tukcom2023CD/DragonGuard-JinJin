@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.result.entity;
 
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.audit.SoftDelete;
+import com.dragonguard.backend.global.SoftDelete;
 import lombok.*;
 
 import javax.persistence.Column;

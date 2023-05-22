@@ -6,7 +6,7 @@ import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMemb
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.audit.SoftDelete;
+import com.dragonguard.backend.global.SoftDelete;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
