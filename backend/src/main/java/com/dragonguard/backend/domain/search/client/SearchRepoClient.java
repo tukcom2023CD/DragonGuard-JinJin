@@ -1,10 +1,10 @@
 package com.dragonguard.backend.domain.search.client;
 
 import com.dragonguard.backend.config.github.GithubProperties;
-import com.dragonguard.backend.domain.search.dto.response.client.SearchRepoResponse;
-import com.dragonguard.backend.global.exception.WebClientException;
-import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
+import com.dragonguard.backend.domain.search.dto.response.client.SearchRepoResponse;
+import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.exception.WebClientException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,6 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -60,7 +59,7 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
                     .queryParam("page", request.getPage())
                     .build();
         }
-        String query = filters.stream().collect(Collectors.joining(" "));
+        String query = String.join(" ", filters);
 
         return uriBuilder -> uriBuilder
                 .path("search")
