@@ -12,11 +12,11 @@ import com.dragonguard.backend.domain.search.dto.response.client.SearchUserRespo
 import com.dragonguard.backend.domain.search.entity.Filter;
 import com.dragonguard.backend.domain.search.entity.Search;
 import com.dragonguard.backend.domain.search.entity.SearchType;
-import com.dragonguard.backend.domain.search.repository.SearchRepository;
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.KafkaProducer;
-import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.domain.search.mapper.SearchMapper;
+import com.dragonguard.backend.domain.search.repository.SearchRepository;
+import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.KafkaProducer;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -66,18 +67,25 @@ public class SearchService {
         List<Result> results = resultRepository.findAllBySearchId(search.getId());
         results.forEach(Result::delete);
         searchRequest.setGithubToken(authService.getLoginUser().getGithubToken());
-        Object clientResult = requestClient(searchRequest);
 
-        if (clientResult instanceof SearchRepoResponse) {
-            return List.of(((SearchRepoResponse) clientResult).getItems()).stream()
-                    .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
-                    .map(resultMapper::toResponse).collect(Collectors.toList());
-        } else if (clientResult instanceof SearchUserResponse) {
-            return List.of(((SearchUserResponse) clientResult).getItems()).stream()
-                    .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
-                    .map(resultMapper::toResponse).collect(Collectors.toList());
+        if (searchRequest.getType().equals(SearchType.REPOSITORIES)) {
+            return searchRepo(searchRequest, search);
         }
-        return List.of();
+        return searchUser(searchRequest, search);
+    }
+
+    private List<ResultResponse> searchUser(SearchRequest searchRequest, Search search) {
+        SearchUserResponse clientResult = githubUserClient.requestToGithub(searchRequest);
+        return Stream.of(clientResult.getItems())
+                .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
+                .map(resultMapper::toResponse).collect(Collectors.toList());
+    }
+
+    private List<ResultResponse> searchRepo(SearchRequest searchRequest, Search search) {
+        SearchRepoResponse clientResult = githubRepoClient.requestToGithub(searchRequest);
+        return Stream.of(clientResult.getItems())
+                .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
+                .map(resultMapper::toResponse).collect(Collectors.toList());
     }
 
     public Search findOrSaveSearch(SearchRequest searchRequest) {
@@ -92,7 +100,7 @@ public class SearchService {
 
         List<String> filters = searchRequest.getFilters();
         for (Search search : searches) {
-            if (search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList()).containsAll(filters)) {
+            if (new HashSet<>(search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList())).containsAll(filters)) {
                 return search;
             }
         }
@@ -113,7 +121,7 @@ public class SearchService {
 
         List<String> filters = searchRequest.getFilters();
         for (Search search : searches) {
-            if (search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList()).containsAll(filters)) {
+            if (new HashSet<>(search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList())).containsAll(filters)) {
                 return search;
             }
         }
@@ -127,13 +135,5 @@ public class SearchService {
                         searchRequest.getName(),
                         searchRequest.getType().toString(),
                         searchRequest.getPage()));
-    }
-
-    private Object requestClient(SearchRequest searchRequest) {
-        return getSearchComponent(searchRequest.getType()).apply(searchRequest);
-    }
-
-    private Function<SearchRequest, Object> getSearchComponent(SearchType searchType) {
-        return searchType.equals(SearchType.REPOSITORIES) ? githubRepoClient::requestToGithub : githubUserClient::requestToGithub;
     }
 }

@@ -15,6 +15,7 @@ import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.TwoGitRepoMemberResponse;
+import com.dragonguard.backend.domain.gitrepomember.dto.response.Week;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
@@ -52,22 +53,6 @@ public class GitRepoService {
     private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
 
-    public List<GitRepoMemberResponse> findMembersByGitRepo(GitRepoRequest gitRepoRequest) {
-        Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
-        if (gitRepo.isEmpty()) {
-            gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
-            requestGitRepoToScraping(gitRepoRequest);
-            return List.of();
-        } else if (gitRepo.get().getGitRepoMembers().isEmpty()) {
-            requestGitRepoToScraping(gitRepoRequest);
-            return List.of();
-        }
-        return gitRepoMemberService.findAllByGitRepo(gitRepo.get()).stream()
-                .map(gitRepoMemberMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
-    //@Cacheable(value = "gitRepoMemberResponseList", key = "#gitRepoRequest", cacheManager = "cacheManager", unless = "#result.size() == 0")
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
         if (!StringUtils.hasText(gitRepoRequest.getGithubToken())) {
@@ -76,10 +61,10 @@ public class GitRepoService {
         if (gitRepo.isEmpty()) {
             gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
             return requestToGithub(gitRepoRequest);
-        } else if (gitRepo.get().getGitRepoMembers().isEmpty()) {
-            return requestToGithub(gitRepoRequest);
-        } else if (gitRepo.get().getGitRepoMembers().stream().findFirst().isPresent() &&
-                gitRepo.get().getGitRepoMembers().stream().findFirst().get().getGitRepoContribution() == null) {
+        }
+        if ((gitRepo.get().getGitRepoMembers().isEmpty()) ||
+                gitRepo.get().getGitRepoMembers().stream().findFirst().isPresent() &&
+                        gitRepo.get().getGitRepoMembers().stream().findFirst().get().getGitRepoContribution() == null) {
             return requestToGithub(gitRepoRequest);
         }
         return gitRepoMemberService.findAllByGitRepo(gitRepo.get()).stream()
@@ -87,7 +72,6 @@ public class GitRepoService {
                 .collect(Collectors.toList());
     }
 
-    //@Cacheable(value = "twoRepoMemberResponseList", key = "#gitRepoCompareRequest", cacheManager = "cacheManager", unless = "#result.firstResult.size() == 0 || #result.secondResult.size() == 0")
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(GitRepoCompareRequest gitRepoCompareRequest) {
         Integer year = LocalDate.now().getYear();
         String githubToken = authService.getLoginUser().getGithubToken();
@@ -103,7 +87,6 @@ public class GitRepoService {
         return new TwoGitRepoMemberResponse(firstResult, secondResult);
     }
 
-    //@Cacheable(value = "gitRepoMemberCompareResponse", key = "#gitRepoMemberCompareRequest", cacheManager = "cacheManager", unless = "#result.firstMember == null || #result.secondMember == null")
     public GitRepoMemberCompareResponse findTwoGitRepoMember(GitRepoMemberCompareRequest gitRepoMemberCompareRequest) {
         GitRepoMember first = gitRepoMemberService.findByNameAndMemberName(gitRepoMemberCompareRequest.getFirstRepo(), gitRepoMemberCompareRequest.getFirstName());
         GitRepoMember second = gitRepoMemberService.findByNameAndMemberName(gitRepoMemberCompareRequest.getSecondRepo(), gitRepoMemberCompareRequest.getSecondName());
@@ -111,7 +94,6 @@ public class GitRepoService {
         return new GitRepoMemberCompareResponse(gitRepoMemberMapper.toResponse(first), gitRepoMemberMapper.toResponse(second));
     }
 
-    //@Cacheable(value = "twoGitRepoResponse", key = "#twoGitRepoCompareRequest", cacheManager = "cacheManager", unless = "#result.firstRepo.gitRepo.closed_issues_count == null || #result.secondRepo.gitRepo.closed_issues_count == null")
     public TwoGitRepoResponse findTwoGitRepos(GitRepoCompareRequest twoGitRepoCompareRequest) {
         return new TwoGitRepoResponse(getOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()), getOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
     }
@@ -160,10 +142,6 @@ public class GitRepoService {
         return gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
     }
 
-    private void requestGitRepoToScraping(GitRepoRequest gitRepoRequest) {
-        kafkaGitRepoProducer.send(gitRepoRequest);
-    }
-
     private void requestIssueToScraping(GitRepoNameRequest gitRepoNameRequest) {
         kafkaIssueProducer.send(gitRepoNameRequest);
     }
@@ -177,10 +155,10 @@ public class GitRepoService {
         List<GitRepoMemberClientResponse> gitRepoClientResponse = Arrays.asList(clientResponse);
 
         Map<GitRepoMemberClientResponse, Integer> additions = gitRepoClientResponse.stream()
-                .collect(Collectors.toMap(Function.identity(), mem -> Arrays.asList(mem.getWeeks()).stream().mapToInt(w -> w.getA()).sum()));
+                .collect(Collectors.toMap(Function.identity(), mem -> Arrays.stream(mem.getWeeks()).mapToInt(Week::getA).sum()));
 
         Map<GitRepoMemberClientResponse, Integer> deletions = gitRepoClientResponse.stream()
-                .collect(Collectors.toMap(Function.identity(), mem -> Arrays.asList(mem.getWeeks()).stream().mapToInt(w -> w.getD()).sum()));
+                .collect(Collectors.toMap(Function.identity(), mem -> Arrays.stream(mem.getWeeks()).mapToInt(Week::getD).sum()));
 
         List<GitRepoMemberResponse> result = gitRepoClientResponse.stream()
                 .map(member -> new GitRepoMemberResponse(
