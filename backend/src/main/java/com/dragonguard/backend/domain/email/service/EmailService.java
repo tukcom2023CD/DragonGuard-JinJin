@@ -1,15 +1,15 @@
 package com.dragonguard.backend.domain.email.service;
 
 import com.dragonguard.backend.domain.email.dto.request.EmailRequest;
-import com.dragonguard.backend.domain.email.exception.EmailException;
-import com.dragonguard.backend.domain.member.entity.OrganizationDetails;
-import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
 import com.dragonguard.backend.domain.email.entity.Email;
+import com.dragonguard.backend.domain.email.exception.EmailException;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
+import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.entity.OrganizationDetails;
+import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;

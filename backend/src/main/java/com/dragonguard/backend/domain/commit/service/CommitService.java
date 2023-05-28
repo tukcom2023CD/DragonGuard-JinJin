@@ -1,9 +1,9 @@
 package com.dragonguard.backend.domain.commit.service;
 
-import com.dragonguard.backend.domain.contribution.dto.response.ContributionScrapingResponse;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.commit.mapper.CommitMapper;
 import com.dragonguard.backend.domain.commit.repository.CommitRepository;
+import com.dragonguard.backend.domain.contribution.dto.response.ContributionScrapingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

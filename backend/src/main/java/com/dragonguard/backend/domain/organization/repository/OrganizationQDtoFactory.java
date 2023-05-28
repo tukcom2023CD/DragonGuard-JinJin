@@ -14,7 +14,6 @@ import static com.dragonguard.backend.domain.organization.entity.QOrganization.o
 
 @Component
 public class OrganizationQDtoFactory {
-
     @Bean
     public QOrganizationResponse qOrganizationResponse() {
         return new QOrganizationResponse(

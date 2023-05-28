@@ -1,9 +1,9 @@
 package com.dragonguard.backend.domain.issue.service;
 
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.issue.mapper.IssueMapper;
 import com.dragonguard.backend.domain.issue.repository.IssueRepository;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

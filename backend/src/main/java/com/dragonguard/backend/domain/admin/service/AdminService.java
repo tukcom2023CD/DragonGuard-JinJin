@@ -5,6 +5,7 @@ import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationRespon
 import com.dragonguard.backend.domain.admin.mapper.AdminMapper;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
+import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminService {
     private final OrganizationRepository organizationRepository;
+    private final OrganizationQueryRepository organizationQueryRepository;
     private final AdminMapper adminMapper;
 
     @Transactional
@@ -33,14 +35,14 @@ public class AdminService {
         OrganizationStatus beforeStatus = organization.getOrganizationStatus();
         organization.updateStatus(adminDecideRequest.getDecide());
 
-        List<Organization> organizations = organizationRepository
+        List<Organization> organizations = organizationQueryRepository
                 .findAllByOrganizationStatus(beforeStatus, PageRequest.of(0, 20));
 
         return adminMapper.toResponseList(organizations);
     }
 
     public List<AdminOrganizationResponse> getOrganizationsByStatus(OrganizationStatus status, Pageable pageable) {
-        List<Organization> organizations = organizationRepository
+        List<Organization> organizations = organizationQueryRepository
                 .findAllByOrganizationStatus(status, pageable);
 
         return adminMapper.toResponseList(organizations);

@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.organization.service;
 
 import com.dragonguard.backend.domain.email.service.EmailService;
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
@@ -8,10 +9,10 @@ import com.dragonguard.backend.domain.organization.dto.response.OrganizationResp
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.mapper.OrganizationMapper;
+import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
+    private final OrganizationQueryRepository organizationQueryRepository;
     private final OrganizationMapper organizationMapper;
     private final MemberService memberService;
     private final EmailService emailService;
@@ -61,15 +63,15 @@ public class OrganizationService {
     }
 
     public List<OrganizationResponse> getOrganizationRank(Pageable pageable) {
-        return organizationRepository.findRanking(pageable);
+        return organizationQueryRepository.findRanking(pageable);
     }
 
     public List<OrganizationResponse> getOrganizationRankByType(OrganizationType type, Pageable pageable) {
-        return organizationRepository.findRankingByType(type, pageable);
+        return organizationQueryRepository.findRankingByType(type, pageable);
     }
 
     public List<OrganizationResponse> searchOrganization(OrganizationType type, String name, Pageable pageable) {
-        return organizationRepository.findByTypeAndSearchWord(type, name, pageable);
+        return organizationQueryRepository.findByTypeAndSearchWord(type, name, pageable);
     }
 
     public IdResponse<Long> findByName(String name) {

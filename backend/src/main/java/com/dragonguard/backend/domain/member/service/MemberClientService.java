@@ -1,17 +1,17 @@
 package com.dragonguard.backend.domain.member.service;
 
-import com.dragonguard.backend.domain.contribution.dto.response.ContributionScrapingResponse;
 import com.dragonguard.backend.domain.commit.service.CommitService;
+import com.dragonguard.backend.domain.contribution.dto.response.ContributionScrapingResponse;
+import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
+import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.issue.service.IssueService;
-import com.dragonguard.backend.domain.member.dto.response.client.*;
-import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
-import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.member.dto.request.client.MemberClientRequest;
+import com.dragonguard.backend.domain.member.dto.response.client.*;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.GithubClient;

@@ -1,9 +1,9 @@
 package com.dragonguard.backend.domain.result.service;
 
 import com.dragonguard.backend.domain.result.dto.response.client.ClientResultResponse;
-import com.dragonguard.backend.domain.result.repository.ResultRepository;
 import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.result.mapper.ResultMapper;
+import com.dragonguard.backend.domain.result.repository.ResultRepository;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.service.SearchService;
 import lombok.RequiredArgsConstructor;

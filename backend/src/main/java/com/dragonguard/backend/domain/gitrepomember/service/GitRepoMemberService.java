@@ -1,16 +1,16 @@
 package com.dragonguard.backend.domain.gitrepomember.service;
 
-import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
-import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +50,8 @@ public class GitRepoMemberService {
 
         list.stream()
                 .filter(m -> gitRepoMemberRepository.existsByGitRepoAndMember(m.getGitRepo(), m.getMember()))
-                .forEach(o -> gitRepoMemberRepository.findByGitRepoAndMember(o.getGitRepo(), o.getMember()).update(o));
+                .forEach(o -> gitRepoMemberRepository.findByGitRepoAndMember(o.getGitRepo(), o.getMember())
+                        .orElseThrow(EntityNotFoundException::new).update(o));
 
         list.stream()
                 .filter(m -> !gitRepoMemberRepository.existsByGitRepoAndMember(m.getGitRepo(), m.getMember()))
@@ -79,14 +80,7 @@ public class GitRepoMemberService {
     }
 
     public GitRepoMember findByNameAndMemberName(String repoName, String memberName) {
-        return gitRepoMemberRepository.findByNameAndMemberName(repoName, memberName);
-    }
-
-    public void saveAll(List<GitRepo> gitRepos, Member member) {
-        List<GitRepoMember> list = gitRepos.stream()
-                .map(gr -> gitRepoMemberMapper.toEntity(member, gr))
-                .collect(Collectors.toList());
-
-        gitRepoMemberRepository.saveAll(list);
+        return gitRepoMemberRepository.findByNameAndMemberName(repoName, memberName)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

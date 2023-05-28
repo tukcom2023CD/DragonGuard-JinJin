@@ -1,7 +1,7 @@
 package com.dragonguard.backend.support.database;
 
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.repository.MemberRepository;
+import com.dragonguard.backend.domain.member.repository.JpaMemberRepository;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.support.fixture.member.entity.MemberFixture;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ public abstract class LoginTest {
     AuthService authService;
 
     @Autowired
-    private MemberRepository memberRepository;
+    private JpaMemberRepository memberRepository;
 
     protected Member loginUser;
 

@@ -6,7 +6,6 @@ import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.result.mapper.ResultMapper;
 import com.dragonguard.backend.domain.result.repository.ResultRepository;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
-import com.dragonguard.backend.domain.search.dto.request.kafka.KafkaSearchRequest;
 import com.dragonguard.backend.domain.search.dto.response.client.SearchRepoResponse;
 import com.dragonguard.backend.domain.search.dto.response.client.SearchUserResponse;
 import com.dragonguard.backend.domain.search.entity.Filter;
@@ -15,7 +14,6 @@ import com.dragonguard.backend.domain.search.entity.SearchType;
 import com.dragonguard.backend.domain.search.mapper.SearchMapper;
 import com.dragonguard.backend.domain.search.repository.SearchRepository;
 import com.dragonguard.backend.global.GithubClient;
-import com.dragonguard.backend.global.KafkaProducer;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -44,21 +42,8 @@ public class SearchService {
     private final ResultMapper resultMapper;
     private final ResultRepository resultRepository;
     private final AuthService authService;
-    private final KafkaProducer<KafkaSearchRequest> kafkaSearchProducer;
     private final GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     private final GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
-
-    public List<ResultResponse> getSearchResult(SearchRequest searchRequest) {
-        Search search = findOrSaveSearch(searchRequest);
-        List<Result> results = resultRepository.findAllBySearchId(search.getId());
-        if (results.isEmpty()) {
-            requestScraping(searchRequest);
-            return List.of();
-        }
-        return results.stream()
-                .map(resultMapper::toResponse)
-                .collect(Collectors.toList());
-    }
 
     @Transactional
     @Cacheable(value = "results", key = "#searchRequest", cacheManager = "cacheManager")
@@ -127,13 +112,5 @@ public class SearchService {
         }
 
         throw new EntityNotFoundException();
-    }
-
-    private void requestScraping(SearchRequest searchRequest) {
-        kafkaSearchProducer.send(
-                new KafkaSearchRequest(
-                        searchRequest.getName(),
-                        searchRequest.getType().toString(),
-                        searchRequest.getPage()));
     }
 }

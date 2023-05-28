@@ -10,25 +10,27 @@ import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
+import com.dragonguard.backend.domain.issue.entity.Issue;
+import com.dragonguard.backend.domain.issue.service.IssueService;
+import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
+import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
+import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaContributionRequest;
+import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
 import com.dragonguard.backend.domain.member.entity.*;
-import com.dragonguard.backend.global.IdResponse;
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.domain.issue.entity.Issue;
-import com.dragonguard.backend.domain.issue.service.IssueService;
-import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaContributionRequest;
-import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaRepositoryRequest;
-import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
-import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
+import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.entity.Organization;
+import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
+import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.KafkaProducer;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -48,17 +50,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final MemberQueryRepository memberQueryRepository;
     private final MemberMapper memberMapper;
     private final CommitService commitService;
     private final ContributionService contributionService;
     private final BlockchainService blockchainService;
     private final AuthService authService;
     private final OrganizationRepository organizationRepository;
+    private final OrganizationQueryRepository organizationQueryRepository;
     private final PullRequestService pullRequestService;
     private final IssueService issueService;
     private final GitOrganizationService gitOrganizationService;
     private final GitRepoRepository gitRepoRepository;
-    private final MemberClientService memberClientService;
     private final KafkaProducer<KafkaContributionRequest> kafkaContributionProducer;
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
 
@@ -142,7 +145,7 @@ public class MemberService {
     @Transactional
     public MemberResponse getMemberResponse(Member member) {
         UUID memberId = member.getId();
-        Integer rank = memberRepository.findRankingById(memberId);
+        Integer rank = memberQueryRepository.findRankingById(memberId);
         Long amount = member.getSumOfTokens();
         updateTier(member);
         OrganizationDetails organizationDetails = member.getOrganizationDetails();
@@ -157,7 +160,7 @@ public class MemberService {
         Organization organization = organizationRepository.findById(organizationDetails.getOrganizationId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Integer organizationRank = organizationRepository.findRankingByMemberId(memberId);
+        Integer organizationRank = organizationQueryRepository.findRankingByMemberId(memberId);
 
         return memberMapper.toResponse(member, rank, amount, organization.getName(), organizationRank);
     }
@@ -169,7 +172,7 @@ public class MemberService {
     }
 
     public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
-        return memberRepository.findRanking(pageable);
+        return memberQueryRepository.findRanking(pageable);
     }
 
     @Transactional
@@ -230,7 +233,7 @@ public class MemberService {
     }
 
     public List<MemberRankResponse> getMemberRankingByOrganization(Long organizationId, Pageable pageable) {
-        return memberRepository.findRankingByOrganization(organizationId, pageable);
+        return memberQueryRepository.findRankingByOrganization(organizationId, pageable);
     }
 
     public Member getEntity(UUID id) {
@@ -275,9 +278,5 @@ public class MemberService {
 
     public void getContributionSumByScraping(String githubId) {
         contributionService.scrapingCommits(githubId);
-    }
-
-    public List<Member> getAll() {
-        return memberRepository.findAll();
     }
 }

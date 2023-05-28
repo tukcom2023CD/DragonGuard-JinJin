@@ -1,10 +1,10 @@
 package com.dragonguard.backend.domain.member.messagequeue;
 
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.member.service.MemberClientService;
 import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.domain.member.entity.Member;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

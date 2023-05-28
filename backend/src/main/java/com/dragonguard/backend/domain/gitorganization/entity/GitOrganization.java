@@ -25,6 +25,7 @@ public class GitOrganization extends BaseTime {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gitOrganization")
