@@ -21,8 +21,11 @@ final class SearchAndFilterController: UIViewController{
         addUI()
         self.view.backgroundColor = .white
         
-        let tapGesture = UITapGestureRecognizer(target: view, action: #selector(view.endEditing))
-        view.addGestureRecognizer(tapGesture)
+        
+//        tapGesture = UITapGestureRecognizer(target: view, action: #selector(view.endEditing))
+//        if let tapGesture = tapGesture {
+//            view.addGestureRecognizer(tapGesture)
+//        }
     }
     
     /*
@@ -59,6 +62,7 @@ final class SearchAndFilterController: UIViewController{
         btn.layer.shadowOpacity = 0.5
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
         btn.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
+        btn.addTarget(self, action: #selector(clickedUser), for: .touchUpInside)
         return btn
     }()
     
@@ -72,6 +76,7 @@ final class SearchAndFilterController: UIViewController{
         btn.layer.shadowOpacity = 0.5
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
         btn.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
+        btn.addTarget(self, action: #selector(clickedRepository), for: .touchUpInside)
         return btn
     }()
     
@@ -195,6 +200,7 @@ final class SearchAndFilterController: UIViewController{
         self.view.addSubview(topcisCollectionView)
         
         searchBtn.textfield.delegate = self
+        
         languageCollectionView.dataSource = self
         languageCollectionView.delegate = self
         languageCollectionView.register(UICollectionviewCustomCell.self, forCellWithReuseIdentifier: UICollectionviewCustomCell.identifier)
@@ -232,7 +238,10 @@ final class SearchAndFilterController: UIViewController{
             make.centerX.equalTo(self.view.snp.centerX)
             make.width.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.width/2)
         }
-        
+    }
+    
+    // MARK:
+    private func setRepositoryAutoLayout(){
         /// 언어 필터링
         languageButton.snp.makeConstraints { make in
             make.top.equalTo(horStackView.snp.bottom).offset(15)
@@ -291,6 +300,8 @@ final class SearchAndFilterController: UIViewController{
         
     }
     
+    
+    
     /*
      Etc
      */
@@ -298,6 +309,27 @@ final class SearchAndFilterController: UIViewController{
     // MARK: 뒤로가기 버튼
     @objc
     private func clickedBackBtn(){
+        self.dismiss(animated: true)
+    }
+    
+    // MARK: Repository 버튼
+    @objc
+    private func clickedRepository(){
+        setRepositoryAutoLayout()
+    }
+    
+    // MARK: User 버튼
+    @objc
+    private func clickedUser(){
+        languageButton.snp.removeConstraints()
+        languageCollectionView.snp.removeConstraints()
+        forksButton.snp.removeConstraints()
+        forksCollectionView.snp.removeConstraints()
+        starsButton.snp.removeConstraints()
+        starsCollectionView.snp.removeConstraints()
+        topicsButton.snp.removeConstraints()
+        topcisCollectionView.snp.removeConstraints()
+        
         self.dismiss(animated: true)
     }
     
@@ -336,6 +368,7 @@ final class SearchAndFilterController: UIViewController{
         let starsArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
         let forksArray = ["10 미만","50 미만","100 미만","500 미만","500 이상"]
         let topicArray = ["0","1","2","3","4 이상"]
+        
         if type == "star"{
             list = starsArray
         }
@@ -352,8 +385,21 @@ final class SearchAndFilterController: UIViewController{
             actionSheet.addAction(UIAlertAction(title: msg,
                                                 style: .default,
                                                 handler: {(ACTION:UIAlertAction) in
-                print(msg)
-                
+                if type == "star"{
+                    self.starsFilterList = []
+                    self.starsFilterList.append(msg)
+                    self.starsCollectionView.reloadData()
+                }
+                else if type == "fork"{
+                    self.forksFilterList = []
+                    self.forksFilterList.append(msg)
+                    self.forksCollectionView.reloadData()
+                }
+                else{
+                    self.topicsFilterList = []
+                    self.topicsFilterList.append(msg)
+                    self.topcisCollectionView.reloadData()
+                }
             }))
         }
         
@@ -373,38 +419,55 @@ extension SearchAndFilterController: UICollectionViewDelegate, UICollectionViewD
         if collectionView == languageCollectionView{
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionviewCustomCell.identifier, for: indexPath) as? UICollectionviewCustomCell else { return UICollectionViewCell()}
             
-            cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)   //셀 배경 색상
             cell.layer.cornerRadius = 15
-            
+            cell.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
             
             cell.inputText(languageFilterList[indexPath.row])
             return cell
         }
         else if collectionView == forksCollectionView{
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionviewCustomCell.identifier, for: indexPath) as? UICollectionviewCustomCell else { return UICollectionViewCell()}
-            
-            cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)   //셀 배경 색상
             cell.layer.cornerRadius = 15
+            cell.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
             cell.inputText(forksFilterList[indexPath.row])
             return cell
         }
         else if collectionView == starsCollectionView{
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionviewCustomCell.identifier, for: indexPath) as? UICollectionviewCustomCell else { return UICollectionViewCell()}
             
-            cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)   //셀 배경 색상
             cell.layer.cornerRadius = 15
+            cell.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
             cell.inputText(starsFilterList[indexPath.row])
             return cell
         }
         else{
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionviewCustomCell.identifier, for: indexPath) as? UICollectionviewCustomCell else { return UICollectionViewCell()}
             
-            cell.backgroundColor = UIColor(red: 153/255.0, green: 204/255.0, blue: 255/255.0, alpha: 0.4)   //셀 배경 색상
             cell.layer.cornerRadius = 15
+            cell.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
             cell.inputText(topicsFilterList[indexPath.row])
             return cell
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        if collectionView == languageCollectionView{
             
+        }
+        else if collectionView == forksCollectionView{
+            self.forksFilterList = []
+            self.forksCollectionView.reloadData()
+        }
+        else if collectionView == starsCollectionView{
+            self.starsFilterList = []
+            self.starsCollectionView.reloadData()
+        }
+        else{
+            self.topicsFilterList = []
+            self.topcisCollectionView.reloadData()
+        }
         
     }
     
