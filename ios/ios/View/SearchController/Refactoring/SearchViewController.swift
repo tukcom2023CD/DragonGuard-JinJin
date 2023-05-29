@@ -11,12 +11,13 @@ import SnapKit
 import RxSwift
 
 final class SearchViewController: UIViewController{
-    private var topConstraint: Constraint?
-    private var cellHeight: CGFloat = 0
+    private var topConstraint: Constraint?  // background View
+    private var searchBarTopConstraint: Constraint?
+    private var resultList: [SearchResultModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.view.backgroundColor = .white
         addUIToView()
     }
     
@@ -54,11 +55,36 @@ final class SearchViewController: UIViewController{
         return btn
     }()
     
+    // MARK: 검색 버튼 고정할 때 사용할 UIView
+    private lazy var searchBtnUIView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
+    // MARK: 고정된 뒤로가기 버튼
+    private lazy var back2Btn: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("<", for: .normal)
+        btn.isHidden = true
+        btn.setTitleColor(.blue, for: .normal)
+        return btn
+    }()
+    
     // MARK: 검색된 결과 표시할 tableView
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.isScrollEnabled = false
         return tableView
+    }()
+    
+    // MARK: tableView 역할
+    private lazy var stackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.distribution = .fillEqually
+        stack.spacing = 10
+        stack.backgroundColor = .white
+        return stack
     }()
     
     // MARK: scrollView
@@ -86,12 +112,13 @@ final class SearchViewController: UIViewController{
         scrollView.delegate = self
         
         contentView.addSubview(backgroundUIView)
+        contentView.addSubview(stackView)
+
+        contentView.addSubview(searchBtnUIView)
         contentView.addSubview(backBtn)
-        contentView.addSubview(searchBtn)
-        contentView.addSubview(tableView)
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(SearchViewTableViewCell.self, forCellReuseIdentifier: SearchViewTableViewCell.identifier)
+        searchBtnUIView.addSubview(searchBtn)
+        searchBtnUIView.addSubview(back2Btn)
+        
         setAutoLayout()
     }
     
@@ -108,12 +135,11 @@ final class SearchViewController: UIViewController{
         
         // contentView
         contentView.snp.makeConstraints { make in
-            make.top.equalTo(self.scrollView.snp.top)
+            self.topConstraint = make.top.equalTo(self.scrollView.snp.top).constraint
             make.leading.equalTo(self.scrollView.snp.leading)
             make.trailing.equalTo(self.scrollView.snp.trailing)
             make.bottom.equalTo(self.scrollView.snp.bottom)
             make.width.equalTo(scrollView.snp.width)
-//            make.height.equalTo(2000)
         }
         
         // 뒤로가기 버튼
@@ -124,60 +150,79 @@ final class SearchViewController: UIViewController{
         
         // 뒷 배경
         backgroundUIView.snp.makeConstraints { make in
-            self.topConstraint = make.top.equalTo(contentView.snp.top).constraint
+            make.top.equalTo(contentView.snp.top)
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
             make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.height/3)
-            
+        }
+        
+        // 검색버튼 고정시 사용
+        searchBtnUIView.snp.makeConstraints { make in
+            make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.width/10)
+            make.width.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.width)
+            searchBarTopConstraint = make.top.equalTo(backgroundUIView.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.width/20).constraint
+            make.centerX.equalToSuperview()
         }
         
         // 검색 버튼
         searchBtn.snp.makeConstraints { make in
             make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.width/10)
             make.width.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.width*35/60)
-            make.top.equalTo(backgroundUIView.snp.bottom)
-            make.centerX.equalToSuperview()
+            make.center.equalToSuperview()
         }
         
-        // 검색 결과 표시할 리스트
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.width/20)
+        // 고정 뒤로가기 버튼
+        back2Btn.snp.makeConstraints { make in
+            make.top.equalTo(searchBtnUIView.snp.top).offset(10)
+            make.leading.equalTo(searchBtnUIView.snp.leading)
+        }
+        
+        stackView.snp.makeConstraints { make in
+            make.top.equalTo(backgroundUIView.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.width/5)
             make.leading.equalTo(30)
             make.trailing.equalTo(-30)
             make.bottom.equalTo(contentView.snp.bottom)
-            make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.height/2)
+        }
+        
+        testData()
+        inputDataIntoList()
+    }
+    
+    // MARK: 데이터 삽입
+    private func inputDataIntoList(){
+        
+        var index = 0
+        resultList.forEach { result in
+            
+            let resultUI = SearchResultUIVIew()
+            resultUI.snp.makeConstraints { make in
+                make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.height/10)
+            }
+            
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+            resultUI.tag = index
+            index += 1
+            resultUI.isUserInteractionEnabled = true
+            
+            resultUI.addGestureRecognizer(tapGesture)
+            resultUI.inputInfo(title: result.title,
+                               create: result.create,
+                               language: result.language)
+            stackView.addArrangedSubview(resultUI)
         }
     }
     
-    
-    
-    
-    
-}
-
-extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
-   
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SearchViewTableViewCell.identifier,for: indexPath ) as! SearchViewTableViewCell
-        cell.layer.cornerRadius = 15
-        cell.backgroundColor = .white
-        cell.layer.borderWidth = 1
-        cell.layer.cornerRadius = 18
-        cell.layer.shadowOpacity = 0.5
-        cellHeight += cell.frame.height
-        cell.layer.shadowOffset = CGSize(width: 0, height: 3)
-        cell.inputInfo(title: "asdfdsf", create: "2022", language: "swift")
-        return cell
+    @objc func handleTap(sender: UITapGestureRecognizer) {
+        print(sender.view?.tag ?? -1)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
-    func numberOfSections(in tableView: UITableView) -> Int { return 30 }
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return 1 }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return " " }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.view.safeAreaLayoutGuide.layoutFrame.height/10
+    // MARK: 테스트용 함수
+    private func testData(){
+        for _ in 0...10{
+            resultList.append(SearchResultModel(create: "2022", language: "swift", title: "hi"))
+        }
     }
+    
 }
 
 extension UIScrollView {
@@ -207,26 +252,33 @@ extension SearchViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let topConstraint = topConstraint else {return}
-        scrollView.updateContentSize(cellHeight: self.cellHeight)
-        self.contentView.snp.updateConstraints { make in
-            make.bottom.equalTo(self.scrollView.snp.bottom)
-        }
-//        self.tableView.snp.updateConstraints { make in
-//            make.bottom.equalTo(self.contentView.snp.bottom)
-//        }
-//        self.tableView.reloadData()
+        guard let searchBarTopConstraint = searchBarTopConstraint else {return}
         
+        // 스크롤 시 뒷 배경 점점 사라지는 효과
+        let percent =  1 - (scrollView.contentOffset.y / (self.backgroundUIView.frame.height))
+        if !percent.isFinite || percent.constraintPriorityTargetValue.isNaN{
+            self.backgroundUIView.alpha = 1
+        }
+        else{
+            self.backgroundUIView.alpha = percent
+        }
+        
+        // 스크롤 할때 검색 버튼이 고정되도록 하는 부분
         if scrollView.contentOffset.y > 0 {
-            if scrollView.contentOffset.y < 100 {
-                topConstraint.update(offset: -scrollView.contentOffset.y)
+            if scrollView.contentOffset.y > self.backgroundUIView.frame.height {
+                self.searchBtnUIView.backgroundColor = .white
+                back2Btn.isHidden = false
+                searchBarTopConstraint.update(offset: scrollView.contentOffset.y - self.backgroundUIView.frame.height)
+                tableView.reloadData()
             }
-            else {
-                topConstraint.update(offset: -100)
-            }
+            
         }
         else {
             topConstraint.update(offset: 0)
+            back2Btn.isHidden = true
+            self.searchBtnUIView.backgroundColor = .clear
         }
+        
     }
 }
 

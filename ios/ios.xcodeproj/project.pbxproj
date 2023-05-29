@@ -16,6 +16,8 @@
 		3B110FE82A23A895008C99F0 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FE72A23A895008C99F0 /* SearchViewController.swift */; };
 		3B110FEB2A23A905008C99F0 /* BackgroundUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FEA2A23A905008C99F0 /* BackgroundUIView.swift */; };
 		3B110FED2A23B9AC008C99F0 /* SearchViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FEC2A23B9AC008C99F0 /* SearchViewTableViewCell.swift */; };
+		3B110FF32A24C96D008C99F0 /* SearchResultUIVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FF22A24C96D008C99F0 /* SearchResultUIVIew.swift */; };
+		3B110FF62A24CA47008C99F0 /* SearchResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FF52A24CA47008C99F0 /* SearchResultModel.swift */; };
 		3B15C596296FB673004AE007 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 3B15C595296FB673004AE007 /* Alamofire */; };
 		3B18AA1E29A7B1E90051C086 /* KlipModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18AA1D29A7B1E90051C086 /* KlipModel.swift */; };
 		3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18AA1F29A7BD0E0051C086 /* Notification.swift */; };
@@ -167,6 +169,8 @@
 		3B110FE72A23A895008C99F0 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		3B110FEA2A23A905008C99F0 /* BackgroundUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundUIView.swift; sourceTree = "<group>"; };
 		3B110FEC2A23B9AC008C99F0 /* SearchViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewTableViewCell.swift; sourceTree = "<group>"; };
+		3B110FF22A24C96D008C99F0 /* SearchResultUIVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultUIVIew.swift; sourceTree = "<group>"; };
+		3B110FF52A24CA47008C99F0 /* SearchResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultModel.swift; sourceTree = "<group>"; };
 		3B18AA1D29A7B1E90051C086 /* KlipModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipModel.swift; sourceTree = "<group>"; };
 		3B18AA1F29A7BD0E0051C086 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		3B18C43F29ADD69D00E58303 /* CompareRepoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -322,19 +326,28 @@
 		3B110FE62A23A87A008C99F0 /* Refactoring */ = {
 			isa = PBXGroup;
 			children = (
-				3B110FE92A23A8F7008C99F0 /* BackGroundView */,
 				3B110FE72A23A895008C99F0 /* SearchViewController.swift */,
 				3B110FEC2A23B9AC008C99F0 /* SearchViewTableViewCell.swift */,
+				3B110FE92A23A8F7008C99F0 /* CustomUIView */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
 		};
-		3B110FE92A23A8F7008C99F0 /* BackGroundView */ = {
+		3B110FE92A23A8F7008C99F0 /* CustomUIView */ = {
 			isa = PBXGroup;
 			children = (
 				3B110FEA2A23A905008C99F0 /* BackgroundUIView.swift */,
+				3B110FF22A24C96D008C99F0 /* SearchResultUIVIew.swift */,
 			);
-			path = BackGroundView;
+			path = CustomUIView;
+			sourceTree = "<group>";
+		};
+		3B110FF42A24CA35008C99F0 /* Refactoring */ = {
+			isa = PBXGroup;
+			children = (
+				3B110FF52A24CA47008C99F0 /* SearchResultModel.swift */,
+			);
+			path = Refactoring;
 			sourceTree = "<group>";
 		};
 		3B1DB86B2963428A00308F43 = {
@@ -681,6 +694,7 @@
 		3BA0EEE329799A3000B9E952 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3B110FF42A24CA35008C99F0 /* Refactoring */,
 				3B18AA1D29A7B1E90051C086 /* KlipModel.swift */,
 				A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */,
 				3B9CF3D1298F997B00495D35 /* UserInfoModel.swift */,
@@ -958,6 +972,7 @@
 				3B110FED2A23B9AC008C99F0 /* SearchViewTableViewCell.swift in Sources */,
 				3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */,
 				3BA78D9A2A04F3D3000ACAD1 /* AdminModel.swift in Sources */,
+				3B110FF62A24CA47008C99F0 /* SearchResultModel.swift in Sources */,
 				3BDD718629C091480018D09B /* LanguageSelectionsCollectionViewCell.swift in Sources */,
 				3B87E57029D7173D000734BE /* AddOrganizationModel.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
@@ -982,6 +997,7 @@
 				3B7BFF6C29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift in Sources */,
 				3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */,
 				3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */,
+				3B110FF32A24C96D008C99F0 /* SearchResultUIVIew.swift in Sources */,
 				3BD6EDDE29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift in Sources */,
 				3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */,
 				3B00229F29879F7D003FA5CC /* SettingTableViewCell.swift in Sources */,

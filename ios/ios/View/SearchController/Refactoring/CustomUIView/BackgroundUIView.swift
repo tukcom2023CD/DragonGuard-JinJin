@@ -16,7 +16,10 @@ final class BackgroundUIView: UIView{
         
         self.addSubview(img)
         img.snp.makeConstraints { make in
-            make.center.equalTo(self.snp.center)
+            make.top.equalTo(self.snp.top)
+            make.leading.equalTo(self.snp.leading)
+            make.trailing.equalTo(self.snp.trailing)
+            make.bottom.equalTo(self.snp.bottom)
         }
         return img
     }()
