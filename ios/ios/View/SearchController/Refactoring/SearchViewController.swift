@@ -30,6 +30,7 @@ final class SearchViewController: UIViewController{
         let btn = UIButton()
         btn.setTitle("<", for: .normal)
         btn.setTitleColor(.blue, for: .normal)
+        btn.addTarget(self, action: #selector(clickedBackBtn), for: .touchUpInside)
         return btn
     }()
     
@@ -43,16 +44,30 @@ final class SearchViewController: UIViewController{
     // MARK: 검색 버튼
     private lazy var searchBtn: UIButton = {
         let btn = UIButton()
-        btn.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        
         btn.backgroundColor = .white
+        btn.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         btn.setTitle(" Repository or User ", for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         btn.setTitleColor(.lightGray, for: .normal)
         btn.layer.cornerRadius = 18
         btn.layer.shadowOpacity = 0.5
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
+        btn.addTarget(self, action: #selector(clickedSearchBtn), for: .touchUpInside)
         return btn
+    }()
+    
+    // MARK:
+    private lazy var searchBar: UISearchBar = {
+        let search = UISearchBar()
+        search.searchTextField.layer.cornerRadius = 20
+        search.searchTextField.layer.masksToBounds = true
+        search.searchTextField.layer.shadowOpacity = 0.5
+        search.backgroundColor = .clear
+        search.placeholder = "Repository or User"
+        search.searchBarStyle = .minimal
+        search.tag = -10
+        search.searchTextField.layer.shadowOffset = CGSize(width: -3, height: 3)
+        return search
     }()
     
     // MARK: 검색 버튼 고정할 때 사용할 UIView
@@ -67,14 +82,8 @@ final class SearchViewController: UIViewController{
         btn.setTitle("<", for: .normal)
         btn.isHidden = true
         btn.setTitleColor(.blue, for: .normal)
+        btn.addTarget(self, action: #selector(clickedBackBtn), for: .touchUpInside)
         return btn
-    }()
-    
-    // MARK: 검색된 결과 표시할 tableView
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.isScrollEnabled = false
-        return tableView
     }()
     
     // MARK: tableView 역할
@@ -212,8 +221,26 @@ final class SearchViewController: UIViewController{
         }
     }
     
-    @objc func handleTap(sender: UITapGestureRecognizer) {
+    // MARK: 검색된 리스트 누른 경우
+    @objc
+    private func handleTap(sender: UITapGestureRecognizer) {
         print(sender.view?.tag ?? -1)
+    }
+        
+    // MARK: 검색 버튼 누른 경우
+    @objc
+    private func clickedSearchBtn(){
+        let nextPage = SearchAndFilterController()
+        
+        nextPage.modalPresentationStyle = .fullScreen
+        self.present(nextPage,animated: true)
+    }
+    
+    // MARK: 뒤로가기 버튼 누르는 경우
+    @objc
+    private func clickedBackBtn(){
+        
+        self.dismiss(animated: true)
     }
     
     // MARK: 테스트용 함수
@@ -269,7 +296,6 @@ extension SearchViewController: UIScrollViewDelegate {
                 self.searchBtnUIView.backgroundColor = .white
                 back2Btn.isHidden = false
                 searchBarTopConstraint.update(offset: scrollView.contentOffset.y - self.backgroundUIView.frame.height)
-                tableView.reloadData()
             }
             
         }
