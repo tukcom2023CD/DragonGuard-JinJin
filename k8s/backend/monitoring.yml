@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: gitrank-backend
+  labels:
+    app: gitrank-backend
+spec:
+  selector:
+    matchLabels:
+      app: gitrank-backend
+  namespaceSelector:
+    any: true
+  endpoints:
+  - port: web
+    path: /actuator/prometheus
+    interval: 10s

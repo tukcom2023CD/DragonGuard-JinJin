@@ -1,0 +1,73 @@
+apiVersion: v1 
+kind: Service
+metadata:
+  name: elasticsearch
+spec:
+  ports:
+    - name: http-rest
+      protocol: TCP
+      port: 9200
+      targetPort: 9200
+    - name: tcp
+      protocol: TCP
+      port: 9300
+      targetPort: 9300
+  selector:
+    app: elasticsearch
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elasticsearch
+  namespace: elk-stack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+        - name: elasticsearch
+          image: 'docker.elastic.co/elasticsearch/elasticsearch:7.15.2'
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: "1"
+              memory: 8Gi
+            requests:
+              cpu: 500m
+              memory: 4Gi          
+          env:
+            - name: ES_JAVA_OPTS
+              value: '-Xmx2g -Xms2g'
+            - name: discovery.type
+              value: single-node
+          ports: 
+            - name: http-rest
+              containerPort: 9200
+              protocol: TCP
+            - name: tcp
+              containerPort: 9300
+              protocol: TCP
+          volumeMounts:
+            - name: elasticsearch-data-volume
+              mountPath: /usr/share/elasticsearch/data
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: elasticsearch-data-volume
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        storageClassName: ssd-ceph-fs
+        volumeMode: Filesystem

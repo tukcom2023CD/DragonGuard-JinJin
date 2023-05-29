@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+spec:
+  type: NodePort
+  ports:
+    - name: tcp
+      protocol: TCP 
+      port: 5000
+      targetPort: 5000
+  selector:
+    app: logstash
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      volumes:
+        - name: logstash-config-volume
+          configMap:
+            name: logstash-config
+            items:
+              - key: logstash.yml
+                path: logstash.yml
+        - name: logstash-pipeline-volume
+          configMap:
+            name: logstash-config
+            items:
+              - key: logstash.conf
+                path: logstash.conf
+      containers:
+        - name: logstash
+          image: docker.elastic.co/logstash/logstash:7.15.2
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 500m
+              memory: 4Gi
+            requests:
+              cpu: 300m
+              memory: 2Gi          
+          env:
+            - name: LS_JAVA_OPTS
+              value: '-Xmx1g -Xms1g'
+          ports:
+            - name: tcp
+              containerPort: 5000
+              protocol: TCP
+          volumeMounts:
+            - name: logstash-config-volume
+              mountPath: /usr/share/logstash/config
+            - name: logstash-pipeline-volume
+              mountPath: /usr/share/logstash/pipeline

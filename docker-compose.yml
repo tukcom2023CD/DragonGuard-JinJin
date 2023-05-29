@@ -90,6 +90,7 @@ services:
   scraping:
     build:
       context: ./scraping
+    image: ohksj77/gitrank-scraping
     container_name: scraping
     restart: on-failure
     depends_on:

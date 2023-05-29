@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitrank-backend
+spec:
+  selector:
+    matchLabels:
+      app: gitrank-backend
+      component: gitrank-backend
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gitrank-backend
+        component: gitrank-backend
+        tier: backend
+    spec:
+      containers:
+        - name: gitrank-backend
+          image: ohksj77/gitrank-backend
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: database.password
+            - name: BLOCKCHAIN_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: blockchain.private-key
+            - name: BLOCKCHAIN_BYTE_CODE
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: blockchain.byte-code
+            - name: BLOCKCHAIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: blockchain.password
+            - name: BLOCKCHAIN_WALLET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: blockchain.wallet-key
+            - name: BLOCKCHAIN_CONTRACT_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: blockchain.contract-address
+            - name: GITHUB_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: spring.security.oauth2.client.registration.github.client-id
+            - name: GITHUB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: spring.security.oauth2.client.registration.github.client-secret
+            - name: REDIRECT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: spring.security.oauth2.client.registration.github.redirectUri
+            - name: EMAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: spring.mail.username
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-backend-secret
+                  key: spring.mail.password
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: app.auth.token.secret-key
+            - name: ADMIN
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: admin

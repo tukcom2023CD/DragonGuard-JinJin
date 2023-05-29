@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5601
+      targetPort: 5601
+  selector:
+    app: kibana
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      volumes:
+        - name: kibana-config-volume
+          items:
+            - key: kibana.yml
+              path: kibana.yml
+      containers:
+        - name: waplpay-kibana
+          image: 'docker.elastic.co/kibana/kibana:7.15.2'
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: kibana
+              containerPort: 5601
+              protocol: TCP
+          resources:
+            limits:
+              cpu: '1'
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+            - name: kibana-config-volume
+              mountPath: /usr/share/kibana/config
+      restartPolicy: Always     

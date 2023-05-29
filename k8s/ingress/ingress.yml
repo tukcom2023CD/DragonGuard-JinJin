@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: gitrank-backend
+            port:
+              number: 80
+  - http:
+      paths:
+      - path: /kafdrop
+        pathType: Prefix
+        backend:
+          service:
+            name: gitrank-kafdrop
+            port:
+              number: 80
+  - http:
+      paths:
+      - path: /elk
+        pathType: Prefix
+        backend:
+          service:
+            name: kibana
+            port:
+              number: 80

@@ -12,7 +12,7 @@ jib {
 		image = "openjdk:11-jre-slim"
 	}
 	to {
-		image = "ohksj77/backend"
+		image = "ohksj77/gitrank-backend"
 		tags = ["latest"]
 	}
 	container {
@@ -52,6 +52,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'com.klaytn.caver:core:1.10.0'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'

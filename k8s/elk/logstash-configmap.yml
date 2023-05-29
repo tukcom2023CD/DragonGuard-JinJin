@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+data:
+  logstash.conf: |
+    input {
+      tcp {
+        port => 5000
+      }
+    }
+
+    filter {
+      json {
+        source => "message"
+      }
+
+      mutate {
+        remove_field => ["@version"]
+      }
+    }
+
+    output {
+      stdout {
+        codec => rubydebug
+      }
+    }
+  
+  # logstash configuration
+  logstash.yml: |
+    http.host: "0.0.0.0"
+    path.config: /usr/share/logstash/pipeline

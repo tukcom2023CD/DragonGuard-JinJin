@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitrank-db
+spec:
+  selector:
+    matchLabels:
+      app: gitrank-db
+      component: gitrank-db
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gitrank-db
+        component: gitrank-db
+        tier: backend
+    spec:
+      containers:
+        - name: gitrank-db
+          image: mysql
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-volume
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: database.password
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: database.schema
+      volumes:
+        - name: mysql-volume
+          hostPath:
+            path: /volume/data/gitrank

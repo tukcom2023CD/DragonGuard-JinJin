@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitrank-scraping
+spec:
+  ports:
+    - port: 5001
+      protocol: TCP
+  selector:
+    app: gitrank-scraping
+    component: gitrank-scraping
+    tier: scraping
+  type: LoadBalancer
