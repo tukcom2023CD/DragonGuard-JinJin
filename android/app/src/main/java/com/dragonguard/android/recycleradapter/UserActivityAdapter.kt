@@ -33,7 +33,7 @@ class UserActivityAdapter (private val datas : HashMap<String, Int>, private val
         return position
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(datas[type[position]], type[position])
+        holder.bind(datas[type[position%4]], type[position%4])
     }
 
 }

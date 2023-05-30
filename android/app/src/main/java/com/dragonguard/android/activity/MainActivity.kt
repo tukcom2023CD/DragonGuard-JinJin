@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.webkit.CookieManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -15,11 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.bumptech.glide.Glide
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.compare.RepoChooseActivity
-import com.dragonguard.android.activity.menu.MenuActivity
-import com.dragonguard.android.activity.ranking.RankingsActivity
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityMainBinding
@@ -78,6 +71,7 @@ class MainActivity : AppCompatActivity() {
     private var refreshState = true
     private var state = true
     private var count = 0
+    private var realCount = 0
     private  var mainFrag: MainFragment? = null
     private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null)
     override fun onNewIntent(intent: Intent?) {
@@ -233,7 +227,9 @@ class MainActivity : AppCompatActivity() {
                             if (prefs.getWalletAddress("") != "") {
                                 postWalletAddress(prefs.getWalletAddress(""))
                             }
+                            realModel.commits = userInfo.commits
                         } else {
+                            realModel.commits = userInfo.commits
                             realModel.tier = userInfo.tier
                         }
                         if (userInfo.tokenAmount == null) {
@@ -244,14 +240,19 @@ class MainActivity : AppCompatActivity() {
                         if(userInfo.organization != null) {
                             realModel.organization = userInfo.organization
                         }
+                        realModel.profileImage = userInfo.profileImage
                         realModel.rank = userInfo.rank
-
+                        realModel.issues = userInfo.issues
+                        realModel.pullRequests = userInfo.pullRequests
+                        realModel.reviews = userInfo.reviews
                         if(userInfo.organizationRank !=null) {
                             realModel.organizationRank = userInfo.organizationRank
                         }
-                        Log.d("userInfo", "id:${userInfo.githubId}")
                         count = 0
+                        Log.d("token", "token: $token")
+                        Log.d("userInfo", "realModel:$realModel")
                         if(realModel.commits != null && realModel.githubId != null && realModel.profileImage != null) {
+                            Log.d("userInfo", "id:${userInfo.githubId}")
                             mainFrag = MainFragment(token, realModel)
                             refreshMain()
                         }
@@ -306,7 +307,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshMain() {
-        if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(2).itemId) {
+        if(realCount == 1) {
+            if(mainFrag != null) {
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.add(binding.contentFrame.id, mainFrag!!)
+                    .commit()
+                return
+            }
+        }
+        if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(2).itemId && state ) {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(binding.contentFrame.id, mainFrag!!)
                 .commit()

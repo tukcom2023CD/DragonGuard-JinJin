@@ -85,7 +85,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.25"
                 android:adjustViewBounds="true"
-                android:onClick="@{()->mainViewModel.clickUserIcon()}" />
+                android:onClick="@{()->mainFragViewmodel.clickUserIcon()}" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -101,7 +101,7 @@
                 android:layout_weight="2"
                 android:fontFamily="@font/ibm_semibold"
                 android:layout_gravity="center_vertical"
-                android:onClick="@{()->mainViewModel.clickUserIcon()}"
+                android:onClick="@{()->mainFragViewmodel.clickUserIcon()}"
                 android:textColor="@color/black"
                 android:textSize="25sp" />
 
@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="0.7"
+                android:layout_weight="0.6"
                 android:weightSum="5"
                 android:orientation="horizontal">
 
@@ -167,6 +167,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:background="#ffffff"
                         android:layout_marginTop="-15dp"
                         android:fontFamily="@font/ibm_semibold"
                         android:gravity="center"
@@ -232,6 +233,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="-15dp"
+                        android:background="#ffffff"
                         android:fontFamily="@font/ibm_semibold"
                         android:gravity="center"
                         android:includeFontPadding="false"
@@ -258,7 +260,7 @@
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="20dp"
-                android:layout_weight="0.4"
+                android:layout_weight="0.55"
                 android:orientation="horizontal">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -270,20 +272,22 @@
 
 
                     <LinearLayout
+                        android:background="@drawable/shadow"
                         android:id="@+id/contribute_frame"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="15dp"
-                        android:foreground="@drawable/shadow"
                         android:orientation="vertical"
+
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent">
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <androidx.viewpager2.widget.ViewPager2
                             android:id="@+id/user_util"
-                            android:layout_marginTop="15dp"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="15dp" />
 
                     </LinearLayout>
 
@@ -294,6 +298,7 @@
                         android:layout_marginTop="-15dp"
                         android:fontFamily="@font/ibm_semibold"
                         android:gravity="center"
+                        android:background="#ffffff"
                         android:includeFontPadding="false"
                         android:text="기여도"
                         android:textColor="@color/black"
@@ -310,7 +315,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.1"
+                android:layout_weight="0.05"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal" />
 
@@ -351,6 +356,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:background="#ffffff"
                         android:id="@+id/user_org_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

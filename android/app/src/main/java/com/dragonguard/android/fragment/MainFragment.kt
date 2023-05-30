@@ -4,26 +4,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.LoginActivity
-import com.dragonguard.android.activity.MainActivity
-import com.dragonguard.android.connect.NetworkCheck
+import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.databinding.FragmentMainBinding
 import com.dragonguard.android.model.UserInfoModel
+import com.dragonguard.android.recycleradapter.UserActivityAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
@@ -76,28 +72,39 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
             "GOLD" ->{
                 binding.tierImg.setBackgroundResource(R.drawable.gold)
             }
+            "PLATINUM" ->{
+                binding.tierImg.setBackgroundResource(R.drawable.platinum)
+            }
             "DIAMOND" ->{
                 binding.tierImg.setBackgroundResource(R.drawable.diamond)
             }
         }
-
+        viewmodel.onSearchClickListener.observe(requireActivity(), Observer {
+            if(viewmodel.onSearchClickListener.value == true) {
+                val intent = Intent(requireActivity(), SearchActivity::class.java)
+                intent.putExtra("token", token)
+                startActivity(intent)
+            }
+        } )
         if (info.tokenAmount != null) {
             binding.tokenAmount.text = info.tokenAmount.toString()
         }
         val typeList = listOf("commits", "issues", "pullRequests", "review")
-        binding.userOrgName.text = info.organization!!
+        if(info.organization != null) {
+            binding.userOrgName.text = info.organization
+        }
         val userActivity = HashMap<String, Int>()
         userActivity.put("commits", info.commits!!)
         userActivity.put("issues", info.issues!!)
         userActivity.put("pullRequests", info.pullRequests!!)
-        userActivity.put("review", info.review!!)
+        userActivity.put("review", info.reviews!!)
+
+        binding.userUtil.adapter = UserActivityAdapter(userActivity, typeList, requireContext())
+        binding.userUtil.orientation = ViewPager2.ORIENTATION_HORIZONTAL
     }
 
     private fun setPage(){
         binding.userUtil.setCurrentItem((binding.userUtil.currentItem+1)%4,false)
     }
-
-
-
 
 }
