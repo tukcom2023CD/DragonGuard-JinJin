@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     private var count = 0
     private var realCount = 0
     private  var mainFrag: MainFragment? = null
+    private var added = false
     private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null)
     override fun onNewIntent(intent: Intent?) {
         count = 0
@@ -139,12 +140,12 @@ class MainActivity : AppCompatActivity() {
         binding.mainNav.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.bottom_main -> {
-                    if(mainFrag != null) {
+                    if(mainFrag != null ) {
+                        Log.d("added", "added: $added    main clicked")
                         val transaction = supportFragmentManager.beginTransaction()
-                        transaction.add(binding.contentFrame.id, mainFrag!!)
+                        transaction.replace(binding.contentFrame.id, mainFrag!!)
                             .commit()
-
-
+                        added = true
                     }
                 }
             }
@@ -309,16 +310,28 @@ class MainActivity : AppCompatActivity() {
     private fun refreshMain() {
         if(realCount == 1) {
             if(mainFrag != null) {
-                val transaction = supportFragmentManager.beginTransaction()
-                transaction.add(binding.contentFrame.id, mainFrag!!)
-                    .commit()
+                Log.d("added", "added: $added    refreshMain")
+                if(!added) {
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.add(binding.contentFrame.id, mainFrag!!)
+                        .commit()
+                    added = true
+                } else {
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(binding.contentFrame.id, mainFrag!!)
+                        .commit()
+                    added = true
+                }
                 return
             }
         }
         if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(2).itemId && state ) {
+            Log.d("added", "added: $added    refreshMain")
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(binding.contentFrame.id, mainFrag!!)
                 .commit()
+
+            added = true
         }
     }
 
