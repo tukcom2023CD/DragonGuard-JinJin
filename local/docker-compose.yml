@@ -4,7 +4,7 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: ../backend
     command: gradle bootRun
     container_name: gitrank-backend
     ports:
@@ -89,7 +89,7 @@ services:
   
   scraping:
     build:
-      context: ./scraping
+      context: ../scraping
     image: ohksj77/gitrank-scraping
     container_name: gitrank-scraping
     restart: on-failure

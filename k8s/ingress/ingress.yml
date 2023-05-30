@@ -15,13 +15,4 @@ spec:
           service:
             name: gitrank-backend
             port:
-              number: 80
-  - http:
-      paths:
-      - path: /elk
-        pathType: Prefix
-        backend:
-          service:
-            name: kibana
-            port:
-              number: 5601
+              number: 8080
