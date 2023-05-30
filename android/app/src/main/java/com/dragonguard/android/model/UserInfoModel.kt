@@ -5,18 +5,18 @@ package com.dragonguard.android.model
  받기위해 정의한 model
  */
 data class UserInfoModel(
-    val authStep: String?,
-    val commits: Int?,
-    val githubId: String?,
-    val id: String?,
-    val name: String?,
-    val profileImage: String?,
-    val tier: String?,
-    val rank: String?,
-    val tokenAmount: Int?,
-    val organization: String?,
-    val organizationRank: Int?,
-    val issues: Int?,
-    val pullRequests: Int?,
-    val review: Int?
+    var authStep: String?,
+    var commits: Int?,
+    var githubId: String?,
+    var id: String?,
+    var name: String?,
+    var profileImage: String?,
+    var tier: String?,
+    var rank: String?,
+    var tokenAmount: Int?,
+    var organization: String?,
+    var organizationRank: Int?,
+    var issues: Int?,
+    var pullRequests: Int?,
+    var review: Int?
 )

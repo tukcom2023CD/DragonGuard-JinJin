@@ -23,6 +23,8 @@ import com.dragonguard.android.activity.ranking.RankingsActivity
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityMainBinding
+import com.dragonguard.android.fragment.MainFragment
+import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
@@ -76,6 +78,8 @@ class MainActivity : AppCompatActivity() {
     private var refreshState = true
     private var state = true
     private var count = 0
+    private  var mainFrag: MainFragment? = null
+    private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null)
     override fun onNewIntent(intent: Intent?) {
         count = 0
         super.onNewIntent(intent)
@@ -109,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 
         prefs = IdPreference(applicationContext)
         this.onBackPressedDispatcher.addCallback(this, callback)
-
+        binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(2).itemId
         if (loginOut) {
             prefs.setWalletAddress("")
         }
@@ -138,24 +142,22 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-//        랭킹 보러가기 버튼 눌렀을 때 랭킹 화면으로 전환
-        binding.lookRanking.setOnClickListener {
-            val intent = Intent(applicationContext, RankingsActivity::class.java)
-            intent.putExtra("token", prefs.getJwtToken(""))
-            intent.putExtra("organization", binding.organizationName.text.toString())
-            startActivity(intent)
+        binding.mainNav.setOnItemSelectedListener {
+            when(it.itemId) {
+                R.id.bottom_main -> {
+                    if(mainFrag != null) {
+                        val transaction = supportFragmentManager.beginTransaction()
+                        transaction.add(binding.contentFrame.id, mainFrag!!)
+                            .commit()
+
+
+                    }
+                }
+            }
+            true
         }
 
-//        유저 아이디, 프로필을 눌렀을 때 메뉴 화면으로 전환
-        viewmodel.onUserIconSelected.observe(this, Observer {
-            if (viewmodel.onUserIconSelected.value == true) {
-                val intent = Intent(applicationContext, UserDetailActivity::class.java)
-                intent.putExtra("token", prefs.getJwtToken(""))
-                intent.putExtra("userName", binding.userId.text.toString())
-                intent.putExtra("githubId", binding.userId.text.toString())
-                startActivity(intent)
-            }
-        })
+
 
 //        검색창, 검색 아이콘 눌렀을 때 검색화면으로 전환
         viewmodel.onSearchClickListener.observe(this, Observer {
@@ -168,11 +170,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        binding.repoCompare.setOnClickListener {
-            val intent = Intent(applicationContext, RepoChooseActivity::class.java)
-            intent.putExtra("token", prefs.getJwtToken(""))
-            startActivity(intent)
-        }
     }
 
     override fun onRestart() {
@@ -229,36 +226,36 @@ class MainActivity : AppCompatActivity() {
                             refreshToken()
                         }
                     } else {
-                        if (userInfo.githubId.isNotBlank()) {
-                            binding.userId.text = userInfo.githubId
+                        if (userInfo.githubId!!.isNotBlank()) {
+                            realModel.githubId = userInfo.githubId
                         }
                         if (userInfo.commits != 0 && userInfo.tier == "SPROUT") {
                             if (prefs.getWalletAddress("") != "") {
                                 postWalletAddress(prefs.getWalletAddress(""))
-                            } else {
-                                binding.userTier.text = "내 티어 : ${userInfo.tier}"
                             }
                         } else {
-                            binding.userTier.text = "내 티어 : ${userInfo.tier}"
+                            realModel.tier = userInfo.tier
                         }
                         if (userInfo.tokenAmount == null) {
-                            binding.userToken.text = "내 기여도 : ${userInfo.commits}"
+                            realModel.tokenAmount = userInfo.commits
                         } else {
-                            binding.userToken.text = "내 기여도 : ${userInfo.tokenAmount}"
+                            realModel.tokenAmount = userInfo.tokenAmount
                         }
                         if(userInfo.organization != null) {
-                            binding.organizationName.text = userInfo.organization
+                            realModel.organization = userInfo.organization
                         }
-                        binding.userRanking.text = userInfo.rank
-                        if (!this@MainActivity.isFinishing) {
-                            Glide.with(binding.githubProfile).load(userInfo.profileImage)
-                                .into(binding.githubProfile)
-                        }
+                        realModel.rank = userInfo.rank
+
                         if(userInfo.organizationRank !=null) {
-                            binding.myOrgRanking.text = userInfo.organizationRank.toString()
+                            realModel.organizationRank = userInfo.organizationRank
                         }
                         Log.d("userInfo", "id:${userInfo.githubId}")
                         count = 0
+                        if(realModel.commits != null && realModel.githubId != null && realModel.profileImage != null) {
+                            mainFrag = MainFragment(token, realModel)
+                            refreshMain()
+                        }
+
                     }
                 }
             }
@@ -305,6 +302,14 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun refreshMain() {
+        if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(2).itemId) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(binding.contentFrame.id, mainFrag!!)
+                .commit()
         }
     }
 
@@ -361,21 +366,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu1, binding.toolbar.menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.menus->{
-                val intent = Intent(applicationContext, MenuActivity::class.java)
-                intent.putExtra("token", prefs.getJwtToken(""))
-                startActivity(intent)
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
 
     //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료

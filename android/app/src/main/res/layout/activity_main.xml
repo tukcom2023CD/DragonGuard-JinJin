@@ -18,12 +18,14 @@
         tools:context=".activity.MainActivity">
 
         <FrameLayout
+            android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3.1">
 
         </FrameLayout>
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/main_nav"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.3"

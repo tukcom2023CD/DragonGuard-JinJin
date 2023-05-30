@@ -1,358 +1,382 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragment.MainFragment"
-    android:orientation="vertical"
-    android:weightSum="3.4">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="mainFragViewmodel"
+            type="com.dragonguard.android.viewmodel.Viewmodel" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
-        android:gravity="center">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal" />
-
-
-        <EditText
-            android:id="@+id/search_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            android:background="@drawable/search_border"
-            android:focusable="false"
-            android:imeOptions="actionSearch"
-            android:maxLines="1"
-            android:onClick="@{()->mainViewModel.clickSearchIcon()}"
-            android:textColor="@color/black"
-            android:textSize="25dp" />
-
-        <ImageView
-            android:id="@+id/search_icon"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:adjustViewBounds="true"
-            android:onClick="@{()->mainViewModel.clickSearchIcon()}"
-            android:src="@drawable/ic_baseline_search_24" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.45"
-        android:orientation="horizontal"
-        android:weightSum="5">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal" />
-
-        <ImageView
-            android:id="@+id/github_profile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.25"
-            android:adjustViewBounds="true"
-            android:onClick="@{()->mainViewModel.clickUserIcon()}" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal" />
-
-        <TextView
-            android:id="@+id/user_id"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:fontFamily="@font/ibm_semibold"
-            android:layout_gravity="center_vertical"
-            android:onClick="@{()->mainViewModel.clickUserIcon()}"
-            android:textColor="@color/black"
-            android:textSize="25sp" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.05"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2.5"
+        android:layout_height="match_parent"
+        tools:context=".fragment.MainFragment"
         android:orientation="vertical"
-        android:weightSum="2.2">
+        android:weightSum="3.4">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.6"
-            android:weightSum="5"
-            android:orientation="horizontal">
+            android:layout_weight="0.3"
+            android:gravity="center">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+
+            <EditText
+                android:id="@+id/search_name"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1.75"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:background="@drawable/search_border"
+                android:focusable="false"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"
+                android:onClick="@{()->mainFragViewmodel.clickSearchIcon()}"
+                android:textColor="@color/black"
+                android:textSize="25dp" />
 
-
-
-                <LinearLayout
-                    android:id="@+id/tier_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="15dp"
-                    android:foreground="@drawable/shadow"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_marginTop="15dp"
-                        android:id="@+id/tier_img"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"/>
-
-
-                </LinearLayout>
-                <TextView
-                    android:id="@+id/user_tier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="-15dp"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:text="Tier"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tier_frame" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/search_icon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:adjustViewBounds="true"
+                android:onClick="@{()->mainFragViewmodel.clickSearchIcon()}"
+                android:src="@drawable/ic_baseline_search_24" />
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+        </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.45"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+
+            <ImageView
+                android:id="@+id/github_profile"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1.25"
+                android:adjustViewBounds="true"
+                android:onClick="@{()->mainViewModel.clickUserIcon()}" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/user_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:fontFamily="@font/ibm_semibold"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1.75"
-                android:orientation="vertical">
-
-
-
-                <LinearLayout
-                    android:id="@+id/token_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="15dp"
-                    android:foreground="@drawable/shadow"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_marginTop="15dp"
-                        android:id="@+id/token_img"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"/>
-
-                </LinearLayout>
-                <TextView
-                    android:id="@+id/user_token"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="-15dp"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:text="Token"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/token_frame" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+                android:onClick="@{()->mainViewModel.clickUserIcon()}"
+                android:textColor="@color/black"
+                android:textSize="25sp" />
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.15"/>
-
+            android:layout_weight="0.05" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginHorizontal="20dp"
-            android:layout_weight="0.4"
-            android:orientation="horizontal">
+            android:layout_weight="2.5"
+            android:orientation="vertical"
+            android:weightSum="2.2">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1.75"
-                android:orientation="vertical">
-
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.7"
+                android:weightSum="5"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/contribute_frame"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="15dp"
-                    android:foreground="@drawable/shadow"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    android:layout_weight="0.5"
+                    android:orientation="vertical" />
 
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/user_util"
-                        android:layout_marginTop="15dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1.75"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:id="@+id/tier_frame"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/shadow"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
 
-                </LinearLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="-15dp"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:text="기여도"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/contribute_frame" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_marginTop="15dp"
+                            android:id="@+id/tier_img"
+                            android:layout_marginHorizontal="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true" />
 
 
-        </LinearLayout>
+                    </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.15"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal" />
+                    <TextView
+                        android:id="@+id/user_tier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="-15dp"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="Tier"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tier_frame" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginHorizontal="20dp"
-            android:layout_weight="0.8"
-            android:orientation="horizontal"
-            android:paddingVertical="5dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1.75"
-                android:orientation="vertical">
-
-
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1.75"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:id="@+id/token_frame"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/shadow"
+                        android:orientation="vertical"
+                        android:weightSum="5"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/token_img"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginHorizontal="15dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="4.3"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/coins" />
+
+                        <TextView
+                            android:layout_marginTop="8dp"
+                            android:id="@+id/token_amount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/user_token"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="-15dp"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="Token"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/token_frame" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight="0.4"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1.75"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:id="@+id/contribute_frame"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:foreground="@drawable/shadow"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/user_util"
+                            android:layout_marginTop="15dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="-15dp"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="기여도"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/contribute_frame" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight="0.8"
+                android:orientation="horizontal"
+                android:paddingVertical="5dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1.75"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
                         android:id="@+id/org_rank_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="15dp"
-                    android:foreground="@drawable/shadow"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/org_rank_list"
-                        android:layout_marginTop="15dp"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:foreground="@drawable/shadow"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
 
-                </LinearLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="-15dp"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/org_rank_list"
+                            android:layout_marginTop="15dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            tools:listitem="@layout/user_activity_list"/>
 
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/org_rank_frame" />
+                    </LinearLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/user_org_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="-15dp"
+                        android:fontFamily="@font/ibm_semibold"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/org_rank_frame" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.05"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" />
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.05"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal" />
 
     </LinearLayout>
-
-</LinearLayout>
+</layout>
