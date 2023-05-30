@@ -6,7 +6,7 @@ services:
     build:
       context: ./backend
     command: gradle bootRun
-    container_name: backend
+    container_name: gitrank-backend
     ports:
       - 8080:8080
     networks:
@@ -19,7 +19,7 @@ services:
 
   db:
     image: mysql
-    container_name: db
+    container_name: gitrank-db
     restart: on-failure
     ports:
       - 3307:3306
@@ -33,7 +33,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: redis
+    container_name: gitrank-redis
     restart: on-failure
     ports:
       - 6379:6379
@@ -43,7 +43,7 @@ services:
 
   zookeeper:
     image: confluentinc/cp-zookeeper
-    container_name: zookeeper
+    container_name: gitrank-zookeeper
     environment:
       - ZOOKEEPER_CLIENT_PORT=2181
     ports:
@@ -55,14 +55,14 @@ services:
     image: confluentinc/cp-kafka
     ports:
       - 9092:9092
-    container_name: kafka
+    container_name: gitrank-kafka
     restart: on-failure
     environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://gitrank-kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: gitrank-zookeeper:2181
       KAFKA_CREATE_TOPICS: dresses:1:1,ratings:1:1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -75,10 +75,10 @@ services:
     image: obsidiandynamics/kafdrop:latest
     ports:
       - 9000:9000
-    container_name: kafdrop
+    container_name: gitrank-kafdrop
     restart: on-failure
     environment:
-      KAFKA_BROKERCONNECT: kafka:9092
+      KAFKA_BROKERCONNECT: gitrank-kafka:9092
       JVM_OPTS: "-Xms32M -Xmx64M"
       SERVER_SERVLET_CONTEXTPATH: /
     depends_on:
@@ -91,7 +91,7 @@ services:
     build:
       context: ./scraping
     image: ohksj77/gitrank-scraping
-    container_name: scraping
+    container_name: gitrank-scraping
     restart: on-failure
     depends_on:
       - kafka
@@ -117,7 +117,7 @@ services:
 
   prometheus:
     image: prom/prometheus
-    container_name: prometheus
+    container_name: gitrank-prometheus
     restart: on-failure
     ports:
       - 9090:9090
@@ -128,7 +128,7 @@ services:
 
   grafana:
     image: grafana/grafana
-    container_name: grafana
+    container_name: gitrank-grafana
     restart: on-failure
     ports:
       - 3000:3000

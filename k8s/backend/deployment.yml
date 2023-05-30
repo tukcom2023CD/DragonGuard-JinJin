@@ -18,8 +18,7 @@ spec:
     spec:
       containers:
         - name: gitrank-backend
-          image: ohksj77/gitrank-backend
-          imagePullPolicy: Always
+          image: ohksj77/gitrank-backend:latest
           ports:
             - containerPort: 8080
           env:
@@ -78,7 +77,7 @@ spec:
             - name: EMAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: gitrank-backend-secret
+                  name: gitrank-secret
                   key: spring.mail.password
             - name: JWT_SECRET_KEY
               valueFrom:

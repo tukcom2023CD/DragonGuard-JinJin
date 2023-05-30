@@ -18,19 +18,10 @@ spec:
               number: 80
   - http:
       paths:
-      - path: /kafdrop
-        pathType: Prefix
-        backend:
-          service:
-            name: gitrank-kafdrop
-            port:
-              number: 80
-  - http:
-      paths:
       - path: /elk
         pathType: Prefix
         backend:
           service:
             name: kibana
             port:
-              number: 80
+              number: 5601

@@ -11,7 +11,6 @@ spec:
       targetPort: 5000
   selector:
     app: logstash
-  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -41,9 +40,8 @@ spec:
               - key: logstash.conf
                 path: logstash.conf
       containers:
-        - name: logstash
-          image: docker.elastic.co/logstash/logstash:7.15.2
-          imagePullPolicy: Always
+        - name: gitrank-logstash
+          image: 'logstash:7.17.10'
           resources:
             limits:
               cpu: 500m

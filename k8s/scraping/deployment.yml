@@ -19,6 +19,3 @@ spec:
       containers:
         - name: gitrank-scraping
           image: ohksj77/gitrank-scraping:latest
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 5001

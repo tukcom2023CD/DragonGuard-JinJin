@@ -32,9 +32,8 @@ spec:
             - key: kibana.yml
               path: kibana.yml
       containers:
-        - name: waplpay-kibana
-          image: 'docker.elastic.co/kibana/kibana:7.15.2'
-          imagePullPolicy: IfNotPresent
+        - name: gitrank-kibana
+          image: 'kibana:7.17.10'
           ports:
             - name: kibana
               containerPort: 5601

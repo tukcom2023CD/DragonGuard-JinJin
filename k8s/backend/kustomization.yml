@@ -1,5 +1,4 @@
 resources:
   - deployment.yml
   - service.yml
-  - monitoring.yml
   

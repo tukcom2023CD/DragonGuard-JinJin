@@ -14,7 +14,6 @@ spec:
       targetPort: 9300
   selector:
     app: elasticsearch
-  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -32,9 +31,8 @@ spec:
         app: elasticsearch
     spec:
       containers:
-        - name: elasticsearch
-          image: 'docker.elastic.co/elasticsearch/elasticsearch:7.15.2'
-          imagePullPolicy: IfNotPresent
+        - name: gitrank-elasticsearch
+          image: 'elasticsearch:7.17.10'
           resources:
             limits:
               cpu: "1"

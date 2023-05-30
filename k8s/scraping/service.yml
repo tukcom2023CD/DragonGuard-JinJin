@@ -9,5 +9,4 @@ spec:
   selector:
     app: gitrank-scraping
     component: gitrank-scraping
-    tier: scraping
-  type: LoadBalancer
+    tier: backend

@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: gitrank-db
-          image: mysql
+          image: mysql:8.0.33
           ports:
             - containerPort: 3306
           volumeMounts:

@@ -11,7 +11,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.response.client.GitRepoClientR
 import com.dragonguard.backend.domain.gitrepo.dto.response.client.GitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
-import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
+import com.dragonguard.backend.domain.gitrepo.repository.JpaGitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.TwoGitRepoMemberResponse;
@@ -43,11 +43,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GitRepoService {
     private final GitRepoMemberMapper gitRepoMemberMapper;
-    private final GitRepoRepository gitRepoRepository;
+    private final JpaGitRepoRepository gitRepoRepository;
     private final GitRepoMemberService gitRepoMemberService;
     private final AuthService authService;
     private final GitRepoMapper gitRepoMapper;
-    private final KafkaProducer<GitRepoRequest> kafkaGitRepoProducer;
     private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
     private final GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
     private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
