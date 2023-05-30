@@ -56,6 +56,7 @@
 		3B5B5F6629E869F40017C5C9 /* RepoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B5F6529E869F40017C5C9 /* RepoTableViewCell.swift */; };
 		3B5B5F6929E86BA90017C5C9 /* RepositoryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B5F6829E86BA90017C5C9 /* RepositoryListView.swift */; };
 		3B5E07FF29BEF7E50090E8A6 /* GithubTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */; };
+		3B5FF1582A25EBED0022BE90 /* ChooseLanguageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5FF1572A25EBED0022BE90 /* ChooseLanguageView.swift */; };
 		3B61080A29E9A0F5000D7A5A /* MyProfileviewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B61080929E9A0F5000D7A5A /* MyProfileviewModel.swift */; };
 		3B61080C29E9A10F000D7A5A /* MyProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B61080B29E9A10F000D7A5A /* MyProfileService.swift */; };
 		3B61080E29E9A142000D7A5A /* MyProfileInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B61080D29E9A142000D7A5A /* MyProfileInfoModel.swift */; };
@@ -212,6 +213,7 @@
 		3B5B5F6529E869F40017C5C9 /* RepoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoTableViewCell.swift; sourceTree = "<group>"; };
 		3B5B5F6829E86BA90017C5C9 /* RepositoryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListView.swift; sourceTree = "<group>"; };
 		3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubTokenModel.swift; sourceTree = "<group>"; };
+		3B5FF1572A25EBED0022BE90 /* ChooseLanguageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseLanguageView.swift; sourceTree = "<group>"; };
 		3B61080929E9A0F5000D7A5A /* MyProfileviewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileviewModel.swift; sourceTree = "<group>"; };
 		3B61080B29E9A10F000D7A5A /* MyProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileService.swift; sourceTree = "<group>"; };
 		3B61080D29E9A142000D7A5A /* MyProfileInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileInfoModel.swift; sourceTree = "<group>"; };
@@ -360,6 +362,7 @@
 			children = (
 				3B110FF82A24D868008C99F0 /* SearchAndFilterController.swift */,
 				3B110FFA2A24DDCA008C99F0 /* CustomButton.swift */,
+				3B5FF1572A25EBED0022BE90 /* ChooseLanguageView.swift */,
 			);
 			path = Search_Filter;
 			sourceTree = "<group>";
@@ -970,6 +973,7 @@
 				A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */,
 				3BA78D942A04EED9000ACAD1 /* AdminCheckService.swift in Sources */,
 				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
+				3B5FF1582A25EBED0022BE90 /* ChooseLanguageView.swift in Sources */,
 				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
 				3BDD718929C0932A0018D09B /* StarSelectionCollectionViewCell.swift in Sources */,
 				3BA78DA32A05018E000ACAD1 /* AdminTableViewCell.swift in Sources */,
@@ -1252,7 +1256,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1281,7 +1285,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

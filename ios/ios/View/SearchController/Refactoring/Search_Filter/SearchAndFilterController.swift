@@ -12,20 +12,16 @@ import RxSwift
 
 final class SearchAndFilterController: UIViewController{
     private var languageFilterList: [String] = []
-    private var forksFilterList: [String] = []
-    private var starsFilterList: [String] = []
-    private var topicsFilterList: [String] = []
+    private var forksFilter: String?
+    private var starsFilter: String?
+    private var topicsFilter: String?
+    private var type: String = "Repository"
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addUI()
         self.view.backgroundColor = .white
-        
-        
-//        tapGesture = UITapGestureRecognizer(target: view, action: #selector(view.endEditing))
-//        if let tapGesture = tapGesture {
-//            view.addGestureRecognizer(tapGesture)
-//        }
     }
     
     /*
@@ -41,7 +37,6 @@ final class SearchAndFilterController: UIViewController{
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
         return btn
     }()
-    
     
     // MARK: 뒤로가기 버튼
     private lazy var backBtn: UIButton = {
@@ -116,7 +111,6 @@ final class SearchAndFilterController: UIViewController{
     private lazy var forksButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("Forks", for: .normal)
-        btn.layer.cornerRadius = 15
         btn.setTitleColor(.black, for: .normal)
         btn.layer.cornerRadius = 18
         btn.layer.shadowOpacity = 0.5
@@ -238,9 +232,10 @@ final class SearchAndFilterController: UIViewController{
             make.centerX.equalTo(self.view.snp.centerX)
             make.width.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.width/2)
         }
+        
     }
     
-    // MARK:
+    // MARK: Repository AutoLayout Set
     private func setRepositoryAutoLayout(){
         /// 언어 필터링
         languageButton.snp.makeConstraints { make in
@@ -315,22 +310,33 @@ final class SearchAndFilterController: UIViewController{
     // MARK: Repository 버튼
     @objc
     private func clickedRepository(){
+        type = "Repository"
         setRepositoryAutoLayout()
+        checkUserBtnOrRepositoryBtn(check: false)
     }
     
     // MARK: User 버튼
     @objc
     private func clickedUser(){
-        languageButton.snp.removeConstraints()
-        languageCollectionView.snp.removeConstraints()
-        forksButton.snp.removeConstraints()
-        forksCollectionView.snp.removeConstraints()
-        starsButton.snp.removeConstraints()
-        starsCollectionView.snp.removeConstraints()
-        topicsButton.snp.removeConstraints()
-        topcisCollectionView.snp.removeConstraints()
+        type = "User"
+        checkUserBtnOrRepositoryBtn(check: true)
+    }
+    
+    // MARK: User or Repository 확인
+    private func checkUserBtnOrRepositoryBtn(check: Bool){
+        languageButton.isHidden = check
+        languageCollectionView.isHidden = check
+        forksButton.isHidden = check
+        forksCollectionView.isHidden = check
+        starsButton.isHidden = check
+        starsCollectionView.isHidden = check
+        topicsButton.isHidden = check
+        topcisCollectionView.isHidden = check
         
-        self.dismiss(animated: true)
+        languageButton.isEnabled = !check
+        forksButton.isEnabled = !check
+        starsButton.isEnabled = !check
+        topicsButton.isEnabled = !check
     }
     
     // MARK: 언어 선택 버튼
@@ -338,6 +344,21 @@ final class SearchAndFilterController: UIViewController{
     private func clickedLanguageBtn(){
         searchBtn.textfield.resignFirstResponder()
         
+        let nc = ChooseLanguageView()
+        nc.selectLanguage = self.languageFilterList
+        if let sheet = nc.sheetPresentationController{
+            sheet.detents = [.medium(),.large()]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        }
+        
+        nc.selectedLanguage.subscribe(onNext: { data in
+            self.languageFilterList = data
+            self.languageCollectionView.reloadData()
+        })
+        .disposed(by: self.disposeBag)
+        
+        self.present(nc,animated: true)
     }
     
     // MARK: 포크 선택 버튼
@@ -386,18 +407,18 @@ final class SearchAndFilterController: UIViewController{
                                                 style: .default,
                                                 handler: {(ACTION:UIAlertAction) in
                 if type == "star"{
-                    self.starsFilterList = []
-                    self.starsFilterList.append(msg)
+                    self.starsFilter = ""
+                    self.starsFilter?.append(msg)
                     self.starsCollectionView.reloadData()
                 }
                 else if type == "fork"{
-                    self.forksFilterList = []
-                    self.forksFilterList.append(msg)
+                    self.forksFilter = ""
+                    self.forksFilter?.append(msg)
                     self.forksCollectionView.reloadData()
                 }
                 else{
-                    self.topicsFilterList = []
-                    self.topicsFilterList.append(msg)
+                    self.topicsFilter = ""
+                    self.topicsFilter?.append(msg)
                     self.topcisCollectionView.reloadData()
                 }
             }))
@@ -429,7 +450,9 @@ extension SearchAndFilterController: UICollectionViewDelegate, UICollectionViewD
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UICollectionviewCustomCell.identifier, for: indexPath) as? UICollectionviewCustomCell else { return UICollectionViewCell()}
             cell.layer.cornerRadius = 15
             cell.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
-            cell.inputText(forksFilterList[indexPath.row])
+            if let fork = forksFilter  {
+                cell.inputText(fork)
+            }
             return cell
         }
         else if collectionView == starsCollectionView{
@@ -437,7 +460,10 @@ extension SearchAndFilterController: UICollectionViewDelegate, UICollectionViewD
             
             cell.layer.cornerRadius = 15
             cell.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
-            cell.inputText(starsFilterList[indexPath.row])
+            
+            if let star = starsFilter{
+                cell.inputText(star)
+            }
             return cell
         }
         else{
@@ -445,7 +471,10 @@ extension SearchAndFilterController: UICollectionViewDelegate, UICollectionViewD
             
             cell.layer.cornerRadius = 15
             cell.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
-            cell.inputText(topicsFilterList[indexPath.row])
+            
+            if let topic = topicsFilter{
+                cell.inputText(topic)
+            }
             return cell
         }
     }
@@ -454,18 +483,21 @@ extension SearchAndFilterController: UICollectionViewDelegate, UICollectionViewD
         collectionView.deselectItem(at: indexPath, animated: true)
         
         if collectionView == languageCollectionView{
+            let languageIndex = self.languageFilterList.firstIndex(of: self.languageFilterList[indexPath.row])
+            self.languageFilterList.remove(at: languageIndex ?? -1)
             
+            self.languageCollectionView.reloadData()
         }
         else if collectionView == forksCollectionView{
-            self.forksFilterList = []
+            self.forksFilter = ""
             self.forksCollectionView.reloadData()
         }
         else if collectionView == starsCollectionView{
-            self.starsFilterList = []
+            self.starsFilter = ""
             self.starsCollectionView.reloadData()
         }
         else{
-            self.topicsFilterList = []
+            self.topicsFilter = ""
             self.topcisCollectionView.reloadData()
         }
         
@@ -483,13 +515,22 @@ extension SearchAndFilterController: UICollectionViewDelegate, UICollectionViewD
             return languageFilterList.count
         }
         else if collectionView == forksCollectionView{
-            return forksFilterList.count
+            if self.forksFilter?.isEmpty ?? true{
+                return 0
+            }
+            return 1
         }
         else if collectionView == starsCollectionView{
-            return starsFilterList.count
+            if self.starsFilter?.isEmpty ?? true{
+                return 0
+            }
+            return 1
         }
         else{
-            return topicsFilterList.count
+            if self.topicsFilter?.isEmpty ?? true{
+                return 0
+            }
+            return 1
         }
     }
 }
@@ -498,11 +539,95 @@ extension SearchAndFilterController: UITextFieldDelegate{
     
     // 입력을 모두 마치고 return 버튼 누른 경우
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        guard let word = textField.text else { return false}
+        print("seach \(word)")
+        let filtering = getFiltering()
+        
+        SearchPageViewModel.viewModel.getSearchData(searchWord: word, type: self.type, change: true, filtering: filtering)
+        
         textField.resignFirstResponder()
         return true
     }
     
-    
+    // MARK:
+    private func getFiltering() -> String{
+        var filtering: String = ""
+        
+        if !languageFilterList.isEmpty{
+            self.languageFilterList.forEach { lang in
+                filtering.append("language:\(lang),")
+            }
+        }
+        
+        if let starsFilter = starsFilter{
+            if !starsFilter.isEmpty{
+                if starsFilter == "10 미만"{
+                    filtering.append("star:0..9,")
+                }
+                else if starsFilter == "50 미만"{
+                    filtering.append("star:10..49,")
+                }
+                else if starsFilter == "100 미만"{
+                    filtering.append("star:50..99,")
+                }
+                else if starsFilter == "500 미만"{
+                    filtering.append("star:100..499,")
+                }
+                else if starsFilter == "500 이상"{
+                    filtering.append("star:>=500,")
+                }
+            }
+        }
+        
+        if let forksFilter = forksFilter {
+            if !forksFilter.isEmpty{
+                if forksFilter == "10 미만"{
+                    filtering.append("fork:0..9,")
+                }
+                else if forksFilter == "50 미만"{
+                    filtering.append("fork:10..49,")
+                }
+                else if forksFilter == "100 미만"{
+                    filtering.append("fork:50..99,")
+                }
+                else if forksFilter == "500 미만"{
+                    filtering.append("fork:100..499,")
+                }
+                else if forksFilter == "500 이상"{
+                    filtering.append("fork:>=500,")
+                }
+            }
+        }
+        
+        if let topicsFilter = topicsFilter {
+            if !topicsFilter.isEmpty{
+                if topicsFilter == "0"{
+                    filtering.append("topic:0,")
+                }
+                else if topicsFilter == "1"{
+                    filtering.append("topic:1,")
+                }
+                else if topicsFilter == "2"{
+                    filtering.append("topic:2,")
+                }
+                else if topicsFilter == "3"{
+                    filtering.append("topic:3,")
+                }
+                else if topicsFilter == "4 이상"{
+                    filtering.append("topic:>3,")
+                }
+            }
+        }
+        
+        if !(filtering.isEmpty){
+            if filtering.last == ","{
+                filtering.removeLast()
+            }
+        }
+        
+        print(filtering)
+        return filtering
+    }
 }
 
 
