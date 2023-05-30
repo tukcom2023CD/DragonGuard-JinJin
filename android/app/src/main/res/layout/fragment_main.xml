@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="mainFragViewmodel"
             type="com.dragonguard.android.viewmodel.Viewmodel" />
@@ -12,9 +13,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragment.MainFragment"
         android:orientation="vertical"
-        android:weightSum="3.4">
+        android:weightSum="3.4"
+        tools:context=".fragment.MainFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -98,9 +99,9 @@
                 android:id="@+id/user_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="2"
                 android:fontFamily="@font/ibm_semibold"
-                android:layout_gravity="center_vertical"
                 android:onClick="@{()->mainFragViewmodel.clickUserIcon()}"
                 android:textColor="@color/black"
                 android:textSize="25sp" />
@@ -124,8 +125,8 @@
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.6"
-                android:weightSum="5"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="5">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -152,11 +153,11 @@
                         app:layout_constraintEnd_toEndOf="parent">
 
                         <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_marginTop="15dp"
                             android:id="@+id/tier_img"
-                            android:layout_marginHorizontal="10dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:layout_marginTop="15dp"
                             android:adjustViewBounds="true" />
 
 
@@ -167,8 +168,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="#ffffff"
                         android:layout_marginTop="-15dp"
+                        android:background="#ffffff"
                         android:fontFamily="@font/ibm_semibold"
                         android:gravity="center"
                         android:includeFontPadding="false"
@@ -217,10 +218,10 @@
                             android:src="@drawable/coins" />
 
                         <TextView
-                            android:layout_marginTop="8dp"
                             android:id="@+id/token_amount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:textColor="@color/black"
                             android:textSize="20sp" />
@@ -272,11 +273,11 @@
 
 
                     <LinearLayout
-                        android:background="@drawable/shadow"
                         android:id="@+id/contribute_frame"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="15dp"
+                        android:background="@drawable/shadow"
                         android:orientation="vertical"
 
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -296,9 +297,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="-15dp"
+                        android:background="#ffffff"
                         android:fontFamily="@font/ibm_semibold"
                         android:gravity="center"
-                        android:background="#ffffff"
                         android:includeFontPadding="false"
                         android:text="기여도"
                         android:textColor="@color/black"
@@ -341,27 +342,118 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="15dp"
-                        android:foreground="@drawable/shadow"
+                        android:background="@drawable/shadow"
                         android:orientation="vertical"
+                        android:weightSum="5"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/org_rank_list"
-                            android:layout_marginTop="15dp"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            tools:listitem="@layout/user_activity_list"/>
+                            android:layout_height="0dp"
+                            android:layout_weight="0.7"
+                            android:orientation="horizontal" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1.3"
+                            android:gravity="center_vertical"
+                            android:weightSum="5"
+                            android:orientation="horizontal">
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"/>
+                            <TextView
+                                android:id="@+id/user1_ranking"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:layout_weight="0.8"
+                                android:textSize="20sp"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/user1_githubid"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:layout_weight="3"
+                                android:textSize="20sp"
+                                android:gravity="center"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1.3"
+                            android:weightSum="5"
+                            android:orientation="horizontal">
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"/>
+                            <TextView
+                                android:id="@+id/user2_ranking"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:layout_weight="0.8"
+                                android:textSize="20sp"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/user2_githubid"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:layout_weight="3"
+                                android:textSize="20sp"
+                                android:gravity="center"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:weightSum="5"
+                            android:layout_weight="1.3"
+                            android:orientation="horizontal">
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"/>
+                            <TextView
+                                android:id="@+id/user3_ranking"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:layout_weight="0.8"
+                                android:textSize="20sp"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/user3_githubid"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:layout_weight="3"
+                                android:textSize="20sp"
+                                android:gravity="center"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                     <TextView
-                        android:background="#ffffff"
                         android:id="@+id/user_org_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="-15dp"
+                        android:background="#ffffff"
                         android:fontFamily="@font/ibm_semibold"
                         android:gravity="center"
                         android:includeFontPadding="false"
