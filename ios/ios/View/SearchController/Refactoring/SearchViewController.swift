@@ -14,6 +14,8 @@ final class SearchViewController: UIViewController{
     private var topConstraint: Constraint?  // background View
     private var searchBarTopConstraint: Constraint?
     private var resultList: [SearchResultModel] = []
+    private let disposeBag = DisposeBag()
+    var beforePage: String? // 이전 페이지 확인하는 변수
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -224,6 +226,35 @@ final class SearchViewController: UIViewController{
     // MARK: 검색된 리스트 누른 경우
     @objc
     private func handleTap(sender: UITapGestureRecognizer) {
+        
+        /*
+         리스트 누르는 경우 코드 처리 해야 함
+         
+         */
+        let comparePage = CompareController()
+        
+        guard let beforePage = beforePage else {return}
+        
+        if beforePage == "Main"{    // 레포 상세조회로 이동
+            let nextPage = RepoContributorInfoController()
+            nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].title
+            nextPage.modalPresentationStyle = .fullScreen
+            self.present(nextPage,animated: true)
+        }
+        else if beforePage == "Compare1"{
+            comparePage.repository1 = resultList[sender.view?.tag ?? -1].title
+            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 1, NotificationKey.repository: resultList[sender.view?.tag ?? -1].title])
+            resultList = []
+            self.dismiss(animated: true)
+        }
+        else if beforePage == "Compare2"{
+            comparePage.repository2 = resultList[sender.view?.tag ?? -1].title
+            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 2, NotificationKey.repository: resultList[sender.view?.tag ?? -1].title])
+            resultList = []
+            self.dismiss(animated: true)
+        }
+        
+        
         print(sender.view?.tag ?? -1)
     }
         
@@ -231,8 +262,14 @@ final class SearchViewController: UIViewController{
     @objc
     private func clickedSearchBtn(){
         let nextPage = SearchAndFilterController()
-        
         nextPage.modalPresentationStyle = .fullScreen
+        
+        nextPage.resultList.subscribe(onNext: { list in
+            self.resultList = list
+        })
+        .disposed(by: self.disposeBag)
+        
+        
         self.present(nextPage,animated: true)
     }
     
@@ -305,6 +342,12 @@ extension SearchViewController: UIScrollViewDelegate {
             self.searchBtnUIView.backgroundColor = .clear
         }
         
+    }
+}
+
+extension SearchViewController: SendSearchResultList{
+    func sendList(list: [SearchResultModel]) {
+        self.resultList = list
     }
 }
 

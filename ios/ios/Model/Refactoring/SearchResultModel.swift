@@ -12,3 +12,9 @@ struct SearchResultModel{
     let language: String
     let title: String
 }
+
+struct SearchResultDecodingModel: Codable{
+    let create: String
+    let language: String
+    let title: String
+}

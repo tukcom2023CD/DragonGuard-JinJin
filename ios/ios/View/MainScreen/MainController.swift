@@ -127,11 +127,13 @@ final class MainController: UIViewController {
     // MARK: 검색 버튼 누르는 경우 네비게이션 뷰 방식으로 이동
     @objc
     private func searchUIClicked(){
-        let searchPage = SearchPageController()
+        let searchPage = SearchViewController()
         searchPage.beforePage = "Main"
-        searchPage.jwtToken = self.jwtToken
-        self.navigationItem.backButtonTitle = " "    //다른 화면에서 BackBtn title 설정
-        self.navigationController?.pushViewController(searchPage, animated: true)
+        searchPage.modalPresentationStyle = .fullScreen
+        self.present(searchPage,animated: true)
+        
+//        self.navigationItem.backButtonTitle = " "    //다른 화면에서 BackBtn title 설정
+//        self.navigationController?.pushViewController(searchPage, animated: true)
     }
     
     // MARK: 유저 이름 누르는 경우 네비게이션 뷰 방식으로 이동

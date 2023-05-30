@@ -17,6 +17,9 @@ final class SearchAndFilterController: UIViewController{
     private var topicsFilter: String?
     private var type: String = "Repository"
     private let disposeBag = DisposeBag()
+    var resultList: BehaviorSubject<[SearchResultModel]> = BehaviorSubject(value: [])
+    var delegate: SendSearchResultList?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -544,6 +547,13 @@ extension SearchAndFilterController: UITextFieldDelegate{
         let filtering = getFiltering()
         
         SearchPageViewModel.viewModel.getSearchData(searchWord: word, type: self.type, change: true, filtering: filtering)
+            .subscribe(onNext: { list in
+                if !list.isEmpty{
+                    self.delegate?.sendList(list: list)
+                    self.dismiss(animated: true)
+                }
+            })
+            .disposed(by: self.disposeBag)
         
         textField.resignFirstResponder()
         return true
@@ -664,6 +674,10 @@ final class UICollectionviewCustomCell: UICollectionViewCell{
         label.text = text
     }
     
+}
+
+protocol SendSearchResultList{
+    func sendList(list: [SearchResultModel])
 }
 
 
