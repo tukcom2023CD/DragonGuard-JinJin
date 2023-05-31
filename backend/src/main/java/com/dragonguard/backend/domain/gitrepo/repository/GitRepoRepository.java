@@ -4,7 +4,6 @@ import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface GitRepoRepository {
     Optional<GitRepo> findByName(String name);
@@ -13,7 +12,7 @@ public interface GitRepoRepository {
 
     List<GitRepo> findByGithubId(String githubId);
 
-    GitRepo save(GitRepo gitRepo);
+//    GitRepo save(GitRepo gitRepo);
 
-    List<GitRepo> saveAll(Set<GitRepo> gitRepos);
+//    List<GitRepo> saveAll(Set<GitRepo> gitRepos);
 }

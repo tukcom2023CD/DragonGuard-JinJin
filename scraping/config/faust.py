@@ -1,6 +1,6 @@
 import faust
 
-app = faust.App('dragonguard-jinjin', broker='kafka://kafka:9092', key_serializer='raw')
+app = faust.App('dragonguard-jinjin', broker='kafka://gitrank-kafka:9092', key_serializer='raw')
 
 result_schema = faust.Schema(
     key_type=str,

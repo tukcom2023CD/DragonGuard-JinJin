@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.gitorganization.service;
 
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.mapper.GitOrganizationMapper;
-import com.dragonguard.backend.domain.gitorganization.repository.GitOrganizationRepository;
+import com.dragonguard.backend.domain.gitorganization.repository.JpaGitOrganizationRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class GitOrganizationService {
-    private final GitOrganizationRepository gitOrganizationRepository;
+    private final JpaGitOrganizationRepository gitOrganizationRepository;
     private final GitOrganizationMapper gitOrganizationMapper;
 
     @Transactional

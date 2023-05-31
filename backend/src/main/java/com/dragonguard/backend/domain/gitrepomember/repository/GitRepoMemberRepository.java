@@ -4,7 +4,6 @@ import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.member.entity.Member;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +16,7 @@ public interface GitRepoMemberRepository {
 
     Optional<GitRepoMember> findByNameAndMemberName(String gitRepo, String member);
 
-    List<GitRepoMember> saveAll(Collection<GitRepoMember> gitRepoMembers);
+//    List<GitRepoMember> saveAll(Collection<GitRepoMember> gitRepoMembers);
 
-    GitRepoMember save(GitRepoMember gitRepoMember);
+//    GitRepoMember save(GitRepoMember gitRepoMember);
 }

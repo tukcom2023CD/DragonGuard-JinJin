@@ -14,4 +14,4 @@ COPY wait-for-it.sh wait-for-it.sh
 RUN chmod +x wait-for-it.sh
 
 ENTRYPOINT [ "./wait-for-it.sh" ]
-CMD [ "-t", "200", "backend:8080", "--", "faust", "-A", "app", "worker", "-l", "info" ]
+CMD [ "-t", "200", "gitrank-backend:8080", "--", "faust", "-A", "app", "worker", "-l", "info" ]

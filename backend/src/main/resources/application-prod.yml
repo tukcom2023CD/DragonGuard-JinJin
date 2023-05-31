@@ -5,13 +5,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://db:3306/gitrank?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://gitrank-db:3306/gitrank?serverTimezone=Asia/Seoul
     username: root
-    password: 1234
-
-  config:
-    import:
-      - classpath:env.yml
+    password: ${MYSQL_ROOT_PASSWORD}
 
   main:
     allow-bean-definition-overriding: true
@@ -19,38 +15,80 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
-    defer-datasource-initialization: true
-
-  sql:
-    init:
-      mode: always
+  
+  flyway:
+    enabled: true
+    encoding: UTF-8
+    baseline-on-migrate: true
 
   cache:
     type: redis
     redis:
-      time-to-live: 10800000 # 3시간
+      time-to-live: 10800000
       cache-null-values: true
 
   redis:
-    host: redis
+    host: gitrank-redis
     port: 6379
 
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: gitrank-kafka:9092
     consumer:
       group-id: gitrank
 
-logging:
-  level:
-    org.hibernate.SQL: debug
-    org.hibernate.type: trace
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_SECRET}
+            redirectUri: ${REDIRECT_URI}
+            scope: repo, user
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 10000
+          starttls:
+            enable: true
 
 management:
   endpoints:
     web:
       exposure:
         include: prometheus
+
+blockchain:
+  private-key: ${BLOCKCHAIN_PRIVATE_KEY}
+  byte-code: ${BLOCKCHAIN_BYTE_CODE}
+  password: ${BLOCKCHAIN_PASSWORD}
+  wallet-key: ${BLOCKCHAIN_WALLET_KEY}
+  contract-address: ${BLOCKCHAIN_CONTRACT_ADDRESS}
+
+github:
+  url: https://api.github.com/
+  version-key: X-GitHub-Api-Version
+  version-value: 2022-11-28
+
+app:
+  auth:
+    token:
+      auth-header: Authorization
+      access-header: Access
+      refresh-header: Refresh
+      secret-key: ${JWT_SECRET_KEY}
+      refresh-cookie-key: Refresh
+  oauth2:
+    authorizedRedirectUri: gitrank://github-auth
+
+admin: ${ADMIN}
