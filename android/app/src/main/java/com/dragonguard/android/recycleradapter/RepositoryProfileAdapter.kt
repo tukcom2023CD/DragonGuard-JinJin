@@ -16,7 +16,8 @@ import com.dragonguard.android.model.search.RepoSearchResultModel
 
 //검색한 레포지토리 나열하는 리사이클러뷰 어댑터 구현
 class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultModel>, private val context: Context,
-                                private val token: String, private val type: String) : RecyclerView.Adapter<RepositoryProfileAdapter.ViewHolder>() {
+                                private val token: String, private val type: String,
+                                private val imgList: HashMap<String, Int>) : RecyclerView.Adapter<RepositoryProfileAdapter.ViewHolder>() {
     private lateinit var binding: RepositoryListBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         binding = RepositoryListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,6 +30,11 @@ class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultMo
         //클릭리스너 구현
         fun bind(data: RepoSearchResultModel) {
             binding.repoName.text = data.name
+            binding.repoLanguage.text = ""
+            val img= imgList[""]
+            if(img != null) {
+                binding.langImg.setBackgroundResource(img)
+            }
             Log.d("name", "$data.name")
             itemView.setOnClickListener{
 //                Toast.makeText(context, "${repoName.text} 눌림", Toast.LENGTH_SHORT).show()

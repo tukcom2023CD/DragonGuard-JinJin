@@ -167,9 +167,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        state = true
+    }
+
     override fun onRestart() {
-        count = 0
         super.onRestart()
+        count = 0
         state = true
         multipleSearchUser()
         refreshCommits()
@@ -205,6 +210,7 @@ class MainActivity : AppCompatActivity() {
                     if (userInfo.githubId == null) {
                         if (prefs.getRefreshToken("").isBlank()) {
                             if (!this@MainActivity.isFinishing && state) {
+                                Log.d("not login", "login activity로 이동")
                                 Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                                 loginOut = true
                                 prefs.setJwtToken("")
@@ -218,6 +224,7 @@ class MainActivity : AppCompatActivity() {
                                 activityResultLauncher.launch(intent)
                             }
                         } else {
+                            Log.d("not login", "refreshToken() 호출")
                             refreshToken()
                         }
                     } else {
@@ -348,8 +355,10 @@ class MainActivity : AppCompatActivity() {
                     prefs.setRefreshToken(refresh.refreshToken)
                     token = refresh.accessToken
                     multipleSearchUser()
+                    Log.d("refresh success", "token refresh 성공")
                 } else {
                     if (!this@MainActivity.isFinishing && state) {
+                        Log.d("refresh fail", "token refresh 실패")
                         Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                         if(refreshState) {
                             refreshState = false

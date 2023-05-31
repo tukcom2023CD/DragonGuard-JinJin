@@ -48,6 +48,7 @@ class SearchActivity : AppCompatActivity() {
     private var filterResult = StringBuilder()
     private var type = ""
     private var token = ""
+    private val imgList = HashMap<String, Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -66,6 +67,32 @@ class SearchActivity : AppCompatActivity() {
         token = intent.getStringExtra("token")!!
         popularLanguages = arrayListOf("C", "C#", "C++", "CoffeeScript ", "CSS", "Dart", "DM", "Elixir", "Go", "Groovy", "HTML", "Java", "JavaScript",
             "Kotlin", "Objective-C", "Perl", "PHP", "PowerShell", "Python", "Ruby", "Rust", "Scala", "Shell", "Swift", "TypeScript")
+        imgList.apply {
+            put("C", R.drawable.c)
+            put("C#", R.drawable.c_sharp)
+            put("C++", R.drawable.c_puls_plus)
+            put("CoffeeScript", R.drawable.coffeescript)
+            put("CSS", R.drawable.css)
+            put("Dart", R.drawable.dart)
+            put("Elixir", R.drawable.elixir)
+            put("Go", R.drawable.go)
+            put("Groovy", R.drawable.groovy)
+            put("HTML", R.drawable.html_5)
+            put("Java", R.drawable.java)
+            put("JavaScript", R.drawable.javascript)
+            put("Kotlin", R.drawable.kotlin)
+            put("Objective-C", R.drawable.objective_c)
+            put("Perl", R.drawable.perl)
+            put("PHP", R.drawable.php)
+            put("PowerShell", R.drawable.powershell)
+            put("Python", R.drawable.python)
+            put("Ruby", R.drawable.ruby)
+            put("Rust", R.drawable.rust)
+            put("Scala", R.drawable.scala)
+            put("Shell", R.drawable.shell)
+            put("Swift", R.drawable.swift)
+            put("TypeScript", R.drawable.typescript)
+        }
         languagesCheckBox = ArrayList<Boolean>()
         for(i in 0 until popularLanguages.size) {
             languagesCheckBox.add(false)
@@ -370,7 +397,7 @@ class SearchActivity : AppCompatActivity() {
 
     //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.loadingLottie.visibility = View.VISIBLE
         Log.d("필터", filterResult.toString())
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -390,7 +417,7 @@ class SearchActivity : AppCompatActivity() {
                             if (checkSearchResult(second)) {
                                 initRecycler()
                             } else {
-                                binding.progressBar.visibility = View.GONE
+                                binding.loadingLottie.visibility = View.GONE
                             }
                         } else {
                             initRecycler()
@@ -409,7 +436,7 @@ class SearchActivity : AppCompatActivity() {
                             if (checkSearchResult(second)) {
                                 initRecycler()
                             } else {
-                                binding.progressBar.visibility = View.GONE
+                                binding.loadingLottie.visibility = View.GONE
                             }
                         } else {
                             initRecycler()
@@ -429,7 +456,7 @@ class SearchActivity : AppCompatActivity() {
                         if (checkSearchResult(second)) {
                             initRecycler()
                         } else {
-                            binding.progressBar.visibility = View.GONE
+                            binding.loadingLottie.visibility = View.GONE
                         }
                     } else {
                         initRecycler()
@@ -470,10 +497,11 @@ class SearchActivity : AppCompatActivity() {
     private fun initRecycler() {
         Log.d("count", "count: $count")
         if (count == 0) {
+
             repositoryProfileAdapter = if(type.isBlank()) {
-                RepositoryProfileAdapter(repoNames, this, token, "REPOSITORIES")
+                RepositoryProfileAdapter(repoNames, this, token, "REPOSITORIES", imgList)
             } else {
-                RepositoryProfileAdapter(repoNames, this, token, type)
+                RepositoryProfileAdapter(repoNames, this, token, type, imgList)
             }
             binding.searchResult.adapter = repositoryProfileAdapter
             binding.searchResult.layoutManager = LinearLayoutManager(this)
@@ -482,15 +510,15 @@ class SearchActivity : AppCompatActivity() {
         }
         count++
         Log.d("api 횟수", "$count 페이지 검색")
-        binding.progressBar.visibility = View.GONE
+        binding.loadingLottie.visibility = View.GONE
         initScrollListener()
     }
 
 
     //    데이터 더 받아오는 함수 loadMorePosts() 구현
     private fun loadMorePosts() {
-        if (binding.progressBar.visibility == View.GONE && count != 0) {
-            binding.progressBar.visibility = View.VISIBLE
+        if (binding.loadingLottie.visibility == View.GONE && count != 0) {
+            binding.loadingLottie.visibility = View.VISIBLE
             changed = true
             CoroutineScope(Dispatchers.Main).launch {
                 Log.d("api 시도", "callSearchApi 실행  load more")

@@ -123,29 +123,34 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
-                if (!this@LoginActivity.isFinishing) {
-                    val cookies = CookieManager.getInstance()
-                        .getCookie("${BuildConfig.api}oauth2/authorize/github")
-                    Log.d("cookie", "onPageFinished original url: $url")
-                    Log.d("cookie", "onPageFinished original: $cookies")
-                    if (cookies.contains("Access") && url!!.startsWith("gitrank://github-auth?")) {
-                        val splits = cookies.split("; ")
-                        val access = splits[1].split("=")[1]
-                        val refresh = splits[2].split("=")[1]
-                        Log.d("tokens", "access:$access, refresh:$refresh")
-                        prefs.setJwtToken(access)
-                        prefs.setRefreshToken(refresh)
-                        if (walletAddress.isNotBlank()) {
-                            val intentH = Intent(applicationContext, MainActivity::class.java)
-                            intentH.putExtra("access", access)
-                            intentH.putExtra("refresh", refresh)
-                            startActivity(intentH)
-                        } else {
-                            binding.loginGithub.visibility = View.GONE
-                            binding.loginMain.visibility = View.VISIBLE
-                            binding.githubAuth.isEnabled = false
+                try{
+                    if (!this@LoginActivity.isFinishing) {
+                        val cookies = CookieManager.getInstance()
+                            .getCookie("${BuildConfig.api}oauth2/authorize/github")
+                        Log.d("cookie", "onPageFinished original url: $url")
+                        Log.d("cookie", "onPageFinished original: $cookies")
+                        if (cookies.contains("Access") && url!!.startsWith("gitrank://github-auth?")) {
+                            val splits = cookies.split("; ")
+                            val access = splits[1].split("=")[1]
+                            val refresh = splits[2].split("=")[1]
+                            Log.d("tokens", "access:$access, refresh:$refresh")
+                            prefs.setJwtToken(access)
+                            prefs.setRefreshToken(refresh)
+                            if (walletAddress.isNotBlank()) {
+                                val intentH = Intent(applicationContext, MainActivity::class.java)
+                                intentH.putExtra("access", access)
+                                intentH.putExtra("refresh", refresh)
+                                startActivity(intentH)
+                            } else {
+                                binding.loginGithub.visibility = View.GONE
+                                binding.loginMain.visibility = View.VISIBLE
+                                binding.githubAuth.isEnabled = false
+                            }
                         }
                     }
+                } catch (e: Exception) {
+                    Log.d("webview error", "error ${e.message}")
+
                 }
             }
         }
