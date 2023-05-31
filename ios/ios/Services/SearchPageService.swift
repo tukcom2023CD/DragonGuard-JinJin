@@ -19,7 +19,7 @@ final class SearchPageService {
     func getSearchResult(searchWord: String,
                          page: Int,
                          type: String,
-                         filtering: String) -> Observable<[SearchPageResultModel]>{
+                         filtering: String) -> Observable<[SearchResultModel]>{
         let url = APIURL.apiUrl.getSearchResult(ip: ip, title: searchWord,page: page, type: type, filtering: filtering)
         let access = UserDefaults.standard.string(forKey: "Access")
 
@@ -27,13 +27,14 @@ final class SearchPageService {
         return Observable.create(){ observer in
             AF.request(url, method: .get, headers: ["Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
-                .responseDecodable(of: [SearchPageDecodingData].self) { response in
+                .responseDecodable(of: [SearchResultDecodingModel].self) { response in
                     guard let responseResult = response.value else {return}
-                    var resultArray = [SearchPageResultModel]() // 결과 저장할 변수
+                    var resultArray = [SearchResultModel]() // 결과 저장할 변수
                     
                     if(responseResult.count != 0 && resultArray.count == 0){
                         for data in responseResult {
-                            let dataBundle = SearchPageResultModel(name: data.name,id: data.id)
+//                            let dataBundle = SearchPageResultModel(name: data.name,id: data.id)
+                            let dataBundle = SearchResultModel(create: data.title, language: data.language, title: data.title)
                             resultArray.append(dataBundle)
                         }
                         observer.onNext(resultArray)

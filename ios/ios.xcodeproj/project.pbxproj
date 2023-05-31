@@ -13,6 +13,13 @@
 		3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A42987ABA1003FA5CC /* FAQPage.swift */; };
 		3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */; };
 		3B060FD629911158000B2518 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B060FD529911158000B2518 /* MainViewModel.swift */; };
+		3B110FE82A23A895008C99F0 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FE72A23A895008C99F0 /* SearchViewController.swift */; };
+		3B110FEB2A23A905008C99F0 /* BackgroundUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FEA2A23A905008C99F0 /* BackgroundUIView.swift */; };
+		3B110FED2A23B9AC008C99F0 /* SearchViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FEC2A23B9AC008C99F0 /* SearchViewTableViewCell.swift */; };
+		3B110FF32A24C96D008C99F0 /* SearchResultUIVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FF22A24C96D008C99F0 /* SearchResultUIVIew.swift */; };
+		3B110FF62A24CA47008C99F0 /* SearchResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FF52A24CA47008C99F0 /* SearchResultModel.swift */; };
+		3B110FF92A24D868008C99F0 /* SearchAndFilterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FF82A24D868008C99F0 /* SearchAndFilterController.swift */; };
+		3B110FFB2A24DDCA008C99F0 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FFA2A24DDCA008C99F0 /* CustomButton.swift */; };
 		3B15C596296FB673004AE007 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 3B15C595296FB673004AE007 /* Alamofire */; };
 		3B18AA1E29A7B1E90051C086 /* KlipModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18AA1D29A7B1E90051C086 /* KlipModel.swift */; };
 		3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18AA1F29A7BD0E0051C086 /* Notification.swift */; };
@@ -49,6 +56,7 @@
 		3B5B5F6629E869F40017C5C9 /* RepoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B5F6529E869F40017C5C9 /* RepoTableViewCell.swift */; };
 		3B5B5F6929E86BA90017C5C9 /* RepositoryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B5F6829E86BA90017C5C9 /* RepositoryListView.swift */; };
 		3B5E07FF29BEF7E50090E8A6 /* GithubTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */; };
+		3B5FF1582A25EBED0022BE90 /* ChooseLanguageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5FF1572A25EBED0022BE90 /* ChooseLanguageView.swift */; };
 		3B61080A29E9A0F5000D7A5A /* MyProfileviewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B61080929E9A0F5000D7A5A /* MyProfileviewModel.swift */; };
 		3B61080C29E9A10F000D7A5A /* MyProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B61080B29E9A10F000D7A5A /* MyProfileService.swift */; };
 		3B61080E29E9A142000D7A5A /* MyProfileInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B61080D29E9A142000D7A5A /* MyProfileInfoModel.swift */; };
@@ -161,6 +169,13 @@
 		3B0022A42987ABA1003FA5CC /* FAQPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQPage.swift; sourceTree = "<group>"; };
 		3B0022A62987AFB1003FA5CC /* WatchRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingController.swift; sourceTree = "<group>"; };
 		3B060FD529911158000B2518 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		3B110FE72A23A895008C99F0 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		3B110FEA2A23A905008C99F0 /* BackgroundUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundUIView.swift; sourceTree = "<group>"; };
+		3B110FEC2A23B9AC008C99F0 /* SearchViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewTableViewCell.swift; sourceTree = "<group>"; };
+		3B110FF22A24C96D008C99F0 /* SearchResultUIVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultUIVIew.swift; sourceTree = "<group>"; };
+		3B110FF52A24CA47008C99F0 /* SearchResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultModel.swift; sourceTree = "<group>"; };
+		3B110FF82A24D868008C99F0 /* SearchAndFilterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAndFilterController.swift; sourceTree = "<group>"; };
+		3B110FFA2A24DDCA008C99F0 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		3B18AA1D29A7B1E90051C086 /* KlipModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipModel.swift; sourceTree = "<group>"; };
 		3B18AA1F29A7BD0E0051C086 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		3B18C43F29ADD69D00E58303 /* CompareRepoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -198,6 +213,7 @@
 		3B5B5F6529E869F40017C5C9 /* RepoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoTableViewCell.swift; sourceTree = "<group>"; };
 		3B5B5F6829E86BA90017C5C9 /* RepositoryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListView.swift; sourceTree = "<group>"; };
 		3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubTokenModel.swift; sourceTree = "<group>"; };
+		3B5FF1572A25EBED0022BE90 /* ChooseLanguageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseLanguageView.swift; sourceTree = "<group>"; };
 		3B61080929E9A0F5000D7A5A /* MyProfileviewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileviewModel.swift; sourceTree = "<group>"; };
 		3B61080B29E9A10F000D7A5A /* MyProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileService.swift; sourceTree = "<group>"; };
 		3B61080D29E9A142000D7A5A /* MyProfileInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileInfoModel.swift; sourceTree = "<group>"; };
@@ -313,6 +329,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3B110FE62A23A87A008C99F0 /* Refactoring */ = {
+			isa = PBXGroup;
+			children = (
+				3B110FE92A23A8F7008C99F0 /* CustomUIView */,
+				3B110FE72A23A895008C99F0 /* SearchViewController.swift */,
+				3B110FEC2A23B9AC008C99F0 /* SearchViewTableViewCell.swift */,
+				3B110FF72A24D81D008C99F0 /* Search_Filter */,
+			);
+			path = Refactoring;
+			sourceTree = "<group>";
+		};
+		3B110FE92A23A8F7008C99F0 /* CustomUIView */ = {
+			isa = PBXGroup;
+			children = (
+				3B110FEA2A23A905008C99F0 /* BackgroundUIView.swift */,
+				3B110FF22A24C96D008C99F0 /* SearchResultUIVIew.swift */,
+			);
+			path = CustomUIView;
+			sourceTree = "<group>";
+		};
+		3B110FF42A24CA35008C99F0 /* Refactoring */ = {
+			isa = PBXGroup;
+			children = (
+				3B110FF52A24CA47008C99F0 /* SearchResultModel.swift */,
+			);
+			path = Refactoring;
+			sourceTree = "<group>";
+		};
+		3B110FF72A24D81D008C99F0 /* Search_Filter */ = {
+			isa = PBXGroup;
+			children = (
+				3B110FF82A24D868008C99F0 /* SearchAndFilterController.swift */,
+				3B110FFA2A24DDCA008C99F0 /* CustomButton.swift */,
+				3B5FF1572A25EBED0022BE90 /* ChooseLanguageView.swift */,
+			);
+			path = Search_Filter;
+			sourceTree = "<group>";
+		};
 		3B1DB86B2963428A00308F43 = {
 			isa = PBXGroup;
 			children = (
@@ -433,6 +487,7 @@
 		3B3CE9D829B46A7300B2594B /* SearchController */ = {
 			isa = PBXGroup;
 			children = (
+				3B110FE62A23A87A008C99F0 /* Refactoring */,
 				3BD6DD21298129B8008C05B2 /* SearchPageController.swift */,
 				3B781FB229C32871007FBDFA /* FilteringCollectionViewCell.swift */,
 				3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */,
@@ -656,6 +711,7 @@
 		3BA0EEE329799A3000B9E952 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3B110FF42A24CA35008C99F0 /* Refactoring */,
 				3B18AA1D29A7B1E90051C086 /* KlipModel.swift */,
 				A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */,
 				3B9CF3D1298F997B00495D35 /* UserInfoModel.swift */,
@@ -917,6 +973,7 @@
 				A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */,
 				3BA78D942A04EED9000ACAD1 /* AdminCheckService.swift in Sources */,
 				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
+				3B5FF1582A25EBED0022BE90 /* ChooseLanguageView.swift in Sources */,
 				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
 				3BDD718929C0932A0018D09B /* StarSelectionCollectionViewCell.swift in Sources */,
 				3BA78DA32A05018E000ACAD1 /* AdminTableViewCell.swift in Sources */,
@@ -930,8 +987,10 @@
 				3B0022A72987AFB1003FA5CC /* WatchRankingController.swift in Sources */,
 				3B29804729ACCCA000967B6E /* CompareSelectedUserView.swift in Sources */,
 				3B3D2E0F29D5E252001A702C /* OrganizationSearchTableViewCell.swift in Sources */,
+				3B110FED2A23B9AC008C99F0 /* SearchViewTableViewCell.swift in Sources */,
 				3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */,
 				3BA78D9A2A04F3D3000ACAD1 /* AdminModel.swift in Sources */,
+				3B110FF62A24CA47008C99F0 /* SearchResultModel.swift in Sources */,
 				3BDD718629C091480018D09B /* LanguageSelectionsCollectionViewCell.swift in Sources */,
 				3B87E57029D7173D000734BE /* AddOrganizationModel.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
@@ -956,6 +1015,7 @@
 				3B7BFF6C29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift in Sources */,
 				3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */,
 				3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */,
+				3B110FF32A24C96D008C99F0 /* SearchResultUIVIew.swift in Sources */,
 				3BD6EDDE29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift in Sources */,
 				3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */,
 				3B00229F29879F7D003FA5CC /* SettingTableViewCell.swift in Sources */,
@@ -966,13 +1026,16 @@
 				3BD6EDDA29DD646D00DEF7E0 /* RankingInOrganizationService.swift in Sources */,
 				3B5B175D29DC7B2900571A8D /* TypeOrganizationRankingService.swift in Sources */,
 				3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */,
+				3B110FFB2A24DDCA008C99F0 /* CustomButton.swift in Sources */,
 				3B18AA1E29A7B1E90051C086 /* KlipModel.swift in Sources */,
+				3B110FE82A23A895008C99F0 /* SearchViewController.swift in Sources */,
 				3B1DB87C2963428A00308F43 /* MainController.swift in Sources */,
 				3B9CF3D6298FB5A700495D35 /* ALLUserInfoViewModel.swift in Sources */,
 				A3ADC9742990210E003D6483 /* MainCollectionView.swift in Sources */,
 				3BA78DA12A050099000ACAD1 /* AcceptedOraganicationController.swift in Sources */,
 				3B5B5F6629E869F40017C5C9 /* RepoTableViewCell.swift in Sources */,
 				3B9CF3D4298F9B8C00495D35 /* ALLUserInfoService.swift in Sources */,
+				3B110FF92A24D868008C99F0 /* SearchAndFilterController.swift in Sources */,
 				3B9756E8298A166300F27094 /* OrganizationInRankingController.swift in Sources */,
 				3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */,
 				3B9756ED298A16FF00F27094 /* AllRepositoryRankingController.swift in Sources */,
@@ -993,6 +1056,7 @@
 				3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */,
 				A37AA6FA29D35522002812F6 /* TierTableViewCell.swift in Sources */,
 				3B9756EB298A16D900F27094 /* AllRankingController.swift in Sources */,
+				3B110FEB2A23A905008C99F0 /* BackgroundUIView.swift in Sources */,
 				3B5B174D29DC593100571A8D /* AllOrganizationRankingService.swift in Sources */,
 				3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */,
 				3BA78D982A04F346000ACAD1 /* AdminService.swift in Sources */,
@@ -1192,7 +1256,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1221,7 +1285,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
