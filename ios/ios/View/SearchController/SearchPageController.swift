@@ -108,7 +108,7 @@ final class SearchPageController: UIViewController {
                                                     filtering: filtering)
             .subscribe(onNext: { searchList in
                 for data in searchList{
-                    self.searchResultList.append(data)
+//                    self.searchResultList.append(data)
                 }
                 self.isInfiniteScroll = true
                 self.filtering = "" // 필터링 초기화
