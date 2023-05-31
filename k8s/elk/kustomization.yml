@@ -1,6 +1,0 @@
-resources:
-  - elasticsearch.yml
-  - kibana-configmap.yml
-  - kibana.yml
-  - logstash-configmap.yml
-  - logstash.yml
