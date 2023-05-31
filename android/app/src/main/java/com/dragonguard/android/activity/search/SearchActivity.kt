@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -398,6 +399,7 @@ class SearchActivity : AppCompatActivity() {
     //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
         binding.loadingLottie.visibility = View.VISIBLE
+        binding.loadingLottie.playAnimation()
         Log.d("필터", filterResult.toString())
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -497,7 +499,7 @@ class SearchActivity : AppCompatActivity() {
     private fun initRecycler() {
         Log.d("count", "count: $count")
         if (count == 0) {
-
+            Log.d("values", "names: $repoNames")
             repositoryProfileAdapter = if(type.isBlank()) {
                 RepositoryProfileAdapter(repoNames, this, token, "REPOSITORIES", imgList)
             } else {
@@ -510,6 +512,7 @@ class SearchActivity : AppCompatActivity() {
         }
         count++
         Log.d("api 횟수", "$count 페이지 검색")
+        binding.loadingLottie.pauseAnimation()
         binding.loadingLottie.visibility = View.GONE
         initScrollListener()
     }
@@ -518,7 +521,12 @@ class SearchActivity : AppCompatActivity() {
     //    데이터 더 받아오는 함수 loadMorePosts() 구현
     private fun loadMorePosts() {
         if (binding.loadingLottie.visibility == View.GONE && count != 0) {
+            val params = binding.loadingLottie.layoutParams as CoordinatorLayout.LayoutParams
+            params.gravity = Gravity.BOTTOM
+            params.bottomMargin = 100
+            binding.loadingLottie.layoutParams = params
             binding.loadingLottie.visibility = View.VISIBLE
+            binding.loadingLottie.playAnimation()
             changed = true
             CoroutineScope(Dispatchers.Main).launch {
                 Log.d("api 시도", "callSearchApi 실행  load more")

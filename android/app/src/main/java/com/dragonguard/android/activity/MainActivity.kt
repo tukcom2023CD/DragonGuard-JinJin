@@ -72,7 +72,8 @@ class MainActivity : AppCompatActivity() {
     private var state = true
     private var count = 0
     private var realCount = 0
-    private  var mainFrag: MainFragment? = null
+    private var refreshCount = 0
+    private var mainFrag: MainFragment? = null
     private var added = false
     private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null)
     override fun onNewIntent(intent: Intent?) {
@@ -177,7 +178,6 @@ class MainActivity : AppCompatActivity() {
         count = 0
         state = true
         multipleSearchUser()
-        refreshCommits()
     }
 
     override fun onPause() {
@@ -257,6 +257,10 @@ class MainActivity : AppCompatActivity() {
                             realModel.organizationRank = userInfo.organizationRank
                         }
                         count = 0
+                        if(refreshCount == 0) {
+                            refreshCommits()
+                            refreshCount++
+                        }
                         Log.d("token", "token: $token")
                         Log.d("userInfo", "realModel:$realModel")
                         if(realModel.commits != null && realModel.githubId != null && realModel.profileImage != null) {
