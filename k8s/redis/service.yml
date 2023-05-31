@@ -2,13 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gitrank-redis
-  labels:
-    app: redis
 spec:
   selector:
-    app: redis
+    app: gitrank-redis
+    component: gitrank-redis
   ports:
-  - name: redis
+  - name: gitrank-redis
     protocol: TCP
     port: 6379
     targetPort: 6379
