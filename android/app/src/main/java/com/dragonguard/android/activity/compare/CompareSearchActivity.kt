@@ -164,7 +164,7 @@ class CompareSearchActivity : AppCompatActivity() {
 
     //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.loadingLottie.visibility = View.VISIBLE
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             if(!this@CompareSearchActivity.isFinishing) {
@@ -181,7 +181,7 @@ class CompareSearchActivity : AppCompatActivity() {
                     if (checkSearchResult(second)) {
                         initRecycler()
                     } else {
-                        binding.progressBar.visibility = View.GONE
+                        binding.loadingLottie.visibility = View.GONE
                     }
                 } else {
                     initRecycler()
@@ -230,15 +230,15 @@ class CompareSearchActivity : AppCompatActivity() {
         count++
         binding.searchResult.adapter?.notifyDataSetChanged()
         Log.d("api 횟수", "$count 페이지 검색")
-        binding.progressBar.visibility = View.GONE
+        binding.loadingLottie.visibility = View.GONE
         initScrollListener()
     }
 
 
     //    데이터 더 받아오는 함수 loadMorePosts() 구현
     private fun loadMorePosts() {
-        if (binding.progressBar.visibility == View.GONE && count != 0) {
-            binding.progressBar.visibility = View.VISIBLE
+        if (binding.loadingLottie.visibility == View.GONE && count != 0) {
+            binding.loadingLottie.visibility = View.VISIBLE
             changed = true
             CoroutineScope(Dispatchers.Main).launch {
                 Log.d("api 시도", "callSearchApi 실행  load more")
