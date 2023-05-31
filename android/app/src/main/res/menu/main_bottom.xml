@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/bottom_questions"
+        android:icon="@drawable/conversation"
+        android:title="질문하기"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item
+        android:id="@+id/bottom_rankings"
+        android:icon="@drawable/ranking"
+        android:title="랭킹"
+        app:showAsAction="ifRoom">
+    </item>
+    <item
+        android:id="@+id/bottom_main"
+        android:icon="@drawable/home"
+        android:title="홈"
+        app:showAsAction="ifRoom">
+    </item>
+    <item
+        android:id="@+id/bottom_compare"
+        android:icon="@drawable/compare"
+        android:title="비교"
+        app:showAsAction="ifRoom">
+    </item>
+    <item
+        android:id="@+id/bottom_profile"
+        android:icon="@drawable/user"
+        android:title="프로필"
+        app:showAsAction="ifRoom">
+    </item>
+
+
+</menu>
