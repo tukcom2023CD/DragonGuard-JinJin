@@ -34,15 +34,3 @@ spec:
           value: "1"
         - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
           value: "1"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: gitrank-kafka
-spec:
-  selector:
-    app: kafka
-  ports:
-    - protocol: TCP
-      port: 9092
-      targetPort: 9092

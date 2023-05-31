@@ -1,0 +1,4 @@
+resources:
+  - config.yml
+  - pod.yml
+  - service.yml
