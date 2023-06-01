@@ -18,6 +18,7 @@ final class ChooseLanguageView: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(red: 239/255, green: 242/255, blue: 240/255, alpha: 1.0) /* #eff2f0 */
+        selectedLanguage.onNext(selectLanguage)
         addUIAndAutoLayout()
     }
     
@@ -62,7 +63,11 @@ extension ChooseLanguageView: UITableViewDelegate, UITableViewDataSource{
         cell.layer.masksToBounds = true
         
         if self.selectLanguage.contains(self.popularLanguage[indexPath.section]){
+            print(indexPath.section)
             cell.accessoryType = .checkmark
+        }
+        else{
+            cell.accessoryType = .none
         }
         cell.inputText(self.popularLanguage[indexPath.section])
         

@@ -360,7 +360,6 @@ final class SearchAndFilterController: UIViewController{
         }
         
         nc.selectedLanguage.subscribe(onNext: { data in
-            
             self.languageFilterList = data
             if !self.languageFilterList.isEmpty{
                 self.languageButton.backgroundColor = UIColor(red: 195/255, green: 202/255, blue: 251/255, alpha: 1.0) /* #c3cafb */
