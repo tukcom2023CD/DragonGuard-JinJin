@@ -261,14 +261,16 @@ class MainActivity : AppCompatActivity() {
                             refreshCommits()
                             refreshCount++
                         }
+                        realModel.authStep = userInfo.authStep
                         Log.d("token", "token: $token")
                         Log.d("userInfo", "realModel:$realModel")
-                        if(realModel.commits != null && realModel.githubId != null && realModel.profileImage != null) {
+                        if(realModel.commits != null && realModel.githubId != null && realModel.profileImage != null && realModel.authStep != null) {
                             Log.d("userInfo", "id:${userInfo.githubId}")
                             mainFrag = MainFragment(token, realModel)
                             refreshMain()
+                        } else {
+                            refreshToken()
                         }
-
                     }
                 }
             }

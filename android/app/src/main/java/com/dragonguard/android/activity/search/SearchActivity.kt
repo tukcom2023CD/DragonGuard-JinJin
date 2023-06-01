@@ -124,26 +124,6 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
-//        검색 아이콘 눌렀을때 검색 구현
-        binding.searchIcon.setOnClickListener {
-            if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
-                if (lastSearch != viewmodel.onSearchListener.value!! || filterLanguage.isNotEmpty() || filterOptions.isNotEmpty()) {
-                    repoNames.clear()
-                    binding.searchResult.visibility = View.GONE
-                    count = 0
-                    position = 0
-                }
-                changed = true
-                lastSearch = viewmodel.onSearchListener.value!!
-                Log.d("api 시도", "callSearchApi 실행")
-                callSearchApi(viewmodel.onSearchListener.value!!)
-                binding.searchResult.visibility = View.VISIBLE
-                binding.searchName.isFocusable = true
-            } else {
-                Toast.makeText(applicationContext, "검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
-                closeKeyboard()
-            }
-        }
 
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
         binding.searchName.setOnEditorActionListener { textView, i, keyEvent ->

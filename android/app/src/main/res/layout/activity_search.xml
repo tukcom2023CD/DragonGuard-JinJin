@@ -37,8 +37,8 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
+                    android:background="#ffffff"
                     android:layout_gravity="bottom"
-                    android:background="@android:color/transparent"
                     android:gravity="top"
                     app:layout_collapseMode="pin">
                     <LinearLayout
@@ -51,26 +51,21 @@
                             android:gravity="center"
                             android:orientation="horizontal">
 
-                            <com.dragonguard.android.custom.edittext.CustomEdittext
+                            <EditText
+                                android:padding="5dp"
                                 android:id="@+id/search_name"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.6"
                                 android:background="@drawable/search_bar_border"
                                 android:imeOptions="actionSearch"
+                                android:drawableStart="@drawable/ic_baseline_search_24"
+                                android:drawablePadding="10dp"
                                 android:hint=" 검색어 입력"
                                 android:inputType="text"
                                 android:text="@={searchViewModel.onSearchListener}"
                                 android:textColor="@color/black"
                                 android:textSize="20sp" />
-
-                            <ImageView
-                                android:id="@+id/search_icon"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:adjustViewBounds="true"
-                                android:src="@drawable/ic_baseline_search_24" />
-
 
 
                             <ImageView
