@@ -59,7 +59,7 @@ final class SearchAndFilterController: UIViewController{
         btn.layer.cornerRadius = 18
         btn.layer.shadowOpacity = 0.5
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
-        btn.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
+        btn.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
         btn.addTarget(self, action: #selector(clickedUser), for: .touchUpInside)
         return btn
     }()
@@ -73,7 +73,7 @@ final class SearchAndFilterController: UIViewController{
         btn.layer.cornerRadius = 18
         btn.layer.shadowOpacity = 0.5
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
-        btn.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
+        btn.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
         btn.addTarget(self, action: #selector(clickedRepository), for: .touchUpInside)
         return btn
     }()
@@ -96,7 +96,7 @@ final class SearchAndFilterController: UIViewController{
         btn.layer.cornerRadius = 18
         btn.layer.shadowOpacity = 0.5
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
-        btn.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
+        btn.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
         btn.addTarget(self, action: #selector(clickedLanguageBtn), for: .touchUpInside)
         return btn
     }()
@@ -118,7 +118,7 @@ final class SearchAndFilterController: UIViewController{
         btn.layer.cornerRadius = 18
         btn.layer.shadowOpacity = 0.5
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
-        btn.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
+        btn.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
         btn.addTarget(self, action: #selector(clickedForksBtn), for: .touchUpInside)
         return btn
     }()
@@ -141,7 +141,7 @@ final class SearchAndFilterController: UIViewController{
         btn.layer.cornerRadius = 18
         btn.layer.shadowOpacity = 0.5
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
-        btn.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
+        btn.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
         btn.addTarget(self, action: #selector(clickedStarsBtn), for: .touchUpInside)
         return btn
     }()
@@ -164,7 +164,7 @@ final class SearchAndFilterController: UIViewController{
         btn.layer.cornerRadius = 18
         btn.layer.shadowOpacity = 0.5
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
-        btn.backgroundColor = UIColor(red: 0/255, green: 252/255, blue: 252/255, alpha: 1.0) /* #00fcfc */
+        btn.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
         btn.addTarget(self, action: #selector(clickedTopicsBtn), for: .touchUpInside)
         return btn
     }()
@@ -314,6 +314,8 @@ final class SearchAndFilterController: UIViewController{
     @objc
     private func clickedRepository(){
         type = "Repository"
+        self.userBtn.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
+        self.repositoryBtn.backgroundColor = UIColor(red: 195/255, green: 202/255, blue: 251/255, alpha: 1.0) /* #c3cafb */
         setRepositoryAutoLayout()
         checkUserBtnOrRepositoryBtn(check: false)
     }
@@ -322,6 +324,8 @@ final class SearchAndFilterController: UIViewController{
     @objc
     private func clickedUser(){
         type = "User"
+        self.userBtn.backgroundColor = UIColor(red: 195/255, green: 202/255, blue: 251/255, alpha: 1.0) /* #c3cafb */
+        self.repositoryBtn.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
         checkUserBtnOrRepositoryBtn(check: true)
     }
     
@@ -356,7 +360,11 @@ final class SearchAndFilterController: UIViewController{
         }
         
         nc.selectedLanguage.subscribe(onNext: { data in
+            
             self.languageFilterList = data
+            if !self.languageFilterList.isEmpty{
+                self.languageButton.backgroundColor = UIColor(red: 195/255, green: 202/255, blue: 251/255, alpha: 1.0) /* #c3cafb */
+            }
             self.languageCollectionView.reloadData()
         })
         .disposed(by: self.disposeBag)
@@ -412,16 +420,25 @@ final class SearchAndFilterController: UIViewController{
                 if type == "star"{
                     self.starsFilter = ""
                     self.starsFilter?.append(msg)
+                    if !(self.starsFilter?.isEmpty ?? true){
+                        self.starsButton.backgroundColor = UIColor(red: 195/255, green: 202/255, blue: 251/255, alpha: 1.0) /* #c3cafb */
+                    }
                     self.starsCollectionView.reloadData()
                 }
                 else if type == "fork"{
                     self.forksFilter = ""
                     self.forksFilter?.append(msg)
+                    if !(self.forksFilter?.isEmpty ?? true){
+                        self.forksButton.backgroundColor = UIColor(red: 195/255, green: 202/255, blue: 251/255, alpha: 1.0) /* #c3cafb */
+                    }
                     self.forksCollectionView.reloadData()
                 }
                 else{
                     self.topicsFilter = ""
                     self.topicsFilter?.append(msg)
+                    if !(self.topicsFilter?.isEmpty ?? true){
+                        self.topicsButton.backgroundColor = UIColor(red: 195/255, green: 202/255, blue: 251/255, alpha: 1.0) /* #c3cafb */
+                    }
                     self.topcisCollectionView.reloadData()
                 }
             }))
@@ -489,18 +506,32 @@ extension SearchAndFilterController: UICollectionViewDelegate, UICollectionViewD
             let languageIndex = self.languageFilterList.firstIndex(of: self.languageFilterList[indexPath.row])
             self.languageFilterList.remove(at: languageIndex ?? -1)
             
+            if languageFilterList.isEmpty{
+                self.languageButton.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
+            }
+            
             self.languageCollectionView.reloadData()
         }
         else if collectionView == forksCollectionView{
             self.forksFilter = ""
+            if self.forksFilter?.isEmpty ?? true{
+                self.forksButton.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
+            }
             self.forksCollectionView.reloadData()
         }
         else if collectionView == starsCollectionView{
             self.starsFilter = ""
+            if self.starsFilter?.isEmpty ?? true{
+                self.starsButton.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
+            }
+            
             self.starsCollectionView.reloadData()
         }
         else{
             self.topicsFilter = ""
+            if self.topicsFilter?.isEmpty ?? true{
+                self.topicsButton.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
+            }
             self.topcisCollectionView.reloadData()
         }
         
