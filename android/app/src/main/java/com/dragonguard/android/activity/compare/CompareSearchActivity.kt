@@ -61,13 +61,7 @@ class CompareSearchActivity : AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
  */
-            if (viewmodel.onOptionListener.value == "down") {
-                binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
-                Log.d("option", "down")
-            } else {
-                binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
-                Log.d("option", "up")
-            }
+
         })
 
 

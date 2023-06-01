@@ -61,21 +61,11 @@
                                 android:imeOptions="actionSearch"
                                 android:drawableStart="@drawable/ic_baseline_search_24"
                                 android:drawablePadding="10dp"
+                                android:focusable="false"
                                 android:hint=" 검색어 입력"
                                 android:inputType="text"
-                                android:text="@={searchViewModel.onSearchListener}"
                                 android:textColor="@color/black"
                                 android:textSize="20sp" />
-
-
-                            <ImageView
-                                android:id="@+id/option_icon"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:adjustViewBounds="true"
-                                android:onClick="@{()->searchViewModel.clickSearchOption()}"
-                                android:src="@drawable/ic_baseline_arrow_drop_down_24"
-                                android:tag="@{searchViewModel.onOptionListener}" />
 
                         </LinearLayout>
 

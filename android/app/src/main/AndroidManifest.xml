@@ -14,9 +14,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.search.SearchFilterActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.menu.ApprovalOrgActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.UserDetailActivity"
             android:exported="false"
