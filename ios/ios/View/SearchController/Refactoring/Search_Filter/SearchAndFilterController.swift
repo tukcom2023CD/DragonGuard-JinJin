@@ -546,14 +546,26 @@ extension SearchAndFilterController: UITextFieldDelegate{
         print("seach \(word)")
         let filtering = getFiltering()
         
-        SearchPageViewModel.viewModel.getSearchData(searchWord: word, type: self.type, change: true, filtering: filtering)
-            .subscribe(onNext: { list in
-                if !list.isEmpty{
-                    self.delegate?.sendList(list: list)
-                    self.dismiss(animated: true)
-                }
-            })
-            .disposed(by: self.disposeBag)
+        let list: [SearchResultModel] = [
+            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+        ]
+        
+        self.delegate?.sendList(list: list)
+        self.dismiss(animated: true)
+        
+//        SearchPageViewModel.viewModel.getSearchData(searchWord: word, type: self.type, change: true, filtering: filtering)
+//            .subscribe(onNext: { list in
+//                if !list.isEmpty{
+//                    self.delegate?.sendList(list: list)
+//                    self.dismiss(animated: true)
+//                }
+//            })
+//            .disposed(by: self.disposeBag)
         
         textField.resignFirstResponder()
         return true

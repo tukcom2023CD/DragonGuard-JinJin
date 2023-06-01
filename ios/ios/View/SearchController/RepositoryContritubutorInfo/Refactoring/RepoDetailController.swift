@@ -17,6 +17,8 @@ final class RepoDetailController: UIViewController{
     private var userCommit: [Int] = []  // 사용자 커밋 횟수
     private var userName: [String] = [] // 사용자 깃허브 아이디
     private var dataColor:[[UIColor]] = []  // 랜덤 색상 설정
+    var selectedTitle: String?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +54,7 @@ final class RepoDetailController: UIViewController{
         let btn = UIButton()
         btn.setTitle("<", for: .normal)
         btn.setTitleColor(.blue, for: .normal)
-//        btn.addTarget(self, action: #selector(clickedBackBtn), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(clickedBackBtn), for: .touchUpInside)
         return btn
     }()
     
@@ -89,7 +91,7 @@ final class RepoDetailController: UIViewController{
         return collect
     }()
     
-    // 차트 그리는 UI
+    // MARK: 차트 그리는 UI
     private lazy var barChart: BarChartView = {
         let chart = BarChartView()
         chart.backgroundColor = .white
@@ -218,7 +220,17 @@ final class RepoDetailController: UIViewController{
         
     }
     
-    // 색상 랜덤 설정
+    /*
+     etc
+     */
+    
+    // MARK: 뒤로가기 버튼
+    @objc
+    private func clickedBackBtn(){
+        self.dismiss(animated: true)
+    }
+    
+    // MARK: 색상 랜덤 설정
     private func randomColor(){
         for _ in 0..<userListCount{
             let r: CGFloat = CGFloat.random(in: 0...1)
@@ -228,7 +240,7 @@ final class RepoDetailController: UIViewController{
         }
     }
     
-    // MARK:
+    // MARK: 테스트 데이터 넣기
     private func testData(){
         for i in 1...10{
             self.userName.append("a")
@@ -269,7 +281,7 @@ extension RepoDetailController: UICollectionViewDelegate, UICollectionViewDataSo
     }
 }
 
-// Chart 설정
+// MARK: Chart 설정
 extension RepoDetailController: ChartViewDelegate {
     
     // 차트 생성
@@ -306,7 +318,6 @@ extension RepoDetailController: ChartViewDelegate {
         barChart.xAxis.enabled = false
         barChart.leftAxis.labelFont = .systemFont(ofSize: 15)
         barChart.legend.textColor = .black
-        
         barChart.noDataText = "출력 데이터가 없습니다."
         barChart.noDataFont = .systemFont(ofSize: 30)
         barChart.noDataTextColor = .lightGray
@@ -316,8 +327,8 @@ extension RepoDetailController: ChartViewDelegate {
 }
 
 
+
 import SwiftUI
-import Charts
 struct VCPreViewRepoDetailController:PreviewProvider {
     static var previews: some View {
         RepoDetailController().toPreview().previewDevice("iPhone 14 Pro")
