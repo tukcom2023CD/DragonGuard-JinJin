@@ -1,11 +1,11 @@
 package com.dragonguard.backend.domain.gitrepomember.service;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.domain.gitrepo.repository.JpaGitRepoRepository;
+import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
-import com.dragonguard.backend.domain.gitrepomember.repository.JpaGitRepoMemberRepository;
+import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GitRepoMemberService {
 
-    private final JpaGitRepoMemberRepository gitRepoMemberRepository;
+    private final GitRepoMemberRepository gitRepoMemberRepository;
     private final MemberService memberService;
-    private final JpaGitRepoRepository gitRepoRepository;
+    private final GitRepoRepository gitRepoRepository;
     private final GitRepoMemberMapper gitRepoMemberMapper;
 
     public void updateOrSaveAll(List<GitRepoMemberResponse> gitRepoResponses, String gitRepo) {
