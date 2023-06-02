@@ -12,6 +12,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: gitrank-backend
+            name: default.gitrank-backend
             port:
               number: 8080
