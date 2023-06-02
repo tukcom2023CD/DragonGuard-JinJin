@@ -12,6 +12,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: gitrank-backend.default.svc.cluster.local
+            name: gitrank-backend
             port:
               number: 8080
