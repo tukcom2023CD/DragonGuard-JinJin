@@ -1,5 +1,0 @@
-resources:
-  - ingress.yml
-  - service.yml
-  - deployment.yml
-  
