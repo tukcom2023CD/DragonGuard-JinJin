@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitrank-nginx
+spec:
+  ports:
+    - name: gitrank-nginx
+      port: 80
+      protocol: TCP
+  selector:
+    app: gitrank-nginx
+    component: gitrank-nginx
+  type: NodePort
