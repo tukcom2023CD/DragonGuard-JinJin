@@ -29,6 +29,9 @@ spring:
     init:
       mode: always
 
+  flyway:
+    enabled: true
+
   cache:
     type: redis
     redis:

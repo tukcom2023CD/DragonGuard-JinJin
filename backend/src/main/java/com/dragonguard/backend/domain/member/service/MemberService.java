@@ -9,7 +9,7 @@ import com.dragonguard.backend.domain.contribution.service.ContributionService;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.domain.gitrepo.repository.JpaGitRepoRepository;
+import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.issue.service.IssueService;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
@@ -61,7 +61,7 @@ public class MemberService {
     private final PullRequestService pullRequestService;
     private final IssueService issueService;
     private final GitOrganizationService gitOrganizationService;
-    private final JpaGitRepoRepository gitRepoRepository;
+    private final GitRepoRepository gitRepoRepository;
     private final KafkaProducer<KafkaContributionRequest> kafkaContributionProducer;
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
 

@@ -5,10 +5,10 @@ import com.dragonguard.backend.domain.contribution.dto.response.ContributionScra
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
-import com.dragonguard.backend.domain.gitrepo.repository.JpaGitRepoRepository;
+import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
-import com.dragonguard.backend.domain.gitrepomember.repository.JpaGitRepoMemberRepository;
+import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.issue.service.IssueService;
 import com.dragonguard.backend.domain.member.dto.request.client.MemberClientRequest;
 import com.dragonguard.backend.domain.member.dto.response.client.*;
@@ -41,12 +41,12 @@ public class MemberClientService {
     private final GithubClient<MemberClientRequest, MemberOrganizationResponse[]> memberOrganizationClient;
     private final GithubClient<MemberClientRequest, OrganizationRepoResponse[]> organizationRepoClient;
     private final GitOrganizationService gitOrganizationService;
-    private final JpaGitRepoRepository gitRepoRepository;
+    private final GitRepoRepository gitRepoRepository;
     private final GitRepoMapper gitRepoMapper;
     private final CommitService commitService;
     private final IssueService issueService;
     private final PullRequestService pullRequestService;
-    private final JpaGitRepoMemberRepository gitRepoMemberRepository;
+    private final GitRepoMemberRepository gitRepoMemberRepository;
     private final GitRepoMemberMapper gitRepoMemberMapper;
 
     public void addMemberContribution(Member member) {

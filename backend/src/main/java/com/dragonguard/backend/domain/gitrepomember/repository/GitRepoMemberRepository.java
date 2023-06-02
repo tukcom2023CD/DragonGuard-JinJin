@@ -16,7 +16,7 @@ public interface GitRepoMemberRepository {
 
     Optional<GitRepoMember> findByNameAndMemberName(String gitRepo, String member);
 
-//    List<GitRepoMember> saveAll(Collection<GitRepoMember> gitRepoMembers);
+    <S extends GitRepoMember> List<S> saveAll(Iterable<S> entities);
 
-//    GitRepoMember save(GitRepoMember gitRepoMember);
+    GitRepoMember save(GitRepoMember gitRepoMember);
 }
