@@ -8,6 +8,18 @@
 
 ## CI / CD Flow
 ![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/7065b430-d8ee-4244-97b7-c1c7b24acf10)
+<details>
+<summary>Jenkins</summary>
+<div>
+<img src=https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/c11d1ad2-93c0-4bfc-be14-3a5d62a082ba/>
+</div>
+</details>
+<details>
+<summary>ArgoCD</summary>
+<div>
+<img src=https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/a86bd15c-b3e1-440d-8b20-54b5f91285ec/>
+</div>
+</details>
 
 ## 협업 툴
 <a href="https://seoullian.atlassian.net/jira/software/projects/DJ/boards/2/backlog" target="_blank"> Jira URL</a>
