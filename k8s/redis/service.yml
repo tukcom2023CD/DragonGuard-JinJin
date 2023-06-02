@@ -6,6 +6,7 @@ spec:
   selector:
     app: gitrank-redis
     component: gitrank-redis
+    tier: backend
   ports:
   - name: gitrank-redis
     protocol: TCP

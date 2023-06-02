@@ -9,5 +9,5 @@ spec:
   selector:
     app: gitrank-scraping
     component: gitrank-scraping
-    tier: backend
+    tier: scraping
   clusterIP: None
