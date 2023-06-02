@@ -10,3 +10,4 @@ spec:
     app: gitrank-scraping
     component: gitrank-scraping
     tier: backend
+  clusterIP: None

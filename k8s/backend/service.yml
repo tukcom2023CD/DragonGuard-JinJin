@@ -10,3 +10,4 @@ spec:
     app: gitrank-backend
     component: gitrank-backend
     tier: backend
+  clusterIP: None
