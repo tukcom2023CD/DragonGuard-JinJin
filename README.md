@@ -11,7 +11,7 @@
 <details>
 <summary>Jenkins</summary>
 <div>
-<img src=https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/c11d1ad2-93c0-4bfc-be14-3a5d62a082ba/>
+<img src=https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/109d420f-9c59-4db8-be39-480b026d375f/>
 </div>
 </details>
 <details>
