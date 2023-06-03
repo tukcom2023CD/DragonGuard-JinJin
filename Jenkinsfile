@@ -36,9 +36,8 @@ pipeline {
 								usernameVariable: 'DOCKER_USER_ID',
 								passwordVariable: 'DOCKER_USER_PASSWORD'
 								]]){
-								sh "docker tag gitrank-${var.toLowerCase()}:latest ${DOCKER_USER_ID}/gitrank-${var.toLowerCase()}:${BUILD_NUMBER}"
 								sh "docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}"
-								sh "docker push ${DOCKER_USER_ID}/gitrank-${var.toLowerCase()}:${BUILD_NUMBER}"
+								sh "docker push ${DOCKER_USER_ID}/gitrank-${var.toLowerCase()}:latest"
 								}
 							}
 						}
