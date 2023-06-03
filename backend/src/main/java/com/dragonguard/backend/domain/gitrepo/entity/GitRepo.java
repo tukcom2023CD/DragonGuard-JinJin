@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -43,5 +44,18 @@ public class GitRepo extends BaseTime {
 
     public void updateClosedIssueNum(Integer closedIssueNum) {
         this.closedIssueNum = closedIssueNum;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GitRepo gitRepo = (GitRepo) o;
+        return Objects.equals(name, gitRepo.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
