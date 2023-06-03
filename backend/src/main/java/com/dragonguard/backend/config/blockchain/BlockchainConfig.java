@@ -5,16 +5,12 @@ import com.klaytn.caver.Caver;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;
 import com.klaytn.caver.wallet.keyring.KeyringFactory;
-import io.ipfs.multibase.Charsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.web3j.crypto.CipherException;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @author 김승진
@@ -28,30 +24,9 @@ public class BlockchainConfig {
     private static final String BAOBAB_TESTNET = "https://api.baobab.klaytn.net:8651";
 
     @Bean
-    public BlockchainJson blockchainJson() {
-        Path path = Paths.get("src/main/resources/");
-        Path abiPath = Paths.get(path.toAbsolutePath().normalize()
-                .resolve("abi.json")
-                .normalize()
-                .toString());
-        Path keyringPath = Paths.get(path.toAbsolutePath().normalize()
-                .resolve("keyring.json")
-                .normalize()
-                .toString());
-
-        try {
-            String abiJson = String.join("", Files.readAllLines(abiPath, Charsets.UTF_8));
-            String keyRingJson = String.join("", Files.readAllLines(keyringPath, Charsets.UTF_8));
-            return new BlockchainJson(abiJson, keyRingJson);
-        } catch (IOException e) {
-            throw new BlockchainException();
-        }
-    }
-
-    @Bean
     public AbstractKeyring keyring() {
         try {
-            return KeyringFactory.decrypt(blockchainJson().getKeyRingJson(), properties.getPassword());
+            return KeyringFactory.decrypt(properties.getKeyring(), properties.getPassword());
         } catch (CipherException | IOException e) {
             throw new BlockchainException();
         }
@@ -65,7 +40,7 @@ public class BlockchainConfig {
     @Bean
     public Contract contract() {
         try {
-            return caver().contract.create(blockchainJson().getAbiJson());
+            return caver().contract.create(properties.getAbi());
         } catch (IOException e) {
             throw new BlockchainException();
         }

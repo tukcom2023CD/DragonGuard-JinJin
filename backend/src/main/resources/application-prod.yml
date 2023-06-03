@@ -74,6 +74,8 @@ blockchain:
   password: ${BLOCKCHAIN_PASSWORD}
   wallet-key: ${BLOCKCHAIN_WALLET_KEY}
   contract-address: ${BLOCKCHAIN_CONTRACT_ADDRESS}
+  abi: ${BLOCKCHAIN_ABI}
+  keyring: ${BLOCKCHAIN_KEYING}
 
 github:
   url: https://api.github.com/

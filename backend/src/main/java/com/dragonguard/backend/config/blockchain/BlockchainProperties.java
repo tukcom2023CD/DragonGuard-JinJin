@@ -20,4 +20,6 @@ public class BlockchainProperties {
     private String password;
     private String walletKey;
     private String contractAddress;
+    private String abi;
+    private String keyring;
 }

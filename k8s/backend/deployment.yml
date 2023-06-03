@@ -89,3 +89,13 @@ spec:
                 secretKeyRef:
                   name: gitrank-secret
                   key: admin
+            - name: BLOCKCHAIN_ABI
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: blockchain.abi
+            - name: BLOCKCHAIN_KEYING
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: blockchain.keyring
