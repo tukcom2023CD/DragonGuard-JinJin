@@ -53,7 +53,7 @@ public class GitRepoService {
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
 
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(GitRepoRequest gitRepoRequest) {
-        Optional<GitRepo> gitRepo = gitRepoRepository.findById(gitRepoRequest.getName());
+        Optional<GitRepo> gitRepo = gitRepoRepository.findById(gitRepoRequest.getId());
         if (!StringUtils.hasText(gitRepoRequest.getGithubToken())) {
             gitRepoRequest.setGithubToken(authService.getLoginUser().getGithubToken());
         }
@@ -166,7 +166,7 @@ public class GitRepoService {
                         additions.get(member),
                         deletions.get(member))).collect(Collectors.toList());
 
-        gitRepoMemberService.saveAll(result, gitRepoRequest.getName());
+        gitRepoMemberService.saveAll(result, gitRepoRequest.getId());
 
         return result;
     }

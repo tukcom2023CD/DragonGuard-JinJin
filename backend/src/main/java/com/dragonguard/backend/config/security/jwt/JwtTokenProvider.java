@@ -21,8 +21,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
     private final Key key;
-    private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 1000; // 1 Day
-    private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 14 * 1000; // 14 Days
+    private static final Long ACCESS_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 1000; // 1 Day
+    private static final Long REFRESH_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 14 * 1000; // 14 Days
     private final MemberRepository memberRepository;
 
     public JwtToken createToken(UserDetailsImpl userDetails) {

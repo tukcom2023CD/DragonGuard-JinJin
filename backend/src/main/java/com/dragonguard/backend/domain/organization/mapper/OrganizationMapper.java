@@ -16,7 +16,7 @@ public class OrganizationMapper {
         return Organization.builder()
                 .name(organizationRequest.getName())
                 .organizationType(organizationRequest.getOrganizationType())
-                .emailEndpoint(organizationRequest.getEmailEndpoint().trim())
+                .emailEndpoint(organizationRequest.getEmailEndpoint().strip())
                 .build();
     }
 

@@ -13,8 +13,4 @@ public class UserDetailsMapper {
         attributes.put("id", user.getId());
         return new UserDetailsImpl(user, user.getRole(), attributes);
     }
-
-    public UserDetailsImpl mapToLoginUser(Member user, Map<String, Object> attributes) {
-        return new UserDetailsImpl(user, user.getRole(), attributes);
-    }
 }

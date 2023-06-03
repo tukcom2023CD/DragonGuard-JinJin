@@ -19,13 +19,15 @@ import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaRepositoryRe
 import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
-import com.dragonguard.backend.domain.member.entity.*;
+import com.dragonguard.backend.domain.member.entity.AuthStep;
+import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.entity.Role;
+import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
-import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.IdResponse;
@@ -56,7 +58,6 @@ public class MemberService {
     private final ContributionService contributionService;
     private final BlockchainService blockchainService;
     private final AuthService authService;
-    private final OrganizationRepository organizationRepository;
     private final OrganizationQueryRepository organizationQueryRepository;
     private final PullRequestService pullRequestService;
     private final IssueService issueService;
@@ -148,17 +149,14 @@ public class MemberService {
         Integer rank = memberQueryRepository.findRankingById(memberId);
         Long amount = member.getSumOfTokens();
         updateTier(member);
-        OrganizationDetails organizationDetails = member.getOrganizationDetails();
+        Organization organization = member.getOrganization();
 
-        if (organizationDetails == null) {
+        if (organization == null) {
             return memberMapper.toResponse(
                     member,
                     rank,
                     amount);
         }
-
-        Organization organization = organizationRepository.findById(organizationDetails.getOrganizationId())
-                .orElseThrow(EntityNotFoundException::new);
 
         Integer organizationRank = organizationQueryRepository.findRankingByMemberId(memberId);
 

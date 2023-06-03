@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -35,7 +36,7 @@ public class Organization extends BaseTime {
 
     private String emailEndpoint;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "organization")
     private Set<Member> members = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
@@ -48,17 +49,23 @@ public class Organization extends BaseTime {
     public Organization(String name, OrganizationType organizationType, String emailEndpoint) {
         this.name = name;
         this.organizationType = organizationType;
-        this.emailEndpoint = emailEndpoint;
+        if (validateEmailEndpoint(emailEndpoint)) {
+            this.emailEndpoint = emailEndpoint;
+        }
     }
 
     public void addMember(Member member, String email) {
         if (email.endsWith(emailEndpoint)) {
             this.members.add(member);
-            member.updateOrganization(id, email);
+            member.updateOrganization(this, email);
         }
     }
 
     public void updateStatus(OrganizationStatus organizationStatus) {
         this.organizationStatus = organizationStatus;
+    }
+
+    private boolean validateEmailEndpoint(String emailEndpoint) {
+        return StringUtils.hasText(emailEndpoint) && !emailEndpoint.contains("@");
     }
 }

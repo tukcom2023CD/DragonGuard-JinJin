@@ -6,7 +6,6 @@ import com.dragonguard.backend.domain.email.entity.Email;
 import com.dragonguard.backend.domain.email.exception.EmailException;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.entity.OrganizationDetails;
 import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
@@ -32,13 +31,11 @@ public class EmailService {
     @Transactional
     public IdResponse<Long> sendEmail() {
         Member member = memberService.getLoginUserWithDatabase();
-        OrganizationDetails organizationDetails = member.getOrganizationDetails();
+        String memberEmail = member.getEmail();
 
-        if (organizationDetails == null) {
+        if (memberEmail == null) {
             throw new IllegalStateException();
         }
-
-        String memberEmail = organizationDetails.getOrganizationEmail();
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         int random = new Random().nextInt(MAX - MIN) + MIN;

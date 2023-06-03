@@ -14,11 +14,11 @@ import lombok.*;
 public class GitRepoRequest {
     @Setter
     private String githubToken;
-    private String name;
+    private String id;
     private Integer year;
 
-    public GitRepoRequest(String name, Integer year) {
-        this.name = name;
+    public GitRepoRequest(String id, Integer year) {
+        this.id = id;
         this.year = year;
     }
 }

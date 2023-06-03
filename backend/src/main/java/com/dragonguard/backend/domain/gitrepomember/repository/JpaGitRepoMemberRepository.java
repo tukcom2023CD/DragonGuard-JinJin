@@ -15,6 +15,6 @@ import java.util.Optional;
 @Repository
 public interface JpaGitRepoMemberRepository extends JpaRepository<GitRepoMember, Long>, GitRepoMemberRepository {
 
-    @Query(value = "SELECT grm FROM GitRepoMember grm, GitRepo gr WHERE gr.name = :gitRepo AND grm.member.githubId = :member")
+    @Query(value = "SELECT grm FROM GitRepoMember grm, GitRepo gr WHERE gr.id = :gitRepo AND grm.member.githubId = :member")
     Optional<GitRepoMember> findByNameAndMemberName(String gitRepo, String member);
 }

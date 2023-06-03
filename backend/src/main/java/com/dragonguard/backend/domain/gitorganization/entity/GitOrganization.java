@@ -24,7 +24,7 @@ import java.util.Objects;
 public class GitOrganization extends BaseTime implements Persistable<String> {
 
     @Id
-    private String name;
+    private String id;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gitOrganization")
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
@@ -33,8 +33,8 @@ public class GitOrganization extends BaseTime implements Persistable<String> {
     private Boolean update;
 
     @Builder
-    public GitOrganization(String name, Member member, Boolean update) {
-        this.name = name;
+    public GitOrganization(String id, Member member, Boolean update) {
+        this.id = id;
         this.update = update;
         addGitOrganizationMember(member);
     }
@@ -45,7 +45,7 @@ public class GitOrganization extends BaseTime implements Persistable<String> {
 
     @Override
     public String getId() {
-        return this.name;
+        return this.id;
     }
 
     @Override
@@ -58,11 +58,11 @@ public class GitOrganization extends BaseTime implements Persistable<String> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GitOrganization that = (GitOrganization) o;
-        return Objects.equals(name, that.name);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id);
     }
 }

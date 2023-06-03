@@ -4,6 +4,7 @@ import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
 import com.dragonguard.backend.domain.issue.entity.Issue;
+import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.SoftDelete;
@@ -70,21 +71,24 @@ public class Member extends BaseTime {
     @OneToMany(mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gitOrganization")
+    private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gitOrganization")
-    private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
     private String refreshToken;
 
     private String githubToken;
 
-    @Embedded
-    private OrganizationDetails organizationDetails;
-
     private Integer sumOfReviews;
+
+    private String email;
 
     @Formula("(SELECT COALESCE(sum(c.amount), 0) FROM commit c WHERE c.member_id = id)")
     private Integer sumOfCommits;
@@ -174,8 +178,9 @@ public class Member extends BaseTime {
         this.refreshToken = refreshToken;
     }
 
-    public void updateOrganization(Long organizationId, String organizationEmail) {
-        this.organizationDetails = new OrganizationDetails(organizationId, organizationEmail);
+    public void updateOrganization(Organization organization, String email) {
+        this.organization = organization;
+        this.email = email;
     }
 
     public void finishAuth() {

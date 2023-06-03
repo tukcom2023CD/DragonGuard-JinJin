@@ -1,6 +1,6 @@
 def component = [
-		Backend: false,
-		Scraping: false
+		Backend: true,
+		Scraping: true
 ]
 pipeline {
 	agent any

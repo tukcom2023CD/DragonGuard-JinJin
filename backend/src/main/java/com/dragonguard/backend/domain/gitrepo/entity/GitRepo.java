@@ -25,7 +25,7 @@ import java.util.Set;
 public class GitRepo extends BaseTime implements Persistable<String> {
 
     @Id
-    private String name;
+    private String id;
 
     private Integer closedIssueNum;
 
@@ -36,8 +36,8 @@ public class GitRepo extends BaseTime implements Persistable<String> {
     private Boolean update;
 
     @Builder
-    public GitRepo(String name, Set<GitRepoMember> gitRepoMembers, Boolean update) {
-        this.name = name;
+    public GitRepo(String id, Set<GitRepoMember> gitRepoMembers, Boolean update) {
+        this.id = id;
         this.gitRepoMembers = gitRepoMembers;
         this.update = update;
     }
@@ -48,7 +48,7 @@ public class GitRepo extends BaseTime implements Persistable<String> {
 
     @Override
     public String getId() {
-        return this.name;
+        return this.id;
     }
 
     @Override

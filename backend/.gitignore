@@ -7,7 +7,7 @@ build/
 
 .json
 env.yml
-data.sql
+*.sql
 
 ### STS ###
 .apt_generated

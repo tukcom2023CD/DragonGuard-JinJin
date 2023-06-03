@@ -77,7 +77,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .select(member)
                 .from(member, organization)
                 .leftJoin(organization.members, member)
-                .on(member.organizationDetails.organizationId.eq(organization.id))
+                .on(member.organization.id.eq(organization.id))
                 .where(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED).and(member.sumOfTokens.gt(
                         JPAExpressions
                                 .select(member.sumOfTokens).from(member).where(member.id.eq(memberId)))))

@@ -55,7 +55,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
         return jpaQueryFactory
                 .select(qDtoFactory.qMemberRankResponse())
                 .from(member)
-                .where(member.walletAddress.isNotNull().and(member.organizationDetails.organizationId.eq(organizationId)).and(member.authStep.eq(AuthStep.ALL)))
+                .where(member.walletAddress.isNotNull().and(member.organization.id.eq(organizationId)).and(member.authStep.eq(AuthStep.ALL)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(memberOrderConverter.convert(pageable.getSort()))

@@ -104,10 +104,10 @@ public class MemberMapper {
     }
 
     private List<String> getGitOrganizationNames(List<GitOrganization> gitOrganizations) {
-        return gitOrganizations.stream().map(GitOrganization::getName).distinct().collect(Collectors.toList());
+        return gitOrganizations.stream().map(GitOrganization::getId).distinct().collect(Collectors.toList());
     }
 
     private List<String> getGitRepoNames(List<GitRepo> gitRepos) {
-        return gitRepos.stream().map(GitRepo::getName).distinct().collect(Collectors.toList());
+        return gitRepos.stream().map(GitRepo::getId).distinct().collect(Collectors.toList());
     }
 }
