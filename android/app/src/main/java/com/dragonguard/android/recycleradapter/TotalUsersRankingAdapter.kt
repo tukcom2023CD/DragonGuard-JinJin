@@ -44,17 +44,6 @@ class TotalUsersRankingAdapter (private val datas : ArrayList<TotalUsersRankings
                 }
             }
         }
-//        fun bind(data1: TotalUsersRankingsModel, data2: TotalUsersRankingsModel) {
-//            if(ranking.text.isNullOrEmpty() && githubId.text.isNullOrEmpty() && contribution.text.isNullOrEmpty()) {
-//                if(data1.commits == data2.commits) {
-//                    ranking.text = data2.ranking.toString()
-//                } else {
-//                    ranking.text = data1.ranking.toString()
-//                }
-//                githubId.text = data1.githubId
-//                contribution.text = data1.commits.toString()
-//            }
-//        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
