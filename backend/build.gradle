@@ -12,7 +12,7 @@ jib {
 		permissions = [
 			'src/main/resources/abi.json' : '755',
 			'src/main/resources/keyring.json' : '755',
-			'src/main/resources/db/migration/V1__init.sql' : '755'
+			'src/main/resources/db/migration' : '755'
 		]
         paths {
             path {

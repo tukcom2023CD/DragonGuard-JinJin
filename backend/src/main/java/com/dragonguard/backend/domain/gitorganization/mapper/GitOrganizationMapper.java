@@ -11,11 +11,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GitOrganizationMapper {
-    public GitOrganization toEntity(String id, Member member, Boolean update) {
+    public GitOrganization toEntity(String name, Member member) {
         return GitOrganization.builder()
-                .id(id)
+                .name(name)
                 .member(member)
-                .update(update)
                 .build();
     }
 }

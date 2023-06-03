@@ -12,7 +12,5 @@ public interface GitRepoRepository {
 
     <S extends GitRepo> List<S> saveAll(Iterable<S> gitRepos);
 
-    Optional<GitRepo> findById(String id);
-
-    boolean existsById(String id);
+    Optional<GitRepo> findByName(String name);
 }

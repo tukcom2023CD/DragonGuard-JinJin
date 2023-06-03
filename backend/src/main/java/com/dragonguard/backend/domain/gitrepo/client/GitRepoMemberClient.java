@@ -36,7 +36,7 @@ public class GitRepoMemberClient implements GithubClient<GitRepoRequest, GitRepo
                 .uri(
                         uriBuilder -> uriBuilder
                                 .path("repos/")
-                                .path(request.getId())
+                                .path(request.getName())
                                 .path("/stats")
                                 .path("/contributors")
                                 .build())

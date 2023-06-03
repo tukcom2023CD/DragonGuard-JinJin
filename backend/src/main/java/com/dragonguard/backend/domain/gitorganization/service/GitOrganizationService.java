@@ -26,8 +26,7 @@ public class GitOrganizationService {
     @Transactional
     public void saveGitOrganizations(Set<String> gitOrganizationNames, Member member) {
         Set<GitOrganization> gitOrganizations = gitOrganizationNames.stream()
-                .filter(name -> !gitOrganizationRepository.existsById(name))
-                .map(name -> gitOrganizationMapper.toEntity(name, member, true))
+                .map(name -> gitOrganizationRepository.findByName(name).orElseGet(() -> gitOrganizationMapper.toEntity(name, member)))
                 .collect(Collectors.toSet());
 
         gitOrganizationRepository.saveAll(gitOrganizations);

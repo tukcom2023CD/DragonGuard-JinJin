@@ -83,8 +83,7 @@ public class MemberClientService {
 
     public void saveGitRepos(Set<String> gitRepoNames, Member member) {
         Set<GitRepo> gitRepos = gitRepoNames.stream()
-                .filter(name -> !gitRepoRepository.existsById(name))
-                .map(name -> gitRepoMapper.toEntity(name, true))
+                .map(name -> gitRepoRepository.findByName(name).orElseGet(() -> gitRepoMapper.toEntity(name)))
                 .collect(Collectors.toSet());
 
         gitRepoRepository.saveAll(gitRepos);

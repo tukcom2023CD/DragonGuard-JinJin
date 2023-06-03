@@ -1,12 +1,11 @@
 package com.dragonguard.backend.domain.gitorganization.entity;
 
-import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.audit.BaseTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,36 +20,26 @@ import java.util.Objects;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GitOrganization extends BaseTime implements Persistable<String> {
+public class GitOrganization extends BaseTime {
 
     @Id
-    private String id;
+    @GeneratedValue
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "gitOrganization")
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
-    @Transient
-    private Boolean update;
-
     @Builder
-    public GitOrganization(String id, Member member, Boolean update) {
-        this.id = id;
-        this.update = update;
+    public GitOrganization(String name, Member member) {
+        this.name = name;
         addGitOrganizationMember(member);
     }
 
     public void addGitOrganizationMember(Member member) {
         this.gitOrganizationMembers.add(new GitOrganizationMember(this, member));
-    }
-
-    @Override
-    public String getId() {
-        return this.id;
-    }
-
-    @Override
-    public boolean isNew() {
-        return !this.update;
     }
 
     @Override
