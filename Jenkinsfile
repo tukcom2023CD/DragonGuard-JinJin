@@ -37,9 +37,11 @@ pipeline {
 									passwordVariable: 'DOCKER_USER_PASSWORD']]){
 
 										if (var == 'Backend') {
-											sh "chmod +x ./backend/gradlew"
-											sh "dos2unix ./backend/gradlew"
-											sh "./backend/gradlew clean jib"
+											sh "cd ./backend"
+											sh "chmod +x ./gradlew"
+											sh "dos2unix ./gradlew"
+											sh "./gradlew clean jib"
+											sh "cd ../"
 										}
 										else {
 											sh "docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}"
