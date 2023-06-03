@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -21,12 +22,9 @@ import java.util.Set;
 @Entity
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GitRepo extends BaseTime {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class GitRepo extends BaseTime implements Persistable<String> {
 
-    @Column(unique = true)
+    @Id
     private String name;
 
     private Integer closedIssueNum;
@@ -34,13 +32,27 @@ public class GitRepo extends BaseTime {
     @OneToMany(mappedBy = "gitRepo", cascade = CascadeType.ALL)
     private Set<GitRepoMember> gitRepoMembers = new HashSet<>();
 
+    @Transient
+    private Boolean update;
+
     @Builder
-    public GitRepo(String name, Set<GitRepoMember> gitRepoMembers) {
+    public GitRepo(String name, Set<GitRepoMember> gitRepoMembers, Boolean update) {
         this.name = name;
         this.gitRepoMembers = gitRepoMembers;
+        this.update = update;
     }
 
     public void updateClosedIssueNum(Integer closedIssueNum) {
         this.closedIssueNum = closedIssueNum;
+    }
+
+    @Override
+    public String getId() {
+        return this.name;
+    }
+
+    @Override
+    public boolean isNew() {
+        return !this.update;
     }
 }

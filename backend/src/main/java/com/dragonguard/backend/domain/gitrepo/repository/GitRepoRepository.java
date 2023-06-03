@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GitRepoRepository {
-    Optional<GitRepo> findByName(String name);
-
-    boolean existsByName(String name);
-
     List<GitRepo> findByGithubId(String githubId);
 
     GitRepo save(GitRepo gitRepo);
 
     <S extends GitRepo> List<S> saveAll(Iterable<S> gitRepos);
+
+    Optional<GitRepo> findById(String id);
+
+    boolean existsById(String id);
 }

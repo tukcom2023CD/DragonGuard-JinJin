@@ -5,9 +5,9 @@ import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import java.util.List;
 
 public interface GitOrganizationRepository {
-    boolean existsByName(String name);
+    boolean existsById(String id);
 
     List<GitOrganization> findByGithubId(String githubId);
 
-//    List<GitOrganization> saveAll(Set<GitOrganization> gitOrganizations);
+    <S extends GitOrganization> List<S> saveAll(Iterable<S> entities);
 }

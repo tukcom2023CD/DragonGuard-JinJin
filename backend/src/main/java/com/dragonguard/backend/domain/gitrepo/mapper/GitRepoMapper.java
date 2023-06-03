@@ -11,15 +11,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GitRepoMapper {
-    public GitRepo toEntity(GitRepoRequest gitRepoRequest) {
+    public GitRepo toEntity(GitRepoRequest gitRepoRequest, Boolean update) {
         return GitRepo.builder()
                 .name(gitRepoRequest.getName())
+                .update(update)
                 .build();
     }
 
-    public GitRepo toEntity(String name) {
+    public GitRepo toEntity(String name, Boolean update) {
         return GitRepo.builder()
                 .name(name)
+                .update(update)
                 .build();
     }
 }

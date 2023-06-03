@@ -36,7 +36,7 @@ public class GitRepoMemberService {
         List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepository -> {
             Member member = memberService.saveAndGet(new MemberRequest(gitRepository.getGithubId()), AuthStep.NONE);
 
-            GitRepo gitRepoEntity = gitRepoRepository.findByName(gitRepo)
+            GitRepo gitRepoEntity = gitRepoRepository.findById(gitRepo)
                     .orElseThrow(EntityNotFoundException::new);
 
             GitRepoMember gitRepoMember = gitRepoMemberMapper.toEntity(gitRepository, member, gitRepoEntity);
@@ -62,7 +62,7 @@ public class GitRepoMemberService {
         List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepository -> {
             Member member = memberService.saveAndGet(new MemberRequest(gitRepository.getGithubId()), AuthStep.NONE);
 
-            GitRepo gitRepoEntity = gitRepoRepository.findByName(gitRepo)
+            GitRepo gitRepoEntity = gitRepoRepository.findById(gitRepo)
                     .orElseThrow(EntityNotFoundException::new);
 
             if (gitRepoMemberRepository.existsByGitRepoAndMember(gitRepoEntity, member)) {

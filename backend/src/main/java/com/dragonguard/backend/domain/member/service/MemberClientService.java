@@ -81,18 +81,10 @@ public class MemberClientService {
         gitOrganizationService.saveGitOrganizations(memberOrganizationNames, member);
     }
 
-    public void addGitOrganizationRepo(String orgName, Member member) {
-        Set<String> repoNames = Arrays.stream(organizationRepoClient.requestToGithub(new MemberClientRequest(orgName, member.getGithubToken(), LocalDate.now().getYear())))
-                .map(OrganizationRepoResponse::getFull_name)
-                .collect(Collectors.toSet());
-
-        saveGitRepos(repoNames, member);
-    }
-
     public void saveGitRepos(Set<String> gitRepoNames, Member member) {
         Set<GitRepo> gitRepos = gitRepoNames.stream()
-                .filter(name -> !gitRepoRepository.existsByName(name))
-                .map(gitRepoMapper::toEntity)
+                .filter(name -> !gitRepoRepository.existsById(name))
+                .map(name -> gitRepoMapper.toEntity(name, true))
                 .collect(Collectors.toSet());
 
         gitRepoRepository.saveAll(gitRepos);

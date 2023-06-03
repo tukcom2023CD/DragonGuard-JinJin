@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 @Repository
-public interface JpaGitRepoRepository extends JpaRepository<GitRepo, Long>, GitRepoRepository {
+public interface JpaGitRepoRepository extends JpaRepository<GitRepo, String>, GitRepoRepository {
     @Query("SELECT DISTINCT gr FROM GitRepo gr JOIN FETCH gr.gitRepoMembers grm JOIN FETCH grm.member m WHERE m.githubId = :githubId")
     List<GitRepo> findByGithubId(String githubId);
 }

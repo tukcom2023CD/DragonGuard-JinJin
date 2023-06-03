@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.gitorganization.service;
 
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.mapper.GitOrganizationMapper;
-import com.dragonguard.backend.domain.gitorganization.repository.JpaGitOrganizationRepository;
+import com.dragonguard.backend.domain.gitorganization.repository.GitOrganizationRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class GitOrganizationService {
-    private final JpaGitOrganizationRepository gitOrganizationRepository;
+    private final GitOrganizationRepository gitOrganizationRepository;
     private final GitOrganizationMapper gitOrganizationMapper;
 
     @Transactional
     public void saveGitOrganizations(Set<String> gitOrganizationNames, Member member) {
         Set<GitOrganization> gitOrganizations = gitOrganizationNames.stream()
-                .filter(name -> !gitOrganizationRepository.existsByName(name))
-                .map(name -> gitOrganizationMapper.toEntity(name, member))
+                .filter(name -> !gitOrganizationRepository.existsById(name))
+                .map(name -> gitOrganizationMapper.toEntity(name, member, true))
                 .collect(Collectors.toSet());
 
         gitOrganizationRepository.saveAll(gitOrganizations);
