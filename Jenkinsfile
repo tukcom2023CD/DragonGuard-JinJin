@@ -38,7 +38,8 @@ pipeline {
 
 										if (var == 'Backend') {
 											sh "cd backend"
-											sh "./gradlew jib"
+											sh "chmod +x gradlew"
+											sh "./gradlew clean jib"
 											sh "cd .."
 										}
 										else {
