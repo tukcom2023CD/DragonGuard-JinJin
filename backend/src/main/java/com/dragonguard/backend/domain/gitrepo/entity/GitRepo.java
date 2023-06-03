@@ -33,7 +33,7 @@ public class GitRepo extends BaseTime {
 
     private Integer closedIssueNum;
 
-    @OneToMany(mappedBy = "gitRepo", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "gitRepo", cascade = CascadeType.PERSIST)
     private Set<GitRepoMember> gitRepoMembers = new HashSet<>();
 
     @Builder

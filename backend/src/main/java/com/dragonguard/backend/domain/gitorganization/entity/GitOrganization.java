@@ -29,7 +29,7 @@ public class GitOrganization extends BaseTime {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gitOrganization")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "gitOrganization")
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
     @Builder

@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 @Repository
-public interface JpaGitOrganizationRepository extends JpaRepository<GitOrganization, String>, GitOrganizationRepository {
+public interface JpaGitOrganizationRepository extends JpaRepository<GitOrganization, Long>, GitOrganizationRepository {
 
     @Query("SELECT DISTINCT go FROM GitOrganization go JOIN FETCH go.gitOrganizationMembers gom JOIN FETCH gom.member m WHERE m.githubId = :githubId")
     List<GitOrganization> findByGithubId(String githubId);

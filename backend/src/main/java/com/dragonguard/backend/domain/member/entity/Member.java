@@ -71,7 +71,7 @@ public class Member extends BaseTime {
     @OneToMany(mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
