@@ -37,7 +37,7 @@ pipeline {
 									passwordVariable: 'DOCKER_USER_PASSWORD']]){
 
 										if (var == 'Backend') {
-											sh "sudo chmod +x ./backend/gradlew"
+											sh "chmod +x ./backend/gradlew"
 											sh "dos2unix ./backend/gradlew"
 											sh "./backend/gradlew clean jib"
 										}
