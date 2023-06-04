@@ -3,8 +3,8 @@
 개인별로 또는 조직별로 깃허브를 얼마나 활용하는지 경쟁하며 순위를 매기는 기능을 제공
 ## 시스템 아키텍처
 
-![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/b4855730-13ba-4f5e-b809-d51be9fd768e)
-![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/bf6936be-86ca-4045-9fd5-244cd387af62)
+![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/5dbf7b2e-cbc6-4412-882f-f20d848627a8)
+![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/dbbbd6cf-5d62-4b17-91cb-292dee847027)
 
 
 ## CI / CD Flow
