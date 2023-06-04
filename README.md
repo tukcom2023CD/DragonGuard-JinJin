@@ -4,6 +4,7 @@
 ## 시스템 아키텍처
 
 ![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/b4855730-13ba-4f5e-b809-d51be9fd768e)
+![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/bf6936be-86ca-4045-9fd5-244cd387af62)
 
 
 ## CI / CD Flow
