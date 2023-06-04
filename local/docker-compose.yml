@@ -5,7 +5,7 @@ services:
   backend:
     build:
       context: ../backend
-    command: gradle bootRun
+    image: ohksj77/gitrank-backend
     container_name: gitrank-backend
     ports:
       - 8080:8080

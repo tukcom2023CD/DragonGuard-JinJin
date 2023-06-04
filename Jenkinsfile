@@ -35,18 +35,8 @@ pipeline {
 									credentialsId: 'docker_credentials',
 									usernameVariable: 'DOCKER_USER_ID',
 									passwordVariable: 'DOCKER_USER_PASSWORD']]){
-
-										if (var == 'Backend') {
-											sh "chmod +x ./backend/gradlew"
-											sh "dos2unix ./backend/gradlew"
-											sh "cd ./backend/"
-											sh "./gradlew clean jib"
-											sh "cd ../"
-										}
-										else {
-											sh "docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}"
-											sh "docker push ${DOCKER_USER_ID}/gitrank-${var.toLowerCase()}:latest"
-										}
+										sh "docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}"
+										sh "docker push ${DOCKER_USER_ID}/gitrank-${var.toLowerCase()}:latest"
 								}
 							}
 						}
