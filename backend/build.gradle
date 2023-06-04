@@ -10,16 +10,9 @@ plugins {
 jib {
 	extraDirectories {
 		permissions = [
-			'src/main/resources/abi.json' : '755',
-			'src/main/resources/keyring.json' : '755',
 			'src/main/resources/db/migration' : '755'
 		]
         paths {
-            path {
-                from  = 'src/main/resources'
-				into = '/src/main/resources'
-				includes = ['*.json']
-            }
 			path {
 				from  = 'src/main/resources/db/migration'
 				into = '/src/main/resources/db/migration'

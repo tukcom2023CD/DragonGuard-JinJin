@@ -1,4 +1,4 @@
-package com.dragonguard.backend.config.init;
+package com.dragonguard.backend.global.init;
 
 import com.dragonguard.backend.domain.blockchain.service.TransactionService;
 import lombok.RequiredArgsConstructor;
