@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
 
 @Component
 public class MemberMapper {
-    public Member toEntity(MemberRequest memberRequest, AuthStep authStep) {
+    public Member toEntity(final MemberRequest memberRequest, final AuthStep authStep) {
         return Member.builder()
                 .githubId(memberRequest.getGithubId())
                 .authStep(authStep)
                 .build();
     }
 
-    public Member toEntity(String githubId, Role role, AuthStep authStep) {
+    public Member toEntity(final String githubId, final Role role, final AuthStep authStep) {
         return Member.builder()
                 .githubId(githubId)
                 .role(role)
@@ -36,7 +36,7 @@ public class MemberMapper {
                 .build();
     }
 
-    public MemberResponse toResponse(Member member, Integer rank, Long amount, String organization, Integer organizationRank) {
+    public MemberResponse toResponse(final Member member, final Integer rank, final Long amount, final String organization, final Integer organizationRank) {
         Optional<Integer> sumOfCommits = member.getSumOfCommits();
         Optional<Integer> sumOfIssues = member.getSumOfIssues();
         Optional<Integer> sumOfPullRequests = member.getSumOfPullRequests();
@@ -61,7 +61,7 @@ public class MemberMapper {
                 .build();
     }
 
-    public MemberResponse toResponse(Member member, Integer rank, Long amount) {
+    public MemberResponse toResponse(final Member member, final Integer rank, final Long amount) {
         Optional<Integer> sumOfCommits = member.getSumOfCommits();
         Optional<Integer> sumOfIssues = member.getSumOfIssues();
         Optional<Integer> sumOfPullRequests = member.getSumOfPullRequests();
@@ -84,7 +84,7 @@ public class MemberMapper {
                 .build();
     }
 
-    public MemberDetailResponse toDetailResponse(MemberResponse dto, List<GitOrganization> gitOrganizations, List<GitRepo> gitRepos) {
+    public MemberDetailResponse toDetailResponse(final MemberResponse dto, final List<GitOrganization> gitOrganizations, final List<GitRepo> gitRepos) {
         return MemberDetailResponse.builder()
                 .id(dto.getId())
                 .name(dto.getName())
@@ -103,11 +103,11 @@ public class MemberMapper {
                 .build();
     }
 
-    private List<String> getGitOrganizationNames(List<GitOrganization> gitOrganizations) {
+    private List<String> getGitOrganizationNames(final List<GitOrganization> gitOrganizations) {
         return gitOrganizations.stream().map(GitOrganization::getName).distinct().collect(Collectors.toList());
     }
 
-    private List<String> getGitRepoNames(List<GitRepo> gitRepos) {
+    private List<String> getGitRepoNames(final List<GitRepo> gitRepos) {
         return gitRepos.stream().map(GitRepo::getName).distinct().collect(Collectors.toList());
     }
 }

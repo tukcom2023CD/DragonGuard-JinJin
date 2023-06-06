@@ -12,32 +12,30 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
 public class KafkaRepositoryClientConsumer {
     private final MemberClientService memberClientService;
     private final MemberRepository memberRepository;
+    private final ObjectMapper objectMapper;
 
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.repository.client", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        Map<String, Object> map = new HashMap<>();
-        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> map = null;
+
         try {
-            map = mapper.readValue(message, new TypeReference<Map<String, Object>>() {
+            map = objectMapper.readValue(message, new TypeReference<Map<String, Object>>() {
             });
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        if (map.isEmpty()) {
-            return;
-        }
+        } catch (JsonProcessingException e) {}
+
+        if (Objects.isNull(map)) return;
 
         String githubId = (String) map.get("githubId");
-        Member member = memberRepository.findMemberByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
         memberClientService.addMemberGitRepoAndGitOrganization(member);
     }
 }

@@ -1,12 +1,10 @@
 package com.dragonguard.backend.domain.organization.entity;
 
-import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
 import com.dragonguard.backend.domain.member.entity.Member;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.dragonguard.backend.global.audit.AuditListener;
+import com.dragonguard.backend.global.audit.Auditable;
+import com.dragonguard.backend.global.audit.BaseTime;
+import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.springframework.util.StringUtils;
 
@@ -21,9 +19,9 @@ import java.util.Set;
 
 @Getter
 @Entity
-@SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Organization extends BaseTime {
+public class Organization implements Auditable {
     @Id
     @GeneratedValue
     private Long id;
@@ -44,6 +42,11 @@ public class Organization extends BaseTime {
 
     @Formula("(SELECT sum(b.amount) FROM blockchain b INNER JOIN member m ON m.id = b.member_id WHERE m.organization_id = id)")
     private Long sumOfMemberTokens;
+
+    @Setter
+    @Embedded
+    @Column(nullable = false)
+    private BaseTime baseTime;
 
     @Builder
     public Organization(String name, OrganizationType organizationType, String emailEndpoint) {

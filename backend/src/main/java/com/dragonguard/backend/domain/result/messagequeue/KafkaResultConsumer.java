@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -26,30 +26,29 @@ import java.util.stream.Collectors;
 public class KafkaResultConsumer {
 
     private final ResultService resultService;
+    private final ObjectMapper objectMapper;
 
     @KafkaListener(topics = "gitrank.to.backend.result", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        Map<Object, Object> map = new HashMap<>();
-        ObjectMapper mapper = new ObjectMapper();
+        Map<Object, Object> map = null;
+
         try {
-            map = mapper.readValue(message, new TypeReference<Map<Object, Object>>() {
+            map = objectMapper.readValue(message, new TypeReference<Map<Object, Object>>() {
             });
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        if (map.isEmpty()) {
-            return;
-        }
+        } catch (JsonProcessingException e) {}
+
+        if (Objects.isNull(map)) return;
 
         List<Map<String, String>> results = (List<Map<String, String>>) map.get("result");
         List<ClientResultResponse> result = results.stream()
                 .map(o -> new ClientResultResponse(o.get("name")))
                 .collect(Collectors.toList());
 
-        Map<String, Object> getMap = (Map<String, Object>) map.get("search");
-        SearchRequest searchRequest = new SearchRequest((String) getMap.get("name"),
-                SearchType.valueOf(((String) getMap.get("type")).toUpperCase()),
-                (Integer) getMap.get("page"));
+        Map<String, Object> resultMap = (Map<String, Object>) map.get("search");
+
+        SearchRequest searchRequest = new SearchRequest((String) resultMap.get("name"),
+                SearchType.valueOf(((String) resultMap.get("type")).toUpperCase()),
+                (Integer) resultMap.get("page"));
 
         resultService.saveAllResult(result, searchRequest);
     }

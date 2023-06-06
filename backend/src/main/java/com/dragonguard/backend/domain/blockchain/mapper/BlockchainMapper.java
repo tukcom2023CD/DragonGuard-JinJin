@@ -17,7 +17,7 @@ import java.math.BigInteger;
 @Component
 public class BlockchainMapper {
 
-    public Blockchain toEntity(BigInteger amount, Member member, ContractRequest request) {
+    public Blockchain toEntity(final BigInteger amount, final Member member, final ContractRequest request) {
         return Blockchain.builder()
                 .contributeType(ContributeType.valueOf(request.getContributeType().toUpperCase()))
                 .amount(amount)
@@ -26,7 +26,7 @@ public class BlockchainMapper {
                 .build();
     }
 
-    public BlockchainResponse toResponse(Blockchain blockchain) {
+    public BlockchainResponse toResponse(final Blockchain blockchain) {
         return BlockchainResponse.builder()
                 .id(blockchain.getId())
                 .contributeType(blockchain.getContributeType())

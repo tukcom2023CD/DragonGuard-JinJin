@@ -7,10 +7,8 @@ import java.util.Optional;
 
 public interface GitRepoRepository {
     List<GitRepo> findByGithubId(String githubId);
-
     GitRepo save(GitRepo gitRepo);
-
     <S extends GitRepo> List<S> saveAll(Iterable<S> gitRepos);
-
     Optional<GitRepo> findByName(String name);
+    Optional<GitRepo> findById(Long id);
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class IssueMapper {
-    public Issue toEntity(String githubId, Integer issueNum, Integer year) {
+    public Issue toEntity(final String githubId, final Integer issueNum, final Integer year) {
         return Issue.builder()
                 .githubId(githubId)
                 .amount(issueNum)

@@ -1,11 +1,9 @@
 package com.dragonguard.backend.domain.search.entity;
 
+import com.dragonguard.backend.global.audit.AuditListener;
+import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -16,9 +14,9 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Filter extends BaseTime {
+public class Filter implements Auditable {
     @Id
     @GeneratedValue
     private Long id;
@@ -27,8 +25,13 @@ public class Filter extends BaseTime {
     private String filter;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "filters")
+    @JoinColumn
     private Search search;
+
+    @Setter
+    @Embedded
+    @Column(nullable = false)
+    private BaseTime baseTime;
 
     @Builder
     public Filter(String filter, Search search) {
@@ -38,6 +41,5 @@ public class Filter extends BaseTime {
 
     public void organizeSearch(Search search) {
         this.search = search;
-        search.addFilter(this);
     }
 }

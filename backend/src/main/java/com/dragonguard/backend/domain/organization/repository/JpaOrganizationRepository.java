@@ -5,7 +5,6 @@ import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -14,8 +13,7 @@ import java.util.List;
  * @description 조직(회사, 대학교) DB CRUD를 수행하는 클래스
  */
 
-@Repository
 public interface JpaOrganizationRepository extends JpaRepository<Organization, Long>, OrganizationRepository {
     @Query(value = "SELECT o FROM Organization o WHERE o.organizationType = :organizationType")
-    List<Organization> findByType(OrganizationType organizationType, Pageable pageable);
+    List<Organization> findAllByType(OrganizationType organizationType, Pageable pageable);
 }

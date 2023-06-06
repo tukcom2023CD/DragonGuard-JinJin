@@ -15,22 +15,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class GitRepoMemberMapper {
 
-    public GitRepoMember toEntity(GitRepoMemberResponse dto, Member member, GitRepo gitRepo) {
+    public GitRepoMember toEntity(final GitRepoMemberResponse gitRepoMemberResponse, final Member member, final GitRepo gitRepo) {
         return GitRepoMember.builder()
-                .gitRepoContribution(new GitRepoContribution(dto.getCommits(), dto.getAdditions(), dto.getDeletions()))
+                .gitRepoContribution(new GitRepoContribution(gitRepoMemberResponse.getCommits(), gitRepoMemberResponse.getAdditions(), gitRepoMemberResponse.getDeletions()))
                 .gitRepo(gitRepo)
                 .member(member)
                 .build();
     }
 
-    public GitRepoMember toEntity(Member member, GitRepo gitRepo) {
+    public GitRepoMember toEntity(final Member member, final GitRepo gitRepo) {
         return GitRepoMember.builder()
                 .gitRepo(gitRepo)
                 .member(member)
                 .build();
     }
 
-    public GitRepoMemberResponse toResponse(GitRepoMember gitRepoMember) {
+    public GitRepoMemberResponse toResponse(final GitRepoMember gitRepoMember) {
         GitRepoContribution gitRepoContribution = gitRepoMember.getGitRepoContribution();
         return GitRepoMemberResponse.builder()
                 .githubId(gitRepoMember.getMember().getGithubId())

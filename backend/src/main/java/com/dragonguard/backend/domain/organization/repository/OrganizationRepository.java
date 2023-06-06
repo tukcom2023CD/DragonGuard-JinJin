@@ -8,13 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrganizationRepository {
-    List<Organization> findByType(OrganizationType organizationType, Pageable pageable);
-
+    List<Organization> findAllByType(OrganizationType organizationType, Pageable pageable);
     Optional<Organization> findByNameAndOrganizationTypeAndEmailEndpoint(String name, OrganizationType organizationType, String emailEndpoint);
-
     Optional<Organization> findByName(String name);
-
     Organization save(Organization organization);
-
     Optional<Organization> findById(Long id);
 }

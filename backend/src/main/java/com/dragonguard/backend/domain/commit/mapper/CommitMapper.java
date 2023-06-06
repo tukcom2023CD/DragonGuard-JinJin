@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Component
 public class CommitMapper {
 
-    public Commit toEntity(ContributionScrapingResponse contributionScrapingResponse) {
+    public Commit toEntity(final ContributionScrapingResponse contributionScrapingResponse) {
         return Commit.builder()
                 .amount(contributionScrapingResponse.getCommitNum())
                 .year(LocalDate.now().getYear())

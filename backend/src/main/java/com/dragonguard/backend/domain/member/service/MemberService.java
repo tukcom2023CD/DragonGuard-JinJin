@@ -33,9 +33,10 @@ import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.KafkaProducer;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
@@ -48,9 +49,9 @@ import java.util.UUID;
  * @description 멤버관련 서비스 로직을 담당하는 클래스
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService implements EntityLoader<Member, UUID> {
     private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
     private final MemberMapper memberMapper;
@@ -70,14 +71,12 @@ public class MemberService {
         return authService.getLoginUser().getTier();
     }
 
-    @Transactional
     public IdResponse<UUID> saveMember(MemberRequest memberRequest, Role role) {
         return new IdResponse<>(scrapeAndGetSavedMember(memberRequest.getGithubId(), role, AuthStep.GITHUB_ONLY).getId());
     }
 
-    @Transactional
     public Member saveAndRequestClient(String githubId, Role role, AuthStep authStep) {
-        Member member = memberRepository.findMemberByGithubId(githubId)
+        Member member = memberRepository.findByGithubId(githubId)
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, role, authStep)));
         kafkaContributionProducer.send(new KafkaContributionRequest(member.getGithubId()));
         kafkaRepositoryProducer.send(new KafkaRepositoryRequest(member.getGithubId()));
@@ -85,17 +84,16 @@ public class MemberService {
     }
 
     public Member saveAndGet(MemberRequest memberRequest, AuthStep authStep) {
-        return memberRepository.findMemberByGithubId(memberRequest.getGithubId())
+        return memberRepository.findByGithubId(memberRequest.getGithubId())
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(memberRequest, authStep)));
     }
 
-    @Transactional
     public void addMemberCommitAndUpdate(String githubId, String name, String profileImage, Integer contributions) {
         Member member = findMemberByGithubId(githubId, AuthStep.NONE);
         member.updateNameAndImage(name, profileImage);
 
         List<Commit> commits = commitService.findCommits(githubId);
-        List<PullRequest> pullRequests = pullRequestService.findPullrequestByGithubId(githubId);
+        List<PullRequest> pullRequests = pullRequestService.findPullRequestByGithubId(githubId);
         List<Issue> issues = issueService.findIssuesByGithubId(githubId);
 
         if (commits.isEmpty() || pullRequests.isEmpty() || issues.isEmpty()) return;
@@ -109,7 +107,10 @@ public class MemberService {
                 + member.getIssueSumWithRelation();
 
         if (sumWithoutReviews > contributions) {
-            member.deleteAllContributions();
+            commitService.deleteAll(member.getCommits());
+            issueService.deleteAll(member.getIssues());
+            pullRequestService.deleteAll(member.getPullRequests());
+            member.updateTier();
             return;
         }
 
@@ -122,28 +123,24 @@ public class MemberService {
         transactionAndUpdateTier(member);
     }
 
-    @Transactional
     public void updateTier(Member member) {
         if (!member.isWallAddressExist()) return;
         member.updateTier();
     }
 
-    @Transactional
     public void updateContributions() {
-        Member member = getLoginUserWithDatabase();
+        Member member = getLoginUserWithPersistence();
         getContributionSumByScraping(member.getGithubId());
         kafkaContributionProducer.send(new KafkaContributionRequest(member.getGithubId()));
         if (!member.isWallAddressExist()) return;
         transactionAndUpdateTier(member);
     }
 
-    @Transactional
     public MemberResponse getMember() {
-        Member member = getLoginUserWithDatabase();
+        Member member = getLoginUserWithPersistence();
         return getMemberResponse(member);
     }
 
-    @Transactional
     public MemberResponse getMemberResponse(Member member) {
         UUID memberId = member.getId();
         Integer rank = memberQueryRepository.findRankingById(memberId);
@@ -163,54 +160,49 @@ public class MemberService {
         return memberMapper.toResponse(member, rank, amount, organization.getName(), organizationRank);
     }
 
-    @Transactional
     public Member findMemberByGithubId(String githubId, AuthStep authStep) {
-        return memberRepository.findMemberByGithubId(githubId)
+        return memberRepository.findByGithubId(githubId)
                 .orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, authStep));
     }
 
+    @Transactional(readOnly = true)
     public List<MemberRankResponse> getMemberRanking(Pageable pageable) {
         return memberQueryRepository.findRanking(pageable);
     }
 
-    @Transactional
     public void updateWalletAddress(WalletRequest walletRequest) {
-        Member member = getLoginUserWithDatabase();
+        Member member = getLoginUserWithPersistence();
         member.updateWalletAddress(walletRequest.getWalletAddress());
     }
 
-    @Transactional
     public void setTransaction(Member member) {
 
-        Integer commit = member.getCommitSumWithRelation();
-        Integer issue = member.getIssueSumWithRelation();
-        Integer pullRequest = member.getPullRequestSumWithRelation();
+        int commit = member.getCommitSumWithRelation();
+        int issue = member.getIssueSumWithRelation();
+        int pullRequest = member.getPullRequestSumWithRelation();
         Optional<Integer> review = member.getSumOfReviews();
 
         String walletAddress = member.getWalletAddress();
         String githubId = member.getGithubId();
 
-        if (commit <= 0) {
-            return;
-        }
+        if (commit <= 0) return;
+
         blockchainService.setTransaction(
                 new ContractRequest(walletAddress,
                         ContributeType.COMMIT.toString(),
                         BigInteger.valueOf(commit),
                         githubId), member);
 
-        if (issue <= 0) {
-            return;
-        }
+        if (issue <= 0) return;
+
         blockchainService.setTransaction(
                 new ContractRequest(walletAddress,
                         ContributeType.ISSUE.toString(),
                         BigInteger.valueOf(issue),
                         githubId), member);
 
-        if (pullRequest <= 0) {
-            return;
-        }
+        if (pullRequest <= 0) return;
+
         blockchainService.setTransaction(
                 new ContractRequest(walletAddress,
                         ContributeType.PULL_REQUEST.toString(),
@@ -219,9 +211,8 @@ public class MemberService {
 
         review.ifPresent(
                 rv -> {
-                    if (rv <= 0) {
-                        return;
-                    }
+                    if (rv <= 0) return;
+
                     blockchainService.setTransaction(
                             new ContractRequest(walletAddress,
                                     ContributeType.CODE_REVIEW.toString(),
@@ -230,29 +221,29 @@ public class MemberService {
                 });
     }
 
+    @Transactional(readOnly = true)
     public List<MemberRankResponse> getMemberRankingByOrganization(Long organizationId, Pageable pageable) {
         return memberQueryRepository.findRankingByOrganization(organizationId, pageable);
     }
 
-    public Member getEntity(UUID id) {
+    @Override
+    public Member loadEntity(UUID id) {
         return memberRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public Member getLoginUserWithDatabase() {
-        return getEntity(authService.getLoginUser().getId());
+    public Member getLoginUserWithPersistence() {
+        return loadEntity(authService.getLoginUser().getId());
     }
 
-    @Transactional
     public Member scrapeAndGetSavedMember(String githubId, Role role, AuthStep authStep) {
         Member member = saveAndRequestClient(githubId, role, authStep);
         getContributionSumByScraping(githubId);
         return member;
     }
 
-    @Transactional
     public MemberDetailResponse findMemberDetailByGithubId(String githubId) {
-        Member member = memberRepository.findMemberByGithubId(githubId).orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
+        Member member = memberRepository.findByGithubId(githubId).orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
         MemberResponse memberResponse = getMemberResponse(member);
         List<GitOrganization> gitOrganizations = gitOrganizationService.findGitOrganizationByGithubId(githubId);
         List<GitRepo> gitRepos = gitRepoRepository.findByGithubId(githubId);
@@ -263,12 +254,10 @@ public class MemberService {
         return memberMapper.toDetailResponse(memberResponse, gitOrganizations, gitRepos);
     }
 
-    @Transactional
     public void updateBlockchain() {
-        transactionAndUpdateTier(getLoginUserWithDatabase());
+        transactionAndUpdateTier(getLoginUserWithPersistence());
     }
 
-    @Transactional
     public void transactionAndUpdateTier(Member member) {
         setTransaction(member);
         updateTier(member);

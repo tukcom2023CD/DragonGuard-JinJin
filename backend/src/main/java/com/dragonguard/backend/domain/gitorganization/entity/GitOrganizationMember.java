@@ -23,11 +23,11 @@ public class GitOrganizationMember extends BaseTime {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "git_organization_id")
+    @JoinColumn
     private GitOrganization gitOrganization;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "member_id")
+    @JoinColumn
     private Member member;
 
     @Builder

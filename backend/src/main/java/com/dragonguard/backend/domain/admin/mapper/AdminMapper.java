@@ -15,17 +15,17 @@ import java.util.stream.Collectors;
 @Component
 public class AdminMapper {
 
-    public List<AdminOrganizationResponse> toResponseList(List<Organization> entityList) {
-        return entityList.stream()
+    public List<AdminOrganizationResponse> toResponseList(final List<Organization> organizations) {
+        return organizations.stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
-    private AdminOrganizationResponse toResponse(Organization entity) {
+    private AdminOrganizationResponse toResponse(final Organization organization) {
         return AdminOrganizationResponse.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .type(entity.getOrganizationType())
+                .id(organization.getId())
+                .name(organization.getName())
+                .type(organization.getOrganizationType())
                 .build();
     }
 }

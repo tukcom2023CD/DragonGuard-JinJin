@@ -6,12 +6,10 @@ import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMemb
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
+import com.dragonguard.backend.global.audit.AuditListener;
+import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,9 +29,9 @@ import java.util.stream.Collectors;
 
 @Getter
 @Entity
-@SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseTime {
+public class Member implements Auditable {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -49,15 +47,15 @@ public class Member extends BaseTime {
     private String profileImage;
 
     @OneToMany
-    @JoinColumn(name = "member_id")
+    @JoinColumn
     private List<Commit> commits = new ArrayList<>();
 
     @OneToMany
-    @JoinColumn(name = "member_id")
+    @JoinColumn
     private List<Issue> issues = new ArrayList<>();
 
     @OneToMany
-    @JoinColumn(name = "member_id")
+    @JoinColumn
     private List<PullRequest> pullRequests = new ArrayList<>();
 
     private String walletAddress;
@@ -75,7 +73,7 @@ public class Member extends BaseTime {
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "organization_id")
+    @JoinColumn
     private Organization organization;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -89,6 +87,11 @@ public class Member extends BaseTime {
     private Integer sumOfReviews;
 
     private String email;
+
+    @Setter
+    @Embedded
+    @Column(nullable = false)
+    private BaseTime baseTime;
 
     @Formula("(SELECT COALESCE(sum(c.amount), 0) FROM commit c WHERE c.member_id = id)")
     private Integer sumOfCommits;
@@ -236,12 +239,5 @@ public class Member extends BaseTime {
 
     public Optional<Integer> getSumOfPullRequests() {
         return Optional.ofNullable(sumOfPullRequests);
-    }
-
-    public void deleteAllContributions() {
-        this.commits.forEach(Commit::delete);
-        this.issues.forEach(Issue::delete);
-        this.pullRequests.forEach(PullRequest::delete);
-        updateTier();
     }
 }

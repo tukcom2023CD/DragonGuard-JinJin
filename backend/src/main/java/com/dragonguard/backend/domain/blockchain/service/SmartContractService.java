@@ -24,7 +24,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TransactionService {
+public class SmartContractService {
     private final BlockchainProperties properties;
     private final Caver caver;
     private final AbstractKeyring keyring;

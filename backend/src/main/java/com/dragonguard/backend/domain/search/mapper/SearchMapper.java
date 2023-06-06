@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class SearchMapper {
-    public Search toEntity(SearchRequest searchRequest) {
+    public Search toSearch(final SearchRequest searchRequest) {
         List<String> filters = searchRequest.getFilters();
         return Search.builder()
                 .name(searchRequest.getName())
@@ -25,13 +25,13 @@ public class SearchMapper {
                 .build();
     }
 
-    private List<Filter> toFilterList(List<String> filters) {
+    private List<Filter> toFilterList(final List<String> filters) {
         return filters.stream()
-                .map(this::toFilterEntity)
+                .map(this::toFilter)
                 .collect(Collectors.toList());
     }
 
-    private Filter toFilterEntity(String filter) {
+    private Filter toFilter(final String filter) {
         return Filter.builder()
                 .filter(filter)
                 .build();

@@ -8,9 +8,12 @@ import com.dragonguard.backend.domain.blockchain.mapper.BlockchainMapper;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.AuthService;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -22,36 +25,34 @@ import java.util.stream.Collectors;
  * @description 블록체인 관련 DB 요청 및 TrasactionService의 함수들의 호출을 담당하는 클래스
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
-public class BlockchainService {
+public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private final BlockchainRepository blockchainRepository;
-    private final TransactionService transactionService;
+    private final SmartContractService smartContractService;
     private final BlockchainMapper blockchainMapper;
     private final AuthService authService;
     @Value("#{'${admin}'.split(',')}")
     private List<String> admins;
 
-    public void setTransaction(ContractRequest request, Member member) {
+    public void setTransaction(final ContractRequest request, final Member member) {
         UUID memberId = member.getId();
         if (blockchainRepository.existsByMemberId(memberId)) {
-            List<Blockchain> blockchains = blockchainRepository.findByMemberId(memberId);
+            List<Blockchain> blockchains = blockchainRepository.findAllByMemberId(memberId);
             long sum = blockchains.stream()
                     .filter(b -> b.getContributeType().equals(ContributeType.valueOf(request.getContributeType())))
                     .mapToLong(b -> Long.parseLong(String.valueOf(b.getAmount())))
                     .sum();
 
-            Long num = Long.parseLong(String.valueOf(request.getAmount())) - sum;
-            if (num <= 0) {
-                return;
-            }
+            long num = Long.parseLong(String.valueOf(request.getAmount())) - sum;
+            if (num <= 0) return;
             request.setAmount(BigInteger.valueOf(num));
         }
 
         if (request.getAmount().equals(BigInteger.ZERO)) return;
 
-        transactionService.transfer(request);
-        BigInteger amount = transactionService.balanceOf(request.getAddress());
+        smartContractService.transfer(request);
+        BigInteger amount = smartContractService.balanceOf(request.getAddress());
 
         if (amount.equals(request.getAmount())) {
             blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));
@@ -62,9 +63,16 @@ public class BlockchainService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<BlockchainResponse> getBlockchainList() {
-        return blockchainRepository.findByMemberId(authService.getLoginUser().getId()).stream()
+        return blockchainRepository.findAllByMemberId(authService.getLoginUser().getId()).stream()
                 .map(blockchainMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Blockchain loadEntity(final Long id) {
+        return blockchainRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

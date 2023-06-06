@@ -12,7 +12,6 @@ import java.util.Optional;
  * @description GitRepoMember 관련 DB와의 CRUD를 담당하는 클래스
  */
 
-@Repository
 public interface JpaGitRepoMemberRepository extends JpaRepository<GitRepoMember, Long>, GitRepoMemberRepository {
 
     @Query(value = "SELECT grm FROM GitRepoMember grm, GitRepo gr WHERE gr.id = :gitRepo AND grm.member.githubId = :member")

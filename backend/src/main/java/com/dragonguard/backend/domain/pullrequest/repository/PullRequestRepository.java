@@ -7,10 +7,9 @@ import java.util.Optional;
 
 public interface PullRequestRepository {
     boolean existsByGithubIdAndYear(String githubId, Integer year);
-
     Optional<PullRequest> findByGithubIdAndYear(String githubId, Integer year);
-
-    List<PullRequest> findByGithubId(String githubId);
-
+    List<PullRequest> findAllByGithubId(String githubId);
     PullRequest save(PullRequest pullRequest);
+    Optional<PullRequest> findById(Long id);
+    void deleteAll(Iterable<? extends PullRequest> entities);
 }

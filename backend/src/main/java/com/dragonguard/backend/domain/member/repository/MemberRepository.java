@@ -6,13 +6,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface MemberRepository {
-    Optional<Member> findMemberByGithubId(String githubId);
-
+    Optional<Member> findByGithubId(String githubId);
     String findRefreshTokenById(UUID id);
-
     void updateRefreshToken(UUID id, String token);
-
     Optional<Member> findById(UUID id);
-
-    <S extends Member> S save(S entity);
+    Member save(Member member);
 }

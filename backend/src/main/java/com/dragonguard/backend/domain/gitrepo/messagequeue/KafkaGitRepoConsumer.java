@@ -20,26 +20,25 @@ import java.util.*;
 @RequiredArgsConstructor
 public class KafkaGitRepoConsumer {
     private final GitRepoMemberService gitRepoMemberService;
+    private final ObjectMapper objectMapper;
 
     @KafkaListener(topics = "gitrank.to.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        Map<String, Map<String, Object>> map = new HashMap<>();
-        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Map<String, Object>> map = null;
+
         try {
-            map = mapper.readValue(message, new TypeReference<Map<String, Map<String, Object>>>() {});
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        if (map.isEmpty()) {
-            return;
-        }
+            map = objectMapper.readValue(message, new TypeReference<Map<String, Map<String, Object>>>() {});
+        } catch (JsonProcessingException e) {}
+
+        if (Objects.isNull(map)) return;
+
         List<GitRepoMemberResponse> list = new ArrayList<>();
         String gitRepo = null;
 
         for (Object key :  map.keySet()) {
             Map<String, Object> resultMap = map.get(key);
             list.add(new GitRepoMemberResponse((String)key, (Integer)resultMap.get("commits"), (Integer)resultMap.get("addition"), (Integer)resultMap.get("deletion")));
-            gitRepo = (String)resultMap.get("gitRepo");
+            gitRepo = (String) resultMap.get("gitRepo");
         }
         gitRepoMemberService.updateOrSaveAll(list, gitRepo);
     }

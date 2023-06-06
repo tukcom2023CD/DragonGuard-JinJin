@@ -14,21 +14,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class ResultMapper {
 
-    public Result toEntity(ClientResultResponse clientResultResponse, Long searchId) {
+    public Result toEntity(final ClientResultResponse clientResultResponse, final Long searchId) {
         return Result.builder()
                 .name(clientResultResponse.getFull_name())
                 .searchId(searchId)
                 .build();
     }
 
-    public Result toEntity(UserResponse userResponse, Long searchId) {
+    public Result toEntity(final UserResponse userResponse, final Long searchId) {
         return Result.builder()
                 .name(userResponse.getLogin())
                 .searchId(searchId)
                 .build();
     }
 
-    public ResultResponse toResponse(Result result) {
+    public ResultResponse toResponse(final Result result) {
         return ResultResponse.builder()
                 .id(result.getId())
                 .name(result.getName())

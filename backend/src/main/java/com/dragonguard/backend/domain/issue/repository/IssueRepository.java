@@ -7,10 +7,9 @@ import java.util.Optional;
 
 public interface IssueRepository {
     List<Issue> findByGithubId(String githubId);
-
     boolean existsByGithubIdAndYear(String githubId, Integer year);
-
     Optional<Issue> findByGithubIdAndYear(String githubId, Integer year);
-
     Issue save(Issue issue);
+    Optional<Issue> findById(Long id);
+    void deleteAll(Iterable<? extends Issue> entities);
 }

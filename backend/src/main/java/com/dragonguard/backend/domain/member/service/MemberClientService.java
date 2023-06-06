@@ -15,9 +15,8 @@ import com.dragonguard.backend.domain.member.dto.response.client.*;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -30,8 +29,7 @@ import java.util.stream.Collectors;
  * @description WebClient로의 요청을 처리하는 Service
  */
 
-@Service
-@Transactional
+@TransactionService
 @RequiredArgsConstructor
 public class MemberClientService {
     private final GithubClient<MemberClientRequest, MemberCommitResponse> memberCommitClient;
@@ -49,7 +47,7 @@ public class MemberClientService {
     private final GitRepoMemberRepository gitRepoMemberRepository;
     private final GitRepoMemberMapper gitRepoMemberMapper;
 
-    public void addMemberContribution(Member member) {
+    public void addMemberContribution(final Member member) {
         int year = LocalDate.now().getYear();
         String githubId = member.getGithubId();
         String githubToken = member.getGithubToken();
@@ -64,7 +62,7 @@ public class MemberClientService {
         pullRequestService.savePullRequests(githubId, pullRequestNum, year);
     }
 
-    public void addMemberGitRepoAndGitOrganization(Member member) {
+    public void addMemberGitRepoAndGitOrganization(final Member member) {
         int year = LocalDate.now().getYear();
         String githubId = member.getGithubId();
         String githubToken = member.getGithubToken();
@@ -81,7 +79,7 @@ public class MemberClientService {
         gitOrganizationService.saveGitOrganizations(memberOrganizationNames, member);
     }
 
-    public void saveGitRepos(Set<String> gitRepoNames, Member member) {
+    public void saveGitRepos(final Set<String> gitRepoNames, final Member member) {
         Set<GitRepo> gitRepos = gitRepoNames.stream()
                 .map(name -> gitRepoRepository.findByName(name).orElseGet(() -> gitRepoMapper.toEntity(name)))
                 .collect(Collectors.toSet());

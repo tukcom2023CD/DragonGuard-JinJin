@@ -4,8 +4,9 @@ import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.issue.mapper.IssueMapper;
 import com.dragonguard.backend.domain.issue.repository.IssueRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,14 +16,13 @@ import java.util.List;
  * @description issue Entity의 서비스 로직을 담당하는 클래스
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
-public class IssueService {
+public class IssueService implements EntityLoader<Issue, Long> {
     private final IssueRepository issueRepository;
     private final IssueMapper issueMapper;
 
-    @Transactional
-    public void saveIssues(String githubId, Integer issueNum, Integer year) {
+    public void saveIssues(final String githubId, final Integer issueNum, final Integer year) {
         if (issueRepository.existsByGithubIdAndYear(githubId, year)) {
             Issue issue = issueRepository.findByGithubIdAndYear(githubId, year).orElseThrow(EntityNotFoundException::new);
             issue.updateIssueNum(issueNum);
@@ -31,7 +31,19 @@ public class IssueService {
         issueRepository.save(issueMapper.toEntity(githubId, issueNum, year));
     }
 
-    public List<Issue> findIssuesByGithubId(String githubId) {
+
+    @Transactional(readOnly = true)
+    public List<Issue> findIssuesByGithubId(final String githubId) {
         return issueRepository.findByGithubId(githubId);
+    }
+
+    @Override
+    public Issue loadEntity(final Long id) {
+        return issueRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public void deleteAll(final List<Issue> issues) {
+        issueRepository.deleteAll(issues);
     }
 }

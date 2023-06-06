@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GitOrganizationMapper {
-    public GitOrganization toEntity(String name, Member member) {
+    public GitOrganization toEntity(final String name, final Member member) {
         return GitOrganization.builder()
                 .name(name)
                 .member(member)

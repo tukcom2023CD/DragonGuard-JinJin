@@ -1,13 +1,11 @@
 package com.dragonguard.backend.domain.gitrepomember.entity;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
 import com.dragonguard.backend.domain.member.entity.Member;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.dragonguard.backend.global.audit.AuditListener;
+import com.dragonguard.backend.global.audit.Auditable;
+import com.dragonguard.backend.global.audit.BaseTime;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -19,23 +17,28 @@ import java.util.Objects;
 
 @Getter
 @Entity
-@SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GitRepoMember extends BaseTime {
+public class GitRepoMember implements Auditable {
     @Id
     @GeneratedValue
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "git_repo_id")
+    @JoinColumn
     private GitRepo gitRepo;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "member_id")
+    @JoinColumn
     private Member member;
 
     @Embedded
     private GitRepoContribution gitRepoContribution;
+
+    @Setter
+    @Embedded
+    @Column(nullable = false)
+    private BaseTime baseTime;
 
     @Builder
     public GitRepoMember(GitRepo gitRepo, Member member, GitRepoContribution gitRepoContribution) {

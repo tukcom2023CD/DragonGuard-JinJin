@@ -3,7 +3,7 @@ package com.dragonguard.backend.domain.blockchain.controller;
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
-import com.dragonguard.backend.domain.blockchain.service.TransactionService;
+import com.dragonguard.backend.domain.blockchain.service.SmartContractService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class BlockchainControllerTest extends RestDocumentTest {
     @MockBean
     private BlockchainService blockchainService;
     @MockBean
-    private TransactionService transactionService;
+    private SmartContractService smartContractService;
 
     @Test
     @DisplayName("블록체인 부여 기록 리스트 조회")

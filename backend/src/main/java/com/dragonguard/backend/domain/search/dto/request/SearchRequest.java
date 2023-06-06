@@ -21,12 +21,16 @@ import java.util.List;
 public class SearchRequest {
     @Setter
     private String githubToken;
+
     @NotBlank
     private String name;
+
     @NotNull
     private SearchType type;
+
     @NotNull
     private Integer page;
+
     private List<String> filters = new ArrayList<>();
 
     public SearchRequest(String name, SearchType type, Integer page) {

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
  * @description 블록체인 관련 application.yml의 환경변수를 받아오는 클래스
  */
 
-@Setter
 @Getter
-@ConfigurationProperties(prefix = "blockchain")
+@Setter
 @Component
+@ConfigurationProperties(prefix = "blockchain")
 public class BlockchainProperties {
     private String privateKey;
     private String byteCode;

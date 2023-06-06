@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Component
 public class ContributionMapper {
-    public ContributionScrapingRequest toRequest(String githubId) {
+    public ContributionScrapingRequest toRequest(final String githubId) {
         return ContributionScrapingRequest.builder()
                 .githubId(githubId)
                 .year(LocalDate.now().getYear())

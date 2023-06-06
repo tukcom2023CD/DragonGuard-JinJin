@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GitOrganizationRepository {
-    List<GitOrganization> findByGithubId(String githubId);
-
+    List<GitOrganization> findAllByGithubId(String githubId);
     <S extends GitOrganization> List<S> saveAll(Iterable<S> entities);
-
     Optional<GitOrganization> findByName(String name);
+    Optional<GitOrganization> findById(Long id);
 }

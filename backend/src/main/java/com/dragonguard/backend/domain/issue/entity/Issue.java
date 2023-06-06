@@ -1,16 +1,11 @@
 package com.dragonguard.backend.domain.issue.entity;
 
+import com.dragonguard.backend.global.audit.AuditListener;
+import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -20,18 +15,27 @@ import java.util.Objects;
 
 @Getter
 @Entity
-@SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Issue extends BaseTime {
+public class Issue implements Auditable {
+
     @Id
     @GeneratedValue
     private Long id;
+
     @Column(nullable = false, unique = true)
     private String githubId;
+
     @Column(nullable = false)
     private Integer amount;
+
     @Column(nullable = false)
     private Integer year;
+
+    @Setter
+    @Embedded
+    @Column(nullable = false)
+    private BaseTime baseTime;
 
     @Builder
     public Issue(String githubId, Integer amount, Integer year) {

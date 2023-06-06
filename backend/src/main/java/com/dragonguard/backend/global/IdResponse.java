@@ -2,10 +2,13 @@ package com.dragonguard.backend.global;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+/**
+ * @author 김승진
+ * @description id만 response 할 때 쓰이는 dto
+ */
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class IdResponse<T> {
     private T id;

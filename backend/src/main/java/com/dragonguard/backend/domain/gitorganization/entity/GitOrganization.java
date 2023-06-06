@@ -1,11 +1,10 @@
 package com.dragonguard.backend.domain.gitorganization.entity;
 
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.audit.AuditListener;
+import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,8 +18,9 @@ import java.util.Objects;
 
 @Getter
 @Entity
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GitOrganization extends BaseTime {
+public class GitOrganization implements Auditable {
 
     @Id
     @GeneratedValue
@@ -31,6 +31,11 @@ public class GitOrganization extends BaseTime {
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "gitOrganization")
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
+
+    @Setter
+    @Embedded
+    @Column(nullable = false)
+    private BaseTime baseTime;
 
     @Builder
     public GitOrganization(String name, Member member) {

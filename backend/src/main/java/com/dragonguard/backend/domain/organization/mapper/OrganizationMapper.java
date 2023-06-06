@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrganizationMapper {
-    public Organization toEntity(OrganizationRequest organizationRequest) {
+    public Organization toEntity(final OrganizationRequest organizationRequest) {
         return Organization.builder()
                 .name(organizationRequest.getName())
                 .organizationType(organizationRequest.getOrganizationType())
@@ -20,7 +20,7 @@ public class OrganizationMapper {
                 .build();
     }
 
-    public OrganizationResponse toResponse(Organization organization) {
+    public OrganizationResponse toResponse(final Organization organization) {
         return OrganizationResponse.builder()
                 .id(organization.getId())
                 .name(organization.getName())

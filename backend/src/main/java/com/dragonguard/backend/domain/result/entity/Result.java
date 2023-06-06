@@ -1,13 +1,11 @@
 package com.dragonguard.backend.domain.result.entity;
 
+import com.dragonguard.backend.global.audit.AuditListener;
+import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -17,9 +15,9 @@ import java.util.Objects;
 
 @Getter
 @Entity
-@SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Result extends BaseTime {
+public class Result implements Auditable {
 
     @Id
     @GeneratedValue
@@ -29,6 +27,11 @@ public class Result extends BaseTime {
     private String name;
 
     private Long searchId;
+
+    @Setter
+    @Embedded
+    @Column(nullable = false)
+    private BaseTime baseTime;
 
     @Builder
     public Result(String name, Long searchId) {

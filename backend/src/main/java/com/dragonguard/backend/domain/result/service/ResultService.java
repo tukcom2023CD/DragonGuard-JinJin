@@ -6,8 +6,10 @@ import com.dragonguard.backend.domain.result.mapper.ResultMapper;
 import com.dragonguard.backend.domain.result.repository.ResultRepository;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.service.SearchService;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,14 +18,14 @@ import java.util.List;
  * @description 검색 결과에 대한 서비스 로직을 수행하는 클래스
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
-public class ResultService {
+public class ResultService implements EntityLoader<Result, Long> {
     private final ResultRepository resultRepository;
     private final ResultMapper resultMapper;
     private final SearchService searchService;
 
-    public void saveAllResult(List<ClientResultResponse> results, SearchRequest searchRequest) {
+    public void saveAllResult(final List<ClientResultResponse> results, final SearchRequest searchRequest) {
         Long searchId = searchService.getEntityByRequest(searchRequest).getId();
         List<Result> resultList = resultRepository.findAllBySearchId(searchId);
 
@@ -32,5 +34,10 @@ public class ResultService {
                 .map(result -> resultMapper.toEntity(result, searchId))
                 .filter(r -> !resultList.contains(r))
                 .forEach(resultRepository::save);
+    }
+
+    @Override
+    public Result loadEntity(final Long id) {
+        return resultRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 }

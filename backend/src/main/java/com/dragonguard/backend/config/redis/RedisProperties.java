@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Setter
 @Getter
-@ConfigurationProperties(prefix = "spring.redis")
 @Component
+@ConfigurationProperties(prefix = "spring.redis")
 public class RedisProperties {
     private String host;
     private int port;

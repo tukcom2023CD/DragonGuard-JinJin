@@ -1,12 +1,10 @@
 package com.dragonguard.backend.domain.blockchain.entity;
 
-import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.global.SoftDelete;
 import com.dragonguard.backend.domain.member.entity.Member;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.dragonguard.backend.global.audit.AuditListener;
+import com.dragonguard.backend.global.audit.Auditable;
+import com.dragonguard.backend.global.audit.BaseTime;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -18,9 +16,9 @@ import java.math.BigInteger;
 
 @Getter
 @Entity
-@SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Blockchain extends BaseTime {
+public class Blockchain implements Auditable {
     @Id
     @GeneratedValue
     private Long id;
@@ -31,10 +29,15 @@ public class Blockchain extends BaseTime {
     private BigInteger amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn
     private Member member;
 
     private String address;
+
+    @Setter
+    @Embedded
+    @Column(nullable = false)
+    private BaseTime baseTime;
 
     @Builder
     public Blockchain(ContributeType contributeType, BigInteger amount, Member member, String address) {

@@ -1,12 +1,10 @@
 package com.dragonguard.backend.domain.gitrepo.entity;
 
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
-import com.dragonguard.backend.global.SoftDelete;
+import com.dragonguard.backend.global.audit.AuditListener;
+import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -20,9 +18,9 @@ import java.util.Set;
 
 @Getter
 @Entity
-@SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GitRepo extends BaseTime {
+public class GitRepo implements Auditable {
 
     @Id
     @GeneratedValue
@@ -35,6 +33,11 @@ public class GitRepo extends BaseTime {
 
     @OneToMany(mappedBy = "gitRepo", cascade = CascadeType.PERSIST)
     private Set<GitRepoMember> gitRepoMembers = new HashSet<>();
+
+    @Setter
+    @Embedded
+    @Column(nullable = false)
+    private BaseTime baseTime;
 
     @Builder
     public GitRepo(String name, Set<GitRepoMember> gitRepoMembers) {

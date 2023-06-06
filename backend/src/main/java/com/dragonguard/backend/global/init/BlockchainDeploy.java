@@ -1,6 +1,6 @@
 package com.dragonguard.backend.global.init;
 
-import com.dragonguard.backend.domain.blockchain.service.TransactionService;
+import com.dragonguard.backend.domain.blockchain.service.SmartContractService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -16,10 +16,10 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 @DependsOn("blockchainConfig")
 public class BlockchainDeploy {
-    private final TransactionService transactionService;
+    private final SmartContractService smartContractService;
 
     @PostConstruct
     public void initDeploy() {
-        transactionService.deploy();
+        smartContractService.deploy();
     }
 }

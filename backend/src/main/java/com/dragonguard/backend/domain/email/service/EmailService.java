@@ -3,86 +3,85 @@ package com.dragonguard.backend.domain.email.service;
 import com.dragonguard.backend.domain.email.dto.request.EmailRequest;
 import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
 import com.dragonguard.backend.domain.email.entity.Email;
-import com.dragonguard.backend.domain.email.exception.EmailException;
+import com.dragonguard.backend.domain.email.mapper.EmailMapper;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
-public class EmailService {
+public class EmailService implements EntityLoader<Email, Long> {
     private final EmailRepository emailRepository;
     private final JavaMailSender javaMailSender;
     private final MemberService memberService;
+    private final EmailMapper emailMapper;
+    private static final String emailSubject = "GitRank 조직 인증";
     private static final int MIN = 10000;
     private static final int MAX = 99999;
 
-    @Transactional
     public IdResponse<Long> sendEmail() {
-        Member member = memberService.getLoginUserWithDatabase();
+        Member member = memberService.getLoginUserWithPersistence();
         String memberEmail = member.getEmail();
 
         if (memberEmail == null) {
             throw new IllegalStateException();
         }
 
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         int random = new Random().nextInt(MAX - MIN) + MIN;
-        try {
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-            mimeMessageHelper.setTo(memberEmail);
-            mimeMessageHelper.setSubject("GitRank 조직 인증");
-            mimeMessageHelper.setText(getEmailText(random), true);
-            javaMailSender.send(mimeMessage);
 
-            Email email = Email.builder()
-                    .code(random)
-                    .memberId(member.getId())
-                    .build();
+        sendEmail(memberEmail, random);
 
-            Email savedEmail = emailRepository.save(email);
+        Email savedEmail = emailRepository.save(emailMapper.toEntity(random, member.getId()));
 
-            return new IdResponse<>(savedEmail.getId());
-        } catch (MessagingException e) {
-            throw new EmailException();
-        }
+        return new IdResponse<>(savedEmail.getId());
     }
 
-    @Transactional
-    public void deleteCode(Long id) {
-        getEntity(id).delete();
+    public void deleteCode(final Long id) {
+        emailRepository.deleteById(id);
     }
 
-    @Transactional
-    public CheckCodeResponse isCodeMatching(EmailRequest emailRequest) {
+    public CheckCodeResponse isCodeMatching(final EmailRequest emailRequest) {
         Long id = emailRequest.getId();
-        boolean flag = getEntity(id).getCode().equals(emailRequest.getCode());
+        boolean flag = loadEntity(id).getCode().equals(emailRequest.getCode());
 
         if (!flag) return new CheckCodeResponse(false);
 
         deleteCode(id);
-        memberService.getLoginUserWithDatabase().finishAuth();
+        memberService.getLoginUserWithPersistence().finishAuth();
 
         return new CheckCodeResponse(true);
     }
 
-    private Email getEntity(Long id) {
+    private void sendEmail(final String memberEmail, final int random) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(javaMailSender.createMimeMessage(), false, "UTF-8");
+            mimeMessageHelper.setTo(memberEmail);
+            mimeMessageHelper.setSubject(emailSubject);
+            mimeMessageHelper.setText(getEmailText(random), true);
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+        }
+    }
+
+    @Override
+    public Email loadEntity(final Long id) {
         return emailRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private String getEmailText(Integer code) {
+    private String getEmailText(final Integer code) {
         return "<html><head></head><body><div>다음 번호를 입력해주세요:\n<div><h1>" + code + "</h1></body></html>";
     }
 }

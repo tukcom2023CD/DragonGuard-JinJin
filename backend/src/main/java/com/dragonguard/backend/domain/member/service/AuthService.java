@@ -7,11 +7,10 @@ import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
@@ -21,15 +20,14 @@ import java.util.UUID;
  * @description 멤버 인증 관련 서비스 로직을 담당하는 클래스
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
 public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtValidator jwtValidator;
 
-    @Transactional
-    public JwtToken refreshToken(String oldRefreshToken, String oldAccessToken) {
+    public JwtToken refreshToken(final String oldRefreshToken, final String oldAccessToken) {
         if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
             throw new IllegalArgumentException();
         }

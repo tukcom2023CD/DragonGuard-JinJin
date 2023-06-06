@@ -9,6 +9,4 @@ import org.springframework.stereotype.Repository;
  * @description issue Entity의 DB CRUD를 담당하는 클래스
  */
 
-@Repository
-public interface JpaIssueRepository extends JpaRepository<Issue, Long>, IssueRepository {
-}
+public interface JpaIssueRepository extends JpaRepository<Issue, Long>, IssueRepository {}

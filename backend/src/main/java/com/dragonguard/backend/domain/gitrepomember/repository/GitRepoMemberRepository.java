@@ -9,14 +9,10 @@ import java.util.Optional;
 
 public interface GitRepoMemberRepository {
     List<GitRepoMember> findAllByGitRepo(GitRepo gitRepo);
-
     boolean existsByGitRepoAndMember(GitRepo gitRepo, Member member);
-
     Optional<GitRepoMember> findByGitRepoAndMember(GitRepo gitRepo, Member member);
-
     Optional<GitRepoMember> findByNameAndMemberName(String gitRepo, String member);
-
     <S extends GitRepoMember> List<S> saveAll(Iterable<S> entities);
-
     GitRepoMember save(GitRepoMember gitRepoMember);
+    Optional<GitRepoMember> findById(Long id);
 }

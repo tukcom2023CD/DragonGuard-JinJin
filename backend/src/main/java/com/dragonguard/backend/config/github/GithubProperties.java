@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Setter
 @Getter
-@ConfigurationProperties(prefix = "github")
 @Component
+@ConfigurationProperties(prefix = "github")
 public class GithubProperties {
     private String url;
     private String versionKey;

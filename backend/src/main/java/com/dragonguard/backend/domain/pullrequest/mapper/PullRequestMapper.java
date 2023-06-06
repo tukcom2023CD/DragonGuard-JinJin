@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PullRequestMapper {
-    public PullRequest toEntity(String githubId, Integer pullRequestNum, Integer year) {
+    public PullRequest toEntity(final String githubId, final Integer pullRequestNum, final Integer year) {
         return PullRequest.builder()
                 .githubId(githubId)
                 .amount(pullRequestNum)
