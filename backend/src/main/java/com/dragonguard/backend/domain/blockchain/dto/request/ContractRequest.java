@@ -16,9 +16,7 @@ import java.math.BigInteger;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContractRequest {
-    private String address;
     private String contributeType;
     @Setter
     private BigInteger amount;
-    private String githubId;
 }

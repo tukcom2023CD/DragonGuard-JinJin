@@ -1,4 +1,4 @@
-package com.dragonguard.backend.global.init;
+package com.dragonguard.backend.config.init;
 
 import com.dragonguard.backend.domain.blockchain.service.SmartContractService;
 import lombok.RequiredArgsConstructor;

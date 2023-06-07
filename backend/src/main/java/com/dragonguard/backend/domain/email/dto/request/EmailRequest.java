@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Setter
@@ -16,7 +15,7 @@ import javax.validation.constraints.NotNull;
 public class EmailRequest {
     @NotNull
     private Long id;
-    @Max(99999)
-    @Min(10000)
+
+    @Range(min = 10000, max = 99999)
     private Integer code;
 }

@@ -39,6 +39,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         UUID memberId = member.getId();
         if (blockchainRepository.existsByMemberId(memberId)) {
             List<Blockchain> blockchains = blockchainRepository.findAllByMemberId(memberId);
+
             long sum = blockchains.stream()
                     .filter(b -> b.getContributeType().equals(ContributeType.valueOf(request.getContributeType())))
                     .mapToLong(b -> Long.parseLong(String.valueOf(b.getAmount())))
@@ -46,13 +47,14 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
             long num = Long.parseLong(String.valueOf(request.getAmount())) - sum;
             if (num <= 0) return;
+
             request.setAmount(BigInteger.valueOf(num));
         }
 
         if (request.getAmount().equals(BigInteger.ZERO)) return;
 
-        smartContractService.transfer(request);
-        BigInteger amount = smartContractService.balanceOf(request.getAddress());
+        smartContractService.transfer(request, member.getWalletAddress());
+        BigInteger amount = smartContractService.balanceOf(member.getWalletAddress());
 
         if (amount.equals(request.getAmount())) {
             blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));

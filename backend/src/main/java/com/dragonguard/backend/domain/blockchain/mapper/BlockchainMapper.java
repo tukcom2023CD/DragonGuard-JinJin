@@ -21,7 +21,6 @@ public class BlockchainMapper {
         return Blockchain.builder()
                 .contributeType(ContributeType.valueOf(request.getContributeType().toUpperCase()))
                 .amount(amount)
-                .address(request.getAddress())
                 .member(member)
                 .build();
     }

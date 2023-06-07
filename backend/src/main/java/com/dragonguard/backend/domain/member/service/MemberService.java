@@ -116,7 +116,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
         member.updateSumOfReviews(contributions - sumWithoutReviews);
 
-        if (!member.isWallAddressExist()) {
+        if (!member.isWalletAddressExist()) {
             updateTier(member);
             return;
         }
@@ -124,7 +124,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public void updateTier(Member member) {
-        if (!member.isWallAddressExist()) return;
+        if (!member.isWalletAddressExist()) return;
         member.updateTier();
     }
 
@@ -132,7 +132,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Member member = getLoginUserWithPersistence();
         getContributionSumByScraping(member.getGithubId());
         kafkaContributionProducer.send(new KafkaContributionRequest(member.getGithubId()));
-        if (!member.isWallAddressExist()) return;
+        if (!member.isWalletAddressExist()) return;
         transactionAndUpdateTier(member);
     }
 
@@ -182,42 +182,35 @@ public class MemberService implements EntityLoader<Member, UUID> {
         int pullRequest = member.getPullRequestSumWithRelation();
         Optional<Integer> review = member.getSumOfReviews();
 
-        String walletAddress = member.getWalletAddress();
-        String githubId = member.getGithubId();
-
         if (commit <= 0) return;
 
         blockchainService.setTransaction(
-                new ContractRequest(walletAddress,
+                new ContractRequest(
                         ContributeType.COMMIT.toString(),
-                        BigInteger.valueOf(commit),
-                        githubId), member);
+                        BigInteger.valueOf(commit)), member);
 
         if (issue <= 0) return;
 
         blockchainService.setTransaction(
-                new ContractRequest(walletAddress,
+                new ContractRequest(
                         ContributeType.ISSUE.toString(),
-                        BigInteger.valueOf(issue),
-                        githubId), member);
+                        BigInteger.valueOf(issue)), member);
 
         if (pullRequest <= 0) return;
 
         blockchainService.setTransaction(
-                new ContractRequest(walletAddress,
+                new ContractRequest(
                         ContributeType.PULL_REQUEST.toString(),
-                        BigInteger.valueOf(pullRequest),
-                        githubId), member);
+                        BigInteger.valueOf(pullRequest)), member);
 
         review.ifPresent(
                 rv -> {
                     if (rv <= 0) return;
 
                     blockchainService.setTransaction(
-                            new ContractRequest(walletAddress,
+                            new ContractRequest(
                                     ContributeType.CODE_REVIEW.toString(),
-                                    BigInteger.valueOf(rv),
-                                    githubId), member);
+                                    BigInteger.valueOf(rv)), member);
                 });
     }
 

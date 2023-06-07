@@ -20,13 +20,13 @@ import java.io.IOException;
 @Configuration
 @RequiredArgsConstructor
 public class BlockchainConfig {
-    private final BlockchainProperties properties;
+    private final BlockchainProperties blockchainProperties;
     private static final String BAOBAB_TESTNET = "https://api.baobab.klaytn.net:8651";
 
     @Bean
     public AbstractKeyring keyring() {
         try {
-            return KeyringFactory.decrypt(properties.getKeyring(), properties.getPassword());
+            return KeyringFactory.decrypt(blockchainProperties.getKeyring(), blockchainProperties.getPassword());
         } catch (CipherException | IOException e) {
             throw new BlockchainException();
         }
@@ -40,7 +40,7 @@ public class BlockchainConfig {
     @Bean
     public Contract contract() {
         try {
-            return caver().contract.create(properties.getAbi());
+            return caver().contract.create(blockchainProperties.getAbi());
         } catch (IOException e) {
             throw new BlockchainException();
         }

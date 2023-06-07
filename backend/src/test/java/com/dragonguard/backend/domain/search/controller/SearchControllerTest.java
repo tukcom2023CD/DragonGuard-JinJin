@@ -1,7 +1,6 @@
 package com.dragonguard.backend.domain.search.controller;
 
 import com.dragonguard.backend.domain.result.dto.response.ResultResponse;
-import com.dragonguard.backend.domain.search.controller.SearchController;
 import com.dragonguard.backend.domain.search.service.SearchService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisplayName("search 컨트롤러의")
 @WebMvcTest(SearchController.class)
 class SearchControllerTest extends RestDocumentTest {
     @MockBean

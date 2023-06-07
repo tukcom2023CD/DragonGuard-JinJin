@@ -15,11 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "blockchain")
 public class BlockchainProperties {
-    private String privateKey;
     private String byteCode;
     private String password;
-    private String walletKey;
-    private String contractAddress;
     private String abi;
     private String keyring;
 }

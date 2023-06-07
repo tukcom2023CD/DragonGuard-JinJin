@@ -57,10 +57,10 @@ public class Organization implements Auditable {
         }
     }
 
-    public void addMember(Member member, String email) {
-        if (email.endsWith(emailEndpoint)) {
+    public void addMember(Member member, String emailAddress) {
+        if (emailAddress.endsWith(emailEndpoint)) {
             this.members.add(member);
-            member.updateOrganization(this, email);
+            member.updateOrganization(this, emailAddress);
         }
     }
 

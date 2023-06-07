@@ -40,10 +40,10 @@ public class Blockchain implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Blockchain(ContributeType contributeType, BigInteger amount, Member member, String address) {
+    public Blockchain(ContributeType contributeType, BigInteger amount, Member member) {
         this.contributeType = contributeType;
         this.amount = amount;
         this.member = member;
-        this.address = address;
+        this.address = member.getWalletAddress();
     }
 }

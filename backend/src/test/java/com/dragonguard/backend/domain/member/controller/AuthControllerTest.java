@@ -1,7 +1,6 @@
 package com.dragonguard.backend.domain.member.controller;
 
 import com.dragonguard.backend.config.security.jwt.JwtToken;
-import com.dragonguard.backend.domain.member.controller.AuthController;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +19,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisplayName("auth 컨트롤러의")
 @WebMvcTest(AuthController.class)
 class AuthControllerTest extends RestDocumentTest {
     @MockBean

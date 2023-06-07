@@ -1,6 +1,5 @@
 package com.dragonguard.backend.domain.member.controller;
 
-import com.dragonguard.backend.domain.member.controller.MemberController;
 import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
@@ -33,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisplayName("member 컨트롤러의")
 @WebMvcTest(MemberController.class)
 class MemberControllerTest extends RestDocumentTest {
     @MockBean

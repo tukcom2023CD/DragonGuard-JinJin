@@ -1,12 +1,11 @@
 package com.dragonguard.backend.domain.organization.controller;
 
-import com.dragonguard.backend.domain.organization.controller.OrganizationController;
-import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.service.OrganizationService;
+import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +26,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisplayName("organization 컨트롤러의")
 @WebMvcTest(OrganizationController.class)
 class OrganizationControllerTest extends RestDocumentTest {
     @MockBean

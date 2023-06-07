@@ -25,7 +25,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SmartContractService {
-    private final BlockchainProperties properties;
+    private final BlockchainProperties blockchainProperties;
     private final Caver caver;
     private final AbstractKeyring keyring;
     private final Contract contract;
@@ -39,14 +39,14 @@ public class SmartContractService {
             options.setGas(BigInteger.valueOf(3000000));
             options.setFeeDelegation(true);
             options.setFeePayer(keyring.getAddress());
-            contract.deploy(options, properties.getByteCode(), "Gitter", "GTR", BigInteger.valueOf(10000000000000L));
+            contract.deploy(options, blockchainProperties.getByteCode(), "Gitter", "GTR", BigInteger.valueOf(10000000000000L));
         } catch (Exception e) {
             e.printStackTrace();
             throw new BlockchainException();
         }
     }
 
-    public void transfer(ContractRequest request) {
+    public void transfer(ContractRequest request, String walletAddress) {
         SendOptions options = new SendOptions();
         options.setFrom(keyring.getAddress());
         options.setGas(BigInteger.valueOf(3000000));
@@ -54,9 +54,8 @@ public class SmartContractService {
         options.setFeePayer(keyring.getAddress());
 
         try {
-            contract.send(options, "set", request.getAddress(), request.getAmount(), request.getContributeType());
+            contract.send(options, "set", walletAddress, request.getAmount(), request.getContributeType());
         } catch (Exception e) {
-            e.printStackTrace();
             throw new BlockchainException();
         }
     }
@@ -68,7 +67,6 @@ public class SmartContractService {
             return new BigInteger(objectToString(info.get(0).getValue()));
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new BlockchainException();
         }
     }

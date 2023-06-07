@@ -1,7 +1,9 @@
 package com.dragonguard.backend.support.fixture.member.dto;
 
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public enum MemberRequestFixture {
     SAMPLE1(
             "ohksj77"
@@ -17,10 +19,6 @@ public enum MemberRequestFixture {
     );
 
     private String githubId;
-
-    MemberRequestFixture(String githubId) {
-        this.githubId = githubId;
-    }
 
     public MemberRequest toMemberRequest() {
         return new MemberRequest(githubId);

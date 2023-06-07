@@ -33,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisplayName("gitrepo 컨트롤러의")
 @WebMvcTest(GitRepoController.class)
 class GitRepoControllerTest extends RestDocumentTest {
 

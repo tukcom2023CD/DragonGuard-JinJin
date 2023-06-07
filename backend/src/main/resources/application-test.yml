@@ -5,44 +5,57 @@ server:
       enabled: true
       force: true
     context-path: /api
+
 spring:
   config:
     import:
       - classpath:env.yml
+
   main:
     allow-bean-definition-overriding: true
+
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
-    generate-ddl: true
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:test
     username: sa
     password:
+
   h2:
     console:
       enabled: true
+
   cache:
     type: redis
     redis:
-      time-to-live: 60000
+      time-to-live: 1000
       cache-null-values: true
+
   redis:
     host: localhost
     port: 6379
+
   kafka:
+    bootstrap-servers: localhost:9092
     producer:
       bootstrap-servers: localhost:9092
     consumer:
-      group-id: gitrank
       bootstrap-servers: localhost:9092
-      enable-auto-commit: false
-      auto-offset-reset: earliest
+      group-id: gitrank
     listener:
-      ack-mode: manual
-    bootstrap-servers: localhost:9092
+      missing-topics-fatal: false
+
+  flyway:
+    enabled: false
+
   sql:
     init:
       mode: never

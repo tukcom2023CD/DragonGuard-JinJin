@@ -1,6 +1,5 @@
 package com.dragonguard.backend.domain.email.controller;
 
-import com.dragonguard.backend.domain.email.controller.EmailController;
 import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
 import com.dragonguard.backend.domain.email.service.EmailService;
 import com.dragonguard.backend.global.IdResponse;
@@ -21,6 +20,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisplayName("email 컨트롤러의")
 @WebMvcTest(EmailController.class)
 class EmailControllerTest extends RestDocumentTest {
     @MockBean

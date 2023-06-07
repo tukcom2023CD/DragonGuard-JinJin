@@ -86,7 +86,7 @@ public class Member implements Auditable {
 
     private Integer sumOfReviews;
 
-    private String email;
+    private String emailAddress;
 
     @Setter
     @Embedded
@@ -181,9 +181,9 @@ public class Member implements Auditable {
         this.refreshToken = refreshToken;
     }
 
-    public void updateOrganization(Organization organization, String email) {
+    public void updateOrganization(Organization organization, String emailAddress) {
         this.organization = organization;
-        this.email = email;
+        this.emailAddress = emailAddress;
     }
 
     public void finishAuth() {
@@ -198,10 +198,6 @@ public class Member implements Auditable {
         this.sumOfReviews = sumOfReviews;
     }
 
-    public void updateAuthStep(AuthStep authStep) {
-        this.authStep = authStep;
-    }
-
     public int getCommitSumWithRelation() {
         return this.commits.stream().mapToInt(Commit::getAmount).sum();
     }
@@ -214,12 +210,12 @@ public class Member implements Auditable {
         return this.pullRequests.stream().mapToInt(PullRequest::getAmount).sum();
     }
 
-    public boolean isWallAddressExist() {
+    public boolean isWalletAddressExist() {
         return StringUtils.hasText(this.getWalletAddress());
     }
 
     public String getBlockchainUrl() {
-        if (!StringUtils.hasText(this.walletAddress)) {
+        if (!isWalletAddressExist()) {
             return null;
         }
         return "https://baobab.scope.klaytn.com/account/" + this.walletAddress + "?tabId=txList";
