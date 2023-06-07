@@ -1,14 +1,16 @@
-기술 관점 | [시스템 관점](README_system.md)
-
 # DragonGuard-JinJin
-## 블록체인 기반 깃 랭크 시스템
+## 블록체인 기반 깃 랭크 시스템 - _GitRank_
+
 개인별로 또는 조직별로 깃허브를 얼마나 활용하는지 경쟁하며 순위를 매기는 기능을 제공
-## 시스템 아키텍처
 
+## 시스템 개요
+- Github는 무료 Git 저장소로, 2023년 1월에 사용자 수 1억 명을 돌파했다. 하지만 유저들의 Github 활용도를 한 눈에 비교하거나 역량을 정량적으로 판단하기 어려웠다.
+- 이에 따라 개발자들에 대한 현재 개발 역량뿐만 아니라 타인 또는 Repositoy, 대학 및 기관 등 여러 방면에서 필터링한 정보를 파악하는 시스템을 정량적인 분석과 평가를 거쳐 건전한 경쟁 심리를 유도하고자 한다.
+
+## System Architecture
 ![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/5dbf7b2e-cbc6-4412-882f-f20d848627a8)
+## Cloud Architecture
 ![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/dbbbd6cf-5d62-4b17-91cb-292dee847027)
-
-
 ## CI / CD Flow
 ![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/7065b430-d8ee-4244-97b7-c1c7b24acf10)
 <details>
@@ -23,6 +25,19 @@
 <img src=https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/a86bd15c-b3e1-440d-8b20-54b5f91285ec/>
 </div>
 </details>
+
+## 기능 명세
+
+|분류|기능|분류|기능| 
+|:----:|:----:|:----:|:----:|
+|`랭킹`|조직 전체 랭킹|`상세 조회`|Repository 내부 기여도 조회|
+|`랭킹`|조직 타입별 랭킹|`상세 조회`|사용자 상세 조회|
+|`랭킹`|조직 내부의 개인 랭킹|`상세 조회`|블록체인 토큰 부여 내역 조회|
+|`랭킹`|전체 사용자 랭킹|`인증`|Github 소셜 로그인 (OAuth2, Jwt)|
+|`비교`|Repository 정보 비교|`인증`|KLIP 인증|
+|`비교`|Repository 내부 기여자 비교|`인증`|조직 인증 (이메일)|
+|`검색`|Repository 필터링별 검색|`관리자`|조직 등록 요청 관리|
+|`검색`|사용자 필터링별 검색|`도우미`|FAQ & 토큰 부여 기준 확인|
 
 ## 협업 툴
 <a href="https://seoullian.atlassian.net/jira/software/projects/DJ/boards/2/backlog" target="_blank"> Jira URL</a>
