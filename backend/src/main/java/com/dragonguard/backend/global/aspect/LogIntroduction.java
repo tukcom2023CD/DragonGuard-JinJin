@@ -12,16 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogIntroduction {
     @Pointcut("execution(* com.dragonguard.backend..*Controller*.*(..))")
-    public void allController() {
-    }
+    public void allController() {}
 
     @Pointcut("execution(* com.dragonguard.backend..*Service*.*(..))")
-    public void allService() {
-    }
+    public void allService() {}
 
     @Pointcut("execution(* com.dragonguard.backend..*Repository*.*(..))")
-    public void allRepository() {
-    }
+    public void allRepository() {}
 
     @Before("allController()")
     public void controllerLog(JoinPoint joinPoint) {

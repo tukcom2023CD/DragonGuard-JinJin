@@ -12,7 +12,7 @@ import java.lang.annotation.Retention;
  * @description 관리자 권한 확인 Annotation
  */
 
-@Target({ElementType.METHOD, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
 @PreAuthorize("hasRole('ADMIN')")
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
 public @interface Admin {}

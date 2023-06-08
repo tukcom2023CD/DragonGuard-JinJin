@@ -5,6 +5,7 @@ import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
 import com.dragonguard.backend.config.security.jwt.JwtValidator;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.exception.CookieException;
 import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.global.service.TransactionService;
@@ -29,7 +30,7 @@ public class AuthService {
 
     public JwtToken refreshToken(final String oldRefreshToken, final String oldAccessToken) {
         if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
-            throw new IllegalArgumentException();
+            throw new CookieException();
         }
 
         if (!jwtTokenProvider.validateToken(oldRefreshToken)) {

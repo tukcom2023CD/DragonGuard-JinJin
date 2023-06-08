@@ -29,16 +29,17 @@ public class SmartContractService {
     private final Caver caver;
     private final AbstractKeyring keyring;
     private final Contract contract;
+    private final ObjectMapper objectMapper;
 
     public void deploy() {
         caver.wallet.add(keyring);
+        SendOptions options = new SendOptions();
+        options.setFrom(keyring.getAddress());
+        options.setGas(BigInteger.valueOf(3000000));
+        options.setFeeDelegation(true);
+        options.setFeePayer(keyring.getAddress());
 
         try {
-            SendOptions options = new SendOptions();
-            options.setFrom(keyring.getAddress());
-            options.setGas(BigInteger.valueOf(3000000));
-            options.setFeeDelegation(true);
-            options.setFeePayer(keyring.getAddress());
             contract.deploy(options, blockchainProperties.getByteCode(), "Gitter", "GTR", BigInteger.valueOf(10000000000000L));
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +73,7 @@ public class SmartContractService {
     }
 
     private String objectToString(Object value) throws JsonProcessingException {
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(value);
     }
 }

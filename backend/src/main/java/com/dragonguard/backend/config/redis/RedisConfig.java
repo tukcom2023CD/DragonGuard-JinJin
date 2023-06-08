@@ -14,10 +14,8 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.Duration;
-import java.util.Objects;
 
 
 /**
@@ -54,11 +52,5 @@ public class RedisConfig {
                 .entryTtl(Duration.ofMinutes(3L));
 
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(cf).cacheDefaults(redisCacheConfiguration).build();
-    }
-
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 3) // 3시간
-    public void evictAll() {
-        cacheManager(redisConnectionFactory()).getCacheNames()
-                .forEach(cacheName -> Objects.requireNonNull(cacheManager(redisConnectionFactory()).getCache(cacheName)).clear());
     }
 }

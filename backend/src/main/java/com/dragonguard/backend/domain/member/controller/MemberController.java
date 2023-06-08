@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,19 +34,19 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody @Valid MemberRequest memberRequest) {
-        return ResponseEntity.ok(memberService.saveMember(memberRequest, Role.ROLE_USER));
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberService.saveMember(memberRequest, Role.ROLE_USER));
     }
 
     @PostMapping("/contributions")
     public ResponseEntity<Void> updateContribution() {
         memberService.updateContributions();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/blockchains")
     public ResponseEntity<Void> updateBlockchain() {
         memberService.updateBlockchain();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/tier")
@@ -69,7 +70,7 @@ public class MemberController {
     @PostMapping("/wallet-address")
     public ResponseEntity<Void> updateWalletAddress(@RequestBody @Valid WalletRequest walletRequest) {
         memberService.updateWalletAddress(walletRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/me")

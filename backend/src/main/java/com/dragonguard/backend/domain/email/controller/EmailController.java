@@ -29,6 +29,6 @@ public class EmailController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCode(@PathVariable Long id) {
         emailService.deleteCode(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
