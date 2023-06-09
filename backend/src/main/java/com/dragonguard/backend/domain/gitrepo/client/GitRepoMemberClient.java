@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.gitrepo.client;
 
 import com.dragonguard.backend.config.github.GithubProperties;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
-import com.dragonguard.backend.domain.gitrepomember.dto.response.client.GitRepoMemberClientResponse;
+import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.global.GithubClient;
 import org.springframework.http.HttpHeaders;

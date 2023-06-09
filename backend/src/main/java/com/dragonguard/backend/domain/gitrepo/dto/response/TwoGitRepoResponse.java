@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.gitrepo.dto.response;
 
-import com.dragonguard.backend.domain.gitrepo.dto.response.client.GitRepoResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

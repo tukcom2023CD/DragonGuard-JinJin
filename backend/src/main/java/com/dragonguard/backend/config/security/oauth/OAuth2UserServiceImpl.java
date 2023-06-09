@@ -1,8 +1,8 @@
 package com.dragonguard.backend.config.security.oauth;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
-import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaContributionRequest;
-import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaRepositoryRequest;
+import com.dragonguard.backend.domain.member.dto.kafka.KafkaContributionRequest;
+import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;

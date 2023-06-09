@@ -1,9 +1,9 @@
 package com.dragonguard.backend.config.blockchain;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
 /**
  * @author 김승진
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
  */
 
 @Getter
-@Setter
-@Component
+@ConstructorBinding
+@RequiredArgsConstructor
 @ConfigurationProperties(prefix = "blockchain")
 public class BlockchainProperties {
-    private String byteCode;
-    private String password;
-    private String abi;
-    private String keyring;
+    private final String byteCode;
+    private final String password;
+    private final String abi;
+    private final String keyring;
 }

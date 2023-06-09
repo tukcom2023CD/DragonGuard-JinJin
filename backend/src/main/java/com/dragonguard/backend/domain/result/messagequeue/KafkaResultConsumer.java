@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.result.messagequeue;
 
-import com.dragonguard.backend.domain.result.dto.response.client.ClientResultResponse;
+import com.dragonguard.backend.domain.result.dto.client.ClientResultResponse;
 import com.dragonguard.backend.domain.result.service.ResultService;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.entity.SearchType;

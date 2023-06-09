@@ -16,10 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +43,14 @@ public class Member implements Auditable {
 
     private String profileImage;
 
+    private String walletAddress;
+
+    @Enumerated(EnumType.STRING)
+    private Tier tier;
+
+    @Enumerated(EnumType.STRING)
+    private AuthStep authStep;
+
     @OneToMany
     @JoinColumn
     private List<Commit> commits = new ArrayList<>();
@@ -58,33 +63,23 @@ public class Member implements Auditable {
     @JoinColumn
     private List<PullRequest> pullRequests = new ArrayList<>();
 
-    private String walletAddress;
-
-    @Enumerated(EnumType.STRING)
-    private Tier tier;
-
-    @Enumerated(EnumType.STRING)
-    private AuthStep authStep;
-
     @OneToMany(mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Organization organization;
 
-    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
 
     private String refreshToken;
 
     private String githubToken;
-
-    private Integer sumOfReviews;
 
     private String emailAddress;
 
@@ -101,6 +96,8 @@ public class Member implements Auditable {
 
     @Formula("(SELECT COALESCE(sum(pr.amount), 0) FROM pull_request pr WHERE pr.member_id = id)")
     private Integer sumOfPullRequests;
+
+    private Integer sumOfReviews;
 
     @Formula("(SELECT COALESCE(sum(b.amount), 0) FROM blockchain b WHERE b.member_id = id)")
     private Long sumOfTokens;
@@ -150,18 +147,26 @@ public class Member implements Auditable {
 
     public void updateTier() {
         if (sumOfTokens != null) {
-            this.tier = Tier.checkTier(sumOfTokens);
+            this.tier = checkTier(sumOfTokens);
             return;
         }
         if (blockchains.isEmpty()) {
-            this.tier = Tier.checkTier(0L);
+            this.tier = checkTier(0L);
             return;
         }
-        Long amount = this.blockchains.stream()
+
+        long amount = this.blockchains.stream()
                 .map(Blockchain::getAmount)
                 .mapToLong(b -> Long.parseLong(b.toString()))
                 .sum();
-        this.tier = Tier.checkTier(amount);
+        this.tier = checkTier(amount);
+    }
+
+    public Tier checkTier(long amount) {
+        return Arrays.stream(Tier.values())
+                .filter(t -> t.getTierPredicate().test(amount))
+                .findFirst()
+                .orElse(Tier.SPROUT);
     }
 
     public void updateWalletAddress(String walletAddress) {

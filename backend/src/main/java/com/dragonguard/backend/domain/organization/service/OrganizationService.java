@@ -47,7 +47,7 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
     public IdResponse<Long> findAndAddMember(final AddMemberRequest addMemberRequest) {
         Organization organization = loadEntity(addMemberRequest.getOrganizationId());
         Member member = memberService.getLoginUserWithPersistence();
-        organization.addMember(member, addMemberRequest.getEmail().trim());
+        organization.addMember(member, addMemberRequest.getEmail().strip());
         return emailService.sendEmail();
     }
 

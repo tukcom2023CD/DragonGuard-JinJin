@@ -1,14 +1,15 @@
 package com.dragonguard.backend.domain.gitrepo.service;
 
+import com.dragonguard.backend.domain.gitrepo.dto.kafka.ClosedIssueKafkaResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.client.GitRepoClientRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.response.client.GitRepoClientResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.response.client.GitRepoResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepoLanguage;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
@@ -17,7 +18,7 @@ import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCom
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.TwoGitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.Week;
-import com.dragonguard.backend.domain.gitrepomember.dto.response.client.GitRepoMemberClientResponse;
+import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
@@ -96,9 +97,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return new TwoGitRepoResponse(getOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()), getOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
     }
 
-    public void updateClosedIssues(final String name, final Integer closedIssue) {
-        GitRepo gitRepo = gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
-        gitRepo.updateClosedIssueNum(closedIssue);
+    public void updateClosedIssues(final ClosedIssueKafkaResponse closedIssueKafkaResponse) {
+        GitRepo gitRepo = gitRepoRepository.findByName(closedIssueKafkaResponse.getName())
+                .orElseThrow(EntityNotFoundException::new);
+
+        gitRepo.updateClosedIssueNum(closedIssueKafkaResponse.getClosedIssue());
     }
 
     private GitRepoResponse getOneRepoResponse(final String repoName) {

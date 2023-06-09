@@ -5,6 +5,7 @@ import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.commit.service.CommitService;
+import com.dragonguard.backend.domain.contribution.dto.kafka.ContributionKafkaResponse;
 import com.dragonguard.backend.domain.contribution.service.ContributionService;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
@@ -14,8 +15,8 @@ import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.issue.service.IssueService;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
-import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaContributionRequest;
-import com.dragonguard.backend.domain.member.dto.request.kafka.KafkaRepositoryRequest;
+import com.dragonguard.backend.domain.member.dto.kafka.KafkaContributionRequest;
+import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
@@ -88,9 +89,10 @@ public class MemberService implements EntityLoader<Member, UUID> {
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(memberRequest, authStep)));
     }
 
-    public void addMemberCommitAndUpdate(String githubId, String name, String profileImage, Integer contributions) {
+    public void addMemberCommitAndUpdate(ContributionKafkaResponse contributionKafkaResponse) {
+        String githubId = contributionKafkaResponse.getGithubId();
         Member member = findMemberByGithubId(githubId, AuthStep.NONE);
-        member.updateNameAndImage(name, profileImage);
+        member.updateNameAndImage(contributionKafkaResponse.getName(), contributionKafkaResponse.getProfileImage());
 
         List<Commit> commits = commitService.findCommits(githubId);
         List<PullRequest> pullRequests = pullRequestService.findPullRequestByGithubId(githubId);
@@ -106,10 +108,13 @@ public class MemberService implements EntityLoader<Member, UUID> {
                 + member.getPullRequestSumWithRelation()
                 + member.getIssueSumWithRelation();
 
+        Integer contributions = contributionKafkaResponse.getContribution();
+
         if (sumWithoutReviews > contributions) {
             commitService.deleteAll(member.getCommits());
             issueService.deleteAll(member.getIssues());
             pullRequestService.deleteAll(member.getPullRequests());
+            member.updateSumOfReviews(0);
             member.updateTier();
             return;
         }
@@ -148,12 +153,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         updateTier(member);
         Organization organization = member.getOrganization();
 
-        if (organization == null) {
-            return memberMapper.toResponse(
-                    member,
-                    rank,
-                    amount);
-        }
+        if (organization == null) return memberMapper.toResponse(member, rank, amount);
 
         Integer organizationRank = organizationQueryRepository.findRankingByMemberId(memberId);
 
@@ -182,36 +182,21 @@ public class MemberService implements EntityLoader<Member, UUID> {
         int pullRequest = member.getPullRequestSumWithRelation();
         Optional<Integer> review = member.getSumOfReviews();
 
-        if (commit <= 0) return;
+        if (checkAndTransaction(member, commit, ContributeType.COMMIT)) return;
+        if (checkAndTransaction(member, issue, ContributeType.ISSUE)) return;
+        if (checkAndTransaction(member, pullRequest, ContributeType.PULL_REQUEST)) return;
+        review.ifPresent(rv -> checkAndTransaction(member, rv, ContributeType.CODE_REVIEW));
+    }
+
+    public boolean checkAndTransaction(Member member, int commit, ContributeType contributeType) {
+        if (commit <= 0) return true;
 
         blockchainService.setTransaction(
                 new ContractRequest(
-                        ContributeType.COMMIT.toString(),
+                        contributeType.toString(),
                         BigInteger.valueOf(commit)), member);
 
-        if (issue <= 0) return;
-
-        blockchainService.setTransaction(
-                new ContractRequest(
-                        ContributeType.ISSUE.toString(),
-                        BigInteger.valueOf(issue)), member);
-
-        if (pullRequest <= 0) return;
-
-        blockchainService.setTransaction(
-                new ContractRequest(
-                        ContributeType.PULL_REQUEST.toString(),
-                        BigInteger.valueOf(pullRequest)), member);
-
-        review.ifPresent(
-                rv -> {
-                    if (rv <= 0) return;
-
-                    blockchainService.setTransaction(
-                            new ContractRequest(
-                                    ContributeType.CODE_REVIEW.toString(),
-                                    BigInteger.valueOf(rv)), member);
-                });
+        return false;
     }
 
     @Transactional(readOnly = true)
