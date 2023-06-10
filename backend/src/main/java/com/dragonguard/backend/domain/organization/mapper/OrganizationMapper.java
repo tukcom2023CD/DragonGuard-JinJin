@@ -3,29 +3,15 @@ package com.dragonguard.backend.domain.organization.mapper;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.domain.organization.entity.Organization;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
 /**
  * @author 김승진
- * @description 조직(회사, 대학교) Entity와 dto 사이의 변환을 도와주는 클래스
+ * @description 조직 Entity와 dto의 변환을 돕는 클래스
  */
 
-@Component
-public class OrganizationMapper {
-    public Organization toEntity(final OrganizationRequest organizationRequest) {
-        return Organization.builder()
-                .name(organizationRequest.getName())
-                .organizationType(organizationRequest.getOrganizationType())
-                .emailEndpoint(organizationRequest.getEmailEndpoint().strip())
-                .build();
-    }
-
-    public OrganizationResponse toResponse(final Organization organization) {
-        return OrganizationResponse.builder()
-                .id(organization.getId())
-                .name(organization.getName())
-                .organizationType(organization.getOrganizationType())
-                .emailEndpoint(organization.getEmailEndpoint())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface OrganizationMapper {
+    Organization toEntity(final OrganizationRequest organizationRequest);
+    OrganizationResponse toResponse(final Organization organization);
 }

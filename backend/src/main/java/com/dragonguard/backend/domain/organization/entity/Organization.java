@@ -53,7 +53,7 @@ public class Organization implements Auditable {
         this.name = name;
         this.organizationType = organizationType;
         if (validateEmailEndpoint(emailEndpoint)) {
-            this.emailEndpoint = emailEndpoint;
+            this.emailEndpoint = emailEndpoint.strip();
         }
     }
 

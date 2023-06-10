@@ -5,7 +5,8 @@ import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.member.entity.Member;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.math.BigInteger;
 
@@ -14,24 +15,11 @@ import java.math.BigInteger;
  * @description 블록체인 Entity와 dto의 변환을 돕는 클래스
  */
 
-@Component
-public class BlockchainMapper {
-
-    public Blockchain toEntity(final BigInteger amount, final Member member, final ContractRequest request) {
-        return Blockchain.builder()
-                .contributeType(ContributeType.valueOf(request.getContributeType().toUpperCase()))
-                .amount(amount)
-                .member(member)
-                .build();
-    }
-
-    public BlockchainResponse toResponse(final Blockchain blockchain) {
-        return BlockchainResponse.builder()
-                .id(blockchain.getId())
-                .contributeType(blockchain.getContributeType())
-                .amount(blockchain.getAmount())
-                .githubId(blockchain.getMember().getGithubId())
-                .memberId(blockchain.getMember().getId())
-                .build();
-    }
+@Mapper(componentModel = "spring", imports = {ContributeType.class})
+public interface BlockchainMapper {
+    @Mapping(target = "contributeType", expression = "java(ContributeType.valueOf(request.getContributeType()))")
+    Blockchain toEntity(final BigInteger amount, final Member member, final ContractRequest request);
+    @Mapping(target = "memberId", source = "blockchain.member.id")
+    @Mapping(target = "githubId", source = "blockchain.member.githubId")
+    BlockchainResponse toResponse(final Blockchain blockchain);
 }

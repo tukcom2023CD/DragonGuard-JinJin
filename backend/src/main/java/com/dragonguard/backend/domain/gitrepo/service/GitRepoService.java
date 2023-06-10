@@ -60,7 +60,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
             gitRepoRequest.setGithubToken(authService.getLoginUser().getGithubToken());
         }
         if (gitRepo.isEmpty()) {
-            gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
+            gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest.getName()));
             return requestToGithub(gitRepoRequest);
         }
         if (gitRepo.get().getGitRepoMembers().isEmpty() || gitRepo.get().getGitRepoMembers().stream().findFirst().get().getGitRepoContribution() == null) {
@@ -107,7 +107,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private GitRepoResponse getOneRepoResponse(final String repoName) {
         Integer year = LocalDate.now().getYear();
         String githubToken = authService.getLoginUser().getGithubToken();
-        GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(new GitRepoRequest(repoName, year))));
+        GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(repoName)));
         GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
         if (repo.getClosedIssueNum() != null) {
             repoResponse.setClosed_issues_count(repo.getClosedIssueNum());
