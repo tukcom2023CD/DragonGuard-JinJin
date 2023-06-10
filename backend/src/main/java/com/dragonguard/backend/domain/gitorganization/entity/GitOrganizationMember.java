@@ -1,9 +1,9 @@
 package com.dragonguard.backend.domain.gitorganization.entity;
 
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
-import com.dragonguard.backend.domain.member.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,12 +22,12 @@ public class GitOrganizationMember implements Auditable {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private GitOrganization gitOrganization;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @Setter

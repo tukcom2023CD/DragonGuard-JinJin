@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.result.service;
 
-import com.dragonguard.backend.domain.result.dto.response.client.ClientResultResponse;
+import com.dragonguard.backend.domain.result.dto.client.ClientResultResponse;
 import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.result.mapper.ResultMapper;
 import com.dragonguard.backend.domain.result.repository.ResultRepository;

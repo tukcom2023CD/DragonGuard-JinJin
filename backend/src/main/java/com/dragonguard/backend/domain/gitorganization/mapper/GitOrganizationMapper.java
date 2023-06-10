@@ -2,19 +2,17 @@ package com.dragonguard.backend.domain.gitorganization.mapper;
 
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.member.entity.Member;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * @author 김승진
- * @description 깃허브 Organization을 만들어주는 Mappper
+ * @description 깃허브 조직 Entity와 dto의 변환을 돕는 클래스
  */
 
-@Component
-public class GitOrganizationMapper {
-    public GitOrganization toEntity(final String name, final Member member) {
-        return GitOrganization.builder()
-                .name(name)
-                .member(member)
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface GitOrganizationMapper {
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "member", source = "member")
+    GitOrganization toEntity(final String name, final Member member);
 }

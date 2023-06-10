@@ -31,7 +31,7 @@ public class Search implements Auditable {
 
     private Integer page;
 
-    @OneToMany(mappedBy = "search")
+    @OneToMany(mappedBy = "search", cascade = CascadeType.PERSIST)
     private List<Filter> filters = new ArrayList<>();
 
     @Setter

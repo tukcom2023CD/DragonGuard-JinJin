@@ -1,15 +1,19 @@
 package com.dragonguard.backend.domain.gitrepo.messagequeue;
 
-import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
+import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoKafkaResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoMemberDetailsResponse;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
+import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -22,24 +26,19 @@ public class KafkaGitRepoConsumer {
     private final GitRepoMemberService gitRepoMemberService;
     private final ObjectMapper objectMapper;
 
+    @SneakyThrows(JsonProcessingException.class)
     @KafkaListener(topics = "gitrank.to.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        Map<String, Map<String, Object>> map = null;
+        GitRepoKafkaResponse response = objectMapper.readValue(message, GitRepoKafkaResponse.class);
 
-        try {
-            map = objectMapper.readValue(message, new TypeReference<Map<String, Map<String, Object>>>() {});
-        } catch (JsonProcessingException e) {}
+        List<GitRepoMemberDetailsResponse> result = response.getResult();
 
-        if (Objects.isNull(map)) return;
+        if (Objects.isNull(result) || result.isEmpty()) return;
 
-        List<GitRepoMemberResponse> list = new ArrayList<>();
-        String gitRepo = null;
+        List<GitRepoMemberResponse> list = result.stream()
+                .map(r -> new GitRepoMemberResponse(r.getMember(), r.getCommits(), r.getAddition(), r.getDeletion()))
+                .collect(Collectors.toList());
 
-        for (Object key :  map.keySet()) {
-            Map<String, Object> resultMap = map.get(key);
-            list.add(new GitRepoMemberResponse((String)key, (Integer)resultMap.get("commits"), (Integer)resultMap.get("addition"), (Integer)resultMap.get("deletion")));
-            gitRepo = (String) resultMap.get("gitRepo");
-        }
-        gitRepoMemberService.updateOrSaveAll(list, gitRepo);
+        gitRepoMemberService.updateOrSaveAll(list, result.get(0).getGitRepo());
     }
 }

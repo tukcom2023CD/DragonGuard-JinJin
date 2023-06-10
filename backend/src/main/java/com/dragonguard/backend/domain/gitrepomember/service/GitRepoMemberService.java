@@ -33,18 +33,20 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
     private final GitRepoRepository gitRepoRepository;
     private final GitRepoMemberMapper gitRepoMemberMapper;
 
-    public void updateOrSaveAll(final List<GitRepoMemberResponse> gitRepoResponses, final String gitRepo) {
-        List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepository -> {
-            Member member = memberService.saveAndGet(new MemberRequest(gitRepository.getGithubId()), AuthStep.NONE);
+    public void updateOrSaveAll(final List<GitRepoMemberResponse> gitRepoResponses, final String gitRepoName) {
+        List<GitRepoMember> list = gitRepoResponses.stream().map(gitRepoResponse -> {
+            Member member = memberService.saveAndGet(new MemberRequest(gitRepoResponse.getGithubId()), AuthStep.NONE);
 
-            GitRepo gitRepoEntity = gitRepoRepository.findByName(gitRepo)
+            GitRepo gitRepo = gitRepoRepository.findByName(gitRepoName)
                     .orElseThrow(EntityNotFoundException::new);
 
-            GitRepoMember gitRepoMember = gitRepoMemberMapper.toEntity(gitRepository, member, gitRepoEntity);
+            GitRepoMember gitRepoMember = gitRepoMemberMapper.toEntity(gitRepoResponse, member, gitRepo);
+
             List<GitRepoMember> duplicated =
-                    gitRepoMemberRepository.findAllByGitRepo(gitRepoEntity).stream()
+                    gitRepoMemberRepository.findAllByGitRepo(gitRepo).stream()
                             .filter(gitRepoMember::equals)
                             .collect(Collectors.toList());
+
             if (duplicated.isEmpty()) return gitRepoMember;
             return null;
         }).filter(Objects::nonNull).collect(Collectors.toList());

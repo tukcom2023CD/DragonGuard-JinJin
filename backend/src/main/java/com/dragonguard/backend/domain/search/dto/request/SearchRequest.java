@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,7 +30,7 @@ public class SearchRequest {
     @NotNull
     private Integer page;
 
-    private List<String> filters = new ArrayList<>();
+    private List<String> filters;
 
     public SearchRequest(String name, SearchType type, Integer page) {
         this.name = name;

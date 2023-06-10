@@ -34,7 +34,7 @@ public class Organization implements Auditable {
 
     private String emailEndpoint;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "organization")
+    @OneToMany(mappedBy = "organization")
     private Set<Member> members = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
@@ -53,7 +53,7 @@ public class Organization implements Auditable {
         this.name = name;
         this.organizationType = organizationType;
         if (validateEmailEndpoint(emailEndpoint)) {
-            this.emailEndpoint = emailEndpoint;
+            this.emailEndpoint = emailEndpoint.strip();
         }
     }
 

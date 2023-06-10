@@ -60,14 +60,14 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
             blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));
             return;
         }
-        if (admins.stream().anyMatch(admin -> admin.trim().equals(member.getGithubId()))) {
+        if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
             blockchainRepository.save(blockchainMapper.toEntity(request.getAmount(), member, request));
         }
     }
 
     @Transactional(readOnly = true)
     public List<BlockchainResponse> getBlockchainList() {
-        return blockchainRepository.findAllByMemberId(authService.getLoginUser().getId()).stream()
+        return blockchainRepository.findAllByMemberId(authService.getLoginUserId()).stream()
                 .map(blockchainMapper::toResponse)
                 .collect(Collectors.toList());
     }

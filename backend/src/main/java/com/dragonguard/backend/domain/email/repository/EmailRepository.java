@@ -7,5 +7,4 @@ import java.util.Optional;
 public interface EmailRepository {
     Email save(Email email);
     Optional<Email> findById(Long id);
-    void deleteById(Long id);
 }

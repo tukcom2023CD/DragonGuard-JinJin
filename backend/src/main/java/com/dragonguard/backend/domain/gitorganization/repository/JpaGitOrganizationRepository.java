@@ -1,9 +1,9 @@
 package com.dragonguard.backend.domain.gitorganization.repository;
 
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
+import com.dragonguard.backend.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -14,6 +14,6 @@ import java.util.List;
 
 public interface JpaGitOrganizationRepository extends JpaRepository<GitOrganization, Long>, GitOrganizationRepository {
 
-    @Query("SELECT DISTINCT go FROM GitOrganization go JOIN FETCH go.gitOrganizationMembers gom JOIN FETCH gom.member m WHERE m.githubId = :githubId")
-    List<GitOrganization> findAllByGithubId(String githubId);
+    @Query("SELECT DISTINCT go FROM GitOrganization go JOIN FETCH go.gitOrganizationMembers gom JOIN FETCH gom.member m WHERE m = :member")
+    List<GitOrganization> findAllByMember(Member member);
 }

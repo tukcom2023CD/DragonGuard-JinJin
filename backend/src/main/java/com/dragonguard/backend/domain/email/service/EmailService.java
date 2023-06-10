@@ -48,7 +48,7 @@ public class EmailService implements EntityLoader<Email, Long> {
     }
 
     public void deleteCode(final Long id) {
-        emailRepository.deleteById(id);
+        loadEntity(id).delete();
     }
 
     public CheckCodeResponse isCodeMatching(final EmailRequest emailRequest) {

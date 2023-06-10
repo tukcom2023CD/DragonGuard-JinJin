@@ -10,5 +10,4 @@ public interface ResultRepository {
     boolean existsByNameAndSearchId(String name, Long searchId);
     Result save(Result result);
     Optional<Result> findById(Long id);
-    void deleteAllBySearchId(Long searchId);
 }

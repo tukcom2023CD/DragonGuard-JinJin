@@ -43,10 +43,6 @@ public class GitOrganization implements Auditable {
         addGitOrganizationMember(member);
     }
 
-    public void addGitOrganizationMember(Member member) {
-        this.gitOrganizationMembers.add(new GitOrganizationMember(this, member));
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,5 +54,9 @@ public class GitOrganization implements Auditable {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    private void addGitOrganizationMember(Member member) {
+        this.gitOrganizationMembers.add(new GitOrganizationMember(this, member));
     }
 }

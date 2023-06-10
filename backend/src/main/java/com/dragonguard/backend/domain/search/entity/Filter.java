@@ -24,8 +24,8 @@ public class Filter implements Auditable {
     @Column(nullable = false)
     private String filter;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Search search;
 
     @Setter

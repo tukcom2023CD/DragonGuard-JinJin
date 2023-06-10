@@ -1,12 +1,12 @@
 package com.dragonguard.backend.domain.commit.entity;
 
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 /**
  * @author 김승진
@@ -29,7 +29,9 @@ public class Commit implements Auditable {
     @Column(nullable = false)
     private Integer amount;
 
-    private String githubId;
+    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
 
     @Setter
     @Embedded
@@ -37,26 +39,22 @@ public class Commit implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Commit(Integer year, Integer amount, String githubId) {
+    public Commit(Integer year, Integer amount, Member member) {
         this.year = year;
         this.amount = amount;
-        this.githubId = githubId;
+        this.member = member;
+        organize(member);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Commit commit = (Commit) o;
-        return year.equals(commit.year) && amount.equals(commit.amount) && githubId.equals(commit.githubId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(year, amount, githubId);
+    public boolean customEqualsWithAmount(Commit commit) {
+        return year.equals(commit.year) && amount.equals(commit.amount) && member.getGithubId().equals(commit.member.getGithubId());
     }
 
     public boolean customEquals(Commit commit) {
-        return year.equals(commit.year) && githubId.equals(commit.githubId);
+        return year.equals(commit.year) && member.getGithubId().equals(commit.member.getGithubId());
+    }
+
+    private void organize(Member member) {
+        member.addCommit(this);
     }
 }

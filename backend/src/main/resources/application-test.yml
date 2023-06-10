@@ -39,23 +39,19 @@ spring:
       time-to-live: 1000
       cache-null-values: true
 
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
+    consumer:
+      group-id: gitrank
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+
   redis:
     host: localhost
     port: 6379
 
-  kafka:
-    bootstrap-servers: localhost:9092
-    producer:
-      bootstrap-servers: localhost:9092
-    consumer:
-      bootstrap-servers: localhost:9092
-      group-id: gitrank
-    listener:
-      missing-topics-fatal: false
-
   flyway:
     enabled: false
-
   sql:
     init:
       mode: never

@@ -94,7 +94,7 @@ async def git_repos(git_repos):
         except selenium.common.exceptions.TimeoutException as e:
             print('Error Occured')
         
-        response = {}
+        response = []
         i = 1
         
         while True:
@@ -111,10 +111,11 @@ async def git_repos(git_repos):
                 deletion = DRIVER.find_element(By.CSS_SELECTOR, 
                                                 '#contributors > ol > li:nth-child(' + str(i) + ') > span > h3 > span.f6.d-block.color-fg-muted > span > div > span.color-fg-danger.text-normal')
                 
-                response[member_name.get_attribute('innerText')] = { "commits" : int(commits.get_attribute('innerText').split(' ')[0].replace(',', '')), 
-                                                                    "addition" : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
-                                                                    "deletion" : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', '')),
-                                                                    "gitRepo" : name}
+                response.append({"member" : str(member_name.get_attribute('innerText')),
+                                 "commits" : int(commits.get_attribute('innerText').split(' ')[0].replace(',', '')), 
+                                 "addition" : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
+                                 "deletion" : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', '')),
+                                 "gitRepo" : name})
                 
             except selenium.common.exceptions.NoSuchElementException as e:
                     break
@@ -124,7 +125,7 @@ async def git_repos(git_repos):
         DRIVER.close()
         
         sink = app.topic('gitrank.to.backend.git-repos', value_type=dict)
-        await sink.send(value=response)
+        await sink.send(value={"result" : response})
 
 
 if __name__ == "__main__":

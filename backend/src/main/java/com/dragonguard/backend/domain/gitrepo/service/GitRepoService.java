@@ -1,14 +1,15 @@
 package com.dragonguard.backend.domain.gitrepo.service;
 
+import com.dragonguard.backend.domain.gitrepo.dto.kafka.ClosedIssueKafkaResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.client.GitRepoClientRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.response.client.GitRepoClientResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.response.client.GitRepoResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepoLanguage;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
@@ -17,11 +18,11 @@ import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCom
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.TwoGitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.Week;
-import com.dragonguard.backend.domain.gitrepomember.dto.response.client.GitRepoMemberClientResponse;
+import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
-import com.dragonguard.backend.domain.member.service.AuthService;
+import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.KafkaProducer;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
@@ -46,7 +47,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private final GitRepoMemberMapper gitRepoMemberMapper;
     private final GitRepoRepository gitRepoRepository;
     private final GitRepoMemberService gitRepoMemberService;
-    private final AuthService authService;
+    private final MemberService memberService;
     private final GitRepoMapper gitRepoMapper;
     private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
     private final GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
@@ -56,10 +57,10 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
         if (!StringUtils.hasText(gitRepoRequest.getGithubToken())) {
-            gitRepoRequest.setGithubToken(authService.getLoginUser().getGithubToken());
+            gitRepoRequest.setGithubToken(memberService.getLoginUserWithPersistence().getGithubToken());
         }
         if (gitRepo.isEmpty()) {
-            gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest));
+            gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest.getName()));
             return requestToGithub(gitRepoRequest);
         }
         if (gitRepo.get().getGitRepoMembers().isEmpty() || gitRepo.get().getGitRepoMembers().stream().findFirst().get().getGitRepoContribution() == null) {
@@ -72,7 +73,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
 
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(final GitRepoCompareRequest gitRepoCompareRequest) {
         Integer year = LocalDate.now().getYear();
-        String githubToken = authService.getLoginUser().getGithubToken();
+        String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         String firstRepo = gitRepoCompareRequest.getFirstRepo();
         String secondRepo = gitRepoCompareRequest.getSecondRepo();
 
@@ -96,15 +97,17 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return new TwoGitRepoResponse(getOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()), getOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
     }
 
-    public void updateClosedIssues(final String name, final Integer closedIssue) {
-        GitRepo gitRepo = gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
-        gitRepo.updateClosedIssueNum(closedIssue);
+    public void updateClosedIssues(final ClosedIssueKafkaResponse closedIssueKafkaResponse) {
+        GitRepo gitRepo = gitRepoRepository.findByName(closedIssueKafkaResponse.getName())
+                .orElseThrow(EntityNotFoundException::new);
+
+        gitRepo.updateClosedIssueNum(closedIssueKafkaResponse.getClosedIssue());
     }
 
     private GitRepoResponse getOneRepoResponse(final String repoName) {
         Integer year = LocalDate.now().getYear();
-        String githubToken = authService.getLoginUser().getGithubToken();
-        GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(new GitRepoRequest(repoName, year))));
+        String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
+        GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(repoName)));
         GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
         if (repo.getClosedIssueNum() != null) {
             repoResponse.setClosed_issues_count(repo.getClosedIssueNum());

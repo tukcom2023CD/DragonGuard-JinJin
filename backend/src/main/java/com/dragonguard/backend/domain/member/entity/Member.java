@@ -16,10 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -46,18 +43,6 @@ public class Member implements Auditable {
 
     private String profileImage;
 
-    @OneToMany
-    @JoinColumn
-    private List<Commit> commits = new ArrayList<>();
-
-    @OneToMany
-    @JoinColumn
-    private List<Issue> issues = new ArrayList<>();
-
-    @OneToMany
-    @JoinColumn
-    private List<PullRequest> pullRequests = new ArrayList<>();
-
     private String walletAddress;
 
     @Enumerated(EnumType.STRING)
@@ -66,25 +51,32 @@ public class Member implements Auditable {
     @Enumerated(EnumType.STRING)
     private AuthStep authStep;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private List<Commit> commits = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private List<Issue> issues = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private List<PullRequest> pullRequests = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
     private Organization organization;
 
-    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
 
     private String refreshToken;
 
     private String githubToken;
-
-    private Integer sumOfReviews;
 
     private String emailAddress;
 
@@ -105,22 +97,23 @@ public class Member implements Auditable {
     @Formula("(SELECT COALESCE(sum(b.amount), 0) FROM blockchain b WHERE b.member_id = id)")
     private Long sumOfTokens;
 
+    private Integer sumOfReviews;
+
     @Builder
-    public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage, Role role, AuthStep authStep) {
+    public Member(String name, String githubId, String walletAddress, String profileImage, Role role, AuthStep authStep) {
         this.name = name;
         this.githubId = githubId;
         this.walletAddress = walletAddress;
         this.profileImage = profileImage;
         this.tier = Tier.SPROUT;
         this.authStep = authStep;
-        addCommit(commit);
         if (role != null && role.equals(Role.ROLE_ADMIN)) {
-            this.role.add(Role.ROLE_ADMIN);
+            this.role.add(role);
         }
     }
 
     public void addCommit(Commit commit) {
-        if (commit == null || this.commits.stream().anyMatch(commit::equals)) return;
+        if (commit == null || this.commits.stream().anyMatch(commit::customEqualsWithAmount)) return;
         else if (this.commits.stream().anyMatch(commit::customEquals)) {
             this.commits.stream().filter(commit::customEquals).findFirst().ifPresent(this.commits::remove);
         }
@@ -128,15 +121,15 @@ public class Member implements Auditable {
     }
 
     public void addIssue(Issue issue) {
-        if (issue == null || this.issues.stream().anyMatch(issue::equals)) return;
-        else if (this.issues.stream().anyMatch(issue::equals)) {
+        if (issue == null || this.issues.stream().anyMatch(issue::customEqualsWithAmount)) return;
+        else if (this.issues.stream().anyMatch(issue::customEquals)) {
             this.issues.stream().filter(issue::customEquals).findFirst().ifPresent(this.issues::remove);
         }
         this.issues.add(issue);
     }
 
     public void addPullRequest(PullRequest pullRequest) {
-        if (pullRequest == null || this.pullRequests.stream().anyMatch(pullRequest::equals)) return;
+        if (pullRequest == null || this.pullRequests.stream().anyMatch(pullRequest::customEqualsWithAmount)) return;
         else if (this.pullRequests.stream().anyMatch(pullRequest::customEquals)) {
             this.pullRequests.stream().filter(pullRequest::customEquals).findFirst().ifPresent(this.commits::remove);
         }
@@ -150,18 +143,26 @@ public class Member implements Auditable {
 
     public void updateTier() {
         if (sumOfTokens != null) {
-            this.tier = Tier.checkTier(sumOfTokens);
+            this.tier = checkTier(sumOfTokens);
             return;
         }
         if (blockchains.isEmpty()) {
-            this.tier = Tier.checkTier(0L);
+            this.tier = checkTier(0L);
             return;
         }
-        Long amount = this.blockchains.stream()
+
+        long amount = this.blockchains.stream()
                 .map(Blockchain::getAmount)
                 .mapToLong(b -> Long.parseLong(b.toString()))
                 .sum();
-        this.tier = Tier.checkTier(amount);
+        this.tier = checkTier(amount);
+    }
+
+    public Tier checkTier(long amount) {
+        return Arrays.stream(Tier.values())
+                .filter(t -> t.getTierPredicate().test(amount))
+                .findFirst()
+                .orElse(Tier.SPROUT);
     }
 
     public void updateWalletAddress(String walletAddress) {
@@ -186,12 +187,12 @@ public class Member implements Auditable {
         this.emailAddress = emailAddress;
     }
 
-    public void finishAuth() {
-        this.authStep = AuthStep.ALL;
+    public void organizeGitOrganizationMember(GitOrganizationMember gitOrganizationMember) {
+        this.gitOrganizationMembers.add(gitOrganizationMember);
     }
 
-    public void organizeGitOrganizationMember(GitOrganizationMember gitOrganizationMembers) {
-        this.gitOrganizationMembers.add(gitOrganizationMembers);
+    public void finishAuth() {
+        this.authStep = AuthStep.ALL;
     }
 
     public void updateSumOfReviews(Integer sumOfReviews) {
@@ -235,5 +236,13 @@ public class Member implements Auditable {
 
     public Optional<Integer> getSumOfPullRequests() {
         return Optional.ofNullable(sumOfPullRequests);
+    }
+
+    public void deleteAllContributions() {
+        this.commits.forEach(Commit::delete);
+        this.pullRequests.forEach(PullRequest::delete);
+        this.issues.forEach(Issue::delete);
+        this.sumOfIssues = 0;
+        updateTier();
     }
 }

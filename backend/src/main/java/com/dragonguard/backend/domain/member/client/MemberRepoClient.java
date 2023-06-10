@@ -1,9 +1,9 @@
 package com.dragonguard.backend.domain.member.client;
 
 import com.dragonguard.backend.config.github.GithubProperties;
-import com.dragonguard.backend.domain.member.dto.response.client.MemberRepoResponse;
+import com.dragonguard.backend.domain.member.dto.client.MemberRepoResponse;
 import com.dragonguard.backend.global.exception.WebClientException;
-import com.dragonguard.backend.domain.member.dto.request.client.MemberClientRequest;
+import com.dragonguard.backend.domain.member.dto.client.MemberClientRequest;
 import com.dragonguard.backend.global.GithubClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
