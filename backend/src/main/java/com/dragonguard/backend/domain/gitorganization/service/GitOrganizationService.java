@@ -26,7 +26,8 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
 
     public void saveGitOrganizations(final Set<String> gitOrganizationNames, final Member member) {
         Set<GitOrganization> gitOrganizations = gitOrganizationNames.stream()
-                .map(name -> gitOrganizationRepository.findByName(name).orElseGet(() -> gitOrganizationMapper.toEntity(name, member)))
+                .filter(name -> !gitOrganizationRepository.existsByName(name))
+                .map(name -> gitOrganizationMapper.toEntity(name, member))
                 .collect(Collectors.toSet());
 
         gitOrganizationRepository.saveAll(gitOrganizations);

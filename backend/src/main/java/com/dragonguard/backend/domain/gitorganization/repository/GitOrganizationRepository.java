@@ -10,4 +10,5 @@ public interface GitOrganizationRepository {
     <S extends GitOrganization> List<S> saveAll(Iterable<S> entities);
     Optional<GitOrganization> findByName(String name);
     Optional<GitOrganization> findById(Long id);
+    boolean existsByName(String name);
 }
