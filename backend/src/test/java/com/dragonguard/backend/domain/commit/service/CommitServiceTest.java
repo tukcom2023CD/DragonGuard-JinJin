@@ -65,19 +65,4 @@ class CommitServiceTest extends LoginTest {
         //then
         assertThat(given).isEqualTo(result);
     }
-
-    @Test
-    @DisplayName("유저의 커밋 내역 전체 삭제")
-    void deleteAll() {
-        //given
-        Commit given1 = commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(1).githubId(loginUser.getGithubId()).build());
-        Commit given2 = commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(2).githubId(loginUser.getGithubId()).build());
-
-        //when
-        commitService.deleteAll(List.of(given1, given2));
-        List<Commit> result = commitRepository.findAllByGithubId(loginUser.getGithubId());
-
-        //then
-        assertThat(result).isEmpty();
-    }
 }

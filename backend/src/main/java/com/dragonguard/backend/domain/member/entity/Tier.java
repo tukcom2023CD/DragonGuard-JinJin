@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.member.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.function.Predicate;
 
@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  */
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum Tier {
     SPROUT(i -> i < 50L, "새싹"),
     BRONZE(i -> 50L <= i && i < 200L, "브론즈"),

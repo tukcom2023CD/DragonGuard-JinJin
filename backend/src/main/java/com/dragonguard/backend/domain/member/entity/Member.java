@@ -2,7 +2,6 @@ package com.dragonguard.backend.domain.member.entity;
 
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.commit.entity.Commit;
-import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
@@ -51,26 +50,20 @@ public class Member implements Auditable {
     @Enumerated(EnumType.STRING)
     private AuthStep authStep;
 
-    @OneToMany
-    @JoinColumn
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Commit> commits = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Issue> issues = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<PullRequest> pullRequests = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
-    private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
-
     @JoinColumn
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Organization organization;
 
     @Enumerated(EnumType.STRING)
@@ -97,10 +90,10 @@ public class Member implements Auditable {
     @Formula("(SELECT COALESCE(sum(pr.amount), 0) FROM pull_request pr WHERE pr.member_id = id)")
     private Integer sumOfPullRequests;
 
-    private Integer sumOfReviews;
-
     @Formula("(SELECT COALESCE(sum(b.amount), 0) FROM blockchain b WHERE b.member_id = id)")
     private Long sumOfTokens;
+
+    private Integer sumOfReviews;
 
     @Builder
     public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage, Role role, AuthStep authStep) {
@@ -193,10 +186,6 @@ public class Member implements Auditable {
 
     public void finishAuth() {
         this.authStep = AuthStep.ALL;
-    }
-
-    public void organizeGitOrganizationMember(GitOrganizationMember gitOrganizationMembers) {
-        this.gitOrganizationMembers.add(gitOrganizationMembers);
     }
 
     public void updateSumOfReviews(Integer sumOfReviews) {

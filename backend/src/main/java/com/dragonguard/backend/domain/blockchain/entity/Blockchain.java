@@ -28,8 +28,8 @@ public class Blockchain implements Auditable {
 
     private BigInteger amount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     private String address;
