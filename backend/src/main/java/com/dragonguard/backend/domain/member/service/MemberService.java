@@ -111,11 +111,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Integer contributions = contributionKafkaResponse.getContribution();
 
         if (sumWithoutReviews > contributions) {
-            commitService.deleteAll(member.getCommits());
-            issueService.deleteAll(member.getIssues());
-            pullRequestService.deleteAll(member.getPullRequests());
-            member.updateSumOfReviews(0);
-            member.updateTier();
+            member.deleteAllContributions();
             return;
         }
 

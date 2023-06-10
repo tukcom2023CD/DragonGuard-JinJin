@@ -36,8 +36,4 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
         return pullRequestRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
-
-    public void deleteAll(final List<PullRequest> pullRequests) {
-        pullRequestRepository.deleteAll(pullRequests);
-    }
 }

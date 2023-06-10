@@ -11,5 +11,4 @@ public interface PullRequestRepository {
     List<PullRequest> findAllByGithubId(String githubId);
     PullRequest save(PullRequest pullRequest);
     Optional<PullRequest> findById(Long id);
-    void deleteAll(Iterable<? extends PullRequest> entities);
 }

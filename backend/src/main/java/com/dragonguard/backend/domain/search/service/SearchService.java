@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.search.service;
 
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.domain.result.dto.response.ResultResponse;
+import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.result.mapper.ResultMapper;
 import com.dragonguard.backend.domain.result.repository.ResultRepository;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
@@ -47,7 +48,7 @@ public class SearchService implements EntityLoader<Search, Long> {
     @Cacheable(value = "results", key = "#searchRequest", cacheManager = "cacheManager")
     public List<ResultResponse> getSearchResultByClient(@Valid final SearchRequest searchRequest) {
         Search search = findOrSaveSearch(searchRequest);
-        resultRepository.deleteAllBySearchId(search.getId());
+        resultRepository.findAllBySearchId(search.getId()).forEach(Result::delete);
         searchRequest.setGithubToken(authService.getLoginUser().getGithubToken());
 
         if (searchRequest.getType().equals(SearchType.REPOSITORIES)) {

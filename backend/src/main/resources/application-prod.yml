@@ -48,7 +48,7 @@ spring:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_SECRET}
             redirectUri: ${REDIRECT_URI}
-            scope: repo, user
+            scope: repo, user, read:org
   mail:
     host: smtp.gmail.com
     port: 587

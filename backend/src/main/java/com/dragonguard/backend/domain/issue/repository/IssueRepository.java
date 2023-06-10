@@ -11,5 +11,4 @@ public interface IssueRepository {
     Optional<Issue> findByGithubIdAndYear(String githubId, Integer year);
     Issue save(Issue issue);
     Optional<Issue> findById(Long id);
-    void deleteAll(Iterable<? extends Issue> entities);
 }

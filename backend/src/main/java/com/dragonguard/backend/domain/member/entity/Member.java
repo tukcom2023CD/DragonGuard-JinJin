@@ -241,4 +241,12 @@ public class Member implements Auditable {
     public Optional<Integer> getSumOfPullRequests() {
         return Optional.ofNullable(sumOfPullRequests);
     }
+
+    public void deleteAllContributions() {
+        this.commits.forEach(Commit::delete);
+        this.pullRequests.forEach(PullRequest::delete);
+        this.issues.forEach(Issue::delete);
+        this.sumOfIssues = 0;
+        updateTier();
+    }
 }

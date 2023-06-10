@@ -17,7 +17,7 @@ public abstract class LoginTest {
     protected AuthService authService;
 
     @Autowired
-    private MemberRepository memberRepository;
+    protected MemberRepository memberRepository;
 
     protected Member loginUser;
 

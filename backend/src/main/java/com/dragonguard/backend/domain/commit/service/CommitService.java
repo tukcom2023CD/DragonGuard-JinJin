@@ -45,8 +45,4 @@ public class CommitService implements EntityLoader<Commit, Long> {
         return commitRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
-
-    public void deleteAll(final List<Commit> commits) {
-        commitRepository.deleteAll(commits);
-    }
 }

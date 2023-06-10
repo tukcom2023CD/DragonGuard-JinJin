@@ -42,8 +42,4 @@ public class IssueService implements EntityLoader<Issue, Long> {
         return issueRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
-
-    public void deleteAll(final List<Issue> issues) {
-        issueRepository.deleteAll(issues);
-    }
 }
