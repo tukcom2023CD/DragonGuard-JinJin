@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.pullrequest.entity;
 
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
@@ -22,8 +23,9 @@ public class PullRequest implements Auditable {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String githubId;
+    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
 
     @Column(nullable = false)
     private Integer amount;
@@ -37,30 +39,26 @@ public class PullRequest implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public PullRequest(String githubId, Integer amount, Integer year) {
-        this.githubId = githubId;
+    public PullRequest(Member member, Integer amount, Integer year) {
+        this.member = member;
         this.amount = amount;
         this.year = year;
+        organize();
     }
 
     public void updatePullRequestNum(Integer amount) {
         this.amount = amount;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PullRequest that = (PullRequest) o;
-        return Objects.equals(githubId, that.githubId) && Objects.equals(amount, that.amount) && Objects.equals(year, that.year);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(githubId, amount, year);
+    public boolean customEqualsWithAmount(PullRequest pullRequest) {
+        return Objects.equals(member.getGithubId(), pullRequest.member.getGithubId()) && Objects.equals(amount, pullRequest.amount) && Objects.equals(year, pullRequest.year);
     }
 
     public boolean customEquals(PullRequest pullRequest) {
-        return year.equals(pullRequest.year) && githubId.equals(pullRequest.githubId);
+        return year.equals(pullRequest.year) && member.getGithubId().equals(pullRequest.member.getGithubId());
+    }
+
+    private void organize() {
+        this.member.addPullRequest(this);
     }
 }

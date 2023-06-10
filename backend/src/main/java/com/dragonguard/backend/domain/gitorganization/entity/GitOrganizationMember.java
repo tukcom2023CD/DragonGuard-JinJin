@@ -23,7 +23,7 @@ public class GitOrganizationMember implements Auditable {
     private Long id;
 
     @JoinColumn
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private GitOrganization gitOrganization;
 
     @JoinColumn
@@ -39,5 +39,10 @@ public class GitOrganizationMember implements Auditable {
     public GitOrganizationMember(GitOrganization gitOrganization, Member member) {
         this.gitOrganization = gitOrganization;
         this.member = member;
+        organize();
+    }
+
+    private void organize() {
+        this.member.organizeGitOrganizationMember(this);
     }
 }

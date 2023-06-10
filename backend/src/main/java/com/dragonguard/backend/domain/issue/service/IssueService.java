@@ -3,11 +3,11 @@ package com.dragonguard.backend.domain.issue.service;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.issue.mapper.IssueMapper;
 import com.dragonguard.backend.domain.issue.repository.IssueRepository;
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,19 +22,18 @@ public class IssueService implements EntityLoader<Issue, Long> {
     private final IssueRepository issueRepository;
     private final IssueMapper issueMapper;
 
-    public void saveIssues(final String githubId, final Integer issueNum, final Integer year) {
-        if (issueRepository.existsByGithubIdAndYear(githubId, year)) {
-            Issue issue = issueRepository.findByGithubIdAndYear(githubId, year).orElseThrow(EntityNotFoundException::new);
+    public void saveIssues(final Member member, final Integer issueNum, final Integer year) {
+        if (issueRepository.existsByMemberAndYear(member, year)) {
+            Issue issue = issueRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
             issue.updateIssueNum(issueNum);
             return;
         }
-        issueRepository.save(issueMapper.toEntity(githubId, issueNum, year));
+        issueRepository.save(issueMapper.toEntity(member, issueNum, year));
     }
 
 
-    @Transactional(readOnly = true)
-    public List<Issue> findIssuesByGithubId(final String githubId) {
-        return issueRepository.findByGithubId(githubId);
+    public List<Issue> findIssuesByMember(final Member member) {
+        return issueRepository.findByMember(member);
     }
 
     @Override

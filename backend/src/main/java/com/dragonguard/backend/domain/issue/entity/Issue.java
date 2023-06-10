@@ -1,12 +1,12 @@
 package com.dragonguard.backend.domain.issue.entity;
 
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -24,8 +24,9 @@ public class Issue implements Auditable {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String githubId;
+    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
 
     @Column(nullable = false)
     private Integer amount;
@@ -39,30 +40,26 @@ public class Issue implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Issue(String githubId, Integer amount, Integer year) {
-        this.githubId = githubId;
+    public Issue(Member member, Integer amount, Integer year) {
+        this.member = member;
         this.amount = amount;
         this.year = year;
+        organize(member);
     }
 
     public void updateIssueNum(Integer amount) {
         this.amount = amount;
     }
 
+    public boolean customEqualsWithAmount(Issue issue) {
+        return Objects.equals(member.getGithubId(), issue.member.getGithubId()) && Objects.equals(amount, issue.amount) && Objects.equals(year, issue.year);
+    }
+
     public boolean customEquals(Issue issue) {
-        return year.equals(issue.year) && githubId.equals(issue.githubId);
+        return year.equals(issue.year) && member.getGithubId().equals(issue.member.getGithubId());
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Issue issue = (Issue) o;
-        return Objects.equals(githubId, issue.githubId) && Objects.equals(amount, issue.amount) && Objects.equals(year, issue.year);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(githubId, amount, year);
+    private void organize(Member member) {
+        member.addIssue(this);
     }
 }

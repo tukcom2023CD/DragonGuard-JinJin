@@ -22,7 +22,7 @@ import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClie
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
-import com.dragonguard.backend.domain.member.service.AuthService;
+import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.KafkaProducer;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
@@ -47,7 +47,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private final GitRepoMemberMapper gitRepoMemberMapper;
     private final GitRepoRepository gitRepoRepository;
     private final GitRepoMemberService gitRepoMemberService;
-    private final AuthService authService;
+    private final MemberService memberService;
     private final GitRepoMapper gitRepoMapper;
     private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
     private final GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
@@ -57,7 +57,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final GitRepoRequest gitRepoRequest) {
         Optional<GitRepo> gitRepo = gitRepoRepository.findByName(gitRepoRequest.getName());
         if (!StringUtils.hasText(gitRepoRequest.getGithubToken())) {
-            gitRepoRequest.setGithubToken(authService.getLoginUser().getGithubToken());
+            gitRepoRequest.setGithubToken(memberService.getLoginUserWithPersistence().getGithubToken());
         }
         if (gitRepo.isEmpty()) {
             gitRepoRepository.save(gitRepoMapper.toEntity(gitRepoRequest.getName()));
@@ -73,7 +73,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
 
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(final GitRepoCompareRequest gitRepoCompareRequest) {
         Integer year = LocalDate.now().getYear();
-        String githubToken = authService.getLoginUser().getGithubToken();
+        String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         String firstRepo = gitRepoCompareRequest.getFirstRepo();
         String secondRepo = gitRepoCompareRequest.getSecondRepo();
 
@@ -106,7 +106,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
 
     private GitRepoResponse getOneRepoResponse(final String repoName) {
         Integer year = LocalDate.now().getYear();
-        String githubToken = authService.getLoginUser().getGithubToken();
+        String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         GitRepo repo = gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(repoName)));
         GitRepoClientResponse repoResponse = gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
         if (repo.getClosedIssueNum() != null) {

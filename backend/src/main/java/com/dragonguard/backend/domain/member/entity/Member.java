@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.member.entity;
 
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.commit.entity.Commit;
+import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
@@ -50,17 +51,20 @@ public class Member implements Auditable {
     @Enumerated(EnumType.STRING)
     private AuthStep authStep;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<Commit> commits = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<Issue> issues = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<PullRequest> pullRequests = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
     @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
@@ -96,21 +100,20 @@ public class Member implements Auditable {
     private Integer sumOfReviews;
 
     @Builder
-    public Member(String name, String githubId, Commit commit, String walletAddress, String profileImage, Role role, AuthStep authStep) {
+    public Member(String name, String githubId, String walletAddress, String profileImage, Role role, AuthStep authStep) {
         this.name = name;
         this.githubId = githubId;
         this.walletAddress = walletAddress;
         this.profileImage = profileImage;
         this.tier = Tier.SPROUT;
         this.authStep = authStep;
-        addCommit(commit);
         if (role != null && role.equals(Role.ROLE_ADMIN)) {
-            this.role.add(Role.ROLE_ADMIN);
+            this.role.add(role);
         }
     }
 
     public void addCommit(Commit commit) {
-        if (commit == null || this.commits.stream().anyMatch(commit::equals)) return;
+        if (commit == null || this.commits.stream().anyMatch(commit::customEqualsWithAmount)) return;
         else if (this.commits.stream().anyMatch(commit::customEquals)) {
             this.commits.stream().filter(commit::customEquals).findFirst().ifPresent(this.commits::remove);
         }
@@ -118,15 +121,15 @@ public class Member implements Auditable {
     }
 
     public void addIssue(Issue issue) {
-        if (issue == null || this.issues.stream().anyMatch(issue::equals)) return;
-        else if (this.issues.stream().anyMatch(issue::equals)) {
+        if (issue == null || this.issues.stream().anyMatch(issue::customEqualsWithAmount)) return;
+        else if (this.issues.stream().anyMatch(issue::customEquals)) {
             this.issues.stream().filter(issue::customEquals).findFirst().ifPresent(this.issues::remove);
         }
         this.issues.add(issue);
     }
 
     public void addPullRequest(PullRequest pullRequest) {
-        if (pullRequest == null || this.pullRequests.stream().anyMatch(pullRequest::equals)) return;
+        if (pullRequest == null || this.pullRequests.stream().anyMatch(pullRequest::customEqualsWithAmount)) return;
         else if (this.pullRequests.stream().anyMatch(pullRequest::customEquals)) {
             this.pullRequests.stream().filter(pullRequest::customEquals).findFirst().ifPresent(this.commits::remove);
         }
@@ -182,6 +185,10 @@ public class Member implements Auditable {
     public void updateOrganization(Organization organization, String emailAddress) {
         this.organization = organization;
         this.emailAddress = emailAddress;
+    }
+
+    public void organizeGitOrganizationMember(GitOrganizationMember gitOrganizationMember) {
+        this.gitOrganizationMembers.add(gitOrganizationMember);
     }
 
     public void finishAuth() {

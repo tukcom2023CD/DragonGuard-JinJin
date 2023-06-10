@@ -56,9 +56,9 @@ public class MemberClientService {
         int issueNum = memberIssueClient.requestToGithub(request).getTotal_count();
         int pullRequestNum = memberPullRequestClient.requestToGithub(request).getTotal_count();
 
-        commitService.saveCommits(new ContributionScrapingResponse(githubId, commitNum));
-        issueService.saveIssues(githubId, issueNum, year);
-        pullRequestService.savePullRequests(githubId, pullRequestNum, year);
+        commitService.saveCommits(new ContributionScrapingResponse(githubId, commitNum), member);
+        issueService.saveIssues(member, issueNum, year);
+        pullRequestService.savePullRequests(member, pullRequestNum, year);
     }
 
     public void addMemberGitRepoAndGitOrganization(final Member member) {

@@ -18,6 +18,7 @@ import java.math.BigInteger;
 @Mapper(componentModel = "spring", imports = {ContributeType.class})
 public interface BlockchainMapper {
     @Mapping(target = "contributeType", expression = "java(ContributeType.valueOf(request.getContributeType()))")
+    @Mapping(target = "amount", source = "amount")
     Blockchain toEntity(final BigInteger amount, final Member member, final ContractRequest request);
     @Mapping(target = "memberId", source = "blockchain.member.id")
     @Mapping(target = "githubId", source = "blockchain.member.githubId")

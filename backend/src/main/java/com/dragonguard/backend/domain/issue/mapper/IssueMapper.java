@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.issue.mapper;
 
 import com.dragonguard.backend.domain.issue.entity.Issue;
+import com.dragonguard.backend.domain.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,5 +13,5 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface IssueMapper {
     @Mapping(target = "amount", source = "issueNum")
-    Issue toEntity(final String githubId, final Integer issueNum, final Integer year);
+    Issue toEntity(final Member member, final Integer issueNum, final Integer year);
 }

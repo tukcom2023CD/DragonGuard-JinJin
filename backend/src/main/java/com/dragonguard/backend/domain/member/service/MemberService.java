@@ -69,7 +69,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
 
     public Tier getTier() {
-        return authService.getLoginUser().getTier();
+        return loadEntity(authService.getLoginUserId()).getTier();
     }
 
     public IdResponse<UUID> saveMember(MemberRequest memberRequest, Role role) {
@@ -94,9 +94,9 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Member member = findMemberByGithubId(githubId, AuthStep.NONE);
         member.updateNameAndImage(contributionKafkaResponse.getName(), contributionKafkaResponse.getProfileImage());
 
-        List<Commit> commits = commitService.findCommits(githubId);
-        List<PullRequest> pullRequests = pullRequestService.findPullRequestByGithubId(githubId);
-        List<Issue> issues = issueService.findIssuesByGithubId(githubId);
+        List<Commit> commits = commitService.findCommitsByMember(member);
+        List<PullRequest> pullRequests = pullRequestService.findPullRequestByMember(member);
+        List<Issue> issues = issueService.findIssuesByMember(member);
 
         if (commits.isEmpty() || pullRequests.isEmpty() || issues.isEmpty()) return;
 
@@ -207,7 +207,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member getLoginUserWithPersistence() {
-        return loadEntity(authService.getLoginUser().getId());
+        return loadEntity(authService.getLoginUserId());
     }
 
     public Member scrapeAndGetSavedMember(String githubId, Role role, AuthStep authStep) {
@@ -219,7 +219,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public MemberDetailResponse findMemberDetailByGithubId(String githubId) {
         Member member = memberRepository.findByGithubId(githubId).orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
         MemberResponse memberResponse = getMemberResponse(member);
-        List<GitOrganization> gitOrganizations = gitOrganizationService.findGitOrganizationByGithubId(githubId);
+        List<GitOrganization> gitOrganizations = gitOrganizationService.findGitOrganizationByMember(member);
         List<GitRepo> gitRepos = gitRepoRepository.findByGithubId(githubId);
 
         kafkaRepositoryProducer.send(new KafkaRepositoryRequest(member.getGithubId()));

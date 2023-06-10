@@ -33,8 +33,8 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
         gitOrganizationRepository.saveAll(gitOrganizations);
     }
 
-    public List<GitOrganization> findGitOrganizationByGithubId(final String githubId) {
-        return gitOrganizationRepository.findAllByGithubId(githubId);
+    public List<GitOrganization> findGitOrganizationByMember(final Member member) {
+        return gitOrganizationRepository.findAllByMember(member);
     }
 
     @Override

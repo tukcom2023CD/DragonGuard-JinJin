@@ -25,7 +25,7 @@ public class GitRepoMember implements Auditable {
     private Long id;
 
     @JoinColumn
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private GitRepo gitRepo;
 
     @JoinColumn

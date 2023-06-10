@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.pullrequest.mapper;
 
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,5 +13,5 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface PullRequestMapper {
     @Mapping(target = "amount", source = "pullRequestNum")
-    PullRequest toEntity(final String githubId, final Integer pullRequestNum, final Integer year);
+    PullRequest toEntity(final Member member, final Integer pullRequestNum, final Integer year);
 }

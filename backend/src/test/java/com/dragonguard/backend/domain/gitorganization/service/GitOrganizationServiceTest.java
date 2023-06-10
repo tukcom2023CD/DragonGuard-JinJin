@@ -17,7 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DatabaseTest
 @DisplayName("GitOrganization 서비스의")
-class GitOrganizationServiceTest extends LoginTest {
+class
+GitOrganizationServiceTest extends LoginTest {
     @Autowired private GitOrganizationService gitOrganizationService;
     @Autowired private GitOrganizationRepository gitOrganizationRepository;
     @Autowired private JpaGitOrganizationRepository jpaGitOrganizationRepository;
@@ -29,15 +30,15 @@ class GitOrganizationServiceTest extends LoginTest {
         Set<String> gitOrganizationNames = Set.of("tukcom2023CD", "C-B-U", "bid-bid");
 
         //when
-        gitOrganizationService.saveGitOrganizations(gitOrganizationNames, memberRepository.findById(loginUser.getId()).orElse(null));
+        gitOrganizationService.saveGitOrganizations(gitOrganizationNames, authService.getLoginUser());
 
-        //then
         long count = gitOrganizationNames.stream()
                 .map(gitOrganizationRepository::findByName)
                 .map(go -> go.orElse(null))
                 .filter(Objects::nonNull)
                 .count();
 
+        //then
         assertThat(count).isEqualTo(Long.valueOf(gitOrganizationNames.size()));
     }
 
@@ -52,7 +53,7 @@ class GitOrganizationServiceTest extends LoginTest {
         gitOrganizationRepository.saveAll(given);
 
         //when
-        List<GitOrganization> gitOrganization = gitOrganizationService.findGitOrganizationByGithubId(memberRepository.findById(loginUser.getId()).orElse(null).getGithubId());
+        List<GitOrganization> gitOrganization = gitOrganizationService.findGitOrganizationByMember(memberRepository.findById(loginUser.getId()).orElse(null));
 
         //then
         assertThat(gitOrganization).hasSameElementsAs(given);
