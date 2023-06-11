@@ -80,12 +80,12 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member findMemberOrSaveWithRole(final String githubId, Role role, final AuthStep authStep) {
-        return memberRepository.findByGithubId(githubId)
+        return memberQueryRepository.findByGithubId(githubId)
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, role, authStep)));
     }
 
     public Member findMemberOrSave(final MemberRequest memberRequest, final AuthStep authStep) {
-        return memberRepository.findByGithubId(memberRequest.getGithubId())
+        return memberQueryRepository.findByGithubId(memberRequest.getGithubId())
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(memberRequest, authStep)));
     }
 
@@ -182,7 +182,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member findMemberByGithubId(final String githubId, final AuthStep authStep) {
-        return memberRepository.findByGithubId(githubId)
+        return memberQueryRepository.findByGithubId(githubId)
                 .orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, authStep));
     }
 
@@ -225,7 +225,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     @Override
     public Member loadEntity(final UUID id) {
-        return memberRepository.findById(id)
+        return memberQueryRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
@@ -247,7 +247,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member getMemberOrSaveAndScrape(final String githubId) {
-        return memberRepository.findByGithubId(githubId).orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
+        return memberQueryRepository.findByGithubId(githubId).orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
     }
 
     public void updateBlockchain() {

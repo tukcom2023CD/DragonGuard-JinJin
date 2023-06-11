@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.member.repository;
 
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.dragonguard.backend.domain.member.entity.QMember.member;
@@ -60,5 +62,30 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
                 .limit(pageable.getPageSize())
                 .orderBy(memberOrderConverter.convert(pageable.getSort()))
                 .fetch();
+    }
+
+    @Override
+    public Optional<Member> findByGithubId(String githubId) {
+        return Optional.ofNullable(jpaQueryFactory
+                .selectFrom(member)
+                .where(member.githubId.eq(githubId))
+                .fetchFirst());
+    }
+
+    @Override
+    public String findRefreshTokenById(UUID id) {
+        return jpaQueryFactory
+                .select(member.refreshToken)
+                .from(member)
+                .where(member.id.eq(id))
+                .fetchFirst();
+    }
+
+    @Override
+    public Optional<Member> findById(UUID id) {
+        return Optional.ofNullable(jpaQueryFactory
+                .selectFrom(member)
+                .where(member.id.eq(id))
+                .fetchFirst());
     }
 }

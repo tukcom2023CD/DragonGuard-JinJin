@@ -7,6 +7,7 @@ import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.exception.CookieException;
 import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
+import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.TransactionService;
@@ -26,6 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthService {
     private final MemberRepository memberRepository;
+    private final MemberQueryRepository memberQueryRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtValidator jwtValidator;
 
@@ -42,7 +44,7 @@ public class AuthService {
     public JwtToken findMemberAndUpdateRefreshToken(final UserDetailsImpl user) {
         JwtToken jwtToken = jwtTokenProvider.createToken(user);
 
-        memberRepository.findById(getLoginUserId())
+        memberQueryRepository.findById(getLoginUserId())
                 .orElseThrow(EntityNotFoundException::new)
                 .updateRefreshToken(jwtToken.getRefreshToken());
 
@@ -60,7 +62,7 @@ public class AuthService {
     }
 
     private void validateSavedRefreshTokenIfExpired(final String oldRefreshToken, final UUID id) {
-        String savedToken = memberRepository.findRefreshTokenById(id);
+        String savedToken = memberQueryRepository.findRefreshTokenById(id);
         if (!savedToken.equals(oldRefreshToken)) {
             throw new JwtProcessingException();
         }

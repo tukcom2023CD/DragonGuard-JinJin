@@ -34,7 +34,7 @@ public class JwtTokenProvider {
         saveRefreshToken(refreshToken, userDetails);
 
         return JwtToken.builder()
-                .grantType("bearer")
+                .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -42,7 +42,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException | UnsupportedJwtException | IllegalStateException e) {
             log.info("JWT 오류");

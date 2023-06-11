@@ -1,9 +1,11 @@
 package com.dragonguard.backend.domain.member.repository;
 
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
+import com.dragonguard.backend.domain.member.entity.Member;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -17,4 +19,7 @@ public interface MemberQueryRepository {
     Integer findRankingById(UUID id);
 
     List<MemberRankResponse> findRankingByOrganization(Long organizationId, Pageable pageable);
+    Optional<Member> findByGithubId(String githubId);
+    String findRefreshTokenById(UUID id);
+    Optional<Member> findById(UUID id);
 }
