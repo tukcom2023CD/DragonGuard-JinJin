@@ -39,11 +39,6 @@ public class Result implements Auditable {
         this.searchId = searchId;
     }
 
-    public void update(Result result) {
-        this.name = result.getName();
-        this.searchId = result.getSearchId();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -42,14 +42,13 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
     }
 
     public void saveOrUpdateGitRepoMembers(final List<GitRepoMember> gitRepoMembers) {
-        gitRepoMembers.forEach(gitRepoMember -> {
-            gitRepoMemberQueryRepository.findByGitRepoAndMember(
-                    gitRepoMember.getGitRepo(),
-                    gitRepoMember.getMember())
-                    .orElseGet(() -> gitRepoRepository.save(gitRepoMember))
-                    .update(gitRepoMember);
-            gitRepoMemberRepository.save(gitRepoMember);
-        });
+        try {
+            gitRepoMembers.forEach(gitRepoMember -> gitRepoMemberQueryRepository.findByGitRepoAndMember(
+                            gitRepoMember.getGitRepo(),
+                            gitRepoMember.getMember())
+                    .orElseGet(() -> gitRepoMemberRepository.save(gitRepoMember))
+                    .update(gitRepoMember));
+        } catch (DataIntegrityViolationException e) {}
     }
 
     public List<GitRepoMember> validateAndGetGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final String gitRepoName) {

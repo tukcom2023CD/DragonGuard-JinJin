@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.gitrepo.entity;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.IntSummaryStatistics;
 import java.util.Map;
@@ -11,12 +12,9 @@ import java.util.Map;
  */
 
 @Getter
-public class GitRepoLanguage {
+@RequiredArgsConstructor
+public class GitRepoLanguageMap {
     private final Map<String, Integer> languages;
-
-    public GitRepoLanguage(Map<String, Integer> languages) {
-        this.languages = languages;
-    }
 
     public IntSummaryStatistics getStatistics() {
         return languages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)

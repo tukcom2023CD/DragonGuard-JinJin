@@ -12,7 +12,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepoContributionMap;
-import com.dragonguard.backend.domain.gitrepo.entity.GitRepoLanguage;
+import com.dragonguard.backend.domain.gitrepo.entity.GitRepoLanguageMap;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
@@ -36,7 +36,6 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
@@ -62,7 +61,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         Optional<GitRepo> gitRepo = findByName(gitRepoRequest);
 
         if (isGithubTokenValid(gitRepoRequest)) gitRepoRequest.setGithubToken(memberService.getLoginUserWithPersistence().getGithubToken());
-        if (checkGitRepoValidAndSave(gitRepoRequest, gitRepo)) return requestToGithub(gitRepoRequest);
+        if (checkGitRepoIfValidAndSave(gitRepoRequest, gitRepo)) return requestToGithub(gitRepoRequest);
         if (isContributionValid(gitRepo.get().getGitRepoMembers())) return requestToGithub(gitRepoRequest);
 
         return getGitRepoMemberResponses(gitRepo);
@@ -72,7 +71,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return gitRepoRepository.findByName(gitRepoRequest.getName());
     }
 
-    public boolean checkGitRepoValidAndSave(final GitRepoRequest gitRepoRequest, final Optional<GitRepo> gitRepo) {
+    public boolean checkGitRepoIfValidAndSave(final GitRepoRequest gitRepoRequest, final Optional<GitRepo> gitRepo) {
         if (gitRepo.isEmpty()) {
             saveGitRepo(gitRepoRequest);
             return true;
@@ -106,12 +105,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     private TwoGitRepoMemberResponse getTwoGitRepoMemberResponse(final GitRepoCompareRequest gitRepoCompareRequest, final Integer year, final String githubToken) {
-        return new TwoGitRepoMemberResponse(getGitRepoMemberResponses(gitRepoCompareRequest::getFirstRepo, year, githubToken),
-                getGitRepoMemberResponses(gitRepoCompareRequest::getSecondRepo, year, githubToken));
+        return new TwoGitRepoMemberResponse(getGitRepoMemberResponses(gitRepoCompareRequest.getFirstRepo(), year, githubToken),
+                getGitRepoMemberResponses(gitRepoCompareRequest.getSecondRepo(), year, githubToken));
     }
 
-    private List<GitRepoMemberResponse> getGitRepoMemberResponses(final Supplier<String> supplier, final Integer year, final String githubToken) {
-        String repo = supplier.get();
+    private List<GitRepoMemberResponse> getGitRepoMemberResponses(final String repo, final Integer year, final String githubToken) {
         requestIssueToScraping(new GitRepoNameRequest(repo));
         return findMembersByGitRepoWithClient(new GitRepoRequest(githubToken, repo, year));
     }
@@ -128,7 +126,8 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     public TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest twoGitRepoCompareRequest) {
-        return new TwoGitRepoResponse(getOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()), getOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
+        return new TwoGitRepoResponse(getOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()),
+                getOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
     }
 
     public void updateClosedIssues(final ClosedIssueKafkaResponse closedIssueKafkaResponse) {
@@ -149,12 +148,12 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return getGitRepoResponse(repoName, repoResponse, getGitRepoLanguage(repoName, githubToken));
     }
 
-    private GitRepoResponse getGitRepoResponse(final String repoName, final GitRepoClientResponse repoResponse, final GitRepoLanguage gitRepoLanguage) {
-        return new GitRepoResponse(repoResponse, getStatistics(repoName), gitRepoLanguage.getLanguages(), gitRepoLanguage.getStatistics());
+    private GitRepoResponse getGitRepoResponse(final String repoName, final GitRepoClientResponse repoResponse, final GitRepoLanguageMap gitRepoLanguageMap) {
+        return new GitRepoResponse(repoResponse, getStatistics(repoName), gitRepoLanguageMap.getLanguages(), gitRepoLanguageMap.getStatistics());
     }
 
-    private GitRepoLanguage getGitRepoLanguage(final String repoName, final String githubToken) {
-        return new GitRepoLanguage(gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName)));
+    private GitRepoLanguageMap getGitRepoLanguage(final String repoName, final String githubToken) {
+        return new GitRepoLanguageMap(gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName)));
     }
 
     private boolean validateAndSetClosedIssue(final GitRepo gitRepo, final GitRepoClientResponse repoResponse) {

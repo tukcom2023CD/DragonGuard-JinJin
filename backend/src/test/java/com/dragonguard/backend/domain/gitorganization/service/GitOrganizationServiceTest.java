@@ -18,8 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DatabaseTest
 @DisplayName("GitOrganization 서비스의")
-class
-GitOrganizationServiceTest extends LoginTest {
+class GitOrganizationServiceTest extends LoginTest {
     @Autowired private GitOrganizationService gitOrganizationService;
     @Autowired private GitOrganizationRepository gitOrganizationRepository;
     @Autowired private JpaGitOrganizationRepository jpaGitOrganizationRepository;

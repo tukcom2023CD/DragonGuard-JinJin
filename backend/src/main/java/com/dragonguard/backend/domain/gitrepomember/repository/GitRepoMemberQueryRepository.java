@@ -1,7 +1,6 @@
 package com.dragonguard.backend.domain.gitrepomember.repository;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoContribution;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.member.entity.Member;
 
@@ -16,7 +15,6 @@ import java.util.Optional;
 public interface GitRepoMemberQueryRepository {
     List<GitRepoMember> findAllByGitRepo(GitRepo gitRepo);
     boolean existsByGitRepoAndMember(GitRepo gitRepo, Member member);
-    boolean existsByGitRepoAndMemberAndGitRepoContribution(GitRepo gitRepo, Member member, GitRepoContribution gitRepoContribution);
     Optional<GitRepoMember> findByGitRepoAndMember(GitRepo gitRepo, Member member);
     Optional<GitRepoMember> findByNameAndMemberName(String name, String githubId);
     Optional<GitRepoMember> findById(Long id);
