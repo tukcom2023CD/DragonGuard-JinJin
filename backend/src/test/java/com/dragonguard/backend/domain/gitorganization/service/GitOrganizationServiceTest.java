@@ -3,6 +3,7 @@ package com.dragonguard.backend.domain.gitorganization.service;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.repository.GitOrganizationRepository;
 import com.dragonguard.backend.domain.gitorganization.repository.JpaGitOrganizationRepository;
+import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,7 @@ GitOrganizationServiceTest extends LoginTest {
     @Autowired private GitOrganizationService gitOrganizationService;
     @Autowired private GitOrganizationRepository gitOrganizationRepository;
     @Autowired private JpaGitOrganizationRepository jpaGitOrganizationRepository;
+    @Autowired private MemberQueryRepository memberQueryRepository;
 
     @Test
     @DisplayName("전체 저장")
@@ -30,7 +32,7 @@ GitOrganizationServiceTest extends LoginTest {
         Set<String> gitOrganizationNames = Set.of("tukcom2023CD", "C-B-U", "bid-bid");
 
         //when
-        gitOrganizationService.saveGitOrganizations(gitOrganizationNames, authService.getLoginUser());
+        gitOrganizationService.findAndSaveGitOrganizations(gitOrganizationNames, authService.getLoginUser());
 
         long count = gitOrganizationNames.stream()
                 .map(gitOrganizationRepository::findByName)
@@ -53,7 +55,7 @@ GitOrganizationServiceTest extends LoginTest {
         gitOrganizationRepository.saveAll(given);
 
         //when
-        List<GitOrganization> gitOrganization = gitOrganizationService.findGitOrganizationByMember(memberRepository.findById(loginUser.getId()).orElse(null));
+        List<GitOrganization> gitOrganization = gitOrganizationService.findGitOrganizationByMember(memberQueryRepository.findById(loginUser.getId()).orElse(null));
 
         //then
         assertThat(gitOrganization).hasSameElementsAs(given);

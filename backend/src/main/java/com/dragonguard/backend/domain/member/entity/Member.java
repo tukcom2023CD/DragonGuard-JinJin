@@ -211,12 +211,12 @@ public class Member implements Auditable {
         return this.pullRequests.stream().mapToInt(PullRequest::getAmount).sum();
     }
 
-    public boolean isWalletAddressExist() {
+    public boolean isWalletAddressExists() {
         return StringUtils.hasText(this.getWalletAddress());
     }
 
     public String getBlockchainUrl() {
-        if (!isWalletAddressExist()) {
+        if (!isWalletAddressExists()) {
             return null;
         }
         return "https://baobab.scope.klaytn.com/account/" + this.walletAddress + "?tabId=txList";
@@ -238,11 +238,23 @@ public class Member implements Auditable {
         return Optional.ofNullable(sumOfPullRequests);
     }
 
-    public void deleteAllContributions() {
+    public boolean validateContributionsAndDeleteIfInvalid(int sumOfReviews) {
+        if (sumOfReviews < 0) return true;
+        deleteContributions();
+        updateTier();
+        return false;
+    }
+
+    private void deleteContributions() {
         this.commits.forEach(Commit::delete);
         this.pullRequests.forEach(PullRequest::delete);
         this.issues.forEach(Issue::delete);
         this.sumOfIssues = 0;
+    }
+
+    public boolean validateWalletAddressAndUpdateTier() {
+        if (!isWalletAddressExists()) return true;
         updateTier();
+        return false;
     }
 }

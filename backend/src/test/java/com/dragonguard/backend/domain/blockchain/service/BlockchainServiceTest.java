@@ -6,7 +6,7 @@ import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.mapper.BlockchainMapper;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
-import com.dragonguard.backend.domain.member.repository.MemberRepository;
+import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
 import com.dragonguard.backend.support.fixture.blockchain.entity.BlockchainFixture;
@@ -29,7 +29,7 @@ class BlockchainServiceTest extends LoginTest {
 
     @Autowired private BlockchainService blockchainService;
     @Autowired private BlockchainRepository blockchainRepository;
-    @Autowired private MemberRepository memberRepository;
+    @Autowired private MemberQueryRepository memberQueryRepository;
     @Autowired private BlockchainMapper blockchainMapper;
     @Value("${wallet}") private String walletAddress;
 
@@ -37,7 +37,7 @@ class BlockchainServiceTest extends LoginTest {
     @DisplayName("블록체인 트랜잭션 수행")
     void setTransaction() {
         //given
-        memberRepository.findById(loginUser.getId()).ifPresent(m -> m.updateWalletAddress(walletAddress));
+        memberQueryRepository.findById(loginUser.getId()).ifPresent(m -> m.updateWalletAddress(walletAddress));
 
         //when
         blockchainService.setTransaction(new ContractRequest(ContributeType.COMMIT.toString(), BigInteger.ONE), loginUser);

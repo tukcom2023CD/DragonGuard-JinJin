@@ -7,6 +7,7 @@ import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
+import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.global.KafkaProducer;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
+    private final MemberQueryRepository memberQueryRepository;
     private final MemberRepository memberRepository;
     private final UserDetailsMapper userDetailsMapper;
     private final MemberMapper memberMapper;
@@ -40,7 +42,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String githubId = (String) attributes.get("login");
 
-        Member user = memberRepository.findByGithubId(githubId)
+        Member user = memberQueryRepository.findByGithubId(githubId)
                 .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY)));
 
         kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));

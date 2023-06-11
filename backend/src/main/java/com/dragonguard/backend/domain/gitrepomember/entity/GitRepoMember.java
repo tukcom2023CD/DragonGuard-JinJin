@@ -19,6 +19,7 @@ import java.util.Objects;
 @Entity
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(uniqueConstraints = {@UniqueConstraint(name = "uniqueGitRepoMember", columnNames = {"git_repo_id", "member_id", "commits", "additions", "deletions"})})
 public class GitRepoMember implements Auditable {
     @Id
     @GeneratedValue
@@ -53,16 +54,9 @@ public class GitRepoMember implements Auditable {
         this.gitRepoContribution = gitRepoMember.gitRepoContribution;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GitRepoMember that = (GitRepoMember) o;
-        return Objects.equals(gitRepo, that.gitRepo) && Objects.equals(member, that.member) && Objects.equals(gitRepoContribution, that.gitRepoContribution);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(gitRepo, member, gitRepoContribution);
+    public boolean customEquals(GitRepoMember gitRepoMember) {
+        return Objects.equals(gitRepo, gitRepoMember.gitRepo)
+                && Objects.equals(member, gitRepoMember.member)
+                && Objects.equals(gitRepoContribution, gitRepoMember.gitRepoContribution);
     }
 }

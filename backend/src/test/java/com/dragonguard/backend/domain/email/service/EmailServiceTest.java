@@ -4,6 +4,7 @@ import com.dragonguard.backend.domain.email.dto.request.EmailRequest;
 import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
 import com.dragonguard.backend.domain.email.entity.Email;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
+import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
@@ -26,13 +27,14 @@ class EmailServiceTest extends LoginTest {
     @Autowired private EmailRepository emailRepository;
     @Autowired private MemberRepository memberRepository;
     @Autowired private OrganizationRepository organizationRepository;
+    @Autowired private MemberQueryRepository memberQueryRepository;
 
     @Test
     @DisplayName("이메일 전송")
     void sendEmail() {
         //given
         Organization organization = organizationRepository.save(OrganizationFixture.SAMPLE1.toEntity());
-        organization.addMember(memberRepository.findById(loginUser.getId()).get(), "ohksj77@tukorea.ac.kr");
+        organization.addMember(memberQueryRepository.findById(loginUser.getId()).get(), "ohksj77@tukorea.ac.kr");
 
         //when
         Long emailId = emailService.sendEmail().getId();

@@ -38,17 +38,27 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
     private final EmailService emailService;
 
     public IdResponse<Long> saveOrganization(final OrganizationRequest organizationRequest) {
-        Organization organization = organizationRepository.findByNameAndOrganizationTypeAndEmailEndpoint(
-                        organizationRequest.getName(), organizationRequest.getOrganizationType(), organizationRequest.getEmailEndpoint())
-                .orElseGet(() -> organizationRepository.save(organizationMapper.toEntity(organizationRequest)));
+        Organization organization = getOrSaveOrganization(organizationRequest);
         return new IdResponse<>(organization.getId());
     }
 
-    public IdResponse<Long> findAndAddMember(final AddMemberRequest addMemberRequest) {
+    public Organization getOrSaveOrganization(final OrganizationRequest organizationRequest) {
+        return organizationRepository.findByNameAndOrganizationTypeAndEmailEndpoint(
+                        organizationRequest.getName(),
+                        organizationRequest.getOrganizationType(),
+                        organizationRequest.getEmailEndpoint())
+                .orElseGet(() -> organizationRepository.save(organizationMapper.toEntity(organizationRequest)));
+    }
+
+    public IdResponse<Long> updateMemberAndSendEmail(final AddMemberRequest addMemberRequest) {
+        findAndAddMember(addMemberRequest);
+        return emailService.sendEmail();
+    }
+
+    public void findAndAddMember(final AddMemberRequest addMemberRequest) {
         Organization organization = loadEntity(addMemberRequest.getOrganizationId());
         Member member = memberService.getLoginUserWithPersistence();
         organization.addMember(member, addMemberRequest.getEmail().strip());
-        return emailService.sendEmail();
     }
 
     public List<OrganizationType> getTypes() {

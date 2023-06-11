@@ -5,9 +5,9 @@ import com.dragonguard.backend.domain.result.dto.response.ResultResponse;
 import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.result.mapper.ResultMapper;
 import com.dragonguard.backend.domain.result.repository.ResultRepository;
-import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.dto.client.SearchRepoResponse;
 import com.dragonguard.backend.domain.search.dto.client.SearchUserResponse;
+import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.entity.Filter;
 import com.dragonguard.backend.domain.search.entity.Search;
 import com.dragonguard.backend.domain.search.entity.SearchType;
@@ -22,6 +22,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,8 +49,7 @@ public class SearchService implements EntityLoader<Search, Long> {
     @Cacheable(value = "results", key = "#searchRequest", cacheManager = "cacheManager")
     public List<ResultResponse> getSearchResultByClient(@Valid final SearchRequest searchRequest) {
         Search search = findOrSaveSearch(searchRequest);
-        resultRepository.findAllBySearchId(search.getId()).forEach(Result::delete);
-        searchRequest.setGithubToken(authService.getLoginUser().getGithubToken());
+        findAllSearchAndDeleteResults(searchRequest, search);
 
         if (searchRequest.getType().equals(SearchType.REPOSITORIES)) {
             return searchRepo(searchRequest, search);
@@ -57,9 +57,13 @@ public class SearchService implements EntityLoader<Search, Long> {
         return searchUser(searchRequest, search);
     }
 
+    public void findAllSearchAndDeleteResults(final SearchRequest searchRequest, final Search search) {
+        resultRepository.findAllBySearchId(search.getId()).forEach(Result::delete);
+        searchRequest.setGithubToken(authService.getLoginUser().getGithubToken());
+    }
+
     private List<ResultResponse> searchUser(final SearchRequest searchRequest, final Search search) {
-        SearchUserResponse clientResult = githubUserClient.requestToGithub(searchRequest);
-        return Stream.of(clientResult.getItems())
+        return Arrays.stream(githubUserClient.requestToGithub(searchRequest).getItems())
                 .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
                 .map(resultMapper::toResponse).collect(Collectors.toList());
     }
@@ -72,44 +76,41 @@ public class SearchService implements EntityLoader<Search, Long> {
     }
 
     public Search findOrSaveSearch(final SearchRequest searchRequest) {
-        if (searchRequest.getFilters() == null || searchRequest.getFilters().isEmpty()) {
-            return searchRepository
-                    .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
-                    .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
-                    .orElseGet(() -> searchRepository.save(searchMapper.toSearch(searchRequest)));
+        if (isValidSearchRequest(searchRequest)) {
+            return findOrGetSearchWithSearchAttributes(searchRequest);
         }
         List<Search> searches = searchRepository
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
-
         List<String> filters = searchRequest.getFilters();
-        for (Search search : searches) {
-            if (new HashSet<>(search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList())).containsAll(filters)) {
-                return search;
-            }
-        }
+
+        Search search = getSameSearch(searches, filters);
+        if (search != null) return search;
 
         return searchRepository.save(searchMapper.toSearch(searchRequest));
     }
 
-    public Search getEntityByRequest(final SearchRequest searchRequest) {
-        if (searchRequest.getFilters() == null || searchRequest.getFilters().isEmpty()) {
-            return searchRepository
-                    .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
-                    .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
-                    .orElseThrow(EntityNotFoundException::new);
-        }
-
-        List<Search> searches = searchRepository
-                .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
-
-        List<String> filters = searchRequest.getFilters();
+    private Search getSameSearch(List<Search> searches, List<String> filters) {
         for (Search search : searches) {
-            if (new HashSet<>(search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList())).containsAll(filters)) {
+            if (isContainsSameFilters(filters, search)) {
                 return search;
             }
         }
+        return null;
+    }
 
-        throw new EntityNotFoundException();
+    private boolean isContainsSameFilters(List<String> filters, Search search) {
+        return new HashSet<>(search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList())).containsAll(filters);
+    }
+
+    private Search findOrGetSearchWithSearchAttributes(SearchRequest searchRequest) {
+        return searchRepository
+                .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
+                .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
+                .orElseGet(() -> searchRepository.save(searchMapper.toSearch(searchRequest)));
+    }
+
+    private boolean isValidSearchRequest(SearchRequest searchRequest) {
+        return searchRequest.getFilters() == null || searchRequest.getFilters().isEmpty();
     }
 
     @Override

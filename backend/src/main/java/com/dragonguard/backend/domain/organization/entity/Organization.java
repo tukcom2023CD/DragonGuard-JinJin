@@ -26,12 +26,13 @@ public class Organization implements Auditable {
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Enumerated(EnumType.STRING)
     private OrganizationType organizationType;
 
+    @Column(nullable = false)
     private String emailEndpoint;
 
     @OneToMany(mappedBy = "organization")

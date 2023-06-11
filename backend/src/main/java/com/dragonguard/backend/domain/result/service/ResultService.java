@@ -26,9 +26,13 @@ public class ResultService implements EntityLoader<Result, Long> {
     private final SearchService searchService;
 
     public void saveAllResult(final List<ClientResultResponse> results, final SearchRequest searchRequest) {
-        Long searchId = searchService.getEntityByRequest(searchRequest).getId();
+        Long searchId = searchService.findOrSaveSearch(searchRequest).getId();
         List<Result> resultList = resultRepository.findAllBySearchId(searchId);
 
+        saveAllResultsWithSearch(results, searchId, resultList);
+    }
+
+    private void saveAllResultsWithSearch(List<ClientResultResponse> results, Long searchId, List<Result> resultList) {
         results.stream()
                 .filter(entity -> resultRepository.existsByNameAndSearchId(entity.getFull_name(), searchId))
                 .map(result -> resultMapper.toEntity(result, searchId))

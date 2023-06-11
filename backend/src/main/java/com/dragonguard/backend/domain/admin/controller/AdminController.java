@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public class AdminController {
     }
 
     @PostMapping("/organizations/decide")
-    public ResponseEntity<List<AdminOrganizationResponse>> decideRequest(@RequestBody AdminDecideRequest adminDecideRequest) {
+    public ResponseEntity<List<AdminOrganizationResponse>> decideRequest(@RequestBody @Valid AdminDecideRequest adminDecideRequest) {
         return ResponseEntity.ok(adminService.decideRequestedOrganization(adminDecideRequest));
     }
 

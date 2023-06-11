@@ -26,7 +26,7 @@ public class GitRepo implements Auditable {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
     private Integer closedIssueNum;

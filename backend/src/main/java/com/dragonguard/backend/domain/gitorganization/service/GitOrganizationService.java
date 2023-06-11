@@ -8,6 +8,7 @@ import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 import java.util.Set;
@@ -24,13 +25,23 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
     private final GitOrganizationRepository gitOrganizationRepository;
     private final GitOrganizationMapper gitOrganizationMapper;
 
-    public void saveGitOrganizations(final Set<String> gitOrganizationNames, final Member member) {
-        Set<GitOrganization> gitOrganizations = gitOrganizationNames.stream()
+    public void findAndSaveGitOrganizations(final Set<String> gitOrganizationNames, final Member member) {
+        Set<GitOrganization> gitOrganizations = findIfNotExists(gitOrganizationNames, member);
+
+        saveAllGitOrganizations(gitOrganizations);
+    }
+
+    public Set<GitOrganization> findIfNotExists(final Set<String> gitOrganizationNames, final Member member) {
+        return gitOrganizationNames.stream()
                 .filter(name -> !gitOrganizationRepository.existsByName(name))
                 .map(name -> gitOrganizationMapper.toEntity(name, member))
                 .collect(Collectors.toSet());
+    }
 
-        gitOrganizationRepository.saveAll(gitOrganizations);
+    public void saveAllGitOrganizations(final Set<GitOrganization> gitOrganizations) {
+        try{
+            gitOrganizationRepository.saveAll(gitOrganizations);
+        } catch(DataIntegrityViolationException e) {}
     }
 
     public List<GitOrganization> findGitOrganizationByMember(final Member member) {

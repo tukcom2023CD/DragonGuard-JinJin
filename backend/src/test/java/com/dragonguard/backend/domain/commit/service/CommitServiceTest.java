@@ -3,6 +3,7 @@ package com.dragonguard.backend.domain.commit.service;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.commit.repository.CommitRepository;
 import com.dragonguard.backend.domain.contribution.dto.response.ContributionScrapingResponse;
+import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommitServiceTest extends LoginTest {
     @Autowired private CommitService commitService;
     @Autowired private CommitRepository commitRepository;
+    @Autowired private MemberQueryRepository memberQueryRepository;
 
     @Test
     @DisplayName("커밋 내역 저장")
@@ -27,7 +29,7 @@ class CommitServiceTest extends LoginTest {
         ContributionScrapingResponse given = new ContributionScrapingResponse(loginUser.getGithubId(), 100);
 
         //when
-        commitService.saveCommits(given, memberRepository.findById(loginUser.getId()).orElse(null));
+        commitService.saveCommits(given, memberQueryRepository.findById(loginUser.getId()).orElse(null));
         List<Commit> commits = commitRepository.findAllByMember(loginUser);
 
         //then
@@ -40,8 +42,8 @@ class CommitServiceTest extends LoginTest {
     @DisplayName("커밋 내역 리스트 조회")
     void findCommits() {
         //given
-        commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(1).member(memberRepository.findById(loginUser.getId()).orElse(null)).build());
-        commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(2).member(memberRepository.findById(loginUser.getId()).orElse(null)).build());
+        commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(1).member(memberQueryRepository.findById(loginUser.getId()).orElse(null)).build());
+        commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(2).member(memberQueryRepository.findById(loginUser.getId()).orElse(null)).build());
 
         //when
         List<Commit> commits = commitService.findCommitsByMember(loginUser);
@@ -57,7 +59,7 @@ class CommitServiceTest extends LoginTest {
     @DisplayName("commit 단건 조회")
     void loadEntity() {
         //given
-        Commit given = commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(1).member(memberRepository.findById(loginUser.getId()).orElse(null)).build());
+        Commit given = commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(1).member(memberQueryRepository.findById(loginUser.getId()).orElse(null)).build());
 
         //when
         Commit result = commitService.loadEntity(given.getId());

@@ -28,7 +28,7 @@ public class EmailService implements EntityLoader<Email, Long> {
     private final JavaMailSender javaMailSender;
     private final MemberService memberService;
     private final EmailMapper emailMapper;
-    private static final String emailSubject = "GitRank 조직 인증";
+    private static final String EMAIL_SUBJECT = "GitRank 조직 인증";
     private static final int MIN = 10000;
     private static final int MAX = 99999;
 
@@ -36,15 +36,17 @@ public class EmailService implements EntityLoader<Email, Long> {
         Member member = memberService.getLoginUserWithPersistence();
         String memberEmail = member.getEmailAddress();
 
-        if (!StringUtils.hasText(memberEmail)) throw new EmailException();
+        validateMemberEmail(memberEmail);
 
         int random = new Random().nextInt(MAX - MIN) + MIN;
-
         sendEmail(memberEmail, random);
 
         Email savedEmail = emailRepository.save(emailMapper.toEntity(random, member.getId()));
-
         return new IdResponse<>(savedEmail.getId());
+    }
+
+    public void validateMemberEmail(String memberEmail) {
+        if (!StringUtils.hasText(memberEmail)) throw new EmailException();
     }
 
     public void deleteCode(final Long id) {
@@ -53,13 +55,11 @@ public class EmailService implements EntityLoader<Email, Long> {
 
     public CheckCodeResponse isCodeMatching(final EmailRequest emailRequest) {
         Long id = emailRequest.getId();
-        boolean flag = loadEntity(id).getCode().equals(emailRequest.getCode());
 
-        if (!flag) return new CheckCodeResponse(false);
-
+        if (!loadEntity(id).getCode().equals(emailRequest.getCode())) return new CheckCodeResponse(false);
         deleteCode(id);
-        memberService.getLoginUserWithPersistence().finishAuth();
 
+        memberService.getLoginUserWithPersistence().finishAuth();
         return new CheckCodeResponse(true);
     }
 
@@ -74,7 +74,7 @@ public class EmailService implements EntityLoader<Email, Long> {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
             mimeMessageHelper.setTo(memberEmail);
-            mimeMessageHelper.setSubject(emailSubject);
+            mimeMessageHelper.setSubject(EMAIL_SUBJECT);
             mimeMessageHelper.setText(getEmailText(random), true);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {}

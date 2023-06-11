@@ -12,6 +12,10 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description 커밋과 관련된 서비스 로직을 처리하는 클래스
+ */
 
 @TransactionService
 @RequiredArgsConstructor
@@ -20,19 +24,12 @@ public class CommitService implements EntityLoader<Commit, Long> {
     private final CommitRepository commitRepository;
     private final CommitMapper commitMapper;
 
-    public void saveCommits(final ContributionScrapingResponse contributionScrapingResponse, Member member) {
-        List<Commit> commits
-                = commitRepository.findAllByMember(member);
+    public void saveCommits(final ContributionScrapingResponse contributionScrapingResponse, final Member member) {
+        List<Commit> commits = commitRepository.findAllByMember(member);
         Commit commit = commitMapper.toEntity(contributionScrapingResponse, member);
 
-        if (commits.isEmpty()) {
-            commitRepository.save(commit);
-            return;
-        }
-        commits.stream()
-                .filter(c -> !c.customEqualsWithAmount(commit))
-                .findFirst()
-                .ifPresent(commitRepository::save);
+        if (saveIfNew(commits, commit)) return;
+        saveIfIsNewCommitWithSameMember(commits, commit);
     }
 
     public List<Commit> findCommitsByMember(final Member member) {
@@ -43,5 +40,24 @@ public class CommitService implements EntityLoader<Commit, Long> {
     public Commit loadEntity(final Long id) {
         return commitRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private boolean saveIfNew(final List<Commit> commits, final Commit commit) {
+        if (commits.isEmpty()) {
+            commitRepository.save(commit);
+            return true;
+        }
+        return false;
+    }
+
+    private void saveIfIsNewCommitWithSameMember(final List<Commit> commits, final Commit commit) {
+        commits.stream()
+                .filter(c -> isNewCommitWithSameMember(commit, c))
+                .findFirst()
+                .ifPresent(commitRepository::save);
+    }
+
+    private boolean isNewCommitWithSameMember(final Commit compareCommit, final Commit commit) {
+        return !commit.customEqualsWithAmount(compareCommit);
     }
 }
