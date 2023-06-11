@@ -23,12 +23,21 @@ public class IssueService implements EntityLoader<Issue, Long> {
     private final IssueMapper issueMapper;
 
     public void saveIssues(final Member member, final Integer issueNum, final Integer year) {
-        if (issueRepository.existsByMemberAndYear(member, year)) {
-            Issue issue = issueRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
-            issue.updateIssueNum(issueNum);
-            return;
-        }
+        if (updateIssueNumIfNotExists(member, issueNum, year)) return;
         issueRepository.save(issueMapper.toEntity(member, issueNum, year));
+    }
+
+    private boolean updateIssueNumIfNotExists(final Member member, final Integer issueNum, final Integer year) {
+        if (issueRepository.existsByMemberAndYear(member, year)) {
+            findIssueAndUpdateNum(member, issueNum, year);
+            return true;
+        }
+        return false;
+    }
+
+    public void findIssueAndUpdateNum(final Member member, final Integer issueNum, final Integer year) {
+        Issue issue = issueRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
+        issue.updateIssueNum(issueNum);
     }
 
 

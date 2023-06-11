@@ -11,6 +11,11 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description PullRequest 관련 서비스 로직을 수행하는 클래스
+ */
+
 @TransactionService
 @RequiredArgsConstructor
 public class PullRequestService implements EntityLoader<PullRequest, Long> {
@@ -18,12 +23,16 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
     private final PullRequestMapper pullRequestMapper;
 
     public void savePullRequests(final Member member, final Integer pullRequestNum, final Integer year) {
-        if (pullRequestRepository.existsByMemberAndYear(member, year)) {
-            PullRequest pullRequest = pullRequestRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
-            pullRequest.updatePullRequestNum(pullRequestNum);
+        if (isExistsByMemberAndYear(member, year)) {
+            updatePullRequestNum(member, pullRequestNum, year);
             return;
         }
         pullRequestRepository.save(pullRequestMapper.toEntity(member, pullRequestNum, year));
+    }
+
+    public void updatePullRequestNum(Member member, Integer pullRequestNum, Integer year) {
+        PullRequest pullRequest = pullRequestRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
+        pullRequest.updatePullRequestNum(pullRequestNum);
     }
 
     public List<PullRequest> findPullRequestByMember(final Member member) {
@@ -34,5 +43,9 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
     public PullRequest loadEntity(final Long id) {
         return pullRequestRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private boolean isExistsByMemberAndYear(Member member, Integer year) {
+        return pullRequestRepository.existsByMemberAndYear(member, year);
     }
 }

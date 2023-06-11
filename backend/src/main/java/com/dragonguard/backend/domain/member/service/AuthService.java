@@ -8,6 +8,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.exception.CookieException;
 import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -29,31 +30,52 @@ public class AuthService {
     private final JwtValidator jwtValidator;
 
     public JwtToken refreshToken(final String oldRefreshToken, final String oldAccessToken) {
-        if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
-            throw new CookieException();
-        }
+        validateTokens(oldRefreshToken, oldAccessToken);
 
-        if (!jwtTokenProvider.validateToken(oldRefreshToken)) {
-            throw new JwtProcessingException();
-        }
+        UserDetailsImpl user = getUserDetails(oldAccessToken);
 
+        validateSavedRefreshTokenIfExpired(oldRefreshToken, UUID.fromString(user.getName()));
+
+        return findMemberAndUpdateRefreshToken(user);
+    }
+
+    public JwtToken findMemberAndUpdateRefreshToken(final UserDetailsImpl user) {
+        JwtToken jwtToken = jwtTokenProvider.createToken(user);
+
+        memberRepository.findById(getLoginUserId())
+                .orElseThrow(EntityNotFoundException::new)
+                .updateRefreshToken(jwtToken.getRefreshToken());
+
+        return jwtToken;
+    }
+
+    private UserDetailsImpl getUserDetails(final String oldAccessToken) {
         Authentication authentication = jwtValidator.getAuthentication(oldAccessToken);
-        UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
+        return (UserDetailsImpl) authentication.getPrincipal();
+    }
 
-        UUID id = UUID.fromString(user.getName());
+    private void validateTokens(final String oldRefreshToken, final String oldAccessToken) {
+        validateJwtTokens(oldRefreshToken, oldAccessToken);
+        validateIfRefreshTokenExpired(oldRefreshToken);
+    }
 
+    private void validateSavedRefreshTokenIfExpired(final String oldRefreshToken, final UUID id) {
         String savedToken = memberRepository.findRefreshTokenById(id);
-
         if (!savedToken.equals(oldRefreshToken)) {
             throw new JwtProcessingException();
         }
+    }
 
-        JwtToken jwtToken = jwtTokenProvider.createToken(user);
+    private void validateIfRefreshTokenExpired(final String oldRefreshToken) {
+        if (!jwtTokenProvider.validateToken(oldRefreshToken)) {
+            throw new JwtProcessingException();
+        }
+    }
 
-        Member member = user.getMember();
-        member.updateRefreshToken(jwtToken.getRefreshToken());
-
-        return jwtToken;
+    private void validateJwtTokens(final String oldRefreshToken, final String oldAccessToken) {
+        if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
+            throw new CookieException();
+        }
     }
 
     public Member getLoginUser() {

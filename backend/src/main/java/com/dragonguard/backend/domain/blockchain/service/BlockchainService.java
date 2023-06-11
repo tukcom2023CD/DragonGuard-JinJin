@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author 김승진
- * @description 블록체인 관련 DB 요청 및 TrasactionService의 함수들의 호출을 담당하는 클래스
+ * @description 블록체인 관련 DB 요청 및 SmartContractService의 함수들의 호출을 담당하는 클래스
  */
 
 @TransactionService
@@ -37,32 +37,37 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
     public void setTransaction(final ContractRequest request, final Member member) {
         UUID memberId = member.getId();
-        if (blockchainRepository.existsByMemberId(memberId)) {
-            List<Blockchain> blockchains = blockchainRepository.findAllByMemberId(memberId);
+        if (isMemberBlockchainSaved(memberId)) request.setAmount(BigInteger.valueOf(getNumOfNewContributionsWithoutSaved(request, memberId)));
 
-            long sum = blockchains.stream()
-                    .filter(b -> b.getContributeType().equals(ContributeType.valueOf(request.getContributeType())))
-                    .mapToLong(b -> Long.parseLong(String.valueOf(b.getAmount())))
-                    .sum();
+        if (hasNoContribution(request)) return;
+        BigInteger amount = transferAndGetBalanceOfTransaction(request, member.getWalletAddress());
 
-            long num = Long.parseLong(String.valueOf(request.getAmount())) - sum;
-            if (num <= 0) return;
+        if (validateAndSaveBlockchain(request, member, amount)) return;
+        checkAdminAndSaveBlockchain(request, member);
+    }
 
-            request.setAmount(BigInteger.valueOf(num));
-        }
+    private long getNumOfNewContributionsWithoutSaved(final ContractRequest request, final UUID memberId) {
+        return Long.parseLong(String.valueOf(request.getAmount())) - getSumOfMemberBlockchainTokens(request, memberId);
+    }
 
-        if (request.getAmount().equals(BigInteger.ZERO)) return;
+    private long getSumOfMemberBlockchainTokens(final ContractRequest request, final UUID memberId) {
+        return blockchainRepository.findAllByMemberId(memberId).stream()
+                .filter(b -> b.getContributeType().equals(ContributeType.valueOf(request.getContributeType())))
+                .mapToLong(b -> Long.parseLong(String.valueOf(b.getAmount())))
+                .sum();
+    }
 
-        smartContractService.transfer(request, member.getWalletAddress());
-        BigInteger amount = smartContractService.balanceOf(member.getWalletAddress());
+    private boolean hasNoContribution(final ContractRequest request) {
+        return request.getAmount().equals(BigInteger.ZERO);
+    }
 
-        if (amount.equals(request.getAmount())) {
-            blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));
-            return;
-        }
-        if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
-            blockchainRepository.save(blockchainMapper.toEntity(request.getAmount(), member, request));
-        }
+    private boolean isMemberBlockchainSaved(final UUID memberId) {
+        return blockchainRepository.existsByMemberId(memberId);
+    }
+
+    private BigInteger transferAndGetBalanceOfTransaction(final ContractRequest request, final String walletAddress) {
+        smartContractService.transfer(request, walletAddress);
+        return smartContractService.balanceOf(walletAddress);
     }
 
     @Transactional(readOnly = true)
@@ -76,5 +81,23 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     public Blockchain loadEntity(final Long id) {
         return blockchainRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private void checkAdminAndSaveBlockchain(final ContractRequest request, final Member member) {
+        if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
+            blockchainRepository.save(blockchainMapper.toEntity(request.getAmount(), member, request));
+        }
+    }
+
+    private boolean validateAndSaveBlockchain(final ContractRequest request, final Member member, final BigInteger amount) {
+        if (hasSameAmount(request, amount)) {
+            blockchainRepository.save(blockchainMapper.toEntity(amount, member, request));
+            return true;
+        }
+        return false;
+    }
+
+    private boolean hasSameAmount(final ContractRequest request, final BigInteger amount) {
+        return amount.equals(request.getAmount());
     }
 }

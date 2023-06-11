@@ -16,6 +16,7 @@ import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -36,7 +37,6 @@ public class MemberClientService {
     private final GithubClient<MemberClientRequest, MemberPullRequestResponse> memberPullRequestClient;
     private final GithubClient<MemberClientRequest, MemberRepoResponse[]> memberRepoClient;
     private final GithubClient<MemberClientRequest, MemberOrganizationResponse[]> memberOrganizationClient;
-    private final GithubClient<MemberClientRequest, OrganizationRepoResponse[]> organizationRepoClient;
     private final GitOrganizationService gitOrganizationService;
     private final GitRepoRepository gitRepoRepository;
     private final GitRepoMapper gitRepoMapper;
@@ -49,45 +49,80 @@ public class MemberClientService {
     public void addMemberContribution(final Member member) {
         int year = LocalDate.now().getYear();
         String githubId = member.getGithubId();
-        String githubToken = member.getGithubToken();
-        MemberClientRequest request = new MemberClientRequest(githubId, githubToken, year);
 
-        int commitNum = memberCommitClient.requestToGithub(request).getTotal_count();
-        int issueNum = memberIssueClient.requestToGithub(request).getTotal_count();
+        MemberClientRequest request = new MemberClientRequest(githubId,  member.getGithubToken(), year);
+
+        requestCommitClientAndSave(member, githubId, request);
+        requestIssueClientAndSave(member, year, request);
+        requestPullRequestClientAndSave(member, year, request);
+    }
+
+    public void requestPullRequestClientAndSave(final Member member, final int year, final MemberClientRequest request) {
         int pullRequestNum = memberPullRequestClient.requestToGithub(request).getTotal_count();
-
-        commitService.saveCommits(new ContributionScrapingResponse(githubId, commitNum), member);
-        issueService.saveIssues(member, issueNum, year);
         pullRequestService.savePullRequests(member, pullRequestNum, year);
     }
 
-    public void addMemberGitRepoAndGitOrganization(final Member member) {
-        int year = LocalDate.now().getYear();
-        String githubId = member.getGithubId();
-        String githubToken = member.getGithubToken();
-        MemberClientRequest request = new MemberClientRequest(githubId, githubToken, year);
+    public void requestIssueClientAndSave(final Member member, final int year, final MemberClientRequest request) {
+        int issueNum = memberIssueClient.requestToGithub(request).getTotal_count();
+        issueService.saveIssues(member, issueNum, year);
+    }
 
-        Set<String> memberRepoNames = Arrays.stream(memberRepoClient.requestToGithub(request))
+    public void requestCommitClientAndSave(final Member member, final String githubId, final MemberClientRequest request) {
+        int commitNum = memberCommitClient.requestToGithub(request).getTotal_count();
+        commitService.saveCommits(new ContributionScrapingResponse(githubId, commitNum), member);
+    }
+
+    public void addMemberGitRepoAndGitOrganization(final Member member) {
+        MemberClientRequest request = new MemberClientRequest(
+                member.getGithubId(),
+                member.getGithubToken(),
+                LocalDate.now().getYear());
+
+        saveGitRepos(getMemberRepoNames(request), member);
+        gitOrganizationService.findAndSaveGitOrganizations(getMemberOrganizationNames(request), member);
+    }
+
+    public Set<String> getMemberRepoNames(final MemberClientRequest request) {
+        return Arrays.stream(memberRepoClient.requestToGithub(request))
                 .map(MemberRepoResponse::getFull_name)
                 .collect(Collectors.toSet());
-        Set<String> memberOrganizationNames = Arrays.stream(memberOrganizationClient.requestToGithub(request))
+    }
+
+    public Set<String> getMemberOrganizationNames(final MemberClientRequest request) {
+        return Arrays.stream(memberOrganizationClient.requestToGithub(request))
                 .map(MemberOrganizationResponse::getLogin)
                 .collect(Collectors.toSet());
-
-        saveGitRepos(memberRepoNames, member);
-        gitOrganizationService.saveGitOrganizations(memberOrganizationNames, member);
     }
 
     public void saveGitRepos(final Set<String> gitRepoNames, final Member member) {
-        Set<GitRepo> gitRepos = gitRepoNames.stream()
-                .map(name -> gitRepoRepository.findByName(name).orElseGet(() -> gitRepoMapper.toEntity(name)))
-                .collect(Collectors.toSet());
+        Set<GitRepo> gitRepos = findIfGitRepoNotExists(gitRepoNames);
+        saveAllGitRepos(gitRepos);
 
-        gitRepoRepository.saveAll(gitRepos);
-        Set<GitRepoMember> list = gitRepos.stream()
+        Set<GitRepoMember> list = findIfGitRepoMemberNotExists(member, gitRepos);
+        saveAllGitRepoMembers(list);
+    }
+
+    public void saveAllGitRepoMembers(final Set<GitRepoMember> list) {
+        try {
+            gitRepoMemberRepository.saveAll(list);
+        } catch (DataIntegrityViolationException e) {}
+    }
+
+    public Set<GitRepoMember> findIfGitRepoMemberNotExists(final Member member, final Set<GitRepo> gitRepos) {
+        return gitRepos.stream()
                 .map(gr -> gitRepoMemberMapper.toEntity(member, gr))
                 .collect(Collectors.toSet());
+    }
 
-        gitRepoMemberRepository.saveAll(list);
+    public void saveAllGitRepos(final Set<GitRepo> gitRepos) {
+        try{
+            gitRepoRepository.saveAll(gitRepos);
+        } catch (DataIntegrityViolationException e) {}
+    }
+
+    public Set<GitRepo> findIfGitRepoNotExists(final Set<String> gitRepoNames) {
+        return gitRepoNames.stream()
+                .map(name -> gitRepoRepository.findByName(name).orElseGet(() -> gitRepoMapper.toEntity(name)))
+                .collect(Collectors.toSet());
     }
 }

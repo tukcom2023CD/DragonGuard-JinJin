@@ -26,7 +26,7 @@ public class GitOrganization implements Auditable {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "gitOrganization")

@@ -30,7 +30,7 @@ GitOrganizationServiceTest extends LoginTest {
         Set<String> gitOrganizationNames = Set.of("tukcom2023CD", "C-B-U", "bid-bid");
 
         //when
-        gitOrganizationService.saveGitOrganizations(gitOrganizationNames, authService.getLoginUser());
+        gitOrganizationService.findAndSaveGitOrganizations(gitOrganizationNames, authService.getLoginUser());
 
         long count = gitOrganizationNames.stream()
                 .map(gitOrganizationRepository::findByName)
