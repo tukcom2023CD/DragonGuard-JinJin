@@ -1,7 +1,6 @@
 package com.dragonguard.backend.domain.gitrepomember.repository;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoContribution;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -12,8 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.dragonguard.backend.domain.gitrepomember.entity.QGitRepoMember.gitRepoMember;
 import static com.dragonguard.backend.domain.gitrepo.entity.QGitRepo.gitRepo;
+import static com.dragonguard.backend.domain.gitrepomember.entity.QGitRepoMember.gitRepoMember;
 
 
 /**
@@ -44,17 +43,6 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
         return jpaQueryFactory
                 .selectFrom(gitRepoMember)
                 .where(equalGitRepoAndMember(gitRepo, member))
-                .fetchFirst() != null;
-    }
-
-    @Override
-    public boolean existsByGitRepoAndMemberAndGitRepoContribution(GitRepo gitRepo, Member member, GitRepoContribution gitRepoContribution) {
-        return jpaQueryFactory
-                .selectFrom(gitRepoMember)
-                .where(equalGitRepoAndMember(gitRepo, member)
-                                .and(gitRepoMember.gitRepoContribution.additions.eq(gitRepoContribution.getAdditions()))
-                                        .and(gitRepoMember.gitRepoContribution.deletions.eq(gitRepoContribution.getDeletions()))
-                                                .and(gitRepoMember.gitRepoContribution.commits.eq(gitRepoContribution.getCommits())))
                 .fetchFirst() != null;
     }
 

@@ -19,7 +19,16 @@ import java.util.Objects;
 @Entity
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(uniqueConstraints = {@UniqueConstraint(name = "uniqueGitRepoMember", columnNames = {"git_repo_id", "member_id", "commits", "additions", "deletions"})})
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uniqueGitRepoMember",
+                        columnNames = {
+                                "git_repo_id",
+                                "member_id",
+                                "commits",
+                                "additions",
+                                "deletions"})})
 public class GitRepoMember implements Auditable {
     @Id
     @GeneratedValue
@@ -46,6 +55,11 @@ public class GitRepoMember implements Auditable {
         this.gitRepo = gitRepo;
         this.member = member;
         this.gitRepoContribution = gitRepoContribution;
+        organize();
+    }
+
+    public void organize() {
+        this.gitRepo.organize(this);
     }
 
     public void update(GitRepoMember gitRepoMember) {
@@ -55,8 +69,10 @@ public class GitRepoMember implements Auditable {
     }
 
     public boolean customEquals(GitRepoMember gitRepoMember) {
-        return Objects.equals(gitRepo, gitRepoMember.gitRepo)
-                && Objects.equals(member, gitRepoMember.member)
-                && Objects.equals(gitRepoContribution, gitRepoMember.gitRepoContribution);
+        return Objects.equals(gitRepo.getName(), gitRepoMember.gitRepo.getName())
+                && Objects.equals(member.getGithubId(), gitRepoMember.member.getGithubId())
+                && gitRepoContribution.getAdditions().intValue() == gitRepoMember.gitRepoContribution.getAdditions().intValue()
+                && gitRepoContribution.getDeletions().intValue() == gitRepoMember.gitRepoContribution.getDeletions().intValue()
+                && gitRepoContribution.getCommits().intValue() == gitRepoMember.gitRepoContribution.getCommits().intValue();
     }
 }

@@ -40,13 +40,16 @@ public class GitRepo implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public GitRepo(String name, Set<GitRepoMember> gitRepoMembers) {
+    public GitRepo(String name) {
         this.name = name;
-        this.gitRepoMembers = gitRepoMembers;
     }
 
     public void updateClosedIssueNum(Integer closedIssueNum) {
         this.closedIssueNum = closedIssueNum;
+    }
+
+    public void organize(GitRepoMember gitRepoMember) {
+        this.gitRepoMembers.add(gitRepoMember);
     }
 
     @Override
