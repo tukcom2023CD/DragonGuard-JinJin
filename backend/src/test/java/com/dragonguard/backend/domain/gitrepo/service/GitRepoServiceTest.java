@@ -172,6 +172,9 @@ class GitRepoServiceTest extends LoginTest {
                 .gitRepoContribution(new GitRepoContribution(4, 5, 6))
                 .build();
 
+        gitRepoRepository.saveAll(List.of(gitRepo1, gitRepo2));
+        gitRepoMemberRepository.saveAll(List.of(gitRepoMember1, gitRepoMember2));
+
         GitRepoCompareRequest request = new GitRepoCompareRequest(gitRepo1.getName(), gitRepo2.getName());
         GitRepoClientResponse expected = new GitRepoClientResponse(gitRepo1.getName(), 1, 2, 3, 4, 5, 6);
 

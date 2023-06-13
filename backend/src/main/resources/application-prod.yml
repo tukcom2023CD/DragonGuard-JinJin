@@ -78,6 +78,7 @@ blockchain:
   contract-address: ${BLOCKCHAIN_CONTRACT_ADDRESS}
   abi: ${BLOCKCHAIN_ABI}
   keyring: ${BLOCKCHAIN_KEYING}
+  smart-contract:  ${BLOCKCHAIN_CONTRACT_ADDRESS}
 
 github:
   url: https://api.github.com/

@@ -99,3 +99,8 @@ spec:
                 secretKeyRef:
                   name: gitrank-secret
                   key: blockchain.keyring
+            - name: BLOCKCHAIN_CONTRACT_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: blockchain.contract-address
