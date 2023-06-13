@@ -30,7 +30,7 @@ public class LogIntroduction {
 
     @Before("allService() || allRepository()")
     public void serviceAndRepositoryLog(JoinPoint joinPoint) {
-        log.debug(
+        log.info(
                 "METHOD : {}, ARGS : {}",
                 joinPoint.getSignature().toShortString(),
                 joinPoint.getArgs());
