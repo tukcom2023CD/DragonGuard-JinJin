@@ -48,23 +48,29 @@ public class BlockchainConfig {
     @Bean
     public Contract contract() {
         Caver caver = caver();
+        AbstractKeyring keyring = keyring();
+        caver.wallet.add(keyring);
         try {
             return caver.contract.create(blockchainProperties.getAbi(), contractAddress);
         } catch (IOException e) {
-            AbstractKeyring keyring = keyring();
-            caver.wallet.add(keyring);
-            SendOptions options = new SendOptions();
-            options.setFrom(keyring.getAddress());
-            options.setGas(BigInteger.valueOf(3000000));
-            options.setFeeDelegation(true);
-            options.setFeePayer(keyring.getAddress());
             try {
                 Contract contract = caver.contract.create(blockchainProperties.getAbi());
-                return contract.deploy(options, blockchainProperties.getByteCode(), TOKEN_NAME, TOKEN_SYMBOL, BigInteger.valueOf(TOKEN_AMOUNT));
+                return contract.deploy(sendOptions(), blockchainProperties.getByteCode(), TOKEN_NAME, TOKEN_SYMBOL, BigInteger.valueOf(TOKEN_AMOUNT));
             } catch(Exception ignored) {
                 e.printStackTrace();
                 throw new BlockchainException();
             }
         }
+    }
+
+    @Bean
+    public SendOptions sendOptions() {
+        AbstractKeyring keyring = keyring();
+        SendOptions options = new SendOptions();
+        options.setFrom(keyring.getAddress());
+        options.setGas(BigInteger.valueOf(3000000));
+        options.setFeeDelegation(true);
+        options.setFeePayer(keyring.getAddress());
+        return options;
     }
 }

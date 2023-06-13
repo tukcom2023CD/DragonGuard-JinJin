@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.contract.SendOptions;
-import com.klaytn.caver.wallet.keyring.AbstractKeyring;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,21 +22,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SmartContractService {
-    private final AbstractKeyring keyring;
     private final Contract contract;
     private final ObjectMapper objectMapper;
+    private final SendOptions sendOptions;
     private static final String SET_METHOD = "set";
     private static final String BALANCE_OF_METHOD = "balanceOf";
 
     public void transfer(ContractRequest request, String walletAddress) {
-        SendOptions options = new SendOptions();
-        options.setFrom(keyring.getAddress());
-        options.setGas(BigInteger.valueOf(3000000));
-        options.setFeeDelegation(true);
-        options.setFeePayer(keyring.getAddress());
-
         try {
-            contract.send(options, SET_METHOD, walletAddress, request.getAmount(), request.getContributeType());
+            contract.send(sendOptions, SET_METHOD, walletAddress, request.getAmount(), request.getContributeType());
         } catch (Exception e) {
             e.printStackTrace();
             throw new BlockchainException();
