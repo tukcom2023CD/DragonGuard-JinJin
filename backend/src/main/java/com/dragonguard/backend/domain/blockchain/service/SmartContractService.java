@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.blockchain.service;
 
-import com.dragonguard.backend.domain.blockchain.dto.request.ContractRequest;
 import com.dragonguard.backend.config.blockchain.BlockchainProperties;
+import com.dragonguard.backend.domain.blockchain.dto.request.ContractRequest;
 import com.dragonguard.backend.domain.blockchain.exception.BlockchainException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,6 +40,7 @@ public class SmartContractService {
         options.setFeePayer(keyring.getAddress());
 
         try {
+            String contractAddress = contract.getContractAddress();
             contract.deploy(options, blockchainProperties.getByteCode(), "Gitter", "GTR", BigInteger.valueOf(10000000000000L));
         } catch (Exception e) {
             e.printStackTrace();
