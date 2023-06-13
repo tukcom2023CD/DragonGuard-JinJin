@@ -224,6 +224,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun filterCat(name: String) {
+        lastSearch = name
         if(filterLanguage.isNotEmpty()) {
             if (filterOptions.isNotEmpty()) {
                 filterResult.append(filterLanguage)
@@ -394,7 +395,10 @@ class SearchActivity : AppCompatActivity() {
             binding.searchResult.layoutManager = LinearLayoutManager(this)
             repositoryProfileAdapter.notifyDataSetChanged()
             binding.searchResult.visibility = View.VISIBLE
+        } else {
+            repositoryProfileAdapter.notifyDataSetChanged()
         }
+
         count++
         Log.d("api 횟수", "$count 페이지 검색")
         binding.loadingLottie.pauseAnimation()
