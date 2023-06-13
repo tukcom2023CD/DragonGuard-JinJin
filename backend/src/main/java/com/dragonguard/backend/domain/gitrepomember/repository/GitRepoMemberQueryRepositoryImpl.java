@@ -29,10 +29,8 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
     @Override
     public List<GitRepoMember> findAllByGitRepo(GitRepo repo) {
         return jpaQueryFactory
-                .select(gitRepoMember)
-                .from(gitRepoMember, gitRepo)
-                .leftJoin(gitRepo.gitRepoMembers, gitRepoMember)
-                .fetchJoin()
+                .selectFrom(gitRepoMember)
+                .join(gitRepo.gitRepoMembers, gitRepoMember)
                 .where()
                 .distinct()
                 .fetch();

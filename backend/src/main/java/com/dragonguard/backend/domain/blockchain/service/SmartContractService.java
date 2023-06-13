@@ -1,12 +1,10 @@
 package com.dragonguard.backend.domain.blockchain.service;
 
-import com.dragonguard.backend.config.blockchain.BlockchainProperties;
 import com.dragonguard.backend.domain.blockchain.dto.request.ContractRequest;
 import com.dragonguard.backend.domain.blockchain.exception.BlockchainException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.klaytn.caver.Caver;
 import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.contract.SendOptions;
@@ -25,28 +23,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SmartContractService {
-    private final BlockchainProperties blockchainProperties;
-    private final Caver caver;
     private final AbstractKeyring keyring;
     private final Contract contract;
     private final ObjectMapper objectMapper;
-
-    public void deploy() {
-        caver.wallet.add(keyring);
-        SendOptions options = new SendOptions();
-        options.setFrom(keyring.getAddress());
-        options.setGas(BigInteger.valueOf(3000000));
-        options.setFeeDelegation(true);
-        options.setFeePayer(keyring.getAddress());
-
-        try {
-            String contractAddress = contract.getContractAddress();
-            contract.deploy(options, blockchainProperties.getByteCode(), "Gitter", "GTR", BigInteger.valueOf(10000000000000L));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BlockchainException();
-        }
-    }
+    private static final String SET_METHOD = "set";
+    private static final String BALANCE_OF_METHOD = "balanceOf";
 
     public void transfer(ContractRequest request, String walletAddress) {
         SendOptions options = new SendOptions();
@@ -56,15 +37,16 @@ public class SmartContractService {
         options.setFeePayer(keyring.getAddress());
 
         try {
-            contract.send(options, "set", walletAddress, request.getAmount(), request.getContributeType());
+            contract.send(options, SET_METHOD, walletAddress, request.getAmount(), request.getContributeType());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BlockchainException();
         }
     }
 
     public BigInteger balanceOf(String address) {
         try {
-            List<Type> info = contract.call("balanceOf", address);
+            List<Type> info = contract.call(BALANCE_OF_METHOD, address);
 
             return new BigInteger(objectToString(info.get(0).getValue()));
 

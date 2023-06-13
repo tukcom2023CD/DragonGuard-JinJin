@@ -25,6 +25,9 @@ import java.math.BigInteger;
 public class BlockchainConfig {
     private final BlockchainProperties blockchainProperties;
     private static final String BAOBAB_TESTNET = "https://api.baobab.klaytn.net:8651";
+    private static final String TOKEN_NAME = "Gitter";
+    private static final String TOKEN_SYMBOL = "GTR";
+    private static final Long TOKEN_AMOUNT = 10000000000000L;
     @Value("${blockchain.contract-address}")
     private String contractAddress;
 
@@ -56,10 +59,11 @@ public class BlockchainConfig {
             options.setFeeDelegation(true);
             options.setFeePayer(keyring.getAddress());
             try {
-                return caver.contract.create(blockchainProperties.getAbi())
-                        .deploy(options, blockchainProperties.getByteCode(), "Gitter", "GTR", BigInteger.valueOf(10000000000000L));
+                Contract contract = caver.contract.create(blockchainProperties.getAbi());
+                return contract.deploy(options, blockchainProperties.getByteCode(), TOKEN_NAME, TOKEN_SYMBOL, BigInteger.valueOf(TOKEN_AMOUNT));
             } catch(Exception ignored) {
-                return null;
+                e.printStackTrace();
+                throw new BlockchainException();
             }
         }
     }
