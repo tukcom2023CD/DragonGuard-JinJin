@@ -94,9 +94,6 @@ class SearchActivity : AppCompatActivity() {
 //        Toast.makeText(applicationContext, "checkbox : ${languagesCheckBox.size}", Toast.LENGTH_SHORT).show()
 //        검색 옵션 구현
 
-
-
-//        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
         binding.searchName.setOnClickListener {
             val intent = Intent(this, SearchFilterActivity::class.java)
             activityResultLauncher.launch(intent)
@@ -120,7 +117,7 @@ class SearchActivity : AppCompatActivity() {
                     Log.d("results", "stars: $stars ")
                     Log.d("results", "forks: $forks ")
                     Log.d("results", "name: $name ")
-                    checkLanguage(language, type, topics, stars, forks, name)
+                    checkLanguage(languages=language, type=type, topics=topics, stars=stars, forks=forks, name=name)
                 } catch (e: Exception) {
 
                 }

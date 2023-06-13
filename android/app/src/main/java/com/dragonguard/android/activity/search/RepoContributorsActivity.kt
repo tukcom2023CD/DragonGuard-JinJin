@@ -59,7 +59,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    repo의 contributors 검색
     fun repoContributors(repoName: String) {
-        if(!this@RepoContributorsActivity.isFinishing){
+        if(!this@RepoContributorsActivity.isFinishing && count < 10){
             Log.d("check", "repoName $repoName")
             Log.d("check", "token $token")
             val coroutine = CoroutineScope(Dispatchers.Main)
@@ -197,7 +197,7 @@ class RepoContributorsActivity : AppCompatActivity() {
           x축 label을 githubId의 앞의 4글자를 기입하여 곂치는 문제 해결
      */
     class MyXAxisFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
-        private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,4)) }
+        private val days = contributors.flatMap { if(it.githubId!!.length <4) {arrayListOf(it.githubId!!.substring(0,it.githubId!!.length))} else arrayListOf(it.githubId!!.substring(0,3)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString()
         }
@@ -208,7 +208,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
 //    막대 위의 커밋수 정수로 변경
     class ScoreCustomFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
-        private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,4)) }
+        private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,3)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
         }

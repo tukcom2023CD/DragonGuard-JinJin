@@ -55,12 +55,15 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                                 val language = filterActivity.map[type]!!.split(",").toMutableList()
                                 language.remove(chip.text.toString())
                                 val sb = StringBuilder()
-                                language.forEach {
-                                    sb.append("$it,")
+                                language.forEachIndexed { index, s ->
+                                    if(index != language.lastIndex) {
+                                        sb.append("$s,")
+                                    } else {
+                                        sb.append(s)
+                                    }
                                 }
-                                sb.deleteAt(sb.lastIndex)
                                 filterActivity.map[type] = sb.toString()
-                                activityBinding.languageFilters.removeView(chip)
+                                activityBinding.languageFilters.removeView(it)
                             }
                             activityBinding.languageFilters.addView(chip)
                         }
@@ -73,7 +76,7 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                             chip.text =binding.languageText.text.toString()
                             chip.setOnClickListener {
                                 filterActivity.map[type] = ""
-                                activityBinding.languageFilters.removeView(chip)
+                                activityBinding.languageFilters.removeView(it)
                             }
                             activityBinding.languageFilters.addView(chip)
                         }
