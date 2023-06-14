@@ -74,7 +74,7 @@ class EmailControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
-        perform.andExpect(status().isOk());
+        perform.andExpect(status().isNoContent());
 
         perform.andDo(print())
                 .andDo(document("delete email code", getDocumentRequest(), getDocumentResponse()));

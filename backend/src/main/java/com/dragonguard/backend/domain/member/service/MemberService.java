@@ -11,7 +11,6 @@ import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationSer
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.issue.service.IssueService;
-import com.dragonguard.backend.domain.member.dto.kafka.KafkaContributionRequest;
 import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
@@ -29,7 +28,7 @@ import com.dragonguard.backend.domain.organization.repository.OrganizationQueryR
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.IdResponse;
-import com.dragonguard.backend.global.KafkaProducer;
+import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
@@ -61,11 +60,12 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private final IssueService issueService;
     private final GitOrganizationService gitOrganizationService;
     private final GitRepoRepository gitRepoRepository;
-    private final KafkaProducer<KafkaContributionRequest> kafkaContributionProducer;
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
 
     public Tier getTier() {
-        return loadEntity(authService.getLoginUserId()).getTier();
+        Member member = getLoginUserWithPersistence();
+        member.updateTier();
+        return member.getTier();
     }
 
     public IdResponse<UUID> saveMember(final MemberRequest memberRequest, final Role role) {
@@ -74,7 +74,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public Member saveAndRequestClient(final String githubId, final Role role, final AuthStep authStep) {
         Member member = findMemberOrSaveWithRole(githubId, role, authStep);
-        sendContributionRequestToKafka(member.getGithubId());
+        getContributionSumByScraping(member.getGithubId());
         sendGitRepoRequestToKafka(githubId);
         return member;
     }
@@ -148,14 +148,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Member member = getLoginUserWithPersistence();
         getContributionSumByScraping(member.getGithubId());
 
-        if (!member.isWalletAddressExists()) return;
-
-        sendTransactionAndUpdateContributionByKafka(member);
-    }
-
-    public void sendTransactionAndUpdateContributionByKafka(final Member member) {
-        transactionAndUpdateTier(member);
-        sendContributionRequestToKafka(member.getGithubId());
+        if (member.isWalletAddressExists()) transactionAndUpdateTier(member);
     }
 
     public MemberResponse getMember() {
@@ -206,13 +199,13 @@ public class MemberService implements EntityLoader<Member, UUID> {
         member.getSumOfReviews().ifPresent(rv -> checkAndTransaction(member, rv, ContributeType.CODE_REVIEW));
     }
 
-    public boolean checkAndTransaction(final Member member, final int commit, final ContributeType contributeType) {
-        if (commit <= 0) return true;
+    public boolean checkAndTransaction(final Member member, final int contribution, final ContributeType contributeType) {
+        if (contribution <= 0) return true;
 
         blockchainService.setTransaction(
                             new ContractRequest(
                                     contributeType.toString(),
-                                    BigInteger.valueOf(commit)),
+                                    BigInteger.valueOf(contribution)),
                             member);
 
         return false;
@@ -276,11 +269,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     private void sendGitRepoAndContributionRequestToKafka(final String githubId) {
         sendGitRepoRequestToKafka(githubId);
-        sendContributionRequestToKafka(githubId);
-    }
-
-    private void sendContributionRequestToKafka(final String githubId) {
-        kafkaContributionProducer.send(new KafkaContributionRequest(githubId));
+        getContributionSumByScraping(githubId);
     }
 
     private void sendGitRepoRequestToKafka(final String githubId) {

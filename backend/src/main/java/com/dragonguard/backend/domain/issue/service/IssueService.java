@@ -42,7 +42,7 @@ public class IssueService implements EntityLoader<Issue, Long> {
 
 
     public List<Issue> findIssuesByMember(final Member member) {
-        return issueRepository.findByMember(member);
+        return issueRepository.findAllByMember(member);
     }
 
     @Override

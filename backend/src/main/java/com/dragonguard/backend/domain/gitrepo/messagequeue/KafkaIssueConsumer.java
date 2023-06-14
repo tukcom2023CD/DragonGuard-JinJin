@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.gitrepo.messagequeue;
 
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.ClosedIssueKafkaResponse;
 import com.dragonguard.backend.domain.gitrepo.service.GitRepoService;
+import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +17,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaIssueConsumer {
+public class KafkaIssueConsumer implements KafkaConsumer<ClosedIssueKafkaResponse> {
     private final GitRepoService gitRepoService;
     private final ObjectMapper objectMapper;
 
-    @SneakyThrows(JsonProcessingException.class)
+    @Override
     @KafkaListener(topics = "gitrank.to.backend.issues", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        gitRepoService.updateClosedIssues(objectMapper.readValue(message, ClosedIssueKafkaResponse.class));
+        gitRepoService.updateClosedIssues(readValue(message));
+    }
+
+    @Override
+    @SneakyThrows(JsonProcessingException.class)
+    public ClosedIssueKafkaResponse readValue(String message) {
+        return objectMapper.readValue(message, ClosedIssueKafkaResponse.class);
     }
 }

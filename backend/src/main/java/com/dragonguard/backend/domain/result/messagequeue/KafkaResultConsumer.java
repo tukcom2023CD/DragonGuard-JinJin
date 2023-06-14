@@ -7,6 +7,7 @@ import com.dragonguard.backend.domain.result.dto.kafka.SearchKafkaResponse;
 import com.dragonguard.backend.domain.result.service.ResultService;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.entity.SearchType;
+import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +25,15 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaResultConsumer {
+public class KafkaResultConsumer implements KafkaConsumer<ResultKafkaResponse> {
 
     private final ResultService resultService;
     private final ObjectMapper objectMapper;
 
-    @SneakyThrows(JsonProcessingException.class)
+    @Override
     @KafkaListener(topics = "gitrank.to.backend.result", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        ResultKafkaResponse resultResponse = objectMapper.readValue(message, ResultKafkaResponse.class);
+        ResultKafkaResponse resultResponse = readValue(message);
 
         List<ClientResultResponse> result = resultResponse.getResult().stream()
                 .map(ResultDetailsResponse::getName)
@@ -45,5 +46,11 @@ public class KafkaResultConsumer {
                 SearchType.valueOf((searchResponse.getType()).toUpperCase()), searchResponse.getPage());
 
         resultService.saveAllResult(result, searchRequest);
+    }
+
+    @Override
+    @SneakyThrows(JsonProcessingException.class)
+    public ResultKafkaResponse readValue(String message) {
+        return objectMapper.readValue(message, ResultKafkaResponse.class);
     }
 }
