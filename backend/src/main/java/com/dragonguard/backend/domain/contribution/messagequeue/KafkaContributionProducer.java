@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.contribution.messagequeue;
 
 import com.dragonguard.backend.domain.contribution.dto.request.ContributionScrapingRequest;
-import com.dragonguard.backend.global.KafkaProducer;
+import com.dragonguard.backend.global.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

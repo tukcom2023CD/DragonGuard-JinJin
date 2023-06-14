@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.DependsOn;
 
 import java.math.BigInteger;
@@ -21,9 +22,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @DatabaseTest
-@DisplayName("admin 서비스의")
+@DisplayName("blockchain 서비스의")
 @DependsOn("blockchainDeploy")
 class BlockchainServiceTest extends LoginTest {
 
@@ -31,6 +35,7 @@ class BlockchainServiceTest extends LoginTest {
     @Autowired private BlockchainRepository blockchainRepository;
     @Autowired private MemberQueryRepository memberQueryRepository;
     @Autowired private BlockchainMapper blockchainMapper;
+    @MockBean private SmartContractService smartContractService;
     @Value("${wallet}") private String walletAddress;
 
     @Test
@@ -38,6 +43,8 @@ class BlockchainServiceTest extends LoginTest {
     void setTransaction() {
         //given
         memberQueryRepository.findById(loginUser.getId()).ifPresent(m -> m.updateWalletAddress(walletAddress));
+        doNothing().when(smartContractService).transfer(any(), any());
+        when(smartContractService.balanceOf(any())).thenReturn(BigInteger.valueOf(1));
 
         //when
         blockchainService.setTransaction(new ContractRequest(ContributeType.COMMIT.toString(), BigInteger.ONE), loginUser);

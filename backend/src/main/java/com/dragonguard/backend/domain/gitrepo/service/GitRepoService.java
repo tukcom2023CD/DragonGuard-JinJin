@@ -25,7 +25,7 @@ import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
 import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.global.GithubClient;
-import com.dragonguard.backend.global.KafkaProducer;
+import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;

@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.contribution.messagequeue;
 
 import com.dragonguard.backend.domain.contribution.dto.kafka.ContributionKafkaResponse;
 import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +17,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaContributionConsumer {
+public class KafkaContributionConsumer implements KafkaConsumer<ContributionKafkaResponse> {
 
     private final MemberService memberService;
     private final ObjectMapper objectMapper;
 
-    @SneakyThrows(JsonProcessingException.class)
+    @Override
     @KafkaListener(topics = "gitrank.to.backend.contribution", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        memberService.addMemberCommitAndUpdate(objectMapper.readValue(message, ContributionKafkaResponse.class));
+        memberService.addMemberCommitAndUpdate(readValue(message));
+    }
+
+    @Override
+    @SneakyThrows(JsonProcessingException.class)
+    public ContributionKafkaResponse readValue(String message) {
+        return objectMapper.readValue(message, ContributionKafkaResponse.class);
     }
 }

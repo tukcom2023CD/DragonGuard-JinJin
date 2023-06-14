@@ -45,6 +45,10 @@ spring:
       group-id: gitrank
       enable-auto-commit: false
       auto-offset-reset: earliest
+    retry:
+      topic:
+        enabled: false
+        attempts: 0
 
   redis:
     host: localhost

@@ -20,7 +20,7 @@ import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.GithubClient;
-import com.dragonguard.backend.global.KafkaProducer;
+import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
 import com.dragonguard.backend.support.fixture.member.entity.MemberFixture;

@@ -45,5 +45,10 @@ public class Blockchain implements Auditable {
         this.amount = amount;
         this.member = member;
         this.address = member.getWalletAddress();
+        organize();
+    }
+
+    private void organize() {
+        this.member.organizeBlockchain(this);
     }
 }

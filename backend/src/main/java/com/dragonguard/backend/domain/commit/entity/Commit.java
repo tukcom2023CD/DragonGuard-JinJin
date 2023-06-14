@@ -43,7 +43,7 @@ public class Commit implements Auditable {
         this.year = year;
         this.amount = amount;
         this.member = member;
-        organize(member);
+        organize();
     }
 
     public boolean customEqualsWithAmount(Commit commit) {
@@ -54,7 +54,7 @@ public class Commit implements Auditable {
         return year.equals(commit.year) && member.getGithubId().equals(commit.member.getGithubId());
     }
 
-    private void organize(Member member) {
+    private void organize() {
         member.addCommit(this);
     }
 }

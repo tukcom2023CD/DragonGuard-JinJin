@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class LogIntroduction {
+    private static final String FORMAT = "METHOD : {}, ARGS : {}";
+
     @Pointcut("execution(* com.dragonguard.backend..*Controller*.*(..))")
     public void allController() {}
 
@@ -20,18 +22,45 @@ public class LogIntroduction {
     @Pointcut("execution(* com.dragonguard.backend..*Repository*.*(..))")
     public void allRepository() {}
 
+    @Pointcut("execution(* com.dragonguard.backend..*Producer*.*(..))")
+    public void allConsumer() {}
+
+    @Pointcut("execution(* com.dragonguard.backend..*Producer*.*(..))")
+    public void allProducer() {}
+
+    @Pointcut("execution(* com.dragonguard.backend..*Client*.*(..))")
+    public void allClient() {}
+
     @Before("allController()")
     public void controllerLog(JoinPoint joinPoint) {
-        log.info(
-                "METHOD : {}, ARGS : {}",
-                joinPoint.getSignature().toShortString(),
-                joinPoint.getArgs());
+        infoLogging(joinPoint);
     }
 
     @Before("allService() || allRepository()")
     public void serviceAndRepositoryLog(JoinPoint joinPoint) {
+        infoLogging(joinPoint);
+    }
+
+    @Before("allClient()")
+    public void clientLog(JoinPoint joinPoint) {
+        debugLogging(joinPoint);
+    }
+
+    @Before("allConsumer() || allProducer()")
+    public void consumerAndLog(JoinPoint joinPoint) {
+        debugLogging(joinPoint);
+    }
+
+    private void infoLogging(JoinPoint joinPoint) {
         log.info(
-                "METHOD : {}, ARGS : {}",
+                FORMAT,
+                joinPoint.getSignature().toShortString(),
+                joinPoint.getArgs());
+    }
+
+    private void debugLogging(JoinPoint joinPoint) {
+        log.debug(
+                FORMAT,
                 joinPoint.getSignature().toShortString(),
                 joinPoint.getArgs());
     }

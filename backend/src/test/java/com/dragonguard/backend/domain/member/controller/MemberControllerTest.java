@@ -57,7 +57,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk());
+        perform.andExpect(status().isCreated());
 
         // docs
         perform.andDo(print())
@@ -77,7 +77,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk());
+        perform.andExpect(status().isNoContent());
 
         // docs
         perform.andDo(print())
@@ -97,7 +97,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk());
+        perform.andExpect(status().isNoContent());
 
         // docs
         perform.andDo(print())
@@ -218,7 +218,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk());
+        perform.andExpect(status().isNoContent());
 
         // docs
         perform.andDo(print())

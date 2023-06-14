@@ -249,12 +249,17 @@ public class Member implements Auditable {
         this.commits.forEach(Commit::delete);
         this.pullRequests.forEach(PullRequest::delete);
         this.issues.forEach(Issue::delete);
-        this.sumOfIssues = 0;
+        this.sumOfReviews = 0;
     }
 
     public boolean validateWalletAddressAndUpdateTier() {
         if (!isWalletAddressExists()) return true;
         updateTier();
         return false;
+    }
+
+    public void organizeBlockchain(Blockchain blockchain) {
+        this.blockchains.add(blockchain);
+        updateTier();
     }
 }

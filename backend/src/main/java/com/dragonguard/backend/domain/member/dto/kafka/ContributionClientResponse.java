@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GithubIdKafkaResponse {
+public class ContributionClientResponse {
     private String githubId;
 }

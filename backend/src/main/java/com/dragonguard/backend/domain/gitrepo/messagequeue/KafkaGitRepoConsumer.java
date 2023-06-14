@@ -4,6 +4,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoKafkaResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoMemberDetailsResponse;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
+import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +23,14 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaGitRepoConsumer {
+public class KafkaGitRepoConsumer implements KafkaConsumer<GitRepoKafkaResponse> {
     private final GitRepoMemberService gitRepoMemberService;
     private final ObjectMapper objectMapper;
 
-    @SneakyThrows(JsonProcessingException.class)
+    @Override
     @KafkaListener(topics = "gitrank.to.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        GitRepoKafkaResponse response = objectMapper.readValue(message, GitRepoKafkaResponse.class);
+        GitRepoKafkaResponse response = readValue(message);
 
         List<GitRepoMemberDetailsResponse> result = response.getResult();
 
@@ -40,5 +41,11 @@ public class KafkaGitRepoConsumer {
                 .collect(Collectors.toList());
 
         gitRepoMemberService.updateOrSaveAll(list, result.get(0).getGitRepo());
+    }
+
+    @Override
+    @SneakyThrows(JsonProcessingException.class)
+    public GitRepoKafkaResponse readValue(String message) {
+        return objectMapper.readValue(message, GitRepoKafkaResponse.class);
     }
 }
