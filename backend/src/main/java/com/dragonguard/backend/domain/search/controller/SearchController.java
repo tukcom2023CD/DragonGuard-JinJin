@@ -5,6 +5,7 @@ import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.entity.SearchType;
 import com.dragonguard.backend.domain.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping
+    @Cacheable(value = "results", key = "{#name, type, page, filters}", cacheManager = "cacheManager")
     public ResponseEntity<List<ResultResponse>> getSearchResult(
             @RequestParam(value = "filters", required = false) List<String> filters,
             @RequestParam String name, @RequestParam SearchType type, @RequestParam Integer page) {

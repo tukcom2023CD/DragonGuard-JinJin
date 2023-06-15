@@ -25,7 +25,7 @@ class GitOrganizationServiceTest extends LoginTest {
     @Autowired private MemberQueryRepository memberQueryRepository;
 
     @Test
-    @DisplayName("전체 저장")
+    @DisplayName("전체 저장이 수행되는가")
     void saveGitOrganizations() {
         //given
         Set<String> gitOrganizationNames = Set.of("tukcom2023CD", "C-B-U", "bid-bid");
@@ -44,7 +44,7 @@ class GitOrganizationServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("유저의 깃허브 id로 조회")
+    @DisplayName("유저의 깃허브 id로 조회가 수행되는가")
     void findGitOrganizationByGithubId() {
         //given
         List<GitOrganization> given = List.of(GitOrganization.builder().member(loginUser).name("tukcom2023CD").build(),
@@ -61,7 +61,7 @@ class GitOrganizationServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("깃허브 조직 id로 조회")
+    @DisplayName("깃허브 조직 id로 조회가 수행되는가")
     void loadEntity() {
         //given
         GitOrganization given = jpaGitOrganizationRepository.save(GitOrganization.builder().name("tukcom2023CD").member(loginUser).build());

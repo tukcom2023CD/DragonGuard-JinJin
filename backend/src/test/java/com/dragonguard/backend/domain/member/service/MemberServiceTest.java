@@ -57,13 +57,13 @@ class MemberServiceTest extends LoginTest {
     @MockBean private SmartContractService smartContractService;
 
     @Test
-    @DisplayName("멤버 저장 기능")
+    @DisplayName("멤버 저장 기능이 수행되는가")
     void saveMember() {
         //given
 
         //when
-        UUID adminId = memberService.saveMember(MemberRequestFixture.SAMPLE1.toMemberRequest(), Role.ROLE_ADMIN).getId();
-        UUID userId = memberService.saveMember(MemberRequestFixture.SAMPLE2.toMemberRequest(), Role.ROLE_USER).getId();
+        UUID adminId = memberService.saveMember(MemberRequestFixture.OHKSJ77.toMemberRequest(), Role.ROLE_ADMIN).getId();
+        UUID userId = memberService.saveMember(MemberRequestFixture.HJ39.toMemberRequest(), Role.ROLE_USER).getId();
 
         UUID adminResult = memberQueryRepository.findById(adminId).orElseThrow().getId();
         UUID userResult = memberQueryRepository.findById(userId).orElseThrow().getId();
@@ -74,7 +74,7 @@ class MemberServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("전체 활용도 업데이트 기능")
+    @DisplayName("전체 활용도 업데이트 기능이 수행되는가")
     void updateContributions() {
         //given
         Integer issue = loginUser.getSumOfIssues().orElse(0);
@@ -93,7 +93,7 @@ class MemberServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("블록체인 내역 업데이트")
+    @DisplayName("블록체인 내역 업데이트가 수행되는가")
     void updateBlockchain() {
         //given
         int year = LocalDate.now().getYear();
@@ -120,7 +120,7 @@ class MemberServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("티어 조회")
+    @DisplayName("티어 조회가 수행되는가")
     void getTier() {
         //given
         loginUser = memberService.getLoginUserWithPersistence();
@@ -136,14 +136,14 @@ class MemberServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("조직별 멤버 랭킹 리스트")
+    @DisplayName("조직별 멤버 랭킹 리스트 조회가 수행되는가")
     void getMemberRankingByOrganization() {
         //given
-        Organization org = organizationRepository.save(OrganizationFixture.SAMPLE1.toEntity());
+        Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
         Member member1 = memberService.getLoginUserWithPersistence();
-        Member member2 = memberRepository.save(MemberFixture.SAMPLE2.toEntity());
-        Member member3 = memberRepository.save(MemberFixture.SAMPLE3.toEntity());
-        Member member4 = memberRepository.save(MemberFixture.SAMPLE4.toEntity());
+        Member member2 = memberRepository.save(MemberFixture.POSITE.toEntity());
+        Member member3 = memberRepository.save(MemberFixture.SAMMUELWOOJAE.toEntity());
+        Member member4 = memberRepository.save(MemberFixture.HJ39.toEntity());
 
         org.addMember(member1, "a@tukorea.ac.kr");
         org.addMember(member2, "b@tukorea.ac.kr");
@@ -159,7 +159,7 @@ class MemberServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("지갑 주소 갱신")
+    @DisplayName("지갑 주소 갱신이 수행되는가")
     void updateWalletAddress() {
         //given
         Member member = memberService.getLoginUserWithPersistence();
@@ -175,10 +175,10 @@ class MemberServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("멤버 자기 자신 조회")
+    @DisplayName("멤버 자기 자신 조회가 수행되는가")
     void getMember() {
         //given
-        Organization org = organizationRepository.save(OrganizationFixture.SAMPLE1.toEntity());
+        Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
         Member member1 = memberService.getLoginUserWithPersistence();
         org.addMember(member1, "ohksj77@tukorea.ac.kr");
 
@@ -190,7 +190,7 @@ class MemberServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("멤버 상세 조회")
+    @DisplayName("멤버 상세 조회가 수행되는가")
     void findMemberDetailByGithubId() {
         //given
 

@@ -55,4 +55,11 @@ public class KafkaTopicConfig {
                 .name("gitrank.to.backend.repository.client")
                 .build();
     }
+
+    @Bean
+    public NewTopic emailTopic() {
+        return TopicBuilder
+                .name("gitrank.to.backend.email")
+                .build();
+    }
 }

@@ -23,7 +23,7 @@ class CommitServiceTest extends LoginTest {
     @Autowired private MemberQueryRepository memberQueryRepository;
 
     @Test
-    @DisplayName("커밋 내역 저장")
+    @DisplayName("커밋 내역 저장이 수행되는가")
     void saveCommits() {
         //given
         ContributionScrapingResponse given = new ContributionScrapingResponse(loginUser.getGithubId(), 100);
@@ -39,7 +39,7 @@ class CommitServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("커밋 내역 리스트 조회")
+    @DisplayName("커밋 내역 리스트 조회가 수행되는가")
     void findCommits() {
         //given
         commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(1).member(memberQueryRepository.findById(loginUser.getId()).orElse(null)).build());
@@ -56,7 +56,7 @@ class CommitServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("commit 단건 조회")
+    @DisplayName("commit 단건 조회가 수행되는가")
     void loadEntity() {
         //given
         Commit given = commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(1).member(memberQueryRepository.findById(loginUser.getId()).orElse(null)).build());

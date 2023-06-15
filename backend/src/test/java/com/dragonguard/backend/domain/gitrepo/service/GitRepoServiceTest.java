@@ -50,7 +50,7 @@ class GitRepoServiceTest extends LoginTest {
     @MockBean private KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
 
     @Test
-    @DisplayName("깃허브 레포지토리 API를 통해 받아오기")
+    @DisplayName("깃허브 레포지토리 API를 통해 받아오기가 수행되는가")
     void findMembersByGitRepoWithClient() {
         //given
         GitRepoRequest request = new GitRepoRequest("tukcom2023CD/DragonGuard-JinJin", 2023);
@@ -76,7 +76,7 @@ class GitRepoServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("깃허브 레포지토리 기여자들을 비교를 위해 조회")
+    @DisplayName("깃허브 레포지토리 기여자들을 비교를 위해 조회가 수행되는가")
     void findMembersByGitRepoForCompare() {
         //given
         GitRepoCompareRequest request = new GitRepoCompareRequest("ohksj77/Algorithm_java", "ohksj77/Algorithm_py");
@@ -108,13 +108,13 @@ class GitRepoServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("깃허브 레포지토리의 두 기여자 조회")
+    @DisplayName("깃허브 레포지토리의 두 기여자 조회가 수행되는가")
     void findTwoGitRepoMember() {
         //given
         doNothing().when(kafkaIssueProducer).send(any());
 
         GitRepo gitRepo = GitRepo.builder().name("tukcom2023CD/DragonGuard-JinJin").build();
-        Member newMember = MemberFixture.SAMPLE4.toEntity();
+        Member newMember = MemberFixture.HJ39.toEntity();
         memberRepository.save(newMember);
 
         GitRepoMember ohksj77 = GitRepoMember.builder()
@@ -152,13 +152,13 @@ class GitRepoServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("깃허브 레포지토리 두개 비교를 위해 한 번에 조회")
+    @DisplayName("깃허브 레포지토리 두개 비교를 위해 한 번에 조회가 수행되는가")
     void findTwoGitRepos() {
         //given
         GitRepo gitRepo1 = GitRepo.builder().name("ohksj77/Algorithm_java").build();
         GitRepo gitRepo2 = GitRepo.builder().name("ohksj77/Algorithm_py").build();
 
-        Member newMember = MemberFixture.SAMPLE4.toEntity();
+        Member newMember = MemberFixture.HJ39.toEntity();
         memberRepository.save(newMember);
 
         GitRepoMember gitRepoMember1 = GitRepoMember.builder()
@@ -191,7 +191,7 @@ class GitRepoServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("깃허브 레포지토리 id로 조회")
+    @DisplayName("깃허브 레포지토리 id로 조회가 수행되는가")
     void loadEntity() {
         //given
         GitRepo given = gitRepoRepository.save(GitRepo.builder().name("tukcom2023CD/DragonGuard-JinJin").build());

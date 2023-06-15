@@ -15,6 +15,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author 김승진
+ * @description Kafka로 기여도 조회를 위한 요청을 처리하는 Consumer
+ */
+
 @Component
 @RequiredArgsConstructor
 public class KafkaContributionClientConsumer implements KafkaConsumer<ContributionClientResponse> {

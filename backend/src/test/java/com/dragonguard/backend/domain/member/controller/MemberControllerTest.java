@@ -39,7 +39,7 @@ class MemberControllerTest extends RestDocumentTest {
     private MemberService memberService;
 
     @Test
-    @DisplayName("멤버 생성")
+    @DisplayName("멤버 생성이 수행되는가")
     void saveMember() throws Exception {
         // given
         IdResponse<UUID> expected = new IdResponse<>(UUID.randomUUID());
@@ -52,7 +52,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                MemberRequestFixture.SAMPLE1
+                                                MemberRequestFixture.OHKSJ77
                                                         .toMemberRequest()))
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
@@ -65,7 +65,7 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("멤버 기여도 내역 업데이트")
+    @DisplayName("멤버 기여도 내역 업데이트가 수행되는가")
     void updateContributions() throws Exception {
         // given
 
@@ -85,7 +85,7 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("멤버 기여도 내역 업데이트")
+    @DisplayName("멤버 기여도 내역 업데이트가 수행되는가")
     void updateBlockchains() throws Exception {
         // given
 
@@ -105,7 +105,7 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("멤버 조회")
+    @DisplayName("멤버 조회가 수행되는가")
     void getMember() throws Exception {
         // given
         MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh");
@@ -128,7 +128,7 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("멤버 조회")
+    @DisplayName("멤버 조회가 수행되는가")
     void getMemberDetails() throws Exception {
         // given
         MemberDetailResponse expected = new MemberDetailResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh", List.of("tukcom2023CD"), List.of("DragonGuard-JinJin", "DragonGuard", "Jin-Jin"));
@@ -151,7 +151,7 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("멤버 티어 조회")
+    @DisplayName("멤버 티어 조회가 수행되는가")
     void getTier() throws Exception {
         // given
         Tier expected = Tier.MASTER;
@@ -174,7 +174,7 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("멤버 전체 랭킹 조회")
+    @DisplayName("멤버 전체 랭킹 조회가 수행되는가")
     void getRanking() throws Exception {
         // given
         List<MemberRankResponse> expected = List.of(
@@ -202,7 +202,7 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("멤버 지갑 주소 갱신")
+    @DisplayName("멤버 지갑 주소 갱신이 수행되는가")
     void updateWalletAddress() throws Exception {
         // given
         willDoNothing().given(memberService).updateWalletAddress(any());
@@ -226,7 +226,7 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("멤버 조회 with Jwt")
+    @DisplayName("Jwt를 통한 멤버 조회가 수행되는가")
     void getMemberWithJwt() throws Exception {
         // given
         MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh");
@@ -247,7 +247,7 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("조직 내부 멤버 랭킹")
+    @DisplayName("조직 내부 멤버 랭킹 조회가 수행되는가")
     void getOrganizationMemberRank() throws Exception {
         // given
         List<MemberRankResponse> expected = List.of(

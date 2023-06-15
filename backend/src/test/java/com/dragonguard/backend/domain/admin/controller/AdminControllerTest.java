@@ -33,7 +33,7 @@ class AdminControllerTest extends RestDocumentTest {
     private AdminService adminService;
 
     @Test
-    @DisplayName("관리자인지 확인")
+    @DisplayName("관리자인지 확인이 수행되는가")
     void checkAdmin() throws Exception {
         ResultActions perform =
                 mockMvc.perform(
@@ -48,7 +48,7 @@ class AdminControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("조직 요청 승인 혹은 반려")
+    @DisplayName("조직 요청 승인 혹은 반려가 수행되는가")
     void decideRequest() throws Exception {
         List<AdminOrganizationResponse> expected = List.of(
                 new AdminOrganizationResponse(2L, "한국공학대학교", OrganizationType.UNIVERSITY),
@@ -72,7 +72,7 @@ class AdminControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("조직 상태에 따른 조회")
+    @DisplayName("조직 상태에 따른 조회가 수행되는가")
     void getOrganizationsByStatus() throws Exception {
         List<AdminOrganizationResponse> expected = List.of(
                 new AdminOrganizationResponse(2L, "한국공학대학교", OrganizationType.UNIVERSITY),

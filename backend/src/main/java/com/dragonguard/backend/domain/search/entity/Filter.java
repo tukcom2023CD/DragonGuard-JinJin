@@ -34,9 +34,8 @@ public class Filter implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Filter(String filter, Search search) {
+    public Filter(String filter) {
         this.filter = filter;
-        this.search = search;
     }
 
     public void organizeSearch(Search search) {

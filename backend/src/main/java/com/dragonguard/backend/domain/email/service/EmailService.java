@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.email.service;
 
+import com.dragonguard.backend.domain.email.dto.kafka.KafkaEmail;
 import com.dragonguard.backend.domain.email.dto.request.EmailRequest;
 import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
 import com.dragonguard.backend.domain.email.entity.Email;
@@ -10,6 +11,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -28,20 +30,21 @@ public class EmailService implements EntityLoader<Email, Long> {
     private final JavaMailSender javaMailSender;
     private final MemberService memberService;
     private final EmailMapper emailMapper;
+    private final KafkaProducer<KafkaEmail> kafkaEmailProducer;
     private static final String EMAIL_SUBJECT = "GitRank 조직 인증";
     private static final int MIN = 10000;
     private static final int MAX = 99999;
 
-    public IdResponse<Long> sendEmail() {
+    public IdResponse<Long> sendAndSaveEmail() {
         Member member = memberService.getLoginUserWithPersistence();
         String memberEmail = member.getEmailAddress();
 
         validateMemberEmail(memberEmail);
 
-        int random = new Random().nextInt(MAX - MIN) + MIN;
-        sendEmail(memberEmail, random);
+        int randomCode = generateRandomCode();
+        requestToSendEmail(memberEmail, randomCode);
 
-        Email savedEmail = emailRepository.save(emailMapper.toEntity(random, member.getId()));
+        Email savedEmail = emailRepository.save(emailMapper.toEntity(randomCode, member.getId()));
         return new IdResponse<>(savedEmail.getId());
     }
 
@@ -69,7 +72,15 @@ public class EmailService implements EntityLoader<Email, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private void sendEmail(String memberEmail, final int random) {
+    private int generateRandomCode() {
+        return new Random().nextInt(MAX - MIN) + MIN;
+    }
+
+    public void requestToSendEmail(final String memberEmail, final int randomCode) {
+        kafkaEmailProducer.send(new KafkaEmail(memberEmail, randomCode));
+    }
+
+    public void sendEmail(String memberEmail, final int random) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
