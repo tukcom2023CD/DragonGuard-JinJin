@@ -33,7 +33,7 @@ class OrganizationControllerTest extends RestDocumentTest {
     private OrganizationService organizationService;
 
     @Test
-    @DisplayName("조직 생성")
+    @DisplayName("조직 생성이 수행되는가")
     void postOrganization() throws Exception {
         // given
         IdResponse<Long> expected = new IdResponse<>(1L);
@@ -57,7 +57,7 @@ class OrganizationControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("조직 id 조회")
+    @DisplayName("조직 id 조회가 수행되는가")
     void getOrganization() throws Exception {
         // given
         IdResponse<Long> expected = new IdResponse<>(1L);
@@ -79,11 +79,11 @@ class OrganizationControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("조직에 멤버 추가")
+    @DisplayName("조직에 멤버 추가가 수행되는가")
     void addMemberToOrganization() throws Exception {
         // given
         IdResponse<Long> expected = new IdResponse<>(1L);
-        given(organizationService.updateMemberAndSendEmail(any())).willReturn(expected);
+        given(organizationService.addMemberAndSendEmail(any())).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -104,7 +104,7 @@ class OrganizationControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("타입별 조직 목록 조회")
+    @DisplayName("타입별 조직 목록 조회가 수행되는가")
     void getOrganizations() throws Exception {
         // given
         List<OrganizationResponse> expected = List.of(
@@ -129,7 +129,7 @@ class OrganizationControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("전체 조직 랭킹 조회")
+    @DisplayName("전체 조직 랭킹 조회가 수행되는가")
     void getOrganizationRank() throws Exception {
         // given
         List<OrganizationResponse> expected = List.of(
@@ -154,7 +154,7 @@ class OrganizationControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("조직 타입별 랭킹 조회")
+    @DisplayName("조직 타입별 랭킹 조회가 수행되는가")
     void getOrganizationRankByType() throws Exception {
         // given
         List<OrganizationResponse> expected = List.of(
@@ -179,7 +179,7 @@ class OrganizationControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("조직 검색")
+    @DisplayName("조직 검색이 수행되는가")
     void searchOrganization() throws Exception {
         // given
         List<OrganizationResponse> expected = List.of(

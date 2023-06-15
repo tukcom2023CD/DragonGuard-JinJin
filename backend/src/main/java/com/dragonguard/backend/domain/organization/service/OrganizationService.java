@@ -50,9 +50,9 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
                 .orElseGet(() -> organizationRepository.save(organizationMapper.toEntity(organizationRequest)));
     }
 
-    public IdResponse<Long> updateMemberAndSendEmail(final AddMemberRequest addMemberRequest) {
+    public IdResponse<Long> addMemberAndSendEmail(final AddMemberRequest addMemberRequest) {
         findAndAddMember(addMemberRequest);
-        return emailService.sendEmail();
+        return emailService.sendAndSaveEmail();
     }
 
     public void findAndAddMember(final AddMemberRequest addMemberRequest) {

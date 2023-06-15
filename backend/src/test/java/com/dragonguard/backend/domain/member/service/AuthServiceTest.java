@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -16,7 +15,7 @@ import static org.mockito.Mockito.when;
 class AuthServiceTest extends LoginTest {
 
     @Test
-    @DisplayName("리프레시 토큰 갱신 기능")
+    @DisplayName("리프레시 토큰 갱신 기능이 수행되는가")
     void refreshToken() {
         //given
         JwtToken expected = new JwtToken("accessToken", "refreshToken", "Bearer");

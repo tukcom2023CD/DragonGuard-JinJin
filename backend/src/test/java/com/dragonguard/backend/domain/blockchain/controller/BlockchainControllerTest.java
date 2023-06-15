@@ -34,7 +34,7 @@ class BlockchainControllerTest extends RestDocumentTest {
     private SmartContractService smartContractService;
 
     @Test
-    @DisplayName("블록체인 부여 기록 리스트 조회")
+    @DisplayName("블록체인 부여 기록 리스트 조회가 수행되는가")
     void getBlockchainInfo() throws Exception {
         List<BlockchainResponse> expected = List.of(
                 new BlockchainResponse(1L, ContributeType.COMMIT, new BigInteger("10"), "ohksj77", UUID.randomUUID()),

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.DependsOn;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -28,7 +27,6 @@ import static org.mockito.Mockito.when;
 
 @DatabaseTest
 @DisplayName("blockchain 서비스의")
-@DependsOn("blockchainDeploy")
 class BlockchainServiceTest extends LoginTest {
 
     @Autowired private BlockchainService blockchainService;
@@ -39,7 +37,7 @@ class BlockchainServiceTest extends LoginTest {
     @Value("${wallet}") private String walletAddress;
 
     @Test
-    @DisplayName("블록체인 트랜잭션 수행")
+    @DisplayName("블록체인 트랜잭션 수행이 수행되는가")
     void setTransaction() {
         //given
         memberQueryRepository.findById(loginUser.getId()).ifPresent(m -> m.updateWalletAddress(walletAddress));
@@ -57,12 +55,12 @@ class BlockchainServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("블록체인 내역 조회")
+    @DisplayName("블록체인 내역 조회가 수행되는가")
     void getBlockchainList() {
         //given
-        List<Blockchain> given = List.of(BlockchainFixture.SAMPLE1.toEntity(loginUser),
-                BlockchainFixture.SAMPLE1.toEntity(loginUser),
-                BlockchainFixture.SAMPLE2.toEntity(loginUser));
+        List<Blockchain> given = List.of(BlockchainFixture.ONE_COMMIT.toEntity(loginUser),
+                BlockchainFixture.ONE_COMMIT.toEntity(loginUser),
+                BlockchainFixture.TWO_ISSUES.toEntity(loginUser));
         given.forEach(blockchainRepository::save);
 
         List<BlockchainResponse> expected = given.stream().map(blockchainMapper::toResponse).collect(Collectors.toList());
@@ -79,10 +77,10 @@ class BlockchainServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("엔티티 id로 조회")
+    @DisplayName("엔티티 id로 조회가 수행되는가")
     void loadEntity() {
         //given
-        Blockchain expected = blockchainRepository.save(BlockchainFixture.SAMPLE1.toEntity(loginUser));
+        Blockchain expected = blockchainRepository.save(BlockchainFixture.ONE_COMMIT.toEntity(loginUser));
 
         //when
         Blockchain result = blockchainService.loadEntity(expected.getId());

@@ -9,8 +9,8 @@ import java.math.BigInteger;
 
 @AllArgsConstructor
 public enum BlockchainFixture {
-    SAMPLE1(ContributeType.COMMIT, BigInteger.ONE),
-    SAMPLE2(ContributeType.ISSUE, BigInteger.TWO);
+    ONE_COMMIT(ContributeType.COMMIT, BigInteger.ONE),
+    TWO_ISSUES(ContributeType.ISSUE, BigInteger.TWO);
 
     ContributeType contributeType;
     BigInteger amount;

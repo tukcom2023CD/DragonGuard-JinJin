@@ -27,10 +27,10 @@ class EmailControllerTest extends RestDocumentTest {
     private EmailService emailService;
 
     @Test
-    @DisplayName("이메일 전송")
+    @DisplayName("이메일 전송이 수행되는가")
     void sendEmail() throws Exception {
         IdResponse<Long> expected = new IdResponse<>(1L);
-        given(emailService.sendEmail()).willReturn(expected);
+        given(emailService.sendAndSaveEmail()).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -45,7 +45,7 @@ class EmailControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("메일 코드 확인")
+    @DisplayName("메일 코드 확인이 수행되는가")
     void checkCode() throws Exception {
         CheckCodeResponse expected = new CheckCodeResponse(true);
         given(emailService.isCodeMatching(any())).willReturn(expected);
@@ -63,10 +63,10 @@ class EmailControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("이메일 코드 삭제")
+    @DisplayName("이메일 코드 삭제가 수행되는가")
     void deleteCode() throws Exception {
         IdResponse<Long> expected = new IdResponse<>(1L);
-        given(emailService.sendEmail()).willReturn(expected);
+        given(emailService.sendAndSaveEmail()).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(

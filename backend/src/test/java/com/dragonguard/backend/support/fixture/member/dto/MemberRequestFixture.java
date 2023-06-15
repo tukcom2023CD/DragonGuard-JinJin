@@ -5,16 +5,16 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum MemberRequestFixture {
-    SAMPLE1(
+    OHKSJ77(
             "ohksj77"
     ),
-    SAMPLE2(
+    HJ39(
             "HJ39"
     ),
-    SAMPLE3(
+    POSITE(
             "posite"
     ),
-    SAMPLE4(
+    SAMMUELWOOJAE(
             "Sammuelwoojae"
     );
 

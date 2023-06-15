@@ -18,7 +18,7 @@ public class EmailController {
 
     @PostMapping("/send")
     public ResponseEntity<IdResponse<Long>> sendEmail() {
-        return ResponseEntity.ok(emailService.sendEmail());
+        return ResponseEntity.ok(emailService.sendAndSaveEmail());
     }
 
     @GetMapping("/check")

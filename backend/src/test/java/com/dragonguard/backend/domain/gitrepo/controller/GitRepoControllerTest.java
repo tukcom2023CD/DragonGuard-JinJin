@@ -41,7 +41,7 @@ class GitRepoControllerTest extends RestDocumentTest {
     private GitRepoService gitRepoService;
 
     @Test
-    @DisplayName("레포 멤버 조회")
+    @DisplayName("레포 멤버 조회가 수행되는가")
     void getRepoMembers() throws Exception {
         List<GitRepoMemberResponse> expected = List.of(
                 new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
@@ -64,7 +64,7 @@ class GitRepoControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("두 레포 기여자 기여도 비교")
+    @DisplayName("두 레포 기여자 기여도 비교가 수행되는가")
     void getTwoGitRepos() throws Exception {
         TwoGitRepoMemberResponse expected = new TwoGitRepoMemberResponse(List.of(
                 new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
@@ -94,7 +94,7 @@ class GitRepoControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("두 레포 비교")
+    @DisplayName("두 레포 비교가 수행되는가")
     void getGitRepoMembersForCompare() throws Exception {
         TwoGitRepoResponse expected = new TwoGitRepoResponse(
                 new GitRepoResponse(new GitRepoClientResponse("tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
@@ -127,7 +127,7 @@ class GitRepoControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("두 멤버의 레포 기여도 비교")
+    @DisplayName("두 멤버의 레포 기여도 비교가 수행되는가")
     void getTwoGitRepoMember() throws Exception {
         GitRepoMemberCompareResponse expected = new GitRepoMemberCompareResponse(
                 new GitRepoMemberResponse("ohksj77", 100, 1000, 500),

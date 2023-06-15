@@ -6,6 +6,7 @@ import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import lombok.*;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Where;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
@@ -35,6 +36,7 @@ public class Organization implements Auditable {
     @Column(nullable = false)
     private String emailEndpoint;
 
+    @Where(clause = "auth_step = 'ALL'")
     @OneToMany(mappedBy = "organization")
     private Set<Member> members = new HashSet<>();
 

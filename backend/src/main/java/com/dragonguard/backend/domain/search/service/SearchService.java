@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.search.service;
 
-import com.dragonguard.backend.domain.member.service.AuthService;
+import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.domain.result.dto.response.ResultResponse;
 import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.result.mapper.ResultMapper;
@@ -18,10 +18,7 @@ import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +31,6 @@ import java.util.stream.Stream;
  * @description 검색 관련 서비스 로직을 처리하는 클래스
  */
 
-@Validated
 @TransactionService
 @RequiredArgsConstructor
 public class SearchService implements EntityLoader<Search, Long> {
@@ -42,14 +38,14 @@ public class SearchService implements EntityLoader<Search, Long> {
     private final SearchMapper searchMapper;
     private final ResultMapper resultMapper;
     private final ResultRepository resultRepository;
-    private final AuthService authService;
+    private final MemberService memberService;
     private final GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     private final GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
 
-    @Cacheable(value = "results", key = "#searchRequest", cacheManager = "cacheManager")
-    public List<ResultResponse> getSearchResultByClient(@Valid final SearchRequest searchRequest) {
+    public List<ResultResponse> getSearchResultByClient(final SearchRequest searchRequest) {
         Search search = findOrSaveSearch(searchRequest);
-        findAllSearchAndDeleteResults(searchRequest, search);
+        findAllResultsAndDelete(search);
+        searchRequest.setGithubToken(memberService.getLoginUserWithPersistence().getGithubToken());
 
         if (searchRequest.getType().equals(SearchType.REPOSITORIES)) {
             return searchRepo(searchRequest, search);
@@ -57,9 +53,8 @@ public class SearchService implements EntityLoader<Search, Long> {
         return searchUser(searchRequest, search);
     }
 
-    public void findAllSearchAndDeleteResults(final SearchRequest searchRequest, final Search search) {
+    public void findAllResultsAndDelete(final Search search) {
         resultRepository.findAllBySearchId(search.getId()).forEach(Result::delete);
-        searchRequest.setGithubToken(authService.getLoginUser().getGithubToken());
     }
 
     private List<ResultResponse> searchUser(final SearchRequest searchRequest, final Search search) {

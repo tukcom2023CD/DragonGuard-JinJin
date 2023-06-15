@@ -25,10 +25,10 @@ class AdminServiceTest extends LoginTest {
     @Autowired private OrganizationRepository organizationRepository;
 
     @Test
-    @DisplayName("승인 요청온 조직에 대해 승인/반려")
+    @DisplayName("승인 요청온 조직에 대해 승인/반려가 수행되는가")
     void decideRequestedOrganization() {
         //given
-        Organization organization = organizationRepository.save(OrganizationFixture.SAMPLE1.toEntity());
+        Organization organization = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
 
         //when
         adminService.decideRequestedOrganization(new AdminDecideRequest(organization.getId(), OrganizationStatus.ACCEPTED));
@@ -38,12 +38,12 @@ class AdminServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("승인/반려/요청 상태별 조직 조회")
+    @DisplayName("승인/반려/요청 상태별 조직 조회가 수행되는가")
     void getOrganizationsByStatus() {
         //given
-        Organization organization1 = organizationRepository.save(OrganizationFixture.SAMPLE1.toEntity());
-        Organization organization2 = organizationRepository.save(OrganizationFixture.SAMPLE2.toEntity());
-        Organization organization3 = organizationRepository.save(OrganizationFixture.SAMPLE3.toEntity());
+        Organization organization1 = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
+        Organization organization2 = organizationRepository.save(OrganizationFixture.GOOGLE.toEntity());
+        Organization organization3 = organizationRepository.save(OrganizationFixture.SNU.toEntity());
 
         adminService.decideRequestedOrganization(new AdminDecideRequest(organization1.getId(), OrganizationStatus.ACCEPTED));
         adminService.decideRequestedOrganization(new AdminDecideRequest(organization2.getId(), OrganizationStatus.ACCEPTED));

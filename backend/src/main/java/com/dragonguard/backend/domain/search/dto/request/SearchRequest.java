@@ -14,7 +14,6 @@ import java.util.List;
  */
 
 @Getter
-@ToString // Redis 때문에 붙임
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchRequest {
