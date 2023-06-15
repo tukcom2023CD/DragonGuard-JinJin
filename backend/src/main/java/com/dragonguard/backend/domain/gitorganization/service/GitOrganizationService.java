@@ -26,12 +26,12 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
     private final GitOrganizationMapper gitOrganizationMapper;
 
     public void findAndSaveGitOrganizations(final Set<String> gitOrganizationNames, final Member member) {
-        Set<GitOrganization> gitOrganizations = findIfNotExists(gitOrganizationNames, member);
+        Set<GitOrganization> gitOrganizations = getNotSavedGitOrganizations(gitOrganizationNames, member);
 
         saveAllGitOrganizations(gitOrganizations);
     }
 
-    public Set<GitOrganization> findIfNotExists(final Set<String> gitOrganizationNames, final Member member) {
+    public Set<GitOrganization> getNotSavedGitOrganizations(final Set<String> gitOrganizationNames, final Member member) {
         return gitOrganizationNames.stream()
                 .filter(name -> !gitOrganizationRepository.existsByName(name))
                 .map(name -> gitOrganizationMapper.toEntity(name, member))

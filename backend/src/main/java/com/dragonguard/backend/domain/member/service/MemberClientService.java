@@ -11,6 +11,7 @@ import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.issue.service.IssueService;
 import com.dragonguard.backend.domain.member.dto.client.*;
+import com.dragonguard.backend.domain.member.dto.response.MemberGitOrganizationRepoResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.GithubClient;
@@ -20,6 +21,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,6 +39,7 @@ public class MemberClientService {
     private final GithubClient<MemberClientRequest, MemberPullRequestResponse> memberPullRequestClient;
     private final GithubClient<MemberClientRequest, MemberRepoResponse[]> memberRepoClient;
     private final GithubClient<MemberClientRequest, MemberOrganizationResponse[]> memberOrganizationClient;
+    private final GithubClient<MemberClientRequest, OrganizationRepoResponse[]> memberOrganizationRepoClient;
     private final GitOrganizationService gitOrganizationService;
     private final GitRepoRepository gitRepoRepository;
     private final GitRepoMapper gitRepoMapper;
@@ -124,5 +127,14 @@ public class MemberClientService {
         return gitRepoNames.stream()
                 .map(name -> gitRepoRepository.findByName(name).orElseGet(() -> gitRepoMapper.toEntity(name)))
                 .collect(Collectors.toSet());
+    }
+
+    public List<MemberGitOrganizationRepoResponse> requestGitOrganizationResponse(String githubToken, String gitOrganizationName) {
+        OrganizationRepoResponse[] clientResponse = memberOrganizationRepoClient.requestToGithub(new MemberClientRequest(gitOrganizationName, githubToken, LocalDate.now().getYear()));
+
+        return Arrays.stream(clientResponse)
+                .map(OrganizationRepoResponse::getFull_name)
+                .map(MemberGitOrganizationRepoResponse::new)
+                .collect(Collectors.toList());
     }
 }

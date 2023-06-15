@@ -21,5 +21,6 @@ public interface GitRepoMemberMapper {
     @Mapping(target = "commits", source = "gitRepoMember.gitRepoContribution.commits")
     @Mapping(target = "additions", source = "gitRepoMember.gitRepoContribution.additions")
     @Mapping(target = "deletions", source = "gitRepoMember.gitRepoContribution.deletions")
+    @Mapping(target = "isServiceMember", expression = "java(gitRepoMember.getMember().isServiceMember())")
     GitRepoMemberResponse toResponse(final GitRepoMember gitRepoMember);
 }

@@ -262,4 +262,8 @@ public class Member implements Auditable {
         this.blockchains.add(blockchain);
         updateTier();
     }
+
+    public boolean isServiceMember() {
+        return !this.authStep.equals(AuthStep.NONE);
+    }
 }

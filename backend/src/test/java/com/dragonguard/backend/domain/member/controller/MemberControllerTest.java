@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.member.controller;
 
-import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
+import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
@@ -108,7 +108,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회가 수행되는가")
     void getMember() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh");
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1000L, "한국공학대학교", "http://abcd.efgh", 1, true, List.of("ohksj", "ksj77"));
         given(memberService.getMember()).willReturn(expected);
 
         // when
@@ -131,7 +131,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회가 수행되는가")
     void getMemberDetails() throws Exception {
         // given
-        MemberDetailResponse expected = new MemberDetailResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh", List.of("tukcom2023CD"), List.of("DragonGuard-JinJin", "DragonGuard", "Jin-Jin"));
+        MemberGitReposAndGitOrganizationsResponse expected = new MemberGitReposAndGitOrganizationsResponse(List.of("tukcom2023CD"), List.of("DragonGuard-JinJin", "DragonGuard", "Jin-Jin"));
         given(memberService.findMemberDetailByGithubId(any())).willReturn(expected);
 
         // when
@@ -142,8 +142,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$.githubId").value("ohksj77"));
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -229,7 +228,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("Jwt를 통한 멤버 조회가 수행되는가")
     void getMemberWithJwt() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh");
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1000L, "한국공학대학교", "http://abcd.efgh", 1, true, List.of("ohksj", "ksj77"));
         given(memberService.getMember()).willReturn(expected);
 
         // when

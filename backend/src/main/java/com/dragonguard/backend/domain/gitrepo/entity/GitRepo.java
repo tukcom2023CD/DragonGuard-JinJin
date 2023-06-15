@@ -7,9 +7,7 @@ import com.dragonguard.backend.global.audit.BaseTime;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author 김승진
@@ -34,6 +32,10 @@ public class GitRepo implements Auditable {
     @OneToMany(mappedBy = "gitRepo", cascade = CascadeType.PERSIST)
     private Set<GitRepoMember> gitRepoMembers = new HashSet<>();
 
+    @ElementCollection
+    @CollectionTable(name = "spark_line", joinColumns = @JoinColumn(name = "git_repo_id"))
+    private List<Integer> sparkLine = new ArrayList<>();
+
     @Setter
     @Embedded
     @Column(nullable = false)
@@ -50,6 +52,10 @@ public class GitRepo implements Auditable {
 
     public void organize(GitRepoMember gitRepoMember) {
         this.gitRepoMembers.add(gitRepoMember);
+    }
+
+    public void updateSparkLine(List<Integer> sparkLine) {
+        this.sparkLine = sparkLine;
     }
 
     @Override

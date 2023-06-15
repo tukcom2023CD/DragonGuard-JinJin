@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,8 +28,10 @@ public class MemberResponse {
     private AuthStep authStep;
     private String profileImage;
     private Integer rank;
-    private Integer organizationRank;
     private Long tokenAmount;
     private String organization;
     private String blockchainUrl;
+    private Integer organizationRank;
+    private Boolean isLast;
+    private List<String> memberGithubIds;
 }

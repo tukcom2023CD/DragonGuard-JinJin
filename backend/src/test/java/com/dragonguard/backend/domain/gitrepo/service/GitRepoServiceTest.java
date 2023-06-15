@@ -2,10 +2,12 @@ package com.dragonguard.backend.domain.gitrepo.service;
 
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoSparkLineResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
@@ -47,32 +49,37 @@ class GitRepoServiceTest extends LoginTest {
     @MockBean private GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
     @MockBean private GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     @MockBean private GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
+    @MockBean private GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> sparkLineClient;
     @MockBean private KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
 
     @Test
     @DisplayName("깃허브 레포지토리 API를 통해 받아오기가 수행되는가")
     void findMembersByGitRepoWithClient() {
         //given
-        GitRepoRequest request = new GitRepoRequest("tukcom2023CD/DragonGuard-JinJin", 2023);
-        GitRepoMemberClientResponse[] expected = {
+        String name = "tukcom2023CD/DragonGuard-JinJin";
+        GitRepoMemberClientResponse[] expected1 = {
                 new GitRepoMemberClientResponse(1000,
                 new Week[]{new Week(100, 50, 100)},
                 new Author(loginUser.getGithubId(), loginUser.getProfileImage()))};
-        List<GitRepoMemberClientResponse> contributions = Arrays.asList(expected);
+        List<GitRepoMemberClientResponse> contributions = Arrays.asList(expected1);
+        GitRepoSparkLineResponse expected2 = new GitRepoSparkLineResponse(new Integer[]{1, 1, 1, 1});
 
-        when(gitRepoMemberClient.requestToGithub(any())).thenReturn(expected);
+
+        when(gitRepoMemberClient.requestToGithub(any())).thenReturn(expected1);
+        when(sparkLineClient.requestToGithub(any())).thenReturn(expected2);
 
         //when
-        List<GitRepoMemberResponse> result = gitRepoService.findMembersByGitRepoWithClient(request);
+        GitRepoResponse result = gitRepoService.findGitRepoInfos(name);
 
         //then
-        GitRepoMemberResponse response = result.get(0);
+        GitRepoMemberResponse response = result.getGitRepoMembers().get(0);
         GitRepoMemberClientResponse clientResponse = contributions.get(0);
 
         assertThat(response.getAdditions()).isEqualTo(clientResponse.getWeeks()[0].getA());
         assertThat(response.getDeletions()).isEqualTo(clientResponse.getWeeks()[0].getD());
         assertThat(response.getCommits()).isEqualTo(clientResponse.getTotal());
         assertThat(response.getGithubId()).isEqualTo(loginUser.getGithubId());
+        assertThat(result.getSparkLine()).hasSizeGreaterThan(1);
     }
 
     @Test

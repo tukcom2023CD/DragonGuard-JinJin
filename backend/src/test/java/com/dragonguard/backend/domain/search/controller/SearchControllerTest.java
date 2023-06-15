@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.search.controller;
 
-import com.dragonguard.backend.domain.result.dto.response.ResultResponse;
+import com.dragonguard.backend.domain.result.dto.response.UserResultResponse;
 import com.dragonguard.backend.domain.search.service.SearchService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
@@ -33,15 +33,15 @@ class SearchControllerTest extends RestDocumentTest {
     @DisplayName("검색 결과 조회")
     void getSearchResult() throws Exception {
         // given
-        List<ResultResponse> expected = Arrays.asList(
-                new ResultResponse(1L, "ohksj77"),
-                new ResultResponse(2L, "HJ39"),
-                new ResultResponse(3L, "posite"),
-                new ResultResponse(4L, "Sammuelwoojae"),
-                new ResultResponse(5L, "And"),
-                new ResultResponse(6L, "DragonGuard-JinJin"));
+        List<UserResultResponse> expected = Arrays.asList(
+                new UserResultResponse(1L, "ohksj77"),
+                new UserResultResponse(2L, "HJ39"),
+                new UserResultResponse(3L, "posite"),
+                new UserResultResponse(4L, "Sammuelwoojae"),
+                new UserResultResponse(5L, "And"),
+                new UserResultResponse(6L, "DragonGuard-JinJin"));
 
-        given(searchService.getSearchResultByClient(any())).willReturn(expected);
+        given(searchService.getUserSearchResultByClient(any())).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -63,15 +63,15 @@ class SearchControllerTest extends RestDocumentTest {
     @DisplayName("검색 결과 필터링 조회")
     void getSearchResultByFiltering() throws Exception {
         // given
-        List<ResultResponse> expected = Arrays.asList(
-                new ResultResponse(1L, "ohksj77"),
-                new ResultResponse(2L, "HJ39"),
-                new ResultResponse(3L, "posite"),
-                new ResultResponse(4L, "Sammuelwoojae"),
-                new ResultResponse(5L, "And"),
-                new ResultResponse(6L, "DragonGuard-JinJin"));
+        List<UserResultResponse> expected = Arrays.asList(
+                new UserResultResponse(1L, "ohksj77"),
+                new UserResultResponse(2L, "HJ39"),
+                new UserResultResponse(3L, "posite"),
+                new UserResultResponse(4L, "Sammuelwoojae"),
+                new UserResultResponse(5L, "And"),
+                new UserResultResponse(6L, "DragonGuard-JinJin"));
 
-        given(searchService.getSearchResultByClient(any())).willReturn(expected);
+        given(searchService.getUserSearchResultByClient(any())).willReturn(expected);
 
         // when
         ResultActions perform =
