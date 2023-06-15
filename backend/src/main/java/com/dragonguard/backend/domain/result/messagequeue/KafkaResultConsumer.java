@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.result.messagequeue;
 
-import com.dragonguard.backend.domain.result.dto.client.ClientResultResponse;
+import com.dragonguard.backend.domain.result.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.result.dto.kafka.ResultDetailsResponse;
 import com.dragonguard.backend.domain.result.dto.kafka.ResultKafkaResponse;
 import com.dragonguard.backend.domain.result.dto.kafka.SearchKafkaResponse;
@@ -35,9 +35,9 @@ public class KafkaResultConsumer implements KafkaConsumer<ResultKafkaResponse> {
     public void consume(String message) {
         ResultKafkaResponse resultResponse = readValue(message);
 
-        List<ClientResultResponse> result = resultResponse.getResult().stream()
+        List<GitRepoClientResponse> result = resultResponse.getResult().stream()
                 .map(ResultDetailsResponse::getName)
-                .map(ClientResultResponse::new)
+                .map(GitRepoClientResponse::new)
                 .collect(Collectors.toList());
 
         SearchKafkaResponse searchResponse = resultResponse.getSearch();

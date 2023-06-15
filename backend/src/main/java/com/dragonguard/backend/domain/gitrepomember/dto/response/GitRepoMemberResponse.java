@@ -16,4 +16,5 @@ public class GitRepoMemberResponse {
     private Integer commits;
     private Integer additions;
     private Integer deletions;
+    private Boolean isServiceMember;
 }

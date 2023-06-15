@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.organization.repository;
 
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.domain.organization.dto.response.RelatedRankWithMemberResponse;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
@@ -21,7 +22,7 @@ public interface OrganizationQueryRepository {
 
     List<OrganizationResponse> findByTypeAndSearchWord(OrganizationType type, String name, Pageable pageable);
 
-    Integer findRankingByMemberId(UUID memberId);
+    RelatedRankWithMemberResponse findRankingByMemberId(UUID memberId);
 
     List<Organization> findAllByOrganizationStatus(OrganizationStatus organizationStatus, Pageable pageable);
 }

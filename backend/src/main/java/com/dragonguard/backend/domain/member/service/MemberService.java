@@ -14,7 +14,7 @@ import com.dragonguard.backend.domain.issue.service.IssueService;
 import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
-import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
+import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
@@ -124,20 +124,20 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public boolean addContributionsIfNotEmpty(
-            Member member,
-            List<Commit> commits,
-            List<PullRequest> pullRequests,
-            List<Issue> issues) {
+            final Member member,
+            final List<Commit> commits,
+            final List<PullRequest> pullRequests,
+            final List<Issue> issues) {
         if (isContributionEmpty(commits, pullRequests, issues)) return true;
         addContributions(member, commits, pullRequests, issues);
         return false;
     }
 
     public void addContributions(
-            Member member,
-            List<Commit> commits,
-            List<PullRequest> pullRequests,
-            List<Issue> issues) {
+            final Member member,
+            final List<Commit> commits,
+            final List<PullRequest> pullRequests,
+            final List<Issue> issues) {
 
         commits.forEach(member::addCommit);
         pullRequests.forEach(member::addPullRequest);
@@ -157,7 +157,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberResponse getMemberResponseWithValidateOrganization(final Member member) {
-        if (hasOrganization(member)) {
+        if (hasNoOrganization(member)) {
             return memberMapper.toResponse(member, memberQueryRepository.findRankingById(member.getId()), member.getSumOfTokens());
         }
         return getMemberResponse(member);
@@ -232,11 +232,11 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return member;
     }
 
-    public MemberDetailResponse findMemberDetailByGithubId(final String githubId) {
+    public MemberGitReposAndGitOrganizationsResponse findMemberDetailByGithubId(final String githubId) {
         Member member = getMemberOrSaveAndScrape(githubId);
         sendGitRepoAndContributionRequestToKafka(member.getGithubId());
 
-        return getDetailResponse(githubId, member);
+        return getMemberGitReposAndGitOrganizations(githubId, member);
     }
 
     public Member getMemberOrSaveAndScrape(final String githubId) {
@@ -256,14 +256,13 @@ public class MemberService implements EntityLoader<Member, UUID> {
         contributionService.scrapingCommits(githubId);
     }
 
-    private MemberDetailResponse getDetailResponse(final String githubId, final Member member) {
+    private MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(final String githubId, final Member member) {
         return memberMapper.toDetailResponse(
-                getMemberResponseWithValidateOrganization(member),
                 gitOrganizationService.findGitOrganizationByMember(member),
                 gitRepoRepository.findByGithubId(githubId));
     }
 
-    private boolean hasOrganization(final Member member) {
+    private boolean hasNoOrganization(final Member member) {
         return member.getOrganization() == null;
     }
 

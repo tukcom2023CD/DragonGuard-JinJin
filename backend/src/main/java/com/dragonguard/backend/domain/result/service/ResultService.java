@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.result.service;
 
-import com.dragonguard.backend.domain.result.dto.client.ClientResultResponse;
+import com.dragonguard.backend.domain.result.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.result.mapper.ResultMapper;
 import com.dragonguard.backend.domain.result.repository.ResultRepository;
@@ -25,14 +25,14 @@ public class ResultService implements EntityLoader<Result, Long> {
     private final ResultMapper resultMapper;
     private final SearchService searchService;
 
-    public void saveAllResult(final List<ClientResultResponse> results, final SearchRequest searchRequest) {
+    public void saveAllResult(final List<GitRepoClientResponse> results, final SearchRequest searchRequest) {
         Long searchId = searchService.findOrSaveSearch(searchRequest).getId();
         List<Result> resultList = resultRepository.findAllBySearchId(searchId);
 
         saveAllResultsWithSearch(results, searchId, resultList);
     }
 
-    private void saveAllResultsWithSearch(List<ClientResultResponse> results, Long searchId, List<Result> resultList) {
+    private void saveAllResultsWithSearch(List<GitRepoClientResponse> results, Long searchId, List<Result> resultList) {
         results.stream()
                 .filter(entity -> resultRepository.existsByNameAndSearchId(entity.getFull_name(), searchId))
                 .map(result -> resultMapper.toEntity(result, searchId))

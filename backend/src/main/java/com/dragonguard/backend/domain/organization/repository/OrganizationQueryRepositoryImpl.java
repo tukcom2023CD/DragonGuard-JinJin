@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.organization.repository;
 
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.domain.organization.dto.response.RelatedRankWithMemberResponse;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
@@ -72,17 +73,28 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     }
 
     @Override
-    public Integer findRankingByMemberId(UUID memberId) {
-        return jpaQueryFactory
+    public RelatedRankWithMemberResponse findRankingByMemberId(UUID memberId) {
+        return getRelatedRankWithMemberResponse(jpaQueryFactory
                 .select(member)
                 .from(member, organization)
                 .leftJoin(organization.members, member)
                 .on(member.organization.id.eq(organization.id))
-                .where(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED).and(member.sumOfTokens.gt(
+                .where(member.sumOfTokens.gt(
                         JPAExpressions
-                                .select(member.sumOfTokens).from(member).where(member.id.eq(memberId)))))
+                                .select(member.sumOfTokens).from(member).where(member.id.eq(memberId))))
                 .distinct()
-                .fetch().size() + 1;
+                .fetch().size() + 1);
+    }
+
+    private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(int rank) {
+        long offset = getOffset(rank);
+        return new RelatedRankWithMemberResponse(rank, isLast(rank, offset), jpaQueryFactory
+                .select(member.githubId)
+                .from(member)
+                .orderBy(organization.sumOfMemberTokens.desc())
+                .offset(offset)
+                .limit(3)
+                .fetch());
     }
 
     @Override
@@ -93,5 +105,25 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    private long getOffset(int rank) {
+        if (rank == 1) return 0L;
+        int size = jpaQueryFactory
+                .select(member.id)
+                .from(member)
+                .leftJoin(organization.members, member)
+                .on(member.organization.id.eq(organization.id))
+                .distinct()
+                .fetch()
+                .size();
+        if (size == rank) {
+            return rank - 3L;
+        }
+        return rank - 2L;
+    }
+
+    private boolean isLast(int rank, long offset) {
+        return rank + 3L == offset;
     }
 }

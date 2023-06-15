@@ -9,7 +9,7 @@ import com.dragonguard.backend.domain.commit.repository.CommitRepository;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.issue.repository.IssueRepository;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
-import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
+import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
@@ -195,7 +195,7 @@ class MemberServiceTest extends LoginTest {
         //given
 
         //when
-        MemberDetailResponse result = memberService.findMemberDetailByGithubId(loginUser.getGithubId());
+        MemberGitReposAndGitOrganizationsResponse result = memberService.findMemberDetailByGithubId(loginUser.getGithubId());
 
         //then
         assertThat(result.getGithubId()).isEqualTo(loginUser.getGithubId());

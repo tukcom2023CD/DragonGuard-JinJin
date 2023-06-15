@@ -28,9 +28,9 @@ public class SmartContractService {
     private static final String SET_METHOD = "set";
     private static final String BALANCE_OF_METHOD = "balanceOf";
 
-    public void transfer(ContractRequest request, String walletAddress) {
+    public String transfer(ContractRequest request, String walletAddress) {
         try {
-            contract.send(sendOptions, SET_METHOD, walletAddress, request.getAmount(), request.getContributeType());
+            return contract.send(sendOptions, SET_METHOD, walletAddress, request.getAmount(), request.getContributeType()).getTransactionHash();
         } catch (Exception e) {
             e.printStackTrace();
             throw new BlockchainException();

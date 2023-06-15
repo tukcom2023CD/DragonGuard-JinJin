@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -22,4 +23,6 @@ public class BlockchainResponse {
     private BigInteger amount;
     private String githubId;
     private UUID memberId;
+    private LocalDateTime createdAt;
+    private String transactionHashUrl;
 }

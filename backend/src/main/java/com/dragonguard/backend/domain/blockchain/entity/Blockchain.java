@@ -34,18 +34,25 @@ public class Blockchain implements Auditable {
 
     private String address;
 
+    private String transactionHash;
+
     @Setter
     @Embedded
     @Column(nullable = false)
     private BaseTime baseTime;
 
     @Builder
-    public Blockchain(ContributeType contributeType, BigInteger amount, Member member) {
+    public Blockchain(ContributeType contributeType, BigInteger amount, Member member, String transactionHash) {
         this.contributeType = contributeType;
         this.amount = amount;
         this.member = member;
         this.address = member.getWalletAddress();
+        this.transactionHash = transactionHash;
         organize();
+    }
+
+    public String getTransactionHashUrl() {
+        return "https://baobab.scope.klaytn.com/tx/" + this.transactionHash + "?tabId=tokenTransfer";
     }
 
     private void organize() {

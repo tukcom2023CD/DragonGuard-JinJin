@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.member.controller;
 
-import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
+import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
@@ -131,7 +131,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회가 수행되는가")
     void getMemberDetails() throws Exception {
         // given
-        MemberDetailResponse expected = new MemberDetailResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh", List.of("tukcom2023CD"), List.of("DragonGuard-JinJin", "DragonGuard", "Jin-Jin"));
+        MemberGitReposAndGitOrganizationsResponse expected = new MemberGitReposAndGitOrganizationsResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh", List.of("tukcom2023CD"), List.of("DragonGuard-JinJin", "DragonGuard", "Jin-Jin"));
         given(memberService.findMemberDetailByGithubId(any())).willReturn(expected);
 
         // when
