@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.member.controller;
 
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
+import com.dragonguard.backend.domain.member.dto.response.MemberGitOrganizationRepoResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
@@ -81,5 +82,10 @@ public class MemberController {
     @GetMapping
     public ResponseEntity<MemberGitReposAndGitOrganizationsResponse> getMemberDetail(@RequestParam String githubId) {
         return ResponseEntity.ok(memberService.findMemberDetailByGithubId(githubId));
+    }
+
+    @GetMapping("/git-organizations/git-repos")
+    public ResponseEntity<List<MemberGitOrganizationRepoResponse>> getMemberGitOrganizationRepo(@RequestParam String name) {
+        return ResponseEntity.ok(memberService.getMemberGitOrganizationRepo(name));
     }
 }

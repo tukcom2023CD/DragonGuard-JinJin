@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.search.service;
 
 import com.dragonguard.backend.domain.result.dto.client.GitRepoClientResponse;
+import com.dragonguard.backend.domain.result.dto.response.GitRepoResultResponse;
 import com.dragonguard.backend.domain.result.dto.response.UserResultResponse;
 import com.dragonguard.backend.domain.search.dto.client.SearchRepoResponse;
 import com.dragonguard.backend.domain.search.dto.client.SearchUserResponse;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -41,10 +43,10 @@ class SearchServiceTest extends LoginTest {
         void getGitRepoSearchResultByClient() {
             //given
             String repoName = "tukcom2023CD/DragonGuard-JinJin";
-            when(githubRepoClient.requestToGithub(any())).thenReturn(new SearchRepoResponse(new GitRepoClientResponse[]{new GitRepoClientResponse(repoName)}));
+            when(githubRepoClient.requestToGithub(any())).thenReturn(new SearchRepoResponse(new GitRepoClientResponse[]{new GitRepoClientResponse(repoName, "java", "good repo", LocalDateTime.now())}));
 
             //when
-            List<UserResultResponse> result = searchService.getUserSearchResultByClient(new SearchRequest(repoName, SearchType.REPOSITORIES, 1));
+            List<GitRepoResultResponse> result = searchService.getGitRepoSearchResultByClient(new SearchRequest(repoName, SearchType.REPOSITORIES, 1));
 
             //then
             assertThat(result.get(0).getName()).isEqualTo(repoName);

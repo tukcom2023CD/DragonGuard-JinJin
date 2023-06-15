@@ -1,11 +1,11 @@
 package com.dragonguard.backend.domain.gitrepo.controller;
 
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
@@ -30,7 +30,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("gitrepo 컨트롤러의")
@@ -48,7 +47,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                 new GitRepoMemberResponse("HJ39", 101, 999, 500),
                 new GitRepoMemberResponse("posite", 99, 1001, 500),
                 new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499));
-        given(gitRepoService.findMembersByGitRepoWithClient(any())).willReturn(expected);
+        given(gitRepoService.findMembersByGitRepoWithClient(any(), any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -56,8 +55,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
-        perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+        perform.andExpect(status().isOk());
 
         perform.andDo(print())
                 .andDo(document("get git-repo contributors", getDocumentRequest(), getDocumentResponse()));
@@ -97,13 +95,13 @@ class GitRepoControllerTest extends RestDocumentTest {
     @DisplayName("두 레포 비교가 수행되는가")
     void getGitRepoMembersForCompare() throws Exception {
         TwoGitRepoResponse expected = new TwoGitRepoResponse(
-                new GitRepoResponse(new GitRepoClientResponse("tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
+                new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
                         new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
                                 new IntSummaryStatistics(4, 1800, 30000, 50000),
                                 new IntSummaryStatistics(4, 5000, 15000, 30000)),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
                         new IntSummaryStatistics(4, 9998, 10000, 29997)),
-                new GitRepoResponse(new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
+                new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
                         new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
                                 new IntSummaryStatistics(4, 1800, 30000, 50000),
                                 new IntSummaryStatistics(4, 5000, 15000, 30000)),

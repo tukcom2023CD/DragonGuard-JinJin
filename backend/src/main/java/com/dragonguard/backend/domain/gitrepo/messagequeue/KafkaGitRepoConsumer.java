@@ -37,7 +37,7 @@ public class KafkaGitRepoConsumer implements KafkaConsumer<GitRepoKafkaResponse>
         if (Objects.isNull(result) || result.isEmpty()) return;
 
         List<GitRepoMemberResponse> list = result.stream()
-                .map(r -> new GitRepoMemberResponse(r.getMember(), r.getCommits(), r.getAddition(), r.getDeletion()))
+                .map(r -> GitRepoMemberResponse.builder().githubId(r.getMember()).commits(r.getCommits()).additions(r.getAddition()).deletions(r.getDeletion()).build())
                 .collect(Collectors.toList());
 
         gitRepoMemberService.updateOrSaveAll(list, result.get(0).getGitRepo());

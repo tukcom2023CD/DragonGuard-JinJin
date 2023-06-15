@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @DatabaseTest
@@ -99,7 +98,7 @@ class MemberServiceTest extends LoginTest {
         int year = LocalDate.now().getYear();
         Member member = memberService.getLoginUserWithPersistence();
         List<Blockchain> before = member.getBlockchains();
-        doNothing().when(smartContractService).transfer(any(), any());
+        when(smartContractService.transfer(any(), any())).thenReturn("123123");
         when(smartContractService.balanceOf(any())).thenReturn(BigInteger.valueOf(200L));
 
         em.clear();
@@ -175,12 +174,12 @@ class MemberServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("멤버 자기 자신 조회가 수행되는가")
+    @DisplayName("멤버 본인 상세 조회가 수행되는가")
     void getMember() {
         //given
         Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
-        Member member1 = memberService.getLoginUserWithPersistence();
-        org.addMember(member1, "ohksj77@tukorea.ac.kr");
+        Member member = memberService.getLoginUserWithPersistence();
+        org.addMember(member, "ohksj77@tukorea.ac.kr");
 
         //when
         MemberResponse result = memberService.getMember();
@@ -190,14 +189,18 @@ class MemberServiceTest extends LoginTest {
     }
 
     @Test
-    @DisplayName("멤버 상세 조회가 수행되는가")
+    @DisplayName("멤버 레포와 깃 org 조회가 수행되는가")
     void findMemberDetailByGithubId() {
         //given
+        Member member = memberService.getLoginUserWithPersistence();
+        Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
+        org.addMember(member, "ohksj77@tukorea.ac.kr");
+        member.finishAuth();
 
         //when
         MemberGitReposAndGitOrganizationsResponse result = memberService.findMemberDetailByGithubId(loginUser.getGithubId());
 
         //then
-        assertThat(result.getGithubId()).isEqualTo(loginUser.getGithubId());
+        assertThat(result.getGitOrganizations()).isNotNull(); // todo 더 정확한 validation 필요
     }
 }

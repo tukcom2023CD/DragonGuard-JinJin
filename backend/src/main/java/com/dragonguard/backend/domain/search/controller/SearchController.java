@@ -34,7 +34,7 @@ public class SearchController {
         return ResponseEntity.ok(searchService.getUserSearchResultByClient(new SearchRequest(name, SearchType.USERS, page, filters)));
     }
 
-    @GetMapping(params = "type=USERS")
+    @GetMapping(params = "type=REPOSITORIES")
     @Cacheable(value = "results", key = "{#name, page, filters}", cacheManager = "cacheManager")
     public ResponseEntity<List<GitRepoResultResponse>> getReposSearchResult(
             @RequestParam(value = "filters", required = false) List<String> filters,

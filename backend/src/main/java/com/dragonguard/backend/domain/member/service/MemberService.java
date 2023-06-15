@@ -14,6 +14,7 @@ import com.dragonguard.backend.domain.issue.service.IssueService;
 import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
+import com.dragonguard.backend.domain.member.dto.response.MemberGitOrganizationRepoResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
@@ -28,8 +29,8 @@ import com.dragonguard.backend.domain.organization.repository.OrganizationQueryR
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.IdResponse;
-import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,7 @@ import java.util.UUID;
 public class MemberService implements EntityLoader<Member, UUID> {
     private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
+    private final MemberClientService memberClientService;
     private final MemberMapper memberMapper;
     private final CommitService commitService;
     private final ContributionService contributionService;
@@ -283,5 +285,9 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return member.getCommitSumWithRelation()
                 + member.getPullRequestSumWithRelation()
                 + member.getIssueSumWithRelation();
+    }
+
+    public List<MemberGitOrganizationRepoResponse> getMemberGitOrganizationRepo(String gitOrganizationName) {
+        return memberClientService.requestGitOrganizationResponse(getLoginUserWithPersistence().getGithubToken(), gitOrganizationName);
     }
 }

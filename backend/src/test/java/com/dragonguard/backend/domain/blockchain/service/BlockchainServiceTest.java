@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @DatabaseTest
@@ -41,7 +40,7 @@ class BlockchainServiceTest extends LoginTest {
     void setTransaction() {
         //given
         memberQueryRepository.findById(loginUser.getId()).ifPresent(m -> m.updateWalletAddress(walletAddress));
-        doNothing().when(smartContractService).transfer(any(), any());
+        when(smartContractService.transfer(any(), any())).thenReturn("123123123");
         when(smartContractService.balanceOf(any())).thenReturn(BigInteger.valueOf(1));
 
         //when

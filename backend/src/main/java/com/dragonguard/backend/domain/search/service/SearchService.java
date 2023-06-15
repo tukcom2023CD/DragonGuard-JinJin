@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -72,7 +73,7 @@ public class SearchService implements EntityLoader<Search, Long> {
         SearchRepoResponse clientResult = githubRepoClient.requestToGithub(searchRequest);
         return Arrays.stream(clientResult.getItems())
                 .map(request -> {
-                    Result result = resultRepository.save(resultMapper.toEntity(request, search.getId()));
+                    Result result = resultRepository.save(resultMapper.toEntity(request.getFull_name(), search.getId()));
                     return resultMapper.toGitRepoResponse(result.getId(), request);
                 }).collect(Collectors.toList());
     }
@@ -85,19 +86,11 @@ public class SearchService implements EntityLoader<Search, Long> {
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
         List<String> filters = searchRequest.getFilters();
 
-        Search search = getSameSearch(searches, filters);
-        if (search != null) return search;
-
-        return searchRepository.save(searchMapper.toSearch(searchRequest));
+        return Optional.ofNullable(getSameSearch(searches, filters)).orElseGet(() -> searchRepository.save(searchMapper.toSearch(searchRequest)));
     }
 
     private Search getSameSearch(List<Search> searches, List<String> filters) {
-        for (Search search : searches) {
-            if (isContainsSameFilters(filters, search)) {
-                return search;
-            }
-        }
-        return null;
+        return searches.stream().filter(search -> isContainsSameFilters(filters, search)).findFirst().orElse(null);
     }
 
     private boolean isContainsSameFilters(List<String> filters, Search search) {

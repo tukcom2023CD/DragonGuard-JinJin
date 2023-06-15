@@ -17,4 +17,11 @@ public class GitRepoMemberResponse {
     private Integer additions;
     private Integer deletions;
     private Boolean isServiceMember;
+
+    public GitRepoMemberResponse(String githubId, Integer commits, Integer additions, Integer deletions) {
+        this.githubId = githubId;
+        this.commits = commits;
+        this.additions = additions;
+        this.deletions = deletions;
+    }
 }

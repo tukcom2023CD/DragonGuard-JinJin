@@ -15,11 +15,10 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ResultMapper {
-    @Mapping(target = "name", source = "clientResultResponse.full_name")
-    Result toEntity(final GitRepoClientResponse gitRepoClientResponse, final Long searchId);
+    Result toEntity(final String name, final Long searchId);
 
     @Mapping(target = "name", source = "userResponse.login")
-    Result toEntity(final UserClientResponse userClientResponse, final Long searchId);
+    Result toEntity(final UserClientResponse userResponse, final Long searchId);
 
     UserResultResponse toUserResponse(final Result result);
 
@@ -30,3 +29,4 @@ public interface ResultMapper {
     @Mapping(target = "id", source = "searchId")
     GitRepoResultResponse toGitRepoResponse(final Long searchId, final GitRepoClientResponse dto);
 }
+
