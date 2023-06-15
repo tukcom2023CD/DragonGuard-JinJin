@@ -4,6 +4,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.service.GitRepoService;
@@ -42,12 +43,13 @@ class GitRepoControllerTest extends RestDocumentTest {
     @Test
     @DisplayName("레포 멤버 조회가 수행되는가")
     void getRepoMembers() throws Exception {
-        List<GitRepoMemberResponse> expected = List.of(
+        List<GitRepoMemberResponse> list = List.of(
                 new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
                 new GitRepoMemberResponse("HJ39", 101, 999, 500),
                 new GitRepoMemberResponse("posite", 99, 1001, 500),
                 new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499));
-        given(gitRepoService.findMembersByGitRepoWithClient(any(), any())).willReturn(expected);
+        GitRepoResponse expected = new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
+        given(gitRepoService.findGitRepoInfos(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(

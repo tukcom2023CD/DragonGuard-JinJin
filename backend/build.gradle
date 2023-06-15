@@ -121,8 +121,8 @@ bootJar {
 }
 
 asciidoctor {
-//	inputs.dir snippetsDir
-//	dependsOn test
+	inputs.dir snippetsDir
+	dependsOn test
 }
 
 tasks.named('test') {

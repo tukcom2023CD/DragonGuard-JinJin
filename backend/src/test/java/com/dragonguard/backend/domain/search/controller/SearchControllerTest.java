@@ -46,7 +46,7 @@ class SearchControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/search?page=1&name=gitrank&type=REPOSITORIES")
+                        get("/search?page=1&name=gitrank&type=USERS")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
@@ -76,7 +76,7 @@ class SearchControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/search?page=1&name=gitrank&type=REPOSITORIES&filters=language:swift,language:kotlin,language:java")
+                        get("/search?page=1&name=gitrank&type=USERS&filters=language:swift,language:kotlin,language:java")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 

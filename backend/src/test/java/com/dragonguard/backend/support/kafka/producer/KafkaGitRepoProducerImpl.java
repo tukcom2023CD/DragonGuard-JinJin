@@ -1,6 +1,6 @@
 package com.dragonguard.backend.support.kafka.producer;
 
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoRequest;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;

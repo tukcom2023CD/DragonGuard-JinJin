@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.member.controller;
 
+import com.dragonguard.backend.domain.member.dto.response.MemberGitOrganizationRepoResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
@@ -268,5 +269,29 @@ class MemberControllerTest extends RestDocumentTest {
         // docs
         perform.andDo(print())
                 .andDo(document("get member ranking in a organization", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("멤버의 조직에 소속된 레포 조회가 수행되는가")
+    void getMemberGitOrganizationRepo() throws Exception {
+        // given
+        List<MemberGitOrganizationRepoResponse> expected = List.of(
+                new MemberGitOrganizationRepoResponse("tukcom2023CD/DragonGuard-JinJin"),
+                new MemberGitOrganizationRepoResponse("tukcom2023CD/DragonGuard"),
+                new MemberGitOrganizationRepoResponse("tukcom2023CD/Yongari"));
+        given(memberService.getMemberGitOrganizationRepo(any())).willReturn(expected);
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        get("/members/git-organizations/git-repos?name=tukcom2023CD")
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("get member repositories in a organization", getDocumentRequest(), getDocumentResponse()));
     }
 }

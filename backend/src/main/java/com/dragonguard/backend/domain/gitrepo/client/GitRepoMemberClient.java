@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.gitrepo.client;
 
 import com.dragonguard.backend.config.github.GithubProperties;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.global.GithubClient;
@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
  */
 
 @Component
-public class GitRepoMemberClient implements GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> {
+public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> {
     private final GithubProperties githubProperties;
     private final WebClient webClient;
     private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";
@@ -31,14 +31,14 @@ public class GitRepoMemberClient implements GithubClient<GitRepoRequest, GitRepo
     }
 
     @Override
-    public GitRepoMemberClientResponse[] requestToGithub(GitRepoRequest request) {
+    public GitRepoMemberClientResponse[] requestToGithub(GitRepoInfoRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
                                 .path("repos/")
                                 .path(request.getName())
                                 .path("/stats")
-                                .path("/contributors?per_page=30&page=1")
+                                .path("/contributors")
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

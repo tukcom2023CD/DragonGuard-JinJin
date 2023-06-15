@@ -6,8 +6,8 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoSparkLineResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.ClosedIssueKafkaResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
@@ -56,8 +56,8 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private final MemberService memberService;
     private final GitRepoMapper gitRepoMapper;
     private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
-    private final KafkaProducer<GitRepoRequest> kafkaGitRepoInfoProducer;
-    private final GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
+    private final KafkaProducer<GitRepoInfoRequest> kafkaGitRepoInfoProducer;
+    private final GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
     private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
     private final GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> gitRepoSparkLineClient;
@@ -65,8 +65,8 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     public GitRepoResponse findGitRepoInfos(final String name) {
         Optional<GitRepo> gitRepo = findByName(name);
         int year = LocalDate.now().getYear();
-        GitRepoRequest gitRepoRequest = new GitRepoRequest(name, year);
-        String githubToken = setGithubTokenAndGet(gitRepoRequest);
+        GitRepoInfoRequest gitRepoInfoRequest = new GitRepoInfoRequest(name, year);
+        String githubToken = setGithubTokenAndGet(gitRepoInfoRequest);
 
         List<GitRepoMemberResponse> gitRepoMemberResponses = getGitRepoMemberResponses(name, year, githubToken);
         List<Integer> sparkLine = getSparkLine(githubToken, name, gitRepo);
@@ -74,9 +74,9 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return new GitRepoResponse(sparkLine, gitRepoMemberResponses);
     }
 
-    private String setGithubTokenAndGet(final GitRepoRequest gitRepoRequest) {
+    private String setGithubTokenAndGet(final GitRepoInfoRequest gitRepoInfoRequest) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
-        gitRepoRequest.setGithubToken(githubToken);
+        gitRepoInfoRequest.setGithubToken(githubToken);
         return githubToken;
     }
 
@@ -107,11 +107,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return gitRepo.orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(name)));
     }
 
-    public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final Optional<GitRepo> gitRepo, final GitRepoRequest gitRepoRequest) {
-        if (checkGitRepoIfValidAndSave(gitRepoRequest.getName(), gitRepo)) return requestToGithub(gitRepoRequest);
-        if (isContributionValid(gitRepo.get().getGitRepoMembers())) return requestToGithub(gitRepoRequest);
+    public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final Optional<GitRepo> gitRepo, final GitRepoInfoRequest gitRepoInfoRequest) {
+        if (checkGitRepoIfValidAndSave(gitRepoInfoRequest.getName(), gitRepo)) return requestToGithub(gitRepoInfoRequest);
+        if (isContributionValid(gitRepo.get().getGitRepoMembers())) return requestToGithub(gitRepoInfoRequest);
 
-        requestKafkaGitRepoInfo(gitRepoRequest);
+        requestKafkaGitRepoInfo(gitRepoInfoRequest);
         return organizeGitRepoMemberResponses(gitRepo);
     }
 
@@ -155,7 +155,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
 
     private List<GitRepoMemberResponse> getGitRepoMemberResponses(final String repo, final Integer year, final String githubToken) {
         requestKafkaIssue(new GitRepoNameRequest(repo));
-        return findMembersByGitRepoWithClient(findByName(repo), new GitRepoRequest(githubToken, repo, year));
+        return findMembersByGitRepoWithClient(findByName(repo), new GitRepoInfoRequest(githubToken, repo, year));
     }
 
     public GitRepoMemberCompareResponse findTwoGitRepoMember(final GitRepoMemberCompareRequest gitRepoMemberCompareRequest) {
@@ -246,19 +246,19 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 deletions.isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0) : deletions.stream().mapToInt(Integer::intValue).summaryStatistics());
     }
 
-    public List<GitRepoMemberResponse> requestToGithub(final GitRepoRequest gitRepoRequest) {
-        List<GitRepoMemberClientResponse> contributions = Arrays.asList(requestClientGitRepoMember(gitRepoRequest));
+    public List<GitRepoMemberResponse> requestToGithub(final GitRepoInfoRequest gitRepoInfoRequest) {
+        List<GitRepoMemberClientResponse> contributions = Arrays.asList(requestClientGitRepoMember(gitRepoInfoRequest));
         if (contributions.isEmpty()) return List.of();
 
         List<GitRepoMemberResponse> result = getResponseList(
                 contributions, getContributionMap(contributions, Week::getA), getContributionMap(contributions, Week::getD));
 
-        gitRepoMemberService.saveAll(result, gitRepoRequest.getName());
+        gitRepoMemberService.saveAll(result, gitRepoInfoRequest.getName());
         return result;
     }
 
-    public GitRepoMemberClientResponse[] requestClientGitRepoMember(final GitRepoRequest gitRepoRequest) {
-        return gitRepoMemberClient.requestToGithub(gitRepoRequest);
+    public GitRepoMemberClientResponse[] requestClientGitRepoMember(final GitRepoInfoRequest gitRepoInfoRequest) {
+        return gitRepoMemberClient.requestToGithub(gitRepoInfoRequest);
     }
 
     private List<GitRepoMemberResponse> getResponseList(
@@ -297,7 +297,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private void requestKafkaGitRepoInfo(final GitRepoRequest gitRepoRequest) {
-        kafkaGitRepoInfoProducer.send(gitRepoRequest);
+    private void requestKafkaGitRepoInfo(final GitRepoInfoRequest gitRepoInfoRequest) {
+        kafkaGitRepoInfoProducer.send(gitRepoInfoRequest);
     }
 }

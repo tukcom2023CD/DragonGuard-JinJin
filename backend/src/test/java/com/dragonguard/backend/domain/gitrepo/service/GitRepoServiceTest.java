@@ -5,7 +5,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoSparkLineResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
@@ -46,7 +46,7 @@ class GitRepoServiceTest extends LoginTest {
     @Autowired private GitRepoService gitRepoService;
     @Autowired private GitRepoRepository gitRepoRepository;
     @Autowired private GitRepoMemberRepository gitRepoMemberRepository;
-    @MockBean private GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
+    @MockBean private GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
     @MockBean private GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     @MockBean private GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
     @MockBean private GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> sparkLineClient;

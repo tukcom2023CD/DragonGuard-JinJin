@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.gitrepo.messagequeue;
 
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaGitRepoInfoConsumer implements KafkaConsumer<GitRepoRequest> {
+public class KafkaGitRepoInfoConsumer implements KafkaConsumer<GitRepoInfoRequest> {
     private final GitRepoService gitRepoService;
     private final ObjectMapper objectMapper;
     @Override
@@ -21,7 +21,7 @@ public class KafkaGitRepoInfoConsumer implements KafkaConsumer<GitRepoRequest> {
 
     @Override
     @SneakyThrows(JsonProcessingException.class)
-    public GitRepoRequest readValue(String message) {
-        return objectMapper.readValue(message, GitRepoRequest.class);
+    public GitRepoInfoRequest readValue(String message) {
+        return objectMapper.readValue(message, GitRepoInfoRequest.class);
     }
 }
