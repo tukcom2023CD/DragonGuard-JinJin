@@ -16,7 +16,7 @@ public class KafkaGitRepoInfoConsumer implements KafkaConsumer<GitRepoRequest> {
     private final ObjectMapper objectMapper;
     @Override
     public void consume(String message) {
-        gitRepoService.requestAllClients(readValue(message));
+        gitRepoService.requestToGithub(readValue(message));
     }
 
     @Override

@@ -300,8 +300,4 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private void requestKafkaGitRepoInfo(final GitRepoRequest gitRepoRequest) {
         kafkaGitRepoInfoProducer.send(gitRepoRequest);
     }
-
-    public void requestAllClients(final GitRepoRequest gitRepoRequest) {
-        requestToGithub(gitRepoRequest);
-    }
 }
