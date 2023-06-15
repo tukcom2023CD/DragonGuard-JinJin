@@ -69,4 +69,11 @@ public class KafkaTopicConfig {
                 .name("gitrank.to.backend.spark-line")
                 .build();
     }
+
+    @Bean
+    public NewTopic gitRepoInfo() {
+        return TopicBuilder
+                .name("gitrank.to.backend.git-repos-info")
+                .build();
+    }
 }

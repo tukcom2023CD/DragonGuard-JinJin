@@ -38,7 +38,7 @@ public class GitRepoMemberClient implements GithubClient<GitRepoRequest, GitRepo
                                 .path("repos/")
                                 .path(request.getName())
                                 .path("/stats")
-                                .path("/contributors")
+                                .path("/contributors?per_page=30&page=1")
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
