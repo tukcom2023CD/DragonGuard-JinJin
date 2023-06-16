@@ -9,7 +9,7 @@
 
 ## System Architecture
 ![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/9f3976b6-25e4-4afc-a469-c9b72499735d)
-## Cloud Architecture
+## Cloud Infra
 ![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/dbbbd6cf-5d62-4b17-91cb-292dee847027)
 ## CI / CD Flow
 ![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/7065b430-d8ee-4244-97b7-c1c7b24acf10)
