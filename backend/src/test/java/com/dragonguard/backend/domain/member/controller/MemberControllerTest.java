@@ -1,14 +1,11 @@
 package com.dragonguard.backend.domain.member.controller;
 
-import com.dragonguard.backend.domain.member.dto.response.MemberGitOrganizationRepoResponse;
-import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
-import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
-import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
-import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
+import com.dragonguard.backend.domain.member.dto.response.*;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import com.dragonguard.backend.support.fixture.member.dto.MemberRequestFixture;
 import org.junit.jupiter.api.DisplayName;
@@ -27,8 +24,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -132,7 +129,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회가 수행되는가")
     void getMemberDetails() throws Exception {
         // given
-        MemberGitReposAndGitOrganizationsResponse expected = new MemberGitReposAndGitOrganizationsResponse(List.of("tukcom2023CD"), List.of("DragonGuard-JinJin", "DragonGuard", "Jin-Jin"));
+        MemberGitReposAndGitOrganizationsResponse expected = new MemberGitReposAndGitOrganizationsResponse(List.of(new MemberGitOrganizationResponse("tukcom2023CD", "http://orgGithubProfile")), List.of("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/DragonGuard", "tukcom2023CD/Jin-Jin"), "http://memberGithubProfile");
         given(memberService.findMemberDetailByGithubId(any())).willReturn(expected);
 
         // when

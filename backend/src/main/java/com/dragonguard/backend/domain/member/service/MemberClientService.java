@@ -91,9 +91,8 @@ public class MemberClientService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> getMemberOrganizationNames(final MemberClientRequest request) {
+    public Set<MemberOrganizationResponse> getMemberOrganizationNames(final MemberClientRequest request) {
         return Arrays.stream(memberOrganizationClient.requestToGithub(request))
-                .map(MemberOrganizationResponse::getLogin)
                 .collect(Collectors.toSet());
     }
 

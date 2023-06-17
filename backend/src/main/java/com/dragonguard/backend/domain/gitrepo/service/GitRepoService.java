@@ -283,7 +283,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public GitRepoResponse findGitRepoInfo(String name) {
+    public GitRepoResponse findGitRepoInfo(final String name) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         Optional<GitRepo> optionalGitRepo = findByName(name);
         List<GitRepoMemberResponse> gitRepoMemberResponses = getGitRepoMemberResponses(name, githubToken);
@@ -291,7 +291,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return new GitRepoResponse(getSparkLine(githubToken, name, optionalGitRepo), gitRepoMemberResponses);
     }
 
-    private List<GitRepoMemberResponse> getGitRepoMemberResponses(String name, String githubToken) {
+    private List<GitRepoMemberResponse> getGitRepoMemberResponses(final String name, final String githubToken) {
         GitRepo gitRepo = findGitRepo(name);
         Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         if (gitRepoMembers.isEmpty()) {
@@ -300,7 +300,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return requestToGithub(new GitRepoInfoRequest(githubToken, name, LocalDate.now().getYear()));
     }
 
-    public TwoGitRepoResponse findTwoGitRepo(GitRepoCompareRequest request) {
+    public TwoGitRepoResponse findTwoGitRepo(final GitRepoCompareRequest request) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         String firstRepo = request.getFirstRepo();
         String secondRepo = request.getSecondRepo();
@@ -316,7 +316,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                         requestClientGitRepoLanguage(secondRepo, githubToken)));
     }
 
-    public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(GitRepoCompareRequest request) {
+    public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(final GitRepoCompareRequest request) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         return new TwoGitRepoMemberResponse(
                 getGitRepoMemberResponses(request.getFirstRepo(), githubToken),

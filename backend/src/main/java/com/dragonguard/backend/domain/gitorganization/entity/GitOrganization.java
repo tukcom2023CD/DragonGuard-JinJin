@@ -32,14 +32,17 @@ public class GitOrganization implements Auditable {
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "gitOrganization")
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
+    private String profileImage;
+
     @Setter
     @Embedded
     @Column(nullable = false)
     private BaseTime baseTime;
 
     @Builder
-    public GitOrganization(String name, Member member) {
+    public GitOrganization(String name, String profileImage, Member member) {
         this.name = name;
+        this.profileImage = profileImage;
         addGitOrganizationMember(member);
     }
 

@@ -3,6 +3,7 @@ package com.dragonguard.backend.domain.gitorganization.service;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.repository.GitOrganizationRepository;
 import com.dragonguard.backend.domain.gitorganization.repository.JpaGitOrganizationRepository;
+import com.dragonguard.backend.domain.member.dto.client.MemberOrganizationResponse;
 import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
@@ -28,12 +29,15 @@ class GitOrganizationServiceTest extends LoginTest {
     @DisplayName("전체 저장이 수행되는가")
     void saveGitOrganizations() {
         //given
-        Set<String> gitOrganizationNames = Set.of("tukcom2023CD", "C-B-U", "bid-bid");
+        Set<MemberOrganizationResponse> gitOrganizationNames = Set.of(
+                new MemberOrganizationResponse("tukcom2023CD", "http://githubProfileImage1"),
+                new MemberOrganizationResponse("C-B-U", "http://githubProfileImage2"));
 
         //when
         gitOrganizationService.findAndSaveGitOrganizations(gitOrganizationNames, authService.getLoginUser());
 
         long count = gitOrganizationNames.stream()
+                .map(MemberOrganizationResponse::getLogin)
                 .map(gitOrganizationRepository::findByName)
                 .map(go -> go.orElse(null))
                 .filter(Objects::nonNull)

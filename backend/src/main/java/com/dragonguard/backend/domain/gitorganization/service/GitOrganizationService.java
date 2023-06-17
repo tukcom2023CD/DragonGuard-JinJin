@@ -3,6 +3,7 @@ package com.dragonguard.backend.domain.gitorganization.service;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.mapper.GitOrganizationMapper;
 import com.dragonguard.backend.domain.gitorganization.repository.GitOrganizationRepository;
+import com.dragonguard.backend.domain.member.dto.client.MemberOrganizationResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
@@ -25,16 +26,16 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
     private final GitOrganizationRepository gitOrganizationRepository;
     private final GitOrganizationMapper gitOrganizationMapper;
 
-    public void findAndSaveGitOrganizations(final Set<String> gitOrganizationNames, final Member member) {
+    public void findAndSaveGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
         Set<GitOrganization> gitOrganizations = getNotSavedGitOrganizations(gitOrganizationNames, member);
 
         saveAllGitOrganizations(gitOrganizations);
     }
 
-    public Set<GitOrganization> getNotSavedGitOrganizations(final Set<String> gitOrganizationNames, final Member member) {
+    public Set<GitOrganization> getNotSavedGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
         return gitOrganizationNames.stream()
-                .filter(name -> !gitOrganizationRepository.existsByName(name))
-                .map(name -> gitOrganizationMapper.toEntity(name, member))
+                .filter(org -> !gitOrganizationRepository.existsByName(org.getLogin()))
+                .map(org -> gitOrganizationMapper.toEntity(org.getLogin(), org.getAvatar_url(), member))
                 .collect(Collectors.toSet());
     }
 
