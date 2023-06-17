@@ -17,17 +17,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        if let accessToken = UserDefaults.standard.string(forKey: "Access"),
-            let refreshToken = UserDefaults.standard.string(forKey: "Refresh"){
-
-            checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
-        }
-        else{
-            moveLoginController()
-        }
-//        let rootView = SearchViewController()
-//        window?.rootViewController = rootView
-//        window?.makeKeyAndVisible()
+//        if let accessToken = UserDefaults.standard.string(forKey: "Access"),
+//            let refreshToken = UserDefaults.standard.string(forKey: "Refresh"){
+//
+//            checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
+//        }
+//        else{
+//            moveLoginController()
+//        }
+        // $$$$$$$ 여기 밑을 바꾸면 됨(내가 만든 화면으로) $$$$$$$$$$
+        let rootView = SearchViewController()
+        window?.rootViewController = rootView
+        window?.makeKeyAndVisible()
     }
     
     // MARK: go to LoginController
