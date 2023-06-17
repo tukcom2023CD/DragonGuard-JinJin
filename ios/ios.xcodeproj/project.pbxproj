@@ -170,6 +170,12 @@
 		A3AEEB602975286C00004722 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB5F2975286C00004722 /* RxCocoa */; };
 		A3AEEB622975286C00004722 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB612975286C00004722 /* RxSwift */; };
 		A3AEEB652975311400004722 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB642975311400004722 /* SnapKit */; };
+		A3D504DB2A3E0BB20024EDA8 /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D504DA2A3E0BB20024EDA8 /* QuestionViewController.swift */; };
+		A3D504DD2A3E0BC90024EDA8 /* RankingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D504DC2A3E0BC90024EDA8 /* RankingViewController.swift */; };
+		A3D504DF2A3E0BDA0024EDA8 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D504DE2A3E0BDA0024EDA8 /* HomeViewController.swift */; };
+		A3D504E12A3E0BED0024EDA8 /* CompareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D504E02A3E0BED0024EDA8 /* CompareViewController.swift */; };
+		A3D504E32A3E0C080024EDA8 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D504E22A3E0C080024EDA8 /* ProfileViewController.swift */; };
+		A3E3139D2A28AEA6006EBCD6 /* TapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E3139C2A28AEA6006EBCD6 /* TapBarViewController.swift */; };
 		A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -345,6 +351,12 @@
 		A37AA6F929D35522002812F6 /* TierTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierTableViewCell.swift; sourceTree = "<group>"; };
 		A3ADC9732990210D003D6483 /* MainCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionView.swift; sourceTree = "<group>"; };
 		A3ADC97E29911B50003D6483 /* CompareController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareController.swift; sourceTree = "<group>"; };
+		A3D504DA2A3E0BB20024EDA8 /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
+		A3D504DC2A3E0BC90024EDA8 /* RankingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingViewController.swift; sourceTree = "<group>"; };
+		A3D504DE2A3E0BDA0024EDA8 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		A3D504E02A3E0BED0024EDA8 /* CompareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareViewController.swift; sourceTree = "<group>"; };
+		A3D504E22A3E0C080024EDA8 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		A3E3139C2A28AEA6006EBCD6 /* TapBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapBarViewController.swift; sourceTree = "<group>"; };
 		A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageResultModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -984,6 +996,7 @@
 		A3ADC97729911357003D6483 /* MainScreen */ = {
 			isa = PBXGroup;
 			children = (
+				A3E3139B2A28AE44006EBCD6 /* Refactoring */,
 				3B1DB87B2963428A00308F43 /* MainController.swift */,
 				A3754F9F2995653B00A683A9 /* TierTokenCustomUIView.swift */,
 				A3ADC9732990210D003D6483 /* MainCollectionView.swift */,
@@ -992,6 +1005,19 @@
 				3B9756E9298A16B200F27094 /* WatchRankingScreen */,
 			);
 			path = MainScreen;
+			sourceTree = "<group>";
+		};
+		A3E3139B2A28AE44006EBCD6 /* Refactoring */ = {
+			isa = PBXGroup;
+			children = (
+				A3E3139C2A28AEA6006EBCD6 /* TapBarViewController.swift */,
+				A3D504DA2A3E0BB20024EDA8 /* QuestionViewController.swift */,
+				A3D504DC2A3E0BC90024EDA8 /* RankingViewController.swift */,
+				A3D504DE2A3E0BDA0024EDA8 /* HomeViewController.swift */,
+				A3D504E02A3E0BED0024EDA8 /* CompareViewController.swift */,
+				A3D504E22A3E0C080024EDA8 /* ProfileViewController.swift */,
+			);
+			path = Refactoring;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1158,6 +1184,7 @@
 				A37AA6EC29A50F7C002812F6 /* CompareRepositoryController.swift in Sources */,
 				3B3CE9DC29B47EDF00B2594B /* UserDBId.swift in Sources */,
 				3B5E07FF29BEF7E50090E8A6 /* GithubTokenModel.swift in Sources */,
+				A3E3139D2A28AEA6006EBCD6 /* TapBarViewController.swift in Sources */,
 				3BA78D9F2A04FFD0000ACAD1 /* AdminTabbarController.swift in Sources */,
 				3B5B174B29DC584800571A8D /* AllOrganizationRankingModel.swift in Sources */,
 				A35F1FB029DECEFB00A4ABD0 /* FAQTableViewCell.swift in Sources */,
@@ -1186,6 +1213,7 @@
 				3BE649F02A3DA0CC005D9F9E /* DetailInfoController.swift in Sources */,
 				3BA78D9A2A04F3D3000ACAD1 /* AdminModel.swift in Sources */,
 				3B110FF62A24CA47008C99F0 /* SearchResultModel.swift in Sources */,
+				A3D504DD2A3E0BC90024EDA8 /* RankingViewController.swift in Sources */,
 				3BDD718629C091480018D09B /* LanguageSelectionsCollectionViewCell.swift in Sources */,
 				3B87E57029D7173D000734BE /* AddOrganizationModel.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
@@ -1235,6 +1263,7 @@
 				3B1DB87C2963428A00308F43 /* MainController.swift in Sources */,
 				3B9CF3D6298FB5A700495D35 /* ALLUserInfoViewModel.swift in Sources */,
 				A3ADC9742990210E003D6483 /* MainCollectionView.swift in Sources */,
+				A3D504E32A3E0C080024EDA8 /* ProfileViewController.swift in Sources */,
 				3BA78DA12A050099000ACAD1 /* AcceptedOraganicationController.swift in Sources */,
 				3B5B5F6629E869F40017C5C9 /* RepoTableViewCell.swift in Sources */,
 				3B9CF3D4298F9B8C00495D35 /* ALLUserInfoService.swift in Sources */,
@@ -1244,10 +1273,12 @@
 				3B9756ED298A16FF00F27094 /* AllRepositoryRankingController.swift in Sources */,
 				3B29804929ACCDC800967B6E /* CompareSelectedUserTableView.swift in Sources */,
 				3BA78D962A04F112000ACAD1 /* AdminViewModel.swift in Sources */,
+				A3D504DF2A3E0BDA0024EDA8 /* HomeViewController.swift in Sources */,
 				3BA08A8429C362C1004359A9 /* TypeCollectionViewCell.swift in Sources */,
 				3B5B174F29DC595D00571A8D /* OrganizationRankingViewModel.swift in Sources */,
 				3B61080E29E9A142000D7A5A /* MyProfileInfoModel.swift in Sources */,
 				A30BA47029841C97008B594E /* SearchPageService.swift in Sources */,
+				A3D504DB2A3E0BB20024EDA8 /* QuestionViewController.swift in Sources */,
 				3BE64A0C2A3E01DC005D9F9E /* TitleView.swift in Sources */,
 				3B18C44029ADD69D00E58303 /* CompareRepoCollectionViewCell.swift in Sources */,
 				3B5B175529DC764A00571A8D /* UniversityRankingController.swift in Sources */,
@@ -1271,6 +1302,7 @@
 				3BE649E02A3CCFDC005D9F9E /* CustomTopView.swift in Sources */,
 				3B5FF18E2A2746320022BE90 /* UserListCollectionViewCell.swift in Sources */,
 				3BF2B31329890F1900F20841 /* WatchRankingCollectionView.swift in Sources */,
+				A3D504E12A3E0BED0024EDA8 /* CompareViewController.swift in Sources */,
 				3B7BFF6A29CBD63200A2F3F4 /* SearchOraganizationService.swift in Sources */,
 				3B5FF1822A2733AD0022BE90 /* RepoDetailController.swift in Sources */,
 				3B9756EF298A171300F27094 /* AllOrganiRankingController.swift in Sources */,
