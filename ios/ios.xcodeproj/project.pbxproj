@@ -160,6 +160,7 @@
 		3BEFEC3529D3FB9500DBBCA8 /* EmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */; };
 		3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */; };
 		3BF2B31329890F1900F20841 /* WatchRankingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */; };
+		3BF40D5E2A3E2E1B0052FA7C /* CustomLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF40D5D2A3E2E1B0052FA7C /* CustomLoginButton.swift */; };
 		3BFF623329CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */; };
 		A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30BA46C298415B8008B594E /* SearchPageViewModel.swift */; };
 		A30BA47029841C97008B594E /* SearchPageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30BA46F29841C97008B594E /* SearchPageService.swift */; };
@@ -344,6 +345,7 @@
 		3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailService.swift; sourceTree = "<group>"; };
 		3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailModel.swift; sourceTree = "<group>"; };
 		3BF2B31229890F1900F20841 /* WatchRankingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRankingCollectionView.swift; sourceTree = "<group>"; };
+		3BF40D5D2A3E2E1B0052FA7C /* CustomLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLoginButton.swift; sourceTree = "<group>"; };
 		3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifiedOrganizationViewModel.swift; sourceTree = "<group>"; };
 		A30BA46C298415B8008B594E /* SearchPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageViewModel.swift; sourceTree = "<group>"; };
 		A30BA46F29841C97008B594E /* SearchPageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageService.swift; sourceTree = "<group>"; };
@@ -583,6 +585,7 @@
 			isa = PBXGroup;
 			children = (
 				3B58A18E29A6164D006A1817 /* LoginController.swift */,
+				3BF40D5D2A3E2E1B0052FA7C /* CustomLoginButton.swift */,
 				3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */,
 			);
 			path = LoginController;
@@ -769,7 +772,6 @@
 		3BA0EEE129799A1100B9E952 /* NotUseView */ = {
 			isa = PBXGroup;
 			children = (
-				3B3CE9DA29B46AA700B2594B /* LoginController */,
 				A3ADC97729911357003D6483 /* MainScreen */,
 				3B3CE9D829B46A7300B2594B /* SearchController */,
 			);
@@ -918,9 +920,10 @@
 		3BE64A012A3DEB70005D9F9E /* View */ = {
 			isa = PBXGroup;
 			children = (
+				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
+				3B3CE9DA29B46AA700B2594B /* LoginController */,
 				3BE64A152A3E2A87005D9F9E /* MainViewController */,
 				3BE64A052A3DFF9F005D9F9E /* BlockChainList */,
-				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
 				3B9756F2298A33E900F27094 /* SettingScreen */,
 				3BE64A042A3DF02A005D9F9E /* RepoDetailController */,
 				3BE64A032A3DEFC6005D9F9E /* SearchController */,
@@ -1195,6 +1198,7 @@
 				3BE64A172A3E2AB1005D9F9E /* QuestionViewController.swift in Sources */,
 				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
 				3BE649F42A3DA4A3005D9F9E /* OrganizationInfoView.swift in Sources */,
+				3BF40D5E2A3E2E1B0052FA7C /* CustomLoginButton.swift in Sources */,
 				3BDD718929C0932A0018D09B /* StarSelectionCollectionViewCell.swift in Sources */,
 				3BA78DA32A05018E000ACAD1 /* AdminTableViewCell.swift in Sources */,
 				A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */,

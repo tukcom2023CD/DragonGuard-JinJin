@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
 //        else{
 //            moveLoginController()
 //        }
-        let rootView = BlockChainListController()
+        let rootView = LoginController()
         window?.rootViewController = rootView
         window?.makeKeyAndVisible()
     }

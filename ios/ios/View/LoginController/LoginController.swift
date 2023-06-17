@@ -34,23 +34,39 @@ final class LoginController: UIViewController{
      UI 코드 작성
      */
     
-    lazy var klipLoginBtn: UIButton = {
-        let btn = UIButton()
-        btn.setTitle("Go KLIP", for: .normal)
-        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        btn.setTitleColor(.black, for: .normal)
-        btn.layer.borderWidth = 2
+    // MARK:
+    private lazy var fillView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 255/255, green: 104/255, blue: 120/255, alpha: 1.0) /* #ff6878 */
+        return view
+    }()
+    
+    // MARK:
+    private lazy var imgView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "2")
+        return imgView
+    }()
+    
+    private lazy var klipLoginBtn: CustomLoginButton = {
+        let btn = CustomLoginButton()
+        btn.inputData(icon: (UIImage(named: "KlipIcon")?.resize(newWidth: 40))!,
+                      title: "Klip 로그인")
+        btn.backgroundColor = UIColor(red: 45/255, green: 106/255, blue: 255/255, alpha: 1.0) /* #2d6aff */
+        btn.clipsToBounds = true
+        btn.layer.cornerRadius = 20
         btn.isEnabled = false
         btn.addTarget(self, action: #selector(clickedKlipLoginBtn), for: .touchUpInside)
         return btn
     }()
     
-    lazy var goGithubBtn: UIButton = {
-        let btn = UIButton()
-        btn.setTitle("Go Github", for: .normal)
-        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        btn.setTitleColor(.black, for: .normal)
-        btn.layer.borderWidth = 2
+    private lazy var goGithubBtn: CustomLoginButton = {
+        let btn = CustomLoginButton()
+        btn.backgroundColor = UIColor(red: 27/255, green: 31/255, blue: 34/255, alpha: 1.0) /* #1b1f22 */
+        btn.inputData(icon: (UIImage(named: "githubIcon")?.resize(newWidth: 40))!,
+                      title: "Github 로그인")
+        btn.clipsToBounds = true
+        btn.layer.cornerRadius = 20
         btn.addTarget(self, action: #selector(clickedGoGihbubBtn), for: .touchUpInside)
         return btn
     }()
@@ -96,13 +112,16 @@ final class LoginController: UIViewController{
         let url = URL(string: APIURL.apiUrl.callBackendForGithubLogin(ip: APIURL.ip))!
         print("url \(url)")
         let urlRequest = URLRequest(url: url)
-        let newViewController = UIViewController()
+        let vc = UIViewController()
+        let newViewController = UINavigationController(rootViewController: vc )
         let webView = WKWebView(frame: newViewController.view.bounds)
         newViewController.view.addSubview(webView)
         
         webView.navigationDelegate = self
         webView.goBack()
         webView.load(urlRequest)
+//        newViewController.modalPresentationStyle = .fullScreen
+//        self.present(newViewController,animated: true)
         self.navigationController?.pushViewController(newViewController,animated: true)
         
     }
@@ -125,26 +144,26 @@ final class LoginController: UIViewController{
 
                     self.klipLoginBtn.isEnabled = false
                     self.goGithubBtn.isEnabled = true
-                    self.goGithubBtn.backgroundColor = .white
-                    self.klipLoginBtn.backgroundColor = .white
-                    
-                    self.navigationController?.pushViewController(rootView, animated: true)
+                    self.klipLoginBtn.layer.opacity = 1
+                    self.goGithubBtn.layer.opacity = 1
+                    self.present(rootView, animated: true)
+//                    self.navigationController?.pushViewController(rootView, animated: true)
                     
                 }
                 else if first{
-                    self.goGithubBtn.backgroundColor = .lightGray
+                    self.goGithubBtn.layer.opacity = 0.4
                     self.klipLoginBtn.isEnabled = true
                     self.goGithubBtn.isEnabled = false
                 }
                 else if second{
-                    self.klipLoginBtn.backgroundColor = .lightGray
+                    self.klipLoginBtn.layer.opacity = 0.4
                     self.klipLoginBtn.isEnabled = false
                 }
                 else{
                     self.klipLoginBtn.isEnabled = false
                     self.goGithubBtn.isEnabled = true
-                    self.goGithubBtn.backgroundColor = .white
-                    self.klipLoginBtn.backgroundColor = .white
+                    self.goGithubBtn.layer.opacity = 1
+                    self.klipLoginBtn.layer.opacity = 1
                 }
             })
             .disposed(by: disposeBag)
@@ -155,8 +174,10 @@ final class LoginController: UIViewController{
      */
     
     private func addUItoView(){
-        self.view.addSubview(klipLoginBtn)
-        self.view.addSubview(goGithubBtn)
+        view.addSubview(klipLoginBtn)
+        view.addSubview(goGithubBtn)
+        view.addSubview(imgView)
+        view.addSubview(fillView)
         setAutoLayout()
     }
     
@@ -167,16 +188,31 @@ final class LoginController: UIViewController{
      */
     
     private func setAutoLayout(){
+        
+        fillView.snp.makeConstraints { make in
+            make.top.equalTo(0)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/4)
+        }
+        
+        imgView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/5)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/2)
+        }
+        
         klipLoginBtn.snp.makeConstraints({ make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-100)
-            make.leading.equalTo(90)
-            make.trailing.equalTo(-90)
+            make.top.equalTo(imgView.snp.bottom).offset(30)
+            make.centerX.equalTo(view.snp.centerX)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/18)
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/3)
         })
         
         goGithubBtn.snp.makeConstraints({ make in
             make.top.equalTo(klipLoginBtn.snp.bottom).offset(30)
-            make.leading.equalTo(90)
-            make.trailing.equalTo(-90)
+            make.centerX.equalTo(view.snp.centerX)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/18)
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/3)
         })
         
         
