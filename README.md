@@ -8,7 +8,7 @@
 - 이에 따라 개발자들에 대한 현재 개발 역량뿐만 아니라 타인 또는 Repository, 대학 및 기관 등 여러 방면에서 필터링한 정보를 파악하는 시스템을 정량적인 분석과 평가를 거쳐 건전한 경쟁 심리를 유도하고자 한다.
 
 ## System Architecture
-![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/9f3976b6-25e4-4afc-a469-c9b72499735d)
+![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/5dbf7b2e-cbc6-4412-882f-f20d848627a8)
 ## Cloud Infra
 ![image](https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/dbbbd6cf-5d62-4b17-91cb-292dee847027)
 ## CI / CD Flow

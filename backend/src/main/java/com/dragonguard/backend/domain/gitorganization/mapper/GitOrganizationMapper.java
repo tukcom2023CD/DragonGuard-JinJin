@@ -14,5 +14,6 @@ import org.mapstruct.Mapping;
 public interface GitOrganizationMapper {
     @Mapping(target = "name", source = "name")
     @Mapping(target = "member", source = "member")
-    GitOrganization toEntity(final String name, final Member member);
+    @Mapping(target = "profileImage", source = "profileImage")
+    GitOrganization toEntity(final String name, String profileImage, final Member member);
 }

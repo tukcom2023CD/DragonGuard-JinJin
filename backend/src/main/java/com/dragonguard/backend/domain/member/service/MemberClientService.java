@@ -11,13 +11,11 @@ import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.issue.service.IssueService;
 import com.dragonguard.backend.domain.member.dto.client.*;
-import com.dragonguard.backend.domain.member.dto.response.MemberGitOrganizationRepoResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -91,9 +89,8 @@ public class MemberClientService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> getMemberOrganizationNames(final MemberClientRequest request) {
+    public Set<MemberOrganizationResponse> getMemberOrganizationNames(final MemberClientRequest request) {
         return Arrays.stream(memberOrganizationClient.requestToGithub(request))
-                .map(MemberOrganizationResponse::getLogin)
                 .collect(Collectors.toSet());
     }
 
@@ -106,9 +103,7 @@ public class MemberClientService {
     }
 
     public void saveAllGitRepoMembers(final Set<GitRepoMember> list) {
-        try {
-            gitRepoMemberRepository.saveAll(list);
-        } catch (DataIntegrityViolationException e) {}
+        gitRepoMemberRepository.saveAll(list);
     }
 
     public Set<GitRepoMember> findIfGitRepoMemberNotExists(final Member member, final Set<GitRepo> gitRepos) {
@@ -118,23 +113,21 @@ public class MemberClientService {
     }
 
     public void saveAllGitRepos(final Set<GitRepo> gitRepos) {
-        try{
-            gitRepoRepository.saveAll(gitRepos);
-        } catch (DataIntegrityViolationException e) {}
+        gitRepoRepository.saveAll(gitRepos);
     }
 
     public Set<GitRepo> findIfGitRepoNotExists(final Set<String> gitRepoNames) {
         return gitRepoNames.stream()
-                .map(name -> gitRepoRepository.findByName(name).orElseGet(() -> gitRepoMapper.toEntity(name)))
+                .filter(name -> !gitRepoRepository.existsByName(name))
+                .map(gitRepoMapper::toEntity)
                 .collect(Collectors.toSet());
     }
 
-    public List<MemberGitOrganizationRepoResponse> requestGitOrganizationResponse(String githubToken, String gitOrganizationName) {
+    public List<String> requestGitOrganizationResponse(String githubToken, String gitOrganizationName) {
         OrganizationRepoResponse[] clientResponse = memberOrganizationRepoClient.requestToGithub(new MemberClientRequest(gitOrganizationName, githubToken, LocalDate.now().getYear()));
 
         return Arrays.stream(clientResponse)
                 .map(OrganizationRepoResponse::getFull_name)
-                .map(MemberGitOrganizationRepoResponse::new)
                 .collect(Collectors.toList());
     }
 }

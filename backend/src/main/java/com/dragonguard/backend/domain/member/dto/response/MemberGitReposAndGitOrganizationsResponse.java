@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class MemberGitReposAndGitOrganizationsResponse {
-    private List<String> gitOrganizations;
+    private List<MemberGitOrganizationResponse> gitOrganizations;
     private List<String> gitRepos;
+    private String memberProfileImage;
 }

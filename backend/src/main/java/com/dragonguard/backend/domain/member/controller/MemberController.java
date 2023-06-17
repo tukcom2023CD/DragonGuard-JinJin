@@ -85,7 +85,7 @@ public class MemberController {
     }
 
     @GetMapping("/git-organizations/git-repos")
-    public ResponseEntity<List<MemberGitOrganizationRepoResponse>> getMemberGitOrganizationRepo(@RequestParam String name) {
+    public ResponseEntity<MemberGitOrganizationRepoResponse> getMemberGitOrganizationRepo(@RequestParam String name) {
         return ResponseEntity.ok(memberService.getMemberGitOrganizationRepo(name));
     }
 }

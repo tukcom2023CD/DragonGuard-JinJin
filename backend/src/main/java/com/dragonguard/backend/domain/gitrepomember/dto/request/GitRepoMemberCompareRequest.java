@@ -18,11 +18,11 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class GitRepoMemberCompareRequest {
     @NotBlank
-    private String firstName;
+    private String firstGithubId;
     @NotBlank
     private String firstRepo;
     @NotBlank
-    private String secondName;
+    private String secondGithubId;
     @NotBlank
     private String secondRepo;
 }

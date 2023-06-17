@@ -3,6 +3,7 @@ package com.dragonguard.backend.domain.member.mapper;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
+import com.dragonguard.backend.domain.member.dto.response.MemberGitOrganizationResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
@@ -51,8 +52,8 @@ public interface MemberMapper {
     MemberGitReposAndGitOrganizationsResponse toDetailResponse(final List<GitOrganization> gitOrganizations, final List<GitRepo> gitRepos);
 
     @Named("getGitOrganizationNames")
-    default List<String> getGitOrganizationNames(final List<GitOrganization> gitOrganizations) {
-        return gitOrganizations.stream().map(GitOrganization::getName).distinct().collect(Collectors.toList());
+    default List<MemberGitOrganizationResponse> getGitOrganizationNames(final List<GitOrganization> gitOrganizations) {
+        return gitOrganizations.stream().map(org -> new MemberGitOrganizationResponse(org.getName(), org.getProfileImage())).distinct().collect(Collectors.toList());
     }
 
     @Named("getGitRepoNames")
