@@ -33,6 +33,22 @@ final class OrganizationDetailTableViewCell: UITableViewCell{
         return view
     }()
     
+    // MARK:
+    private func addUI(){
+        self.addSubview(repositoryView)
+        
+        repositoryView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(10)
+            make.leading.equalToSuperview().offset(30)
+            make.trailing.equalToSuperview().offset(-30)
+            make.bottom.equalToSuperview().offset(-10)
+        }
+    }
     
+    func inputData(title: String, imgPath: String, organizationTitle: String){
+        addUI()
+        
+        repositoryView.inputData(imgPath: imgPath, title: title, userName: organizationTitle)
+    }
     
 }

@@ -140,6 +140,7 @@
 		3BE649F82A3DA84D005D9F9E /* DetailInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649F72A3DA84D005D9F9E /* DetailInfoModel.swift */; };
 		3BE649FC2A3DC23C005D9F9E /* OrganizationDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649FB2A3DC23C005D9F9E /* OrganizationDetailController.swift */; };
 		3BE649FE2A3DC36B005D9F9E /* OrganizationDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649FD2A3DC36B005D9F9E /* OrganizationDetailTableViewCell.swift */; };
+		3BE64A002A3DC6C5005D9F9E /* RepositoryListInOrganizationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649FF2A3DC6C5005D9F9E /* RepositoryListInOrganizationModel.swift */; };
 		3BE6AD2D2993904D00B22EBD /* RepoContributorTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6AD2C2993904D00B22EBD /* RepoContributorTableView.swift */; };
 		3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6AD2E2993C6D300B22EBD /* RepoContributorInfoService.swift */; };
 		3BE6AD312993CF8500B22EBD /* RepoContributorInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */; };
@@ -312,6 +313,7 @@
 		3BE649F72A3DA84D005D9F9E /* DetailInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoModel.swift; sourceTree = "<group>"; };
 		3BE649FB2A3DC23C005D9F9E /* OrganizationDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationDetailController.swift; sourceTree = "<group>"; };
 		3BE649FD2A3DC36B005D9F9E /* OrganizationDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationDetailTableViewCell.swift; sourceTree = "<group>"; };
+		3BE649FF2A3DC6C5005D9F9E /* RepositoryListInOrganizationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListInOrganizationModel.swift; sourceTree = "<group>"; };
 		3BE6AD2C2993904D00B22EBD /* RepoContributorTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorTableView.swift; sourceTree = "<group>"; };
 		3BE6AD2E2993C6D300B22EBD /* RepoContributorInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoService.swift; sourceTree = "<group>"; };
 		3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoViewModel.swift; sourceTree = "<group>"; };
@@ -399,6 +401,7 @@
 				3B110FF52A24CA47008C99F0 /* SearchResultModel.swift */,
 				3BE649E72A3D80FA005D9F9E /* AllUserRankingModel.swift */,
 				3BE649F72A3DA84D005D9F9E /* DetailInfoModel.swift */,
+				3BE649FF2A3DC6C5005D9F9E /* RepositoryListInOrganizationModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -1120,6 +1123,7 @@
 				3BDD718929C0932A0018D09B /* StarSelectionCollectionViewCell.swift in Sources */,
 				3BA78DA32A05018E000ACAD1 /* AdminTableViewCell.swift in Sources */,
 				A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */,
+				3BE64A002A3DC6C5005D9F9E /* RepositoryListInOrganizationModel.swift in Sources */,
 				3BE6AD2D2993904D00B22EBD /* RepoContributorTableView.swift in Sources */,
 				3B43B5A329B87FB100EBB379 /* UserDBIdModel.swift in Sources */,
 				3B8C165629B7824A00B881F4 /* LanguageFillteringTableView.swift in Sources */,

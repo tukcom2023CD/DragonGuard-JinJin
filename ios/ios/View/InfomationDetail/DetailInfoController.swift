@@ -110,7 +110,9 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
         
         /// Organization
         if indexPath.section == 0{
-            
+            let nextPage = OrganizationDetailController()
+            nextPage.modalPresentationStyle = .fullScreen
+            self.present(nextPage, animated: true)
         }
         else{   /// Repository
             
