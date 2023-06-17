@@ -12,6 +12,11 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author 김승진
+ * @description GitRepo 관련 배치 처리를 수행하는 클래스
+ */
+
 @Configuration
 @RequiredArgsConstructor
 public class JobScheduler {

@@ -11,9 +11,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * @author 김승진
+ * @description 배치처리에 필요한 API 토큰을 설정하는 클래스
+ */
+
 @Component
 @RequiredArgsConstructor
-public class AdminApiKeys {
+public class AdminApiTokens {
     private final MemberQueryRepository memberQueryRepository;
     @Value("#{'${admin}'.split(',')}")
     private List<String> admins;
@@ -24,7 +29,8 @@ public class AdminApiKeys {
     public void init() {
         this.apiTokens = admins.stream()
                 .map(memberQueryRepository::findByGithubId)
-                .map(Optional::orElseThrow)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(Member::getGithubToken)
                 .collect(Collectors.toList());
     }

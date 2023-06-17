@@ -11,10 +11,13 @@ import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.exception.NoApiTokenException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
@@ -32,6 +35,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+/**
+ * @author 김승진
+ * @description GitRepo 관련 배치 처리의 단위인 Job을 명시하는 클래스
+ */
+
 @Configuration
 @RequiredArgsConstructor
 public class WebClientJobConfig {
@@ -39,7 +48,7 @@ public class WebClientJobConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final EntityManagerFactory entityManagerFactory;
     private final GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
-    private final AdminApiKeys adminApiKeys;
+    private final AdminApiTokens adminApiTokens;
 
     @Bean
     public Job clientJob() {
@@ -49,6 +58,7 @@ public class WebClientJobConfig {
     }
 
     @Bean
+    @JobScope
     public Step step() {
         return stepBuilderFactory.get("step")
                 .<GitRepo, Set<GitRepoMember>>chunk(10)
@@ -64,12 +74,14 @@ public class WebClientJobConfig {
                 .writer(writer())
                 .faultTolerant()
                 .skip(DataIntegrityViolationException.class)
+                .skip(ConstraintViolationException.class)
                 .build();
     }
 
     @Bean
+    @StepScope
     public ItemProcessor<GitRepo, Set<GitRepoMember>> processor() {
-        String apiToken = adminApiKeys.getApiToken();
+        String apiToken = adminApiTokens.getApiToken();
         return gitRepo -> {
             try{
                 List<GitRepoMemberClientResponse> list = Arrays.asList(gitRepoMemberClient.requestToGithub(new GitRepoInfoRequest(apiToken, gitRepo.getName(), LocalDateTime.now().getYear())));
@@ -81,6 +93,7 @@ public class WebClientJobConfig {
     }
 
     @Bean
+    @StepScope
     public JpaItemWriter<Set<GitRepoMember>> writer() {
         return new JpaItemWriterBuilder<Set<GitRepoMember>>()
                 .entityManagerFactory(entityManagerFactory)
@@ -88,10 +101,11 @@ public class WebClientJobConfig {
     }
 
     @Bean
+    @StepScope
     public JpaPagingItemReader<GitRepo> reader() {
         return new JpaPagingItemReaderBuilder<GitRepo>()
                 .pageSize(10)
-                .queryString("SELECT gr FROM GitRepo gr ORDER BY id ASC")
+                .queryString("SELECT gr FROM GitRepo gr ORDER BY gr.id ASC")
                 .entityManagerFactory(entityManagerFactory)
                 .name("jpaPagingReader")
                 .build();

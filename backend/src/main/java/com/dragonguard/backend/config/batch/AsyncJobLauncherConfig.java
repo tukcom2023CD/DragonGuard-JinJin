@@ -7,6 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
+/**
+ * @author 김승진
+ * @description 배치처리의 비동기성을 설정하는 클래스
+ */
+
 @Configuration
 @RequiredArgsConstructor
 public class AsyncJobLauncherConfig {

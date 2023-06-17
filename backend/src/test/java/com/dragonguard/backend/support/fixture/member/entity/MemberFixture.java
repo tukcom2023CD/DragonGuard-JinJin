@@ -7,10 +7,10 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum MemberFixture {
-    OHKSJ77("Kim", "ohksj77", "12341234", "https://github", Role.ROLE_ADMIN, AuthStep.ALL),
-    POSITE("Shim", "posite", "12341234", "https://github", Role.ROLE_ADMIN, AuthStep.ALL),
-    SAMMUELWOOJAE("Kwan", "Sammuelwoojae", "12341234", "https://github", Role.ROLE_ADMIN, AuthStep.ALL),
-    HJ39("Jeong", "HJ39", "12341234", "https://github", Role.ROLE_ADMIN, AuthStep.ALL);
+    OHKSJ77("Kim", "ohksj77", "123412344", "https://github", Role.ROLE_ADMIN, AuthStep.ALL),
+    POSITE("Shim", "posite", "123412234", "https://github", Role.ROLE_ADMIN, AuthStep.ALL),
+    SAMMUELWOOJAE("Kwan", "Sammuelwoojae", "123412354", "https://github", Role.ROLE_ADMIN, AuthStep.ALL),
+    HJ39("Jeong", "HJ39", "123041234", "https://github", Role.ROLE_ADMIN, AuthStep.ALL);
 
     String name;
     String githubId;

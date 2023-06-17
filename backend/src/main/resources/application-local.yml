@@ -25,7 +25,7 @@ spring:
         format_sql: true
 
   flyway:
-    enabled: true
+    enabled: false
     encoding: UTF-8
     baseline-on-migrate: true
 
@@ -49,6 +49,8 @@ spring:
   batch:
     jdbc:
       initialize-schema: always
+    job:
+      enabled: false
 
 logging:
   level:

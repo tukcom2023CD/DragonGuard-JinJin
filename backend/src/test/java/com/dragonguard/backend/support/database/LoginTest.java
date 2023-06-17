@@ -18,7 +18,6 @@ public abstract class LoginTest {
 
     @Autowired
     protected MemberRepository memberRepository;
-
     protected Member loginUser;
 
     @BeforeEach

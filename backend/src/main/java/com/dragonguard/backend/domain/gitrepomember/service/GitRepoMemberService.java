@@ -10,15 +10,16 @@ import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepo
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -48,7 +49,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
                             gitRepoMember.getMember())
                     .orElseGet(() -> gitRepoMemberRepository.save(gitRepoMember))
                     .update(gitRepoMember));
-        } catch (DataIntegrityViolationException e) {}
+        } catch (DataIntegrityViolationException | ConstraintViolationException e) {}
     }
 
     public List<GitRepoMember> validateAndGetGitRepoMembers(final List<GitRepoMemberResponse> gitRepoMemberResponses, final String gitRepoName) {
@@ -58,9 +59,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
     }
 
     public void saveAll(final List<GitRepoMemberResponse> gitRepoResponses, final String gitRepoName) {
-        try {
-            gitRepoMemberRepository.saveAll(getGitRepoMembers(gitRepoResponses, gitRepoName));
-        } catch (DataIntegrityViolationException e) {}
+        gitRepoMemberRepository.saveAll(getGitRepoMembers(gitRepoResponses, gitRepoName));
     }
 
     public List<GitRepoMember> getGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final String gitRepoName) {
@@ -68,7 +67,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
                 .map(gitRepo ->
                         getGitRepoMember(gitRepo, getMemberByGitRepoResponse(gitRepo),
                                 getGitRepoByName(gitRepoName)))
-                .filter(Objects::nonNull).collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     public GitRepoMember getGitRepoMember(final GitRepoMemberResponse gitRepoMemberResponse, final Member member, final GitRepo gitRepo) {
@@ -92,13 +91,15 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
         return memberService.findMemberOrSave(new MemberRequest(gitRepository.getGithubId()), AuthStep.NONE);
     }
 
-    public List<GitRepoMember> findAllByGitRepo(final GitRepo gitRepo) {
-        return gitRepoMemberQueryRepository.findAllByGitRepo(gitRepo);
-    }
-
     public GitRepoMember findByNameAndMemberGithubId(final String gitRepoName, final String githubId) {
-        return gitRepoMemberQueryRepository.findByNameAndMemberGithubId(gitRepoName, githubId)
-                .orElse(gitRepoMemberMapper.toEntity(memberService.findByGithubIdOrSaveWithAuthStep(githubId, AuthStep.NONE), getGitRepoByName(gitRepoName)));
+        try {
+            return gitRepoMemberQueryRepository.findByNameAndMemberGithubId(gitRepoName, githubId)
+                    .orElse(gitRepoMemberRepository.save(
+                            gitRepoMemberMapper.toEntity(
+                                    memberService.findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE),
+                                    getGitRepoByName(gitRepoName))));
+        } catch(DataIntegrityViolationException | ConstraintViolationException e) {}
+        return null;
     }
 
     @Override

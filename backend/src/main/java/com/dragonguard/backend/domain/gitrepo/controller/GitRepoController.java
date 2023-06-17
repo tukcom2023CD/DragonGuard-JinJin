@@ -27,7 +27,7 @@ public class GitRepoController {
     @GetMapping
     public ResponseEntity<GitRepoResponse> getGitRepoMembers(
             @RequestParam String name) {
-        return ResponseEntity.ok(gitRepoService.findGitRepoInfo(name));
+        return ResponseEntity.ok(gitRepoService.findGitRepoInfos(name));
     }
 
     @PostMapping("/compare")

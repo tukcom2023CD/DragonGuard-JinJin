@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 @Getter
-@ToString
+@ToString // redis 때문에 붙인 toString
 @NoArgsConstructor
 @AllArgsConstructor
 public class TwoGitRepoMemberResponse {

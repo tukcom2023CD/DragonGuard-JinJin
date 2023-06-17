@@ -9,7 +9,6 @@ import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 import java.util.Set;
@@ -40,9 +39,7 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
     }
 
     public void saveAllGitOrganizations(final Set<GitOrganization> gitOrganizations) {
-        try{
-            gitOrganizationRepository.saveAll(gitOrganizations);
-        } catch(DataIntegrityViolationException e) {}
+        gitOrganizationRepository.saveAll(gitOrganizations);
     }
 
     public List<GitOrganization> findGitOrganizationByMember(final Member member) {
@@ -52,6 +49,11 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
     @Override
     public GitOrganization loadEntity(final Long id) {
         return gitOrganizationRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public GitOrganization findByName(String name) {
+        return gitOrganizationRepository.findByName(name)
                 .orElseThrow(EntityNotFoundException::new);
     }
 }

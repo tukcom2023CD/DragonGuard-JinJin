@@ -61,14 +61,13 @@ class MemberServiceTest extends LoginTest {
         //given
 
         //when
-        UUID adminId = memberService.saveMember(MemberRequestFixture.OHKSJ77.toMemberRequest(), Role.ROLE_ADMIN).getId();
         UUID userId = memberService.saveMember(MemberRequestFixture.HJ39.toMemberRequest(), Role.ROLE_USER).getId();
 
-        UUID adminResult = memberQueryRepository.findById(adminId).orElseThrow().getId();
+        UUID adminResult = memberQueryRepository.findById(loginUser.getId()).orElseThrow().getId();
         UUID userResult = memberQueryRepository.findById(userId).orElseThrow().getId();
 
         //then
-        assertThat(adminResult).isEqualTo(adminId);
+        assertThat(adminResult).isEqualTo(loginUser.getId());
         assertThat(userResult).isEqualTo(userId);
     }
 

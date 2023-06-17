@@ -3,6 +3,7 @@ package com.dragonguard.backend.domain.member.entity;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
+import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
@@ -65,6 +66,9 @@ public class Member implements Auditable {
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private List<GitRepoMember> gitRepoMembers = new ArrayList<>();
 
     @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
@@ -191,6 +195,10 @@ public class Member implements Auditable {
         this.gitOrganizationMembers.add(gitOrganizationMember);
     }
 
+    public void organizeGitRepoMember(GitRepoMember gitRepoMember) {
+        this.gitRepoMembers.add(gitRepoMember);
+    }
+
     public void finishAuth() {
         this.authStep = AuthStep.ALL;
     }
@@ -220,6 +228,13 @@ public class Member implements Auditable {
             return null;
         }
         return "https://baobab.scope.klaytn.com/account/" + this.walletAddress + "?tabId=txList";
+    }
+
+    public String getGithubToken() {
+        if (Objects.nonNull(this.githubToken)) {
+            return githubToken;
+        }
+        return "";
     }
 
     public Optional<Integer> getSumOfReviews() {

@@ -29,7 +29,7 @@ public class GitRepo implements Auditable {
 
     private Integer closedIssueNum;
 
-    @OneToMany(mappedBy = "gitRepo", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "gitRepo")
     private Set<GitRepoMember> gitRepoMembers = new HashSet<>();
 
     @ElementCollection
@@ -50,7 +50,7 @@ public class GitRepo implements Auditable {
         this.closedIssueNum = closedIssueNum;
     }
 
-    public void organize(GitRepoMember gitRepoMember) {
+    public void organizeGitRepoMember(GitRepoMember gitRepoMember) {
         this.gitRepoMembers.add(gitRepoMember);
     }
 

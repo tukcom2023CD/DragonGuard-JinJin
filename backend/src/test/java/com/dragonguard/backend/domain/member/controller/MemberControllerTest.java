@@ -272,10 +272,10 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버의 조직에 소속된 레포 조회가 수행되는가")
     void getMemberGitOrganizationRepo() throws Exception {
         // given
-        List<MemberGitOrganizationRepoResponse> expected = List.of(
-                new MemberGitOrganizationRepoResponse("tukcom2023CD/DragonGuard-JinJin"),
-                new MemberGitOrganizationRepoResponse("tukcom2023CD/DragonGuard"),
-                new MemberGitOrganizationRepoResponse("tukcom2023CD/Yongari"));
+        MemberGitOrganizationRepoResponse expected = new MemberGitOrganizationRepoResponse("http://someProfileImageOfOrg", List.of(
+                "tukcom2023CD/DragonGuard-JinJin",
+                "tukcom2023CD/DragonGuard",
+                "tukcom2023CD/Yongari"));
         given(memberService.getMemberGitOrganizationRepo(any())).willReturn(expected);
 
         // when
