@@ -33,7 +33,7 @@ public class GitRepoController {
     @PostMapping("/compare")
     public ResponseEntity<TwoGitRepoResponse> getTwoGitRepos(
             @RequestBody @Valid GitRepoCompareRequest request) {
-        return ResponseEntity.ok(gitRepoService.findTwoGitRepo(request));
+        return ResponseEntity.ok(gitRepoService.findTwoGitRepos(request));
     }
 
     @PostMapping("/compare/git-repos-members")

@@ -284,7 +284,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return requestToGithub(new GitRepoInfoRequest(githubToken, name, LocalDate.now().getYear()));
     }
 
-    public TwoGitRepoResponse findTwoGitRepo(final GitRepoCompareRequest request) {
+    public TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         String firstRepo = request.getFirstRepo();
         String secondRepo = request.getSecondRepo();

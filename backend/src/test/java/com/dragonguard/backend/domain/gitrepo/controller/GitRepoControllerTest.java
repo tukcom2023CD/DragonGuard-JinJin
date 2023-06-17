@@ -41,8 +41,31 @@ class GitRepoControllerTest extends RestDocumentTest {
     private GitRepoService gitRepoService;
 
     @Test
-    @DisplayName("레포 멤버 조회가 수행되는가")
+    @DisplayName("레포 멤버 조회가 수행되는가 (수동 업데이트)")
     void getRepoMembers() throws Exception {
+        List<GitRepoMemberResponse> list = List.of(
+                new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
+                new GitRepoMemberResponse("HJ39", 101, 999, 500),
+                new GitRepoMemberResponse("posite", 99, 1001, 500),
+                new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499));
+        GitRepoResponse expected = new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
+        given(gitRepoService.findGitRepoInfos(any())).willReturn(expected);
+
+        ResultActions perform =
+                mockMvc.perform(
+                        get("/git-repos?name=tukcom2023CD/DragonGuard-JinJin")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        perform.andExpect(status().isOk());
+
+        perform.andDo(print())
+                .andDo(document("get git-repo contributors", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("레포 멤버 조회가 수행되는가")
+    void getRepoMembersAndUpdate() throws Exception {
         List<GitRepoMemberResponse> list = List.of(
                 new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
                 new GitRepoMemberResponse("HJ39", 101, 999, 500),
@@ -60,12 +83,42 @@ class GitRepoControllerTest extends RestDocumentTest {
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("get git-repo contributors", getDocumentRequest(), getDocumentResponse()));
+                .andDo(document("get git-repo contributors for update", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("두 레포 기여자 기여도 비교가 수행되는가 (수동 업데이트)")
+    void getTwoGitRepos() throws Exception {
+        TwoGitRepoMemberResponse expected = new TwoGitRepoMemberResponse(List.of(
+                new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
+                new GitRepoMemberResponse("HJ39", 101, 999, 500),
+                new GitRepoMemberResponse("posite", 99, 1001, 500),
+                new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499)),
+                List.of(
+                        new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
+                        new GitRepoMemberResponse("HJ39", 101, 999, 500),
+                        new GitRepoMemberResponse("posite", 99, 1001, 500),
+                        new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499)));
+        given(gitRepoService.findMembersByGitRepoForCompare(any())).willReturn(expected);
+
+        ResultActions perform =
+                mockMvc.perform(
+                        post("/git-repos/compare/git-repos-members")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        toRequestBody(
+                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/")))
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        perform.andExpect(status().isOk());
+
+        perform.andDo(print())
+                .andDo(document("get comparing two git-repos members", getDocumentRequest(), getDocumentResponse()));
     }
 
     @Test
     @DisplayName("두 레포 기여자 기여도 비교가 수행되는가")
-    void getTwoGitRepos() throws Exception {
+    void getTwoGitReposForUpdate() throws Exception {
         TwoGitRepoMemberResponse expected = new TwoGitRepoMemberResponse(List.of(
                 new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
                 new GitRepoMemberResponse("HJ39", 101, 999, 500),
@@ -90,12 +143,45 @@ class GitRepoControllerTest extends RestDocumentTest {
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("get comparing two git-repos members", getDocumentRequest(), getDocumentResponse()));
+                .andDo(document("get comparing two git-repos members for update", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("두 레포 비교가 수행되는가 (수동 업데이트)")
+    void getGitRepoMembersForCompare() throws Exception {
+        TwoGitRepoResponse expected = new TwoGitRepoResponse(
+                new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
+                        new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
+                                new IntSummaryStatistics(4, 1800, 30000, 50000),
+                                new IntSummaryStatistics(4, 5000, 15000, 30000)),
+                        Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
+                        new IntSummaryStatistics(4, 9998, 10000, 29997)),
+                new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
+                        new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
+                                new IntSummaryStatistics(4, 1800, 30000, 50000),
+                                new IntSummaryStatistics(4, 5000, 15000, 30000)),
+                        Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
+                        new IntSummaryStatistics(4, 9998, 10000, 29997)));
+        given(gitRepoService.findTwoGitRepos(any())).willReturn(expected);
+
+        ResultActions perform =
+                mockMvc.perform(
+                        post("/git-repos/compare")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        toRequestBody(
+                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/")))
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        perform.andExpect(status().isOk());
+
+        perform.andDo(print())
+                .andDo(document("get comparing two git-repos", getDocumentRequest(), getDocumentResponse()));
     }
 
     @Test
     @DisplayName("두 레포 비교가 수행되는가")
-    void getGitRepoMembersForCompare() throws Exception {
+    void getGitRepoMembersForCompareForUpdate() throws Exception {
         TwoGitRepoResponse expected = new TwoGitRepoResponse(
                 new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
                         new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
@@ -123,7 +209,7 @@ class GitRepoControllerTest extends RestDocumentTest {
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("get comparing two git-repos", getDocumentRequest(), getDocumentResponse()));
+                .andDo(document("get comparing two git-repos for update", getDocumentRequest(), getDocumentResponse()));
     }
 
     @Test
