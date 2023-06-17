@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SnapKit
+import RxSwift
 
 class FAQPage: UIViewController {
     var tableViewData = [CellData(opened: false,
@@ -34,6 +35,7 @@ class FAQPage: UIViewController {
                     CellData(opened: false,
                              title: "Q. 후원하고 싶어요 ^^",
                              sectionData: "감사하지만 마음만 받을게요!")]
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +45,21 @@ class FAQPage: UIViewController {
         addUIToView()
     }
     
+    // MARK: 뒤로가기 버튼
+    private lazy var backBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
+        return btn
+    }()
+    
+    // MARK: 설정 라벨
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "설정"
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
+        return label
+    }()
+    
     private lazy var tableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .white
@@ -50,23 +67,45 @@ class FAQPage: UIViewController {
     }()
     
     private func addUIToView(){
-        self.view.addSubview(tableView)
+        view.addSubview(tableView)
+        view.addSubview(titleLabel)
+        view.addSubview(backBtn)
         
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(FAQTableViewCell.self, forCellReuseIdentifier: FAQTableViewCell.identifier)
         setAutoLayout()
+        clickedBackBtn()
     }
     
     private func setAutoLayout(){
+        
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.centerX.equalTo(view.snp.centerX)
+        }
+        
+        backBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(15)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+        }
+        
         self.tableView.snp.makeConstraints({ make in
-            make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            make.top.equalTo(titleLabel.snp.bottom).offset(10)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalTo(20)
             make.trailing.equalTo(-20)
         })
+        
     }
     
-    
+    // MARK:
+    private func clickedBackBtn(){
+        backBtn.rx.tap.subscribe(onNext: {
+            self.dismiss(animated: true)
+        })
+        .disposed(by: disposeBag)
+    }
 }
 
 extension FAQPage: UITableViewDelegate, UITableViewDataSource{

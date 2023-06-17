@@ -28,7 +28,7 @@ final class OrganizationDetailTableViewCell: UITableViewCell{
         view.layer.cornerRadius = 20
         view.layer.borderWidth = 1
         view.layer.shadowOpacity = 1
-        view.layer.shadowOffset = CGSize(width: 0, height: 3)
+        view.layer.shadowOffset = CGSize(width: 3, height: 3)
         view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
         return view
     }()

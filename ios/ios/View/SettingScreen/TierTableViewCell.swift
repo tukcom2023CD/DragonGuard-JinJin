@@ -41,20 +41,20 @@ final class TierTableViewCell : UITableViewCell {
     private func tierAutoLayout() {
         tierImage.snp.makeConstraints ({ make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(10)
-            make.trailing.equalTo(listLabel.snp.leading).offset(-10)
+            make.leading.equalToSuperview().offset(10)
         })
         
         listLabel.snp.makeConstraints ({ make in
             make.centerY.equalToSuperview()
-            make.trailing.equalTo(-10)
+            make.leading.equalTo(tierImage.snp.trailing).offset(10)
         })
     }
     
     // MARK: 티어에 이미지, 라벨에 텍스트 입력
     func inputData(tier: UIImage, list: String) {
         tierAutoLayout()
-        tierImage.image = tier
+        
+        tierImage.image = tier.resize(newWidth: 100, newHeight: 100)
         listLabel.text = list
     }
     

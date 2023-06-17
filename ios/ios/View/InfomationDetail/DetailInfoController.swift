@@ -12,6 +12,7 @@ import UIKit
 
 final class DetailInfoController: UIViewController{
     private var dataList: DetailInfoModel?
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,6 +64,17 @@ final class DetailInfoController: UIViewController{
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
+        clickedSettingBtn()
+    }
+    
+    // MARK:
+    private func clickedSettingBtn(){
+        settingBtn.rx.tap.subscribe(onNext: {
+            let settingPage = SettingController()
+            settingPage.modalPresentationStyle = .fullScreen
+            self.present(settingPage, animated: true)
+        })
+        .disposed(by: disposeBag)
     }
     
     func getData() {
@@ -115,7 +127,10 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
             self.present(nextPage, animated: true)
         }
         else{   /// Repository
-            
+            let nextPage = RepoDetailController()
+            nextPage.modalPresentationStyle = .fullScreen
+            nextPage.selectedTitle = dataList?.gitRepos?[indexPath.row] ?? ""
+            self.present(nextPage,animated: true)
         }
         
     }
@@ -123,6 +138,7 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return view.safeAreaLayoutGuide.layoutFrame.height/8
     }
+    
     func numberOfSections(in tableView: UITableView) -> Int { return 2 }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

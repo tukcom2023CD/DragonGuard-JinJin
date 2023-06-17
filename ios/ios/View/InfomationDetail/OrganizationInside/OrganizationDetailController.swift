@@ -12,7 +12,7 @@ import RxSwift
 
 // MARK: 내 조직을 눌렀을 때 내부 레포지토리들 보여주는 화면
 final class OrganizationDetailController: UIViewController{
-    
+    private let disposeBag = DisposeBag()
     var data: RepositoryListInOrganizationModel?
     
     override func viewDidLoad() {
@@ -21,6 +21,13 @@ final class OrganizationDetailController: UIViewController{
         getData()
         
     }
+    
+    // MARK: back button
+    private lazy var backBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
+        return btn
+    }()
     
     // MARK:
     private lazy var repoLabel: UILabel = {
@@ -39,6 +46,7 @@ final class OrganizationDetailController: UIViewController{
     
     // MARK:
     private func addUI(){
+        view.addSubview(backBtn)
         view.addSubview(repoLabel)
         view.addSubview(tableView)
         
@@ -46,10 +54,14 @@ final class OrganizationDetailController: UIViewController{
         tableView.dataSource = self
         tableView.register(OrganizationDetailTableViewCell.self, forCellReuseIdentifier: OrganizationDetailTableViewCell.identifier)
             
+        backBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+        }
         
         repoLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
+            make.top.equalTo(backBtn.snp.bottom)
+            make.leading.equalTo(backBtn.snp.trailing)
         }
         
         tableView.snp.makeConstraints { make in
@@ -58,11 +70,21 @@ final class OrganizationDetailController: UIViewController{
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
+        clickedBackBtn()
+        
+    }
+    
+    // MARK:
+    private func clickedBackBtn(){
+        backBtn.rx.tap.subscribe(onNext: {
+            self.dismiss(animated: true)
+        })
+        .disposed(by: disposeBag)
+        
     }
     
     // MARK:
     private func getData(){
-        
         data = RepositoryListInOrganizationModel(gitRepos: ["aa","bb","cccccccc","ddddddddddddd","e","fffff"],
                                                  imgPath: "")
         addUI()
@@ -78,6 +100,15 @@ extension OrganizationDetailController: UITableViewDelegate, UITableViewDataSour
         
         cell.inputData(title: data?.gitRepos?[indexPath.row] ?? "", imgPath: data?.imgPath ?? "", organizationTitle: "ab")
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let nextPage = RepoDetailController()
+        nextPage.modalPresentationStyle = .fullScreen
+        
+        nextPage.selectedTitle = data?.gitRepos?[indexPath.row] ?? ""
+        self.present(nextPage,animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -22,16 +22,18 @@ final class RepoDetailController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        addUIIndicator()
-        randomColor()
-        testData()
-        addDetailUI()
+        addUIIndicator()
+        view.backgroundColor = .white
+//        randomColor()
+//        testData()
+//        addDetailUI()
     }
     
     // MARK: 로딩 UI
     private lazy var indicatorView: LottieAnimationView = {
         let view = LottieAnimationView(name: "graphLottie")
         view.center = self.view.center
+        view.backgroundColor = .white
         view.loopMode = .loop
         return view
     }()
@@ -52,8 +54,7 @@ final class RepoDetailController: UIViewController{
     // MARK: 뒤로가기 버튼
     private lazy var backBtn: UIButton = {
         let btn = UIButton()
-        btn.setTitle("<", for: .normal)
-        btn.setTitleColor(.blue, for: .normal)
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
         btn.addTarget(self, action: #selector(clickedBackBtn), for: .touchUpInside)
         return btn
     }()
@@ -119,9 +120,7 @@ final class RepoDetailController: UIViewController{
     // MARK: Indicator View AutoLayout
     private func setIndicactorAutoLayout(){
         indicatorView.snp.makeConstraints { make in
-            make.leading.equalTo(self.view.safeAreaLayoutGuide).offset(40)
-            make.trailing.equalTo(self.view.safeAreaLayoutGuide).offset(-40)
-            make.centerY.equalToSuperview()
+            make.top.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
