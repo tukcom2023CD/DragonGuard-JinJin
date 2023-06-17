@@ -195,12 +195,15 @@ final class SearchViewController: UIViewController{
             make.bottom.equalTo(contentView.snp.bottom)
         }
         
-        testData()
         inputDataIntoList()
     }
     
     // MARK: 데이터 삽입
     private func inputDataIntoList(){
+  
+        stackView.arrangedSubviews.forEach { view in
+            view.removeFromSuperview()
+        }
         
         var index = 0
         resultList.forEach { result in
@@ -233,10 +236,13 @@ final class SearchViewController: UIViewController{
          */
         let comparePage = CompareController()
         
-        guard let beforePage = beforePage else {return}
+        let nextPage = RepoDetailController()
+        nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].title
+        nextPage.modalPresentationStyle = .fullScreen
+        self.present(nextPage,animated: true)
         
         if beforePage == "Main"{    // 레포 상세조회로 이동
-            let nextPage = RepoContributorInfoController()
+            let nextPage = RepoDetailController()
             nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].title
             nextPage.modalPresentationStyle = .fullScreen
             self.present(nextPage,animated: true)
@@ -263,12 +269,12 @@ final class SearchViewController: UIViewController{
     private func clickedSearchBtn(){
         let nextPage = SearchAndFilterController()
         nextPage.modalPresentationStyle = .fullScreen
+        nextPage.delegate = self
         
         nextPage.resultList.subscribe(onNext: { list in
             self.resultList = list
         })
         .disposed(by: self.disposeBag)
-        
         
         self.present(nextPage,animated: true)
     }
@@ -347,7 +353,10 @@ extension SearchViewController: UIScrollViewDelegate {
 
 extension SearchViewController: SendSearchResultList{
     func sendList(list: [SearchResultModel]) {
+        print(list)
+        resultList = []
         self.resultList = list
+        inputDataIntoList()
     }
 }
 
