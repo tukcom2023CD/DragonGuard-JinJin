@@ -7,21 +7,39 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 final class TokenStandards : UIViewController {
     private let tierArray = ["Bronze", "Silver", "Gold", "Diamond"]
     private let imageArray = [UIImage(named: "bronze"), UIImage(named: "silver"), UIImage(named: "gold"), UIImage(named: "diamond")]
+    private let disposeBag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationItem.title = "토큰 부여 기준"
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        
         addUIToView()
     }
     
     /*
      UI 작성
      */
+    
+    // MARK: 뒤로가기 버튼
+    private lazy var backBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
+        return btn
+    }()
+    
+    // MARK: 설정 라벨
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "토큰 부여 기준"
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
+        return label
+    }()
     
     // MARK: 토큰 부여 기준을 담는 StackView
     private lazy var standards: UIStackView = {
@@ -120,6 +138,8 @@ final class TokenStandards : UIViewController {
      */
     
     private func addUIToView(){
+        view.addSubview(titleLabel)
+        view.addSubview(backBtn)
         view.addSubview(allUp)
         view.addSubview(tierTableView)
         
@@ -138,20 +158,40 @@ final class TokenStandards : UIViewController {
      */
     
     private func allUpAutoLayout(){
+        
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.centerX.equalTo(view.snp.centerX)
+        }
+        
+        backBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(15)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+        }
+        
         allUp.snp.makeConstraints ({ make in
-            make.leading.equalTo(20)
-            make.trailing.equalTo(-20)
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(UIScreen.main.bounds.height/12)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            make.top.equalTo(titleLabel.snp.bottom).offset(10)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/12)
         })
         
         tierTableView.snp.makeConstraints ({ make in
             make.top.equalTo(allUp.snp.bottom).offset(20)
-            make.leading.equalTo(20)
-            make.trailing.equalTo(-20)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         })
         
+        clickedBackBtn()
+    }
+    
+    // MARK:
+    private func clickedBackBtn(){
+        backBtn.rx.tap.subscribe(onNext: {
+            self.dismiss(animated: true)
+        })
+        .disposed(by: disposeBag)
     }
     
     
@@ -165,7 +205,8 @@ extension TokenStandards : UITableViewDelegate, UITableViewDataSource {
     // 중요하니까 한번 더 보고 복습
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TierTableViewCell.identifier, for: indexPath) as! TierTableViewCell
-        cell.inputData(tier: imageArray[indexPath.row]!.resize(newWidth: 100), list: tierArray[indexPath.row])
+        cell.inputData(tier: imageArray[indexPath.row]!,
+                       list: tierArray[indexPath.row])
         cell.backgroundColor = .white
         cell.selectionStyle = .none
         return cell

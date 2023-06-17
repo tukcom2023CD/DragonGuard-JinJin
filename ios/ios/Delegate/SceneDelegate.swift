@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
 //        else{
 //            moveLoginController()
 //        }
-        let rootView = AllUserRankingController()
+        let rootView = BlockChainListController()
         window?.rootViewController = rootView
         window?.makeKeyAndVisible()
     }

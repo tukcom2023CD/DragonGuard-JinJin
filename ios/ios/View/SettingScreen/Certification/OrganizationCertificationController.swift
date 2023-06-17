@@ -27,6 +27,13 @@ final class OrganizationCertificationController: UIViewController{
      UI 코드 작성
      */
     
+    // MARK: 뒤로가기 버튼
+    private lazy var backBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
+        return btn
+    }()
+    
     // MARK: '조직 인증' 제목 라벨
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -146,14 +153,22 @@ final class OrganizationCertificationController: UIViewController{
     
     // MARK: UI 등록
     private func addUIToView(){
+        self.view.addSubview(backBtn)
         self.view.addSubview(titleLabel)
         self.view.addSubview(verticalStackView)
         self.view.addSubview(certifiedBtn)
         setAutoLayout()
+        clickedBackBtn()
     }
     
     // MARK: UI AutoLayout 적용
     private func setAutoLayout(){
+        
+        backBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(15)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+        }
+        
         self.titleLabel.snp.makeConstraints({ make in
             make.centerX.equalToSuperview()
             make.top.equalTo(self.view.safeAreaLayoutGuide).offset(UIScreen.main.bounds.height/20)
@@ -226,6 +241,14 @@ final class OrganizationCertificationController: UIViewController{
             }
             .disposed(by: self.disposeBag)
         
+    }
+    
+    // MARK:
+    private func clickedBackBtn(){
+        backBtn.rx.tap.subscribe(onNext: {
+            self.dismiss(animated: true)
+        })
+        .disposed(by: disposeBag)
     }
     
 }

@@ -25,7 +25,7 @@ final class CustomUserView: UIView{
     // MARK: 유저 프로필 이미지
     private lazy var userImage: UIImageView = {
         let imgView = UIImageView()
-        imgView.image = UIImage(systemName: "shareplay")?.resize(newWidth: 60)
+        imgView.image = UIImage(named: "linkIcon")?.resize(newWidth: 60)
         imgView.layer.cornerRadius = 20
         
         return imgView
@@ -56,7 +56,7 @@ final class CustomUserView: UIView{
     // MARK: 링크 이미지
     private lazy var linkImage: UIImageView = {
         let imgView = UIImageView()
-        imgView.image = UIImage(systemName: "link")
+        imgView.image = UIImage(named: "linkIcon")?.resize(newWidth: 30)
         return imgView
     }()
     

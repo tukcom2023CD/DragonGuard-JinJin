@@ -19,10 +19,10 @@ final class SettingController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.navigationController?.navigationBar.isHidden = false   // navigation bar 생성
-        self.navigationItem.title = "설정"
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+//        self.navigationController?.navigationBar.isHidden = false   // navigation bar 생성
+//        self.navigationItem.title = "설정"
+//        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
+//        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         // UI view에 추가
         addUIToView()
         
@@ -44,7 +44,22 @@ final class SettingController: UIViewController{
      UI 코드 작성
      */
     
-    lazy var settingTableView: UITableView = {
+    // MARK: 뒤로가기 버튼
+    private lazy var backBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
+        return btn
+    }()
+    
+    // MARK: 설정 라벨
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "설정"
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
+        return label
+    }()
+    
+    private lazy var settingTableView: UITableView = {
         let tableview = UITableView()
         tableview.backgroundColor = .white 
         return tableview
@@ -84,8 +99,11 @@ final class SettingController: UIViewController{
      */
     
     private func addUIToView(){
-        self.view.addSubview(settingTableView)
+        view.addSubview(titleLabel)
+        view.addSubview(backBtn)
+        view.addSubview(settingTableView)
         
+    
         self.settingTableView.delegate = self
         self.settingTableView.dataSource = self
         self.settingTableView.register(SettingTableViewCell.self, forCellReuseIdentifier: SettingTableViewCell.identifier)
@@ -100,12 +118,32 @@ final class SettingController: UIViewController{
     
     // tableview Autolayout 설정
     private func settingTableViewSetLayout(){
+        
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.centerX.equalTo(view.snp.centerX)
+        }
+        
+        backBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(15)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+        }
+        
         settingTableView.snp.makeConstraints({ make in
-            make.leading.equalTo(20)
-            make.trailing.equalTo(-20)
-            make.top.equalTo(30)
-            make.bottom.equalTo(0)
+            
+            make.top.equalTo(titleLabel.snp.bottom).offset(10)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         })
+    }
+    
+    // MARK:
+    private func clickedBackBtn(){
+        backBtn.rx.tap.subscribe(onNext: {
+            self.dismiss(animated: true)
+        })
+        .disposed(by: disposeBag)
     }
     
 }
@@ -154,15 +192,29 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
         // 셀 눌렀을 때 기능
         switch indexPath.section{
         case 0:
-            self.navigationController?.pushViewController(TokenStandards(), animated: true)
+            let nextPage = TokenStandards()
+            nextPage.modalPresentationStyle = .fullScreen
+            self.present(nextPage, animated: true)
         case 1:
-            self.navigationController?.pushViewController(FAQPage(), animated: true)
+            let nextPage = FAQPage()
+            nextPage.modalPresentationStyle = .fullScreen
+            self.present(nextPage, animated: true)
         case 2:
             versionInfo()   // 버전 정보
         case 3:
-            self.navigationController?.pushViewController(OrganizationCertificationController(), animated: true)
+            
+            let nextPage = OrganizationCertificationController()
+            nextPage.modalPresentationStyle = .fullScreen
+            self.present(nextPage, animated: true)
         case 4:
-            self.navigationController?.pushViewController(AdminTabbarController(), animated: true)
+            if checkAdmin{
+                let nextPage = AdminTabbarController()
+                nextPage.modalPresentationStyle = .fullScreen
+                self.present(nextPage, animated: true)
+            }
+            else{
+                self.logOut()
+            }
         case 5:
             self.logOut()
         default:
