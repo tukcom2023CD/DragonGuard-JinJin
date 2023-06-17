@@ -46,6 +46,9 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit: false
 
+  batch:
+    jdbc:
+      initialize-schema: always
 
 logging:
   level:
@@ -57,3 +60,5 @@ management:
     web:
       exposure:
         include: prometheus
+
+kafka-timeout: 15000

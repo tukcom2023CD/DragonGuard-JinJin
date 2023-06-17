@@ -59,3 +59,11 @@ spring:
   sql:
     init:
       mode: never
+
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+
+kafka-timeout: 15000

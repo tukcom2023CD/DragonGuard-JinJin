@@ -51,28 +51,9 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
         } catch (DataIntegrityViolationException e) {}
     }
 
-    public List<GitRepoMember> validateAndGetGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final String gitRepoName) {
-        return gitRepoResponses.stream()
-                .map(gitRepoResponse -> getNotDuplicatedGitRepoMembers(gitRepoName, gitRepoResponse))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
-
-    public GitRepoMember getNotDuplicatedGitRepoMembers(final String gitRepoName, final GitRepoMemberResponse gitRepoResponse) {
-        GitRepo gitRepo = getGitRepoByName(gitRepoName);
-        GitRepoMember gitRepoMember = gitRepoMemberMapper.toEntity(gitRepoResponse, getMemberByGitRepoResponse(gitRepoResponse), gitRepo);
-        return getGitRepoMemberIfNotDuplicated(gitRepo, gitRepoMember);
-    }
-
-    public GitRepoMember getGitRepoMemberIfNotDuplicated(final GitRepo gitRepo, final GitRepoMember gitRepoMember) {
-        List<GitRepoMember> duplicated = getDuplicatedGitRepoMembers(gitRepo, gitRepoMember);
-        if (duplicated.isEmpty()) return gitRepoMember;
-        return null;
-    }
-
-    public List<GitRepoMember> getDuplicatedGitRepoMembers(final GitRepo gitRepo, final GitRepoMember gitRepoMember) {
-        return gitRepoMemberQueryRepository.findAllByGitRepo(gitRepo).stream()
-                .filter(gitRepoMember::customEquals)
+    public List<GitRepoMember> validateAndGetGitRepoMembers(final List<GitRepoMemberResponse> gitRepoMemberResponses, final String gitRepoName) {
+        return gitRepoMemberResponses.stream()
+                .map(gitRepoResponse -> findByNameAndMemberGithubId(gitRepoName, gitRepoResponse.getGithubId()))
                 .collect(Collectors.toList());
     }
 
@@ -84,20 +65,27 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
 
     public List<GitRepoMember> getGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final String gitRepoName) {
         return gitRepoResponses.stream()
-                .map(gitRepository ->
-                        getGitRepoMember(gitRepository, getMemberByGitRepoResponse(gitRepository),
+                .map(gitRepo ->
+                        getGitRepoMember(gitRepo, getMemberByGitRepoResponse(gitRepo),
                                 getGitRepoByName(gitRepoName)))
                 .filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    public GitRepoMember getGitRepoMember(final GitRepoMemberResponse gitRepository, final Member member, final GitRepo gitRepo) {
-        if (gitRepoMemberQueryRepository.existsByGitRepoAndMember(gitRepo, member)) return null;
-        return gitRepoMemberMapper.toEntity(gitRepository, member, gitRepo);
+    public GitRepoMember getGitRepoMember(final GitRepoMemberResponse gitRepoMemberResponse, final Member member, final GitRepo gitRepo) {
+        GitRepoMember gitRepoMember = gitRepoMemberQueryRepository.findByGitRepoAndMember(gitRepo, member)
+                .orElse(gitRepoMemberMapper.toEntity(member, gitRepo));
+
+        gitRepoMember.updateGitRepoContribution(
+                gitRepoMemberResponse.getCommits(),
+                gitRepoMemberResponse.getAdditions(),
+                gitRepoMemberResponse.getDeletions());
+
+        return gitRepoMember;
     }
 
     public GitRepo getGitRepoByName(final String gitRepoName) {
         return gitRepoRepository.findByName(gitRepoName)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElse(gitRepoRepository.save(new GitRepo(gitRepoName)));
     }
 
     public Member getMemberByGitRepoResponse(final GitRepoMemberResponse gitRepository) {
@@ -108,9 +96,9 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
         return gitRepoMemberQueryRepository.findAllByGitRepo(gitRepo);
     }
 
-    public GitRepoMember findByNameAndMemberName(final String repoName, final String memberName) {
-        return gitRepoMemberQueryRepository.findByNameAndMemberName(repoName, memberName)
-                .orElseThrow(EntityNotFoundException::new);
+    public GitRepoMember findByNameAndMemberGithubId(final String gitRepoName, final String githubId) {
+        return gitRepoMemberQueryRepository.findByNameAndMemberGithubId(gitRepoName, githubId)
+                .orElse(gitRepoMemberMapper.toEntity(memberService.findByGithubIdOrSaveWithAuthStep(githubId, AuthStep.NONE), getGitRepoByName(gitRepoName)));
     }
 
     @Override

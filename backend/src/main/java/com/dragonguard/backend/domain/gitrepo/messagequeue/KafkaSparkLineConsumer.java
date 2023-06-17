@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class KafkaSparkLineConsumer implements KafkaConsumer<SparkLineKafka> {
     private final GitRepoService gitRepoService;
 
     @Override
+    @Transactional
     @KafkaListener(topics = "gitrank.to.backend.spark-line", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         SparkLineKafka sparkLine = readValue(message);

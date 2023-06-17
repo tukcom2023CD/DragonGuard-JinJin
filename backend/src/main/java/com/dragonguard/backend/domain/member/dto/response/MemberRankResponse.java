@@ -18,13 +18,15 @@ public class MemberRankResponse {
     private String githubId;
     private Long tokens;
     private Tier tier;
+    private String profileImage;
 
     @QueryProjection
-    public MemberRankResponse(UUID id, String name, String githubId, Long tokens, Tier tier) {
+    public MemberRankResponse(UUID id, String name, String githubId, Long tokens, Tier tier, String profileImage) {
         this.id = id;
         this.name = name;
         this.githubId = githubId;
         this.tokens = tokens;
         this.tier = tier;
+        this.profileImage = profileImage;
     }
 }

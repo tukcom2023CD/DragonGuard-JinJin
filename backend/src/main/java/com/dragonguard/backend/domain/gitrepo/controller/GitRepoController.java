@@ -25,21 +25,39 @@ public class GitRepoController {
     private final GitRepoService gitRepoService;
 
     @GetMapping
-    public ResponseEntity<GitRepoResponse> getRepoMembers(
+    public ResponseEntity<GitRepoResponse> getGitRepoMembers(
             @RequestParam String name) {
-        return ResponseEntity.ok(gitRepoService.findGitRepoInfos(name));
+        return ResponseEntity.ok(gitRepoService.findGitRepoInfo(name));
     }
 
     @PostMapping("/compare")
     public ResponseEntity<TwoGitRepoResponse> getTwoGitRepos(
             @RequestBody @Valid GitRepoCompareRequest request) {
-        return ResponseEntity.ok(gitRepoService.findTwoGitRepos(request));
+        return ResponseEntity.ok(gitRepoService.findTwoGitRepo(request));
     }
 
     @PostMapping("/compare/git-repos-members")
     public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(
             @RequestBody @Valid GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompare(request));
+    }
+
+    @GetMapping("/update")
+    public ResponseEntity<GitRepoResponse> getGitRepoMembersAndUpdate(
+            @RequestParam String name) {
+        return ResponseEntity.ok(gitRepoService.findGitRepoInfosAndUpdate(name));
+    }
+
+    @PostMapping("/compare/update")
+    public ResponseEntity<TwoGitRepoResponse> getTwoGitReposAndUpdate(
+            @RequestBody @Valid GitRepoCompareRequest request) {
+        return ResponseEntity.ok(gitRepoService.findTwoGitReposAndUpdate(request));
+    }
+
+    @PostMapping("/compare/git-repos-members/update")
+    public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompareAndUpdate(
+            @RequestBody @Valid GitRepoCompareRequest request) {
+        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompareAndUpdate(request));
     }
 
     @PostMapping("/compare/members")

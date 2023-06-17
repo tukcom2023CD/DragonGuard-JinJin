@@ -178,11 +178,11 @@ class MemberControllerTest extends RestDocumentTest {
     void getRanking() throws Exception {
         // given
         List<MemberRankResponse> expected = List.of(
-                new MemberRankResponse(UUID.randomUUID(), "Kim", "ohksj77", 10000L, Tier.MASTER),
-                new MemberRankResponse(UUID.randomUUID(), "Seung", "ohksj", 5000L, Tier.RUBY),
-                new MemberRankResponse(UUID.randomUUID(), "Jin", "ohksj777", 3000L, Tier.DIAMOND),
-                new MemberRankResponse(UUID.randomUUID(), "Lee", "ohksjj", 1000L, Tier.PLATINUM),
-                new MemberRankResponse(UUID.randomUUID(), "Da", "ohksjksj", 500L, Tier.GOLD));
+                new MemberRankResponse(UUID.randomUUID(), "Kim", "ohksj77", 10000L, Tier.MASTER, "http://github123123412412412profileUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "Seung", "ohksj", 5000L, Tier.RUBY, "http://github123123412412412profileUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "Jin", "ohksj777", 3000L, Tier.DIAMOND, "http://github123123412412412profileUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "Lee", "ohksjj", 1000L, Tier.PLATINUM, "http://github123123412412412profileUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "Da", "ohksjksj", 500L, Tier.GOLD, "http://github123123412412412profileUrl"));
         given(memberService.getMemberRanking(any())).willReturn(expected);
 
         // when
@@ -251,10 +251,10 @@ class MemberControllerTest extends RestDocumentTest {
     void getOrganizationMemberRank() throws Exception {
         // given
         List<MemberRankResponse> expected = List.of(
-                new MemberRankResponse(UUID.randomUUID(), "정해진", "HJ39", 20L, Tier.SPROUT),
-                new MemberRankResponse(UUID.randomUUID(), "넓은관용", "Sammuelwoojae", 20L, Tier.SPROUT),
-                new MemberRankResponse(UUID.randomUUID(), "회사승진", "ohksj77", 20L, Tier.SPROUT),
-                new MemberRankResponse(UUID.randomUUID(), "영어수학", "posite", 20L, Tier.SPROUT));
+                new MemberRankResponse(UUID.randomUUID(), "정해진", "HJ39", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "넓은관용", "Sammuelwoojae", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "회사승진", "ohksj77", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "영어수학", "posite", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"));
         given(memberService.getMemberRankingByOrganization(any(), any())).willReturn(expected);
 
         // when

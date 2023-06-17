@@ -108,7 +108,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member findMemberAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
-        Member member = findMemberByGithubId(contributionKafkaResponse.getGithubId(), AuthStep.NONE);
+        Member member = findByGithubIdOrSaveWithAuthStep(contributionKafkaResponse.getGithubId(), AuthStep.NONE);
         member.updateNameAndImage(contributionKafkaResponse.getName(), contributionKafkaResponse.getProfileImage());
         return member;
     }
@@ -176,7 +176,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
                 organizationQueryRepository.findRankingByMemberId(memberId));
     }
 
-    public Member findMemberByGithubId(final String githubId, final AuthStep authStep) {
+    public Member findByGithubIdOrSaveWithAuthStep(final String githubId, final AuthStep authStep) {
         return memberQueryRepository.findByGithubId(githubId)
                 .orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, authStep));
     }

@@ -38,14 +38,6 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
     }
 
     @Override
-    public boolean existsByGitRepoAndMember(GitRepo gitRepo, Member member) {
-        return jpaQueryFactory
-                .selectFrom(gitRepoMember)
-                .where(equalGitRepoAndMember(gitRepo, member))
-                .fetchFirst() != null;
-    }
-
-    @Override
     public Optional<GitRepoMember> findByGitRepoAndMember(GitRepo gitRepo, Member member) {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(gitRepoMember)
@@ -54,7 +46,7 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
     }
 
     @Override
-    public Optional<GitRepoMember> findByNameAndMemberName(String name, String githubId) {
+    public Optional<GitRepoMember> findByNameAndMemberGithubId(String name, String githubId) {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(gitRepoMember)
                 .where(gitRepoMember.gitRepo.name.eq(name).and(gitRepoMember.member.githubId.eq(githubId)))

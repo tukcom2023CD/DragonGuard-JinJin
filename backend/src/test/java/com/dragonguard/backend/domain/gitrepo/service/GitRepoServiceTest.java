@@ -69,7 +69,7 @@ class GitRepoServiceTest extends LoginTest {
         when(sparkLineClient.requestToGithub(any())).thenReturn(expected2);
 
         //when
-        GitRepoResponse result = gitRepoService.findGitRepoInfos(name);
+        GitRepoResponse result = gitRepoService.findGitRepoInfosAndUpdate(name);
 
         //then
         GitRepoMemberResponse response = result.getGitRepoMembers().get(0);
@@ -96,7 +96,7 @@ class GitRepoServiceTest extends LoginTest {
         when(gitRepoMemberClient.requestToGithub(any())).thenReturn(expected);
 
         //when
-        TwoGitRepoMemberResponse result = gitRepoService.findMembersByGitRepoForCompare(request);
+        TwoGitRepoMemberResponse result = gitRepoService.findMembersByGitRepoForCompareAndUpdate(request);
 
         //then
         GitRepoMemberResponse firstResponse = result.getFirstResult().get(0);
@@ -190,7 +190,7 @@ class GitRepoServiceTest extends LoginTest {
         when(gitRepoLanguageClient.requestToGithub(any())).thenReturn(Map.of("Java", 10000));
 
         //when
-        TwoGitRepoResponse result = gitRepoService.findTwoGitRepos(request);
+        TwoGitRepoResponse result = gitRepoService.findTwoGitReposAndUpdate(request);
 
         //then
         assertThat(result.getFirstRepo().getGitRepo()).isEqualTo(expected);

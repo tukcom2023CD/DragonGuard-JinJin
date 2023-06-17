@@ -49,7 +49,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                 new GitRepoMemberResponse("posite", 99, 1001, 500),
                 new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499));
         GitRepoResponse expected = new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
-        given(gitRepoService.findGitRepoInfos(any())).willReturn(expected);
+        given(gitRepoService.findGitRepoInfosAndUpdate(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -76,7 +76,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                         new GitRepoMemberResponse("HJ39", 101, 999, 500),
                         new GitRepoMemberResponse("posite", 99, 1001, 500),
                         new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499)));
-        given(gitRepoService.findMembersByGitRepoForCompare(any())).willReturn(expected);
+        given(gitRepoService.findMembersByGitRepoForCompareAndUpdate(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -109,7 +109,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 new IntSummaryStatistics(4, 5000, 15000, 30000)),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
                         new IntSummaryStatistics(4, 9998, 10000, 29997)));
-        given(gitRepoService.findTwoGitRepos(any())).willReturn(expected);
+        given(gitRepoService.findTwoGitReposAndUpdate(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(

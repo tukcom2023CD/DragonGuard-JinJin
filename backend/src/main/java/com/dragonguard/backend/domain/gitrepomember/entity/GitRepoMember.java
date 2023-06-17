@@ -75,4 +75,8 @@ public class GitRepoMember implements Auditable {
                 && gitRepoContribution.getDeletions().intValue() == gitRepoMember.gitRepoContribution.getDeletions().intValue()
                 && gitRepoContribution.getCommits().intValue() == gitRepoMember.gitRepoContribution.getCommits().intValue();
     }
+
+    public void updateGitRepoContribution(Integer commits, Integer additions, Integer deletions) {
+        this.gitRepoContribution = new GitRepoContribution(commits, additions, deletions);
+    }
 }
