@@ -240,8 +240,10 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return contributions.stream()
                 .map(clientResponse -> {
                     String githubId = clientResponse.getAuthor().getLogin();
+                    String profileUrl = clientResponse.getAuthor().getAvatar_url();
                     return new GitRepoMemberResponse(
                             githubId,
+                            profileUrl,
                             clientResponse.getTotal(),
                             additions.getContributionByKey(clientResponse),
                             deletions.getContributionByKey(clientResponse),

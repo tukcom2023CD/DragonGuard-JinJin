@@ -44,10 +44,10 @@ class GitRepoControllerTest extends RestDocumentTest {
     @DisplayName("레포 멤버 조회가 수행되는가 (수동 업데이트)")
     void getRepoMembers() throws Exception {
         List<GitRepoMemberResponse> list = List.of(
-                new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
-                new GitRepoMemberResponse("HJ39", 101, 999, 500),
-                new GitRepoMemberResponse("posite", 99, 1001, 500),
-                new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499));
+                new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
+                new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
+                new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true));
         GitRepoResponse expected = new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
         given(gitRepoService.findGitRepoInfos(any())).willReturn(expected);
 
@@ -67,10 +67,10 @@ class GitRepoControllerTest extends RestDocumentTest {
     @DisplayName("레포 멤버 조회가 수행되는가")
     void getRepoMembersAndUpdate() throws Exception {
         List<GitRepoMemberResponse> list = List.of(
-                new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
-                new GitRepoMemberResponse("HJ39", 101, 999, 500),
-                new GitRepoMemberResponse("posite", 99, 1001, 500),
-                new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499));
+                new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
+                new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
+                new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true));
         GitRepoResponse expected = new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
         given(gitRepoService.findGitRepoInfosAndUpdate(any())).willReturn(expected);
 
@@ -90,15 +90,15 @@ class GitRepoControllerTest extends RestDocumentTest {
     @DisplayName("두 레포 기여자 기여도 비교가 수행되는가 (수동 업데이트)")
     void getTwoGitRepos() throws Exception {
         TwoGitRepoMemberResponse expected = new TwoGitRepoMemberResponse(List.of(
-                new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
-                new GitRepoMemberResponse("HJ39", 101, 999, 500),
-                new GitRepoMemberResponse("posite", 99, 1001, 500),
-                new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499)),
+                new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
+                new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
+                new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true)),
                 List.of(
-                        new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
-                        new GitRepoMemberResponse("HJ39", 101, 999, 500),
-                        new GitRepoMemberResponse("posite", 99, 1001, 500),
-                        new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499)));
+                        new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
+                        new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                        new GitRepoMemberResponse("posite","http://somethingProfileUrl", 99, 1001, 500, true),
+                        new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true)));
         given(gitRepoService.findMembersByGitRepoForCompare(any())).willReturn(expected);
 
         ResultActions perform =
@@ -120,15 +120,15 @@ class GitRepoControllerTest extends RestDocumentTest {
     @DisplayName("두 레포 기여자 기여도 비교가 수행되는가")
     void getTwoGitReposForUpdate() throws Exception {
         TwoGitRepoMemberResponse expected = new TwoGitRepoMemberResponse(List.of(
-                new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
-                new GitRepoMemberResponse("HJ39", 101, 999, 500),
-                new GitRepoMemberResponse("posite", 99, 1001, 500),
-                new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499)),
+                new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
+                new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
+                new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true)),
                 List.of(
-                        new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
-                        new GitRepoMemberResponse("HJ39", 101, 999, 500),
-                        new GitRepoMemberResponse("posite", 99, 1001, 500),
-                        new GitRepoMemberResponse("Sammuelwoojae", 100, 1001, 499)));
+                        new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
+                        new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                        new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
+                        new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true)));
         given(gitRepoService.findMembersByGitRepoForCompareAndUpdate(any())).willReturn(expected);
 
         ResultActions perform =
@@ -216,8 +216,8 @@ class GitRepoControllerTest extends RestDocumentTest {
     @DisplayName("두 멤버의 레포 기여도 비교가 수행되는가")
     void getTwoGitRepoMember() throws Exception {
         GitRepoMemberCompareResponse expected = new GitRepoMemberCompareResponse(
-                new GitRepoMemberResponse("ohksj77", 100, 1000, 500),
-                new GitRepoMemberResponse("ohksj", 101, 1001, 501));
+                new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
+                new GitRepoMemberResponse("ohksj", "http://somethingProfileUrl", 101, 1001, 501, true));
         given(gitRepoService.findTwoGitRepoMember(any())).willReturn(expected);
 
         ResultActions perform =
