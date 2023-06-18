@@ -5,9 +5,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://gitrank-db:3306/gitrank?serverTimezone=Asia/Seoul
-    username: root
-    password: ${MYSQL_ROOT_PASSWORD}
+    url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_SCHEMA}?serverTimezone=Asia/Seoul
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 
   main:
     allow-bean-definition-overriding: true
