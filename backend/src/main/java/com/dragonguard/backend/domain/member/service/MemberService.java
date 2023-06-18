@@ -260,6 +260,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     private MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(final String githubId, final Member member) {
         return memberMapper.toDetailResponse(
+                member.getProfileImage(),
                 gitOrganizationService.findGitOrganizationByMember(member),
                 gitRepoRepository.findByGithubId(githubId));
     }

@@ -49,7 +49,8 @@ public interface MemberMapper {
 
     @Mapping(target = "gitOrganizations", source = "gitOrganizations", qualifiedByName = "getGitOrganizationNames")
     @Mapping(target = "gitRepos", source = "gitRepos", qualifiedByName = "getGitRepoNames")
-    MemberGitReposAndGitOrganizationsResponse toDetailResponse(final List<GitOrganization> gitOrganizations, final List<GitRepo> gitRepos);
+    @Mapping(target = "memberProfileImage", source = "memberProfileImage")
+    MemberGitReposAndGitOrganizationsResponse toDetailResponse(final String memberProfileImage, final List<GitOrganization> gitOrganizations, final List<GitRepo> gitRepos);
 
     @Named("getGitOrganizationNames")
     default List<MemberGitOrganizationResponse> getGitOrganizationNames(final List<GitOrganization> gitOrganizations) {
