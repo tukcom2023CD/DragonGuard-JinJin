@@ -1,20 +1,17 @@
 package com.dragonguard.backend.domain.gitrepo.controller;
 
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
-import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.service.GitRepoService;
-import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
+import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.TwoGitRepoMemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.List;
 
 /**
  * @author 김승진
@@ -28,9 +25,9 @@ public class GitRepoController {
     private final GitRepoService gitRepoService;
 
     @GetMapping
-    public ResponseEntity<List<GitRepoMemberResponse>> getRepoMembers(
+    public ResponseEntity<GitRepoResponse> getGitRepoMembers(
             @RequestParam String name) {
-        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoWithClient(new GitRepoRequest(name, LocalDate.now().getYear())));
+        return ResponseEntity.ok(gitRepoService.findGitRepoInfos(name));
     }
 
     @PostMapping("/compare")
@@ -43,6 +40,24 @@ public class GitRepoController {
     public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(
             @RequestBody @Valid GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompare(request));
+    }
+
+    @GetMapping("/update")
+    public ResponseEntity<GitRepoResponse> getGitRepoMembersAndUpdate(
+            @RequestParam String name) {
+        return ResponseEntity.ok(gitRepoService.findGitRepoInfosAndUpdate(name));
+    }
+
+    @PostMapping("/compare/update")
+    public ResponseEntity<TwoGitRepoResponse> getTwoGitReposAndUpdate(
+            @RequestBody @Valid GitRepoCompareRequest request) {
+        return ResponseEntity.ok(gitRepoService.findTwoGitReposAndUpdate(request));
+    }
+
+    @PostMapping("/compare/git-repos-members/update")
+    public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompareAndUpdate(
+            @RequestBody @Valid GitRepoCompareRequest request) {
+        return ResponseEntity.ok(gitRepoService.findMembersByGitRepoForCompareAndUpdate(request));
     }
 
     @PostMapping("/compare/members")

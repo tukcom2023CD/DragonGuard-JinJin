@@ -42,6 +42,12 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit: false
 
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+
   security:
     oauth2:
       client:
@@ -97,3 +103,4 @@ app:
     authorizedRedirectUri: gitrank://github-auth
 
 admin: ${ADMIN}
+kafka-timeout: 15000

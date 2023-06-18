@@ -22,6 +22,7 @@ public class MemberQDtoFactory {
                 member.name,
                 member.githubId,
                 member.sumOfTokens,
-                member.tier);
+                member.tier,
+                member.profileImage);
     }
 }

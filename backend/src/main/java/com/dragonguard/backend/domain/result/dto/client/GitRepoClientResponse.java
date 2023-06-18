@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 /**
  * @author 김승진
@@ -16,6 +16,9 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClientResultResponse {
+public class GitRepoClientResponse {
     private String full_name;
+    private String language;
+    private String description;
+    private LocalDateTime created_at;
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GitRepoResponse {
+public class GitRepoCompareResponse {
     private GitRepoClientResponse gitRepo;
     private StatisticsResponse statistics;
     private Map<String, Integer> languages;

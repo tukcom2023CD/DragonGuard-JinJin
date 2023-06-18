@@ -19,23 +19,13 @@ import java.util.Objects;
 @Entity
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uniqueGitRepoMember",
-                        columnNames = {
-                                "git_repo_id",
-                                "member_id",
-                                "commits",
-                                "additions",
-                                "deletions"})})
 public class GitRepoMember implements Auditable {
     @Id
     @GeneratedValue
     private Long id;
 
     @JoinColumn
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private GitRepo gitRepo;
 
     @JoinColumn
@@ -59,7 +49,8 @@ public class GitRepoMember implements Auditable {
     }
 
     public void organize() {
-        this.gitRepo.organize(this);
+        this.gitRepo.organizeGitRepoMember(this);
+        this.member.organizeGitRepoMember(this);
     }
 
     public void update(GitRepoMember gitRepoMember) {
@@ -74,5 +65,9 @@ public class GitRepoMember implements Auditable {
                 && gitRepoContribution.getAdditions().intValue() == gitRepoMember.gitRepoContribution.getAdditions().intValue()
                 && gitRepoContribution.getDeletions().intValue() == gitRepoMember.gitRepoContribution.getDeletions().intValue()
                 && gitRepoContribution.getCommits().intValue() == gitRepoMember.gitRepoContribution.getCommits().intValue();
+    }
+
+    public void updateGitRepoContribution(Integer commits, Integer additions, Integer deletions) {
+        this.gitRepoContribution = new GitRepoContribution(commits, additions, deletions);
     }
 }

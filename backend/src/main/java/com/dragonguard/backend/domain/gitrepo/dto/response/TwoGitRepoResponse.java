@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.gitrepo.dto.response;
 
-import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TwoGitRepoResponse {
-    private GitRepoResponse firstRepo;
-    private GitRepoResponse secondRepo;
+    private GitRepoCompareResponse firstRepo;
+    private GitRepoCompareResponse secondRepo;
 }

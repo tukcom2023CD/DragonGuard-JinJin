@@ -48,7 +48,7 @@ include::../../build/generated-snippets/get member by jwt/http-request.adoc[]
 ==== HTTP response
 include::../../build/generated-snippets/get member by jwt/http-response.adoc[]
 
-=== 멤버 프로필 상세 조회
+=== 멤버 github 조직 및 레포 목록 조회
 ==== HTTP request
 include::../../build/generated-snippets/get member details/http-request.adoc[]
 ==== HTTP response
@@ -59,3 +59,9 @@ include::../../build/generated-snippets/get member details/http-response.adoc[]
 include::../../build/generated-snippets/update member blockchains/http-request.adoc[]
 ==== HTTP response
 include::../../build/generated-snippets/update member blockchains/http-response.adoc[]
+
+=== 멤버 github 조직의 레포 목록 조회
+==== HTTP request
+include::../../build/generated-snippets/get member repositories in a organization/http-request.adoc[]
+==== HTTP response
+include::../../build/generated-snippets/get member repositories in a organization/http-response.adoc[]

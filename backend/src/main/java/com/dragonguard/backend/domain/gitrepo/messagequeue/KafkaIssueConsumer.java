@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author 김승진
@@ -22,6 +23,7 @@ public class KafkaIssueConsumer implements KafkaConsumer<ClosedIssueKafkaRespons
     private final ObjectMapper objectMapper;
 
     @Override
+    @Transactional
     @KafkaListener(topics = "gitrank.to.backend.issues", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         gitRepoService.updateClosedIssues(readValue(message));

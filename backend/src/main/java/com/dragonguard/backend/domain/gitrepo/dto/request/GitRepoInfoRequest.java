@@ -11,13 +11,13 @@ import lombok.*;
 @ToString // Redis를 위해 넣은 toString
 @NoArgsConstructor
 @AllArgsConstructor
-public class GitRepoRequest {
+public class GitRepoInfoRequest {
     @Setter
     private String githubToken;
     private String name;
     private Integer year;
 
-    public GitRepoRequest(String name, Integer year) {
+    public GitRepoInfoRequest(String name, Integer year) {
         this.name = name;
         this.year = year;
     }
