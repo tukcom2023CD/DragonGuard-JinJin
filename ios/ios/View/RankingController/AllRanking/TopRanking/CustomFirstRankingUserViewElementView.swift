@@ -91,7 +91,13 @@ final class CustomFirstRankingUserViewElementView: UIView{
         self.firstUserData = data
         addUI()
     }
-    
+        
+    func updateData(data: AllUserRankingModel){
+        self.firstUserData = data
+        titleLabel.text = data.userName
+        numLabel.text = "\(data.num ?? 0)"
+        userView.updateData(img: data.profileImg ?? "")
+    }
 }
 
 

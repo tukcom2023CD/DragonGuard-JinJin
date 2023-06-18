@@ -11,14 +11,16 @@ import SnapKit
 import RxSwift
 import Lottie
 
-// MARK: 전체 사용자 랭킹
-final class AllUserRankingController: UIViewController{
+// MARK: 회사 랭킹
+final class CompanyRankController: UIViewController {
     private var topTierData: [AllUserRankingModel] = []
     private var userTierData: [AllUserRankingModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        self.navigationItem.title = "회사 랭킹"
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
 //        addUIIndicator()
         loadData()
         
@@ -27,6 +29,31 @@ final class AllUserRankingController: UIViewController{
     /*
      UI code
      */
+    
+    // MARK:
+    private lazy var item1: UITabBarItem = {
+        let item = UITabBarItem()
+        item.title = "Repository"
+        item.image = UIImage(systemName: "book.closed")
+        return item
+    }()
+    
+    // MARK:
+    private lazy var item2: UITabBarItem = {
+        let item = UITabBarItem()
+        item.title = "User"
+        item.image = UIImage(systemName: "person.3.fill")
+        return item
+    }()
+    
+    // MARK:
+    private lazy var tabbar: UITabBar = {
+        let tabbar = UITabBar()
+        
+        tabbar.items = [item1,item2]
+        
+        return tabbar
+    }()
     
     // MARK: 스크롤 뷰
     private lazy var scrollView: UIScrollView = {
@@ -91,11 +118,13 @@ final class AllUserRankingController: UIViewController{
     
     // MARK: 로딩 후 뷰 생성
     private func addUI_AutoLayout_About_Ranking(){
+        view.addSubview(tabbar)
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(topView)
         contentView.addSubview(tableView)
         
+        tabbar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(AllUserTableviewCell.self, forCellReuseIdentifier: AllUserTableviewCell.identifier)
@@ -104,8 +133,16 @@ final class AllUserRankingController: UIViewController{
     
     // MARK: AutoLayout After loading
     private func setAutoLayout(){
+        
+        tabbar.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        
         scrollView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(tabbar.snp.bottom)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalToSuperview()
         }
         
@@ -137,7 +174,7 @@ final class AllUserRankingController: UIViewController{
     
     // MARK: 데이터 가져옴
     private func loadData(){
-        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo1", num: 344, link: "s",tier: "GOLD"))
+        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo100", num: 344, link: "s",tier: "GOLD"))
         topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo2", num: 22, link: "s",tier: "GOLD"))
         topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo3", num: 333, link: "s",tier: "BRONZE"))
         
@@ -155,10 +192,24 @@ final class AllUserRankingController: UIViewController{
         
         addUI_AutoLayout_About_Ranking()
     }
+
     
 }
 
-extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
+extension CompanyRankController: UITabBarDelegate{
+    
+    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        if item ==  item1{
+            let newViewController = AllUserRankingController()
+            navigationController?.setViewControllers([newViewController], animated: false)
+        } else if item == item2 {
+            let anotherViewController = CompanyRankController()
+            navigationController?.setViewControllers([anotherViewController], animated: false)
+        }
+    }
+}
+
+extension CompanyRankController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: AllUserTableviewCell.identifier, for: indexPath) as? AllUserTableviewCell else { return UITableViewCell()}

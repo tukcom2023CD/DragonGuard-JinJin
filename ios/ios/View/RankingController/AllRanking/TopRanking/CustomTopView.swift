@@ -15,7 +15,6 @@ final class CustomTopView: UIView{
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
     }
     
     required init?(coder: NSCoder) {
@@ -60,9 +59,9 @@ final class CustomTopView: UIView{
         self.addSubview(stackView)
         
         stackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(-20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.trailing.equalToSuperview()
             make.height.equalTo(250).priority(250)
         }
     }
@@ -70,8 +69,20 @@ final class CustomTopView: UIView{
     
     func getData(list: [AllUserRankingModel]){
         self.topTierData = list
+        
         addUI()
+        firstRankView.layoutIfNeeded()
+        secondRankView.layoutIfNeeded()
+        thirdRankView.layoutIfNeeded()
     }
+    
+    func updateData(list: [AllUserRankingModel]){
+        self.topTierData = list
+        firstRankView.updateData(data: list[0])
+        secondRankView.updateData(data: list[1])
+        thirdRankView.updateData(data: list[2])
+    }
+    
 }
 
 

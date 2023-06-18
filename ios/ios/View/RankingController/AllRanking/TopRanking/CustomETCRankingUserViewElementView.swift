@@ -95,6 +95,14 @@ final class CustomETCRankingUserViewElementView: UIView{
             rankingImgView.image = UIImage(named: "thirdRank")?.resize(newWidth: 60)
         }
     }
+    
+    func updateData(data: AllUserRankingModel){
+        self.etcUserData = data
+        titleLabel.text = data.userName
+        numLabel.text = "\(data.num ?? 0)"
+        userView.updateData(img: data.profileImg ?? "")
+    }
+    
 }
 
 

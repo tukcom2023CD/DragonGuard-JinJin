@@ -41,4 +41,8 @@ final class UserProfileImgView: UIView{
             make.bottom.equalToSuperview().offset(-10)
         }
     }
+    
+    func updateData(img: String){
+        
+    }
 }
