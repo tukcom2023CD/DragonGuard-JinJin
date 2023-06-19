@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 /**
  * @author 김승진
  * @description 레포지토리 검색 결과 응답 정보를 담는 dto
@@ -19,5 +17,5 @@ public class GitRepoResultResponse {
     private String name;
     private String language;
     private String description;
-    private LocalDateTime createdAt;
+    private String createdAt;
 }

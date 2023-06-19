@@ -29,4 +29,3 @@ public interface ResultMapper {
     @Mapping(target = "id", source = "searchId")
     GitRepoResultResponse toGitRepoResponse(final Long searchId, final GitRepoClientResponse dto);
 }
-

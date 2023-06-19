@@ -8,9 +8,6 @@ spring:
     url: jdbc:mysql://localhost:3306/gitrank?serverTimezone=Asia/Seoul
     username: root
     password: 1234
-  jackson:
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: false
 
   config:
     import:
