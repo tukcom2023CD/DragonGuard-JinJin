@@ -5,6 +5,7 @@ import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -32,6 +33,7 @@ public class AdminApiTokens {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(Member::getGithubToken)
+                .filter(StringUtils::hasText)
                 .collect(Collectors.toList());
     }
 
