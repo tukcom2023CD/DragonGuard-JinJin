@@ -79,7 +79,6 @@ public class WebClientJobConfig {
     }
 
     @Bean
-    @StepScope
     public ItemProcessor<GitRepo, Set<GitRepoMember>> processor() {
         String apiToken = adminApiTokens.getApiToken();
         return gitRepo -> {
@@ -93,7 +92,6 @@ public class WebClientJobConfig {
     }
 
     @Bean
-    @StepScope
     public JpaItemWriter<Set<GitRepoMember>> writer() {
         return new JpaItemWriterBuilder<Set<GitRepoMember>>()
                 .entityManagerFactory(entityManagerFactory)
