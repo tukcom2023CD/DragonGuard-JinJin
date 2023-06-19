@@ -3,6 +3,7 @@ package com.dragonguard.backend.domain.result.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author 김승진
@@ -11,6 +12,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 public class UserResultResponse {
     private Long id;
