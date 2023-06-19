@@ -10,6 +10,9 @@ spring:
   config:
     import:
       - classpath:env.yml
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
 
   main:
     allow-bean-definition-overriding: true

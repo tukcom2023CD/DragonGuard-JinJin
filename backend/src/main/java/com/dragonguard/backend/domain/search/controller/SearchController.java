@@ -27,7 +27,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping(params = "type=USERS")
-    @Cacheable(value = "results", key = "{#name, page, filters}", cacheManager = "cacheManager")
+    @Cacheable(value = "results", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
     public ResponseEntity<List<UserResultResponse>> getUsersSearchResult(
             @RequestParam(value = "filters", required = false) List<String> filters,
             @RequestParam String name, @RequestParam Integer page) {
@@ -35,7 +35,7 @@ public class SearchController {
     }
 
     @GetMapping(params = "type=REPOSITORIES")
-    @Cacheable(value = "results", key = "{#name, page, filters}", cacheManager = "cacheManager")
+    @Cacheable(value = "results", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
     public ResponseEntity<List<GitRepoResultResponse>> getReposSearchResult(
             @RequestParam(value = "filters", required = false) List<String> filters,
             @RequestParam String name, @RequestParam Integer page) {
