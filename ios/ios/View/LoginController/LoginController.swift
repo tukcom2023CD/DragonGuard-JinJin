@@ -25,7 +25,8 @@ final class LoginController: UIViewController{
         checkClearAuths()
         
         if autoLoginCheck ?? false{
-            self.navigationController?.pushViewController(MainController(), animated: true)
+            print("?")
+//            self.navigationController?.pushViewController(MainController(), animated: true)
         }
         
     }
@@ -114,15 +115,17 @@ final class LoginController: UIViewController{
         let urlRequest = URLRequest(url: url)
         let vc = UIViewController()
         let newViewController = UINavigationController(rootViewController: vc )
-        let webView = WKWebView(frame: newViewController.view.bounds)
+        let webView = WKWebView(frame: vc.view.bounds)
         newViewController.view.addSubview(webView)
         
         webView.navigationDelegate = self
-        webView.goBack()
         webView.load(urlRequest)
-//        newViewController.modalPresentationStyle = .fullScreen
-//        self.present(newViewController,animated: true)
-        self.navigationController?.pushViewController(newViewController,animated: true)
+        
+        webView.goBack()
+        webView.reload()
+        newViewController.modalPresentationStyle = .fullScreen
+        self.present(newViewController,animated: true)
+//        self.navigationController?.pushViewController(newViewController,animated: true)
         
     }
 
@@ -136,7 +139,7 @@ final class LoginController: UIViewController{
             .subscribe(onNext: { first, second in
                 if first && second{
                     
-                    let rootView = MainController()
+                    let rootView = SearchViewController()
                     
 //                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
 //                       print("\(key): \(value)")
@@ -244,14 +247,20 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                     }
                
                     if accessTokenCheck && refreshTokenCheck{
-                        self.navigationController?.popViewController(animated: true)
+                        self.dismiss(animated: true)
+//                        self.navigationController?.popViewController(animated: true)
                         LoginViewModel.loginService.githubAuthSubject.onNext(true)
                     }
+                    
                 }
             }
           
             decisionHandler(.allow)
         }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+    }
     
 }
 

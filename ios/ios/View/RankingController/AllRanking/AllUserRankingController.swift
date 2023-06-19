@@ -13,6 +13,8 @@ import Lottie
 
 // MARK: 전체 사용자 랭킹
 final class AllUserRankingController: UIViewController{
+    private let allRankingViewModel = ALLUserInfoViewModel()
+    private let disposeBag = DisposeBag()
     private let selectionList: [String] = ["사용자 전체", "조직 전체" ,"회사", "대학교", "고등학교", "ETC"]
     private var topTierData: [AllUserRankingModel] = []
     private var userTierData: [AllUserRankingModel] = []
@@ -171,27 +173,30 @@ final class AllUserRankingController: UIViewController{
      Get Data
      */
     
-    // MARK: 데이터 가져옴
+    // MARK: 전체 사용자 랭킹 데이터 가져옴
     private func loadAllRankingData(){
-        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "allRank", num: 344, link: "s",tier: "GOLD"))
-        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo2", num: 22, link: "s",tier: "GOLD"))
-        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo3", num: 333, link: "s",tier: "BRONZE"))
         
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "allRank", num: 333, link: "s",tier: "SILVER"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo5", num: 333, link: "s",tier: "SILVER"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo6", num: 333, link: "s",tier: "GOLD"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo7", num: 333, link: "s",tier: "BRONZE"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo8", num: 333, link: "s",tier: "SILVER"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo9", num: 333, link: "s",tier: "BRONZE"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo10", num: 333, link: "s",tier: "GOLD"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo11", num: 333, link: "s",tier: "SILVER"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo12", num: 333, link: "s",tier: "GOLD"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo13", num: 333, link: "s",tier: "GOLD"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo14", num: 333, link: "s",tier: "BRONZE"))
+        allRankingViewModel.getAllRanking()
+            .subscribe(onNext:{ list in
+                print("?A")
+                print(list)
+                self.addUI_AutoLayout_About_Ranking()
+                
+                for i in 0..<list.count{
+                    if(i<3){
+                        self.topTierData.append(list[i])
+                    }
+                    else{
+                        self.userTierData.append(list[i])
+                    }
+                }
+                
+                self.topView.updateData(list: list)
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
         
-        addUI_AutoLayout_About_Ranking()
-        topView.updateData(list: topTierData)
-        tableView.reloadData()
+        
     }
 
     // MARK: 전체 조직 랭킹 데이터 가져옴

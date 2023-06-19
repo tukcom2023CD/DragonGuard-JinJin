@@ -15,7 +15,7 @@ final class SearchAndFilterController: UIViewController{
     private var forksFilter: String?
     private var starsFilter: String?
     private var topicsFilter: String?
-    private var type: String = "Repository"
+    private var type: String = "REPOSITORIES"
     private let disposeBag = DisposeBag()
     var resultList: BehaviorSubject<[SearchResultModel]> = BehaviorSubject(value: [])
     var delegate: SendSearchResultList?
@@ -313,7 +313,7 @@ final class SearchAndFilterController: UIViewController{
     // MARK: Repository 버튼
     @objc
     private func clickedRepository(){
-        type = "Repository"
+        type = "REPOSITORIES"
         self.userBtn.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
         self.repositoryBtn.backgroundColor = UIColor(red: 195/255, green: 202/255, blue: 251/255, alpha: 1.0) /* #c3cafb */
         setRepositoryAutoLayout()
@@ -323,7 +323,7 @@ final class SearchAndFilterController: UIViewController{
     // MARK: User 버튼
     @objc
     private func clickedUser(){
-        type = "User"
+        type = "USERS"
         self.userBtn.backgroundColor = UIColor(red: 195/255, green: 202/255, blue: 251/255, alpha: 1.0) /* #c3cafb */
         self.repositoryBtn.backgroundColor = UIColor(red: 225/255, green: 228/255, blue: 253/255, alpha: 1.0) /* #e1e4fd */
         checkUserBtnOrRepositoryBtn(check: true)
@@ -576,26 +576,26 @@ extension SearchAndFilterController: UITextFieldDelegate{
         print("seach \(word)")
         let filtering = getFiltering()
         
-        let list: [SearchResultModel] = [
-            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-        ]
+//        let list: [SearchResultModel] = [
+//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
+//        ]
         
-        self.delegate?.sendList(list: list)
-        self.dismiss(animated: true)
+//        self.delegate?.sendList(list: list)
+//        self.dismiss(animated: true)
         
-//        SearchPageViewModel.viewModel.getSearchData(searchWord: word, type: self.type, change: true, filtering: filtering)
-//            .subscribe(onNext: { list in
-//                if !list.isEmpty{
-//                    self.delegate?.sendList(list: list)
-//                    self.dismiss(animated: true)
-//                }
-//            })
-//            .disposed(by: self.disposeBag)
+        SearchPageViewModel.viewModel.getSearchData(searchWord: word, type: self.type, change: true, filtering: filtering)
+            .subscribe(onNext: { list in
+                if !list.isEmpty{
+                    self.delegate?.sendList(list: list)
+                    self.dismiss(animated: true)
+                }
+            })
+            .disposed(by: self.disposeBag)
         
         textField.resignFirstResponder()
         return true

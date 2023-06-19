@@ -24,6 +24,7 @@ final class SearchPageService {
         let access = UserDefaults.standard.string(forKey: "Access")
 
         print("SearchUrl \(url)")
+        print(access)
         return Observable.create(){ observer in
             AF.request(url, method: .get, headers: ["Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
@@ -33,8 +34,11 @@ final class SearchPageService {
                     
                     if(responseResult.count != 0 && resultArray.count == 0){
                         for data in responseResult {
-//                            let dataBundle = SearchPageResultModel(name: data.name,id: data.id)
-                            let dataBundle = SearchResultModel(create: data.title, language: data.language, title: data.title)
+                            let dataBundle = SearchResultModel(id: data.id,
+                                                               name: data.name ?? "",
+                                                               language: data.language ?? "",
+                                                               description: data.description ?? "",
+                                                               createdAt: data.createdAt ?? "")
                             resultArray.append(dataBundle)
                         }
                         observer.onNext(resultArray)

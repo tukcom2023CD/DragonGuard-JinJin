@@ -18,15 +18,17 @@ final class RepoDetailController: UIViewController{
     private var userName: [String] = [] // 사용자 깃허브 아이디
     private var dataColor:[[UIColor]] = []  // 랜덤 색상 설정
     var selectedTitle: String?
-    
+    private let viewModel = RepoDetailViewModel()
+    private let disposeBag = DisposeBag()
+    private var sparkLineList: [Int] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addUIIndicator()
         view.backgroundColor = .white
-//        randomColor()
-//        testData()
-//        addDetailUI()
+        
+        addUIIndicator()
+        getData()
+        randomColor()
     }
     
     // MARK: 로딩 UI
@@ -144,9 +146,7 @@ final class RepoDetailController: UIViewController{
         userListCollectionView.dataSource = self
         userListCollectionView.register(UserListCollectionViewCell.self, forCellWithReuseIdentifier: UserListCollectionViewCell.identifier)
         
-        
         setDeatilUIAutoLayout()
-        
     }
     
     // MARK: 로딩이 끝난 후 필요한 UI AutoLayout
@@ -239,13 +239,28 @@ final class RepoDetailController: UIViewController{
         }
     }
     
+    private func getData(){
+        viewModel.getData(title: selectedTitle ?? "")
+            .subscribe(onNext: { data in
+                self.indicatorView.removeFromSuperview()
+                self.sparkLineList = data.sparkLine ?? []
+                
+                data.gitRepoMembers?.forEach({ member in
+                    self.userName.append(member.githubId)
+                    self.userCommit.append(member.commits)
+                })
+                self.setchartOption()
+                self.addDetailUI()
+            })
+            .disposed(by: disposeBag)
+    }
+    
     // MARK: 테스트 데이터 넣기
     private func testData(){
         for i in 1...10{
             self.userName.append("a")
             self.userCommit.append(i)
         }
-        setchartOption()
     }
 }
 
@@ -323,20 +338,4 @@ extension RepoDetailController: ChartViewDelegate {
         
     }
     
-}
-
-
-
-import SwiftUI
-struct VCPreViewRepoDetailController:PreviewProvider {
-    static var previews: some View {
-        RepoDetailController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewRepoDetailController2:PreviewProvider {
-    static var previews: some View {
-        RepoDetailController().toPreview().previewDevice("iPhone 11")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
 }
