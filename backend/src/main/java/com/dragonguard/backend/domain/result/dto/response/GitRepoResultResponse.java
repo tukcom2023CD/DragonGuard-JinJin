@@ -1,9 +1,6 @@
 package com.dragonguard.backend.domain.result.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * @author 김승진
@@ -13,6 +10,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoResultResponse {
     private Long id;

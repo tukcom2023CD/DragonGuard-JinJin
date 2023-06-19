@@ -20,12 +20,12 @@ import javax.validation.ValidationException;
 @RestControllerAdvice
 public class GlobalErrorAdvice {
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorResponse> entityNotFound(EntityNotFoundException e) {
+    public ResponseEntity<ErrorResponse> entityNotFoundException(EntityNotFoundException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<ErrorResponse> webClientResponse(WebClientResponseException e) {
+    public ResponseEntity<ErrorResponse> webClientResponseException(WebClientResponseException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
