@@ -117,7 +117,7 @@ final class CompareRepoUserController: UIViewController{
         }
     }
     
-    // MARK:
+    // MARK: CollectionView and BackBtn
     private func addUIBase(){
         view.addSubview(backBtn)
         view.addSubview(selectionCollectionView)
@@ -201,7 +201,7 @@ final class CompareRepoUserController: UIViewController{
         
     }
     
-    // MARK:
+    // MARK: get repository Data
     private func getData(){
         addUI()
         
@@ -209,7 +209,7 @@ final class CompareRepoUserController: UIViewController{
         rightView.inputData(repo1: [], values: nil, repoName: "qwer", imgList: [])
     }
     
-    // MARK:
+    // MARK: Button Actions
     private func clickedBtn(){
         backBtn.rx.tap.subscribe(onNext: {
             self.dismiss(animated: false)
