@@ -9,12 +9,17 @@ import Foundation
 import UIKit
 import SnapKit
 import RxSwift
+import Charts
 import Lottie
 
 final class CompareRepoUserController: UIViewController{
     private let nameList: [String] = ["forks", "closed issues", "open issues", "stars", "contributers", "deletions average", "languages", "code average"]
     private let selectionList: [String] = ["Repository", "User"]
     private let disposeBag = DisposeBag()
+    var repoUserInfo: CompareUserModel = CompareUserModel(firstResult: [], secondResult: [])
+    var user1Index: Int?
+    var user2Index: Int?
+    var lastIndexOfFisrtArray: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +56,23 @@ final class CompareRepoUserController: UIViewController{
         return cv
     }()
     
+    // MARK: 스크롤 뷰
+    private lazy var scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        return scroll
+    }()
+    
+    // MARK: contentView
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        
+        return view
+    }()
+    
+    /*
+     Respository UI
+     */
+    
     // MARK: 첫 번째 레포 정보
     private lazy var leftView: CustomUIView = {
         let view = CustomUIView()
@@ -72,19 +94,6 @@ final class CompareRepoUserController: UIViewController{
         return view
     }()
     
-    // MARK: 스크롤 뷰
-    private lazy var scrollView: UIScrollView = {
-        let scroll = UIScrollView()
-        return scroll
-    }()
-    
-    // MARK: contentView
-    private lazy var contentView: UIView = {
-        let view = UIView()
-        
-        return view
-    }()
-    
     // MARK: repository info
     private lazy var tableView: UITableView = {
         let table = UITableView()
@@ -95,6 +104,44 @@ final class CompareRepoUserController: UIViewController{
         table.layer.shadowOpacity = 0.5
         table.clipsToBounds = true
         return table
+    }()
+    
+    /*
+     User UI
+     */
+    
+    // MARK:
+    private lazy var leftUserButton: UserUIButton = {
+        let btn = UserUIButton()
+        return btn
+    }()
+    
+    // MARK:
+    private lazy var rightUserButton: UserUIButton = {
+        let btn = UserUIButton()
+        return btn
+    }()
+    
+    // MARK:
+    private lazy var stack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [leftUserButton, rightUserButton])
+        stack.axis = .horizontal
+        stack.distribution = .fillEqually
+        return stack
+    }()
+    
+    // MARK: Commit chart
+    private lazy var chartCommit: BarChartView = {
+        let chart1 = BarChartView()
+        chart1.backgroundColor = .white
+        return chart1
+    }()
+    
+    // MARK: Addition Deletion Chart
+    private lazy var chartAddDel: BarChartView = {
+        let chart1 = BarChartView()
+        chart1.backgroundColor = .white
+        return chart1
     }()
     
     /*
@@ -138,7 +185,7 @@ final class CompareRepoUserController: UIViewController{
         clickedBtn()
     }
     
-    // MARK: Add UI
+    // MARK: Add UI (레포지토리 UI)
     private func addUI(){
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -153,7 +200,7 @@ final class CompareRepoUserController: UIViewController{
         setAutoLayout()
     }
     
-    // MARK: Setting AutoLayout
+    // MARK: Setting AutoLayout (레포지토리 UI)
     private func setAutoLayout(){
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(selectionCollectionView.snp.bottom).offset(10)
@@ -197,6 +244,22 @@ final class CompareRepoUserController: UIViewController{
             make.bottom.equalTo(contentView.snp.bottom).offset(-20)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*8/14)
         }
+        
+        
+    }
+    
+    // MARK:
+    private func addUI_User(){
+        view.addSubview(stack)
+        view.addSubview(chartCommit)
+        view.addSubview(chartAddDel)
+        
+        stack.snp.makeConstraints { make in
+            make.top.equalTo(selectionCollectionView.snp.bottom).offset(30)
+            make.leading.equalTo(selectionCollectionView.snp.bottom).offset(30)
+            make.trailing.equalTo(selectionCollectionView.snp.bottom).offset(30)
+        }
+        
         
         
     }
@@ -247,5 +310,204 @@ extension CompareRepoUserController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return selectionList.count }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize { return CGSize(width: collectionView.frame.width/2, height: collectionView.frame.height) }
     
+}
+
+
+extension CompareRepoUserController : ChartViewDelegate {
     
+    /// Commit 차트를 그리는 부분
+    /// BarChart 사용
+    private func setChartCommit() {
+        var dataSet : [BarChartDataSet] = []
+        guard let lastIndexOfFisrtArray = self.lastIndexOfFisrtArray else {return}
+        guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 14) else {return}
+        
+        // data set 1
+        var userInfo = [ChartDataEntry]()
+        guard let user1Index = self.user1Index else {return}
+        var set1 = BarChartDataSet()
+        var repo = ""
+        var newUser1Index = 0
+        
+        if lastIndexOfFisrtArray > user1Index{  // 첫 번째 유저 선택이 첫번쨰 배열 안에 있는 경우
+            newUser1Index = user1Index
+            repo = "first"
+        }
+        else if lastIndexOfFisrtArray <= user1Index{ // 첫 번째 유저 선택이 두 번째 배열 안에 있는 경우
+            newUser1Index = user1Index - lastIndexOfFisrtArray
+            repo = "second"
+        }
+        
+        if repo == "first"{
+            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.repoUserInfo.firstResult[newUser1Index].commits))
+            userInfo.append(dataEntry1)
+            set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.firstResult[newUser1Index].githubId)
+        }
+        else if repo == "second"{
+            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.repoUserInfo.secondResult[newUser1Index].commits))
+            userInfo.append(dataEntry1)
+            set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.secondResult[newUser1Index].githubId)
+        }
+        set1.valueTextColor = .black
+        set1.valueFont = font
+        set1.colors = [.red]
+        dataSet.append(set1)
+        
+        
+        // data set 2
+        guard let user2Index = self.user2Index else {return}
+        var newUser2Index = 0
+        var set2 = BarChartDataSet()
+        var userInfo2 = [ChartDataEntry]()
+        repo = ""
+        if lastIndexOfFisrtArray > user2Index{  // 두 번째 유저 선택이 첫번째 배열 안에 있는 경우
+            newUser2Index = user2Index
+            repo = "first"
+        }
+        else if lastIndexOfFisrtArray <= user2Index{ // 두 번째 유저 선택이 두 번째 배열 안에 있는 경우
+            newUser2Index = user2Index - lastIndexOfFisrtArray
+            repo = "second"
+        }
+        
+        if repo == "first"{
+            let dataEntry2 = BarChartDataEntry(x: 1, y: floor(Double(self.repoUserInfo.firstResult[newUser2Index].commits)))
+            userInfo2.append(dataEntry2)
+            set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.firstResult[newUser2Index].githubId)
+        }
+        else if repo == "second"{
+            let dataEntry2 = BarChartDataEntry(x: 1, y: floor(Double(self.repoUserInfo.secondResult[newUser2Index].commits)))
+            userInfo2.append(dataEntry2)
+            set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.secondResult[newUser2Index].githubId)
+        }
+        
+        
+        set2.valueTextColor = .black
+        set2.valueFont = font
+        set2.colors = [.blue]
+        dataSet.append(set2)
+        let data = BarChartData(dataSets: dataSet)
+        chartCommit.data = data
+        chartCommitAttribute()
+    }
+    
+    
+    ///  Commit 차트 속성을 설정하는 부분
+    private func chartCommitAttribute(){
+        guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15) else {return}
+        chartCommit.xAxis.enabled = false
+        chartCommit.animate(xAxisDuration: 1, yAxisDuration: 2)
+        chartCommit.leftAxis.enabled = true
+        chartCommit.leftAxis.labelTextColor = .black
+        chartCommit.doubleTapToZoomEnabled = false
+        chartCommit.leftAxis.labelFont = font
+        chartCommit.noDataText = "출력 데이터가 없습니다."
+        chartCommit.noDataFont = .systemFont(ofSize: 30)
+        chartCommit.noDataTextColor = .lightGray
+        chartCommit.legend.textColor = .black
+        chartCommit.legend.font = font
+    }
+    
+    
+    ///  Addtion, Deletion 차트를 그리는 부분
+    ///  BarChart 사용
+    private func setChartAddDel() {
+        var dataSet : [BarChartDataSet] = []
+        guard let lastIndexOfFisrtArray = self.lastIndexOfFisrtArray else {return}
+        guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 14) else {return}
+        
+        // data set 1
+        var userInfo = [ChartDataEntry]()
+        guard let user1Index = self.user1Index else {return}
+        var set1 = BarChartDataSet()
+        var repo = ""
+        var newUser1Index = 0
+        
+        if lastIndexOfFisrtArray > user1Index{  // 첫 번째 유저 선택이 첫번쨰 배열 안에 있는 경우
+            newUser1Index = user1Index
+            repo = "first"
+        }
+        else if lastIndexOfFisrtArray <= user1Index{ // 첫 번째 유저 선택이 두 번째 배열 안에 있는 경우
+            newUser1Index = user1Index - lastIndexOfFisrtArray
+            repo = "second"
+        }
+        
+        if repo == "first"{
+            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.repoUserInfo.firstResult[newUser1Index].additions))
+            let dataEntry2 = BarChartDataEntry(x: 2, y: Double(self.repoUserInfo.firstResult[newUser1Index].deletions))
+            userInfo.append(dataEntry1)
+            userInfo.append(dataEntry2)
+            set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.firstResult[newUser1Index].githubId)
+        }
+        else if repo == "second"{
+            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.repoUserInfo.secondResult[newUser1Index].additions))
+            let dataEntry2 = BarChartDataEntry(x: 2, y: Double(self.repoUserInfo.secondResult[newUser1Index].deletions))
+            userInfo.append(dataEntry1)
+            userInfo.append(dataEntry2)
+            set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.secondResult[newUser1Index].githubId)
+        }
+        set1.valueTextColor = .black
+        set1.valueFont = font
+        set1.colors = [.red]
+        dataSet.append(set1)
+        
+        
+        // data set 2
+        guard let user2Index = self.user2Index else { return }
+        var newUser2Index = 0
+        var set2 = BarChartDataSet()
+        var userInfo2 = [ChartDataEntry]()
+        repo = ""
+        if lastIndexOfFisrtArray > user2Index{  // 두 번째 유저 선택이 첫번째 배열 안에 있는 경우
+            newUser2Index = user2Index
+            repo = "first"
+        }
+        else if lastIndexOfFisrtArray <= user2Index{ // 두 번째 유저 선택이 두 번째 배열 안에 있는 경우
+            newUser2Index = user2Index - lastIndexOfFisrtArray
+            repo = "second"
+        }
+        
+        if repo == "first"{
+            let dataEntry1 = BarChartDataEntry(x: 1, y: Double(self.repoUserInfo.firstResult[newUser2Index].additions))
+            let dataEntry2 = BarChartDataEntry(x: 3, y: Double(self.repoUserInfo.firstResult[newUser2Index].deletions))
+            userInfo2.append(dataEntry1)
+            userInfo2.append(dataEntry2)
+            set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.firstResult[newUser2Index].githubId)
+        }
+        else if repo == "second"{
+            let dataEntry1 = BarChartDataEntry(x: 1, y: Double(self.repoUserInfo.secondResult[newUser2Index].additions))
+            let dataEntry2 = BarChartDataEntry(x: 3, y: Double(self.repoUserInfo.secondResult[newUser2Index].deletions))
+            userInfo2.append(dataEntry1)
+            userInfo2.append(dataEntry2)
+            set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.secondResult[newUser2Index].githubId)
+        }
+        set2.valueTextColor = .black
+        set2.valueFont = font
+        set2.colors = [.blue]
+        dataSet.append(set2)
+        
+        
+        
+        let data = BarChartData(dataSets: dataSet)
+        
+        chartAddDel.data = data
+        
+        chartAddDelAttribute()
+    }
+    
+    /// Addtion Deletion 그리는 차트 속성
+    private func chartAddDelAttribute(){
+        guard let font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15) else {return}
+        
+        chartAddDel.xAxis.enabled = false
+        chartAddDel.animate(xAxisDuration: 1, yAxisDuration: 2)
+        chartAddDel.leftAxis.enabled = true
+        chartAddDel.leftAxis.labelTextColor = .black
+        chartAddDel.doubleTapToZoomEnabled = false
+        chartAddDel.leftAxis.labelFont = font
+        chartAddDel.noDataText = "출력 데이터가 없습니다."
+        chartAddDel.noDataFont = .systemFont(ofSize: 30)
+        chartAddDel.noDataTextColor = .lightGray
+        chartAddDel.legend.textColor = .black
+        chartAddDel.legend.font = font
+    }
 }
