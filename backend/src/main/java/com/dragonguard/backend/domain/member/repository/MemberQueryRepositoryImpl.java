@@ -87,4 +87,12 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
                 .where(member.id.eq(id))
                 .fetchFirst());
     }
+
+    @Override
+    public boolean existsByGithubId(String githubId) {
+        return jpaQueryFactory
+                .selectFrom(member)
+                .where(member.githubId.eq(githubId))
+                .fetchFirst() != null;
+    }
 }

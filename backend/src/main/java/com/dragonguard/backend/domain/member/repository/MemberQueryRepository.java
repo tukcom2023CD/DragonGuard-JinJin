@@ -20,4 +20,5 @@ public interface MemberQueryRepository {
     Optional<Member> findByGithubId(String githubId);
     String findRefreshTokenById(UUID id);
     Optional<Member> findById(UUID id);
+    boolean existsByGithubId(String githubId);
 }
