@@ -11,6 +11,7 @@ import com.dragonguard.backend.domain.search.dto.client.SearchUserResponse;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.entity.Filter;
 import com.dragonguard.backend.domain.search.entity.Search;
+import com.dragonguard.backend.domain.search.entity.SearchType;
 import com.dragonguard.backend.domain.search.mapper.SearchMapper;
 import com.dragonguard.backend.domain.search.repository.SearchRepository;
 import com.dragonguard.backend.global.GithubClient;
@@ -18,6 +19,7 @@ import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -42,12 +44,16 @@ public class SearchService implements EntityLoader<Search, Long> {
     private final GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     private final GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
 
-    public List<UserResultResponse> getUserSearchResultByClient(final SearchRequest searchRequest) {
+    @Cacheable(value = "results", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
+    public List<UserResultResponse> getUserSearchResultByClient(String name, Integer page, List<String> filters) {
+        SearchRequest searchRequest = new SearchRequest(name, SearchType.USERS, page, filters);
         Search search = getSearch(searchRequest);
         return searchUser(searchRequest, search);
     }
 
-    public List<GitRepoResultResponse> getGitRepoSearchResultByClient(SearchRequest searchRequest) {
+    @Cacheable(value = "results", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
+    public List<GitRepoResultResponse> getGitRepoSearchResultByClient(String name, Integer page, List<String> filters) {
+        SearchRequest searchRequest = new SearchRequest(name, SearchType.REPOSITORIES, page, filters);
         Search search = getSearch(searchRequest);
         return searchRepo(searchRequest, search);
     }

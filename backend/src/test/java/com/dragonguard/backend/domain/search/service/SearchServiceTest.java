@@ -43,10 +43,10 @@ class SearchServiceTest extends LoginTest {
         void getGitRepoSearchResultByClient() {
             //given
             String repoName = "tukcom2023CD/DragonGuard-JinJin";
-            when(githubRepoClient.requestToGithub(any())).thenReturn(new SearchRepoResponse(new GitRepoClientResponse[]{new GitRepoClientResponse(repoName, "java", "good repo", LocalDateTime.now())}));
+            when(githubRepoClient.requestToGithub(any())).thenReturn(new SearchRepoResponse(new GitRepoClientResponse[]{new GitRepoClientResponse(repoName, "java", "good repo", LocalDateTime.now().toString())}));
 
             //when
-            List<GitRepoResultResponse> result = searchService.getGitRepoSearchResultByClient(new SearchRequest(repoName, SearchType.REPOSITORIES, 1));
+            List<GitRepoResultResponse> result = searchService.getGitRepoSearchResultByClient(repoName, 1, List.of("language:java"));
 
             //then
             assertThat(result.get(0).getName()).isEqualTo(repoName);
@@ -60,7 +60,7 @@ class SearchServiceTest extends LoginTest {
             when(githubUserClient.requestToGithub(any())).thenReturn(new SearchUserResponse(new UserClientResponse[]{new UserClientResponse(userName)}));
 
             //when
-            List<UserResultResponse> result = searchService.getUserSearchResultByClient(new SearchRequest(userName, SearchType.USERS, 1));
+            List<UserResultResponse> result = searchService.getUserSearchResultByClient(userName, 1, List.of("language:java"));
 
             //then
             assertThat(result.get(0).getName()).isEqualTo(userName);
