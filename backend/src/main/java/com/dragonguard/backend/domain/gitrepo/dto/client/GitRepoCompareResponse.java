@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.IntSummaryStatistics;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,4 +22,5 @@ public class GitRepoCompareResponse {
     private StatisticsResponse statistics;
     private Map<String, Integer> languages;
     private IntSummaryStatistics languagesStats;
+    private List<String> profileUrls;
 }

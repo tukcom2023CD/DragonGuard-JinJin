@@ -41,7 +41,7 @@ class SearchControllerTest extends RestDocumentTest {
                 new UserResultResponse(5L, "And"),
                 new UserResultResponse(6L, "DragonGuard-JinJin"));
 
-        given(searchService.getUserSearchResultByClient(any())).willReturn(expected);
+        given(searchService.getUserSearchResultByClient(any(), any(), any())).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -71,7 +71,7 @@ class SearchControllerTest extends RestDocumentTest {
                 new UserResultResponse(5L, "And"),
                 new UserResultResponse(6L, "DragonGuard-JinJin"));
 
-        given(searchService.getUserSearchResultByClient(any())).willReturn(expected);
+        given(searchService.getUserSearchResultByClient(any(), any(), any())).willReturn(expected);
 
         // when
         ResultActions perform =

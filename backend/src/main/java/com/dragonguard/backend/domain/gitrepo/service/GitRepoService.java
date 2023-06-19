@@ -183,7 +183,8 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     private GitRepoCompareResponse getGitRepoResponse(final String repoName, final GitRepoClientResponse repoResponse, final GitRepoLanguageMap gitRepoLanguageMap) {
-        return new GitRepoCompareResponse(repoResponse, getStatistics(repoName), gitRepoLanguageMap.getLanguages(), gitRepoLanguageMap.getStatistics());
+        List<String> profileUrls = getEntityByName(repoName).getGitRepoMembers().stream().map(gitRepoMember -> gitRepoMember.getMember().getProfileImage()).collect(Collectors.toList());
+        return new GitRepoCompareResponse(repoResponse, getStatistics(repoName), gitRepoLanguageMap.getLanguages(), gitRepoLanguageMap.getStatistics(), profileUrls);
     }
 
     public GitRepoLanguageMap requestClientGitRepoLanguage(final String repoName, final String githubToken) {

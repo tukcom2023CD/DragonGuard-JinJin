@@ -37,8 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GitRepoController.class)
 class GitRepoControllerTest extends RestDocumentTest {
 
-    @MockBean
-    private GitRepoService gitRepoService;
+    @MockBean private GitRepoService gitRepoService;
 
     @Test
     @DisplayName("레포 멤버 조회가 수행되는가 (수동 업데이트)")
@@ -155,13 +154,15 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 new IntSummaryStatistics(4, 1800, 30000, 50000),
                                 new IntSummaryStatistics(4, 5000, 15000, 30000)),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new IntSummaryStatistics(4, 9998, 10000, 29997)),
+                        new IntSummaryStatistics(4, 9998, 10000, 29997),
+                        List.of("http://profileImage", "http://profileImage")),
                 new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
                         new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
                                 new IntSummaryStatistics(4, 1800, 30000, 50000),
                                 new IntSummaryStatistics(4, 5000, 15000, 30000)),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new IntSummaryStatistics(4, 9998, 10000, 29997)));
+                        new IntSummaryStatistics(4, 9998, 10000, 29997),
+                        List.of("http://profileImage", "http://profileImage")));
         given(gitRepoService.findTwoGitRepos(any())).willReturn(expected);
 
         ResultActions perform =
@@ -188,13 +189,15 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 new IntSummaryStatistics(4, 1800, 30000, 50000),
                                 new IntSummaryStatistics(4, 5000, 15000, 30000)),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new IntSummaryStatistics(4, 9998, 10000, 29997)),
+                        new IntSummaryStatistics(4, 9998, 10000, 29997),
+                        List.of("http://profileImage", "http://profileImage")),
                 new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
                         new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
                                 new IntSummaryStatistics(4, 1800, 30000, 50000),
                                 new IntSummaryStatistics(4, 5000, 15000, 30000)),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new IntSummaryStatistics(4, 9998, 10000, 29997)));
+                        new IntSummaryStatistics(4, 9998, 10000, 29997),
+                        List.of("http://profileImage", "http://profileImage")));
         given(gitRepoService.findTwoGitReposAndUpdate(any())).willReturn(expected);
 
         ResultActions perform =
