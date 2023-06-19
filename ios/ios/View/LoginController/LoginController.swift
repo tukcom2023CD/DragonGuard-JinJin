@@ -149,6 +149,7 @@ final class LoginController: UIViewController{
                     self.goGithubBtn.isEnabled = true
                     self.klipLoginBtn.layer.opacity = 1
                     self.goGithubBtn.layer.opacity = 1
+                    rootView.modalPresentationStyle = .fullScreen
                     self.present(rootView, animated: true)
 //                    self.navigationController?.pushViewController(rootView, animated: true)
                     

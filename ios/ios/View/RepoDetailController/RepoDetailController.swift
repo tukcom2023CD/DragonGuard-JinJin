@@ -242,6 +242,7 @@ final class RepoDetailController: UIViewController{
     private func getData(){
         viewModel.getData(title: selectedTitle ?? "")
             .subscribe(onNext: { data in
+                print("succeeess\n\(data)")
                 self.indicatorView.removeFromSuperview()
                 self.sparkLineList = data.sparkLine ?? []
                 

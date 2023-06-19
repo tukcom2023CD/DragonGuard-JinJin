@@ -26,9 +26,12 @@ final class SearchPageService {
         print("SearchUrl \(url)")
         print(access)
         return Observable.create(){ observer in
-            AF.request(url, method: .get, headers: ["Authorization": "Bearer \(access ?? "")"])
+            AF.request(url,
+                       method: .get,
+                       headers: ["Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: [SearchResultDecodingModel].self) { response in
+                    print(response)
                     guard let responseResult = response.value else {return}
                     var resultArray = [SearchResultModel]() // 결과 저장할 변수
                     
