@@ -87,7 +87,6 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(member)
                 .where(member.id.eq(id))
-                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetchFirst());
     }
 

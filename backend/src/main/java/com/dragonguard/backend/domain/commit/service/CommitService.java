@@ -20,7 +20,6 @@ import java.util.List;
 @TransactionService
 @RequiredArgsConstructor
 public class CommitService implements EntityLoader<Commit, Long> {
-
     private final CommitRepository commitRepository;
     private final CommitMapper commitMapper;
 
@@ -28,7 +27,11 @@ public class CommitService implements EntityLoader<Commit, Long> {
         List<Commit> commits = commitRepository.findAllByMember(member);
         Commit commit = commitMapper.toEntity(contributionScrapingResponse, member);
 
-        if (saveIfNew(commits, commit)) return;
+        if (commits.isEmpty()) {
+            commitRepository.save(commit);
+            return;
+        }
+
         saveIfIsNewCommitWithSameMember(commits, commit);
     }
 
@@ -42,15 +45,7 @@ public class CommitService implements EntityLoader<Commit, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private boolean saveIfNew(final List<Commit> commits, final Commit commit) {
-        if (commits.isEmpty()) {
-            commitRepository.save(commit);
-            return true;
-        }
-        return false;
-    }
-
-    private void saveIfIsNewCommitWithSameMember(final List<Commit> commits, final Commit commit) {
+    public void saveIfIsNewCommitWithSameMember(final List<Commit> commits, final Commit commit) {
         commits.stream()
                 .filter(c -> isNewCommitWithSameMember(commit, c))
                 .findFirst()
