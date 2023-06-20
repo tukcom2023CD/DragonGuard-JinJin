@@ -27,8 +27,6 @@ final class CompareRepoUserController: UIViewController{
         
 //        addUIIndicator()
         addUIBase()
-//        getData()
-//        getData_User()
     }
     
     // MARK: 로딩 UI
@@ -132,8 +130,8 @@ final class CompareRepoUserController: UIViewController{
         btn.layer.shadowOpacity = 1
         btn.layer.shadowColor = .init(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
         btn.layer.cornerRadius = 20
-        btn.layer.borderWidth = 1
         btn.clipsToBounds = true
+        btn.layer.masksToBounds = true
         return btn
     }()
     
@@ -142,9 +140,8 @@ final class CompareRepoUserController: UIViewController{
         let btn = UserUIButton()
         btn.backgroundColor = .white
         btn.layer.shadowOffset = CGSize(width: 3, height: 3)
-        btn.layer.shadowOpacity = 0.5
+        btn.layer.shadowOpacity = 1
         btn.layer.shadowColor = .init(red: 100/255, green: 100/255, blue: 100/255, alpha: 1)
-        btn.layer.borderWidth = 1
         btn.layer.cornerRadius = 20
         btn.layer.masksToBounds = true
         btn.clipsToBounds = true
@@ -157,6 +154,7 @@ final class CompareRepoUserController: UIViewController{
         stack.axis = .horizontal
         stack.spacing = 40
         stack.distribution = .fillEqually
+        stack.backgroundColor = .clear
         return stack
     }()
     
@@ -281,10 +279,10 @@ final class CompareRepoUserController: UIViewController{
     // MARK:
     private func addUI_User(){
         view.addSubview(scrollView_User)
-        scrollView.addSubview(contentView_User)
-        contentView.addSubview(stack)
-        contentView.addSubview(chartCommit)
-        contentView.addSubview(chartAddDel)
+        scrollView_User.addSubview(contentView_User)
+        contentView_User.addSubview(stack)
+        contentView_User.addSubview(chartCommit)
+        contentView_User.addSubview(chartAddDel)
         
         scrollView_User.snp.makeConstraints { make in
             make.top.equalTo(selectionCollectionView.snp.bottom).offset(10)
@@ -293,32 +291,32 @@ final class CompareRepoUserController: UIViewController{
         }
         
         contentView_User.snp.makeConstraints { make in
-            make.top.equalTo(scrollView.snp.top)
-            make.leading.equalTo(scrollView.snp.leading)
-            make.trailing.equalTo(scrollView.snp.trailing)
-            make.bottom.equalTo(scrollView.snp.bottom)
-            make.width.equalTo(scrollView.snp.width)
+            make.top.equalTo(scrollView_User.snp.top)
+            make.leading.equalTo(scrollView_User.snp.leading)
+            make.trailing.equalTo(scrollView_User.snp.trailing)
+            make.bottom.equalTo(scrollView_User.snp.bottom)
+            make.width.equalTo(scrollView_User.snp.width)
         }
         
         stack.snp.makeConstraints { make in
-            make.top.equalTo(contentView.snp.top)
-            make.leading.equalTo(contentView.snp.leading).offset(40)
-            make.trailing.equalTo(contentView.snp.trailing).offset(-40)
+            make.top.equalTo(contentView_User.snp.top)
+            make.leading.equalTo(contentView_User.snp.leading).offset(40)
+            make.trailing.equalTo(contentView_User.snp.trailing).offset(-40)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/5)
         }
         
         chartCommit.snp.makeConstraints { make in
             make.top.equalTo(stack.snp.bottom).offset(20)
-            make.leading.equalTo(contentView.snp.leading).offset(10)
-            make.trailing.equalTo(contentView.snp.trailing).offset(-10)
+            make.leading.equalTo(contentView_User.snp.leading).offset(10)
+            make.trailing.equalTo(contentView_User.snp.trailing).offset(-10)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/2)
         }
         
         chartAddDel.snp.makeConstraints { make in
             make.top.equalTo(chartCommit.snp.bottom).offset(20)
-            make.leading.equalTo(contentView.snp.leading).offset(10)
-            make.trailing.equalTo(contentView.snp.trailing).offset(-10)
-            make.bottom.equalTo(contentView.snp.bottom)
+            make.leading.equalTo(contentView_User.snp.leading).offset(10)
+            make.trailing.equalTo(contentView_User.snp.trailing).offset(-10)
+            make.bottom.equalTo(contentView_User.snp.bottom)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/2)
         }
         
@@ -350,7 +348,7 @@ final class CompareRepoUserController: UIViewController{
         addUI_User()
         leftUserButton.inputData(img: UIImage(named: "2")!, name: "ttf")
         rightUserButton.inputData(img: UIImage(named: "2")!, name: "ttr")
-        
+
         setChartCommit()
         setChartAddDel()
     }
@@ -392,16 +390,12 @@ extension CompareRepoUserController: UICollectionViewDelegate, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == 0{
-            print("c")
-            scrollView.removeFromSuperview()
+            scrollView_User.removeFromSuperview()
             getData()
         }
         else if indexPath.row == 1{
-            print("a")
             scrollView.removeFromSuperview()
-            getData()
-//            scrollView.removeFromSuperview()
-//            getData_User()
+            getData_User()
         }
     }
     
@@ -426,7 +420,7 @@ extension CompareRepoUserController : ChartViewDelegate {
         var set1 = BarChartDataSet()
         var repo = ""
         var newUser1Index = 0
-        print("?")
+
         if lastIndexOfFisrtArray > user1Index{  // 첫 번째 유저 선택이 첫번쨰 배열 안에 있는 경우
             newUser1Index = user1Index
             repo = "first"

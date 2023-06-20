@@ -43,7 +43,7 @@ final class UserUIButton: UIButton{
             make.leading.equalToSuperview().offset(30)
             make.trailing.equalToSuperview().offset(-30)
         }
-        
+
         userName.snp.makeConstraints { make in
             make.top.equalTo(imgView.snp.bottom).offset(20)
             make.centerX.equalTo(imgView.snp.centerX)

@@ -25,7 +25,7 @@ final class CustomUIView: UIView{
         let view = ContributorUIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 20
-        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+        view.layer.shadowOffset = CGSize(width:-3, height: 3)
         view.layer.shadowOpacity = 0.5
         return view
     }()

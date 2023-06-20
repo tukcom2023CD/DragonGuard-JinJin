@@ -22,28 +22,36 @@ final class ContributorUIView: UIView{
     // MARK:
     private lazy var imgView1: UIImageView = {
         let imgView = UIImageView()
-        imgView.layer.cornerRadius = 20
+        imgView.layer.cornerRadius = 10
+        imgView.clipsToBounds = true
+        imgView.layer.masksToBounds = true
         return imgView
     }()
     
     // MARK:
     private lazy var imgView2: UIImageView = {
         let imgView = UIImageView()
-        imgView.layer.cornerRadius = 20
+        imgView.layer.cornerRadius = 10
+        imgView.clipsToBounds = true
+        imgView.layer.masksToBounds = true
         return imgView
     }()
     
     // MARK:
     private lazy var imgView3: UIImageView = {
         let imgView = UIImageView()
-        imgView.layer.cornerRadius = 20
+        imgView.layer.cornerRadius = 10
+        imgView.clipsToBounds = true
+        imgView.layer.masksToBounds = true
         return imgView
     }()
     
     // MARK:
     private lazy var imgView4: UIImageView = {
         let imgView = UIImageView()
-        imgView.layer.cornerRadius = 20
+        imgView.layer.cornerRadius = 10
+        imgView.clipsToBounds = true
+        imgView.layer.masksToBounds = true
         return imgView
     }()
     
