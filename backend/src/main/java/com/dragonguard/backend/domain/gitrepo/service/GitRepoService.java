@@ -87,7 +87,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     public List<Integer> updateAndGetSparkLine(final String name, final String githubToken, final GitRepo gitRepo) {
         List<Integer> savedSparkLine = gitRepo.getSparkLine();
         if (!savedSparkLine.isEmpty()) {
-            requestKafkaSparkLine(githubToken, name);
+            requestKafkaSparkLine(githubToken, gitRepo.getId());
             return savedSparkLine;
         }
         List<Integer> sparkLine = Arrays.asList(requestClientSparkLine(githubToken, name).getAll());
@@ -95,8 +95,9 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return sparkLine;
     }
 
-    public void updateSparkLine(final String name, final String githubToken) {
-        getOrSaveGitRepo(name).updateSparkLine(Arrays.asList(requestClientSparkLine(githubToken, name).getAll()));
+    public void updateSparkLine(final Long id, final String githubToken) {
+        GitRepo gitRepo = loadEntity(id);
+        gitRepo.updateSparkLine(Arrays.asList(requestClientSparkLine(githubToken, gitRepo.getName()).getAll()));
     }
 
     private GitRepoSparkLineResponse requestClientSparkLine(final String githubToken, final String name) {
@@ -266,8 +267,8 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         kafkaIssueProducer.send(gitRepoNameRequest);
     }
 
-    private void requestKafkaSparkLine(final String githubToken, final String name) {
-        kafkaSparkLineProducer.send(new SparkLineKafka(githubToken, name));
+    private void requestKafkaSparkLine(final String githubToken, final Long id) {
+        kafkaSparkLineProducer.send(new SparkLineKafka(githubToken, id));
     }
 
     @Override
@@ -287,7 +288,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     public List<GitRepoMemberResponse> getGitRepoMemberResponses(final GitRepo gitRepo, final String githubToken) {
         Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         if (!gitRepoMembers.isEmpty()) {
-            return gitRepoMapper.toGitRepoMemberResponseList(gitRepoMembers);
+            return gitRepoMemberMapper.toResponseList(gitRepoMembers);
         }
         return requestToGithub(new GitRepoInfoRequest(githubToken, gitRepo.getName(), LocalDate.now().getYear()), gitRepo);
     }

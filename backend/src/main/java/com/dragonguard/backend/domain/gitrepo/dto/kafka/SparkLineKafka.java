@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SparkLineKafka {
     private String githubToken;
-    private String name;
+    private Long id;
 }

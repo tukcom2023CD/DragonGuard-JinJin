@@ -8,7 +8,6 @@ import com.dragonguard.backend.global.audit.BaseTime;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 /**
  * @author 김승진
@@ -57,14 +56,6 @@ public class GitRepoMember implements Auditable {
         this.gitRepo = gitRepoMember.gitRepo;
         this.member = gitRepoMember.member;
         this.gitRepoContribution = gitRepoMember.gitRepoContribution;
-    }
-
-    public boolean customEquals(GitRepoMember gitRepoMember) {
-        return Objects.equals(gitRepo.getName(), gitRepoMember.gitRepo.getName())
-                && Objects.equals(member.getGithubId(), gitRepoMember.member.getGithubId())
-                && gitRepoContribution.getAdditions().intValue() == gitRepoMember.gitRepoContribution.getAdditions().intValue()
-                && gitRepoContribution.getDeletions().intValue() == gitRepoMember.gitRepoContribution.getDeletions().intValue()
-                && gitRepoContribution.getCommits().intValue() == gitRepoMember.gitRepoContribution.getCommits().intValue();
     }
 
     public void updateGitRepoContribution(Integer commits, Integer additions, Integer deletions) {
