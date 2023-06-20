@@ -84,10 +84,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
     }
 
     public GitRepo getGitRepoByName(final String gitRepoName) {
-        if (gitRepoRepository.existsByName(gitRepoName)) {
-            return gitRepoRepository.findByName(gitRepoName).orElseThrow(EntityNotFoundException::new);
-        }
-        return gitRepoRepository.save(new GitRepo(gitRepoName));
+        return gitRepoRepository.findByName(gitRepoName).orElseThrow(EntityNotFoundException::new);
     }
 
     public Member getMemberByGitRepoResponse(final GitRepoMemberResponse gitRepository) {

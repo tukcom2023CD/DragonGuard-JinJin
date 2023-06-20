@@ -62,9 +62,9 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
     private final GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> gitRepoSparkLineClient;
 
-    public GitRepoResponse  findGitRepoInfosAndUpdate(final String name) {
-        if (!gitRepoRepository.existsByName(name)) {
-            return findGitRepoInfosAndUpdate(name);
+    public GitRepoResponse findGitRepoInfosAndUpdate(final String name) {
+        if (gitRepoRepository.existsByName(name)) {
+            return findGitRepoInfos(name);
         }
         int year = LocalDate.now().getYear();
         GitRepoInfoRequest gitRepoInfoRequest = new GitRepoInfoRequest(name, year);
