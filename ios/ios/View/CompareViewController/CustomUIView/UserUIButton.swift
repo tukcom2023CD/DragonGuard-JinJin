@@ -52,7 +52,7 @@ final class UserUIButton: UIButton{
     
     func inputData(img: UIImage, name: String){
         addUI()
-        imgView.image = img
+        imgView.image = img.resize(newWidth: 80, newHeight: 80)
         userName.text = name
     }
     

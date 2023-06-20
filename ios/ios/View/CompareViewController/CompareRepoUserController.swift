@@ -25,10 +25,10 @@ final class CompareRepoUserController: UIViewController{
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        addUIIndicator()
+//        addUIIndicator()
         addUIBase()
-        getData()
-        
+//        getData()
+//        getData_User()
     }
     
     // MARK: 로딩 UI
@@ -56,6 +56,11 @@ final class CompareRepoUserController: UIViewController{
         return cv
     }()
     
+    
+    /*
+     Respository UI
+     */
+    
     // MARK: 스크롤 뷰
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -68,10 +73,6 @@ final class CompareRepoUserController: UIViewController{
         
         return view
     }()
-    
-    /*
-     Respository UI
-     */
     
     // MARK: 첫 번째 레포 정보
     private lazy var leftView: CustomUIView = {
@@ -110,15 +111,43 @@ final class CompareRepoUserController: UIViewController{
      User UI
      */
     
+    // MARK: 스크롤 뷰
+    private lazy var scrollView_User: UIScrollView = {
+        let scroll = UIScrollView()
+        return scroll
+    }()
+    
+    // MARK: contentView
+    private lazy var contentView_User: UIView = {
+        let view = UIView()
+        
+        return view
+    }()
+    
     // MARK:
     private lazy var leftUserButton: UserUIButton = {
         let btn = UserUIButton()
+        btn.backgroundColor = .white
+        btn.layer.shadowOffset = CGSize(width: 3, height: 3)
+        btn.layer.shadowOpacity = 1
+        btn.layer.shadowColor = .init(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
+        btn.layer.cornerRadius = 20
+        btn.layer.borderWidth = 1
+        btn.clipsToBounds = true
         return btn
     }()
     
     // MARK:
     private lazy var rightUserButton: UserUIButton = {
         let btn = UserUIButton()
+        btn.backgroundColor = .white
+        btn.layer.shadowOffset = CGSize(width: 3, height: 3)
+        btn.layer.shadowOpacity = 0.5
+        btn.layer.shadowColor = .init(red: 100/255, green: 100/255, blue: 100/255, alpha: 1)
+        btn.layer.borderWidth = 1
+        btn.layer.cornerRadius = 20
+        btn.layer.masksToBounds = true
+        btn.clipsToBounds = true
         return btn
     }()
     
@@ -126,6 +155,7 @@ final class CompareRepoUserController: UIViewController{
     private lazy var stack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [leftUserButton, rightUserButton])
         stack.axis = .horizontal
+        stack.spacing = 40
         stack.distribution = .fillEqually
         return stack
     }()
@@ -250,17 +280,47 @@ final class CompareRepoUserController: UIViewController{
     
     // MARK:
     private func addUI_User(){
-        view.addSubview(stack)
-        view.addSubview(chartCommit)
-        view.addSubview(chartAddDel)
+        view.addSubview(scrollView_User)
+        scrollView.addSubview(contentView_User)
+        contentView.addSubview(stack)
+        contentView.addSubview(chartCommit)
+        contentView.addSubview(chartAddDel)
         
-        stack.snp.makeConstraints { make in
-            make.top.equalTo(selectionCollectionView.snp.bottom).offset(30)
-            make.leading.equalTo(selectionCollectionView.snp.bottom).offset(30)
-            make.trailing.equalTo(selectionCollectionView.snp.bottom).offset(30)
+        scrollView_User.snp.makeConstraints { make in
+            make.top.equalTo(selectionCollectionView.snp.bottom).offset(10)
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
+        contentView_User.snp.makeConstraints { make in
+            make.top.equalTo(scrollView.snp.top)
+            make.leading.equalTo(scrollView.snp.leading)
+            make.trailing.equalTo(scrollView.snp.trailing)
+            make.bottom.equalTo(scrollView.snp.bottom)
+            make.width.equalTo(scrollView.snp.width)
+        }
         
+        stack.snp.makeConstraints { make in
+            make.top.equalTo(contentView.snp.top)
+            make.leading.equalTo(contentView.snp.leading).offset(40)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-40)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/5)
+        }
+        
+        chartCommit.snp.makeConstraints { make in
+            make.top.equalTo(stack.snp.bottom).offset(20)
+            make.leading.equalTo(contentView.snp.leading).offset(10)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-10)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/2)
+        }
+        
+        chartAddDel.snp.makeConstraints { make in
+            make.top.equalTo(chartCommit.snp.bottom).offset(20)
+            make.leading.equalTo(contentView.snp.leading).offset(10)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-10)
+            make.bottom.equalTo(contentView.snp.bottom)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/2)
+        }
         
     }
     
@@ -270,6 +330,29 @@ final class CompareRepoUserController: UIViewController{
         
         leftView.inputData(repo1: [], values: nil, repoName: "abc", imgList: [])
         rightView.inputData(repo1: [], values: nil, repoName: "qwer", imgList: [])
+    }
+    
+    // MARK:
+    private func getData_User(){
+        repoUserInfo.firstResult = [FirstRepoResult(githubId: "aa1", commits: 12, additions: 100, deletions: 100),
+                                    FirstRepoResult(githubId: "aa2", commits: 12, additions: 100, deletions: 100),
+                                    FirstRepoResult(githubId: "aa3", commits: 12, additions: 100, deletions: 100),
+                                    FirstRepoResult(githubId: "aa4", commits: 12, additions: 100, deletions: 100)]
+        
+        repoUserInfo.secondResult = [SecondRepoResult(githubId: "aa1", commits: 122, additions: 10, deletions: 110),
+                                     SecondRepoResult(githubId: "aa2", commits: 12, additions: 100, deletions: 100),
+                                     SecondRepoResult(githubId: "aa3", commits: 12, additions: 100, deletions: 100),
+                                     SecondRepoResult(githubId: "aa4", commits: 12, additions: 100, deletions: 100)]
+        user1Index = 1
+        user2Index = 0
+        lastIndexOfFisrtArray = repoUserInfo.firstResult.count
+        
+        addUI_User()
+        leftUserButton.inputData(img: UIImage(named: "2")!, name: "ttf")
+        rightUserButton.inputData(img: UIImage(named: "2")!, name: "ttr")
+        
+        setChartCommit()
+        setChartAddDel()
     }
     
     // MARK: Button Actions
@@ -307,6 +390,21 @@ extension CompareRepoUserController: UICollectionViewDelegate, UICollectionViewD
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row == 0{
+            print("c")
+            scrollView.removeFromSuperview()
+            getData()
+        }
+        else if indexPath.row == 1{
+            print("a")
+            scrollView.removeFromSuperview()
+            getData()
+//            scrollView.removeFromSuperview()
+//            getData_User()
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return selectionList.count }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize { return CGSize(width: collectionView.frame.width/2, height: collectionView.frame.height) }
     
@@ -328,7 +426,7 @@ extension CompareRepoUserController : ChartViewDelegate {
         var set1 = BarChartDataSet()
         var repo = ""
         var newUser1Index = 0
-        
+        print("?")
         if lastIndexOfFisrtArray > user1Index{  // 첫 번째 유저 선택이 첫번쨰 배열 안에 있는 경우
             newUser1Index = user1Index
             repo = "first"
@@ -405,6 +503,9 @@ extension CompareRepoUserController : ChartViewDelegate {
         chartCommit.noDataTextColor = .lightGray
         chartCommit.legend.textColor = .black
         chartCommit.legend.font = font
+        chartCommit.highlightFullBarEnabled = false
+        chartCommit.highlightPerTapEnabled = false
+        chartCommit.highlightPerDragEnabled = false
     }
     
     
@@ -509,5 +610,8 @@ extension CompareRepoUserController : ChartViewDelegate {
         chartAddDel.noDataTextColor = .lightGray
         chartAddDel.legend.textColor = .black
         chartAddDel.legend.font = font
+        chartAddDel.highlightFullBarEnabled = false
+        chartAddDel.highlightPerTapEnabled = false
+        chartAddDel.highlightPerDragEnabled = false
     }
 }
