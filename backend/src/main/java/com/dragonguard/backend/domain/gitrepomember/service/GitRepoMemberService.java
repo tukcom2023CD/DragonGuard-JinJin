@@ -65,8 +65,8 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
     public List<GitRepoMember> getGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final String gitRepoName) {
         return gitRepoResponses.stream()
                 .distinct()
-                .map(gitRepo ->
-                        getGitRepoMember(gitRepo, getMemberByGitRepoResponse(gitRepo),
+                .map(gitRepoResponse ->
+                        getGitRepoMember(gitRepoResponse, getMemberByGitRepoResponse(gitRepoResponse),
                                 getGitRepoByName(gitRepoName)))
                 .collect(Collectors.toList());
     }
@@ -84,8 +84,10 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
     }
 
     public GitRepo getGitRepoByName(final String gitRepoName) {
-        return gitRepoRepository.findByName(gitRepoName)
-                .orElse(gitRepoRepository.save(new GitRepo(gitRepoName)));
+        if (gitRepoRepository.existsByName(gitRepoName)) {
+            return gitRepoRepository.findByName(gitRepoName).orElseThrow(EntityNotFoundException::new);
+        }
+        return gitRepoRepository.save(new GitRepo(gitRepoName));
     }
 
     public Member getMemberByGitRepoResponse(final GitRepoMemberResponse gitRepository) {
