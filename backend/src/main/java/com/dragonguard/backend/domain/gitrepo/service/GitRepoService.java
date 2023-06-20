@@ -35,8 +35,6 @@ import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -127,7 +125,6 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompareAndUpdate(final GitRepoCompareRequest gitRepoCompareRequest) {
         return getTwoGitRepoMemberResponse(gitRepoCompareRequest,
                 LocalDate.now().getYear(), memberService.getLoginUserWithPersistence().getGithubToken());
@@ -190,7 +187,10 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     public GitRepo findGitRepo(final String repoName) {
-        return gitRepoRepository.findByName(repoName).orElse(gitRepoRepository.save(new GitRepo(repoName)));
+        if (gitRepoRepository.existsByName(repoName)) {
+            return gitRepoRepository.findByName(repoName).orElseThrow(EntityNotFoundException::new);
+        }
+        return gitRepoRepository.save(new GitRepo(repoName));
     }
 
     private StatisticsResponse getStatistics(final String name) {
