@@ -20,7 +20,8 @@ public class KafkaGitRepoInfoConsumer implements KafkaConsumer<GitRepoInfoReques
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.git-repos-info", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        gitRepoService.requestToGithub(readValue(message));
+        GitRepoInfoRequest request = readValue(message);
+        gitRepoService.requestToGithub(request, gitRepoService.findGitRepo(request.getName()));
     }
 
     @Override
