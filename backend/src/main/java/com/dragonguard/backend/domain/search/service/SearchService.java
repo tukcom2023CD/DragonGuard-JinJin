@@ -14,12 +14,13 @@ import com.dragonguard.backend.domain.search.entity.Search;
 import com.dragonguard.backend.domain.search.entity.SearchType;
 import com.dragonguard.backend.domain.search.mapper.SearchMapper;
 import com.dragonguard.backend.domain.search.repository.SearchRepository;
+import com.dragonguard.backend.global.EntityLoader;
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
  * @description 검색 관련 서비스 로직을 처리하는 클래스
  */
 
-@TransactionService
+@Service
 @RequiredArgsConstructor
 public class SearchService implements EntityLoader<Search, Long> {
     private final SearchRepository searchRepository;
@@ -44,6 +45,7 @@ public class SearchService implements EntityLoader<Search, Long> {
     private final GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     private final GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
 
+    @Transactional
     @Cacheable(value = "results", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
     public List<UserResultResponse> getUserSearchResultByClient(String name, Integer page, List<String> filters) {
         SearchRequest searchRequest = new SearchRequest(name, SearchType.USERS, page, filters);
@@ -51,6 +53,7 @@ public class SearchService implements EntityLoader<Search, Long> {
         return searchUser(searchRequest, search);
     }
 
+    @Transactional
     @Cacheable(value = "results", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
     public List<GitRepoResultResponse> getGitRepoSearchResultByClient(String name, Integer page, List<String> filters) {
         SearchRequest searchRequest = new SearchRequest(name, SearchType.REPOSITORIES, page, filters);

@@ -11,12 +11,12 @@ import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.mapper.OrganizationMapper;
 import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
+import com.dragonguard.backend.global.EntityLoader;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @description 조직(회사, 대학교) 관련 서비스 로직을 수행하는 클래스
  */
 
-@TransactionService
+@Service
 @RequiredArgsConstructor
 public class OrganizationService implements EntityLoader<Organization, Long> {
     private final OrganizationRepository organizationRepository;
@@ -37,6 +37,7 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
     private final MemberService memberService;
     private final EmailService emailService;
 
+    @Transactional
     public IdResponse<Long> saveOrganization(final OrganizationRequest organizationRequest) {
         Organization organization = getOrSaveOrganization(organizationRequest);
         return new IdResponse<>(organization.getId());
@@ -50,6 +51,7 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
                 .orElseGet(() -> organizationRepository.save(organizationMapper.toEntity(organizationRequest)));
     }
 
+    @Transactional
     public IdResponse<Long> addMemberAndSendEmail(final AddMemberRequest addMemberRequest) {
         findAndAddMember(addMemberRequest);
         return emailService.sendAndSaveEmail();

@@ -12,12 +12,12 @@ import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.global.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @description GitRepoMember 관련 서비스로직을 담당하는 클래스
  */
 
-@TransactionService
+@Service
 @RequiredArgsConstructor
 public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
 

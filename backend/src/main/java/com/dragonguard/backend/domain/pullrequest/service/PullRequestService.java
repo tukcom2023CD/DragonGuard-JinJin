@@ -4,10 +4,10 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.mapper.PullRequestMapper;
 import com.dragonguard.backend.domain.pullrequest.repository.PullRequestRepository;
+import com.dragonguard.backend.global.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * @description PullRequest 관련 서비스 로직을 수행하는 클래스
  */
 
-@TransactionService
+@Service
 @RequiredArgsConstructor
 public class PullRequestService implements EntityLoader<PullRequest, Long> {
     private final PullRequestRepository pullRequestRepository;

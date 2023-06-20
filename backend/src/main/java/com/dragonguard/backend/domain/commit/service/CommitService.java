@@ -5,10 +5,10 @@ import com.dragonguard.backend.domain.commit.mapper.CommitMapper;
 import com.dragonguard.backend.domain.commit.repository.CommitRepository;
 import com.dragonguard.backend.domain.contribution.dto.response.ContributionScrapingResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * @description 커밋과 관련된 서비스 로직을 처리하는 클래스
  */
 
-@TransactionService
+@Service
 @RequiredArgsConstructor
 public class CommitService implements EntityLoader<Commit, Long> {
     private final CommitRepository commitRepository;

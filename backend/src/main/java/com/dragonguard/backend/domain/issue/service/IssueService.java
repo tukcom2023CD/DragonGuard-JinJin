@@ -4,10 +4,10 @@ import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.issue.mapper.IssueMapper;
 import com.dragonguard.backend.domain.issue.repository.IssueRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * @description issue Entity의 서비스 로직을 담당하는 클래스
  */
 
-@TransactionService
+@Service
 @RequiredArgsConstructor
 public class IssueService implements EntityLoader<Issue, Long> {
     private final IssueRepository issueRepository;

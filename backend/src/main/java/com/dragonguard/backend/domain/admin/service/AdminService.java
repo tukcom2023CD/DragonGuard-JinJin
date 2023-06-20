@@ -8,10 +8,10 @@ import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,13 +21,14 @@ import java.util.List;
  * @description 관리자 기능을 수행하는 Service
  */
 
-@TransactionService
+@Service
 @RequiredArgsConstructor
 public class AdminService {
     private final OrganizationRepository organizationRepository;
     private final OrganizationQueryRepository organizationQueryRepository;
     private final AdminMapper adminMapper;
 
+    @Transactional
     public List<AdminOrganizationResponse> decideRequestedOrganization(final AdminDecideRequest adminDecideRequest) {
         Organization organization = organizationRepository.findById(adminDecideRequest.getId())
                 .orElseThrow(EntityNotFoundException::new);

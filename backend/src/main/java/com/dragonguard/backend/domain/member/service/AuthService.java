@@ -9,10 +9,11 @@ import com.dragonguard.backend.domain.member.exception.CookieException;
 import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
 import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
@@ -22,13 +23,14 @@ import java.util.UUID;
  * @description 멤버 인증 관련 서비스 로직을 담당하는 클래스
  */
 
-@TransactionService
+@Service
 @RequiredArgsConstructor
 public class AuthService {
     private final MemberQueryRepository memberQueryRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtValidator jwtValidator;
 
+    @Transactional
     public JwtToken refreshToken(final String oldRefreshToken, final String oldAccessToken) {
         validateTokens(oldRefreshToken, oldAccessToken);
 

@@ -29,13 +29,13 @@ import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
+import com.dragonguard.backend.global.EntityLoader;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
@@ -47,7 +47,7 @@ import java.util.UUID;
  * @description 멤버관련 서비스 로직을 담당하는 클래스
  */
 
-@TransactionService
+@Service
 @RequiredArgsConstructor
 public class MemberService implements EntityLoader<Member, UUID> {
     private final MemberRepository memberRepository;
@@ -66,12 +66,14 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
     private final KafkaProducer<KafkaContributionRequest> kafkaContributionClientProducer;
 
+    @Transactional
     public Tier getTier() {
         Member member = getLoginUserWithPersistence();
         member.updateTier();
         return member.getTier();
     }
 
+    @Transactional
     public IdResponse<UUID> saveMember(final MemberRequest memberRequest, final Role role) {
         return new IdResponse<>(scrapeAndGetSavedMember(memberRequest.getGithubId(), role, AuthStep.GITHUB_ONLY).getId());
     }
@@ -154,6 +156,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         issues.forEach(member::addIssue);
     }
 
+    @Transactional
     public void updateContributions() {
         Member member = getLoginUserWithPersistence();
         getContributionSumByScraping(member.getGithubId());
@@ -161,6 +164,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         if (member.isWalletAddressExists()) transactionAndUpdateTier(member);
     }
 
+    @Transactional
     public MemberResponse getMember() {
         Member member = getLoginUserWithPersistence();
         return getMemberResponseWithValidateOrganization(member);
@@ -194,6 +198,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return memberQueryRepository.findRanking(pageable);
     }
 
+    @Transactional
     public void updateWalletAddress(final WalletRequest walletRequest) {
         Member member = getLoginUserWithPersistence();
         member.updateWalletAddress(walletRequest.getWalletAddress());
@@ -247,6 +252,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return member;
     }
 
+    @Transactional
     public MemberGitReposAndGitOrganizationsResponse findMemberDetailByGithubId(final String githubId) {
         Member member = getMemberOrSaveAndScrape(githubId);
         sendGitRepoAndContributionSumRequestToKafka(member.getGithubId());
@@ -258,6 +264,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return memberQueryRepository.findByGithubId(githubId).orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
     }
 
+    @Transactional
     public void updateBlockchain() {
         transactionAndUpdateTier(getLoginUserWithPersistence());
     }
@@ -301,6 +308,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
                 + member.getIssueSumWithRelation();
     }
 
+    @Transactional
     public MemberGitOrganizationRepoResponse getMemberGitOrganizationRepo(String gitOrganizationName) {
         return new MemberGitOrganizationRepoResponse(
                 gitOrganizationService.findByName(gitOrganizationName).getProfileImage(),

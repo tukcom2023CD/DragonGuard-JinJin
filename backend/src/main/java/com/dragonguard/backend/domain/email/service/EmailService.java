@@ -9,21 +9,22 @@ import com.dragonguard.backend.domain.email.mapper.EmailMapper;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.global.EntityLoader;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
-@TransactionService
+@Service
 @RequiredArgsConstructor
 public class EmailService implements EntityLoader<Email, Long> {
     private final EmailRepository emailRepository;
@@ -35,6 +36,7 @@ public class EmailService implements EntityLoader<Email, Long> {
     private static final int MIN = 10000;
     private static final int MAX = 99999;
 
+    @Transactional
     public IdResponse<Long> sendAndSaveEmail() {
         Member member = memberService.getLoginUserWithPersistence();
         String memberEmail = member.getEmailAddress();
@@ -52,10 +54,12 @@ public class EmailService implements EntityLoader<Email, Long> {
         if (!StringUtils.hasText(memberEmail)) throw new EmailException();
     }
 
+    @Transactional
     public void deleteCode(final Long id) {
         loadEntity(id).delete();
     }
 
+    @Transactional
     public CheckCodeResponse isCodeMatching(final EmailRequest emailRequest) {
         Long id = emailRequest.getId();
 
