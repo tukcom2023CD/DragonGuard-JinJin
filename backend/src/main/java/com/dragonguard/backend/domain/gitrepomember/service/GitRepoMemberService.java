@@ -18,8 +18,6 @@ import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,7 +83,6 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
         return gitRepoMember;
     }
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public GitRepo getGitRepoByName(final String gitRepoName) {
         return gitRepoRepository.findByName(gitRepoName).orElseThrow(EntityNotFoundException::new);
     }

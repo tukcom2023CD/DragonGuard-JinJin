@@ -118,7 +118,6 @@ public class MemberClientService {
         gitRepoRepository.saveAll(gitRepos);
     }
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Set<GitRepo> findIfGitRepoNotExists(final Set<String> gitRepoNames) {
         return gitRepoNames.stream()
                 .filter(name -> !gitRepoRepository.existsByName(name))
