@@ -5,6 +5,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoSparkLineResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.ClosedIssueKafkaResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.kafka.SparkLineKafka;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
@@ -55,6 +56,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private final MemberService memberService;
     private final GitRepoMapper gitRepoMapper;
     private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
+    private final KafkaProducer<SparkLineKafka> kafkaSparkLineProducer;
     private final GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
     private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
@@ -69,7 +71,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         String githubToken = setGithubTokenAndGet(gitRepoInfoRequest);
 
         List<GitRepoMemberResponse> gitRepoMemberResponses = getGitRepoMemberResponses(name, year, githubToken);
-        List<Integer> sparkLine = updateAndGetSparkLine(githubToken, name, getOrSaveGitRepo(name));
+        List<Integer> sparkLine = updateAndGetSparkLine(name, githubToken, getOrSaveGitRepo(name));
 
         return new GitRepoResponse(sparkLine, gitRepoMemberResponses);
     }
@@ -81,6 +83,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     public List<Integer> updateAndGetSparkLine(final String name, final String githubToken, final GitRepo gitRepo) {
+        List<Integer> savedSparkLine = gitRepo.getSparkLine();
+        if (!savedSparkLine.isEmpty()) {
+            requestKafkaSparkLine(githubToken, name);
+            return savedSparkLine;
+        }
         List<Integer> sparkLine = Arrays.asList(requestClientSparkLine(githubToken, name).getAll());
         gitRepo.updateSparkLine(sparkLine);
         return sparkLine;
@@ -265,6 +272,10 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         kafkaIssueProducer.send(gitRepoNameRequest);
     }
 
+    private void requestKafkaSparkLine(final String githubToken, final String name) {
+        kafkaSparkLineProducer.send(new SparkLineKafka(githubToken, name));
+    }
+
     @Override
     public GitRepo loadEntity(final Long id) {
         return gitRepoRepository.findById(id)
@@ -275,7 +286,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         List<GitRepoMemberResponse> gitRepoMemberResponses = getGitRepoMemberResponses(name, githubToken);
 
-        return new GitRepoResponse(updateAndGetSparkLine(githubToken, name, getOrSaveGitRepo(name)), gitRepoMemberResponses);
+        return new GitRepoResponse(updateAndGetSparkLine(name, githubToken, getOrSaveGitRepo(name)), gitRepoMemberResponses);
     }
 
     public List<GitRepoMemberResponse> getGitRepoMemberResponses(final String name, final String githubToken) {

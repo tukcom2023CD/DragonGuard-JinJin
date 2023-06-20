@@ -41,12 +41,12 @@ public class WebClientConfig {
 
         return WebClient.builder()
                 .uriBuilderFactory(factory)
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .exchangeStrategies(exchangeStrategies)
                 .baseUrl(githubProperties.getUrl())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)
                 .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
                 .defaultHeader(githubProperties.getVersionKey(), githubProperties.getVersionValue())
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }
 }
