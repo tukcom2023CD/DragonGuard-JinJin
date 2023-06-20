@@ -104,3 +104,4 @@ app:
 
 admin: ${ADMIN}
 kafka-timeout: 15000
+admin-tokens: ${ADMIN_TOKENS}

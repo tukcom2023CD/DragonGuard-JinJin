@@ -124,4 +124,8 @@ spec:
                 secretKeyRef:
                   name: gitrank-secret
                   key: database.password
-
+            - name: ADMIN_TOKENS
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: admin-tokens
