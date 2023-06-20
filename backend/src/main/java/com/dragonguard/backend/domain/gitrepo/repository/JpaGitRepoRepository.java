@@ -25,4 +25,7 @@ public interface JpaGitRepoRepository extends JpaRepository<GitRepo, Long>, GitR
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     boolean existsByName(String name);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<GitRepo> findById(Long id);
 }
