@@ -236,11 +236,6 @@ final class SearchViewController: UIViewController{
          */
         let comparePage = CompareController()
         
-        let nextPage = RepoDetailController()
-        nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].name
-        nextPage.modalPresentationStyle = .fullScreen
-        self.present(nextPage,animated: true)
-        
         if beforePage == "Main"{    // 레포 상세조회로 이동
             let nextPage = RepoDetailController()
             nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].name

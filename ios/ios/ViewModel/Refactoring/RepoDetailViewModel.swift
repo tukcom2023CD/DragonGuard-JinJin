@@ -13,7 +13,6 @@ final class RepoDetailViewModel{
     let service = RepoDetailService()
     
     func getData(title: String) -> Observable<DetailRepoModel>{
-        
         return Observable.create { observer in
             self.service.getData(title: title)
                 .subscribe(onNext:{ data in
