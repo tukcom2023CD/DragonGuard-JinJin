@@ -58,16 +58,16 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
                 .collect(Collectors.toList());
     }
 
-    public void saveAll(final List<GitRepoMemberResponse> gitRepoResponses, final String gitRepoName) {
-        gitRepoMemberRepository.saveAll(getGitRepoMembers(gitRepoResponses, gitRepoName));
+    public void saveAll(final List<GitRepoMemberResponse> gitRepoResponses, final GitRepo gitRepo) {
+        gitRepoMemberRepository.saveAll(getGitRepoMembers(gitRepoResponses, gitRepo));
     }
 
-    public List<GitRepoMember> getGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final String gitRepoName) {
+    public List<GitRepoMember> getGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final GitRepo gitRepo) {
         return gitRepoResponses.stream()
                 .distinct()
                 .map(gitRepoResponse ->
                         getGitRepoMember(gitRepoResponse, getMemberByGitRepoResponse(gitRepoResponse),
-                                getGitRepoByName(gitRepoName)))
+                                gitRepo))
                 .collect(Collectors.toList());
     }
 

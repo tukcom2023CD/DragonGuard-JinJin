@@ -108,29 +108,20 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final GitRepoInfoRequest gitRepoInfoRequest) {
-        Optional<GitRepo> optionalGitRepo = gitRepoRepository.findByName(gitRepoInfoRequest.getName());
-        if (checkGitRepoIfValidAndSave(gitRepoInfoRequest.getName(), optionalGitRepo)) return requestToGithub(gitRepoInfoRequest);
+        GitRepo gitRepo = getOrSaveGitRepo(gitRepoInfoRequest.getName());
 
-        GitRepo gitRepo = optionalGitRepo.orElseThrow(EntityNotFoundException::new);
-        if (isContributionNotValid(gitRepo.getGitRepoMembers())) return requestToGithub(gitRepoInfoRequest);
+        Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
+        if (isContributionNotValid(gitRepoMembers)) return requestToGithub(gitRepoInfoRequest, gitRepo);
 
-        return getGitRepoMemberResponses(gitRepo);
-    }
-
-    public boolean checkGitRepoIfValidAndSave(final String name, final Optional<GitRepo> gitRepo) {
-        if (gitRepo.isEmpty()) {
-            saveGitRepo(name);
-            return true;
-        }
-        return false;
+        return getGitRepoMemberResponses(gitRepoMembers);
     }
 
     private boolean isContributionNotValid(final Set<GitRepoMember> gitRepoMembers) {
         return gitRepoMembers.isEmpty() || gitRepoMembers.stream().findFirst().orElseThrow(EntityNotFoundException::new).getGitRepoContribution() == null;
     }
 
-    private List<GitRepoMemberResponse> getGitRepoMemberResponses(final GitRepo gitRepo) {
-        return gitRepo.getGitRepoMembers().stream()
+    private List<GitRepoMemberResponse> getGitRepoMemberResponses(final Set<GitRepoMember> gitRepoMembers) {
+        return gitRepoMembers.stream()
                 .map(gitRepoMemberMapper::toResponse)
                 .collect(Collectors.toList());
     }
@@ -228,14 +219,14 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 deletions.isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0) : deletions.stream().mapToInt(Integer::intValue).summaryStatistics());
     }
 
-    public List<GitRepoMemberResponse> requestToGithub(final GitRepoInfoRequest gitRepoInfoRequest) {
+    public List<GitRepoMemberResponse> requestToGithub(final GitRepoInfoRequest gitRepoInfoRequest, final GitRepo gitRepo) {
         Set<GitRepoMemberClientResponse> contributions = Arrays.stream(requestClientGitRepoMember(gitRepoInfoRequest)).collect(Collectors.toSet());
         if (contributions.isEmpty()) return List.of();
 
         List<GitRepoMemberResponse> result = getResponseList(
                 contributions, getContributionMap(contributions, Week::getA), getContributionMap(contributions, Week::getD));
 
-        gitRepoMemberService.saveAll(result, gitRepoInfoRequest.getName());
+        gitRepoMemberService.saveAll(result, gitRepo);
         return result;
     }
 
@@ -287,18 +278,18 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
 
     public GitRepoResponse findGitRepoInfos(final String name) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
-        List<GitRepoMemberResponse> gitRepoMemberResponses = getGitRepoMemberResponses(name, githubToken);
+        GitRepo gitRepo = findGitRepo(name);
+        List<GitRepoMemberResponse> gitRepoMemberResponses = getGitRepoMemberResponses(gitRepo, githubToken);
 
-        return new GitRepoResponse(updateAndGetSparkLine(name, githubToken, getOrSaveGitRepo(name)), gitRepoMemberResponses);
+        return new GitRepoResponse(updateAndGetSparkLine(name, githubToken, gitRepo), gitRepoMemberResponses);
     }
 
-    public List<GitRepoMemberResponse> getGitRepoMemberResponses(final String name, final String githubToken) {
-        GitRepo gitRepo = findGitRepo(name);
+    public List<GitRepoMemberResponse> getGitRepoMemberResponses(final GitRepo gitRepo, final String githubToken) {
         Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         if (!gitRepoMembers.isEmpty()) {
             return gitRepoMapper.toGitRepoMemberResponseList(gitRepoMembers);
         }
-        return requestToGithub(new GitRepoInfoRequest(githubToken, name, LocalDate.now().getYear()));
+        return requestToGithub(new GitRepoInfoRequest(githubToken, gitRepo.getName(), LocalDate.now().getYear()), gitRepo);
     }
 
     public TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request) {
@@ -320,7 +311,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(final GitRepoCompareRequest request) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         return new TwoGitRepoMemberResponse(
-                getGitRepoMemberResponses(request.getFirstRepo(), githubToken),
-                getGitRepoMemberResponses(request.getSecondRepo(), githubToken));
+                getGitRepoMemberResponses(getOrSaveGitRepo(request.getFirstRepo()), githubToken),
+                getGitRepoMemberResponses(getOrSaveGitRepo(request.getSecondRepo()), githubToken));
     }
 }
