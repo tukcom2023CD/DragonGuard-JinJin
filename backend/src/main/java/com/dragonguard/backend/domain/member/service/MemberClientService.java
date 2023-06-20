@@ -16,6 +16,8 @@ import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -116,6 +118,7 @@ public class MemberClientService {
         gitRepoRepository.saveAll(gitRepos);
     }
 
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public Set<GitRepo> findIfGitRepoNotExists(final Set<String> gitRepoNames) {
         return gitRepoNames.stream()
                 .filter(name -> !gitRepoRepository.existsByName(name))

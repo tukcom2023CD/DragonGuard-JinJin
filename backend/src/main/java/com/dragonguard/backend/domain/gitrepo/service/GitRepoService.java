@@ -35,6 +35,8 @@ import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -62,6 +64,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
     private final GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> gitRepoSparkLineClient;
 
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public GitRepoResponse findGitRepoInfosAndUpdate(final String name) {
         if (gitRepoRepository.existsByName(name)) {
             return findGitRepoInfos(name);
@@ -101,10 +104,12 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return gitRepoSparkLineClient.requestToGithub(new GitRepoClientRequest(githubToken, name));
     }
 
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public GitRepo getOrSaveGitRepo(final String name) {
         return gitRepoRepository.findByName(name).orElse(gitRepoRepository.save(gitRepoMapper.toEntity(name)));
     }
 
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final GitRepoInfoRequest gitRepoInfoRequest) {
         Optional<GitRepo> optionalGitRepo = gitRepoRepository.findByName(gitRepoInfoRequest.getName());
         if (checkGitRepoIfValidAndSave(gitRepoInfoRequest.getName(), optionalGitRepo)) return requestToGithub(gitRepoInfoRequest);
@@ -168,6 +173,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 getOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
     }
 
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void updateClosedIssues(final ClosedIssueKafkaResponse closedIssueKafkaResponse) {
         GitRepo gitRepo = gitRepoRepository.findByName(closedIssueKafkaResponse.getName())
                 .orElseThrow(EntityNotFoundException::new);
@@ -198,6 +204,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return new GitRepoLanguageMap(gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName)));
     }
 
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public GitRepo findGitRepo(final String repoName) {
         return gitRepoRepository.findByName(repoName).orElse(gitRepoRepository.save(new GitRepo(repoName)));
     }
@@ -240,7 +247,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return gitRepoMemberClient.requestToGithub(gitRepoInfoRequest);
     }
 
-    private List<GitRepoMemberResponse> getResponseList(
+    public List<GitRepoMemberResponse> getResponseList(
             final Set<GitRepoMemberClientResponse> contributions,
             final GitRepoContributionMap additions,
             final GitRepoContributionMap deletions) {
@@ -259,12 +266,13 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 }).collect(Collectors.toList());
     }
 
-    private GitRepoContributionMap getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function) {
+    public GitRepoContributionMap getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function) {
         return new GitRepoContributionMap(contributions.stream()
                 .collect(Collectors.toMap(Function.identity(), mem -> Arrays.stream(mem.getWeeks()).mapToInt(function).sum())));
     }
 
-    private GitRepo getEntityByName(final String name) {
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public GitRepo getEntityByName(final String name) {
         return gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
     }
 

@@ -36,6 +36,7 @@ import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
@@ -271,7 +272,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
         contributionService.scrapingCommits(githubId);
     }
 
-    private MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(final String githubId, final Member member) {
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(final String githubId, final Member member) {
         return memberMapper.toDetailResponse(
                 member.getProfileImage(),
                 gitOrganizationService.findGitOrganizationByMember(member),
