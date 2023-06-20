@@ -58,16 +58,4 @@ public class GitRepo implements Auditable {
         this.sparkLine = sparkLine;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GitRepo gitRepo = (GitRepo) o;
-        return Objects.equals(name, gitRepo.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
 }

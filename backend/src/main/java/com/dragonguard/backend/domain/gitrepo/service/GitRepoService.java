@@ -219,7 +219,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     public List<GitRepoMemberResponse> requestToGithub(final GitRepoInfoRequest gitRepoInfoRequest) {
-        List<GitRepoMemberClientResponse> contributions = Arrays.asList(requestClientGitRepoMember(gitRepoInfoRequest));
+        Set<GitRepoMemberClientResponse> contributions = Arrays.stream(requestClientGitRepoMember(gitRepoInfoRequest)).collect(Collectors.toSet());
         if (contributions.isEmpty()) return List.of();
 
         List<GitRepoMemberResponse> result = getResponseList(
@@ -234,7 +234,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     private List<GitRepoMemberResponse> getResponseList(
-            final List<GitRepoMemberClientResponse> contributions,
+            final Set<GitRepoMemberClientResponse> contributions,
             final GitRepoContributionMap additions,
             final GitRepoContributionMap deletions) {
 
@@ -252,7 +252,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 }).collect(Collectors.toList());
     }
 
-    private GitRepoContributionMap getContributionMap(final List<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function) {
+    private GitRepoContributionMap getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function) {
         return new GitRepoContributionMap(contributions.stream()
                 .collect(Collectors.toMap(Function.identity(), mem -> Arrays.stream(mem.getWeeks()).mapToInt(function).sum())));
     }

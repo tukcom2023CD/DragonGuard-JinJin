@@ -92,8 +92,11 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member findMemberOrSave(final MemberRequest memberRequest, final AuthStep authStep) {
-        return memberQueryRepository.findByGithubId(memberRequest.getGithubId())
-                .orElse(memberRepository.save(memberMapper.toEntity(memberRequest, authStep)));
+        if (memberQueryRepository.existsByGithubId(memberRequest.getGithubId())) {
+            return memberQueryRepository.findByGithubId(memberRequest.getGithubId())
+                    .orElseThrow(EntityNotFoundException::new);
+        }
+        return memberRepository.save(memberMapper.toEntity(memberRequest, authStep));
     }
 
     public void addMemberCommitAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {

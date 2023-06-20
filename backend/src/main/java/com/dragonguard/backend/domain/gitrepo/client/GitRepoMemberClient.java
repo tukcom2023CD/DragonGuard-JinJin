@@ -5,13 +5,11 @@ import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClie
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
 import com.dragonguard.backend.global.exception.WebClientException;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.util.retry.Retry;
 
 import java.nio.charset.StandardCharsets;
@@ -46,8 +44,7 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Git
                 .bodyToMono(GitRepoMemberClientResponse[].class)
                 .retryWhen(
                         Retry.fixedDelay(8, Duration.ofMillis(1500))
-                                .filter(WebClientResponseException.class::isInstance)
-                                .filter(MismatchedInputException.class::isInstance))
+                                .filter(Exception.class::isInstance))
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
     }
