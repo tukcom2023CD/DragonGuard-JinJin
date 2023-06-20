@@ -18,11 +18,11 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
+import org.springframework.batch.item.function.FunctionItemProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -80,16 +80,17 @@ public class WebClientJobConfig {
 
     @Bean
     @StepScope
-    public ItemProcessor<GitRepo, Set<GitRepoMember>> processor() {
+    public FunctionItemProcessor<GitRepo, Set<GitRepoMember>> processor() {
         String apiToken = adminApiTokens.getApiToken();
-        return gitRepo -> {
+
+        return new FunctionItemProcessor<>(gitRepo -> {
             try{
                 List<GitRepoMemberClientResponse> list = Arrays.asList(gitRepoMemberClient.requestToGithub(new GitRepoInfoRequest(apiToken, gitRepo.getName(), LocalDateTime.now().getYear())));
                 return getGitRepoMembers(gitRepo, list);
 
             } catch(ClientBadRequestException e) {}
             return gitRepo.getGitRepoMembers();
-        };
+        });
     }
 
     @Bean
