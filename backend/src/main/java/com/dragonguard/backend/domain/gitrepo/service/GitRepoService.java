@@ -139,7 +139,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         gitRepoRepository.save(gitRepoMapper.toEntity(name));
     }
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompareAndUpdate(final GitRepoCompareRequest gitRepoCompareRequest) {
         return getTwoGitRepoMemberResponse(gitRepoCompareRequest,
                 LocalDate.now().getYear(), memberService.getLoginUserWithPersistence().getGithubToken());
@@ -155,7 +155,6 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return findMembersByGitRepoWithClient(new GitRepoInfoRequest(githubToken, repo, year));
     }
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public GitRepoMemberCompareResponse findTwoGitRepoMember(final GitRepoMemberCompareRequest gitRepoMemberCompareRequest) {
         GitRepoMember firstGitRepoMember =
                 gitRepoMemberService.findByNameAndMemberGithubId(gitRepoMemberCompareRequest.getFirstRepo(), gitRepoMemberCompareRequest.getFirstGithubId());
@@ -167,7 +166,6 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 gitRepoMemberMapper.toResponse(secondGitRepoMember));
     }
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public TwoGitRepoResponse findTwoGitReposAndUpdate(final GitRepoCompareRequest twoGitRepoCompareRequest) {
         return new TwoGitRepoResponse(getOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()),
                 getOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
@@ -287,7 +285,6 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public GitRepoResponse findGitRepoInfos(final String name) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         List<GitRepoMemberResponse> gitRepoMemberResponses = getGitRepoMemberResponses(name, githubToken);
@@ -304,7 +301,6 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return requestToGithub(new GitRepoInfoRequest(githubToken, name, LocalDate.now().getYear()));
     }
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         String firstRepo = request.getFirstRepo();
@@ -321,7 +317,6 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                         requestClientGitRepoLanguage(secondRepo, githubToken)));
     }
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(final GitRepoCompareRequest request) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         return new TwoGitRepoMemberResponse(
