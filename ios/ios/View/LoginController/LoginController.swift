@@ -113,16 +113,17 @@ final class LoginController: UIViewController{
         print("url \(url)")
         let urlRequest = URLRequest(url: url)
         let vc = UIViewController()
-        let newViewController = UINavigationController(rootViewController: vc )
-        let webView = WKWebView(frame: newViewController.view.bounds)
-        newViewController.view.addSubview(webView)
+//        let newViewController = UINavigationController(rootViewController: vc )
+        
+        let webView = WKWebView(frame: vc.view.bounds)
+        
+        vc.view.addSubview(webView)
         
         webView.navigationDelegate = self
         webView.goBack()
         webView.load(urlRequest)
-//        newViewController.modalPresentationStyle = .fullScreen
-//        self.present(newViewController,animated: true)
-        self.navigationController?.pushViewController(newViewController,animated: true)
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc,animated: true)
         
     }
 
@@ -232,6 +233,7 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                 var refreshTokenCheck = false
                 
                 for cookie in cookies{
+                    print(cookie)
                     if cookie.name == "Access" {
                         UserDefaults.standard.set(cookie.value, forKey:"Access")
                         print("@@@ Access  저장하기: \(cookie.value)")
@@ -244,7 +246,8 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                     }
                
                     if accessTokenCheck && refreshTokenCheck{
-                        self.navigationController?.popViewController(animated: true)
+                        self.dismiss(animated: true)
+//                        self.navigationController?.popViewController(animated: true)
                         LoginViewModel.loginService.githubAuthSubject.onNext(true)
                     }
                 }

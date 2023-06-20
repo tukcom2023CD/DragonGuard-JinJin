@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
 //        else{
 //            moveLoginController()
 //        }
-        let rootView = LoginController()
+        let rootView = CompareChooseRepoViewController()
         window?.rootViewController = rootView
         window?.makeKeyAndVisible()
     }
