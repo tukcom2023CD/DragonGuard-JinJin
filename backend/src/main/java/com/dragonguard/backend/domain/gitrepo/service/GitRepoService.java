@@ -127,10 +127,6 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 .collect(Collectors.toList());
     }
 
-    public void saveGitRepo(final String name) {
-        gitRepoRepository.save(gitRepoMapper.toEntity(name));
-    }
-
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompareAndUpdate(final GitRepoCompareRequest gitRepoCompareRequest) {
         return getTwoGitRepoMemberResponse(gitRepoCompareRequest,
@@ -280,9 +276,10 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     public GitRepoResponse findGitRepoInfos(final String name) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         GitRepo gitRepo = findGitRepo(name);
-        List<GitRepoMemberResponse> gitRepoMemberResponses = getGitRepoMemberResponses(gitRepo, githubToken);
 
-        return new GitRepoResponse(updateAndGetSparkLine(name, githubToken, gitRepo), gitRepoMemberResponses);
+        return new GitRepoResponse(
+                updateAndGetSparkLine(name, githubToken, gitRepo),
+                getGitRepoMemberResponses(gitRepo, githubToken));
     }
 
     public List<GitRepoMemberResponse> getGitRepoMemberResponses(final GitRepo gitRepo, final String githubToken) {
