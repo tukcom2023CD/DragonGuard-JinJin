@@ -97,7 +97,8 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
                         orgInternalRankings.add(
                             OrgInternalRankingsModel(
                                 it.githubId, it.id, it.name, it.tier, it.tokens,
-                                orgInternalRankings[ranking - 1].ranking
+                                orgInternalRankings[ranking - 1].ranking,
+                                it.profileImage
                             )
                         )
                     } else {
@@ -108,7 +109,8 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
                                 it.name,
                                 it.tier,
                                 it.tokens,
-                                ranking + 1
+                                ranking + 1,
+                                it.profileImage
                             )
                         )
                     }
@@ -120,7 +122,8 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
                             it.name,
                             it.tier,
                             it.tokens,
-                            1
+                            1,
+                            it.profileImage
                         )
                     )
                 }

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="right"
+    android:background="@drawable/shadow"
     android:id="@+id/contributors_layout">
 
     <LinearLayout
@@ -17,22 +18,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/contribute_ranking"
+
+        <ImageView
+            android:id="@+id/contributor_profile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/ibm_semibold"
-            android:gravity="center"
-            android:text=""
-            android:textColor="#000000"
-            android:textSize="20dp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.04"
-            android:background="@color/black" />
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/contrubutor_id"
@@ -43,26 +35,20 @@
             android:fontFamily="@font/ibm_semibold"
             android:gravity="center"
             android:maxLines="1"
-            android:text="id"
             android:textColor="#000000"
             android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/contributor_color"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+
+        <TextView
+            android:id="@+id/contribute_ranking"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_baseline_circle_24"
-            app:tint="#100000" />
-
-
+            android:fontFamily="@font/ibm_semibold"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="20dp" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginHorizontal="10dp"
-        android:background="#000000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

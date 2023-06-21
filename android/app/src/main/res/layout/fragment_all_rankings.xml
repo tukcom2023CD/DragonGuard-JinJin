@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="rankingsViewmodel"
+            type="com.dragonguard.android.viewmodel.Viewmodel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragment.AllRankingsFragment"
+        android:orientation="vertical"
+        android:weightSum="5">
+        <LinearLayout
+            android:id="@+id/top_rankings"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.2"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:background="@drawable/shadow"
+            android:visibility="invisible">
+
+            <LinearLayout
+                android:id="@+id/second_ranker"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                android:gravity="bottom|center_horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/second"/>
+                <ImageView
+                    android:id="@+id/second_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:layout_marginHorizontal="25dp"
+                    android:background="@drawable/shadow"
+                    android:src="@drawable/second"/>
+                <TextView
+                    android:id="@+id/second_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:textColor="@color/black"
+                    android:text="id"/>
+
+                <TextView
+                    android:id="@+id/second_contribute"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/first_ranker"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="top|center_horizontal"
+                android:visibility="invisible"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/first"/>
+                <ImageView
+                    android:id="@+id/first_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shadow"
+                    android:adjustViewBounds="true"
+                    android:layout_marginHorizontal="25dp"
+                    android:src="@drawable/first"/>
+                <TextView
+                    android:id="@+id/first_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:maxLines="1"
+
+                    android:fontFamily="@font/ibm_semibold"
+                    android:textColor="@color/black"
+                    android:text="id"/>
+
+                <TextView
+                    android:id="@+id/first_contribute"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/third_ranker"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:visibility="invisible"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/third"/>
+                <ImageView
+                    android:id="@+id/third_profile"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/shadow"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:layout_marginHorizontal="25dp"
+                    android:src="@drawable/first"/>
+                <TextView
+                    android:id="@+id/third_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:textColor="@color/black"
+                    android:text="id"/>
+
+                <TextView
+                    android:id="@+id/third_contribute"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:fontFamily="@font/ibm_semibold"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/each_rankings"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.2"
+            tools:listitem="@layout/ranking_list" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/ranking_lottie"
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            app:lottie_autoPlay="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:lottie_loop="true"
+            android:layout_gravity="top"
+            app:lottie_rawRes="@raw/loading_page"/>
+
+
+    </LinearLayout>
+</layout>

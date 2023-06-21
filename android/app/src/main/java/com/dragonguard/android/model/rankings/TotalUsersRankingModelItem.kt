@@ -8,5 +8,6 @@ data class TotalUsersRankingModelItem(
     val githubId: String?,
     val id: String?,
     val name: String?,
-    val tier: String?
+    val tier: String?,
+    val profileImage: String?
 )

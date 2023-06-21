@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.dragonguard.android.R
-import com.dragonguard.android.activity.UserDetailActivity
 import com.dragonguard.android.activity.search.RepoContributorsActivity
 import com.dragonguard.android.databinding.RepositoryListBinding
 import com.dragonguard.android.model.search.RepoSearchResultModel
@@ -39,10 +36,10 @@ class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultMo
             itemView.setOnClickListener{
 //                Toast.makeText(context, "${repoName.text} 눌림", Toast.LENGTH_SHORT).show()
                 if(type == "USERS") {
-                    Intent(context, UserDetailActivity::class.java).apply{
-                        putExtra("githubId", data.name)
-                        putExtra("token", token)
-                    }.run{context.startActivity(this)}
+//                    Intent(context, UserDetailActivity::class.java).apply{
+//                        putExtra("githubId", data.name)
+//                        putExtra("token", token)
+//                    }.run{context.startActivity(this)}
                 } else {
                     Intent(context, RepoContributorsActivity::class.java).apply{
                         putExtra("repoName", data.name)

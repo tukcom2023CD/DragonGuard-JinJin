@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.dragonguard.android.databinding.ApproveRequestListBinding
 import com.dragonguard.android.databinding.ApprovedOrgListBinding
-import com.dragonguard.android.model.contributors.RepoContributorsItem
 import com.dragonguard.android.model.org.ApproveRequestOrgModelItem
 
 //승인된 조직 목록 adapter

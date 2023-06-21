@@ -74,12 +74,12 @@ class TotalUsersRankingActivity : AppCompatActivity() {
                 if(it.tokens != null) {
                     if(ranking != 0) {
                         if(usersRanking[ranking-1].tokens == it.tokens) {
-                            usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,usersRanking[ranking-1].ranking))
+                            usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,usersRanking[ranking-1].ranking, it.profileImage))
                         } else {
-                            usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,ranking+1))
+                            usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,ranking+1, it.profileImage))
                         }
                     } else {
-                        usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,1))
+                        usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,1, it.profileImage))
                     }
 //                Log.d("유져", "랭킹 ${ranking+1} 추가")
                     ranking++

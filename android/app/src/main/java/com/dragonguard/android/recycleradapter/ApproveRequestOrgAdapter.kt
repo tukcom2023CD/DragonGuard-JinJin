@@ -1,23 +1,18 @@
 package com.dragonguard.android.recycleradapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.databinding.ApproveRequestListBinding
 import com.dragonguard.android.enums.RequestStatus
 import com.dragonguard.android.fragment.ApproveOrgFragment
-import com.dragonguard.android.model.contributors.RepoContributorsItem
 import com.dragonguard.android.model.org.ApproveRequestOrgModelItem
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import okhttp3.internal.notifyAll
 
 //승인 요청중인 조직 목록 adapter
 class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgModelItem>, private val context: Context,

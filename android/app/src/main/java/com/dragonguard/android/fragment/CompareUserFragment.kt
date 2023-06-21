@@ -15,7 +15,6 @@ import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentCompareUserBinding
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
-import com.dragonguard.android.model.contributors.RepoContributorsItem
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis

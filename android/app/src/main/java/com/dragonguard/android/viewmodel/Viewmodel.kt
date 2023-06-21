@@ -10,7 +10,7 @@ import com.dragonguard.android.model.*
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
-import com.dragonguard.android.model.contributors.RepoContributorsItem
+import com.dragonguard.android.model.contributors.RepoContributorsModel
 import com.dragonguard.android.model.detail.UserDetailModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
@@ -77,7 +77,7 @@ class Viewmodel: ViewModel() {
         onSearchClickListener.value = true
     }
 
-    fun getRepoContributors(repoName: String, token: String): ArrayList<RepoContributorsItem> {
+    fun getRepoContributors(repoName: String, token: String): RepoContributorsModel {
         return repository.getRepoContributors(repoName, token)
     }
 

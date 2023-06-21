@@ -7,5 +7,6 @@ data class TotalUsersRankingsModel(
     val id: String?,
     val name: String?,
     val tier: String?,
-    val ranking: Int?
+    val ranking: Int?,
+    val profileImage: String?
 )

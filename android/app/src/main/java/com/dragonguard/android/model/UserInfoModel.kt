@@ -18,5 +18,7 @@ data class UserInfoModel(
     var organizationRank: Int?,
     var issues: Int?,
     var pullRequests: Int?,
-    var reviews: Int?
+    var reviews: Int?,
+    var isLast: Boolean?,
+    var memberGithubIds: List<String>?
 )

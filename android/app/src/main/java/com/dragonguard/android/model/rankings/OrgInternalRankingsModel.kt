@@ -6,5 +6,6 @@ data class OrgInternalRankingsModel(
     val name: String?,
     val tier: String?,
     val tokens: Int?,
-    val ranking: Int
+    val ranking: Int,
+    val profileImage: String
 )

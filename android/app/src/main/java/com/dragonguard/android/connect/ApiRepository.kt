@@ -6,7 +6,7 @@ import com.dragonguard.android.model.*
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
-import com.dragonguard.android.model.contributors.RepoContributorsItem
+import com.dragonguard.android.model.contributors.RepoContributorsModel
 import com.dragonguard.android.model.detail.UserDetailModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
@@ -18,7 +18,6 @@ import com.dragonguard.android.model.token.RefreshTokenModel
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import retrofit2.HttpException
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.CookieManager
@@ -88,7 +87,8 @@ class ApiRepository {
     //사용자의 정보를 받아오기 위한 함수
     fun getUserInfo(token: String): UserInfoModel {
         val userInfo = api.getUserInfo("Bearer $token")
-        var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null, null, null, null, null, null)
+        var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null, null, null,
+            null, null, null, null, null)
         try {
             val result = userInfo.execute()
             Log.d("no", "사용자 정보 요청 결과 : ${result.code()}")
@@ -101,9 +101,9 @@ class ApiRepository {
     }
 
     //Repository의 기여자들의 정보를 받아오기 위한 함수
-    fun getRepoContributors(repoName: String, token: String): ArrayList<RepoContributorsItem> {
+    fun getRepoContributors(repoName: String, token: String): RepoContributorsModel {
         val repoContributors = api.getRepoContributors(repoName, "Bearer $token")
-        var repoContResult = arrayListOf(RepoContributorsItem(null,null,null,null))
+        var repoContResult = RepoContributorsModel(null, null)
         try{
             val result = repoContributors.execute()
             repoContResult = result.body()!!
@@ -392,9 +392,8 @@ class ApiRepository {
         }
     }
 
-    fun userDetail(githubId: String, token: String): UserDetailModel{
-        val details = UserDetailModel(null, null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null, null)
+    fun userDetail(githubId: String, token: String): UserDetailModel {
+        val details = UserDetailModel(null, null, null)
         val userDetails = api.getUserDetail(githubId, "Bearer $token")
         return try {
             val result = userDetails.execute()
@@ -451,6 +450,17 @@ class ApiRepository {
         } catch (e: Exception) {
             Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
             return statusOrg
+        }
+    }
+
+    fun userGitOrgRepoList(orgName: String, token: String): GithubOrgReposModel? {
+        val repoList = api.getOrgRepoList(orgName, token)
+        return try {
+            val result = repoList.execute()
+            result.body()
+        } catch (e: Exception) {
+            Log.d("error", "조직의 레포 리스트 조회 실패: ${e.message}")
+            null
         }
     }
 }
