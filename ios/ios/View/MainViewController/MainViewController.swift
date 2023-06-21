@@ -40,13 +40,15 @@ final class MainViewController: UIViewController {
     }()
     
     // MARK: 사용자 프로필
-    private lazy var profileBtn: UIButton = {
-        let btn = UIButton()
-        btn.setImage(img.image, for: .normal)
-        btn.imageView?.layer.cornerRadius = 20
-        btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        return btn
+    private lazy var profileImage: UIImageView = {
+        let img = UIImageView()
+        img.layer.cornerRadius = 20
+        img.backgroundColor = .white
+        img.layer.shadowOffset = CGSize(width: 5, height: 5)
+        img.layer.shadowOpacity = 0.7
+        img.layer.shadowRadius = 5
+        img.layer.shadowColor = UIColor.gray.cgColor
+        return img
     }()
     
     // MARK: 사용자 이름
@@ -58,6 +60,41 @@ final class MainViewController: UIViewController {
         return label
     }()
     
+    // MARK:
+    private lazy var titleView: TitleView = {
+        let view = TitleView()
+        view.backgroundColor = .white
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+        view.layer.cornerRadius = 20
+        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        return view
+    }()
+    
+    // MARK: tier 이미지
+    private lazy var tierImage: UIImageView = {
+        let tier = UIImageView()
+        tier.image = UIImage(named: "tier")
+        tier.backgroundColor = .white
+        return tier
+    }()
+    
+    // MARK: token 이미지
+    private lazy var tokenImage: UIImageView = {
+        let token = UIImageView()
+        token.image = UIImage(named: "token")
+        token.backgroundColor = .white
+        return token
+    }()
+    
+    // MARK: 링크 이미지
+    private lazy var linkImage: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "linkIcon")?.resize(newWidth: 30), for: .normal)
+        btn.backgroundColor = .white
+        return btn
+    }()
+    
     /*
      Add UI & Set AutoLayout
      */
@@ -65,8 +102,11 @@ final class MainViewController: UIViewController {
     // MARK: UI 등록
     private func addUIToView(){
         self.view.addSubview(searchBtn)
-        self.view.addSubview(profileBtn)
+        self.view.addSubview(profileImage)
         self.view.addSubview(nameLabel)
+        self.view.addSubview(tierImage)
+        self.view.addSubview(tokenImage)
+        self.view.addSubview(linkImage)
         
         setAutoLayout()
     }
@@ -81,17 +121,17 @@ final class MainViewController: UIViewController {
             make.centerX.equalTo(view.snp_centerXWithinMargins)
         }
         
-        profileBtn.snp.makeConstraints { make in
-            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
-            make.leading.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
-        
-        nameLabel.snp.makeConstraints { make in
-            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
-            make.leading.equalTo(profileBtn.snp.trailing).offset(10)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
+//        profileBtn.snp.makeConstraints { make in
+//            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
+//            make.leading.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
+//            make.bottom.equalTo(view.safeAreaLayoutGuide)
+//        }
+//
+//        nameLabel.snp.makeConstraints { make in
+//            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
+//            make.leading.equalTo(profileBtn.snp.trailing).offset(10)
+//            make.bottom.equalTo(view.safeAreaLayoutGuide)
+//        }
 
     }
     
