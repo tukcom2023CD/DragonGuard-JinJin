@@ -4,7 +4,7 @@ import com.dragonguard.backend.domain.email.entity.Email;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
 import com.dragonguard.backend.domain.email.service.EmailService;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.repository.JpaMemberRepository;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +41,7 @@ class OrganizationServiceTest extends LoginTest {
     @Autowired private OrganizationRepository organizationRepository;
     @Autowired private EmailRepository emailRepository;
     @Autowired private MemberService memberService;
-    @Autowired private JpaMemberRepository jpaMemberRepository;
+    @Autowired private MemberRepository memberRepository;
     @MockBean private EmailService emailService;
 
 
@@ -173,7 +172,7 @@ class OrganizationServiceTest extends LoginTest {
                     OrganizationFixture.SNU.toEntity())
                     .forEach(organizationRepository::save);
 
-            List<Member> members = jpaMemberRepository.findAll();
+            List<Member> members = memberRepository.findAll();
 
             Organization org = organizationRepository.findByName(OrganizationFixture.TUKOREA.getName()).orElse(null);
             assert org != null;

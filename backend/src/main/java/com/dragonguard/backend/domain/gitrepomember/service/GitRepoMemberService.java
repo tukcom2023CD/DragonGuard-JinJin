@@ -5,7 +5,6 @@ import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
-import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberQueryRepository;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
@@ -16,9 +15,6 @@ import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +29,6 @@ import java.util.stream.Collectors;
 public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
 
     private final GitRepoMemberRepository gitRepoMemberRepository;
-    private final GitRepoMemberQueryRepository gitRepoMemberQueryRepository;
     private final MemberService memberService;
     private final GitRepoRepository gitRepoRepository;
     private final GitRepoMemberMapper gitRepoMemberMapper;
@@ -44,12 +39,12 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
     }
 
     private void saveOrUpdateGitRepoMembers(final List<GitRepoMember> gitRepoMembers) {
-        gitRepoMembers.forEach(gitRepoMember -> gitRepoMemberQueryRepository.findByGitRepoAndMember(
+        gitRepoMembers.forEach(gitRepoMember -> gitRepoMemberRepository.findByGitRepoAndMember(
                         gitRepoMember.getGitRepo(),
                         gitRepoMember.getMember())
                 .orElseGet(() -> {
                     GitRepoMember savedGitRepoMember = gitRepoMemberRepository.save(gitRepoMember);
-                    return gitRepoMemberQueryRepository.findById(savedGitRepoMember.getId())
+                    return gitRepoMemberRepository.findById(savedGitRepoMember.getId())
                             .orElseThrow(EntityNotFoundException::new);
                 })
                 .update(gitRepoMember));
@@ -75,7 +70,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
     }
 
     private GitRepoMember getGitRepoMember(final GitRepoMemberResponse gitRepoMemberResponse, final Member member, final GitRepo gitRepo) {
-        GitRepoMember gitRepoMember = gitRepoMemberQueryRepository.findByGitRepoAndMember(gitRepo, member)
+        GitRepoMember gitRepoMember = gitRepoMemberRepository.findByGitRepoAndMember(gitRepo, member)
                 .orElse(gitRepoMemberMapper.toEntity(member, gitRepo));
 
         gitRepoMember.updateGitRepoContribution(
@@ -95,20 +90,20 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
     }
 
     public GitRepoMember findByNameAndMemberGithubId(final String gitRepoName, final String githubId) {
-        return gitRepoMemberQueryRepository.findByNameAndMemberGithubId(gitRepoName, githubId)
+        return gitRepoMemberRepository.findByNameAndMemberGithubId(gitRepoName, githubId)
                 .orElseGet(() -> {
                     GitRepoMember gitRepoMember = gitRepoMemberRepository.save(
                             gitRepoMemberMapper.toEntity(
                                     memberService.findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE),
                                     getGitRepoByName(gitRepoName)));
-                    return gitRepoMemberQueryRepository.findById(gitRepoMember.getId())
+                    return gitRepoMemberRepository.findById(gitRepoMember.getId())
                             .orElseThrow(EntityNotFoundException::new);
                 });
     }
 
     @Override
     public GitRepoMember loadEntity(final Long id) {
-        return gitRepoMemberQueryRepository.findById(id)
+        return gitRepoMemberRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
 }

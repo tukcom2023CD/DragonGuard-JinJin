@@ -21,7 +21,6 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
-import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
@@ -48,7 +47,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberService implements EntityLoader<Member, UUID> {
     private final MemberRepository memberRepository;
-    private final MemberQueryRepository memberQueryRepository;
     private final MemberClientService memberClientService;
     private final MemberMapper memberMapper;
     private final CommitService commitService;
@@ -81,8 +79,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member findMemberOrSaveWithRole(final String githubId, final Role role, final AuthStep authStep) {
-        if (memberQueryRepository.existsByGithubId(githubId)) {
-            return memberQueryRepository.findByGithubId(githubId)
+        if (memberRepository.existsByGithubId(githubId)) {
+            return memberRepository.findByGithubId(githubId)
                     .orElseThrow(EntityNotFoundException::new);
         }
         Member member = memberRepository.save(memberMapper.toEntity(githubId, role, authStep));
@@ -90,8 +88,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member findMemberOrSave(final MemberRequest memberRequest, final AuthStep authStep) {
-        if (memberQueryRepository.existsByGithubId(memberRequest.getGithubId())) {
-            return memberQueryRepository.findByGithubId(memberRequest.getGithubId())
+        if (memberRepository.existsByGithubId(memberRequest.getGithubId())) {
+            return memberRepository.findByGithubId(memberRequest.getGithubId())
                     .orElseThrow(EntityNotFoundException::new);
         }
         Member member = memberRepository.save(memberMapper.toEntity(memberRequest, authStep));
@@ -167,7 +165,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public MemberResponse getMemberResponseWithValidateOrganization(final Member member) {
         if (hasNoOrganization(member)) {
-            return memberMapper.toResponse(member, memberQueryRepository.findRankingById(member.getId()), member.getSumOfTokens());
+            return memberMapper.toResponse(member, memberRepository.findRankingById(member.getId()), member.getSumOfTokens());
         }
         return getMemberResponse(member);
     }
@@ -177,20 +175,20 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
         return memberMapper.toResponse(
                 member,
-                memberQueryRepository.findRankingById(memberId),
+                memberRepository.findRankingById(memberId),
                 member.getSumOfTokens(),
                 member.getOrganization().getName(),
                 organizationQueryRepository.findRankingByMemberId(memberId));
     }
 
     public Member findByGithubIdOrSaveWithAuthStep(final String githubId, final AuthStep authStep) {
-        return memberQueryRepository.findByGithubId(githubId)
+        return memberRepository.findByGithubId(githubId)
                 .orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, authStep));
     }
 
     @Transactional(readOnly = true)
     public List<MemberRankResponse> getMemberRanking(final Pageable pageable) {
-        return memberQueryRepository.findRanking(pageable);
+        return memberRepository.findRanking(pageable);
     }
 
     public void updateWalletAddress(final WalletRequest walletRequest) {
@@ -227,12 +225,12 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     @Transactional(readOnly = true)
     public List<MemberRankResponse> getMemberRankingByOrganization(final Long organizationId, final Pageable pageable) {
-        return memberQueryRepository.findRankingByOrganization(organizationId, pageable);
+        return memberRepository.findRankingByOrganization(organizationId, pageable);
     }
 
     @Override
     public Member loadEntity(final UUID id) {
-        return memberQueryRepository.findById(id)
+        return memberRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
@@ -255,7 +253,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member getMemberOrSaveAndScrape(final String githubId) {
-        return memberQueryRepository.findByGithubId(githubId).orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
+        return memberRepository.findByGithubId(githubId).orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
     }
 
     public void updateBlockchain() {
@@ -309,7 +307,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public MemberDetailsResponse getMemberDetails(String githubId) {
         Member member = getMemberOrSaveAndScrape(githubId);
-        Integer rank = memberQueryRepository.findRankingById(member.getId());
+        Integer rank = memberRepository.findRankingById(member.getId());
         return memberMapper.toDetailsResponse(member, rank);
     }
 }

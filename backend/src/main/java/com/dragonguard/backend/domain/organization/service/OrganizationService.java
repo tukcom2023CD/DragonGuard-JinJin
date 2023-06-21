@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrganizationService implements EntityLoader<Organization, Long> {
     private final OrganizationRepository organizationRepository;
-    private final OrganizationQueryRepository organizationQueryRepository;
     private final OrganizationMapper organizationMapper;
     private final MemberService memberService;
     private final EmailService emailService;
@@ -74,17 +73,17 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
 
     @Transactional(readOnly = true)
     public List<OrganizationResponse> getOrganizationRank(final Pageable pageable) {
-        return organizationQueryRepository.findRanking(pageable);
+        return organizationRepository.findRanking(pageable);
     }
 
     @Transactional(readOnly = true)
     public List<OrganizationResponse> getOrganizationRankByType(final OrganizationType type, final Pageable pageable) {
-        return organizationQueryRepository.findRankingByType(type, pageable);
+        return organizationRepository.findRankingByType(type, pageable);
     }
 
     @Transactional(readOnly = true)
     public List<OrganizationResponse> searchOrganization(final OrganizationType type, final String name, final Pageable pageable) {
-        return organizationQueryRepository.findByTypeAndSearchWord(type, name, pageable);
+        return organizationRepository.findByTypeAndSearchWord(type, name, pageable);
     }
 
     @Transactional(readOnly = true)

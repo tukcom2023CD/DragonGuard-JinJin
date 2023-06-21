@@ -42,12 +42,4 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
                 .where(gitRepoMember.gitRepo.name.eq(name).and(gitRepoMember.member.githubId.eq(githubId)))
                 .fetchFirst());
     }
-
-    @Override
-    public Optional<GitRepoMember> findById(Long id) {
-        return Optional.ofNullable(jpaQueryFactory
-                .selectFrom(gitRepoMember)
-                .where(gitRepoMember.id.eq(id))
-                .fetchFirst());
-    }
 }
