@@ -44,6 +44,14 @@
 		3B49BAB82A40C71F009C5963 /* RepoDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49BAB72A40C71F009C5963 /* RepoDetailViewModel.swift */; };
 		3B49BABA2A40CC37009C5963 /* DetailRepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49BAB92A40CC37009C5963 /* DetailRepoModel.swift */; };
 		3B49BABD2A40CD6E009C5963 /* RepoDetailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49BABC2A40CD6E009C5963 /* RepoDetailService.swift */; };
+		3B54FF522A42D4A3004B21B1 /* launchScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B54FF4F2A42D4A3004B21B1 /* launchScreen.json */; };
+		3B54FF532A42D4A3004B21B1 /* splashScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B54FF502A42D4A3004B21B1 /* splashScreen.json */; };
+		3B54FF542A42D4A3004B21B1 /* graphLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B54FF512A42D4A3004B21B1 /* graphLottie.json */; };
+		3B54FF572A42E51C004B21B1 /* YourProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF562A42E51C004B21B1 /* YourProfileController.swift */; };
+		3B54FF592A42EAD0004B21B1 /* Contributor'sInfoUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF582A42EAD0004B21B1 /* Contributor'sInfoUIView.swift */; };
+		3B54FF5B2A42FA7E004B21B1 /* RepositoryListUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF5A2A42FA7E004B21B1 /* RepositoryListUIView.swift */; };
+		3B54FF5D2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF5C2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift */; };
+		3B54FF5F2A42FC61004B21B1 /* RepositoryListTableViewInUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF5E2A42FC61004B21B1 /* RepositoryListTableViewInUIView.swift */; };
 		3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B58A18E29A6164D006A1817 /* LoginController.swift */; };
 		3B5B174B29DC584800571A8D /* AllOrganizationRankingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B174A29DC584800571A8D /* AllOrganizationRankingModel.swift */; };
 		3B5B174D29DC593100571A8D /* AllOrganizationRankingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B174C29DC593100571A8D /* AllOrganizationRankingService.swift */; };
@@ -179,9 +187,6 @@
 		A3AEEB602975286C00004722 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB5F2975286C00004722 /* RxCocoa */; };
 		A3AEEB622975286C00004722 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB612975286C00004722 /* RxSwift */; };
 		A3AEEB652975311400004722 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB642975311400004722 /* SnapKit */; };
-		A3E9513F2A4188FC00E8E67F /* splashScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = A3E9513C2A4188FC00E8E67F /* splashScreen.json */; };
-		A3E951402A4188FD00E8E67F /* graphLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = A3E9513D2A4188FC00E8E67F /* graphLottie.json */; };
-		A3E951412A4188FD00E8E67F /* launchScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = A3E9513E2A4188FC00E8E67F /* launchScreen.json */; };
 		A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -241,6 +246,14 @@
 		3B49BAB72A40C71F009C5963 /* RepoDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoDetailViewModel.swift; sourceTree = "<group>"; };
 		3B49BAB92A40CC37009C5963 /* DetailRepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRepoModel.swift; sourceTree = "<group>"; };
 		3B49BABC2A40CD6E009C5963 /* RepoDetailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoDetailService.swift; sourceTree = "<group>"; };
+		3B54FF4F2A42D4A3004B21B1 /* launchScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = launchScreen.json; path = ../../../../lottie/launchScreen.json; sourceTree = "<group>"; };
+		3B54FF502A42D4A3004B21B1 /* splashScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = splashScreen.json; path = ../../../../lottie/splashScreen.json; sourceTree = "<group>"; };
+		3B54FF512A42D4A3004B21B1 /* graphLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = graphLottie.json; path = ../../../../lottie/graphLottie.json; sourceTree = "<group>"; };
+		3B54FF562A42E51C004B21B1 /* YourProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourProfileController.swift; sourceTree = "<group>"; };
+		3B54FF582A42EAD0004B21B1 /* Contributor'sInfoUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Contributor'sInfoUIView.swift"; sourceTree = "<group>"; };
+		3B54FF5A2A42FA7E004B21B1 /* RepositoryListUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListUIView.swift; sourceTree = "<group>"; };
+		3B54FF5C2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListTableViewCell.swift; sourceTree = "<group>"; };
+		3B54FF5E2A42FC61004B21B1 /* RepositoryListTableViewInUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListTableViewInUIView.swift; sourceTree = "<group>"; };
 		3B58A18E29A6164D006A1817 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		3B5B174A29DC584800571A8D /* AllOrganizationRankingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllOrganizationRankingModel.swift; sourceTree = "<group>"; };
 		3B5B174C29DC593100571A8D /* AllOrganizationRankingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllOrganizationRankingService.swift; sourceTree = "<group>"; };
@@ -366,9 +379,6 @@
 		A37AA6F929D35522002812F6 /* TierTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierTableViewCell.swift; sourceTree = "<group>"; };
 		A3ADC9732990210D003D6483 /* MainCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionView.swift; sourceTree = "<group>"; };
 		A3ADC97E29911B50003D6483 /* CompareController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareController.swift; sourceTree = "<group>"; };
-		A3E9513C2A4188FC00E8E67F /* splashScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = splashScreen.json; path = ../../../../../Downloads/splashScreen.json; sourceTree = "<group>"; };
-		A3E9513D2A4188FC00E8E67F /* graphLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = graphLottie.json; path = ../../../../../Downloads/graphLottie.json; sourceTree = "<group>"; };
-		A3E9513E2A4188FC00E8E67F /* launchScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = launchScreen.json; path = ../../../../../Downloads/launchScreen.json; sourceTree = "<group>"; };
 		A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageResultModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -623,6 +633,18 @@
 			path = Refactcoring;
 			sourceTree = "<group>";
 		};
+		3B54FF552A42E506004B21B1 /* YourProfile */ = {
+			isa = PBXGroup;
+			children = (
+				3B54FF562A42E51C004B21B1 /* YourProfileController.swift */,
+				3B54FF5A2A42FA7E004B21B1 /* RepositoryListUIView.swift */,
+				3B54FF5C2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift */,
+				3B54FF5E2A42FC61004B21B1 /* RepositoryListTableViewInUIView.swift */,
+				3B54FF582A42EAD0004B21B1 /* Contributor'sInfoUIView.swift */,
+			);
+			path = YourProfile;
+			sourceTree = "<group>";
+		};
 		3B5B175029DC73D900571A8D /* OrganizationRankings */ = {
 			isa = PBXGroup;
 			children = (
@@ -698,9 +720,9 @@
 		3B5FF1882A27364E0022BE90 /* LottieFiles */ = {
 			isa = PBXGroup;
 			children = (
-				A3E9513D2A4188FC00E8E67F /* graphLottie.json */,
-				A3E9513E2A4188FC00E8E67F /* launchScreen.json */,
-				A3E9513C2A4188FC00E8E67F /* splashScreen.json */,
+				3B54FF512A42D4A3004B21B1 /* graphLottie.json */,
+				3B54FF4F2A42D4A3004B21B1 /* launchScreen.json */,
+				3B54FF502A42D4A3004B21B1 /* splashScreen.json */,
 			);
 			path = LottieFiles;
 			sourceTree = "<group>";
@@ -940,6 +962,7 @@
 		3BE64A012A3DEB70005D9F9E /* View */ = {
 			isa = PBXGroup;
 			children = (
+				3B54FF552A42E506004B21B1 /* YourProfile */,
 				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
 				3B3CE9DA29B46AA700B2594B /* LoginController */,
 				3BE64A152A3E2A87005D9F9E /* MainViewController */,
@@ -1189,11 +1212,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A3E9513F2A4188FC00E8E67F /* splashScreen.json in Resources */,
+				3B54FF532A42D4A3004B21B1 /* splashScreen.json in Resources */,
+				3B54FF542A42D4A3004B21B1 /* graphLottie.json in Resources */,
+				3B54FF522A42D4A3004B21B1 /* launchScreen.json in Resources */,
 				3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */,
 				3B1DB8842963428B00308F43 /* LaunchScreen.storyboard in Resources */,
-				A3E951402A4188FD00E8E67F /* graphLottie.json in Resources */,
-				A3E951412A4188FD00E8E67F /* launchScreen.json in Resources */,
 				3B1DB8812963428B00308F43 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1233,6 +1256,7 @@
 				3B5B174B29DC584800571A8D /* AllOrganizationRankingModel.swift in Sources */,
 				A35F1FB029DECEFB00A4ABD0 /* FAQTableViewCell.swift in Sources */,
 				A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */,
+				3B54FF572A42E51C004B21B1 /* YourProfileController.swift in Sources */,
 				3BA78D942A04EED9000ACAD1 /* AdminCheckService.swift in Sources */,
 				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
 				3B5FF1582A25EBED0022BE90 /* ChooseLanguageView.swift in Sources */,
@@ -1294,6 +1318,7 @@
 				3B00229F29879F7D003FA5CC /* SettingTableViewCell.swift in Sources */,
 				3BE649E42A3D74CE005D9F9E /* UserProfileImageView.swift in Sources */,
 				3B5B5F5E29E8228F0017C5C9 /* UserProfileController.swift in Sources */,
+				3B54FF5F2A42FC61004B21B1 /* RepositoryListTableViewInUIView.swift in Sources */,
 				3BE64A1F2A3E2AFE005D9F9E /* ProfileViewController.swift in Sources */,
 				3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */,
 				3B5B5F6929E86BA90017C5C9 /* RepositoryListView.swift in Sources */,
@@ -1320,6 +1345,7 @@
 				3BE64A1D2A3E2AF2005D9F9E /* CompareViewController.swift in Sources */,
 				3B29804929ACCDC800967B6E /* CompareSelectedUserTableView.swift in Sources */,
 				3BA78D962A04F112000ACAD1 /* AdminViewModel.swift in Sources */,
+				3B54FF5D2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift in Sources */,
 				3BF0C08D2A3F08BC00823271 /* SelectionCollectionViewCell.swift in Sources */,
 				3BA08A8429C362C1004359A9 /* TypeCollectionViewCell.swift in Sources */,
 				3B5B174F29DC595D00571A8D /* OrganizationRankingViewModel.swift in Sources */,
@@ -1361,6 +1387,7 @@
 				3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */,
 				3B3D2E0B29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift in Sources */,
 				3BE649E62A3D7553005D9F9E /* CustomETCRankingUserViewElementView.swift in Sources */,
+				3B54FF592A42EAD0004B21B1 /* Contributor'sInfoUIView.swift in Sources */,
 				3BE649DE2A3CBD40005D9F9E /* CustomUserView.swift in Sources */,
 				3B3D2E0929D5C0B8001A702C /* OrganizationCertificationController.swift in Sources */,
 				3B9597A229D98193008E9335 /* CertificationEmailController.swift in Sources */,
@@ -1372,6 +1399,7 @@
 				A37AA6EE29A525C5002812F6 /* TabBarController.swift in Sources */,
 				3B61080C29E9A10F000D7A5A /* MyProfileService.swift in Sources */,
 				3B060FD629911158000B2518 /* MainViewModel.swift in Sources */,
+				3B54FF5B2A42FA7E004B21B1 /* RepositoryListUIView.swift in Sources */,
 				A3ADC97F29911B50003D6483 /* CompareController.swift in Sources */,
 				A37AA6F629AC988E002812F6 /* CompareUserController.swift in Sources */,
 			);
@@ -1544,7 +1572,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R3B9284796;
+				DEVELOPMENT_TEAM = SN5J3DYFX4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ios/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GitRank;
@@ -1558,7 +1586,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin1.ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1573,7 +1601,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R3B9284796;
+				DEVELOPMENT_TEAM = SN5J3DYFX4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ios/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GitRank;
@@ -1587,7 +1615,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin1.ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
