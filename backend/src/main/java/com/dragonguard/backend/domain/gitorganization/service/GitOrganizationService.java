@@ -52,7 +52,7 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public GitOrganization findByName(String name) {
+    public GitOrganization findByName(final String name) {
         return gitOrganizationRepository.findByName(name)
                 .orElseThrow(EntityNotFoundException::new);
     }
