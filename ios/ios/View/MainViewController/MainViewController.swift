@@ -11,6 +11,7 @@ import SnapKit
 import RxSwift
 
 final class MainViewController: UIViewController {
+    private let img = UIImageView()
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -37,9 +38,18 @@ final class MainViewController: UIViewController {
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
         return btn
     }()
-
     
-    // 사용자 이름
+    // MARK: 사용자 프로필
+    private lazy var profileBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(img.image, for: .normal)
+        btn.imageView?.layer.cornerRadius = 20
+        btn.setTitleColor(.black, for: .normal)
+        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return btn
+    }()
+    
+    // MARK: 사용자 이름
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
@@ -55,7 +65,8 @@ final class MainViewController: UIViewController {
     // MARK: UI 등록
     private func addUIToView(){
         self.view.addSubview(searchBtn)
-        
+        self.view.addSubview(profileBtn)
+        self.view.addSubview(nameLabel)
         
         setAutoLayout()
     }
@@ -70,6 +81,18 @@ final class MainViewController: UIViewController {
             make.centerX.equalTo(view.snp_centerXWithinMargins)
         }
         
+        profileBtn.snp.makeConstraints { make in
+            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
+            make.leading.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        nameLabel.snp.makeConstraints { make in
+            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
+            make.leading.equalTo(profileBtn.snp.trailing).offset(10)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+
     }
     
     
