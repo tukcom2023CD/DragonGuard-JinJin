@@ -124,6 +124,46 @@ final class MainViewController: UIViewController {
         return btn
     }()
     
+    // MARK: contribution 배경
+    private lazy var contributionView: TitleView = {
+        let view = TitleView()
+        view.backgroundColor = .white
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+        view.layer.cornerRadius = 20
+        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        return view
+    }()
+    
+    // MARK: contribution 글자
+    private lazy var contributionLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .white
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return label
+    }()
+    
+    // MARK: group 배경
+    private lazy var groupView: TitleView = {
+        let view = TitleView()
+        view.backgroundColor = .white
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+        view.layer.cornerRadius = 20
+        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        return view
+    }()
+    
+    // MARK: group 글자
+    private lazy var groupLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .white
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return label
+    }()
+    
     /*
      Add UI & Set AutoLayout
      */
@@ -140,6 +180,10 @@ final class MainViewController: UIViewController {
         self.view.addSubview(tokenLabel)
         self.view.addSubview(tokenImage)
         self.view.addSubview(linkImage)
+        self.view.addSubview(contributionView)
+        self.view.addSubview(contributionLabel)
+        self.view.addSubview(groupView)
+        self.view.addSubview(groupLabel)
         
         setAutoLayout()
     }
