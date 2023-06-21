@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class KafkaContributionConsumer implements KafkaConsumer<ContributionKafkaResponse> {
-
     private final MemberService memberService;
     private final ObjectMapper objectMapper;
 

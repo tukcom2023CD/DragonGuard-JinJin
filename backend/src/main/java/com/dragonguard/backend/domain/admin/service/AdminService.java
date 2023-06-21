@@ -28,7 +28,6 @@ public class AdminService {
     private final OrganizationQueryRepository organizationQueryRepository;
     private final AdminMapper adminMapper;
 
-    @Transactional
     public List<AdminOrganizationResponse> decideRequestedOrganization(final AdminDecideRequest adminDecideRequest) {
         Organization organization = organizationRepository.findById(adminDecideRequest.getId())
                 .orElseThrow(EntityNotFoundException::new);

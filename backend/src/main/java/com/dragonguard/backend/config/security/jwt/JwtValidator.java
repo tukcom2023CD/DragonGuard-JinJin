@@ -40,11 +40,11 @@ public class JwtValidator {
         return new UsernamePasswordAuthenticationToken(loginUser, "", loginUser.getAuthorities());
     }
 
-    private UUID extractUUID(Claims claims) {
+    public UUID extractUUID(Claims claims) {
         return UUID.fromString(claims.get("id", String.class));
     }
 
-    private Claims getTokenBodyClaims(String accessToken) {
+    public Claims getTokenBodyClaims(String accessToken) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

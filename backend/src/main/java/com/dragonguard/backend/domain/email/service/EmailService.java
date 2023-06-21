@@ -17,7 +17,6 @@ import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
@@ -36,7 +35,6 @@ public class EmailService implements EntityLoader<Email, Long> {
     private static final int MIN = 10000;
     private static final int MAX = 99999;
 
-    @Transactional
     public IdResponse<Long> sendAndSaveEmail() {
         Member member = memberService.getLoginUserWithPersistence();
         String memberEmail = member.getEmailAddress();
@@ -54,12 +52,10 @@ public class EmailService implements EntityLoader<Email, Long> {
         if (!StringUtils.hasText(memberEmail)) throw new EmailException();
     }
 
-    @Transactional
     public void deleteCode(final Long id) {
         loadEntity(id).delete();
     }
 
-    @Transactional
     public CheckCodeResponse isCodeMatching(final EmailRequest emailRequest) {
         Long id = emailRequest.getId();
 

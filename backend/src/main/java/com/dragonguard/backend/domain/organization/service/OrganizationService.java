@@ -38,7 +38,6 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
     private final MemberService memberService;
     private final EmailService emailService;
 
-    @Transactional
     public IdResponse<Long> saveOrganization(final OrganizationRequest organizationRequest) {
         Organization organization = getOrSaveOrganization(organizationRequest);
         return new IdResponse<>(organization.getId());
@@ -52,7 +51,6 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
                 .orElseGet(() -> organizationRepository.save(organizationMapper.toEntity(organizationRequest)));
     }
 
-    @Transactional
     public IdResponse<Long> addMemberAndSendEmail(final AddMemberRequest addMemberRequest) {
         findAndAddMember(addMemberRequest);
         return emailService.sendAndSaveEmail();
