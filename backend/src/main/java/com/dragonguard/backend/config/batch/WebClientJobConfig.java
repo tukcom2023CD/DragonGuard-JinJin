@@ -25,10 +25,13 @@ import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilde
 import org.springframework.batch.item.function.FunctionItemProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +52,7 @@ public class WebClientJobConfig {
     private final EntityManagerFactory entityManagerFactory;
     private final GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
     private final AdminApiTokens adminApiTokens;
+    private final DataSource dataSource;
 
     @Bean
     public Job clientJob() {
@@ -61,6 +65,7 @@ public class WebClientJobConfig {
     @JobScope
     public Step step() {
         return stepBuilderFactory.get("step")
+                .transactionManager(jpaTransactionManager())
                 .<GitRepo, Set<GitRepoMember>>chunk(10)
                 .reader(reader())
                 .processor(processor())
@@ -129,5 +134,13 @@ public class WebClientJobConfig {
 
                     return gitRepoMember;
                 }).collect(Collectors.toSet());
+    }
+
+    @Bean
+    @Primary
+    public JpaTransactionManager jpaTransactionManager() {
+        JpaTransactionManager tm = new JpaTransactionManager();
+        tm.setDataSource(dataSource);
+        return tm;
     }
 }
