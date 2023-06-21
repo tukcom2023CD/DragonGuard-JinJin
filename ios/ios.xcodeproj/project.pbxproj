@@ -979,6 +979,7 @@
 		3BE64A152A3E2A87005D9F9E /* MainViewController */ = {
 			isa = PBXGroup;
 			children = (
+				A3342B9A2A439B32002C85A7 /* CustomUIView */,
 				A3E9514E2A42C2B300E8E67F /* MainViewController.swift */,
 				3BE64A132A3E2A53005D9F9E /* TabBarViewController.swift */,
 				3BE64A1E2A3E2AFE005D9F9E /* ProfileViewController.swift */,
@@ -1011,6 +1012,13 @@
 				3BA78D972A04F346000ACAD1 /* AdminService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		A3342B9A2A439B32002C85A7 /* CustomUIView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CustomUIView;
 			sourceTree = "<group>";
 		};
 		A3ADC97729911357003D6483 /* MainScreen */ = {

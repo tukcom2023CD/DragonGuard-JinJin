@@ -61,17 +61,6 @@ final class MainViewController: UIViewController {
         return label
     }()
     
-    // MARK: tier 배경
-//    private lazy var tierView: TitleView = {
-//        let view = TitleView()
-//        view.backgroundColor = .white
-//        view.layer.shadowOpacity = 1
-//        view.layer.shadowOffset = CGSize(width: 3, height: 3)
-//        view.layer.cornerRadius = 20
-//        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-//        return view
-//    }()
-    
     // MARK: tier 글자
     private lazy var tierLabel: UILabel = {
         let label = UILabel()
@@ -79,6 +68,17 @@ final class MainViewController: UIViewController {
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
+    }()
+    
+    // MARK: tier 틀
+    private lazy var tierView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+        view.layer.cornerRadius = 20
+        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        return view
     }()
     
     // MARK: tier 이미지
@@ -89,17 +89,6 @@ final class MainViewController: UIViewController {
         return tier
     }()
     
-    // MARK: token 배경
-//    private lazy var tokenView: TitleView = {
-//        let view = TitleView()
-//        view.backgroundColor = .white
-//        view.layer.shadowOpacity = 1
-//        view.layer.shadowOffset = CGSize(width: 3, height: 3)
-//        view.layer.cornerRadius = 20
-//        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-//        return view
-//    }()
-    
     // MARK: token 글자
     private lazy var tokenLabel: UILabel = {
         let label = UILabel()
@@ -107,6 +96,17 @@ final class MainViewController: UIViewController {
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
+    }()
+    
+    // MARK: token 틀
+    private lazy var tokenView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+        view.layer.cornerRadius = 20
+        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        return view
     }()
     
     // MARK: token 이미지
@@ -117,27 +117,8 @@ final class MainViewController: UIViewController {
         return token
     }()
     
-    // MARK: 링크 이미지
-    private lazy var linkImage: UIButton = {
-        let btn = UIButton()
-        btn.setImage(UIImage(named: "linkIcon")?.resize(newWidth: 30), for: .normal)
-        btn.backgroundColor = .white
-        return btn
-    }()
-    
-    // MARK: contribution 배경
-//    private lazy var contributionView: TitleView = {
-//        let view = TitleView()
-//        view.backgroundColor = .white
-//        view.layer.shadowOpacity = 1
-//        view.layer.shadowOffset = CGSize(width: 3, height: 3)
-//        view.layer.cornerRadius = 20
-//        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-//        return view
-//    }()
-    
-    // MARK: contribution 글자
-    private lazy var cNameLabel: UILabel = {
+    // MARK: token 숫자
+    private lazy var tokenNumLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
         label.textColor = .black
@@ -145,7 +126,7 @@ final class MainViewController: UIViewController {
         return label
     }()
     
-    // MARK: contribution 내용
+    // MARK: contribution 글자
     private lazy var contributionLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
@@ -154,19 +135,19 @@ final class MainViewController: UIViewController {
         return label
     }()
     
-    // MARK: group 배경
-//    private lazy var groupView: TitleView = {
-//        let view = TitleView()
-//        view.backgroundColor = .white
-//        view.layer.shadowOpacity = 1
-//        view.layer.shadowOffset = CGSize(width: 3, height: 3)
-//        view.layer.cornerRadius = 20
-//        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-//        return view
-//    }()
+    // MARK: contribution 틀
+    private lazy var contributionView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+        view.layer.cornerRadius = 20
+        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        return view
+    }()
     
-    // MARK: group 글자
-    private lazy var gNameLabel: UILabel = {
+    // MARK: contribution 내용
+    private lazy var cNumLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
         label.textColor = .black
@@ -174,8 +155,28 @@ final class MainViewController: UIViewController {
         return label
     }()
     
-    // MARK: group 내용
+    // MARK: group 글자
     private lazy var groupLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .white
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return label
+    }()
+    
+    // MARK: group 틀
+    private lazy var groupView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+        view.layer.cornerRadius = 20
+        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        return view
+    }()
+    
+    // MARK: group 내용
+    private lazy var gNumLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
         label.textColor = .black
@@ -195,23 +196,28 @@ final class MainViewController: UIViewController {
     
     // MARK: UI 등록
     private func addUIToView(){
-        self.view.addSubview(searchBtn)
-        self.view.addSubview(profileImage)
-        self.view.addSubview(nameLabel)
-        // self.view.addSubview(tierView)
-        self.view.addSubview(tierLabel)
-        self.view.addSubview(tierImage)
-        // self.view.addSubview(tokenView)
-        self.view.addSubview(tokenLabel)
-        self.view.addSubview(tokenImage)
-        self.view.addSubview(linkImage)
-        // self.view.addSubview(contributionView)
-        self.view.addSubview(cNameLabel)
-        self.view.addSubview(contributionLabel)
-        // self.view.addSubview(groupView)
-        self.view.addSubview(gNameLabel)
-        self.view.addSubview(groupLabel)
-        // self.view.addSubview(tapBarView)
+        view.addSubview(searchBtn)
+        view.addSubview(profileImage)
+        view.addSubview(nameLabel)
+        
+        view.addSubview(tierLabel)
+        view.addSubview(tierView)
+        tierView.addSubview(tierImage)
+        
+        view.addSubview(tokenLabel)
+        view.addSubview(tokenView)
+        tokenView.addSubview(tokenImage)
+        tokenView.addSubview(tokenNumLabel)
+        
+        view.addSubview(contributionLabel)
+        view.addSubview(contributionView)
+        contributionView.addSubview(cNumLabel)
+        
+        view.addSubview(groupLabel)
+        view.addSubview(groupView)
+        groupView.addSubview(gNumLabel)
+        
+        // view.addSubview(tapBarView)
         setAutoLayout()
     }
     
