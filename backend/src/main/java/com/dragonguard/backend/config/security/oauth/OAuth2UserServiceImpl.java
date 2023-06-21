@@ -9,6 +9,7 @@ import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +42,12 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String githubId = (String) attributes.get("login");
 
+        if (memberQueryRepository.existsByGithubId(githubId)) {
+            memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY));
+        }
+
         Member user = memberQueryRepository.findByGithubId(githubId)
-                .orElse(memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY)));
+                .orElseThrow(EntityNotFoundException::new);
 
         if (user.getAuthStep().equals(AuthStep.NONE)) {
             user.updateAuthStep(AuthStep.GITHUB_ONLY);

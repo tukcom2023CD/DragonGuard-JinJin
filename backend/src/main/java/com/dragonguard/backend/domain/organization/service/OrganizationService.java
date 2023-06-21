@@ -48,7 +48,10 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
                         organizationRequest.getName(),
                         organizationRequest.getOrganizationType(),
                         organizationRequest.getEmailEndpoint())
-                .orElseGet(() -> organizationRepository.save(organizationMapper.toEntity(organizationRequest)));
+                .orElseGet(() -> {
+                    Organization organization = organizationRepository.save(organizationMapper.toEntity(organizationRequest));
+                    return loadEntity(organization.getId());
+                });
     }
 
     public IdResponse<Long> addMemberAndSendEmail(final AddMemberRequest addMemberRequest) {

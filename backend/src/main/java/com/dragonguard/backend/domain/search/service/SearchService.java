@@ -72,7 +72,10 @@ public class SearchService implements EntityLoader<Search, Long> {
 
     private List<UserResultResponse> searchUser(final SearchRequest searchRequest, final Search search) {
         return Arrays.stream(githubUserClient.requestToGithub(searchRequest).getItems())
-                .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
+                .map(request -> {
+                    Result result = resultRepository.save(resultMapper.toEntity(request, search.getId()));
+                    return resultRepository.findById(result.getId()).orElseThrow(EntityNotFoundException::new);
+                })
                 .map(resultMapper::toUserResponse).collect(Collectors.toList());
     }
 
@@ -93,7 +96,10 @@ public class SearchService implements EntityLoader<Search, Long> {
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
         List<String> filters = searchRequest.getFilters();
 
-        return Optional.ofNullable(getSameSearch(searches, filters)).orElse(searchRepository.save(searchMapper.toSearch(searchRequest)));
+        return Optional.ofNullable(getSameSearch(searches, filters)).orElseGet(() -> {
+            Search search = searchRepository.save(searchMapper.toSearch(searchRequest));
+            return loadEntity(search.getId());
+        });
     }
 
     private Search getSameSearch(List<Search> searches, List<String> filters) {
@@ -108,7 +114,10 @@ public class SearchService implements EntityLoader<Search, Long> {
         return searchRepository
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
                 .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
-                .orElseGet(() -> searchRepository.save(searchMapper.toSearch(searchRequest)));
+                .orElseGet(() -> {
+                    Search search = searchRepository.save(searchMapper.toSearch(searchRequest));
+                    return loadEntity(search.getId());
+                });
     }
 
     private boolean isValidSearchRequest(SearchRequest searchRequest) {

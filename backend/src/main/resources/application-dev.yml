@@ -23,7 +23,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    open-in-view: true
 
   flyway:
     enabled: false

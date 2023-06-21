@@ -203,7 +203,8 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         }
         GitRepo gitRepo = gitRepoRepository.save(gitRepoMapper.toEntity(repoName));
         requestKafkaIssue(new GitRepoNameRequest(repoName));
-        return gitRepo;
+        return gitRepoRepository.findByName(repoName)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     private StatisticsResponse getStatistics(final String name) {

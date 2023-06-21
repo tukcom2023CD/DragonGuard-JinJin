@@ -85,7 +85,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
             return memberQueryRepository.findByGithubId(githubId)
                     .orElseThrow(EntityNotFoundException::new);
         }
-        return memberRepository.save(memberMapper.toEntity(githubId, role, authStep));
+        Member member = memberRepository.save(memberMapper.toEntity(githubId, role, authStep));
+        return loadEntity(member.getId());
     }
 
     public Member findMemberOrSave(final MemberRequest memberRequest, final AuthStep authStep) {
@@ -93,7 +94,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
             return memberQueryRepository.findByGithubId(memberRequest.getGithubId())
                     .orElseThrow(EntityNotFoundException::new);
         }
-        return memberRepository.save(memberMapper.toEntity(memberRequest, authStep));
+        Member member = memberRepository.save(memberMapper.toEntity(memberRequest, authStep));
+        return loadEntity(member.getId());
     }
 
     public void addMemberCommitAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
