@@ -29,14 +29,12 @@ import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.service.MemberService;
-import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
+import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -272,11 +270,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
     }
 
-    public void requestKafkaIssue(final GitRepoNameRequest gitRepoNameRequest) {
+    private void requestKafkaIssue(final GitRepoNameRequest gitRepoNameRequest) {
         kafkaIssueProducer.send(gitRepoNameRequest);
     }
 
-    public void requestKafkaSparkLine(final String githubToken, final Long id) {
+    private void requestKafkaSparkLine(final String githubToken, final Long id) {
         kafkaSparkLineProducer.send(new SparkLineKafka(githubToken, id));
     }
 

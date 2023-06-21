@@ -76,7 +76,7 @@ public class EmailService implements EntityLoader<Email, Long> {
         return new Random().nextInt(MAX - MIN) + MIN;
     }
 
-    public void requestToSendEmail(final String memberEmail, final int randomCode) {
+    private void requestToSendEmail(final String memberEmail, final int randomCode) {
         kafkaEmailProducer.send(new KafkaEmail(memberEmail, randomCode));
     }
 

@@ -197,7 +197,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         sendContributionRequestToKafka(member.getGithubId(), member.getGithubToken());
     }
 
-    public void sendContributionRequestToKafka(final String githubId, final String githubToken) {
+    private void sendContributionRequestToKafka(final String githubId, final String githubToken) {
         kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId, githubToken));
     }
 
@@ -285,7 +285,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         getContributionSumByScraping(githubId);
     }
 
-    public void sendGitRepoRequestToKafka(final String githubId, final String githubToken) {
+    private void sendGitRepoRequestToKafka(final String githubId, final String githubToken) {
         kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId, githubToken));
     }
 
