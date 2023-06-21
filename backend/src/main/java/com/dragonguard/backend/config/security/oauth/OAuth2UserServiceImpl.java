@@ -17,8 +17,6 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -28,7 +26,7 @@ import java.util.Map;
  * @description OAuth2UserService의 구현체로 유저를 로드한다.
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     private final MemberQueryRepository memberQueryRepository;
@@ -39,7 +37,6 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryClientProducer;
 
     @Override
-    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();

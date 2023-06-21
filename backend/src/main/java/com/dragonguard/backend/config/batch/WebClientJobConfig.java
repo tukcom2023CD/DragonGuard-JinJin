@@ -52,7 +52,6 @@ public class WebClientJobConfig {
     private final EntityManagerFactory entityManagerFactory;
     private final GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
     private final AdminApiTokens adminApiTokens;
-    private final DataSource dataSource;
 
     @Bean
     public Job clientJob() {
@@ -88,12 +87,8 @@ public class WebClientJobConfig {
         String apiToken = adminApiTokens.getApiToken();
 
         return new FunctionItemProcessor<>(gitRepo -> {
-            try{
                 List<GitRepoMemberClientResponse> list = Arrays.asList(gitRepoMemberClient.requestToGithub(new GitRepoInfoRequest(apiToken, gitRepo.getName(), LocalDateTime.now().getYear())));
                 return getGitRepoMembers(gitRepo, list);
-
-            } catch(ClientBadRequestException e) {}
-            return gitRepo.getGitRepoMembers();
         });
     }
 

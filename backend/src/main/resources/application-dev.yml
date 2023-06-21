@@ -19,13 +19,13 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
 
   flyway:
-    enabled: true
+    enabled: false
     encoding: UTF-8
     baseline-on-migrate: true
 
