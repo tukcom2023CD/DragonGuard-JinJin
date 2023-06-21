@@ -5,6 +5,7 @@ plugins {
 	id 'com.google.cloud.tools.jib' version '3.2.1'
 	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 	id "org.asciidoctor.jvm.convert" version "3.3.2"
+	id "io.freefair.aspectj" version "5.3.3.3"
 }
 
 jib {
@@ -35,6 +36,9 @@ jib {
 group = 'com.dragonguard'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+
+sourceSets.main.aspectj.srcDir "src/main/java"
+sourceSets.main.java.srcDirs = files()
 
 configurations {
 	compileOnly {
@@ -68,6 +72,8 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-mysql'
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	implementation "org.aspectj:aspectjrt:1.9.7"
+	implementation "org.aspectj:aspectjweaver:1.9.7"
 
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
@@ -144,4 +150,8 @@ compileJava {
 			'-Amapstruct.suppressGeneratorVersionInfoComment=true',
 			'-Amapstruct.verbose=true'
 	]
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = "UTF-8"
 }

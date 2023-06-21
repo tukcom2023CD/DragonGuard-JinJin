@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -93,6 +94,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
         return jpaQueryFactory
                 .selectFrom(member)
                 .where(member.githubId.eq(githubId))
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetchFirst() != null;
     }
 }
