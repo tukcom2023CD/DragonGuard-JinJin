@@ -27,7 +27,7 @@ class PostService {
                        encoding: JSONEncoding.default,
                        headers: ["Content-type": "application/json",
                                  "Authorization": "Bearer \(token)"])
-            .validate(statusCode: 204..<205)
+            .validate(statusCode: 200..<201)
             .response { response in
                 switch response.result{
                 case .success(_):

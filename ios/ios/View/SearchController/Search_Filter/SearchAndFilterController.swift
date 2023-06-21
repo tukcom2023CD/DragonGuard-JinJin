@@ -588,7 +588,7 @@ extension SearchAndFilterController: UITextFieldDelegate{
 //        self.delegate?.sendList(list: list)
 //        self.dismiss(animated: true)
         
-        SearchPageViewModel.viewModel.getSearchData(searchWord: word, type: self.type, change: true, filtering: filtering)
+        SearchPageViewModel.viewModel.getSearchData(searchWord: word, type: self.type, filtering: filtering)
             .subscribe(onNext: { list in
                 if !list.isEmpty{
                     self.delegate?.sendList(list: list)

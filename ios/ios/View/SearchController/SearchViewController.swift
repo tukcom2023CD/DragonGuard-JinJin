@@ -15,7 +15,9 @@ final class SearchViewController: UIViewController{
     private var searchBarTopConstraint: Constraint?
     private var resultList: [SearchResultModel] = []
     private let disposeBag = DisposeBag()
+    private var isInfiniteScroll = false // 무한 스크롤 1번만 로딩되게 확인하는 변수
     var beforePage: String? = "Main"// 이전 페이지 확인하는 변수
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -292,24 +294,25 @@ final class SearchViewController: UIViewController{
 
 extension UIScrollView {
     
-    func updateContentSize(cellHeight: CGFloat) {
-        let unionCalculatedTotalRect = recursiveUnionInDepthFor(view: self)
-        
-        // 계산된 크기로 컨텐츠 사이즈 설정
-        self.contentSize = CGSize(width: self.frame.width, height: unionCalculatedTotalRect.height)
-    }
+//    func updateContentSize(cellHeight: CGFloat) {
+//        let unionCalculatedTotalRect = recursiveUnionInDepthFor(view: self)
+//
+//        // 계산된 크기로 컨텐츠 사이즈 설정
+//        self.contentSize = CGSize(width: self.frame.width, height: unionCalculatedTotalRect.height)
+//    }
+//
+//    private func recursiveUnionInDepthFor(view: UIView) -> CGRect {
+//        var totalRect: CGRect = .zero
+//
+//        // 모든 자식 View의 컨트롤의 크기를 재귀적으로 호출하며 최종 영역의 크기를 설정
+//        for subView in view.subviews {
+//            totalRect = totalRect.union(recursiveUnionInDepthFor(view: subView))
+//        }
+//
+//        // 최종 계산 영역의 크기를 반환
+//        return totalRect.union(view.frame)
+//    }
     
-    private func recursiveUnionInDepthFor(view: UIView) -> CGRect {
-        var totalRect: CGRect = .zero
-        
-        // 모든 자식 View의 컨트롤의 크기를 재귀적으로 호출하며 최종 영역의 크기를 설정
-        for subView in view.subviews {
-            totalRect = totalRect.union(recursiveUnionInDepthFor(view: subView))
-        }
-        
-        // 최종 계산 영역의 크기를 반환
-        return totalRect.union(view.frame)
-    }
 }
 
 // 스크롤 될 때 뷰 올라가게 하기
@@ -336,6 +339,8 @@ extension SearchViewController: UIScrollViewDelegate {
                 searchBarTopConstraint.update(offset: scrollView.contentOffset.y - self.backgroundUIView.frame.height)
             }
             
+            
+            
         }
         else {
             topConstraint.update(offset: 0)
@@ -343,12 +348,29 @@ extension SearchViewController: UIScrollViewDelegate {
             self.searchBtnUIView.backgroundColor = .clear
         }
         
+        
+        let position = scrollView.contentOffset.y
+        
+        if position > (contentView.frame.height - scrollView.frame.size.height){
+            if self.isInfiniteScroll{
+                SearchPageViewModel.viewModel.updateData()
+                    .subscribe(onNext: { list in
+                        list.forEach { data in
+                            self.resultList.append(data)
+                        }
+                        self.inputDataIntoList()
+                    })
+                    .disposed(by: disposeBag)
+                self.isInfiniteScroll = false
+            }
+        }
+        
     }
 }
 
 extension SearchViewController: SendSearchResultList{
     func sendList(list: [SearchResultModel]) {
-//        print(list)
+
         resultList = []
         self.resultList = list
         inputDataIntoList()

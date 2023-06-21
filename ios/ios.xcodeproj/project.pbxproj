@@ -824,7 +824,6 @@
 			isa = PBXGroup;
 			children = (
 				3BE649E92A3D8747005D9F9E /* Refactoring */,
-				A30BA46C298415B8008B594E /* SearchPageViewModel.swift */,
 				3B9CF3D5298FB5A700495D35 /* ALLUserInfoViewModel.swift */,
 				3B060FD529911158000B2518 /* MainViewModel.swift */,
 				3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */,
@@ -926,6 +925,7 @@
 			isa = PBXGroup;
 			children = (
 				3B49BAB72A40C71F009C5963 /* RepoDetailViewModel.swift */,
+				A30BA46C298415B8008B594E /* SearchPageViewModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";

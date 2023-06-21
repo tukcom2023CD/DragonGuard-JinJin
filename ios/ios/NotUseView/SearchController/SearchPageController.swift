@@ -104,7 +104,6 @@ final class SearchPageController: UIViewController {
     private func getData(searchWord: String, type: String, change: Bool, filtering: String){
         SearchPageViewModel.viewModel.getSearchData(searchWord: searchWord,
                                                     type: type,
-                                                    change: change ,
                                                     filtering: filtering)
             .subscribe(onNext: { searchList in
                 for data in searchList{
