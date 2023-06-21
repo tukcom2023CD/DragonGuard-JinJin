@@ -60,8 +60,8 @@ final class MainViewController: UIViewController {
         return label
     }()
     
-    // MARK:
-    private lazy var titleView: TitleView = {
+    // MARK: tier 배경
+    private lazy var tierView: TitleView = {
         let view = TitleView()
         view.backgroundColor = .white
         view.layer.shadowOpacity = 1
@@ -71,12 +71,41 @@ final class MainViewController: UIViewController {
         return view
     }()
     
+    // MARK: tier 글자
+    private lazy var tierLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .white
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return label
+    }()
+    
     // MARK: tier 이미지
     private lazy var tierImage: UIImageView = {
         let tier = UIImageView()
         tier.image = UIImage(named: "tier")
         tier.backgroundColor = .white
         return tier
+    }()
+    
+    // MARK: token 배경
+    private lazy var tokenView: TitleView = {
+        let view = TitleView()
+        view.backgroundColor = .white
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+        view.layer.cornerRadius = 20
+        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        return view
+    }()
+    
+    // MARK: token 글자
+    private lazy var tokenLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .white
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return label
     }()
     
     // MARK: token 이미지
