@@ -25,7 +25,8 @@ final class LoginController: UIViewController{
         checkClearAuths()
         
         if autoLoginCheck ?? false{
-            self.navigationController?.pushViewController(MainController(), animated: true)
+            print("?")
+//            self.navigationController?.pushViewController(MainController(), animated: true)
         }
         
     }
@@ -113,17 +114,22 @@ final class LoginController: UIViewController{
         print("url \(url)")
         let urlRequest = URLRequest(url: url)
         let vc = UIViewController()
-//        let newViewController = UINavigationController(rootViewController: vc )
-        
+
+        let newViewController = UINavigationController(rootViewController: vc )
         let webView = WKWebView(frame: vc.view.bounds)
-        
-        vc.view.addSubview(webView)
+        newViewController.view.addSubview(webView)
+
         
         webView.navigationDelegate = self
-        webView.goBack()
         webView.load(urlRequest)
-        vc.modalPresentationStyle = .fullScreen
-        self.present(vc,animated: true)
+
+        
+        webView.goBack()
+        webView.reload()
+        newViewController.modalPresentationStyle = .fullScreen
+        self.present(newViewController,animated: true)
+//        self.navigationController?.pushViewController(newViewController,animated: true)
+
         
     }
 
@@ -137,7 +143,7 @@ final class LoginController: UIViewController{
             .subscribe(onNext: { first, second in
                 if first && second{
                     
-                    let rootView = MainController()
+                    let rootView = SearchViewController()
                     
 //                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
 //                       print("\(key): \(value)")
@@ -147,6 +153,7 @@ final class LoginController: UIViewController{
                     self.goGithubBtn.isEnabled = true
                     self.klipLoginBtn.layer.opacity = 1
                     self.goGithubBtn.layer.opacity = 1
+                    rootView.modalPresentationStyle = .fullScreen
                     self.present(rootView, animated: true)
 //                    self.navigationController?.pushViewController(rootView, animated: true)
                     
@@ -250,11 +257,16 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
 //                        self.navigationController?.popViewController(animated: true)
                         LoginViewModel.loginService.githubAuthSubject.onNext(true)
                     }
+                    
                 }
             }
           
             decisionHandler(.allow)
         }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+    }
     
 }
 

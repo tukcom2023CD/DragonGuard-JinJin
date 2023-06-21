@@ -170,22 +170,22 @@ final class AddOrganizationController: UIViewController{
         
         // 조직 인증을 모두 입력한 뒤 전송하는 부분
         if !name.isEmpty && !email.isEmpty && !type.isEmpty {
-            CertifiedOrganizationViewModel.viewModel.addOrganization(name: name,
-                                                                     type: type,
-                                                                     endPoint: email)
-            .subscribe { id in
-                print("id \(id)")
-                if id != 0 {
-                    guard let viewControllerStack = self.navigationController?.viewControllers else { return }
-                    
-                    for viewController in viewControllerStack {
-                        if let mainView = viewController as? MainController {
-                            self.navigationController?.popToViewController(mainView, animated: true)
-                        }
-                    }
-                }
-            }
-            .disposed(by: self.disposeBag)
+//            CertifiedOrganizationViewModel.viewModel.addOrganization(name: name,
+//                                                                     type: type,
+//                                                                     endPoint: email)
+//            .subscribe { id in
+//                print("id \(id)")
+//                if id != 0 {
+//                    guard let viewControllerStack = self.navigationController?.viewControllers else { return }
+//
+//                    for viewController in viewControllerStack {
+//                        if let mainView = viewController as? MainController {
+//                            self.navigationController?.popToViewController(mainView, animated: true)
+//                        }
+//                    }
+//                }
+//            }
+//            .disposed(by: self.disposeBag)
             
         }
     }

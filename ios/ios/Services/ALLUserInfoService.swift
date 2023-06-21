@@ -17,9 +17,9 @@ final class ALLUserInfoService{
     /// - Parameters:
     ///   - page: 유저 리스트 페이지
     ///   - size: 한번에 받아올 버퍼 크기
-    func getMemberInfo(page: Int, size: Int) -> Observable<[UserInfoModel]>{
+    func getMemberInfo(page: Int, size: Int) -> Observable<[AllUserRankingModel]>{
         let url = APIURL.apiUrl.getUserInfo(ip: ip, page: page, size: size)
-        var resultArray = [UserInfoModel]()
+        var resultArray = [AllUserRankingModel]()
         let access = UserDefaults.standard.string(forKey: "Access")
 
         
@@ -27,12 +27,18 @@ final class ALLUserInfoService{
             AF.request(url,
                        headers: ["Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
-                .responseDecodable(of: [UserInfoDecodingData].self) { response in
+                .responseDecodable(of: [AllUserRankingCodableModel].self) { response in
+                    print("claaa")
+                    print(response)
                     guard let responseResult = response.value else {return}
                     
                     if responseResult.count != 0 && resultArray.count == 0{
                         for data in responseResult {
-                            let dataBundle = UserInfoModel(id: data.id, name: data.name ?? "unknown", githubId: data.githubId, tokens: data.tokens ?? 0, tier: data.tier)
+                            let dataBundle = AllUserRankingModel(profileImg: data.profileImg,
+                                                                 userName: data.githubId,
+                                                                 num: data.tokens,
+                                                                 link: nil,
+                                                                 tier: data.tier)
                             resultArray.append(dataBundle)
                         }
                         

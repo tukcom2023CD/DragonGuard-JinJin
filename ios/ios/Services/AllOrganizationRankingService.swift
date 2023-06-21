@@ -28,7 +28,7 @@ final class AllOrganizationRankingService{
                        "Authorization" : "Bearer \(access ?? "")"
                        ])
             .responseDecodable(of: [AllOrganizationRankingDecodingModel].self) { response in
-                print(response)
+//                print(response)
                 switch response.result{
                 case .success(let data):
                     data.forEach { data in

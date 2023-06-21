@@ -17,9 +17,10 @@ struct AllUserRankingModel{
 
 
 struct AllUserRankingCodableModel: Codable{
+    let id: String?
     let profileImg: String?
-    let userName: String?
-    let num: Int?
-    let link: String?
+    let name: String?
+    let githubId: String?
+    let tokens: Int?
     let tier: String?
 }

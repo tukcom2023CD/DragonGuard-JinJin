@@ -41,6 +41,17 @@
 		3B3D2E0D29D5DA74001A702C /* OrganizationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0C29D5DA74001A702C /* OrganizationSearchController.swift */; };
 		3B3D2E0F29D5E252001A702C /* OrganizationSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0E29D5E252001A702C /* OrganizationSearchTableViewCell.swift */; };
 		3B43B5A329B87FB100EBB379 /* UserDBIdModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */; };
+		3B49BAB82A40C71F009C5963 /* RepoDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49BAB72A40C71F009C5963 /* RepoDetailViewModel.swift */; };
+		3B49BABA2A40CC37009C5963 /* DetailRepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49BAB92A40CC37009C5963 /* DetailRepoModel.swift */; };
+		3B49BABD2A40CD6E009C5963 /* RepoDetailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49BABC2A40CD6E009C5963 /* RepoDetailService.swift */; };
+		3B54FF522A42D4A3004B21B1 /* launchScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B54FF4F2A42D4A3004B21B1 /* launchScreen.json */; };
+		3B54FF532A42D4A3004B21B1 /* splashScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B54FF502A42D4A3004B21B1 /* splashScreen.json */; };
+		3B54FF542A42D4A3004B21B1 /* graphLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B54FF512A42D4A3004B21B1 /* graphLottie.json */; };
+		3B54FF572A42E51C004B21B1 /* YourProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF562A42E51C004B21B1 /* YourProfileController.swift */; };
+		3B54FF592A42EAD0004B21B1 /* Contributor'sInfoUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF582A42EAD0004B21B1 /* Contributor'sInfoUIView.swift */; };
+		3B54FF5B2A42FA7E004B21B1 /* RepositoryListUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF5A2A42FA7E004B21B1 /* RepositoryListUIView.swift */; };
+		3B54FF5D2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF5C2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift */; };
+		3B54FF5F2A42FC61004B21B1 /* RepositoryListTableViewInUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF5E2A42FC61004B21B1 /* RepositoryListTableViewInUIView.swift */; };
 		3B49BAB62A409F58009C5963 /* UserUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49BAB52A409F58009C5963 /* UserUIButton.swift */; };
 		3B54FF4E2A42C3FD004B21B1 /* SparkLineUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF4D2A42C3FD004B21B1 /* SparkLineUIView.swift */; };
 		3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B58A18E29A6164D006A1817 /* LoginController.swift */; };
@@ -123,8 +134,6 @@
 		3BE3F7D2297060DC0005B640 /* iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7D1297060DC0005B640 /* iosTests.swift */; };
 		3BE3F7DF297064340005B640 /* iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7DE297064340005B640 /* iosUITests.swift */; };
 		3BE3F7E1297064340005B640 /* iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3F7E0297064340005B640 /* iosUITestsLaunchTests.swift */; };
-		3BE649D22A3CB650005D9F9E /* launchScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = 3BE649D02A3CB650005D9F9E /* launchScreen.json */; };
-		3BE649D32A3CB650005D9F9E /* graphLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 3BE649D12A3CB650005D9F9E /* graphLottie.json */; };
 		3BE649D62A3CB7EE005D9F9E /* AllUserRankingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649D52A3CB7EE005D9F9E /* AllUserRankingController.swift */; };
 		3BE649DB2A3CBC9E005D9F9E /* AllUserTableviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649DA2A3CBC9E005D9F9E /* AllUserTableviewCell.swift */; };
 		3BE649DE2A3CBD40005D9F9E /* CustomUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649DD2A3CBD40005D9F9E /* CustomUserView.swift */; };
@@ -133,7 +142,6 @@
 		3BE649E42A3D74CE005D9F9E /* UserProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649E32A3D74CE005D9F9E /* UserProfileImageView.swift */; };
 		3BE649E62A3D7553005D9F9E /* CustomETCRankingUserViewElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649E52A3D7553005D9F9E /* CustomETCRankingUserViewElementView.swift */; };
 		3BE649E82A3D80FA005D9F9E /* AllUserRankingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649E72A3D80FA005D9F9E /* AllUserRankingModel.swift */; };
-		3BE649EB2A3D878F005D9F9E /* AllRankingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649EA2A3D878F005D9F9E /* AllRankingViewModel.swift */; };
 		3BE649ED2A3D9184005D9F9E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649EC2A3D9184005D9F9E /* Extension.swift */; };
 		3BE649F02A3DA0CC005D9F9E /* DetailInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649EF2A3DA0CC005D9F9E /* DetailInfoController.swift */; };
 		3BE649F22A3DA269005D9F9E /* DetailInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE649F12A3DA269005D9F9E /* DetailInfoTableViewCell.swift */; };
@@ -161,6 +169,8 @@
 		3BEFEC3329D3E1A100DBBCA8 /* AddOrganizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */; };
 		3BEFEC3529D3FB9500DBBCA8 /* EmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */; };
 		3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */; };
+		3BF0C08B2A3EF3B800823271 /* CompanyRankController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0C08A2A3EF3B800823271 /* CompanyRankController.swift */; };
+		3BF0C08D2A3F08BC00823271 /* SelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0C08C2A3F08BC00823271 /* SelectionCollectionViewCell.swift */; };
 		3BF0C0902A3F517D00823271 /* CompareChooseRepoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0C08F2A3F517D00823271 /* CompareChooseRepoViewController.swift */; };
 		3BF0C0922A3F607E00823271 /* CompareRepoUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0C0912A3F607E00823271 /* CompareRepoUserController.swift */; };
 		3BF0C0952A3F61FA00823271 /* CustomUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0C0942A3F61FA00823271 /* CustomUIView.swift */; };
@@ -241,6 +251,17 @@
 		3B3D2E0C29D5DA74001A702C /* OrganizationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationSearchController.swift; sourceTree = "<group>"; };
 		3B3D2E0E29D5E252001A702C /* OrganizationSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationSearchTableViewCell.swift; sourceTree = "<group>"; };
 		3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDBIdModel.swift; sourceTree = "<group>"; };
+		3B49BAB72A40C71F009C5963 /* RepoDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoDetailViewModel.swift; sourceTree = "<group>"; };
+		3B49BAB92A40CC37009C5963 /* DetailRepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRepoModel.swift; sourceTree = "<group>"; };
+		3B49BABC2A40CD6E009C5963 /* RepoDetailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoDetailService.swift; sourceTree = "<group>"; };
+		3B54FF4F2A42D4A3004B21B1 /* launchScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = launchScreen.json; path = ../../../../lottie/launchScreen.json; sourceTree = "<group>"; };
+		3B54FF502A42D4A3004B21B1 /* splashScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = splashScreen.json; path = ../../../../lottie/splashScreen.json; sourceTree = "<group>"; };
+		3B54FF512A42D4A3004B21B1 /* graphLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = graphLottie.json; path = ../../../../lottie/graphLottie.json; sourceTree = "<group>"; };
+		3B54FF562A42E51C004B21B1 /* YourProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourProfileController.swift; sourceTree = "<group>"; };
+		3B54FF582A42EAD0004B21B1 /* Contributor'sInfoUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Contributor'sInfoUIView.swift"; sourceTree = "<group>"; };
+		3B54FF5A2A42FA7E004B21B1 /* RepositoryListUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListUIView.swift; sourceTree = "<group>"; };
+		3B54FF5C2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListTableViewCell.swift; sourceTree = "<group>"; };
+		3B54FF5E2A42FC61004B21B1 /* RepositoryListTableViewInUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListTableViewInUIView.swift; sourceTree = "<group>"; };
 		3B49BAB52A409F58009C5963 /* UserUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUIButton.swift; sourceTree = "<group>"; };
 		3B54FF4D2A42C3FD004B21B1 /* SparkLineUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SparkLineUIView.swift; sourceTree = "<group>"; };
 		3B58A18E29A6164D006A1817 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -316,8 +337,6 @@
 		3BE3F7DC297064340005B640 /* iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BE3F7DE297064340005B640 /* iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosUITests.swift; sourceTree = "<group>"; };
 		3BE3F7E0297064340005B640 /* iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		3BE649D02A3CB650005D9F9E /* launchScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = launchScreen.json; path = ../../../../lottie/launchScreen.json; sourceTree = "<group>"; };
-		3BE649D12A3CB650005D9F9E /* graphLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = graphLottie.json; path = ../../../../lottie/graphLottie.json; sourceTree = "<group>"; };
 		3BE649D52A3CB7EE005D9F9E /* AllUserRankingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUserRankingController.swift; sourceTree = "<group>"; };
 		3BE649DA2A3CBC9E005D9F9E /* AllUserTableviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUserTableviewCell.swift; sourceTree = "<group>"; };
 		3BE649DD2A3CBD40005D9F9E /* CustomUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUserView.swift; sourceTree = "<group>"; };
@@ -326,7 +345,6 @@
 		3BE649E32A3D74CE005D9F9E /* UserProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileImageView.swift; sourceTree = "<group>"; };
 		3BE649E52A3D7553005D9F9E /* CustomETCRankingUserViewElementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomETCRankingUserViewElementView.swift; sourceTree = "<group>"; };
 		3BE649E72A3D80FA005D9F9E /* AllUserRankingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllUserRankingModel.swift; sourceTree = "<group>"; };
-		3BE649EA2A3D878F005D9F9E /* AllRankingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllRankingViewModel.swift; sourceTree = "<group>"; };
 		3BE649EC2A3D9184005D9F9E /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		3BE649EF2A3DA0CC005D9F9E /* DetailInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoController.swift; sourceTree = "<group>"; };
 		3BE649F12A3DA269005D9F9E /* DetailInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoTableViewCell.swift; sourceTree = "<group>"; };
@@ -354,6 +372,8 @@
 		3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrganizationService.swift; sourceTree = "<group>"; };
 		3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailService.swift; sourceTree = "<group>"; };
 		3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailModel.swift; sourceTree = "<group>"; };
+		3BF0C08A2A3EF3B800823271 /* CompanyRankController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyRankController.swift; sourceTree = "<group>"; };
+		3BF0C08C2A3F08BC00823271 /* SelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		3BF0C08F2A3F517D00823271 /* CompareChooseRepoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareChooseRepoViewController.swift; sourceTree = "<group>"; };
 		3BF0C0912A3F607E00823271 /* CompareRepoUserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoUserController.swift; sourceTree = "<group>"; };
 		3BF0C0942A3F61FA00823271 /* CustomUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIView.swift; sourceTree = "<group>"; };
@@ -439,6 +459,7 @@
 				3BE649F72A3DA84D005D9F9E /* DetailInfoModel.swift */,
 				3BE649FF2A3DC6C5005D9F9E /* RepositoryListInOrganizationModel.swift */,
 				3BE64A0F2A3E05E1005D9F9E /* BlockChainListModel.swift */,
+				3B49BAB92A40CC37009C5963 /* DetailRepoModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -620,6 +641,26 @@
 			path = Certification;
 			sourceTree = "<group>";
 		};
+		3B49BABB2A40CD64009C5963 /* Refactcoring */ = {
+			isa = PBXGroup;
+			children = (
+				3B49BABC2A40CD6E009C5963 /* RepoDetailService.swift */,
+			);
+			path = Refactcoring;
+			sourceTree = "<group>";
+		};
+		3B54FF552A42E506004B21B1 /* YourProfile */ = {
+			isa = PBXGroup;
+			children = (
+				3B54FF562A42E51C004B21B1 /* YourProfileController.swift */,
+				3B54FF5A2A42FA7E004B21B1 /* RepositoryListUIView.swift */,
+				3B54FF5C2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift */,
+				3B54FF5E2A42FC61004B21B1 /* RepositoryListTableViewInUIView.swift */,
+				3B54FF582A42EAD0004B21B1 /* Contributor'sInfoUIView.swift */,
+			);
+			path = YourProfile;
+			sourceTree = "<group>";
+		};
 		3B5B175029DC73D900571A8D /* OrganizationRankings */ = {
 			isa = PBXGroup;
 			children = (
@@ -695,8 +736,9 @@
 		3B5FF1882A27364E0022BE90 /* LottieFiles */ = {
 			isa = PBXGroup;
 			children = (
-				3BE649D12A3CB650005D9F9E /* graphLottie.json */,
-				3BE649D02A3CB650005D9F9E /* launchScreen.json */,
+				3B54FF512A42D4A3004B21B1 /* graphLottie.json */,
+				3B54FF4F2A42D4A3004B21B1 /* launchScreen.json */,
+				3B54FF502A42D4A3004B21B1 /* splashScreen.json */,
 			);
 			path = LottieFiles;
 			sourceTree = "<group>";
@@ -798,7 +840,6 @@
 			isa = PBXGroup;
 			children = (
 				3BE649E92A3D8747005D9F9E /* Refactoring */,
-				A30BA46C298415B8008B594E /* SearchPageViewModel.swift */,
 				3B9CF3D5298FB5A700495D35 /* ALLUserInfoViewModel.swift */,
 				3B060FD529911158000B2518 /* MainViewModel.swift */,
 				3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */,
@@ -899,7 +940,8 @@
 		3BE649E92A3D8747005D9F9E /* Refactoring */ = {
 			isa = PBXGroup;
 			children = (
-				3BE649EA2A3D878F005D9F9E /* AllRankingViewModel.swift */,
+				3B49BAB72A40C71F009C5963 /* RepoDetailViewModel.swift */,
+				A30BA46C298415B8008B594E /* SearchPageViewModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -936,6 +978,7 @@
 		3BE64A012A3DEB70005D9F9E /* View */ = {
 			isa = PBXGroup;
 			children = (
+				3B54FF552A42E506004B21B1 /* YourProfile */,
 				3BF0C08E2A3F515000823271 /* CompareViewController */,
 				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
 				3B3CE9DA29B46AA700B2594B /* LoginController */,
@@ -953,9 +996,8 @@
 		3BE64A022A3DEBCF005D9F9E /* RankingController */ = {
 			isa = PBXGroup;
 			children = (
-				3BE649D52A3CB7EE005D9F9E /* AllUserRankingController.swift */,
-				3BE649D72A3CBBFF005D9F9E /* TopRanking */,
-				3BE649DC2A3CBD0A005D9F9E /* CustomUnderRanking */,
+				3BF0C0892A3EF39600823271 /* CompanyRanking */,
+				3BF0C0862A3EE57E00823271 /* AllRanking */,
 			);
 			path = RankingController;
 			sourceTree = "<group>";
@@ -1005,6 +1047,25 @@
 			path = MainViewController;
 			sourceTree = "<group>";
 		};
+
+		3BF0C0862A3EE57E00823271 /* AllRanking */ = {
+			isa = PBXGroup;
+			children = (
+				3BE649D52A3CB7EE005D9F9E /* AllUserRankingController.swift */,
+				3BF0C08C2A3F08BC00823271 /* SelectionCollectionViewCell.swift */,
+				3BE649DC2A3CBD0A005D9F9E /* CustomUnderRanking */,
+				3BE649D72A3CBBFF005D9F9E /* TopRanking */,
+			);
+			path = AllRanking;
+			sourceTree = "<group>";
+		};
+		3BF0C0892A3EF39600823271 /* CompanyRanking */ = {
+			isa = PBXGroup;
+			children = (
+				3BF0C08A2A3EF3B800823271 /* CompanyRankController.swift */,
+			);
+			path = CompanyRanking;
+
 		3BF0C08E2A3F515000823271 /* CompareViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1025,11 +1086,13 @@
 				3B49BAB52A409F58009C5963 /* UserUIButton.swift */,
 			);
 			path = CustomUIView;
+
 			sourceTree = "<group>";
 		};
 		A30BA46E29841C1E008B594E /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3B49BABB2A40CD64009C5963 /* Refactcoring */,
 				A30BA46F29841C97008B594E /* SearchPageService.swift */,
 				3B9CF3D3298F9B8C00495D35 /* ALLUserInfoService.swift */,
 				3BE6AD2E2993C6D300B22EBD /* RepoContributorInfoService.swift */,
@@ -1190,11 +1253,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B54FF532A42D4A3004B21B1 /* splashScreen.json in Resources */,
+				3B54FF542A42D4A3004B21B1 /* graphLottie.json in Resources */,
+				3B54FF522A42D4A3004B21B1 /* launchScreen.json in Resources */,
 				3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */,
 				3B1DB8842963428B00308F43 /* LaunchScreen.storyboard in Resources */,
 				3B1DB8812963428B00308F43 /* Assets.xcassets in Resources */,
-				3BE649D22A3CB650005D9F9E /* launchScreen.json in Resources */,
-				3BE649D32A3CB650005D9F9E /* graphLottie.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1229,11 +1293,16 @@
 				3B3CE9DC29B47EDF00B2594B /* UserDBId.swift in Sources */,
 				3B5E07FF29BEF7E50090E8A6 /* GithubTokenModel.swift in Sources */,
 				3BA78D9F2A04FFD0000ACAD1 /* AdminTabbarController.swift in Sources */,
+				3B49BAB82A40C71F009C5963 /* RepoDetailViewModel.swift in Sources */,
 				3B5B174B29DC584800571A8D /* AllOrganizationRankingModel.swift in Sources */,
 				3B49BAB62A409F58009C5963 /* UserUIButton.swift in Sources */,
 				A35F1FB029DECEFB00A4ABD0 /* FAQTableViewCell.swift in Sources */,
 				A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */,
+
+				3B54FF572A42E51C004B21B1 /* YourProfileController.swift in Sources */,
+
 				3BF0C0992A3F7C1F00823271 /* CompareTableViewCell.swift in Sources */,
+
 				3BA78D942A04EED9000ACAD1 /* AdminCheckService.swift in Sources */,
 				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
 				3B5FF1582A25EBED0022BE90 /* ChooseLanguageView.swift in Sources */,
@@ -1290,11 +1359,13 @@
 				3B9756E6298A162200F27094 /* MyOrganizationListController.swift in Sources */,
 				3B9756E4298A15BB00F27094 /* MyRepositoryRankingController.swift in Sources */,
 				3B110FF32A24C96D008C99F0 /* SearchResultUIVIew.swift in Sources */,
+				3B49BABA2A40CC37009C5963 /* DetailRepoModel.swift in Sources */,
 				3BD6EDDE29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift in Sources */,
 				3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */,
 				3B00229F29879F7D003FA5CC /* SettingTableViewCell.swift in Sources */,
 				3BE649E42A3D74CE005D9F9E /* UserProfileImageView.swift in Sources */,
 				3B5B5F5E29E8228F0017C5C9 /* UserProfileController.swift in Sources */,
+				3B54FF5F2A42FC61004B21B1 /* RepositoryListTableViewInUIView.swift in Sources */,
 				3BE64A1F2A3E2AFE005D9F9E /* ProfileViewController.swift in Sources */,
 				3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */,
 				3BF0C09B2A3F808000823271 /* CompareCollectionViewCell.swift in Sources */,
@@ -1306,7 +1377,6 @@
 				3B5B175D29DC7B2900571A8D /* TypeOrganizationRankingService.swift in Sources */,
 				3B0022A52987ABA1003FA5CC /* FAQPage.swift in Sources */,
 				3B110FFB2A24DDCA008C99F0 /* CustomButton.swift in Sources */,
-				3BE649EB2A3D878F005D9F9E /* AllRankingViewModel.swift in Sources */,
 				3BE649E22A3CD1E6005D9F9E /* CustomFirstRankingUserViewElementView.swift in Sources */,
 				3B18AA1E29A7B1E90051C086 /* KlipModel.swift in Sources */,
 				3B110FE82A23A895008C99F0 /* SearchViewController.swift in Sources */,
@@ -1323,6 +1393,8 @@
 				3BE64A1D2A3E2AF2005D9F9E /* CompareViewController.swift in Sources */,
 				3B29804929ACCDC800967B6E /* CompareSelectedUserTableView.swift in Sources */,
 				3BA78D962A04F112000ACAD1 /* AdminViewModel.swift in Sources */,
+				3B54FF5D2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift in Sources */,
+				3BF0C08D2A3F08BC00823271 /* SelectionCollectionViewCell.swift in Sources */,
 				3BA08A8429C362C1004359A9 /* TypeCollectionViewCell.swift in Sources */,
 				3B5B174F29DC595D00571A8D /* OrganizationRankingViewModel.swift in Sources */,
 				3B61080E29E9A142000D7A5A /* MyProfileInfoModel.swift in Sources */,
@@ -1335,6 +1407,7 @@
 				3BE6AD312993CF8500B22EBD /* RepoContributorInfoViewModel.swift in Sources */,
 				3BE649F22A3DA269005D9F9E /* DetailInfoTableViewCell.swift in Sources */,
 				3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */,
+				3B49BABD2A40CD6E009C5963 /* RepoDetailService.swift in Sources */,
 				3BA2013929980661008978A5 /* MainService.swift in Sources */,
 				3BA20137299805AE008978A5 /* MainModel.swift in Sources */,
 				3BD6EDDC29DD664600DEF7E0 /* MemberInOrganizationModel.swift in Sources */,
@@ -1361,10 +1434,12 @@
 				3B5B5F6029E84C000017C5C9 /* StoreView.swift in Sources */,
 				A3754FA02995653B00A683A9 /* TierTokenCustomUIView.swift in Sources */,
 				3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */,
+				3BF0C08B2A3EF3B800823271 /* CompanyRankController.swift in Sources */,
 				3BE64A142A3E2A53005D9F9E /* TabBarViewController.swift in Sources */,
 				3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */,
 				3B3D2E0B29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift in Sources */,
 				3BE649E62A3D7553005D9F9E /* CustomETCRankingUserViewElementView.swift in Sources */,
+				3B54FF592A42EAD0004B21B1 /* Contributor'sInfoUIView.swift in Sources */,
 				3BE649DE2A3CBD40005D9F9E /* CustomUserView.swift in Sources */,
 				3B3D2E0929D5C0B8001A702C /* OrganizationCertificationController.swift in Sources */,
 				3B9597A229D98193008E9335 /* CertificationEmailController.swift in Sources */,
@@ -1376,6 +1451,7 @@
 				A37AA6EE29A525C5002812F6 /* TabBarController.swift in Sources */,
 				3B61080C29E9A10F000D7A5A /* MyProfileService.swift in Sources */,
 				3B060FD629911158000B2518 /* MainViewModel.swift in Sources */,
+				3B54FF5B2A42FA7E004B21B1 /* RepositoryListUIView.swift in Sources */,
 				A3ADC97F29911B50003D6483 /* CompareController.swift in Sources */,
 				A37AA6F629AC988E002812F6 /* CompareUserController.swift in Sources */,
 			);
@@ -1562,7 +1638,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin2.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin1.ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1591,7 +1667,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin2.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin1.ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

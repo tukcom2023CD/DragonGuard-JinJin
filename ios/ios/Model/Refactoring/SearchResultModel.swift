@@ -8,13 +8,18 @@
 import Foundation
 
 struct SearchResultModel{
-    let create: String
+    let id: Int
+    let name: String
     let language: String
-    let title: String
+    let description: String
+    let createdAt: String
 }
 
 struct SearchResultDecodingModel: Codable{
-    let create: String
-    let language: String
-    let title: String
+    let id: Int
+    let name: String?
+    let language: String?
+    let description: String?
+    let createdAt: String?
+    
 }

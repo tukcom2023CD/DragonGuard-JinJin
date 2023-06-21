@@ -24,22 +24,32 @@ final class SearchPageService {
         let access = UserDefaults.standard.string(forKey: "Access")
 
         print("SearchUrl \(url)")
+        print(access)
         return Observable.create(){ observer in
-            AF.request(url, method: .get, headers: ["Authorization": "Bearer \(access ?? "")"])
+            AF.request(url,
+                       method: .get,
+                       headers: ["Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
-                .responseDecodable(of: [SearchResultDecodingModel].self) { response in
-                    guard let responseResult = response.value else {return}
-                    var resultArray = [SearchResultModel]() // 결과 저장할 변수
-                    
-                    if(responseResult.count != 0 && resultArray.count == 0){
-                        for data in responseResult {
-//                            let dataBundle = SearchPageResultModel(name: data.name,id: data.id)
-                            let dataBundle = SearchResultModel(create: data.title, language: data.language, title: data.title)
-                            resultArray.append(dataBundle)
-                        }
-                        observer.onNext(resultArray)
-                    }
+                .responseJSON { res in
+                    print(res)
                 }
+//                .responseDecodable(of: [SearchResultDecodingModel].self) { response in
+//                    print(response)
+//                    guard let responseResult = response.value else {return}
+//                    var resultArray = [SearchResultModel]() // 결과 저장할 변수
+//
+//                    if(responseResult.count != 0 && resultArray.count == 0){
+//                        for data in responseResult {
+//                            let dataBundle = SearchResultModel(id: data.id,
+//                                                               name: data.name ?? "",
+//                                                               language: data.language ?? "",
+//                                                               description: data.description ?? "",
+//                                                               createdAt: data.createdAt ?? "")
+//                            resultArray.append(dataBundle)
+//                        }
+//                        observer.onNext(resultArray)
+//                    }
+//                }
             
             return Disposables.create()
         }

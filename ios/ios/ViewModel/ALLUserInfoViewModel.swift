@@ -14,7 +14,7 @@ final class ALLUserInfoViewModel{
     let disposeBag = DisposeBag()
     var pageCount = 0
     
-    func getAllRanking() -> Observable<[UserInfoModel]>{
+    func getAllRanking() -> Observable<[AllUserRankingModel]>{
         return Observable.create(){ observer in
             self.service.getMemberInfo(page: self.pageCount, size: 30)
                 .subscribe(onNext: { rankingList in

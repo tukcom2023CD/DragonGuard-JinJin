@@ -17,33 +17,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-//        if let accessToken = UserDefaults.standard.string(forKey: "Access"),
-//            let refreshToken = UserDefaults.standard.string(forKey: "Refresh"){
-//
-//            checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
-//        }
-//        else{
-//            moveLoginController()
-//        }
-        let rootView = RepoDetailController()
-        window?.rootViewController = rootView
-        window?.makeKeyAndVisible()
+        if let accessToken = UserDefaults.standard.string(forKey: "Access"),
+            let refreshToken = UserDefaults.standard.string(forKey: "Refresh"){
+
+            checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
+        }
+        else{
+            moveLoginController()
+        }
+        
+//        let rootView = AllUserRankingController()
+//        window?.rootViewController = rootView
+//        window?.makeKeyAndVisible()
     }
     
     // MARK: go to LoginController
     func moveLoginController(){
         let rootView = LoginController()
         let nc = UINavigationController(rootViewController: rootView)
-        window?.rootViewController = nc
+        window?.rootViewController = rootView
         window?.makeKeyAndVisible()
     }
     
     // MARK: If success User, go to MainController
     func moveMainController(){
-        let rootView = LoginController()
-        rootView.autoLoginCheck = true
+        let rootView = SearchViewController()
+//        rootView.autoLoginCheck = true
         let nc = UINavigationController(rootViewController: rootView)
-        window?.rootViewController = nc
+        window?.rootViewController = rootView
         window?.makeKeyAndVisible()
     }
     
@@ -53,6 +54,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
         
         AF.request(url,
                    headers: ["Authorization": "Bearer \(accessToken)"])
+        .validate(statusCode: 200..<205)
         .responseDecodable(of: MainDecodingModel.self ){ response in
                 switch response.result{
                 case .success(let data):
@@ -84,6 +86,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
         
         AF.request(url,
                    headers: ["accessToken" : accessToken, "refreshToken" : refreshToken])
+        .validate(statusCode: 200..<205)
         .responseDecodable(of: TokenModel.self){ response in
             switch response.result{
             case .success(let data):

@@ -15,7 +15,9 @@ final class SearchViewController: UIViewController{
     private var searchBarTopConstraint: Constraint?
     private var resultList: [SearchResultModel] = []
     private let disposeBag = DisposeBag()
-    var beforePage: String? // 이전 페이지 확인하는 변수
+    private var isInfiniteScroll = false // 무한 스크롤 1번만 로딩되게 확인하는 변수
+    var beforePage: String? = "Main"// 이전 페이지 확인하는 변수
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -219,8 +221,8 @@ final class SearchViewController: UIViewController{
             resultUI.isUserInteractionEnabled = true
             
             resultUI.addGestureRecognizer(tapGesture)
-            resultUI.inputInfo(title: result.title,
-                               create: result.create,
+            resultUI.inputInfo(title: result.name,
+                               create: result.createdAt,
                                language: result.language)
             stackView.addArrangedSubview(resultUI)
         }
@@ -236,26 +238,21 @@ final class SearchViewController: UIViewController{
          */
         let comparePage = CompareController()
         
-        let nextPage = RepoDetailController()
-        nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].title
-        nextPage.modalPresentationStyle = .fullScreen
-        self.present(nextPage,animated: true)
-        
         if beforePage == "Main"{    // 레포 상세조회로 이동
             let nextPage = RepoDetailController()
-            nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].title
+            nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].name
             nextPage.modalPresentationStyle = .fullScreen
             self.present(nextPage,animated: true)
         }
         else if beforePage == "Compare1"{
-            comparePage.repository1 = resultList[sender.view?.tag ?? -1].title
-            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 1, NotificationKey.repository: resultList[sender.view?.tag ?? -1].title])
+            comparePage.repository1 = resultList[sender.view?.tag ?? -1].name
+            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 1, NotificationKey.repository: resultList[sender.view?.tag ?? -1].name])
             resultList = []
             self.dismiss(animated: true)
         }
         else if beforePage == "Compare2"{
-            comparePage.repository2 = resultList[sender.view?.tag ?? -1].title
-            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 2, NotificationKey.repository: resultList[sender.view?.tag ?? -1].title])
+            comparePage.repository2 = resultList[sender.view?.tag ?? -1].name
+            NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 2, NotificationKey.repository: resultList[sender.view?.tag ?? -1].name])
             resultList = []
             self.dismiss(animated: true)
         }
@@ -288,33 +285,34 @@ final class SearchViewController: UIViewController{
     
     // MARK: 테스트용 함수
     private func testData(){
-        for _ in 0...10{
-            resultList.append(SearchResultModel(create: "2022", language: "swift", title: "hi"))
-        }
+//        for _ in 0...10{
+//            resultList.append(SearchResultModel(create: "2022", language: "swift", title: "hi"))
+//        }
     }
     
 }
 
 extension UIScrollView {
     
-    func updateContentSize(cellHeight: CGFloat) {
-        let unionCalculatedTotalRect = recursiveUnionInDepthFor(view: self)
-        
-        // 계산된 크기로 컨텐츠 사이즈 설정
-        self.contentSize = CGSize(width: self.frame.width, height: unionCalculatedTotalRect.height)
-    }
+//    func updateContentSize(cellHeight: CGFloat) {
+//        let unionCalculatedTotalRect = recursiveUnionInDepthFor(view: self)
+//
+//        // 계산된 크기로 컨텐츠 사이즈 설정
+//        self.contentSize = CGSize(width: self.frame.width, height: unionCalculatedTotalRect.height)
+//    }
+//
+//    private func recursiveUnionInDepthFor(view: UIView) -> CGRect {
+//        var totalRect: CGRect = .zero
+//
+//        // 모든 자식 View의 컨트롤의 크기를 재귀적으로 호출하며 최종 영역의 크기를 설정
+//        for subView in view.subviews {
+//            totalRect = totalRect.union(recursiveUnionInDepthFor(view: subView))
+//        }
+//
+//        // 최종 계산 영역의 크기를 반환
+//        return totalRect.union(view.frame)
+//    }
     
-    private func recursiveUnionInDepthFor(view: UIView) -> CGRect {
-        var totalRect: CGRect = .zero
-        
-        // 모든 자식 View의 컨트롤의 크기를 재귀적으로 호출하며 최종 영역의 크기를 설정
-        for subView in view.subviews {
-            totalRect = totalRect.union(recursiveUnionInDepthFor(view: subView))
-        }
-        
-        // 최종 계산 영역의 크기를 반환
-        return totalRect.union(view.frame)
-    }
 }
 
 // 스크롤 될 때 뷰 올라가게 하기
@@ -341,6 +339,8 @@ extension SearchViewController: UIScrollViewDelegate {
                 searchBarTopConstraint.update(offset: scrollView.contentOffset.y - self.backgroundUIView.frame.height)
             }
             
+            
+            
         }
         else {
             topConstraint.update(offset: 0)
@@ -348,12 +348,29 @@ extension SearchViewController: UIScrollViewDelegate {
             self.searchBtnUIView.backgroundColor = .clear
         }
         
+        
+        let position = scrollView.contentOffset.y
+        
+        if position > (contentView.frame.height - scrollView.frame.size.height){
+            if self.isInfiniteScroll{
+                SearchPageViewModel.viewModel.updateData()
+                    .subscribe(onNext: { list in
+                        list.forEach { data in
+                            self.resultList.append(data)
+                        }
+                        self.inputDataIntoList()
+                    })
+                    .disposed(by: disposeBag)
+                self.isInfiniteScroll = false
+            }
+        }
+        
     }
 }
 
 extension SearchViewController: SendSearchResultList{
     func sendList(list: [SearchResultModel]) {
-        print(list)
+
         resultList = []
         self.resultList = list
         inputDataIntoList()
