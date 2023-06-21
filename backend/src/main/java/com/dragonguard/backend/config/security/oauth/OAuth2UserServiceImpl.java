@@ -37,22 +37,26 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryClientProducer;
 
     @Override
-    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String githubId = (String) attributes.get("login");
 
         Member user = memberQueryRepository.findByGithubId(githubId)
-                .orElseGet(() -> memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY)));
+                .orElse(memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY)));
         String githubToken = userRequest.getAccessToken().getTokenValue();
-        user.updateGithubToken(githubToken);
+        setGithubToken(githubToken, user);
 
-        if (StringUtils.hasText(user.getWalletAddress()) && user.getAuthStep().equals(AuthStep.ALL)) {
+        if (StringUtils.hasText(user.getWalletAddress()) && !user.getAuthStep().equals(AuthStep.GITHUB_ONLY)) {
             kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId, githubToken));
         }
         kafkaRepositoryClientProducer.send(new KafkaRepositoryRequest(githubId, githubToken));
 
         return userDetailsMapper.mapToLoginUser(user);
+    }
+
+    @Transactional
+    public void setGithubToken(String githubToken, Member user) {
+        user.updateGithubToken(githubToken);
     }
 }
