@@ -45,7 +45,10 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         String transactionHash = transferTransaction(request, walletAddress);
         BigInteger amount = transferAndGetBalanceOfTransaction(walletAddress);
 
-        if (validateAndSaveBlockchain(transactionHash, request, member, amount)) return;
+        if (hasSameAmount(request, amount)) {
+            blockchainRepository.save(blockchainMapper.toEntity(amount, member, request, transactionHash));
+            return;
+        }
         checkAdminAndSaveBlockchain(transactionHash, request, member);
     }
 
@@ -93,14 +96,6 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
             blockchainRepository.save(blockchainMapper.toEntity(request.getAmount(), member, request, transactionHash));
         }
-    }
-
-    private boolean validateAndSaveBlockchain(final String transactionHash, final ContractRequest request, final Member member, final BigInteger amount) {
-        if (hasSameAmount(request, amount)) {
-            blockchainRepository.save(blockchainMapper.toEntity(amount, member, request, transactionHash));
-            return true;
-        }
-        return false;
     }
 
     private boolean hasSameAmount(final ContractRequest request, final BigInteger amount) {
