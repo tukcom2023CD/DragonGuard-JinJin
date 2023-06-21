@@ -42,7 +42,8 @@ final class MainViewController: UIViewController {
     // MARK: 사용자 프로필
     private lazy var profileImage: UIImageView = {
         let img = UIImageView()
-        img.layer.cornerRadius = 20
+        img.image = UIImage(named: "pomi")?.resize(newWidth: 80, newHeight: 80)
+        img.layer.cornerRadius = 120
         img.backgroundColor = .white
         img.layer.shadowOffset = CGSize(width: 5, height: 5)
         img.layer.shadowOpacity = 0.7
@@ -61,15 +62,15 @@ final class MainViewController: UIViewController {
     }()
     
     // MARK: tier 배경
-    private lazy var tierView: TitleView = {
-        let view = TitleView()
-        view.backgroundColor = .white
-        view.layer.shadowOpacity = 1
-        view.layer.shadowOffset = CGSize(width: 3, height: 3)
-        view.layer.cornerRadius = 20
-        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-        return view
-    }()
+//    private lazy var tierView: TitleView = {
+//        let view = TitleView()
+//        view.backgroundColor = .white
+//        view.layer.shadowOpacity = 1
+//        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+//        view.layer.cornerRadius = 20
+//        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+//        return view
+//    }()
     
     // MARK: tier 글자
     private lazy var tierLabel: UILabel = {
@@ -89,15 +90,15 @@ final class MainViewController: UIViewController {
     }()
     
     // MARK: token 배경
-    private lazy var tokenView: TitleView = {
-        let view = TitleView()
-        view.backgroundColor = .white
-        view.layer.shadowOpacity = 1
-        view.layer.shadowOffset = CGSize(width: 3, height: 3)
-        view.layer.cornerRadius = 20
-        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-        return view
-    }()
+//    private lazy var tokenView: TitleView = {
+//        let view = TitleView()
+//        view.backgroundColor = .white
+//        view.layer.shadowOpacity = 1
+//        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+//        view.layer.cornerRadius = 20
+//        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+//        return view
+//    }()
     
     // MARK: token 글자
     private lazy var tokenLabel: UILabel = {
@@ -125,15 +126,15 @@ final class MainViewController: UIViewController {
     }()
     
     // MARK: contribution 배경
-    private lazy var contributionView: TitleView = {
-        let view = TitleView()
-        view.backgroundColor = .white
-        view.layer.shadowOpacity = 1
-        view.layer.shadowOffset = CGSize(width: 3, height: 3)
-        view.layer.cornerRadius = 20
-        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-        return view
-    }()
+//    private lazy var contributionView: TitleView = {
+//        let view = TitleView()
+//        view.backgroundColor = .white
+//        view.layer.shadowOpacity = 1
+//        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+//        view.layer.cornerRadius = 20
+//        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+//        return view
+//    }()
     
     // MARK: contribution 글자
     private lazy var cNameLabel: UILabel = {
@@ -154,15 +155,15 @@ final class MainViewController: UIViewController {
     }()
     
     // MARK: group 배경
-    private lazy var groupView: TitleView = {
-        let view = TitleView()
-        view.backgroundColor = .white
-        view.layer.shadowOpacity = 1
-        view.layer.shadowOffset = CGSize(width: 3, height: 3)
-        view.layer.cornerRadius = 20
-        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-        return view
-    }()
+//    private lazy var groupView: TitleView = {
+//        let view = TitleView()
+//        view.backgroundColor = .white
+//        view.layer.shadowOpacity = 1
+//        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+//        view.layer.cornerRadius = 20
+//        view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+//        return view
+//    }()
     
     // MARK: contribution 글자
     private lazy var gNameLabel: UILabel = {
@@ -191,17 +192,17 @@ final class MainViewController: UIViewController {
         self.view.addSubview(searchBtn)
         self.view.addSubview(profileImage)
         self.view.addSubview(nameLabel)
-        self.view.addSubview(tierView)
+        // self.view.addSubview(tierView)
         self.view.addSubview(tierLabel)
         self.view.addSubview(tierImage)
-        self.view.addSubview(tokenView)
+        // self.view.addSubview(tokenView)
         self.view.addSubview(tokenLabel)
         self.view.addSubview(tokenImage)
         self.view.addSubview(linkImage)
-        self.view.addSubview(contributionView)
+        // self.view.addSubview(contributionView)
         self.view.addSubview(cNameLabel)
         self.view.addSubview(contributionLabel)
-        self.view.addSubview(groupView)
+        // self.view.addSubview(groupView)
         self.view.addSubview(gNameLabel)
         self.view.addSubview(groupLabel)
         
@@ -219,15 +220,15 @@ final class MainViewController: UIViewController {
         }
         
         profileImage.snp.makeConstraints { make in
-            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
-            make.leading.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(searchBtn.snp.bottom).offset(50)
+            make.leading.equalTo(searchBtn.snp.leading)
+            
         }
 
         nameLabel.snp.makeConstraints { make in
-            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
-            make.leading.equalTo(profileImage.snp.trailing).offset(10)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(searchBtn.snp.bottom).offset(50)
+            make.leading.equalTo(profileImage.snp.trailing).offset(30)
+            make.centerY.equalTo(view.snp_centerYWithinMargins)
         }
 
     }
