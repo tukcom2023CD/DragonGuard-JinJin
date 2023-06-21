@@ -20,8 +20,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ibm_semibold"
+            android:gravity="center"
             android:textColor="@color/black"
-            android:layout_weight="1"
+            android:layout_weight="0.9"
             android:textSize="25sp" />
 
         <LinearLayout
@@ -37,14 +38,14 @@
                 android:layout_margin="5dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5"
+                android:layout_weight="1.3"
                 android:background="@drawable/shadow"
                 android:adjustViewBounds="true"/>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3.7"
+                android:layout_weight="3.3"
                 android:orientation="vertical"
                 android:gravity="start|center_vertical">
 
@@ -66,7 +67,17 @@
 
             </LinearLayout>
 
+
         </LinearLayout>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_weight="0.3"
+            android:adjustViewBounds="true"
+            android:alpha="0.3"
+            android:foregroundGravity="top"
+            android:src="@drawable/external_link"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
