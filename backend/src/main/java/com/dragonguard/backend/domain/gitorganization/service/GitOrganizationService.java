@@ -31,14 +31,14 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
         saveAllGitOrganizations(gitOrganizations);
     }
 
-    public Set<GitOrganization> getNotSavedGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
+    private Set<GitOrganization> getNotSavedGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
         return gitOrganizationNames.stream()
                 .filter(org -> !gitOrganizationRepository.existsByName(org.getLogin()))
                 .map(org -> gitOrganizationMapper.toEntity(org.getLogin(), org.getAvatar_url(), member))
                 .collect(Collectors.toSet());
     }
 
-    public void saveAllGitOrganizations(final Set<GitOrganization> gitOrganizations) {
+    private void saveAllGitOrganizations(final Set<GitOrganization> gitOrganizations) {
         gitOrganizationRepository.saveAll(gitOrganizations);
     }
 

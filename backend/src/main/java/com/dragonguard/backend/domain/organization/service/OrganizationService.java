@@ -43,7 +43,7 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
         return new IdResponse<>(organization.getId());
     }
 
-    public Organization getOrSaveOrganization(final OrganizationRequest organizationRequest) {
+    private Organization getOrSaveOrganization(final OrganizationRequest organizationRequest) {
         return organizationRepository.findByNameAndOrganizationTypeAndEmailEndpoint(
                         organizationRequest.getName(),
                         organizationRequest.getOrganizationType(),
@@ -56,14 +56,10 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
         return emailService.sendAndSaveEmail();
     }
 
-    public void findAndAddMember(final AddMemberRequest addMemberRequest) {
+    private void findAndAddMember(final AddMemberRequest addMemberRequest) {
         Organization organization = loadEntity(addMemberRequest.getOrganizationId());
         Member member = memberService.getLoginUserWithPersistence();
         organization.addMember(member, addMemberRequest.getEmail().strip());
-    }
-
-    public List<OrganizationType> getTypes() {
-        return Arrays.asList(OrganizationType.values());
     }
 
     @Transactional(readOnly = true)

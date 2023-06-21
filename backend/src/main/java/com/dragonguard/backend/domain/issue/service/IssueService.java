@@ -27,7 +27,7 @@ public class IssueService implements EntityLoader<Issue, Long> {
         issueRepository.save(issueMapper.toEntity(member, issueNum, year));
     }
 
-    public boolean updateIssueNumIfNotExists(final Member member, final Integer issueNum, final Integer year) {
+    private boolean updateIssueNumIfNotExists(final Member member, final Integer issueNum, final Integer year) {
         if (issueRepository.existsByMemberAndYear(member, year)) {
             findIssueAndUpdateNum(member, issueNum, year);
             return true;
@@ -35,7 +35,7 @@ public class IssueService implements EntityLoader<Issue, Long> {
         return false;
     }
 
-    public void findIssueAndUpdateNum(final Member member, final Integer issueNum, final Integer year) {
+    private void findIssueAndUpdateNum(final Member member, final Integer issueNum, final Integer year) {
         Issue issue = issueRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
         issue.updateIssueNum(issueNum);
     }

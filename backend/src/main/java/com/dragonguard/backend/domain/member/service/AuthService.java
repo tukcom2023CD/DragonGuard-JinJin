@@ -39,7 +39,7 @@ public class AuthService {
         return findMemberAndUpdateRefreshToken(user);
     }
 
-    public JwtToken findMemberAndUpdateRefreshToken(final UserDetailsImpl user) {
+    private JwtToken findMemberAndUpdateRefreshToken(final UserDetailsImpl user) {
         JwtToken jwtToken = jwtTokenProvider.createToken(user);
 
         memberQueryRepository.findById(getLoginUserId())
@@ -49,30 +49,30 @@ public class AuthService {
         return jwtToken;
     }
 
-    public UserDetailsImpl getUserDetails(final String oldAccessToken) {
+    private UserDetailsImpl getUserDetails(final String oldAccessToken) {
         Authentication authentication = jwtValidator.getAuthentication(oldAccessToken);
         return (UserDetailsImpl) authentication.getPrincipal();
     }
 
-    public void validateTokens(final String oldRefreshToken, final String oldAccessToken) {
+    private void validateTokens(final String oldRefreshToken, final String oldAccessToken) {
         validateJwtTokens(oldRefreshToken, oldAccessToken);
         validateIfRefreshTokenExpired(oldRefreshToken);
     }
 
-    public void validateSavedRefreshTokenIfExpired(final String oldRefreshToken, final UUID id) {
+    private void validateSavedRefreshTokenIfExpired(final String oldRefreshToken, final UUID id) {
         String savedToken = memberQueryRepository.findRefreshTokenById(id);
         if (!savedToken.equals(oldRefreshToken)) {
             throw new JwtProcessingException();
         }
     }
 
-    public void validateIfRefreshTokenExpired(final String oldRefreshToken) {
+    private void validateIfRefreshTokenExpired(final String oldRefreshToken) {
         if (!jwtTokenProvider.validateToken(oldRefreshToken)) {
             throw new JwtProcessingException();
         }
     }
 
-    public void validateJwtTokens(final String oldRefreshToken, final String oldAccessToken) {
+    private void validateJwtTokens(final String oldRefreshToken, final String oldAccessToken) {
         if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
             throw new CookieException();
         }

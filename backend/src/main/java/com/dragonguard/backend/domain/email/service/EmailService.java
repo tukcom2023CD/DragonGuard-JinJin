@@ -48,7 +48,7 @@ public class EmailService implements EntityLoader<Email, Long> {
         return new IdResponse<>(savedEmail.getId());
     }
 
-    public void validateMemberEmail(String memberEmail) {
+    private void validateMemberEmail(String memberEmail) {
         if (!StringUtils.hasText(memberEmail)) throw new EmailException();
     }
 
@@ -72,7 +72,7 @@ public class EmailService implements EntityLoader<Email, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public int generateRandomCode() {
+    private int generateRandomCode() {
         return new Random().nextInt(MAX - MIN) + MIN;
     }
 
@@ -91,7 +91,7 @@ public class EmailService implements EntityLoader<Email, Long> {
         } catch (MessagingException e) {}
     }
 
-    public String getEmailText(final Integer code) {
+    private String getEmailText(final Integer code) {
         return "<html><head></head><body><div>다음 번호를 입력해주세요:\n<div><h1>" + code + "</h1></body></html>";
     }
 }

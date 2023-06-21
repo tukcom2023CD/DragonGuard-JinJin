@@ -30,7 +30,7 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
         pullRequestRepository.save(pullRequestMapper.toEntity(member, pullRequestNum, year));
     }
 
-    public void updatePullRequestNum(final Member member, final Integer pullRequestNum, final Integer year) {
+    private void updatePullRequestNum(final Member member, final Integer pullRequestNum, final Integer year) {
         PullRequest pullRequest = pullRequestRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
         pullRequest.updatePullRequestNum(pullRequestNum);
     }
@@ -45,7 +45,7 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public boolean isExistsByMemberAndYear(final Member member, final Integer year) {
+    private boolean isExistsByMemberAndYear(final Member member, final Integer year) {
         return pullRequestRepository.existsByMemberAndYear(member, year);
     }
 }

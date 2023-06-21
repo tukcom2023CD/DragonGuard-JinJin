@@ -45,14 +45,14 @@ public class CommitService implements EntityLoader<Commit, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public void saveIfIsNewCommitWithSameMember(final List<Commit> commits, final Commit commit) {
+    private void saveIfIsNewCommitWithSameMember(final List<Commit> commits, final Commit commit) {
         commits.stream()
                 .filter(c -> isNewCommitWithSameMember(commit, c))
                 .findFirst()
                 .ifPresent(commitRepository::save);
     }
 
-    public boolean isNewCommitWithSameMember(final Commit compareCommit, final Commit commit) {
+    private boolean isNewCommitWithSameMember(final Commit compareCommit, final Commit commit) {
         return !commit.customEqualsWithAmount(compareCommit);
     }
 }

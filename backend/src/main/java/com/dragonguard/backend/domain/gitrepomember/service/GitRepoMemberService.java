@@ -43,17 +43,15 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
         saveOrUpdateGitRepoMembers(gitRepoMembers);
     }
 
-    public void saveOrUpdateGitRepoMembers(final List<GitRepoMember> gitRepoMembers) {
-        try {
-            gitRepoMembers.forEach(gitRepoMember -> gitRepoMemberQueryRepository.findByGitRepoAndMember(
-                            gitRepoMember.getGitRepo(),
-                            gitRepoMember.getMember())
-                    .orElseGet(() -> gitRepoMemberRepository.save(gitRepoMember))
-                    .update(gitRepoMember));
-        } catch (DataIntegrityViolationException | ConstraintViolationException e) {}
+    private void saveOrUpdateGitRepoMembers(final List<GitRepoMember> gitRepoMembers) {
+        gitRepoMembers.forEach(gitRepoMember -> gitRepoMemberQueryRepository.findByGitRepoAndMember(
+                        gitRepoMember.getGitRepo(),
+                        gitRepoMember.getMember())
+                .orElseGet(() -> gitRepoMemberRepository.save(gitRepoMember))
+                .update(gitRepoMember));
     }
 
-    public List<GitRepoMember> validateAndGetGitRepoMembers(final List<GitRepoMemberResponse> gitRepoMemberResponses, final String gitRepoName) {
+    private List<GitRepoMember> validateAndGetGitRepoMembers(final List<GitRepoMemberResponse> gitRepoMemberResponses, final String gitRepoName) {
         return gitRepoMemberResponses.stream()
                 .map(gitRepoResponse -> findByNameAndMemberGithubId(gitRepoName, gitRepoResponse.getGithubId()))
                 .collect(Collectors.toList());
@@ -63,7 +61,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
         gitRepoMemberRepository.saveAll(getGitRepoMembers(gitRepoResponses, gitRepo));
     }
 
-    public List<GitRepoMember> getGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final GitRepo gitRepo) {
+    private List<GitRepoMember> getGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final GitRepo gitRepo) {
         return gitRepoResponses.stream()
                 .distinct()
                 .map(gitRepoResponse ->
@@ -72,7 +70,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
                 .collect(Collectors.toList());
     }
 
-    public GitRepoMember getGitRepoMember(final GitRepoMemberResponse gitRepoMemberResponse, final Member member, final GitRepo gitRepo) {
+    private GitRepoMember getGitRepoMember(final GitRepoMemberResponse gitRepoMemberResponse, final Member member, final GitRepo gitRepo) {
         GitRepoMember gitRepoMember = gitRepoMemberQueryRepository.findByGitRepoAndMember(gitRepo, member)
                 .orElse(gitRepoMemberMapper.toEntity(member, gitRepo));
 
@@ -84,23 +82,20 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
         return gitRepoMember;
     }
 
-    public GitRepo getGitRepoByName(final String gitRepoName) {
+    private GitRepo getGitRepoByName(final String gitRepoName) {
         return gitRepoRepository.findByName(gitRepoName).orElseThrow(EntityNotFoundException::new);
     }
 
-    public Member getMemberByGitRepoResponse(final GitRepoMemberResponse gitRepository) {
+    private Member getMemberByGitRepoResponse(final GitRepoMemberResponse gitRepository) {
         return memberService.findMemberOrSave(new MemberRequest(gitRepository.getGithubId()), AuthStep.NONE);
     }
 
-    public GitRepoMember findByNameAndMemberGithubId(final String gitRepoName, final String githubId) {
-        try {
-            return gitRepoMemberQueryRepository.findByNameAndMemberGithubId(gitRepoName, githubId)
-                    .orElse(gitRepoMemberRepository.save(
-                            gitRepoMemberMapper.toEntity(
-                                    memberService.findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE),
-                                    getGitRepoByName(gitRepoName))));
-        } catch(DataIntegrityViolationException | ConstraintViolationException e) {}
-        return null;
+    private GitRepoMember findByNameAndMemberGithubId(final String gitRepoName, final String githubId) {
+        return gitRepoMemberQueryRepository.findByNameAndMemberGithubId(gitRepoName, githubId)
+                .orElse(gitRepoMemberRepository.save(
+                        gitRepoMemberMapper.toEntity(
+                                memberService.findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE),
+                                getGitRepoByName(gitRepoName))));
     }
 
     @Override
