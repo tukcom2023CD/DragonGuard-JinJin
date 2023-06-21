@@ -114,22 +114,18 @@ final class LoginController: UIViewController{
         print("url \(url)")
         let urlRequest = URLRequest(url: url)
         let vc = UIViewController()
-
         let newViewController = UINavigationController(rootViewController: vc )
         let webView = WKWebView(frame: vc.view.bounds)
         newViewController.view.addSubview(webView)
-
         
         webView.navigationDelegate = self
         webView.load(urlRequest)
-
         
         webView.goBack()
         webView.reload()
         newViewController.modalPresentationStyle = .fullScreen
         self.present(newViewController,animated: true)
 //        self.navigationController?.pushViewController(newViewController,animated: true)
-
         
     }
 
@@ -240,7 +236,6 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                 var refreshTokenCheck = false
                 
                 for cookie in cookies{
-                    print(cookie)
                     if cookie.name == "Access" {
                         UserDefaults.standard.set(cookie.value, forKey:"Access")
                         print("@@@ Access  저장하기: \(cookie.value)")
