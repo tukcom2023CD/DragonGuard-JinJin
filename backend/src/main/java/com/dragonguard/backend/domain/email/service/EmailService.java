@@ -72,11 +72,11 @@ public class EmailService implements EntityLoader<Email, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private int generateRandomCode() {
+    public int generateRandomCode() {
         return new Random().nextInt(MAX - MIN) + MIN;
     }
 
-    public void requestToSendEmail(final String memberEmail, final int randomCode) {
+    private void requestToSendEmail(final String memberEmail, final int randomCode) {
         kafkaEmailProducer.send(new KafkaEmail(memberEmail, randomCode));
     }
 
@@ -91,7 +91,7 @@ public class EmailService implements EntityLoader<Email, Long> {
         } catch (MessagingException e) {}
     }
 
-    private String getEmailText(final Integer code) {
+    public String getEmailText(final Integer code) {
         return "<html><head></head><body><div>다음 번호를 입력해주세요:\n<div><h1>" + code + "</h1></body></html>";
     }
 }

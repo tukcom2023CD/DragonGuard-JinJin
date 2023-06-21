@@ -4,6 +4,7 @@ import com.dragonguard.backend.domain.organization.dto.request.OrganizationReque
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * @author 김승진
@@ -13,5 +14,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface OrganizationMapper {
     Organization toEntity(final OrganizationRequest organizationRequest);
+
+    @Mapping(target = "tokenSum", expression = "java(organization.getSumOfMemberTokens())")
     OrganizationResponse toResponse(final Organization organization);
 }

@@ -1,13 +1,11 @@
 package com.dragonguard.backend.domain.member.controller;
 
-import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
-import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
-import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
-import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
+import com.dragonguard.backend.domain.member.dto.response.*;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import com.dragonguard.backend.support.fixture.member.dto.MemberRequestFixture;
 import org.junit.jupiter.api.DisplayName;
@@ -26,8 +24,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -77,7 +75,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isNoContent());
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -97,7 +95,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isNoContent());
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -108,19 +106,18 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회가 수행되는가")
     void getMember() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh");
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1000L, "한국공학대학교", "http://abcd.efgh", 1, true, List.of("ohksj", "ksj77"));
         given(memberService.getMember()).willReturn(expected);
 
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/members/me")
+                        get("/members/me/details")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$.githubId").value("ohksj77"));
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -131,19 +128,18 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회가 수행되는가")
     void getMemberDetails() throws Exception {
         // given
-        MemberDetailResponse expected = new MemberDetailResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh", List.of("tukcom2023CD"), List.of("DragonGuard-JinJin", "DragonGuard", "Jin-Jin"));
-        given(memberService.findMemberDetailByGithubId(any())).willReturn(expected);
+        MemberGitReposAndGitOrganizationsResponse expected = new MemberGitReposAndGitOrganizationsResponse(List.of(new MemberGitOrganizationResponse("tukcom2023CD", "http://orgGithubProfile")), List.of("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/DragonGuard", "tukcom2023CD/Jin-Jin"), "http://memberGithubProfile");
+        given(memberService.findMemberDetails()).willReturn(expected);
 
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/members?githubId=ohksj77")
+                        get("/members/me/details")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$.githubId").value("ohksj77"));
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -178,11 +174,11 @@ class MemberControllerTest extends RestDocumentTest {
     void getRanking() throws Exception {
         // given
         List<MemberRankResponse> expected = List.of(
-                new MemberRankResponse(UUID.randomUUID(), "Kim", "ohksj77", 10000L, Tier.MASTER),
-                new MemberRankResponse(UUID.randomUUID(), "Seung", "ohksj", 5000L, Tier.RUBY),
-                new MemberRankResponse(UUID.randomUUID(), "Jin", "ohksj777", 3000L, Tier.DIAMOND),
-                new MemberRankResponse(UUID.randomUUID(), "Lee", "ohksjj", 1000L, Tier.PLATINUM),
-                new MemberRankResponse(UUID.randomUUID(), "Da", "ohksjksj", 500L, Tier.GOLD));
+                new MemberRankResponse(UUID.randomUUID(), "Kim", "ohksj77", 10000L, Tier.MASTER, "http://github123123412412412profileUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "Seung", "ohksj", 5000L, Tier.RUBY, "http://github123123412412412profileUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "Jin", "ohksj777", 3000L, Tier.DIAMOND, "http://github123123412412412profileUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "Lee", "ohksjj", 1000L, Tier.PLATINUM, "http://github123123412412412profileUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "Da", "ohksjksj", 500L, Tier.GOLD, "http://github123123412412412profileUrl"));
         given(memberService.getMemberRanking(any())).willReturn(expected);
 
         // when
@@ -218,7 +214,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isNoContent());
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -229,7 +225,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("Jwt를 통한 멤버 조회가 수행되는가")
     void getMemberWithJwt() throws Exception {
         // given
-        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1, 1000L, "한국공학대학교", "http://abcd.efgh");
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1000L, "한국공학대학교", "http://abcd.efgh", 1, true, List.of("ohksj", "ksj77"));
         given(memberService.getMember()).willReturn(expected);
 
         // when
@@ -251,10 +247,10 @@ class MemberControllerTest extends RestDocumentTest {
     void getOrganizationMemberRank() throws Exception {
         // given
         List<MemberRankResponse> expected = List.of(
-                new MemberRankResponse(UUID.randomUUID(), "정해진", "HJ39", 20L, Tier.SPROUT),
-                new MemberRankResponse(UUID.randomUUID(), "넓은관용", "Sammuelwoojae", 20L, Tier.SPROUT),
-                new MemberRankResponse(UUID.randomUUID(), "회사승진", "ohksj77", 20L, Tier.SPROUT),
-                new MemberRankResponse(UUID.randomUUID(), "영어수학", "posite", 20L, Tier.SPROUT));
+                new MemberRankResponse(UUID.randomUUID(), "정해진", "HJ39", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "넓은관용", "Sammuelwoojae", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "회사승진", "ohksj77", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"),
+                new MemberRankResponse(UUID.randomUUID(), "영어수학", "posite", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"));
         given(memberService.getMemberRankingByOrganization(any(), any())).willReturn(expected);
 
         // when
@@ -269,5 +265,51 @@ class MemberControllerTest extends RestDocumentTest {
         // docs
         perform.andDo(print())
                 .andDo(document("get member ranking in a organization", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("멤버의 조직에 소속된 레포 조회가 수행되는가")
+    void getMemberGitOrganizationRepo() throws Exception {
+        // given
+        MemberGitOrganizationRepoResponse expected = new MemberGitOrganizationRepoResponse("http://someProfileImageOfOrg", List.of(
+                "tukcom2023CD/DragonGuard-JinJin",
+                "tukcom2023CD/DragonGuard",
+                "tukcom2023CD/Yongari"));
+        given(memberService.getMemberGitOrganizationRepo(any())).willReturn(expected);
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        get("/members/git-organizations/git-repos?name=tukcom2023CD")
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("get member repositories in a organization", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("타 멤버의 상세조회가 수행되는가")
+    void getOtherMemberDetails() throws Exception {
+        // given
+        MemberDetailsResponse expected = new MemberDetailsResponse(
+                1, 2, 3, 4, "http://profileImage", List.of("gitRepo1", "gitRepo2"), "한국공학대학교", 10);
+        given(memberService.getMemberDetails(any())).willReturn(expected);
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        get("/members/details?githubId=ohksj77")
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("get other member details", getDocumentRequest(), getDocumentResponse()));
     }
 }

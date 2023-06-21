@@ -1,16 +1,13 @@
 package com.dragonguard.backend.domain.member.client;
 
-import com.dragonguard.backend.config.github.GithubProperties;
-import com.dragonguard.backend.domain.member.dto.client.MemberPullRequestResponse;
-import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.domain.member.dto.client.MemberClientRequest;
+import com.dragonguard.backend.domain.member.dto.client.MemberPullRequestResponse;
 import com.dragonguard.backend.global.GithubClient;
-import org.springframework.http.HttpHeaders;
+import com.dragonguard.backend.global.exception.WebClientException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -21,16 +18,9 @@ import java.time.LocalDate;
  */
 
 @Component
+@RequiredArgsConstructor
 public class MemberPullRequestClient implements GithubClient<MemberClientRequest, MemberPullRequestResponse> {
-    private final GithubProperties githubProperties;
     private final WebClient webClient;
-    private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";
-    private static final String USER_AGENT = "GITRANK WEB CLIENT";
-
-    public MemberPullRequestClient(GithubProperties githubProperties) {
-        this.githubProperties = githubProperties;
-        webClient = generateWebClient();
-    }
 
     @Override
     public MemberPullRequestResponse requestToGithub(MemberClientRequest request) {
@@ -47,23 +37,5 @@ public class MemberPullRequestClient implements GithubClient<MemberClientRequest
                 .bodyToMono(MemberPullRequestResponse.class)
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
-    }
-
-    private WebClient generateWebClient() {
-        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1))
-                .build();
-
-        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(githubProperties.getUrl());
-        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
-
-        return WebClient.builder()
-                .uriBuilderFactory(factory)
-                .exchangeStrategies(exchangeStrategies)
-                .baseUrl(githubProperties.getUrl())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)
-                .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
-                .defaultHeader(githubProperties.getVersionKey(), githubProperties.getVersionValue())
-                .build();
     }
 }

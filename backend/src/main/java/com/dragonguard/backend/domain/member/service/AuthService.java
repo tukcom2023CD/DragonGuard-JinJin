@@ -49,30 +49,30 @@ public class AuthService {
         return jwtToken;
     }
 
-    private UserDetailsImpl getUserDetails(final String oldAccessToken) {
+    public UserDetailsImpl getUserDetails(final String oldAccessToken) {
         Authentication authentication = jwtValidator.getAuthentication(oldAccessToken);
         return (UserDetailsImpl) authentication.getPrincipal();
     }
 
-    private void validateTokens(final String oldRefreshToken, final String oldAccessToken) {
+    public void validateTokens(final String oldRefreshToken, final String oldAccessToken) {
         validateJwtTokens(oldRefreshToken, oldAccessToken);
         validateIfRefreshTokenExpired(oldRefreshToken);
     }
 
-    private void validateSavedRefreshTokenIfExpired(final String oldRefreshToken, final UUID id) {
+    public void validateSavedRefreshTokenIfExpired(final String oldRefreshToken, final UUID id) {
         String savedToken = memberQueryRepository.findRefreshTokenById(id);
         if (!savedToken.equals(oldRefreshToken)) {
             throw new JwtProcessingException();
         }
     }
 
-    private void validateIfRefreshTokenExpired(final String oldRefreshToken) {
+    public void validateIfRefreshTokenExpired(final String oldRefreshToken) {
         if (!jwtTokenProvider.validateToken(oldRefreshToken)) {
             throw new JwtProcessingException();
         }
     }
 
-    private void validateJwtTokens(final String oldRefreshToken, final String oldAccessToken) {
+    public void validateJwtTokens(final String oldRefreshToken, final String oldAccessToken) {
         if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
             throw new CookieException();
         }

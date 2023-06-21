@@ -1,14 +1,12 @@
 package com.dragonguard.backend.domain.search.client;
 
-import com.dragonguard.backend.config.github.GithubProperties;
 import com.dragonguard.backend.domain.search.dto.client.SearchUserResponse;
-import com.dragonguard.backend.global.exception.WebClientException;
-import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
-import org.springframework.http.HttpHeaders;
+import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.exception.WebClientException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 
@@ -16,7 +14,6 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -24,16 +21,9 @@ import java.util.stream.Collectors;
  */
 
 @Component
+@RequiredArgsConstructor
 public class SearchUserClient implements GithubClient<SearchRequest, SearchUserResponse> {
-    private final GithubProperties githubProperties;
     private final WebClient webClient;
-    private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";
-    private static final String USER_AGENT = "GITRANK WEB CLIENT";
-
-    public SearchUserClient(GithubProperties githubProperties) {
-        this.githubProperties = githubProperties;
-        this.webClient = generateWebClient();
-    }
 
     @Override
     public SearchUserResponse requestToGithub(SearchRequest request) {
@@ -60,7 +50,7 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
                     .queryParam("page", request.getPage())
                     .build();
         }
-        String query = filters.stream().collect(Collectors.joining(" "));
+        String query = String.join(" ", filters);
 
         return uriBuilder -> uriBuilder
                 .path("search")
@@ -68,19 +58,6 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
                 .queryParam("q", request.getName().concat(" " + query))
                 .queryParam("per_page", 10)
                 .queryParam("page", request.getPage())
-                .build();
-    }
-
-    private WebClient generateWebClient() {
-        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1))
-                .build();
-        return WebClient.builder()
-                .exchangeStrategies(exchangeStrategies)
-                .baseUrl(githubProperties.getUrl())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)
-                .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
-                .defaultHeader(githubProperties.getVersionKey(), githubProperties.getVersionValue())
                 .build();
     }
 }

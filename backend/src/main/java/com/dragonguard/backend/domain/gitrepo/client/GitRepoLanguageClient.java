@@ -1,13 +1,11 @@
 package com.dragonguard.backend.domain.gitrepo.client;
 
-import com.dragonguard.backend.config.github.GithubProperties;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
-import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.global.GithubClient;
-import org.springframework.http.HttpHeaders;
+import com.dragonguard.backend.global.exception.WebClientException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.charset.StandardCharsets;
@@ -19,16 +17,9 @@ import java.util.Map;
  */
 
 @Component
+@RequiredArgsConstructor
 public class GitRepoLanguageClient implements GithubClient<GitRepoClientRequest, Map<String, Integer>> {
-    private final GithubProperties githubProperties;
     private final WebClient webClient;
-    private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";
-    private static final String USER_AGENT = "GITRANK WEB CLIENT";
-
-    public GitRepoLanguageClient(GithubProperties githubProperties) {
-        this.githubProperties = githubProperties;
-        webClient = generateWebClient();
-    }
 
     @Override
     public Map<String, Integer> requestToGithub(GitRepoClientRequest request) {
@@ -46,18 +37,5 @@ public class GitRepoLanguageClient implements GithubClient<GitRepoClientRequest,
                 .bodyToMono(Map.class)
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
-    }
-
-    private WebClient generateWebClient() {
-        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1))
-                .build();
-        return WebClient.builder()
-                .exchangeStrategies(exchangeStrategies)
-                .baseUrl(githubProperties.getUrl())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)
-                .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
-                .defaultHeader(githubProperties.getVersionKey(), githubProperties.getVersionValue())
-                .build();
     }
 }

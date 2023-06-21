@@ -1,9 +1,10 @@
 package com.dragonguard.backend.domain.result.mapper;
 
-import com.dragonguard.backend.domain.result.dto.client.ClientResultResponse;
-import com.dragonguard.backend.domain.result.dto.response.ResultResponse;
+import com.dragonguard.backend.domain.result.dto.client.GitRepoClientResponse;
+import com.dragonguard.backend.domain.result.dto.response.GitRepoResultResponse;
+import com.dragonguard.backend.domain.result.dto.response.UserResultResponse;
 import com.dragonguard.backend.domain.result.entity.Result;
-import com.dragonguard.backend.domain.search.dto.client.UserResponse;
+import com.dragonguard.backend.domain.search.dto.client.UserClientResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,9 +15,17 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ResultMapper {
-    @Mapping(target = "name", source = "clientResultResponse.full_name")
-    Result toEntity(final ClientResultResponse clientResultResponse, final Long searchId);
+    Result toEntity(final String name, final Long searchId);
+
     @Mapping(target = "name", source = "userResponse.login")
-    Result toEntity(final UserResponse userResponse, final Long searchId);
-    ResultResponse toResponse(final Result result);
+    Result toEntity(final UserClientResponse userResponse, final Long searchId);
+
+    UserResultResponse toUserResponse(final Result result);
+
+    @Mapping(target = "name", source = "dto.full_name")
+    @Mapping(target = "language", source = "dto.language")
+    @Mapping(target = "description", source = "dto.description")
+    @Mapping(target = "createdAt", source = "dto.created_at")
+    @Mapping(target = "id", source = "searchId")
+    GitRepoResultResponse toGitRepoResponse(final Long searchId, final GitRepoClientResponse dto);
 }

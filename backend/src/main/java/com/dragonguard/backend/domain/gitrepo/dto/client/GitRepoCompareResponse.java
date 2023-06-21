@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.IntSummaryStatistics;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,9 +17,10 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GitRepoResponse {
+public class GitRepoCompareResponse {
     private GitRepoClientResponse gitRepo;
     private StatisticsResponse statistics;
     private Map<String, Integer> languages;
     private IntSummaryStatistics languagesStats;
+    private List<String> profileUrls;
 }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaSearchProducer implements KafkaProducer<KafkaSearchRequest> {
+public class KafkaSearchScrapeProducer implements KafkaProducer<KafkaSearchRequest> {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 

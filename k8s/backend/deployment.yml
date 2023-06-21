@@ -24,11 +24,6 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: gitrank-secret
-                  key: database.password
             - name: BLOCKCHAIN_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
@@ -104,3 +99,33 @@ spec:
                 secretKeyRef:
                   name: gitrank-secret
                   key: blockchain.contract-address
+            - name: DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: database.host
+            - name: DATABASE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: database.port
+            - name: DATABASE_SCHEMA
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: database.schema
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: database.host
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: database.password
+            - name: ADMIN_TOKENS
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: admin-tokens

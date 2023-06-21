@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +29,7 @@ public class KafkaGitRepoConsumer implements KafkaConsumer<GitRepoKafkaResponse>
     private final ObjectMapper objectMapper;
 
     @Override
+    @Transactional
     @KafkaListener(topics = "gitrank.to.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         GitRepoKafkaResponse response = readValue(message);
@@ -37,7 +39,7 @@ public class KafkaGitRepoConsumer implements KafkaConsumer<GitRepoKafkaResponse>
         if (Objects.isNull(result) || result.isEmpty()) return;
 
         List<GitRepoMemberResponse> list = result.stream()
-                .map(r -> new GitRepoMemberResponse(r.getMember(), r.getCommits(), r.getAddition(), r.getDeletion()))
+                .map(r -> GitRepoMemberResponse.builder().githubId(r.getMember()).commits(r.getCommits()).additions(r.getAddition()).deletions(r.getDeletion()).build())
                 .collect(Collectors.toList());
 
         gitRepoMemberService.updateOrSaveAll(list, result.get(0).getGitRepo());

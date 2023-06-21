@@ -44,8 +44,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     @Override
     public Integer findRankingById(UUID id) {
         return jpaQueryFactory
-                .select(member)
-                .from(member)
+                .selectFrom(member)
                 .where(member.walletAddress.isNotNull().and(member.sumOfTokens.gt(
                         JPAExpressions
                                 .select(member.sumOfTokens).from(member).where(member.id.eq(id)))))
@@ -87,5 +86,13 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
                 .selectFrom(member)
                 .where(member.id.eq(id))
                 .fetchFirst());
+    }
+
+    @Override
+    public boolean existsByGithubId(String githubId) {
+        return jpaQueryFactory
+                .selectFrom(member)
+                .where(member.githubId.eq(githubId))
+                .fetchFirst() != null;
     }
 }

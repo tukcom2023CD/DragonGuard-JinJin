@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchUserResponse {
-    private UserResponse[] items;
+    private UserClientResponse[] items;
 }

@@ -19,23 +19,13 @@ import java.util.Objects;
 @Entity
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uniqueGitRepoMember",
-                        columnNames = {
-                                "git_repo_id",
-                                "member_id",
-                                "commits",
-                                "additions",
-                                "deletions"})})
 public class GitRepoMember implements Auditable {
     @Id
     @GeneratedValue
     private Long id;
 
     @JoinColumn
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private GitRepo gitRepo;
 
     @JoinColumn
@@ -50,6 +40,19 @@ public class GitRepoMember implements Auditable {
     @Column(nullable = false)
     private BaseTime baseTime;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GitRepoMember that = (GitRepoMember) o;
+        return Objects.equals(gitRepo, that.gitRepo) && Objects.equals(member, that.member);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gitRepo, member);
+    }
+
     @Builder
     public GitRepoMember(GitRepo gitRepo, Member member, GitRepoContribution gitRepoContribution) {
         this.gitRepo = gitRepo;
@@ -59,7 +62,8 @@ public class GitRepoMember implements Auditable {
     }
 
     public void organize() {
-        this.gitRepo.organize(this);
+        this.gitRepo.organizeGitRepoMember(this);
+        this.member.organizeGitRepoMember(this);
     }
 
     public void update(GitRepoMember gitRepoMember) {
@@ -68,11 +72,7 @@ public class GitRepoMember implements Auditable {
         this.gitRepoContribution = gitRepoMember.gitRepoContribution;
     }
 
-    public boolean customEquals(GitRepoMember gitRepoMember) {
-        return Objects.equals(gitRepo.getName(), gitRepoMember.gitRepo.getName())
-                && Objects.equals(member.getGithubId(), gitRepoMember.member.getGithubId())
-                && gitRepoContribution.getAdditions().intValue() == gitRepoMember.gitRepoContribution.getAdditions().intValue()
-                && gitRepoContribution.getDeletions().intValue() == gitRepoMember.gitRepoContribution.getDeletions().intValue()
-                && gitRepoContribution.getCommits().intValue() == gitRepoMember.gitRepoContribution.getCommits().intValue();
+    public void updateGitRepoContribution(Integer commits, Integer additions, Integer deletions) {
+        this.gitRepoContribution = new GitRepoContribution(commits, additions, deletions);
     }
 }

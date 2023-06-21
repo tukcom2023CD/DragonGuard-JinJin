@@ -1,17 +1,19 @@
 package com.dragonguard.backend.domain.gitrepo.client;
 
-import com.dragonguard.backend.config.github.GithubProperties;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
-import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.global.GithubClient;
-import org.springframework.http.HttpHeaders;
+import com.dragonguard.backend.global.exception.ClientBadRequestException;
+import com.dragonguard.backend.global.exception.WebClientException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.util.retry.Retry;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 /**
  * @author 김승진
@@ -19,19 +21,12 @@ import java.nio.charset.StandardCharsets;
  */
 
 @Component
-public class GitRepoMemberClient implements GithubClient<GitRepoRequest, GitRepoMemberClientResponse[]> {
-    private final GithubProperties githubProperties;
+@RequiredArgsConstructor
+public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> {
     private final WebClient webClient;
-    private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";
-    private static final String USER_AGENT = "GITRANK WEB CLIENT";
-
-    public GitRepoMemberClient(GithubProperties githubProperties) {
-        this.githubProperties = githubProperties;
-        webClient = generateWebClient();
-    }
 
     @Override
-    public GitRepoMemberClientResponse[] requestToGithub(GitRepoRequest request) {
+    public GitRepoMemberClientResponse[] requestToGithub(GitRepoInfoRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
@@ -44,21 +39,13 @@ public class GitRepoMemberClient implements GithubClient<GitRepoRequest, GitRepo
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(GitRepoMemberClientResponse[].class)
+                        .map(r -> new ClientBadRequestException()))
                 .bodyToMono(GitRepoMemberClientResponse[].class)
+                .retryWhen(
+                        Retry.fixedDelay(8, Duration.ofMillis(1500))
+                                .filter(Exception.class::isInstance))
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
-    }
-
-    private WebClient generateWebClient() {
-        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1))
-                .build();
-        return WebClient.builder()
-                .exchangeStrategies(exchangeStrategies)
-                .baseUrl(githubProperties.getUrl())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)
-                .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
-                .defaultHeader(githubProperties.getVersionKey(), githubProperties.getVersionValue())
-                .build();
     }
 }

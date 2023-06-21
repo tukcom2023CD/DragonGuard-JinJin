@@ -51,8 +51,10 @@ public class BlockchainConfig {
         AbstractKeyring keyring = keyring();
         caver.wallet.add(keyring);
         try {
-            return caver.contract.create(blockchainProperties.getAbi(), contractAddress);
-        } catch (IOException e) {
+            Contract contract = caver.contract.create(blockchainProperties.getAbi(), contractAddress);
+            contract.call("balanceOf", keyring.getAddress());
+            return contract;
+        } catch (Exception e) {
             try {
                 Contract contract = caver.contract.create(blockchainProperties.getAbi());
                 return contract.deploy(sendOptions(), blockchainProperties.getByteCode(), TOKEN_NAME, TOKEN_SYMBOL, BigInteger.valueOf(TOKEN_AMOUNT));

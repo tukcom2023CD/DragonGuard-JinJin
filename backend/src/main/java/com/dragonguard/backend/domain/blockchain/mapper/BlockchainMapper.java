@@ -19,8 +19,11 @@ import java.math.BigInteger;
 public interface BlockchainMapper {
     @Mapping(target = "contributeType", expression = "java(ContributeType.valueOf(request.getContributeType()))")
     @Mapping(target = "amount", source = "amount")
-    Blockchain toEntity(final BigInteger amount, final Member member, final ContractRequest request);
+    @Mapping(target = "transactionHash", source = "transactionHash")
+    Blockchain toEntity(final BigInteger amount, final Member member, final ContractRequest request, final String transactionHash);
     @Mapping(target = "memberId", source = "blockchain.member.id")
     @Mapping(target = "githubId", source = "blockchain.member.githubId")
+    @Mapping(target = "createdAt", source = "blockchain.baseTime.createdAt")
+    @Mapping(target = "transactionHashUrl", expression = "java(blockchain.getTransactionHashUrl())")
     BlockchainResponse toResponse(final Blockchain blockchain);
 }

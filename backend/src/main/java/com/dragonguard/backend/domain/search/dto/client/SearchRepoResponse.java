@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.search.dto.client;
 
-import com.dragonguard.backend.domain.result.dto.client.ClientResultResponse;
+import com.dragonguard.backend.domain.result.dto.client.GitRepoClientResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +14,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchRepoResponse {
-    private ClientResultResponse[] items;
+    private GitRepoClientResponse[] items;
 }

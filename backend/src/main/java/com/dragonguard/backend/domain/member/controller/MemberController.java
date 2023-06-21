@@ -2,9 +2,7 @@ package com.dragonguard.backend.domain.member.controller;
 
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
-import com.dragonguard.backend.domain.member.dto.response.MemberDetailResponse;
-import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
-import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
+import com.dragonguard.backend.domain.member.dto.response.*;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.service.MemberService;
@@ -40,13 +38,13 @@ public class MemberController {
     @PostMapping("/contributions")
     public ResponseEntity<Void> updateContribution() {
         memberService.updateContributions();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/blockchains")
     public ResponseEntity<Void> updateBlockchain() {
         memberService.updateBlockchain();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/tier")
@@ -70,7 +68,7 @@ public class MemberController {
     @PostMapping("/wallet-address")
     public ResponseEntity<Void> updateWalletAddress(@RequestBody @Valid WalletRequest walletRequest) {
         memberService.updateWalletAddress(walletRequest);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
@@ -78,8 +76,18 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getMember());
     }
 
-    @GetMapping
-    public ResponseEntity<MemberDetailResponse> getMemberDetail(@RequestParam String githubId) {
-        return ResponseEntity.ok(memberService.findMemberDetailByGithubId(githubId));
+    @GetMapping("/me/details")
+    public ResponseEntity<MemberGitReposAndGitOrganizationsResponse> getCurrentUserDetails() {
+        return ResponseEntity.ok(memberService.findMemberDetails());
+    }
+
+    @GetMapping("/details")
+    public ResponseEntity<MemberDetailsResponse> getUserDetails(@RequestParam String githubId) {
+        return ResponseEntity.ok(memberService.getMemberDetails(githubId));
+    }
+
+    @GetMapping("/git-organizations/git-repos")
+    public ResponseEntity<MemberGitOrganizationRepoResponse> getMemberGitOrganizationRepo(@RequestParam String name) {
+        return ResponseEntity.ok(memberService.getMemberGitOrganizationRepo(name));
     }
 }

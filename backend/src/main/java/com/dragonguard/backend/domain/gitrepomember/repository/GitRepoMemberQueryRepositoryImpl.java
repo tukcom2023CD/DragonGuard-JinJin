@@ -3,16 +3,14 @@ package com.dragonguard.backend.domain.gitrepomember.repository;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
-import static com.dragonguard.backend.domain.gitrepo.entity.QGitRepo.gitRepo;
 import static com.dragonguard.backend.domain.gitrepomember.entity.QGitRepoMember.gitRepoMember;
+import static com.dragonguard.backend.domain.member.entity.QMember.member;
 
 
 /**
@@ -27,36 +25,20 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<GitRepoMember> findAllByGitRepo(GitRepo repo) {
-        return jpaQueryFactory
-                .selectFrom(gitRepoMember)
-                .leftJoin(gitRepoMember.gitRepo, gitRepo)
-                .where(gitRepo.eq(repo))
-                .fetchJoin()
-                .distinct()
-                .fetch();
-    }
-
-    @Override
-    public boolean existsByGitRepoAndMember(GitRepo gitRepo, Member member) {
-        return jpaQueryFactory
-                .selectFrom(gitRepoMember)
-                .where(equalGitRepoAndMember(gitRepo, member))
-                .fetchFirst() != null;
-    }
-
-    @Override
     public Optional<GitRepoMember> findByGitRepoAndMember(GitRepo gitRepo, Member member) {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(gitRepoMember)
-                .where(equalGitRepoAndMember(gitRepo, member))
+                .where(gitRepoMember.gitRepo.eq(gitRepo)
+                .and(gitRepoMember.member.eq(member)))
                 .fetchFirst());
     }
 
     @Override
-    public Optional<GitRepoMember> findByNameAndMemberName(String name, String githubId) {
+    public Optional<GitRepoMember> findByNameAndMemberGithubId(String name, String githubId) {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(gitRepoMember)
+                .leftJoin(gitRepoMember.member, member)
+                .fetchJoin()
                 .where(gitRepoMember.gitRepo.name.eq(name).and(gitRepoMember.member.githubId.eq(githubId)))
                 .fetchFirst());
     }
@@ -67,10 +49,5 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
                 .selectFrom(gitRepoMember)
                 .where(gitRepoMember.id.eq(id))
                 .fetchFirst());
-    }
-
-    private BooleanExpression equalGitRepoAndMember(GitRepo gitRepo, Member member) {
-        return gitRepoMember.gitRepo.eq(gitRepo)
-                .and(gitRepoMember.member.eq(member));
     }
 }

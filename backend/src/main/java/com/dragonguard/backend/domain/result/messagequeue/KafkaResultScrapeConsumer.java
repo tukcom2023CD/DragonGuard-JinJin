@@ -1,8 +1,8 @@
 package com.dragonguard.backend.domain.result.messagequeue;
 
-import com.dragonguard.backend.domain.result.dto.client.ClientResultResponse;
 import com.dragonguard.backend.domain.result.dto.kafka.ResultDetailsResponse;
 import com.dragonguard.backend.domain.result.dto.kafka.ResultKafkaResponse;
+import com.dragonguard.backend.domain.result.dto.kafka.ScrapeResult;
 import com.dragonguard.backend.domain.result.dto.kafka.SearchKafkaResponse;
 import com.dragonguard.backend.domain.result.service.ResultService;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,19 +26,20 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaResultConsumer implements KafkaConsumer<ResultKafkaResponse> {
+public class KafkaResultScrapeConsumer implements KafkaConsumer<ResultKafkaResponse> {
 
     private final ResultService resultService;
     private final ObjectMapper objectMapper;
 
     @Override
+    @Transactional
     @KafkaListener(topics = "gitrank.to.backend.result", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         ResultKafkaResponse resultResponse = readValue(message);
 
-        List<ClientResultResponse> result = resultResponse.getResult().stream()
+        List<ScrapeResult> result = resultResponse.getResult().stream()
                 .map(ResultDetailsResponse::getName)
-                .map(ClientResultResponse::new)
+                .map(ScrapeResult::new)
                 .collect(Collectors.toList());
 
         SearchKafkaResponse searchResponse = resultResponse.getSearch();

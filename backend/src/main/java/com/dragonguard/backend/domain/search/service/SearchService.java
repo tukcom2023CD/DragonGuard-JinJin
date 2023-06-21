@@ -1,7 +1,8 @@
 package com.dragonguard.backend.domain.search.service;
 
 import com.dragonguard.backend.domain.member.service.MemberService;
-import com.dragonguard.backend.domain.result.dto.response.ResultResponse;
+import com.dragonguard.backend.domain.result.dto.response.GitRepoResultResponse;
+import com.dragonguard.backend.domain.result.dto.response.UserResultResponse;
 import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.result.mapper.ResultMapper;
 import com.dragonguard.backend.domain.result.repository.ResultRepository;
@@ -18,12 +19,14 @@ import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -42,32 +45,44 @@ public class SearchService implements EntityLoader<Search, Long> {
     private final GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     private final GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
 
-    public List<ResultResponse> getSearchResultByClient(final SearchRequest searchRequest) {
-        Search search = findOrSaveSearch(searchRequest);
-        findAllResultsAndDelete(search);
-        searchRequest.setGithubToken(memberService.getLoginUserWithPersistence().getGithubToken());
-
-        if (searchRequest.getType().equals(SearchType.REPOSITORIES)) {
-            return searchRepo(searchRequest, search);
-        }
+    @Cacheable(value = "results", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
+    public List<UserResultResponse> getUserSearchResultByClient(String name, Integer page, List<String> filters) {
+        SearchRequest searchRequest = new SearchRequest(name, SearchType.USERS, page, filters);
+        Search search = getSearch(searchRequest);
         return searchUser(searchRequest, search);
     }
 
-    public void findAllResultsAndDelete(final Search search) {
+    @Cacheable(value = "results", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
+    public List<GitRepoResultResponse> getGitRepoSearchResultByClient(String name, Integer page, List<String> filters) {
+        SearchRequest searchRequest = new SearchRequest(name, SearchType.REPOSITORIES, page, filters);
+        Search search = getSearch(searchRequest);
+        return searchRepo(searchRequest, search);
+    }
+
+    public Search getSearch(SearchRequest searchRequest) {
+        Search search = findOrSaveSearch(searchRequest);
+        deleteAllLastResults(search);
+        searchRequest.setGithubToken(memberService.getLoginUserWithPersistence().getGithubToken());
+        return search;
+    }
+
+    public void deleteAllLastResults(final Search search) {
         resultRepository.findAllBySearchId(search.getId()).forEach(Result::delete);
     }
 
-    private List<ResultResponse> searchUser(final SearchRequest searchRequest, final Search search) {
+    public List<UserResultResponse> searchUser(final SearchRequest searchRequest, final Search search) {
         return Arrays.stream(githubUserClient.requestToGithub(searchRequest).getItems())
                 .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
-                .map(resultMapper::toResponse).collect(Collectors.toList());
+                .map(resultMapper::toUserResponse).collect(Collectors.toList());
     }
 
-    private List<ResultResponse> searchRepo(final SearchRequest searchRequest, final Search search) {
+    public List<GitRepoResultResponse> searchRepo(final SearchRequest searchRequest, final Search search) {
         SearchRepoResponse clientResult = githubRepoClient.requestToGithub(searchRequest);
-        return Stream.of(clientResult.getItems())
-                .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
-                .map(resultMapper::toResponse).collect(Collectors.toList());
+        return Arrays.stream(clientResult.getItems())
+                .map(request -> {
+                    Result result = resultRepository.save(resultMapper.toEntity(request.getFull_name(), search.getId()));
+                    return resultMapper.toGitRepoResponse(result.getId(), request);
+                }).collect(Collectors.toList());
     }
 
     public Search findOrSaveSearch(final SearchRequest searchRequest) {
@@ -78,33 +93,25 @@ public class SearchService implements EntityLoader<Search, Long> {
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
         List<String> filters = searchRequest.getFilters();
 
-        Search search = getSameSearch(searches, filters);
-        if (search != null) return search;
-
-        return searchRepository.save(searchMapper.toSearch(searchRequest));
+        return Optional.ofNullable(getSameSearch(searches, filters)).orElse(searchRepository.save(searchMapper.toSearch(searchRequest)));
     }
 
-    private Search getSameSearch(List<Search> searches, List<String> filters) {
-        for (Search search : searches) {
-            if (isContainsSameFilters(filters, search)) {
-                return search;
-            }
-        }
-        return null;
+    public Search getSameSearch(List<Search> searches, List<String> filters) {
+        return searches.stream().filter(search -> isContainsSameFilters(filters, search)).findFirst().orElse(null);
     }
 
-    private boolean isContainsSameFilters(List<String> filters, Search search) {
+    public boolean isContainsSameFilters(List<String> filters, Search search) {
         return new HashSet<>(search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList())).containsAll(filters);
     }
 
-    private Search findOrGetSearchWithSearchAttributes(SearchRequest searchRequest) {
+    public Search findOrGetSearchWithSearchAttributes(SearchRequest searchRequest) {
         return searchRepository
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
                 .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
                 .orElseGet(() -> searchRepository.save(searchMapper.toSearch(searchRequest)));
     }
 
-    private boolean isValidSearchRequest(SearchRequest searchRequest) {
+    public boolean isValidSearchRequest(SearchRequest searchRequest) {
         return searchRequest.getFilters() == null || searchRequest.getFilters().isEmpty();
     }
 

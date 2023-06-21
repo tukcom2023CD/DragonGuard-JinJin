@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class KafkaContributionRequest {
     private String githubId;
+    private String githubToken;
 }

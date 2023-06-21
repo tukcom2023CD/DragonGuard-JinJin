@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Key;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class JwtValidator {
     private final MemberQueryRepository memberQueryRepository;
     private final UserDetailsMapper userDetailsMapper;
 
+    @Transactional
     public Authentication getAuthentication(String accessToken) {
         Claims claims = getTokenBodyClaims(accessToken);
         Optional<Member> member = memberQueryRepository.findById(extractUUID(claims));
@@ -38,11 +40,11 @@ public class JwtValidator {
         return new UsernamePasswordAuthenticationToken(loginUser, "", loginUser.getAuthorities());
     }
 
-    private UUID extractUUID(Claims claims) {
+    public UUID extractUUID(Claims claims) {
         return UUID.fromString(claims.get("id", String.class));
     }
 
-    private Claims getTokenBodyClaims(String accessToken) {
+    public Claims getTokenBodyClaims(String accessToken) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

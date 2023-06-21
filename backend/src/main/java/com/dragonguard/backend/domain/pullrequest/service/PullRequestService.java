@@ -45,7 +45,7 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private boolean isExistsByMemberAndYear(final Member member, final Integer year) {
+    public boolean isExistsByMemberAndYear(final Member member, final Integer year) {
         return pullRequestRepository.existsByMemberAndYear(member, year);
     }
 }

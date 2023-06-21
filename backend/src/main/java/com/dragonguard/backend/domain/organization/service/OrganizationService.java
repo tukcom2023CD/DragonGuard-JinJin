@@ -11,12 +11,13 @@ import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.mapper.OrganizationMapper;
 import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
+import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;

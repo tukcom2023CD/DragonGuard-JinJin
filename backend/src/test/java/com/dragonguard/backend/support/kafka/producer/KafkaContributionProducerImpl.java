@@ -26,7 +26,6 @@ public class KafkaContributionProducerImpl implements KafkaProducer<Contribution
     private final IssueRepository issueRepository;
 
     @Override
-    @Transactional
     public void send(ContributionScrapingRequest request) {
         memberQueryRepository.findByGithubId(request.getGithubId()).ifPresent(member -> {
             int year = LocalDate.now().getYear();
