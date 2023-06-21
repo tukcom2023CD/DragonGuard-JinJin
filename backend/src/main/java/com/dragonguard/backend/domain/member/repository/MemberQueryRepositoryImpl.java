@@ -81,14 +81,6 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     }
 
     @Override
-    public Optional<Member> findById(UUID id) {
-        return Optional.ofNullable(jpaQueryFactory
-                .selectFrom(member)
-                .where(member.id.eq(id))
-                .fetchFirst());
-    }
-
-    @Override
     public boolean existsByGithubId(String githubId) {
         return jpaQueryFactory
                 .selectFrom(member)
