@@ -189,7 +189,7 @@
 		A3AEEB652975311400004722 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB642975311400004722 /* SnapKit */; };
 		A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */; };
 /* End PBXBuildFile section */
-
+ 
 /* Begin PBXContainerItemProxy section */
 		3BE3F7D3297060DC0005B640 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
