@@ -145,7 +145,7 @@ final class MainViewController: UIViewController {
         return label
     }()
     
-    // MARK: contribution 글자
+    // MARK: contribution 내용
     private lazy var contributionLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
@@ -165,7 +165,7 @@ final class MainViewController: UIViewController {
 //        return view
 //    }()
     
-    // MARK: contribution 글자
+    // MARK: group 글자
     private lazy var gNameLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
@@ -174,13 +174,19 @@ final class MainViewController: UIViewController {
         return label
     }()
     
-    // MARK: group 글자
+    // MARK: group 내용
     private lazy var groupLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
+    }()
+    
+    // MARK: TapBar
+    private lazy var tapBarView: UITabBarController = {
+        let tabBar = UITabBarController()
+       return tabBar
     }()
     
     /*
@@ -205,7 +211,7 @@ final class MainViewController: UIViewController {
         // self.view.addSubview(groupView)
         self.view.addSubview(gNameLabel)
         self.view.addSubview(groupLabel)
-        
+        // self.view.addSubview(tapBarView)
         setAutoLayout()
     }
     
