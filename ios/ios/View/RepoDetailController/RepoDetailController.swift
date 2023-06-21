@@ -22,10 +22,11 @@ final class RepoDetailController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addUIIndicator()
+//        addUIIndicator()
         view.backgroundColor = .white
-//        randomColor()
-//        testData()
+        
+        randomColor()
+        testData()
 //        addDetailUI()
     }
     
@@ -68,8 +69,8 @@ final class RepoDetailController: UIViewController{
     }()
     
     // MARK: Repository 그래프 기록
-    private lazy var sparkLineView: UIView = {
-        let view = UIView()
+    private lazy var sparkLineView: SparkLineUIView = {
+        let view = SparkLineUIView()
         view.backgroundColor = .clear
         return view
     }()
@@ -105,6 +106,8 @@ final class RepoDetailController: UIViewController{
         view.backgroundColor = .white
         return view
     }()
+    
+  
     
     /*
      Add UI and Set AutoLayout
@@ -245,6 +248,8 @@ final class RepoDetailController: UIViewController{
             self.userName.append("a")
             self.userCommit.append(i)
         }
+        addDetailUI()
+        sparkLineView.inputData(lineList: [0,11,23,13,4,52,6,7,8,9])
         setchartOption()
     }
 }
@@ -310,6 +315,7 @@ extension RepoDetailController: ChartViewDelegate {
     
     // 차트 옵션 설정
     private func customChart(){
+        
         barChart.rightAxis.enabled = false
         barChart.animate(xAxisDuration: 2, yAxisDuration: 2)
         barChart.leftAxis.enabled = true

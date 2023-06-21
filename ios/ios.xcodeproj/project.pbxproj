@@ -42,6 +42,7 @@
 		3B3D2E0F29D5E252001A702C /* OrganizationSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0E29D5E252001A702C /* OrganizationSearchTableViewCell.swift */; };
 		3B43B5A329B87FB100EBB379 /* UserDBIdModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */; };
 		3B49BAB62A409F58009C5963 /* UserUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49BAB52A409F58009C5963 /* UserUIButton.swift */; };
+		3B54FF4E2A42C3FD004B21B1 /* SparkLineUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B54FF4D2A42C3FD004B21B1 /* SparkLineUIView.swift */; };
 		3B58A18F29A6164D006A1817 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B58A18E29A6164D006A1817 /* LoginController.swift */; };
 		3B5B174B29DC584800571A8D /* AllOrganizationRankingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B174A29DC584800571A8D /* AllOrganizationRankingModel.swift */; };
 		3B5B174D29DC593100571A8D /* AllOrganizationRankingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B174C29DC593100571A8D /* AllOrganizationRankingService.swift */; };
@@ -241,6 +242,7 @@
 		3B3D2E0E29D5E252001A702C /* OrganizationSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationSearchTableViewCell.swift; sourceTree = "<group>"; };
 		3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDBIdModel.swift; sourceTree = "<group>"; };
 		3B49BAB52A409F58009C5963 /* UserUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUIButton.swift; sourceTree = "<group>"; };
+		3B54FF4D2A42C3FD004B21B1 /* SparkLineUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SparkLineUIView.swift; sourceTree = "<group>"; };
 		3B58A18E29A6164D006A1817 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		3B5B174A29DC584800571A8D /* AllOrganizationRankingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllOrganizationRankingModel.swift; sourceTree = "<group>"; };
 		3B5B174C29DC593100571A8D /* AllOrganizationRankingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllOrganizationRankingService.swift; sourceTree = "<group>"; };
@@ -973,6 +975,7 @@
 			isa = PBXGroup;
 			children = (
 				3B5FF1812A2733AD0022BE90 /* RepoDetailController.swift */,
+				3B54FF4D2A42C3FD004B21B1 /* SparkLineUIView.swift */,
 				3B5FF18D2A2746320022BE90 /* UserListCollectionViewCell.swift */,
 			);
 			path = RepoDetailController;
@@ -1339,6 +1342,7 @@
 				A37AA6FA29D35522002812F6 /* TierTableViewCell.swift in Sources */,
 				3BE649F62A3DA4F2005D9F9E /* RepositoryInfoView.swift in Sources */,
 				3B9756EB298A16D900F27094 /* AllRankingController.swift in Sources */,
+				3B54FF4E2A42C3FD004B21B1 /* SparkLineUIView.swift in Sources */,
 				3B110FEB2A23A905008C99F0 /* BackgroundUIView.swift in Sources */,
 				3B5B174D29DC593100571A8D /* AllOrganizationRankingService.swift in Sources */,
 				3B1DB87A2963428A00308F43 /* SceneDelegate.swift in Sources */,
