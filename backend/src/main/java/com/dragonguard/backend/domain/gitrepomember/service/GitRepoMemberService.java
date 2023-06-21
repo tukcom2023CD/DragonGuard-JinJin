@@ -90,7 +90,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
         return memberService.findMemberOrSave(new MemberRequest(gitRepository.getGithubId()), AuthStep.NONE);
     }
 
-    private GitRepoMember findByNameAndMemberGithubId(final String gitRepoName, final String githubId) {
+    public GitRepoMember findByNameAndMemberGithubId(final String gitRepoName, final String githubId) {
         return gitRepoMemberQueryRepository.findByNameAndMemberGithubId(gitRepoName, githubId)
                 .orElse(gitRepoMemberRepository.save(
                         gitRepoMemberMapper.toEntity(
