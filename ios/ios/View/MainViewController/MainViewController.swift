@@ -37,7 +37,16 @@ final class MainViewController: UIViewController {
         btn.layer.shadowOffset = CGSize(width: -3, height: 3)
         return btn
     }()
+
     
+    // 사용자 이름
+    private lazy var nameLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .white
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return label
+    }()
     
     /*
      Add UI & Set AutoLayout
