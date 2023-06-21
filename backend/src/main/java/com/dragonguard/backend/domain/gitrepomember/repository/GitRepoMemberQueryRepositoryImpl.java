@@ -7,7 +7,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.LockModeType;
 import java.util.Optional;
 
 import static com.dragonguard.backend.domain.gitrepomember.entity.QGitRepoMember.gitRepoMember;
@@ -31,7 +30,6 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
                 .selectFrom(gitRepoMember)
                 .where(gitRepoMember.gitRepo.eq(gitRepo)
                 .and(gitRepoMember.member.eq(member)))
-                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetchFirst());
     }
 
@@ -42,7 +40,6 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
                 .leftJoin(gitRepoMember.member, member)
                 .fetchJoin()
                 .where(gitRepoMember.gitRepo.name.eq(name).and(gitRepoMember.member.githubId.eq(githubId)))
-                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetchFirst());
     }
 
@@ -51,7 +48,6 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(gitRepoMember)
                 .where(gitRepoMember.id.eq(id))
-                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetchFirst());
     }
 }

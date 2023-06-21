@@ -18,8 +18,8 @@ public interface JpaMemberRepository extends JpaRepository<Member, UUID>, Member
     @Query("SELECT m.refreshToken FROM Member m WHERE m.id = :id")
     String findRefreshTokenById(UUID id);
 
-    @Transactional
     @Modifying
+    @Transactional
     @Query("UPDATE Member m SET m.refreshToken = :token WHERE m.id = :id")
     void updateRefreshToken(UUID id, String token);
 }
