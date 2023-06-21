@@ -18,6 +18,4 @@ public interface JpaGitRepoRepository extends JpaRepository<GitRepo, Long>, GitR
 
     @Query("SELECT gr FROM GitRepo gr WHERE gr.name = :name")
     Optional<GitRepo> findByName(String name);
-
-    boolean existsByName(String name);
 }

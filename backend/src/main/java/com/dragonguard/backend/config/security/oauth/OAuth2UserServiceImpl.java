@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -44,6 +43,11 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
         Member user = memberQueryRepository.findByGithubId(githubId)
                 .orElse(memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY)));
+
+        if (user.getAuthStep().equals(AuthStep.NONE)) {
+            user.updateAuthStep(AuthStep.GITHUB_ONLY);
+        }
+
         String githubToken = userRequest.getAccessToken().getTokenValue();
         user.updateGithubToken(githubToken);
 

@@ -281,4 +281,8 @@ public class Member implements Auditable {
     public boolean isServiceMember() {
         return !this.authStep.equals(AuthStep.NONE);
     }
+
+    public void updateAuthStep(AuthStep authStep) {
+        this.authStep = authStep;
+    }
 }
