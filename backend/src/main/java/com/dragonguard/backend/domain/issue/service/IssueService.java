@@ -27,7 +27,7 @@ public class IssueService implements EntityLoader<Issue, Long> {
         issueRepository.save(issueMapper.toEntity(member, issueNum, year));
     }
 
-    private boolean updateIssueNumIfNotExists(final Member member, final Integer issueNum, final Integer year) {
+    public boolean updateIssueNumIfNotExists(final Member member, final Integer issueNum, final Integer year) {
         if (issueRepository.existsByMemberAndYear(member, year)) {
             findIssueAndUpdateNum(member, issueNum, year);
             return true;

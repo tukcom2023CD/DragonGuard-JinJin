@@ -52,7 +52,7 @@ public class CommitService implements EntityLoader<Commit, Long> {
                 .ifPresent(commitRepository::save);
     }
 
-    private boolean isNewCommitWithSameMember(final Commit compareCommit, final Commit commit) {
+    public boolean isNewCommitWithSameMember(final Commit compareCommit, final Commit commit) {
         return !commit.customEqualsWithAmount(compareCommit);
     }
 }

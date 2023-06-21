@@ -80,8 +80,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public Member saveAndRequestClient(final String githubId, final Role role, final AuthStep authStep) {
         Member member = findMemberOrSaveWithRole(githubId, role, authStep);
-        getContributionSumByScraping(member.getGithubId());
-        sendGitRepoRequestToKafka(githubId);
+        getContributionSumByScraping(githubId);
+        sendGitRepoRequestToKafka(githubId, member.getGithubToken());
         return member;
     }
 
@@ -202,11 +202,11 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public void updateWalletAddress(final WalletRequest walletRequest) {
         Member member = getLoginUserWithPersistence();
         member.updateWalletAddress(walletRequest.getWalletAddress());
-        sendContributionRequestToKafka(getLoginUserWithPersistence().getGithubId());
+        sendContributionRequestToKafka(member.getGithubId(), member.getGithubToken());
     }
 
-    public void sendContributionRequestToKafka(final String githubId) {
-        kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
+    public void sendContributionRequestToKafka(final String githubId, final String githubToken) {
+        kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId, githubToken));
     }
 
     public void sendSmartContractTransaction(final Member member) {
@@ -255,7 +255,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     @Transactional
     public MemberGitReposAndGitOrganizationsResponse findMemberDetailByGithubId(final String githubId) {
         Member member = getMemberOrSaveAndScrape(githubId);
-        sendGitRepoAndContributionSumRequestToKafka(member.getGithubId());
+        sendGitRepoAndContributionSumRequestToKafka(member.getGithubId(), member.getGithubToken());
 
         return getMemberGitReposAndGitOrganizations(githubId, member);
     }
@@ -285,24 +285,24 @@ public class MemberService implements EntityLoader<Member, UUID> {
                 gitRepoRepository.findByGithubId(githubId));
     }
 
-    private boolean hasNoOrganization(final Member member) {
+    public boolean hasNoOrganization(final Member member) {
         return member.getOrganization() == null;
     }
 
-    private void sendGitRepoAndContributionSumRequestToKafka(final String githubId) {
-        sendGitRepoRequestToKafka(githubId);
+    public void sendGitRepoAndContributionSumRequestToKafka(final String githubId, final String githubToken) {
+        sendGitRepoRequestToKafka(githubId, githubToken);
         getContributionSumByScraping(githubId);
     }
 
-    private void sendGitRepoRequestToKafka(final String githubId) {
-        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
+    public void sendGitRepoRequestToKafka(final String githubId, final String githubToken) {
+        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId, githubToken));
     }
 
-    private boolean isContributionEmpty(final List<Commit> commits, final List<PullRequest> pullRequests, final List<Issue> issues) {
+    public boolean isContributionEmpty(final List<Commit> commits, final List<PullRequest> pullRequests, final List<Issue> issues) {
         return commits.isEmpty() || pullRequests.isEmpty() || issues.isEmpty();
     }
 
-    private int getContributionSumWithoutReviews(final Member member) {
+    public int getContributionSumWithoutReviews(final Member member) {
         return member.getCommitSumWithRelation()
                 + member.getPullRequestSumWithRelation()
                 + member.getIssueSumWithRelation();

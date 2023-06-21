@@ -32,7 +32,7 @@ public class ResultService implements EntityLoader<Result, Long> {
         saveAllResultsWithSearch(results, searchId, resultList);
     }
 
-    private void saveAllResultsWithSearch(List<ScrapeResult> results, Long searchId, List<Result> resultList) {
+    public void saveAllResultsWithSearch(List<ScrapeResult> results, Long searchId, List<Result> resultList) {
         results.stream()
                 .filter(entity -> resultRepository.existsByNameAndSearchId(entity.getFull_name(), searchId))
                 .map(result -> resultMapper.toEntity(result.getFull_name(), searchId))

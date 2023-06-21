@@ -102,7 +102,7 @@ public class SearchService implements EntityLoader<Search, Long> {
         return searches.stream().filter(search -> isContainsSameFilters(filters, search)).findFirst().orElse(null);
     }
 
-    private boolean isContainsSameFilters(List<String> filters, Search search) {
+    public boolean isContainsSameFilters(List<String> filters, Search search) {
         return new HashSet<>(search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList())).containsAll(filters);
     }
 
@@ -113,7 +113,7 @@ public class SearchService implements EntityLoader<Search, Long> {
                 .orElseGet(() -> searchRepository.save(searchMapper.toSearch(searchRequest)));
     }
 
-    private boolean isValidSearchRequest(SearchRequest searchRequest) {
+    public boolean isValidSearchRequest(SearchRequest searchRequest) {
         return searchRequest.getFilters() == null || searchRequest.getFilters().isEmpty();
     }
 
