@@ -133,7 +133,11 @@ final class MainViewController: UIViewController {
         self.view.addSubview(searchBtn)
         self.view.addSubview(profileImage)
         self.view.addSubview(nameLabel)
+        self.view.addSubview(tierView)
+        self.view.addSubview(tierLabel)
         self.view.addSubview(tierImage)
+        self.view.addSubview(tokenView)
+        self.view.addSubview(tokenLabel)
         self.view.addSubview(tokenImage)
         self.view.addSubview(linkImage)
         
