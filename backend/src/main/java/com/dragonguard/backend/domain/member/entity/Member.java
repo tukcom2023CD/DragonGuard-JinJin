@@ -231,8 +231,8 @@ public class Member implements Auditable {
     }
 
     public String getGithubToken() {
-        if (Objects.nonNull(this.githubToken)) {
-            return githubToken;
+        if (StringUtils.hasText(this.githubToken)) {
+            return this.githubToken;
         }
         return "";
     }

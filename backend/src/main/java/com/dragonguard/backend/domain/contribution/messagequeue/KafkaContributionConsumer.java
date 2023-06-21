@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author 김승진
@@ -23,6 +24,7 @@ public class KafkaContributionConsumer implements KafkaConsumer<ContributionKafk
     private final ObjectMapper objectMapper;
 
     @Override
+    @Transactional
     @KafkaListener(topics = "gitrank.to.backend.contribution", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         memberService.addMemberCommitAndUpdate(readValue(message));

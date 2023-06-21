@@ -166,10 +166,11 @@ class MemberServiceTest extends LoginTest {
         //when
         String after = "Dragon1234Guard4321JinJin";
         memberService.updateWalletAddress(new WalletRequest(after));
+        String walletAddress = memberQueryRepository.findById(loginUser.getId()).get().getWalletAddress();
 
         //then
         assertThat(before).isNotEqualTo(after);
-        assertThat(member.getWalletAddress()).isEqualTo(after);
+        assertThat(walletAddress).isEqualTo(after);
     }
 
     @Test
@@ -197,7 +198,7 @@ class MemberServiceTest extends LoginTest {
         member.finishAuth();
 
         //when
-        MemberGitReposAndGitOrganizationsResponse result = memberService.findMemberDetailByGithubId(loginUser.getGithubId());
+        MemberGitReposAndGitOrganizationsResponse result = memberService.findMemberDetails();
 
         //then
         assertThat(result.getGitOrganizations()).isNotNull(); // todo 더 정확한 validation 필요

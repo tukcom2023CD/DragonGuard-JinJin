@@ -65,3 +65,9 @@ include::../../build/generated-snippets/update member blockchains/http-response.
 include::../../build/generated-snippets/get member repositories in a organization/http-request.adoc[]
 ==== HTTP response
 include::../../build/generated-snippets/get member repositories in a organization/http-response.adoc[]
+
+=== 타 멤버의 프로필 조회
+==== HTTP request
+include::../../build/generated-snippets/get other member details/http-request.adoc[]
+==== HTTP response
+include::../../build/generated-snippets/get other member details/http-response.adoc[]

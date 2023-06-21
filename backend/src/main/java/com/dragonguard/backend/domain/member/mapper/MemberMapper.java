@@ -2,7 +2,9 @@ package com.dragonguard.backend.domain.member.mapper;
 
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
+import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
+import com.dragonguard.backend.domain.member.dto.response.MemberDetailsResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberGitOrganizationResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
  * @description 멤버 Entity와 dto의 변환을 돕는 클래스
  */
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = {GitRepo.class, GitRepoMember.class, Collectors.class})
 public interface MemberMapper {
     @Mapping(target = "githubId", source = "memberRequest.githubId")
     Member toEntity(final MemberRequest memberRequest, final AuthStep authStep);
@@ -50,7 +52,17 @@ public interface MemberMapper {
     @Mapping(target = "gitOrganizations", source = "gitOrganizations", qualifiedByName = "getGitOrganizationNames")
     @Mapping(target = "gitRepos", source = "gitRepos", qualifiedByName = "getGitRepoNames")
     @Mapping(target = "memberProfileImage", source = "memberProfileImage")
-    MemberGitReposAndGitOrganizationsResponse toDetailResponse(final String memberProfileImage, final List<GitOrganization> gitOrganizations, final List<GitRepo> gitRepos);
+    MemberGitReposAndGitOrganizationsResponse toRepoAndOrgResponse(final String memberProfileImage, final List<GitOrganization> gitOrganizations, final List<GitRepo> gitRepos);
+
+    @Mapping(target = "commits", expression = "java(member.getCommitSumWithRelation())")
+    @Mapping(target = "issues", expression = "java(member.getIssueSumWithRelation())")
+    @Mapping(target = "pullRequests", expression = "java(member.getPullRequestSumWithRelation())")
+    @Mapping(target = "reviews", expression = "java(member.getSumOfReviews().orElse(null))")
+    @Mapping(target = "profileImage", source = "member.profileImage")
+    @Mapping(target = "gitRepos", expression = "java(member.getGitRepoMembers().stream().map(GitRepoMember::getGitRepo).map(GitRepo::getName).collect(Collectors.toList()))")
+    @Mapping(target = "organization", expression = "java(member.isServiceMember() ? member.getOrganization().getName() : null)")
+    @Mapping(target = "rank", source = "rank")
+    MemberDetailsResponse toDetailsResponse(Member member, Integer rank);
 
     @Named("getGitOrganizationNames")
     default List<MemberGitOrganizationResponse> getGitOrganizationNames(final List<GitOrganization> gitOrganizations) {

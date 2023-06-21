@@ -15,10 +15,7 @@ import com.dragonguard.backend.domain.member.dto.kafka.KafkaContributionRequest;
 import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
-import com.dragonguard.backend.domain.member.dto.response.MemberGitOrganizationRepoResponse;
-import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
-import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
-import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
+import com.dragonguard.backend.domain.member.dto.response.*;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
@@ -253,9 +250,10 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     @Transactional
-    public MemberGitReposAndGitOrganizationsResponse findMemberDetailByGithubId(final String githubId) {
-        Member member = getMemberOrSaveAndScrape(githubId);
-        sendGitRepoAndContributionSumRequestToKafka(member.getGithubId(), member.getGithubToken());
+    public MemberGitReposAndGitOrganizationsResponse findMemberDetails() {
+        Member member = getLoginUserWithPersistence();
+        String githubId = member.getGithubId();
+        sendGitRepoAndContributionSumRequestToKafka(githubId, member.getGithubToken());
 
         return getMemberGitReposAndGitOrganizations(githubId, member);
     }
@@ -279,7 +277,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(final String githubId, final Member member) {
-        return memberMapper.toDetailResponse(
+        return memberMapper.toRepoAndOrgResponse(
                 member.getProfileImage(),
                 gitOrganizationService.findGitOrganizationByMember(member),
                 gitRepoRepository.findByGithubId(githubId));
@@ -313,5 +311,12 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return new MemberGitOrganizationRepoResponse(
                 gitOrganizationService.findByName(gitOrganizationName).getProfileImage(),
                 memberClientService.requestGitOrganizationResponse(getLoginUserWithPersistence().getGithubToken(), gitOrganizationName));
+    }
+
+    @Transactional
+    public MemberDetailsResponse getMemberDetails(String githubId) {
+        Member member = getMemberOrSaveAndScrape(githubId);
+        Integer rank = memberQueryRepository.findRankingById(member.getId());
+        return memberMapper.toDetailsResponse(member, rank);
     }
 }

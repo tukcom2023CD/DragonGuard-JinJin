@@ -75,7 +75,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isNoContent());
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -95,7 +95,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isNoContent());
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -112,13 +112,12 @@ class MemberControllerTest extends RestDocumentTest {
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/members/me")
+                        get("/members/me/details")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$.githubId").value("ohksj77"));
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -130,12 +129,12 @@ class MemberControllerTest extends RestDocumentTest {
     void getMemberDetails() throws Exception {
         // given
         MemberGitReposAndGitOrganizationsResponse expected = new MemberGitReposAndGitOrganizationsResponse(List.of(new MemberGitOrganizationResponse("tukcom2023CD", "http://orgGithubProfile")), List.of("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/DragonGuard", "tukcom2023CD/Jin-Jin"), "http://memberGithubProfile");
-        given(memberService.findMemberDetailByGithubId(any())).willReturn(expected);
+        given(memberService.findMemberDetails()).willReturn(expected);
 
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/members?githubId=ohksj77")
+                        get("/members/me/details")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
@@ -215,7 +214,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isNoContent());
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -290,5 +289,27 @@ class MemberControllerTest extends RestDocumentTest {
         // docs
         perform.andDo(print())
                 .andDo(document("get member repositories in a organization", getDocumentRequest(), getDocumentResponse()));
+    }
+
+    @Test
+    @DisplayName("타 멤버의 상세조회가 수행되는가")
+    void getOtherMemberDetails() throws Exception {
+        // given
+        MemberDetailsResponse expected = new MemberDetailsResponse(
+                1, 2, 3, 4, "http://profileImage", List.of("gitRepo1", "gitRepo2"), "한국공학대학교", 10);
+        given(memberService.getMemberDetails(any())).willReturn(expected);
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        get("/members/details?githubId=ohksj77")
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("get other member details", getDocumentRequest(), getDocumentResponse()));
     }
 }
