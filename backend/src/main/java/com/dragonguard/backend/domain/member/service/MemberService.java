@@ -205,7 +205,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         sendContributionRequestToKafka(getLoginUserWithPersistence().getGithubId());
     }
 
-    private void sendContributionRequestToKafka(final String githubId) {
+    public void sendContributionRequestToKafka(final String githubId) {
         kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
     }
 

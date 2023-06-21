@@ -61,7 +61,7 @@ public class SearchService implements EntityLoader<Search, Long> {
         return searchRepo(searchRequest, search);
     }
 
-    private Search getSearch(SearchRequest searchRequest) {
+    public Search getSearch(SearchRequest searchRequest) {
         Search search = findOrSaveSearch(searchRequest);
         deleteAllLastResults(search);
         searchRequest.setGithubToken(memberService.getLoginUserWithPersistence().getGithubToken());
@@ -72,13 +72,13 @@ public class SearchService implements EntityLoader<Search, Long> {
         resultRepository.findAllBySearchId(search.getId()).forEach(Result::delete);
     }
 
-    private List<UserResultResponse> searchUser(final SearchRequest searchRequest, final Search search) {
+    public List<UserResultResponse> searchUser(final SearchRequest searchRequest, final Search search) {
         return Arrays.stream(githubUserClient.requestToGithub(searchRequest).getItems())
                 .map(request -> resultRepository.save(resultMapper.toEntity(request, search.getId())))
                 .map(resultMapper::toUserResponse).collect(Collectors.toList());
     }
 
-    private List<GitRepoResultResponse> searchRepo(final SearchRequest searchRequest, final Search search) {
+    public List<GitRepoResultResponse> searchRepo(final SearchRequest searchRequest, final Search search) {
         SearchRepoResponse clientResult = githubRepoClient.requestToGithub(searchRequest);
         return Arrays.stream(clientResult.getItems())
                 .map(request -> {
@@ -95,10 +95,10 @@ public class SearchService implements EntityLoader<Search, Long> {
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
         List<String> filters = searchRequest.getFilters();
 
-        return Optional.ofNullable(getSameSearch(searches, filters)).orElseGet(() -> searchRepository.save(searchMapper.toSearch(searchRequest)));
+        return Optional.ofNullable(getSameSearch(searches, filters)).orElse(searchRepository.save(searchMapper.toSearch(searchRequest)));
     }
 
-    private Search getSameSearch(List<Search> searches, List<String> filters) {
+    public Search getSameSearch(List<Search> searches, List<String> filters) {
         return searches.stream().filter(search -> isContainsSameFilters(filters, search)).findFirst().orElse(null);
     }
 
@@ -106,7 +106,7 @@ public class SearchService implements EntityLoader<Search, Long> {
         return new HashSet<>(search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList())).containsAll(filters);
     }
 
-    private Search findOrGetSearchWithSearchAttributes(SearchRequest searchRequest) {
+    public Search findOrGetSearchWithSearchAttributes(SearchRequest searchRequest) {
         return searchRepository
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
                 .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()

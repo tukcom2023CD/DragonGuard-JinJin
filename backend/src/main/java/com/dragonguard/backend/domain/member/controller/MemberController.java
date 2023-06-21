@@ -41,13 +41,13 @@ public class MemberController {
     @PostMapping("/contributions")
     public ResponseEntity<Void> updateContribution() {
         memberService.updateContributions();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/blockchains")
     public ResponseEntity<Void> updateBlockchain() {
         memberService.updateBlockchain();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/tier")
@@ -71,7 +71,7 @@ public class MemberController {
     @PostMapping("/wallet-address")
     public ResponseEntity<Void> updateWalletAddress(@RequestBody @Valid WalletRequest walletRequest) {
         memberService.updateWalletAddress(walletRequest);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
