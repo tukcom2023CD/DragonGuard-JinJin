@@ -65,7 +65,6 @@ public class WebClientJobConfig {
     @JobScope
     public Step step() {
         return stepBuilderFactory.get("step")
-                .transactionManager(jpaTransactionManager())
                 .<GitRepo, Set<GitRepoMember>>chunk(10)
                 .reader(reader())
                 .processor(processor())
@@ -134,13 +133,5 @@ public class WebClientJobConfig {
 
                     return gitRepoMember;
                 }).collect(Collectors.toSet());
-    }
-
-    @Bean
-    @Primary
-    public JpaTransactionManager jpaTransactionManager() {
-        JpaTransactionManager tm = new JpaTransactionManager();
-        tm.setDataSource(dataSource);
-        return tm;
     }
 }

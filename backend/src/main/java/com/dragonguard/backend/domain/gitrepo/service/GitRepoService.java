@@ -5,6 +5,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoSparkLineResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.ClosedIssueKafkaResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.SparkLineKafka;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
@@ -57,6 +58,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private final GitRepoMapper gitRepoMapper;
     private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
     private final KafkaProducer<SparkLineKafka> kafkaSparkLineProducer;
+    private final KafkaProducer<GitRepoRequest> kafkaGitRepoInfoProducer;
     private final GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
     private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
@@ -278,6 +280,10 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         kafkaSparkLineProducer.send(new SparkLineKafka(githubToken, id));
     }
 
+    private void requestKafkaGitRepoInfo(String githubToken, String name) {
+        kafkaGitRepoInfoProducer.send(new GitRepoRequest(githubToken, name, LocalDate.now().getYear()));
+    }
+
     @Override
     public GitRepo loadEntity(final Long id) {
         return gitRepoRepository.findById(id)
@@ -296,6 +302,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private List<GitRepoMemberResponse> getGitRepoMemberResponses(final GitRepo gitRepo, final String githubToken) {
         Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         if (!gitRepoMembers.isEmpty()) {
+            requestKafkaGitRepoInfo(githubToken, gitRepo.getName());
             return gitRepoMemberMapper.toResponseList(gitRepoMembers);
         }
         return requestToGithub(new GitRepoInfoRequest(githubToken, gitRepo.getName(), LocalDate.now().getYear()), gitRepo);
