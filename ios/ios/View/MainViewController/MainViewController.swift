@@ -136,6 +136,15 @@ final class MainViewController: UIViewController {
     }()
     
     // MARK: contribution 글자
+    private lazy var cNameLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .white
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return label
+    }()
+    
+    // MARK: contribution 글자
     private lazy var contributionLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
@@ -153,6 +162,15 @@ final class MainViewController: UIViewController {
         view.layer.cornerRadius = 20
         view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
         return view
+    }()
+    
+    // MARK: contribution 글자
+    private lazy var gNameLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .white
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        return label
     }()
     
     // MARK: group 글자
@@ -181,8 +199,10 @@ final class MainViewController: UIViewController {
         self.view.addSubview(tokenImage)
         self.view.addSubview(linkImage)
         self.view.addSubview(contributionView)
+        self.view.addSubview(cNameLabel)
         self.view.addSubview(contributionLabel)
         self.view.addSubview(groupView)
+        self.view.addSubview(gNameLabel)
         self.view.addSubview(groupLabel)
         
         setAutoLayout()
@@ -198,17 +218,17 @@ final class MainViewController: UIViewController {
             make.centerX.equalTo(view.snp_centerXWithinMargins)
         }
         
-//        profileBtn.snp.makeConstraints { make in
-//            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
-//            make.leading.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
-//            make.bottom.equalTo(view.safeAreaLayoutGuide)
-//        }
-//
-//        nameLabel.snp.makeConstraints { make in
-//            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
-//            make.leading.equalTo(profileBtn.snp.trailing).offset(10)
-//            make.bottom.equalTo(view.safeAreaLayoutGuide)
-//        }
+        profileImage.snp.makeConstraints { make in
+            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
+            make.leading.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+
+        nameLabel.snp.makeConstraints { make in
+            make.top.equalTo(searchBtn.snp.bottom).offset(self.view.safeAreaLayoutGuide.layoutFrame.height/20)
+            make.leading.equalTo(profileImage.snp.trailing).offset(10)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
 
     }
     
