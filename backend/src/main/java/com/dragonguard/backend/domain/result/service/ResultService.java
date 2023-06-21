@@ -6,10 +6,10 @@ import com.dragonguard.backend.domain.result.mapper.ResultMapper;
 import com.dragonguard.backend.domain.result.repository.ResultRepository;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.service.SearchService;
-import com.dragonguard.backend.global.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
  * @description 검색 결과에 대한 서비스 로직을 수행하는 클래스
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
 public class ResultService implements EntityLoader<Result, Long> {
     private final ResultRepository resultRepository;

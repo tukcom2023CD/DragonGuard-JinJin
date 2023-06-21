@@ -29,10 +29,11 @@ import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.service.MemberService;
-import com.dragonguard.backend.global.EntityLoader;
+import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +49,7 @@ import java.util.stream.Collectors;
  * @description 깃허브 Repository 관련 서비스 로직을 처리하는 클래스
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
 public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private final GitRepoMemberMapper gitRepoMemberMapper;

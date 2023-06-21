@@ -14,6 +14,7 @@ import com.dragonguard.backend.domain.member.dto.client.*;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
  * @description WebClient로의 요청을 처리하는 Service
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
 public class MemberClientService {
     private final GithubClient<MemberClientRequest, MemberCommitResponse> memberCommitClient;

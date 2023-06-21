@@ -7,8 +7,7 @@ import org.springframework.context.annotation.EnableLoadTimeWeaving;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @EnableLoadTimeWeaving(aspectjWeaving = EnableLoadTimeWeaving.AspectJWeaving.ENABLED)
-public class TransactionConfig {
-}
+public class TransactionAopConfig {}

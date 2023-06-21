@@ -9,14 +9,14 @@ import com.dragonguard.backend.domain.email.mapper.EmailMapper;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.MemberService;
-import com.dragonguard.backend.global.EntityLoader;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
+import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -24,7 +24,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
 public class EmailService implements EntityLoader<Email, Long> {
     private final EmailRepository emailRepository;

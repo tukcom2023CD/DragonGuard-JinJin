@@ -26,10 +26,11 @@ import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
-import com.dragonguard.backend.global.EntityLoader;
+import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ import java.util.UUID;
  * @description 멤버관련 서비스 로직을 담당하는 클래스
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
 public class MemberService implements EntityLoader<Member, UUID> {
     private final MemberRepository memberRepository;

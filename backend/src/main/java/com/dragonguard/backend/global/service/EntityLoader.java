@@ -1,4 +1,4 @@
-package com.dragonguard.backend.global;
+package com.dragonguard.backend.global.service;
 
 /**
  * @author 김승진

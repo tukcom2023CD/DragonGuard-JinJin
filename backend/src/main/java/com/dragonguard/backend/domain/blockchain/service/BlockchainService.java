@@ -8,8 +8,9 @@ import com.dragonguard.backend.domain.blockchain.mapper.BlockchainMapper;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.AuthService;
-import com.dragonguard.backend.global.EntityLoader;
+import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  * @description 블록체인 관련 DB 요청 및 SmartContractService의 함수들의 호출을 담당하는 클래스
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
 public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private final BlockchainRepository blockchainRepository;
