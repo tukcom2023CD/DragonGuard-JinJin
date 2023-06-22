@@ -20,25 +20,28 @@ final class BlockChainService{
                        method: .get,
                        headers: ["Content-type": "application/json",
                                      "Authorization": "Bearer \(access ?? "")"])
-            .responseDecodable(of: [BlockChainListCodableModel].self) { response in
-                switch response.result{
-                    
-                case .success(let data):
-                    data.forEach { a in
-                        result.append(BlockChainListModel(contributeType: a.contributeType,
-                                                          amount: a.amount,
-                                                          githubId: a.githubId,
-                                                          createdAt: a.createdAt,
-                                                          transactionHashUrl: a.transactionHashUrl))
-                    }
-                    observer.onNext(result)
-                    
-                    
-                case .failure(let error):
-                    print("BlockChainService error!\n\(error)")
-                }
-                
+            .responseJSON { res in
+                print(res)
             }
+//            .responseDecodable(of: [BlockChainListCodableModel].self) { response in
+//                switch response.result{
+//
+//                case .success(let data):
+//                    data.forEach { a in
+//                        result.append(BlockChainListModel(contributeType: a.contributeType,
+//                                                          amount: a.amount,
+//                                                          githubId: a.githubId,
+//                                                          createdAt: a.createdAt,
+//                                                          transactionHashUrl: a.transactionHashUrl))
+//                    }
+//                    observer.onNext(result)
+//
+//
+//                case .failure(let error):
+//                    print("BlockChainService error!\n\(error)")
+//                }
+//
+//            }
             
             return Disposables.create()
         }

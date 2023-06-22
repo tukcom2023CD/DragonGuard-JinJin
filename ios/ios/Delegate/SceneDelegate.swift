@@ -41,7 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     
     // MARK: If success User, go to MainController
     func moveMainController(){
-        let rootView = CompareChooseRepoViewController()
+        let rootView = BlockChainListController()
 //        rootView.autoLoginCheck = true
         let nc = UINavigationController(rootViewController: rootView)
         window?.rootViewController = rootView
