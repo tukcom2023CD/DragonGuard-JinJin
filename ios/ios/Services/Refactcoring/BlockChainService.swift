@@ -20,9 +20,23 @@ final class BlockChainService{
                        method: .get,
                        headers: ["Content-type": "application/json",
                                      "Authorization": "Bearer \(access ?? "")"])
-            .responseJSON { res in
-                print("??FDS?FADSF?")
-                print(res)
+            .responseJSON { response in
+                guard let res = response.data else {return}
+                do {
+                    let decoder = JSONDecoder()
+                    let json = try decoder.decode([BlockChainListCodableModel].self, from: res)
+                    print(json)
+                    json.forEach { data in
+                        result.append(BlockChainListModel(contributeType: data.contributeType,
+                                                          amount: data.amount,
+                                                          githubId: data.githubId,
+                                                          createdAt: data.createdAt,
+                                                          transactionHashUrl: data.transactionHashUrl))
+                    }
+                    observer.onNext(result)
+                } catch {
+                    print("error!\(error)")
+                }
                 
             }
 //            .responseDecodable(of: [BlockChainListCodableModel].self) { response in

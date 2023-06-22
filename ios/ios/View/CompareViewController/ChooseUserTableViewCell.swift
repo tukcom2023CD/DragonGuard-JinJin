@@ -24,6 +24,7 @@ final class ChooseUserTableViewCell: UITableViewCell{
     private lazy var label: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 30)
+        label.textColor = .black
         return label
     }()
     
@@ -37,6 +38,7 @@ final class ChooseUserTableViewCell: UITableViewCell{
     }
     
     func inputData(text: String){
+        addUI()
         label.text = text
     }
 }

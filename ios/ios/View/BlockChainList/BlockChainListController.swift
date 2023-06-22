@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 import RxSwift
+import SafariServices
 
 // MARK: 블록체인 부여 내역
 final class BlockChainListController: UIViewController{
@@ -78,26 +79,13 @@ final class BlockChainListController: UIViewController{
     
     // MARK:
     private func getData(){
-//        let list = [BlockChainListModel(contributeType: "COMMIT",
-//                                        amount: 4,
-//                                        githubId: "aa",
-//                                        createdAt: "2022-22-22",
-//                                        transactionHashUrl: ""),
-//                    BlockChainListModel(contributeType: "COMMIT",
-//                                                    amount: 2,
-//                                                    githubId: "aa",
-//                                                    createdAt: "2022-22-22",
-//                                                    transactionHashUrl: ""  ),
-//                    BlockChainListModel(contributeType: "PULLREQUEST",
-//                                                    amount: 10,
-//                                                    githubId: "aa",
-//                                                    createdAt: "2022-22-22",
-//                                                    transactionHashUrl: "")]
+        
         self.viewModel.getData()
             .subscribe(onNext: { list in
                 print(list)
                 
                 self.addUI()
+                self.outsideView.delegate = self
                 self.outsideView.inputData(list: list, totalLink: self.blockchainUrl)
             })
             .disposed(by: disposeBag)
@@ -113,5 +101,13 @@ final class BlockChainListController: UIViewController{
             self.dismiss(animated: true)
         })
         .disposed(by: disposeBag)
+    }
+}
+
+extension BlockChainListController: SendURL{
+    func sendURL(url: String) {
+        let url = NSURL(string: url)
+        let blogSafariView: SFSafariViewController = SFSafariViewController(url: url! as URL)
+        self.present(blogSafariView, animated: true)
     }
 }

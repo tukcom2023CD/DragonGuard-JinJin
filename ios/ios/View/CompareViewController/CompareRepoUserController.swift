@@ -431,7 +431,6 @@ final class CompareRepoUserController: UIViewController{
         
         
         leftUserButton.rx.tap.subscribe(onNext: {
-            print("called")
             let nextPage = ChooseUserViewController()
             nextPage.beforeUser = "user1"
             nextPage.delegate = self
@@ -443,7 +442,6 @@ final class CompareRepoUserController: UIViewController{
         
         
         rightUserButton.rx.tap.subscribe(onNext: {
-            print("called11")
             let nextPage = ChooseUserViewController()
             nextPage.beforeUser = "user2"
             nextPage.delegate = self

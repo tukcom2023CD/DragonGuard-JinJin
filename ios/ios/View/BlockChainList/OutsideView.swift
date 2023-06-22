@@ -9,8 +9,10 @@ import Foundation
 import SnapKit
 import UIKit
 
+
 final class OutsideView: UIView{
     private var dataList: [BlockChainListModel] = []
+    var delegate: SendURL?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -82,9 +84,16 @@ extension OutsideView: UITableViewDelegate, UITableViewDataSource{
         tableView.deselectRow(at: indexPath, animated: true)
         
         print("selectLink \(dataList[indexPath.row].transactionHashUrl)")
+        
+        delegate?.sendURL(url: dataList[indexPath.row].transactionHashUrl ?? "")
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataList.count
     }
+}
+
+protocol SendURL{
+    func sendURL(url: String)
 }
