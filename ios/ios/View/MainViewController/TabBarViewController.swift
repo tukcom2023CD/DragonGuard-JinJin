@@ -16,10 +16,10 @@ final class TabBarViewController: UITabBarController {
         
         // Do any additional setup after loading the view.
         let questionVC = QuestionViewController()
-        let rankingVC = RankingViewController()
-        let homeVC = HomeViewController()
-        let compareVC = CompareViewController()
-        let profileVC = ProfileViewController()
+        let rankingVC = AllUserRankingController()
+        let homeVC = MainViewController()
+        let compareVC = CompareChooseRepoViewController()
+        let profileVC = DetailInfoController()
         
         
         questionVC.tabBarItem.image = UIImage(named: "question")

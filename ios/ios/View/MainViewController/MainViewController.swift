@@ -18,6 +18,7 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         getData()
+        clickedBtn()
     }
     
     /*
@@ -119,8 +120,8 @@ final class MainViewController: UIViewController {
     }()
     
     // MARK: token 틀
-    private lazy var tokenView: UIView = {
-        let view = UIView()
+    private lazy var tokenView: UIButton = {
+        let view = UIButton()
         view.backgroundColor = .white
         view.layer.shadowOpacity = 1
         view.layer.borderWidth = 1
@@ -368,6 +369,25 @@ final class MainViewController: UIViewController {
         
         groupView.inputData(top: "a", me: "b", under: "c")
         contributionView.inputData(commit: 1, issue: 2, pr: 3, reviews: 4)
+    }
+    
+    func clickedBtn(){
+        searchBtn.rx.tap.subscribe(onNext:{
+            let nextPage = SearchViewController()
+            nextPage.modalPresentationStyle = .fullScreen
+            nextPage.beforePage = "Main"
+            self.present(nextPage ,animated: false)
+        })
+        .disposed(by: disposeBag)
+        
+        
+        tokenView.rx.tap.subscribe(onNext:{
+            print("called")
+            let nextPage = BlockChainListController()
+            nextPage.modalPresentationStyle = .fullScreen
+            self.present(nextPage ,animated: false)
+        })
+        .disposed(by: disposeBag)
     }
     
 }

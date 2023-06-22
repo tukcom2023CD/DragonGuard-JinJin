@@ -21,7 +21,9 @@ final class BlockChainService{
                        headers: ["Content-type": "application/json",
                                      "Authorization": "Bearer \(access ?? "")"])
             .responseJSON { res in
+                print("??FDS?FADSF?")
                 print(res)
+                
             }
 //            .responseDecodable(of: [BlockChainListCodableModel].self) { response in
 //                switch response.result{

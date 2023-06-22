@@ -139,7 +139,7 @@ final class LoginController: UIViewController{
             .subscribe(onNext: { first, second in
                 if first && second{
                     
-                    let rootView = BlockChainListController()
+                    let rootView = TabBarViewController()
                     
 //                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
 //                       print("\(key): \(value)")

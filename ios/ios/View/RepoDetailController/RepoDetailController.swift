@@ -79,7 +79,7 @@ final class RepoDetailController: UIViewController{
     // MARK: Repository title
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "???"
+        label.text = selectedTitle ?? "None"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
         label.textColor = .black
         return label
