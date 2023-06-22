@@ -262,6 +262,8 @@ final class MainViewController: UIViewController {
         
         profileImage.snp.makeConstraints { make in
             make.top.equalTo(searchBtn.snp.bottom).offset(30)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/5)
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/5)
             make.leading.equalTo(searchBtn.snp.leading)
         }
 
