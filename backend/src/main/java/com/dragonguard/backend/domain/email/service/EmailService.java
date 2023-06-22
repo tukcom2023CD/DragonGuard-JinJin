@@ -53,7 +53,7 @@ public class EmailService implements EntityLoader<Email, Long> {
         return new IdResponse<>(savedEmail.getId());
     }
 
-    private void validateMemberEmail(String memberEmail) {
+    private void validateMemberEmail(final String memberEmail) {
         if (!StringUtils.hasText(memberEmail)) throw new EmailException();
     }
 
