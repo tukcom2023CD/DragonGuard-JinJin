@@ -87,12 +87,12 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return loadEntity(member.getId());
     }
 
-    public Member findMemberOrSave(final MemberRequest memberRequest, final AuthStep authStep) {
+    public Member findMemberOrSave(final MemberRequest memberRequest, final AuthStep authStep, String profileUrl) {
         if (memberRepository.existsByGithubId(memberRequest.getGithubId())) {
             return memberRepository.findByGithubId(memberRequest.getGithubId())
                     .orElseThrow(EntityNotFoundException::new);
         }
-        Member member = memberRepository.save(memberMapper.toEntity(memberRequest, authStep));
+        Member member = memberRepository.save(memberMapper.toEntity(memberRequest, authStep, profileUrl));
         return loadEntity(member.getId());
     }
 

@@ -10,10 +10,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.kafka.SparkLineKafka;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.*;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepoContributionMap;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepoLanguageMap;
@@ -36,6 +33,7 @@ import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -192,7 +190,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 repoResponse,
                 getStatistics(gitRepo),
                 gitRepoLanguageMap.getLanguages(),
-                gitRepoLanguageMap.getStatistics(),
+                new SummaryResponse(gitRepoLanguageMap.getStatistics()),
                 profileUrls);
     }
 
@@ -224,9 +222,9 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
 
     private StatisticsResponse getStatisticsResponse(final List<Integer> commits, final List<Integer> additions, final List<Integer> deletions) {
         return new StatisticsResponse(
-                commits.isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0) : commits.stream().mapToInt(Integer::intValue).summaryStatistics(),
-                additions.isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0) : additions.stream().mapToInt(Integer::intValue).summaryStatistics(),
-                deletions.isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0) : deletions.stream().mapToInt(Integer::intValue).summaryStatistics());
+                commits.isEmpty() ? new SummaryResponse(new IntSummaryStatistics(0, 0, 0, 0)) : new SummaryResponse(commits.stream().mapToInt(Integer::intValue).summaryStatistics()),
+                additions.isEmpty() ? new SummaryResponse(new IntSummaryStatistics(0, 0, 0, 0)) : new SummaryResponse(additions.stream().mapToInt(Integer::intValue).summaryStatistics()),
+                deletions.isEmpty() ? new SummaryResponse(new IntSummaryStatistics(0, 0, 0, 0)) : new SummaryResponse(deletions.stream().mapToInt(Integer::intValue).summaryStatistics()));
     }
 
     public List<GitRepoMemberResponse> requestToGithub(final GitRepoInfoRequest gitRepoInfoRequest, final GitRepo gitRepo) {
@@ -261,7 +259,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                             clientResponse.getTotal(),
                             additions.getContributionByKey(clientResponse),
                             deletions.getContributionByKey(clientResponse),
-                            memberService.findMemberOrSave(new MemberRequest(githubId), AuthStep.NONE).isServiceMember());
+                            memberService.findMemberOrSave(new MemberRequest(githubId), AuthStep.NONE, profileUrl).isServiceMember());
                 }).collect(Collectors.toList());
     }
 
@@ -313,6 +311,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return requestToGithub(new GitRepoInfoRequest(githubToken, gitRepo.getName(), LocalDate.now().getYear()), gitRepo);
     }
 
+    @Cacheable(value = "twoGitRepos", key = "{#request.firstRepo, #request.secondRepo}", cacheManager = "cacheManager")
     public TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         String firstRepo = request.getFirstRepo();

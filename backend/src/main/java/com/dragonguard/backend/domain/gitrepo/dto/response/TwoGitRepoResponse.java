@@ -4,6 +4,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * @author 김승진
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
  */
 
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class TwoGitRepoResponse {

@@ -13,10 +13,11 @@ import java.util.IntSummaryStatistics;
  */
 
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatisticsResponse {
-    private IntSummaryStatistics commitStats;
-    private IntSummaryStatistics additionStats;
-    private IntSummaryStatistics deletionStats;
+    private SummaryResponse commitStats;
+    private SummaryResponse additionStats;
+    private SummaryResponse deletionStats;
 }

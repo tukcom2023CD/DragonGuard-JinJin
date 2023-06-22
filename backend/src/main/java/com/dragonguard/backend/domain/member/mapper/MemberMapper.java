@@ -27,7 +27,9 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", imports = {GitRepo.class, GitRepoMember.class, Collectors.class})
 public interface MemberMapper {
     @Mapping(target = "githubId", source = "memberRequest.githubId")
-    Member toEntity(final MemberRequest memberRequest, final AuthStep authStep);
+    @Mapping(target = "profileImage", source = "profileUrl")
+    @Mapping(target = "authStep", source = "authStep")
+    Member toEntity(final MemberRequest memberRequest, final AuthStep authStep, final String profileUrl);
 
     Member toEntity(final String githubId, final Role role, final AuthStep authStep);
 

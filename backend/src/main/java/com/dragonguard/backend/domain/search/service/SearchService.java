@@ -45,14 +45,14 @@ public class SearchService implements EntityLoader<Search, Long> {
     private final GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     private final GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
 
-    @Cacheable(value = "results", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
+    @Cacheable(value = "userResults", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
     public List<UserResultResponse> getUserSearchResultByClient(String name, Integer page, List<String> filters) {
         SearchRequest searchRequest = new SearchRequest(name, SearchType.USERS, page, filters);
         Search search = getSearch(searchRequest);
         return searchUser(searchRequest, search);
     }
 
-    @Cacheable(value = "results", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
+    @Cacheable(value = "repoResults", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
     public List<GitRepoResultResponse> getGitRepoSearchResultByClient(String name, Integer page, List<String> filters) {
         SearchRequest searchRequest = new SearchRequest(name, SearchType.REPOSITORIES, page, filters);
         Search search = getSearch(searchRequest);

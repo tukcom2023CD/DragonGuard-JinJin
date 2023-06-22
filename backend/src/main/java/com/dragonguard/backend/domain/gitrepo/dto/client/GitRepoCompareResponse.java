@@ -1,9 +1,11 @@
 package com.dragonguard.backend.domain.gitrepo.dto.client;
 
 import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.SummaryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.IntSummaryStatistics;
 import java.util.List;
@@ -15,12 +17,13 @@ import java.util.Map;
  */
 
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoCompareResponse {
     private GitRepoClientResponse gitRepo;
     private StatisticsResponse statistics;
     private Map<String, Integer> languages;
-    private IntSummaryStatistics languagesStats;
+    private SummaryResponse languagesStats;
     private List<String> profileUrls;
 }

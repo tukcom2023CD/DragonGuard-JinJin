@@ -84,8 +84,8 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
         return gitRepoRepository.findByName(gitRepoName).orElseThrow(EntityNotFoundException::new);
     }
 
-    private Member getMemberByGitRepoResponse(final GitRepoMemberResponse gitRepository) {
-        return memberService.findMemberOrSave(new MemberRequest(gitRepository.getGithubId()), AuthStep.NONE);
+    private Member getMemberByGitRepoResponse(final GitRepoMemberResponse gitRepoMemberResponse) {
+        return memberService.findMemberOrSave(new MemberRequest(gitRepoMemberResponse.getGithubId()), AuthStep.NONE, gitRepoMemberResponse.getProfileUrl());
     }
 
     public GitRepoMember findByNameAndMemberGithubId(final String gitRepoName, final String githubId) {
