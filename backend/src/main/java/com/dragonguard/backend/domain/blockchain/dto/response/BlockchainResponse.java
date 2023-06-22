@@ -19,10 +19,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class BlockchainResponse {
     private Long id;
-    private ContributeType contributeType;
-    private BigInteger amount;
+    private String contributeType;
+    private Long amount;
     private String githubId;
     private UUID memberId;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private String transactionHashUrl;
 }

@@ -7,19 +7,17 @@ import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.mapper.BlockchainMapper;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -79,11 +77,8 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         return smartContractService.transfer(request, walletAddress);
     }
 
-    @Transactional(readOnly = true)
     public List<BlockchainResponse> getBlockchainList() {
-        return blockchainRepository.findAllByMemberId(authService.getLoginUser().getId()).stream()
-                .map(blockchainMapper::toResponse)
-                .collect(Collectors.toList());
+        return blockchainMapper.toResponseList(blockchainRepository.findAllByMemberId(authService.getLoginUser().getId()));
     }
 
     @Override

@@ -32,6 +32,7 @@ import javax.persistence.EntityManagerFactory;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -110,20 +111,20 @@ public class WebClientJobConfig {
 
     private Set<GitRepoMember> getGitRepoMembers(GitRepo gitRepo, List<GitRepoMemberClientResponse> list) {
         return gitRepo.getGitRepoMembers().stream()
-                .map(gitRepoMember -> {
-                    GitRepoMemberClientResponse gitRepoMemberResponse = list.stream()
+                .peek(gitRepoMember -> {
+                    Optional<GitRepoMemberClientResponse> gitRepoMemberResponse = list.stream()
                             .filter(response -> gitRepoMember.getMember().getName().equals(response.getAuthor().getLogin()))
-                            .findFirst()
-                            .orElseThrow(EntityNotFoundException::new);
+                            .findFirst();
 
-                    List<Week> weeks = Arrays.asList(gitRepoMemberResponse.getWeeks());
-
-                    gitRepoMember.updateGitRepoContribution(
-                            gitRepoMemberResponse.getTotal(),
-                            weeks.stream().mapToInt(Week::getA).sum(),
-                            weeks.stream().mapToInt(Week::getD).sum());
-
-                    return gitRepoMember;
+                    gitRepoMemberResponse.ifPresent(
+                            gitRepoMemberDto -> {
+                                List<Week> weeks = Arrays.asList(gitRepoMemberDto.getWeeks());
+                                gitRepoMember.updateGitRepoContribution(
+                                        gitRepoMemberDto.getTotal(),
+                                        weeks.stream().mapToInt(Week::getA).sum(),
+                                        weeks.stream().mapToInt(Week::getD).sum());
+                            }
+                    );
                 }).collect(Collectors.toSet());
     }
 }

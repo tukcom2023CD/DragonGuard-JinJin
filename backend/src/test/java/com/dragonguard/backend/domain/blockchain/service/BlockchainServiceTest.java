@@ -45,7 +45,7 @@ class BlockchainServiceTest extends LoginTest {
 
         //when
         blockchainService.setTransaction(new ContractRequest(ContributeType.COMMIT.toString(), BigInteger.ONE), loginUser);
-        List<Blockchain> blockchains = blockchainRepository.findAllByMemberId(loginUser.getId());
+        List<Blockchain> blockchains = blockchainRepository.findAllByMember(loginUser.getId());
 
         //then
         assertThat(blockchains).hasSize(1);

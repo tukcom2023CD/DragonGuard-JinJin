@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.blockchain.repository;
 
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
+import com.dragonguard.backend.domain.member.entity.Member;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import java.util.UUID;
  */
 
 public interface BlockchainRepository {
+    List<Blockchain> findAllByMember(Member member);
     List<Blockchain> findAllByMemberId(UUID memberId);
     boolean existsByMemberId(UUID memberId);
     Blockchain save(Blockchain blockchain);
