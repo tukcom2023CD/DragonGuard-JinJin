@@ -12,7 +12,7 @@ import Alamofire
 final class BlockChainService{
     
     func getData() -> Observable<[BlockChainListModel]>{
-        let url = APIURL.apiUrl.getBlockChainList(ip: APIURL.ip)
+        let url = APIURL.apiUrl.getBlockChain(ip: APIURL.ip)
         let access = UserDefaults.standard.string(forKey: "Access")
         var result: [BlockChainListModel] = []
         return Observable.create { observer in
