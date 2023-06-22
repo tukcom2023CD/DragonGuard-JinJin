@@ -321,11 +321,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return new TwoGitRepoResponse(
                 getGitRepoResponse(
                         firstRepo,
-                        requestClientGitRepo(githubToken, firstRepo),
+                        requestClientGitRepo(firstRepo, githubToken),
                         requestClientGitRepoLanguage(firstRepo, githubToken)),
                 getGitRepoResponse(
                         secondRepo,
-                        requestClientGitRepo(githubToken, secondRepo),
+                        requestClientGitRepo(secondRepo, githubToken),
                         requestClientGitRepoLanguage(secondRepo, githubToken)));
     }
 
