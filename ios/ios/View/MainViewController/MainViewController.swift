@@ -234,7 +234,7 @@ final class MainViewController: UIViewController {
         profileImage.snp.makeConstraints { make in
             make.top.equalTo(searchBtn.snp.bottom).offset(50)
             make.leading.equalTo(searchBtn.snp.leading)
-            
+            make.centerY.equalTo(view.snp_centerYWithinMargins)
         }
 
         nameLabel.snp.makeConstraints { make in
