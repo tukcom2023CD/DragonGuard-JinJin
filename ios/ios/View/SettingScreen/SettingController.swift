@@ -157,7 +157,7 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
     
     // 셀 속성 설정
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var color = UIColor.black   // label textColor 변경
+        let color = UIColor.black   // label textColor 변경
         let cell = tableView.dequeueReusableCell(withIdentifier: SettingTableViewCell.identifier,for: indexPath) as? SettingTableViewCell ?? SettingTableViewCell()
         
         
