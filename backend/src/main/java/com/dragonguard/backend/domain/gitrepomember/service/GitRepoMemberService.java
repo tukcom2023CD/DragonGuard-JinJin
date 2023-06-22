@@ -64,8 +64,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
         return gitRepoResponses.stream()
                 .distinct()
                 .map(gitRepoResponse ->
-                        getGitRepoMember(gitRepoResponse, getMemberByGitRepoResponse(gitRepoResponse),
-                                gitRepo))
+                        getGitRepoMember(gitRepoResponse, getMemberByGitRepoResponse(gitRepoResponse), gitRepo))
                 .collect(Collectors.toList());
     }
 

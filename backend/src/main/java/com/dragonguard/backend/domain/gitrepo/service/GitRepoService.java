@@ -158,10 +158,12 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     public void updateClosedIssues(final ClosedIssueKafkaResponse closedIssueKafkaResponse) {
-        GitRepo gitRepo = gitRepoRepository.findByName(closedIssueKafkaResponse.getName())
-                .orElseThrow(EntityNotFoundException::new);
+        String name = closedIssueKafkaResponse.getName();
+        if (!gitRepoRepository.existsByName(name)) return;
 
-        gitRepo.updateClosedIssueNum(closedIssueKafkaResponse.getClosedIssue());
+        gitRepoRepository.findByName(name)
+                .orElseThrow(EntityNotFoundException::new)
+                .updateClosedIssueNum(closedIssueKafkaResponse.getClosedIssue());
     }
 
     private GitRepoCompareResponse getOneRepoResponse(final String repoName) {
@@ -232,7 +234,9 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         if (contributions.isEmpty()) return List.of();
 
         List<GitRepoMemberResponse> result = getResponseList(
-                contributions, getContributionMap(contributions, Week::getA), getContributionMap(contributions, Week::getD));
+                contributions,
+                getContributionMap(contributions, Week::getA),
+                getContributionMap(contributions, Week::getD));
 
         gitRepoMemberService.saveAll(result, gitRepo);
         return result;
