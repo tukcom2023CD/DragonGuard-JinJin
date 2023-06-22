@@ -26,7 +26,7 @@ public class JobScheduler {
     @Scheduled(cron = "0 50 1,3,5,7,9,11,13,15,17,19,21,23 * * *", zone = "Asia/Seoul")
     public void launchJob() throws Exception {
         Map<String, JobParameter> jobParametersMap = new HashMap<>();
-        jobParametersMap.put("now", new JobParameter(LocalDateTime.now().toString()));
+        jobParametersMap.put("now", new JobParameter(LocalDateTime.now().plusHours(9L).toString()));
         JobParameters parameters = new JobParameters(jobParametersMap);
         simpleJobLauncher.run(clientJob, parameters);
     }

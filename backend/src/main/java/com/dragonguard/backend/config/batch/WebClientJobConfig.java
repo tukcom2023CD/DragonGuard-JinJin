@@ -85,7 +85,7 @@ public class WebClientJobConfig {
         String apiToken = adminApiToken.getApiToken();
 
         return new FunctionItemProcessor<>(gitRepo -> {
-                List<GitRepoMemberClientResponse> list = Arrays.asList(gitRepoMemberClient.requestToGithub(new GitRepoInfoRequest(apiToken, gitRepo.getName(), LocalDateTime.now().getYear())));
+                List<GitRepoMemberClientResponse> list = Arrays.asList(gitRepoMemberClient.requestToGithub(new GitRepoInfoRequest(apiToken, gitRepo.getName(), LocalDateTime.now().plusHours(9L).getYear())));
                 return getGitRepoMembers(gitRepo, list);
         });
     }
