@@ -70,7 +70,7 @@ final class CustomUIView: UIView{
     }
     
     // MARK: Repo1 차트 설정
-    func inputData(repo1: [Double?], values: [String]?, repoName: String, imgList: [UIImage]){
+    func inputData(repo1: [Double?], values: [String]?, repoName: String, imgList: [String]){
         addUI()
         setRepoPieChartOptions(repo1: repo1, values: values)
         repoLabel.text = repoName

@@ -24,8 +24,7 @@ final class CompareService{
         let access = UserDefaults.standard.string(forKey: "Access")
 
         return Observable.create(){ observer in
-            Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { timer in
-                print("sending url1")
+            
                 AF.request(url,
                            method: .post,
                            parameters: body,
@@ -40,12 +39,22 @@ final class CompareService{
                             do {
                                 let decodedData = try JSONDecoder().decode(CompareUserDecodingModel.self, from: jsonData)
                                 print(decodedData)
-                                timer.invalidate()
+
                                 for data in decodedData.firstResult{
-                                    firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+                                    firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId ?? "Unknown",
+                                                                             profileUrl: data.profileUrl ?? "",
+                                                                             commits: data.commits ?? 0,
+                                                                             additions: data.additions ?? 0,
+                                                                             deletions: data.deletions ?? 0,
+                                                                             isServiceMember: data.isServiceMember ?? false))
                                 }
                                 for data in decodedData.secondResult{
-                                    secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId, commits: data.commits, additions: data.additions, deletions: data.deletions))
+                                    secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId ?? "Unknown",
+                                                                               profileUrl: data.profileUrl ?? "",
+                                                                               commits: data.commits ?? 0,
+                                                                               additions: data.additions ?? 0,
+                                                                               deletions: data.deletions ?? 0,
+                                                                               isServiceMember: data.isServiceMember ?? false))
                                 }
                                 let compareUser = CompareUserModel(firstResult: firstRepoUserInfo, secondResult: secondRepoUserInfo)
                                 observer.onNext(compareUser)
@@ -59,7 +68,6 @@ final class CompareService{
                        }
                 }
                 
-            })
             return Disposables.create()
         }
         
@@ -77,8 +85,6 @@ final class CompareService{
         let access = UserDefaults.standard.string(forKey: "Access")
 
         return Observable.create() { observer in
-            Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { timer in
-                print("sending url22")
                 AF.request(url,
                            method: .post,
                            parameters: body,
@@ -91,7 +97,6 @@ final class CompareService{
                     guard let responseResult = response.value else {return}
                     
                     if responseResult.firstRepo.gitRepo.full_name != "" && responseResult.secondRepo.gitRepo.full_name != ""{
-                        timer.invalidate()
                         // first Repo
                         var firstLanguage: [String] = []
                         var firstCount: [Int] = []
@@ -140,7 +145,8 @@ final class CompareService{
                                                                                             sum: responseResult.firstRepo.languagesStats.sum ?? 0,
                                                                                             min: responseResult.firstRepo.languagesStats.min ?? 0,
                                                                                             max: responseResult.firstRepo.languagesStats.max ?? 0,
-                                                                                            average: responseResult.firstRepo.languagesStats.average ?? 0)),
+                                                                                            average: responseResult.firstRepo.languagesStats.average ?? 0),
+                                                       profileUrls: responseResult.firstRepo.profileUrls),
                             secondRepo: secondRepoModel(gitRepo: GitRepoModel(full_name: responseResult.secondRepo.gitRepo.full_name,
                                                                               forks_count: responseResult.secondRepo.gitRepo.forks_count ?? 0,
                                                                               stargazers_count: responseResult.secondRepo.gitRepo.stargazers_count ?? 0,
@@ -168,12 +174,12 @@ final class CompareService{
                                                                                              sum: responseResult.secondRepo.languagesStats.sum ?? 0,
                                                                                              min: responseResult.secondRepo.languagesStats.min ?? 0,
                                                                                              max: responseResult.secondRepo.languagesStats.max ?? 0,
-                                                                                             average: responseResult.secondRepo.languagesStats.average ?? 0)))
+                                                                                             average: responseResult.secondRepo.languagesStats.average ?? 0),
+                                                        profileUrls: responseResult.secondRepo.profileUrls))
                         observer.onNext(compareRepo)
                         
                     }
                 }
-            })
             return Disposables.create()
         }
         

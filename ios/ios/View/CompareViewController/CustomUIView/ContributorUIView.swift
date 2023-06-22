@@ -95,7 +95,7 @@ final class ContributorUIView: UIView{
     }
     
     // MARK: input Data
-    func inputData(imgList: [UIImage]){
+    func inputData(imgList: [String]){
         addUI()
         
         imgView1.image = UIImage(named: "githubIcon")?.resize(newWidth: 30)

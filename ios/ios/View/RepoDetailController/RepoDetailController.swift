@@ -13,7 +13,7 @@ import Charts
 import Lottie
 
 final class RepoDetailController: UIViewController{
-    private var userListCount: Int = 10
+    private var userListCount: Int = 0
     private var userCommit: [Int] = []  // 사용자 커밋 횟수
     private var userName: [String] = [] // 사용자 깃허브 아이디
     private var dataColor:[[UIColor]] = []  // 랜덤 색상 설정
@@ -28,7 +28,7 @@ final class RepoDetailController: UIViewController{
         
         addUIIndicator()
         getData()
-        randomColor()
+        
     }
     
     // MARK: 로딩 UI
@@ -246,6 +246,8 @@ final class RepoDetailController: UIViewController{
                 self.indicatorView.removeFromSuperview()
                 self.sparkLineList = data.sparkLine ?? []
                 
+                self.userListCount = data.gitRepoMembers?.count ?? 0
+                self.randomColor()
                 data.gitRepoMembers?.forEach({ member in
                     self.userName.append(member.githubId)
                     self.userCommit.append(member.commits)

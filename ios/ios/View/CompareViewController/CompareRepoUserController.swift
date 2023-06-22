@@ -16,10 +16,13 @@ final class CompareRepoUserController: UIViewController{
     private let nameList: [String] = ["forks", "closed issues", "open issues", "stars", "contributers", "deletions average", "languages", "code average"]
     private let selectionList: [String] = ["Repository", "User"]
     private let disposeBag = DisposeBag()
-    var repoUserInfo: CompareUserModel = CompareUserModel(firstResult: [], secondResult: [])
-    var user1Index: Int?
-    var user2Index: Int?
-    var lastIndexOfFisrtArray: Int?
+    private var repoUserInfo: CompareUserModel = CompareUserModel(firstResult: [], secondResult: [])    /// 유저 정보
+    private var user1Index: Int?    /// 차트를 그릴때 첫 번째 레포지토리인지 확인
+    private var user2Index: Int?     /// 차트를 그릴때 두 번째 레포지토리 인지 확인
+    private var lastIndexOfFisrtArray: Int? /// 첫 번째 배열의 마지막 인덱스 저장
+    private var selectedUserNum: [String] = []
+    var firstRepo: String?
+    var secondRepo: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +30,8 @@ final class CompareRepoUserController: UIViewController{
         
 //        addUIIndicator()
         addUIBase()
+        
+        
     }
     
     // MARK: 로딩 UI
@@ -326,31 +331,79 @@ final class CompareRepoUserController: UIViewController{
     private func getData(){
         addUI()
         
-        leftView.inputData(repo1: [], values: nil, repoName: "abc", imgList: [])
-        rightView.inputData(repo1: [], values: nil, repoName: "qwer", imgList: [])
+        CompareViewModel.viewModel.getRepositoryInfo(firstRepo: self.firstRepo ?? "", secondRepo: self.secondRepo ?? "")
+            .subscribe(onNext:{ list in
+                
+                let repo1Language: [String] = list.firstRepo.languages.language
+                var repo1LanguagesCount: [Double] = []
+                
+                for count in list.firstRepo.languages.count {
+                    repo1LanguagesCount.append(Double(count))
+                }
+                
+                let repo2Language: [String] = list.secondRepo.languages.language
+                var repo2LanguagesCount: [Double] = []
+                
+                for count in list.secondRepo.languages.count {
+                    repo2LanguagesCount.append(Double(count))
+                }
+                
+                self.leftView.inputData(repo1: repo1LanguagesCount,
+                                        values: repo1Language,
+                                        repoName: list.firstRepo.gitRepo.full_name,
+                                        imgList: list.firstRepo.profileUrls)
+                self.rightView.inputData(repo1: repo2LanguagesCount,
+                                         values: repo2Language,
+                                         repoName: list.secondRepo.gitRepo.full_name,
+                                         imgList: list.secondRepo.profileUrls)
+            })
+            .disposed(by: disposeBag)
+        
     }
     
     // MARK:
     private func getData_User(){
-        repoUserInfo.firstResult = [FirstRepoResult(githubId: "aa1", commits: 12, additions: 100, deletions: 100),
-                                    FirstRepoResult(githubId: "aa2", commits: 12, additions: 100, deletions: 100),
-                                    FirstRepoResult(githubId: "aa3", commits: 12, additions: 100, deletions: 100),
-                                    FirstRepoResult(githubId: "aa4", commits: 12, additions: 100, deletions: 100)]
         
-        repoUserInfo.secondResult = [SecondRepoResult(githubId: "aa1", commits: 122, additions: 10, deletions: 110),
-                                     SecondRepoResult(githubId: "aa2", commits: 12, additions: 100, deletions: 100),
-                                     SecondRepoResult(githubId: "aa3", commits: 12, additions: 100, deletions: 100),
-                                     SecondRepoResult(githubId: "aa4", commits: 12, additions: 100, deletions: 100)]
-        user1Index = 1
-        user2Index = 0
-        lastIndexOfFisrtArray = repoUserInfo.firstResult.count
+        CompareViewModel.viewModel.getContributorInfo(firstRepoName: self.firstRepo ?? "", secondRepoName: self.secondRepo ?? "")
+            .subscribe(onNext:{ list in
+                self.getData()
+                self.repoUserInfo.firstResult = list.firstResult
+                self.repoUserInfo.secondResult = list.secondResult
+                self.lastIndexOfFisrtArray = self.repoUserInfo.firstResult.count
+                
+                if self.selectedUserNum.isEmpty{
+                    self.repoUserInfo.firstResult.forEach { data in
+                        self.selectedUserNum.append(data.githubId)
+                    }
+                    self.repoUserInfo.secondResult.forEach { data in
+                        self.selectedUserNum.append(data.githubId)
+                    }
+                }
+                
+                self.addUI_User()
+            })
+            .disposed(by: disposeBag)
         
-        addUI_User()
-        leftUserButton.inputData(img: UIImage(named: "2")!, name: "ttf")
-        rightUserButton.inputData(img: UIImage(named: "2")!, name: "ttr")
+    }
+    
+    // MARK:
+    private func checkChooseTwoUser(){
+        let user1 = CompareViewModel.viewModel.checkChooseUser1
+        let user2 = CompareViewModel.viewModel.checkChooseUser2
 
-        setChartCommit()
-        setChartAddDel()
+        Observable.combineLatest(user1, user2)
+            .subscribe(onNext: { first, second in
+                if first && second{
+
+                    self.leftUserButton.inputData(img: UIImage(named: "2")!, name: "ttf")
+                    self.rightUserButton.inputData(img: UIImage(named: "2")!, name: "ttr")
+
+                    self.setChartCommit()
+                    self.setChartAddDel()
+                }
+            })
+            .disposed(by: disposeBag)
+        
     }
     
     // MARK: Button Actions
@@ -359,9 +412,51 @@ final class CompareRepoUserController: UIViewController{
             self.dismiss(animated: false)
         })
         .disposed(by: disposeBag)
+        
+        
+        leftUserButton.rx.tap.subscribe(onNext: {
+            let nextPage = ChooseUserViewController()
+            nextPage.beforeUser = "user1"
+            nextPage.delegate = self
+            nextPage.modalPresentationStyle = .formSheet
+            self.present(nextPage,animated: true)
+        })
+        .disposed(by: disposeBag)
+        
+        
+        rightUserButton.rx.tap.subscribe(onNext: {
+            let nextPage = ChooseUserViewController()
+            nextPage.beforeUser = "user2"
+            nextPage.delegate = self
+            nextPage.modalPresentationStyle = .formSheet
+            self.present(nextPage, animated: true)
+        })
+        .disposed(by: disposeBag)
     }
     
+ 
     
+}
+
+extension CompareRepoUserController: SendUser{
+    func sendUser(user: String, choseRepo: String, index: Int) {
+        if choseRepo == "user1"{
+            if (self.lastIndexOfFisrtArray ?? 0) > index{
+                self.user1Index = index
+            }
+            else{
+                self.user1Index = index - (self.lastIndexOfFisrtArray ?? 0)
+            }
+        }
+        else{
+            if (self.lastIndexOfFisrtArray ?? 0) > index{
+                self.user2Index = index
+            }
+            else{
+                self.user2Index = index - (self.lastIndexOfFisrtArray ?? 0)
+            }
+        }
+    }
 }
 
 extension CompareRepoUserController: UITableViewDelegate, UITableViewDataSource{

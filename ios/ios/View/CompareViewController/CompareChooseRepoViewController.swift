@@ -12,11 +12,15 @@ import RxSwift
 
 final class CompareChooseRepoViewController: UIViewController{
     private let disposeBag = DisposeBag()
+    var firstRepo: String?
+    var secondRepo: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         addUI()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationData(notification:)), name: Notification.Name.data, object: nil)
     }
     
     // MARK:
@@ -119,11 +123,31 @@ final class CompareChooseRepoViewController: UIViewController{
         .disposed(by: disposeBag)
         
         nextBtn.rx.tap.subscribe(onNext:{
-            let nextPage = CompareRepoUserController()
-            nextPage.modalPresentationStyle = .fullScreen
-            self.present(nextPage, animated: true)
+            if !(self.firstRepo?.isEmpty ?? false) && !(self.secondRepo?.isEmpty ?? false){
+                let nextPage = CompareRepoUserController()
+                nextPage.modalPresentationStyle = .fullScreen
+                nextPage.firstRepo = self.firstRepo
+                nextPage.secondRepo = self.secondRepo
+                self.present(nextPage, animated: true)
+            }
         })
         .disposed(by: disposeBag)
+    }
+    
+    
+    @objc func notificationData(notification: Notification){
+        guard let id = notification.userInfo?[NotificationKey.choiceId] as? Int else {return}
+        guard let data = notification.userInfo?[NotificationKey.repository] as? String else {return}
+        
+        if id  == 1{
+            self.firstRepo = data
+            repository1Btn.setTitle(data, for: .normal)
+        }
+        else if id == 2{
+            self.secondRepo = data
+            repository2Btn.setTitle(data, for: .normal)
+        }
+        
     }
     
 }

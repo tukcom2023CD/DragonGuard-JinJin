@@ -22,11 +22,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
 
             checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
         }
-        else{
+        else{ 
             moveLoginController()
         }
         
-//        let rootView = AllUserRankingController()
+//        let rootView = CompareChooseRepoViewController()
 //        window?.rootViewController = rootView
 //        window?.makeKeyAndVisible()
     }
@@ -41,7 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     
     // MARK: If success User, go to MainController
     func moveMainController(){
-        let rootView = SearchViewController()
+        let rootView = CompareChooseRepoViewController()
 //        rootView.autoLoginCheck = true
         let nc = UINavigationController(rootViewController: rootView)
         window?.rootViewController = rootView

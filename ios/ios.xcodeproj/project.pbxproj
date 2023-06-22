@@ -39,6 +39,8 @@
 		3B2E0DC52A4374BA00E6A7AD /* ContributorUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DC42A4374BA00E6A7AD /* ContributorUIView.swift */; };
 		3B2E0DC72A4374E100E6A7AD /* CustomUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DC62A4374E100E6A7AD /* CustomUIView.swift */; };
 		3B2E0DC92A4374EC00E6A7AD /* UserUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DC82A4374EC00E6A7AD /* UserUIButton.swift */; };
+		3B2E0DCB2A438D7A00E6A7AD /* ChooseUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DCA2A438D7A00E6A7AD /* ChooseUserViewController.swift */; };
+		3B2E0DCD2A438F5800E6A7AD /* ChooseUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DCC2A438F5800E6A7AD /* ChooseUserTableViewCell.swift */; };
 		3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */; };
 		3B3B563429A8DA12005034FC /* CompareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563329A8DA12005034FC /* CompareService.swift */; };
 		3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */; };
@@ -248,6 +250,8 @@
 		3B2E0DC42A4374BA00E6A7AD /* ContributorUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributorUIView.swift; sourceTree = "<group>"; };
 		3B2E0DC62A4374E100E6A7AD /* CustomUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIView.swift; sourceTree = "<group>"; };
 		3B2E0DC82A4374EC00E6A7AD /* UserUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUIButton.swift; sourceTree = "<group>"; };
+		3B2E0DCA2A438D7A00E6A7AD /* ChooseUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseUserViewController.swift; sourceTree = "<group>"; };
+		3B2E0DCC2A438F5800E6A7AD /* ChooseUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseUserTableViewCell.swift; sourceTree = "<group>"; };
 		3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipLoginCheckview.swift; sourceTree = "<group>"; };
 		3B3B563329A8DA12005034FC /* CompareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareService.swift; sourceTree = "<group>"; };
 		3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoModel.swift; sourceTree = "<group>"; };
@@ -433,13 +437,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3B110FE62A23A87A008C99F0 /* Refactoring */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Refactoring;
-			sourceTree = "<group>";
-		};
 		3B110FE92A23A8F7008C99F0 /* CustomUIView */ = {
 			isa = PBXGroup;
 			children = (
@@ -517,6 +514,8 @@
 			isa = PBXGroup;
 			children = (
 				3B2E0DC02A43746A00E6A7AD /* CompareRepoUserController.swift */,
+				3B2E0DCA2A438D7A00E6A7AD /* ChooseUserViewController.swift */,
+				3B2E0DCC2A438F5800E6A7AD /* ChooseUserTableViewCell.swift */,
 				3B2E0DC22A43748B00E6A7AD /* CompareTableViewCell.swift */,
 				3B2E0DBC2A43743900E6A7AD /* CompareChooseRepoViewController.swift */,
 				3B2E0DBE2A43745100E6A7AD /* CompareCollectionViewCell.swift */,
@@ -617,7 +616,6 @@
 		3B3CE9D829B46A7300B2594B /* SearchController */ = {
 			isa = PBXGroup;
 			children = (
-				3B110FE62A23A87A008C99F0 /* Refactoring */,
 				3BD6DD21298129B8008C05B2 /* SearchPageController.swift */,
 				3B781FB229C32871007FBDFA /* FilteringCollectionViewCell.swift */,
 				3BD6DD2329813CE3008C05B2 /* SearchPageTableView.swift */,
@@ -665,6 +663,7 @@
 			isa = PBXGroup;
 			children = (
 				3B49BABC2A40CD6E009C5963 /* RepoDetailService.swift */,
+				3B3B563329A8DA12005034FC /* CompareService.swift */,
 			);
 			path = Refactcoring;
 			sourceTree = "<group>";
@@ -863,8 +862,6 @@
 				3B9CF3D5298FB5A700495D35 /* ALLUserInfoViewModel.swift */,
 				3B060FD529911158000B2518 /* MainViewModel.swift */,
 				3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */,
-				3BDF0FA429A619F900816837 /* LoginViewModel.swift */,
-				3B29804429AC85A800967B6E /* CompareViewModel.swift */,
 				3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */,
 				3B5B174E29DC595D00571A8D /* OrganizationRankingViewModel.swift */,
 				3BD6EDDD29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift */,
@@ -962,6 +959,8 @@
 			children = (
 				3B49BAB72A40C71F009C5963 /* RepoDetailViewModel.swift */,
 				A30BA46C298415B8008B594E /* SearchPageViewModel.swift */,
+				3B29804429AC85A800967B6E /* CompareViewModel.swift */,
+				3BDF0FA429A619F900816837 /* LoginViewModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -1095,7 +1094,6 @@
 				3BA2013829980661008978A5 /* MainService.swift */,
 				3BAEA776299CFD090054DC5D /* PostService.swift */,
 				3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */,
-				3B3B563329A8DA12005034FC /* CompareService.swift */,
 				3B7BFF6929CBD63200A2F3F4 /* SearchOraganizationService.swift */,
 				3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */,
 				3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */,
@@ -1323,6 +1321,7 @@
 				3BDD718629C091480018D09B /* LanguageSelectionsCollectionViewCell.swift in Sources */,
 				3B87E57029D7173D000734BE /* AddOrganizationModel.swift in Sources */,
 				3BE64A192A3E2AD1005D9F9E /* RankingViewController.swift in Sources */,
+				3B2E0DCD2A438F5800E6A7AD /* ChooseUserTableViewCell.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
 				3BEFEC3529D3FB9500DBBCA8 /* EmailService.swift in Sources */,
 				3BE649ED2A3D9184005D9F9E /* Extension.swift in Sources */,
@@ -1398,6 +1397,7 @@
 				3BE6AD312993CF8500B22EBD /* RepoContributorInfoViewModel.swift in Sources */,
 				3B2E0DC12A43746A00E6A7AD /* CompareRepoUserController.swift in Sources */,
 				3BE649F22A3DA269005D9F9E /* DetailInfoTableViewCell.swift in Sources */,
+				3B2E0DCB2A438D7A00E6A7AD /* ChooseUserViewController.swift in Sources */,
 				3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */,
 				3B49BABD2A40CD6E009C5963 /* RepoDetailService.swift in Sources */,
 				3BA2013929980661008978A5 /* MainService.swift in Sources */,
