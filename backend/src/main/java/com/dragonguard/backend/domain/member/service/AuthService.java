@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -31,26 +32,28 @@ public class AuthService {
     public JwtToken refreshToken(final String oldRefreshToken, final String oldAccessToken) {
         validateTokens(oldRefreshToken, oldAccessToken);
 
-        UserDetailsImpl user = getUserDetails(oldAccessToken);
+        Optional<UserDetailsImpl> user = getUserDetails(oldAccessToken);
 
-        validateSavedRefreshTokenIfExpired(oldRefreshToken, UUID.fromString(user.getName()));
+        user.ifPresent(userDetails -> validateSavedRefreshTokenIfExpired(oldRefreshToken, UUID.fromString(userDetails.getName())));
 
-        return findMemberAndUpdateRefreshToken(user);
+        return findMemberAndUpdateRefreshToken(user.orElse(null));
     }
 
     private JwtToken findMemberAndUpdateRefreshToken(final UserDetailsImpl user) {
+        if (user == null) return null;
+
         JwtToken jwtToken = jwtTokenProvider.createToken(user);
 
-        memberRepository.findById(getLoginUserId())
+        memberRepository.findById(((UserDetailsImpl) SecurityContextHolder
+                        .getContext().getAuthentication().getPrincipal()).getMember().getId())
                 .orElseThrow(EntityNotFoundException::new)
                 .updateRefreshToken(jwtToken.getRefreshToken());
-
         return jwtToken;
     }
 
-    private UserDetailsImpl getUserDetails(final String oldAccessToken) {
+    private Optional<UserDetailsImpl> getUserDetails(final String oldAccessToken) {
         Authentication authentication = jwtValidator.getAuthentication(oldAccessToken);
-        return (UserDetailsImpl) authentication.getPrincipal();
+        return Optional.ofNullable((UserDetailsImpl) authentication.getPrincipal());
     }
 
     private void validateTokens(final String oldRefreshToken, final String oldAccessToken) {
@@ -80,10 +83,5 @@ public class AuthService {
     public Member getLoginUser() {
         return ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
                 .getMember();
-    }
-
-    public UUID getLoginUserId() {
-        return UUID.fromString(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                .getName());
     }
 }

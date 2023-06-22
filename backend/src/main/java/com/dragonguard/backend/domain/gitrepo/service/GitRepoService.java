@@ -74,13 +74,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         }
 
         int year = LocalDate.now().getYear();
-        GitRepoInfoRequest gitRepoInfoRequest = new GitRepoInfoRequest(name, year);
-        String githubToken = setGithubTokenAndGet(gitRepoInfoRequest);
+        String githubToken = setGithubTokenAndGet(new GitRepoInfoRequest(name, year));
 
-        List<GitRepoMemberResponse> gitRepoMemberResponses = getGitRepoMemberResponses(name, year, githubToken);
-        List<Integer> sparkLine = updateAndGetSparkLine(name, githubToken, findGitRepo(name));
-
-        return new GitRepoResponse(sparkLine, gitRepoMemberResponses);
+        return new GitRepoResponse(
+                updateAndGetSparkLine(name, githubToken, findGitRepo(name)),
+                getGitRepoMemberResponses(name, year, githubToken));
     }
 
     private String setGithubTokenAndGet(final GitRepoInfoRequest gitRepoInfoRequest) {
@@ -182,6 +180,8 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
 
     private GitRepoCompareResponse getGitRepoResponse(final String repoName, final GitRepoClientResponse repoResponse, final GitRepoLanguageMap gitRepoLanguageMap) {
         GitRepo gitRepo = getEntityByName(repoName);
+        if (gitRepo == null) return null;
+
         List<String> profileUrls = gitRepo.getGitRepoMembers().stream()
                 .map(gitRepoMember -> gitRepoMember.getMember().getProfileImage())
                 .collect(Collectors.toList());
@@ -200,6 +200,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
 
     private GitRepo findGitRepo(final String repoName) {
         if (gitRepoRepository.existsByName(repoName)) {
+            requestKafkaIssue(new GitRepoNameRequest(repoName));
             return gitRepoRepository.findByName(repoName).orElseThrow(EntityNotFoundException::new);
         }
         GitRepo gitRepo = gitRepoRepository.save(gitRepoMapper.toEntity(repoName));
@@ -266,6 +267,9 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     public GitRepo getEntityByName(final String name) {
+        if (!gitRepoRepository.existsByName(name)) {
+            return null;
+        }
         return gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
     }
 

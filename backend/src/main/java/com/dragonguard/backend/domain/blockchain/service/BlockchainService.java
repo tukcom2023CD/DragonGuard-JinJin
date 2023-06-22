@@ -81,7 +81,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
     @Transactional(readOnly = true)
     public List<BlockchainResponse> getBlockchainList() {
-        return blockchainRepository.findAllByMemberId(authService.getLoginUserId()).stream()
+        return blockchainRepository.findAllByMemberId(authService.getLoginUser().getId()).stream()
                 .map(blockchainMapper::toResponse)
                 .collect(Collectors.toList());
     }
