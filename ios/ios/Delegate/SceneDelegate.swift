@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
 
             checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
         }
-        else{ 
+        else{
             moveLoginController()
         }
         

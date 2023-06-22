@@ -139,7 +139,7 @@ final class LoginController: UIViewController{
             .subscribe(onNext: { first, second in
                 if first && second{
                     
-                    let rootView = SearchViewController()
+                    let rootView = CompareChooseRepoViewController()
                     
 //                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
 //                       print("\(key): \(value)")

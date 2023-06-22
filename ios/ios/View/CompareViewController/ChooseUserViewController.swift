@@ -11,6 +11,7 @@ import SnapKit
 
 final class ChooseUserViewController: UIViewController{
     var beforeUser: String?
+    var userList: [String] = []
     var delegate: SendUser?
     
     override func viewDidLoad() {
@@ -33,7 +34,7 @@ final class ChooseUserViewController: UIViewController{
         
         tableView.dataSource = self
         tableView.delegate = self
-        
+        tableView.register(ChooseUserTableViewCell.self, forCellReuseIdentifier: ChooseUserTableViewCell.identifier)
         
         tableView.snp.makeConstraints { make in
             make.top.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -49,13 +50,17 @@ extension ChooseUserViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ChooseUserTableViewCell.identifier, for: indexPath) as? ChooseUserTableViewCell else { return UITableViewCell() }
             
-        
+        cell.inputData(text: userList[indexPath.row])
         
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.delegate?.sendUser(user: userList[indexPath.row], choseRepo: "", index: indexPath.row)
+        self.dismiss(animated: true)
+    }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return userList.count }
 }
 
 protocol SendUser{

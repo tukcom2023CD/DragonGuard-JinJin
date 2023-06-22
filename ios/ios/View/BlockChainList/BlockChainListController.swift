@@ -14,6 +14,7 @@ import RxSwift
 final class BlockChainListController: UIViewController{
     var blockchainUrl: String?
     private let disposeBag = DisposeBag()
+    private let viewModel = BlockchainViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,24 +78,31 @@ final class BlockChainListController: UIViewController{
     
     // MARK:
     private func getData(){
-        let list = [BlockChainListModel(contributeType: "COMMIT",
-                                        amount: 4,
-                                        githubId: "aa",
-                                        createdAt: "2022-22-22",
-                                        transactionHashUrl: ""),
-                    BlockChainListModel(contributeType: "COMMIT",
-                                                    amount: 2,
-                                                    githubId: "aa",
-                                                    createdAt: "2022-22-22",
-                                                    transactionHashUrl: ""  ),
-                    BlockChainListModel(contributeType: "PULLREQUEST",
-                                                    amount: 10,
-                                                    githubId: "aa",
-                                                    createdAt: "2022-22-22",
-                                                    transactionHashUrl: "")]
+//        let list = [BlockChainListModel(contributeType: "COMMIT",
+//                                        amount: 4,
+//                                        githubId: "aa",
+//                                        createdAt: "2022-22-22",
+//                                        transactionHashUrl: ""),
+//                    BlockChainListModel(contributeType: "COMMIT",
+//                                                    amount: 2,
+//                                                    githubId: "aa",
+//                                                    createdAt: "2022-22-22",
+//                                                    transactionHashUrl: ""  ),
+//                    BlockChainListModel(contributeType: "PULLREQUEST",
+//                                                    amount: 10,
+//                                                    githubId: "aa",
+//                                                    createdAt: "2022-22-22",
+//                                                    transactionHashUrl: "")]
+        self.viewModel.getData()
+            .subscribe(onNext: { list in
+                print(list)
+                
+                self.addUI()
+                self.outsideView.inputData(list: list, totalLink: self.blockchainUrl)
+            })
+            .disposed(by: disposeBag)
         
-        addUI()
-        outsideView.inputData(list: list, totalLink: blockchainUrl)
+        
         clickedBackBtn()
     }
         

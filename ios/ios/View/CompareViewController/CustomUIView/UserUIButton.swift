@@ -29,6 +29,7 @@ final class UserUIButton: UIButton{
     // MARK:
     private lazy var userName: UILabel = {
         let label = UILabel()
+        label.textColor = .black
         label.font = .systemFont(ofSize: 20)
         return label
     }()

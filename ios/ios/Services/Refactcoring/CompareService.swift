@@ -22,7 +22,7 @@ final class CompareService{
         var firstRepoUserInfo: [FirstRepoResult] = []   // 첫 번째 레포 내부 유저 리스트
         var secondRepoUserInfo: [SecondRepoResult] = []  // 두 번째 레포 내부 유저 리스트
         let access = UserDefaults.standard.string(forKey: "Access")
-
+        print("beforeSendingInfo\n\(url)")
         return Observable.create(){ observer in
             
                 AF.request(url,
@@ -83,7 +83,7 @@ final class CompareService{
         let url = APIURL.apiUrl.compareRepoAPI(ip: ip)
         let body = ["firstRepo": firstRepo, "secondRepo": secondRepo]
         let access = UserDefaults.standard.string(forKey: "Access")
-
+        print("getCompareInfo\n\(url)")
         return Observable.create() { observer in
                 AF.request(url,
                            method: .post,

@@ -41,6 +41,9 @@
 		3B2E0DC92A4374EC00E6A7AD /* UserUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DC82A4374EC00E6A7AD /* UserUIButton.swift */; };
 		3B2E0DCB2A438D7A00E6A7AD /* ChooseUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DCA2A438D7A00E6A7AD /* ChooseUserViewController.swift */; };
 		3B2E0DCD2A438F5800E6A7AD /* ChooseUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DCC2A438F5800E6A7AD /* ChooseUserTableViewCell.swift */; };
+		3B2E0DCF2A43CB5700E6A7AD /* BlockchainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DCE2A43CB5700E6A7AD /* BlockchainViewModel.swift */; };
+		3B2E0DD12A43CB9300E6A7AD /* BlockChainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DD02A43CB9300E6A7AD /* BlockChainService.swift */; };
+		3B2E0DD52A43D4D000E6A7AD /* CompareUserAllModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DD42A43D4D000E6A7AD /* CompareUserAllModel.swift */; };
 		3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */; };
 		3B3B563429A8DA12005034FC /* CompareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563329A8DA12005034FC /* CompareService.swift */; };
 		3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */; };
@@ -252,6 +255,9 @@
 		3B2E0DC82A4374EC00E6A7AD /* UserUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUIButton.swift; sourceTree = "<group>"; };
 		3B2E0DCA2A438D7A00E6A7AD /* ChooseUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseUserViewController.swift; sourceTree = "<group>"; };
 		3B2E0DCC2A438F5800E6A7AD /* ChooseUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseUserTableViewCell.swift; sourceTree = "<group>"; };
+		3B2E0DCE2A43CB5700E6A7AD /* BlockchainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockchainViewModel.swift; sourceTree = "<group>"; };
+		3B2E0DD02A43CB9300E6A7AD /* BlockChainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockChainService.swift; sourceTree = "<group>"; };
+		3B2E0DD42A43D4D000E6A7AD /* CompareUserAllModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareUserAllModel.swift; sourceTree = "<group>"; };
 		3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipLoginCheckview.swift; sourceTree = "<group>"; };
 		3B3B563329A8DA12005034FC /* CompareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareService.swift; sourceTree = "<group>"; };
 		3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoModel.swift; sourceTree = "<group>"; };
@@ -455,6 +461,7 @@
 				3BE649FF2A3DC6C5005D9F9E /* RepositoryListInOrganizationModel.swift */,
 				3BE64A0F2A3E05E1005D9F9E /* BlockChainListModel.swift */,
 				3B49BAB92A40CC37009C5963 /* DetailRepoModel.swift */,
+				3B2E0DD42A43D4D000E6A7AD /* CompareUserAllModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -664,6 +671,7 @@
 			children = (
 				3B49BABC2A40CD6E009C5963 /* RepoDetailService.swift */,
 				3B3B563329A8DA12005034FC /* CompareService.swift */,
+				3B2E0DD02A43CB9300E6A7AD /* BlockChainService.swift */,
 			);
 			path = Refactcoring;
 			sourceTree = "<group>";
@@ -961,6 +969,7 @@
 				A30BA46C298415B8008B594E /* SearchPageViewModel.swift */,
 				3B29804429AC85A800967B6E /* CompareViewModel.swift */,
 				3BDF0FA429A619F900816837 /* LoginViewModel.swift */,
+				3B2E0DCE2A43CB5700E6A7AD /* BlockchainViewModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -1283,6 +1292,7 @@
 				3B8C165829B782CD00B881F4 /* LanguageFillteringTableViewCell.swift in Sources */,
 				3BE64A1B2A3E2AE5005D9F9E /* HomeViewController.swift in Sources */,
 				3B9CF3D2298F997B00495D35 /* UserInfoModel.swift in Sources */,
+				3B2E0DD12A43CB9300E6A7AD /* BlockChainService.swift in Sources */,
 				A37AA6EC29A50F7C002812F6 /* CompareRepositoryController.swift in Sources */,
 				3B3CE9DC29B47EDF00B2594B /* UserDBId.swift in Sources */,
 				3B5E07FF29BEF7E50090E8A6 /* GithubTokenModel.swift in Sources */,
@@ -1328,6 +1338,7 @@
 				3BFF623329CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift in Sources */,
 				3BD6DD2429813CE3008C05B2 /* SearchPageTableView.swift in Sources */,
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,
+				3B2E0DD52A43D4D000E6A7AD /* CompareUserAllModel.swift in Sources */,
 				3BE649F82A3DA84D005D9F9E /* DetailInfoModel.swift in Sources */,
 				3B5B5F6429E84FDF0017C5C9 /* ETCCollectionViewCell.swift in Sources */,
 				3B5B175829DC769100571A8D /* CompanyRankingController.swift in Sources */,
@@ -1370,6 +1381,7 @@
 				3BE649E22A3CD1E6005D9F9E /* CustomFirstRankingUserViewElementView.swift in Sources */,
 				3B18AA1E29A7B1E90051C086 /* KlipModel.swift in Sources */,
 				3B110FE82A23A895008C99F0 /* SearchViewController.swift in Sources */,
+				3B2E0DCF2A43CB5700E6A7AD /* BlockchainViewModel.swift in Sources */,
 				3B1DB87C2963428A00308F43 /* MainController.swift in Sources */,
 				3B9CF3D6298FB5A700495D35 /* ALLUserInfoViewModel.swift in Sources */,
 				A3ADC9742990210E003D6483 /* MainCollectionView.swift in Sources */,
