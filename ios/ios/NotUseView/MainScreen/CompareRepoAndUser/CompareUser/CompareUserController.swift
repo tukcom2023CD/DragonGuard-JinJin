@@ -277,17 +277,17 @@ final class CompareUserController : UIViewController, SendingProtocol {
 
     /// API 통신을 한 부분을 viewModel을 통해 데이터를 받아오는 부분
     func getUserInfo(){
-        CompareViewModel.viewModel.getUserInfo()
-            .subscribe(onNext: { userInfo in
-                print(userInfo)
-                self.repoUserInfo = userInfo
-                self.indicator.stopAnimating()
-                
-                if !self.indicator.isAnimating{
-                    self.addToView()
-                }
-            })
-            .disposed(by: disposeBag)
+//        CompareViewModel.viewModel.getUserInfo()
+//            .subscribe(onNext: { userInfo in
+//                print(userInfo)
+//                self.repoUserInfo = userInfo
+//                self.indicator.stopAnimating()
+//                
+//                if !self.indicator.isAnimating{
+//                    self.addToView()
+//                }
+//            })
+//            .disposed(by: disposeBag)
       
         
     }

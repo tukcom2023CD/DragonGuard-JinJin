@@ -17,16 +17,20 @@ struct CompareUserModel{
 
 struct FirstRepoResult{
     var githubId: String
+    var profileUrl: String
     var commits: Int
     var additions: Int
     var deletions: Int
+    var isServiceMember: Bool
 }
 
 struct SecondRepoResult{
     var githubId: String
+    var profileUrl: String
     var commits: Int
     var additions: Int
     var deletions: Int
+    var isServiceMember: Bool
 }
 
 
@@ -39,15 +43,19 @@ struct CompareUserDecodingModel: Codable{
 }
 
 struct FirstResult: Codable{
-    var githubId: String
-    var commits: Int
-    var additions: Int
-    var deletions: Int
+    var githubId: String?
+    var profileUrl: String?
+    var commits: Int?
+    var additions: Int?
+    var deletions: Int?
+    var isServiceMember: Bool?
 }
 
 struct SecondResult: Codable{
-    var githubId: String
-    var commits: Int
-    var additions: Int
-    var deletions: Int
+    var githubId: String?
+    var profileUrl: String?
+    var commits: Int?
+    var additions: Int?
+    var deletions: Int?
+    var isServiceMember: Bool?
 }

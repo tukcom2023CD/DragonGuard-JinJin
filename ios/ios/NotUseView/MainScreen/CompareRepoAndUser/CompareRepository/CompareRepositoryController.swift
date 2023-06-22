@@ -197,22 +197,22 @@ final class CompareRepositoryController : UIViewController {
     
     func getData(){
         
-        CompareViewModel.viewModel.getRepoInfo()
-            .subscribe(onNext: { infomation in
-                self.indicator.stopAnimating()
-                
-                if !self.indicator.isAnimating{
-                    self.firstRepo = infomation.firstRepo
-                    self.secondRepo = infomation.secondRepo
-                    
-                    self.addToView()    // 로딩화면이 사라지고 정보를 보는 데이터 로드
-
-                    // label 이름 변경
-                    self.repo1Label.text = self.firstRepo?.gitRepo.full_name
-                    self.repo2Label.text = self.secondRepo?.gitRepo.full_name
-                }
-            })
-            .disposed(by: self.disposebag)
+//        CompareViewModel.viewModel.getRepoInfo()
+//            .subscribe(onNext: { infomation in
+//                self.indicator.stopAnimating()
+//                
+//                if !self.indicator.isAnimating{
+//                    self.firstRepo = infomation.firstRepo
+//                    self.secondRepo = infomation.secondRepo
+//                    
+//                    self.addToView()    // 로딩화면이 사라지고 정보를 보는 데이터 로드
+//
+//                    // label 이름 변경
+//                    self.repo1Label.text = self.firstRepo?.gitRepo.full_name
+//                    self.repo2Label.text = self.secondRepo?.gitRepo.full_name
+//                }
+//            })
+//            .disposed(by: self.disposebag)
         
         
     }

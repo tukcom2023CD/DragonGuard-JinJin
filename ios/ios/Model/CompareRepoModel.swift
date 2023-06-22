@@ -17,6 +17,7 @@ struct FirstRepoModel{
     var statistics: StatisticsModel
     var languages: LanguagesModel
     var languagesStats: StatisticsStatsModel
+    var profileUrls: [String]
 }
 
 struct secondRepoModel{
@@ -24,6 +25,7 @@ struct secondRepoModel{
     var statistics: StatisticsModel
     var languages: LanguagesModel
     var languagesStats: StatisticsStatsModel
+    var profileUrls: [String]
 }
 
 struct GitRepoModel{
@@ -67,6 +69,7 @@ struct FirstRepo: Decodable{
     var statistics: Statistics
     var languages: Languages
     var languagesStats: StatisticsStats
+    var profileUrls: [String]
 }
 
 struct SecondRepo: Decodable{
@@ -74,7 +77,7 @@ struct SecondRepo: Decodable{
     let statistics: Statistics
     var languages: Languages
     let languagesStats: StatisticsStats
-    
+    var profileUrls: [String]
 }
 
 struct GitRepo: Codable{

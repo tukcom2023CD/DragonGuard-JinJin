@@ -18,7 +18,6 @@ final class SearchViewController: UIViewController{
     private var isInfiniteScroll = false // 무한 스크롤 1번만 로딩되게 확인하는 변수
     var beforePage: String? = "Main"// 이전 페이지 확인하는 변수
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white

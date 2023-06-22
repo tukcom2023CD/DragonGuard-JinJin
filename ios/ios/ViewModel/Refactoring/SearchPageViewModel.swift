@@ -35,7 +35,6 @@ final class SearchPageViewModel {
                     observer.onNext(searchResultList)
                 })
                 .disposed(by: self.disposeBag)
-//            self.pageCount += 1
             
             return Disposables.create()
         }

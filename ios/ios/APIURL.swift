@@ -211,6 +211,11 @@ final class APIURL{
         return url
     }
     
+    // MARK: 블록체인 API
+    func getBlockChain(ip:String) -> String{
+        let url = "http://\(ip)/api/blockchain"
+        return url
+    }
     
 }
 
