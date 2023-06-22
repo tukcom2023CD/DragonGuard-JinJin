@@ -17,7 +17,7 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        addUIToView()
+        getData()
     }
     
     /*
@@ -56,6 +56,7 @@ final class MainViewController: UIViewController {
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
+        label.text = "JJ"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
@@ -66,8 +67,16 @@ final class MainViewController: UIViewController {
         let label = UILabel()
         label.backgroundColor = .white
         label.textColor = .black
+        label.text = "tier"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
+    }()
+    
+    // MARK:
+    private lazy var emptyView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
     }()
     
     // MARK: tier 틀
@@ -75,9 +84,12 @@ final class MainViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.shadowOpacity = 1
+        view.layer.borderWidth = 1
         view.layer.shadowOffset = CGSize(width: 3, height: 3)
         view.layer.cornerRadius = 20
         view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        view.clipsToBounds = true
+        view.layer.masksToBounds = true
         return view
     }()
     
@@ -94,8 +106,16 @@ final class MainViewController: UIViewController {
         let label = UILabel()
         label.backgroundColor = .white
         label.textColor = .black
+        label.text = "token"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
+    }()
+    
+    // MARK:
+    private lazy var emptyView1: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
     }()
     
     // MARK: token 틀
@@ -103,6 +123,7 @@ final class MainViewController: UIViewController {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.shadowOpacity = 1
+        view.layer.borderWidth = 1
         view.layer.shadowOffset = CGSize(width: 3, height: 3)
         view.layer.cornerRadius = 20
         view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
@@ -112,7 +133,7 @@ final class MainViewController: UIViewController {
     // MARK: token 이미지
     private lazy var tokenImage: UIImageView = {
         let token = UIImageView()
-        token.image = UIImage(named: "token")
+        token.image = UIImage(named: "token")?.resize(newWidth: 50, newHeight: 50)
         token.backgroundColor = .white
         return token
     }()
@@ -122,6 +143,7 @@ final class MainViewController: UIViewController {
         let label = UILabel()
         label.backgroundColor = .white
         label.textColor = .black
+        label.text = "200"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
     }()
@@ -130,14 +152,22 @@ final class MainViewController: UIViewController {
     private lazy var contributionLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
+        label.text = "기여도"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
     }()
     
-    // MARK: contribution 틀
-    private lazy var contributionView: UIView = {
+    // MARK:
+    private lazy var emptyView2: UIView = {
         let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    // MARK: contribution 틀
+    private lazy var contributionView: ContributorAutoUIView = {
+        let view = ContributorAutoUIView()
         view.backgroundColor = .white
         view.layer.shadowOpacity = 1
         view.layer.shadowOffset = CGSize(width: 3, height: 3)
@@ -155,18 +185,10 @@ final class MainViewController: UIViewController {
         return label
     }()
     
-    // MARK: group 글자
-    private lazy var groupLabel: UILabel = {
-        let label = UILabel()
-        label.backgroundColor = .white
-        label.textColor = .black
-        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        return label
-    }()
     
     // MARK: group 틀
-    private lazy var groupView: UIView = {
-        let view = UIView()
+    private lazy var groupView: OrganiRankInMyRank = {
+        let view = OrganiRankInMyRank()
         view.backgroundColor = .white
         view.layer.shadowOpacity = 1
         view.layer.shadowOffset = CGSize(width: 3, height: 3)
@@ -175,19 +197,21 @@ final class MainViewController: UIViewController {
         return view
     }()
     
-    // MARK: group 내용
-    private lazy var gNumLabel: UILabel = {
+    // MARK: contribution 글자
+    private lazy var groupLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
+        label.text = "TUK"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
     }()
     
-    // MARK: TapBar
-    private lazy var tapBarView: UITabBarController = {
-        let tabBar = UITabBarController()
-       return tabBar
+    // MARK:
+    private lazy var emptyView3: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
     }()
     
     /*
@@ -200,24 +224,28 @@ final class MainViewController: UIViewController {
         view.addSubview(profileImage)
         view.addSubview(nameLabel)
         
-        view.addSubview(tierLabel)
+        
         view.addSubview(tierView)
         tierView.addSubview(tierImage)
+        view.addSubview(emptyView)
+        emptyView.addSubview(tierLabel)
         
-        view.addSubview(tokenLabel)
+        
         view.addSubview(tokenView)
+        view.addSubview(emptyView1)
+        emptyView1.addSubview(tokenLabel)
         tokenView.addSubview(tokenImage)
         tokenView.addSubview(tokenNumLabel)
+
         
-        view.addSubview(contributionLabel)
         view.addSubview(contributionView)
-        contributionView.addSubview(cNumLabel)
+        view.addSubview(emptyView2)
+        emptyView2.addSubview(contributionLabel)
         
-        view.addSubview(groupLabel)
         view.addSubview(groupView)
-        groupView.addSubview(gNumLabel)
+        view.addSubview(emptyView3)
+        emptyView3.addSubview(groupLabel)
         
-        // view.addSubview(tapBarView)
         setAutoLayout()
     }
     
@@ -228,23 +256,118 @@ final class MainViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
             make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*35/60)
-            make.centerX.equalTo(view.snp_centerXWithinMargins)
+            make.centerX.equalTo(view.snp.centerX)
         }
         
         profileImage.snp.makeConstraints { make in
-            make.top.equalTo(searchBtn.snp.bottom).offset(50)
+            make.top.equalTo(searchBtn.snp.bottom).offset(30)
             make.leading.equalTo(searchBtn.snp.leading)
-            make.centerY.equalTo(view.snp_centerYWithinMargins)
         }
 
         nameLabel.snp.makeConstraints { make in
-            make.top.equalTo(searchBtn.snp.bottom).offset(50)
+            make.centerY.equalTo(profileImage.snp.centerY)
             make.leading.equalTo(profileImage.snp.trailing).offset(30)
-            make.centerY.equalTo(view.snp_centerYWithinMargins)
+        }
+        
+        tierView.snp.makeConstraints { make in
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
+            make.top.equalTo(profileImage.snp.bottom).offset(50)
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/5)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/5)
+        }
+        
+        tierImage.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.bottom.equalToSuperview().offset(-20)
+        }
+        
+        emptyView.snp.makeConstraints { make in
+            make.top.equalTo(tierView.snp.top).offset(-5)
+            make.centerX.equalTo(tierView.snp.centerX)
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/6)
+            make.bottom.equalTo(tierView.snp.top).offset(5)
+        }
+        
+        tierLabel.snp.makeConstraints { make in
+            make.center.equalTo(emptyView.snp.center)
+        }
+        
+        tokenView.snp.makeConstraints { make in
+            make.top.equalTo(tierView.snp.top)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/5)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/5)
+        }
+        
+        tokenImage.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.centerX.equalToSuperview()
+        }
+        
+        tokenNumLabel.snp.makeConstraints { make in
+            make.top.equalTo(tokenImage.snp.bottom).offset(10)
+            make.centerX.equalTo(tokenImage.snp.centerX)
+        }
+        
+        emptyView1.snp.makeConstraints { make in
+            make.top.equalTo(tokenView.snp.top).offset(-5)
+            make.centerX.equalTo(tokenView.snp.centerX)
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/6)
+            make.bottom.equalTo(tokenView.snp.top).offset(5)
+        }
+        
+        tokenLabel.snp.makeConstraints { make in
+            make.center.equalTo(emptyView1.snp.center)
+        }
+        
+        contributionView.snp.makeConstraints { make in
+            make.top.equalTo(tokenView.snp.bottom).offset(50)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/8)
+            
+        }
+        
+        emptyView2.snp.makeConstraints { make in
+            make.top.equalTo(contributionView.snp.top).offset(-5)
+            make.centerX.equalTo(contributionView.snp.centerX)
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/6)
+            make.bottom.equalTo(contributionView.snp.top).offset(5)
+        }
+        
+        contributionLabel.snp.makeConstraints { make in
+            make.center.equalTo(emptyView2.snp.center)
         }
 
+        groupView.snp.makeConstraints { make in
+            make.top.equalTo(contributionView.snp.bottom).offset(30)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(40)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-40)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/4)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
+        }
+        
+        emptyView3.snp.makeConstraints { make in
+            make.top.equalTo(groupView.snp.top).offset(-5)
+            make.centerX.equalTo(groupView.snp.centerX)
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/6)
+            make.bottom.equalTo(groupView.snp.top).offset(5)
+        }
+        
+        groupLabel.snp.makeConstraints { make in
+            make.center.equalTo(emptyView3.snp.center)
+        }
+        
     }
     
     
+    func getData(){
+        addUIToView()
+        
+        groupView.inputData(top: "a", me: "b", under: "c")
+        contributionView.inputData(commit: 1, issue: 2, pr: 3, reviews: 4)
+    }
     
 }
