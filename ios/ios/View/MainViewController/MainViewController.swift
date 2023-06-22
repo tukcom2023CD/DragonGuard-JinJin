@@ -57,7 +57,7 @@ final class MainViewController: UIViewController {
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
-        label.text = "JJ"
+        label.text = "HJ39"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
@@ -369,7 +369,7 @@ final class MainViewController: UIViewController {
     func getData(){
         addUIToView()
         
-        groupView.inputData(top: "a", me: "b", under: "c")
+        groupView.inputData(top: "MBTI", me: "Boss", under: "AOK")
         contributionView.inputData(commit: 1, issue: 2, pr: 3, reviews: 4)
     }
     
