@@ -16,6 +16,11 @@ import reactor.netty.http.client.HttpClient;
 
 import javax.net.ssl.SSLException;
 
+/**
+ * @author 김승진
+ * @description Github로 요청을 보내는 WebClient를 Bean으로 등록하는 설정 클래스
+ */
+
 @Configuration
 @RequiredArgsConstructor
 public class WebClientConfig {

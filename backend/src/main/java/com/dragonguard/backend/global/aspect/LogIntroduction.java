@@ -7,6 +7,11 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 김승진
+ * @description 각종 클래스의 요청에 대해 AOP로 로깅을 진행하는 클래스
+ */
+
 @Slf4j
 @Aspect
 @Component

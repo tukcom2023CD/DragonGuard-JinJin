@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AdminApiTokens {
+public class AdminApiToken {
     @Value("#{'${admin-tokens}'.split(',')}")
     private List<String> adminTokens;
     private Integer index = 0;

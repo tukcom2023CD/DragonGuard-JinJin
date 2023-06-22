@@ -9,7 +9,7 @@ import lombok.*;
 
 @Getter
 @Builder
-@ToString
+@ToString // Redis Cache 사용을 위함
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoResultResponse {

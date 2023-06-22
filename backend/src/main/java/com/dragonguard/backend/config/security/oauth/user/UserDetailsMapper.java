@@ -6,6 +6,11 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author 김승진
+ * @description UserDetails를 Member로 Mapping해주는 클래스
+ */
+
 @Component
 public class UserDetailsMapper {
     public UserDetailsImpl mapToLoginUser(Member user) {

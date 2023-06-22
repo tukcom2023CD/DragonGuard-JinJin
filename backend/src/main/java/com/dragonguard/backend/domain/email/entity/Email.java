@@ -8,6 +8,11 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.UUID;
 
+/**
+ * @author 김승진
+ * @description 이메일의 정보를 담는 도메인 엔티티 클래스
+ */
+
 @Getter
 @Entity
 @EntityListeners(AuditListener.class)

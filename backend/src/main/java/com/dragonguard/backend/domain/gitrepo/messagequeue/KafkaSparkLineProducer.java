@@ -6,6 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 김승진
+ * @description 레포지토리 스파크라인 kafka 요청을 처리하는 consumer 클래스
+ */
+
 @Component
 @RequiredArgsConstructor
 public class KafkaSparkLineProducer implements KafkaProducer<SparkLineKafka> {

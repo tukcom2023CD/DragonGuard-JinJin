@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * @author 김승진
+ * @description 이메일 관련 요청을 받아와 처리하는 Controller 클래스
+ */
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/email")

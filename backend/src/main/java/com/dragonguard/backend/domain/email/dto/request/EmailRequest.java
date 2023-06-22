@@ -8,7 +8,12 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 
-@Setter
+/**
+ * @author 김승진
+ * @description 이메일 관련 요청을 받아와 처리하는 Controller 클래스
+ */
+
+@Setter // ModelAttribute를 사용하기 위함
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

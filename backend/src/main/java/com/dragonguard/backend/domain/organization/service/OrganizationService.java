@@ -9,7 +9,6 @@ import com.dragonguard.backend.domain.organization.dto.response.OrganizationResp
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.mapper.OrganizationMapper;
-import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.IdResponse;

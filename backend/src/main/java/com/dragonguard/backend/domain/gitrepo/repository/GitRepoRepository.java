@@ -5,6 +5,11 @@ import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author 김승진
+ * @description 레포지토리 관련 DB 접근 로직을 갖는 인터페이스
+ */
+
 public interface GitRepoRepository {
     List<GitRepo> findByGithubId(String githubId);
     GitRepo save(GitRepo gitRepo);

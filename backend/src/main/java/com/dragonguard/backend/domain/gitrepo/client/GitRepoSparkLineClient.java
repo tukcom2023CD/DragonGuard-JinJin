@@ -11,6 +11,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author 김승진
+ * @description 레포지토리의 스파크 라인 정보를 요청하는 클라이언트 클래스
+ */
+
 @Component
 @RequiredArgsConstructor
 public class GitRepoSparkLineClient implements GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> {

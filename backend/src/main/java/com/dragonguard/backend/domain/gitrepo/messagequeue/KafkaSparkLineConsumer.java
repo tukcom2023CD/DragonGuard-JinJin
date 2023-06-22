@@ -11,6 +11,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author 김승진
+ * @description 레포지토리 스파크라인 kafka 요청을 보내는 consumer 클래스
+ */
+
 @Component
 @RequiredArgsConstructor
 public class KafkaSparkLineConsumer implements KafkaConsumer<SparkLineKafka> {

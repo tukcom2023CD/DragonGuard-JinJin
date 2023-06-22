@@ -5,6 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
+/**
+ * @author 김승진
+ * @description Kafka에 쓰일 환경변수들을 가져오는 클래스
+ */
+
 @Getter
 @ConstructorBinding
 @RequiredArgsConstructor

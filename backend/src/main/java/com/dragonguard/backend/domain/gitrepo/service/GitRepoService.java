@@ -181,13 +181,14 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     private GitRepoCompareResponse getGitRepoResponse(final String repoName, final GitRepoClientResponse repoResponse, final GitRepoLanguageMap gitRepoLanguageMap) {
-        List<String> profileUrls = getEntityByName(repoName).getGitRepoMembers().stream()
+        GitRepo gitRepo = getEntityByName(repoName);
+        List<String> profileUrls = gitRepo.getGitRepoMembers().stream()
                 .map(gitRepoMember -> gitRepoMember.getMember().getProfileImage())
                 .collect(Collectors.toList());
 
         return new GitRepoCompareResponse(
                 repoResponse,
-                getStatistics(repoName),
+                getStatistics(gitRepo),
                 gitRepoLanguageMap.getLanguages(),
                 gitRepoLanguageMap.getStatistics(),
                 profileUrls);
@@ -203,16 +204,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         }
         GitRepo gitRepo = gitRepoRepository.save(gitRepoMapper.toEntity(repoName));
         requestKafkaIssue(new GitRepoNameRequest(repoName));
-        return gitRepoRepository.findByName(repoName)
-                .orElseThrow(EntityNotFoundException::new);
+        return loadEntity(gitRepo.getId());
     }
 
-    private StatisticsResponse getStatistics(final String name) {
-        GitRepo gitRepo = getEntityByName(name);
-        return getContributionStatisticsResponse(gitRepo.getGitRepoMembers());
-    }
-
-    private StatisticsResponse getContributionStatisticsResponse(final Set<GitRepoMember> gitRepoMembers) {
+    private StatisticsResponse getStatistics(final GitRepo gitRepo) {
+        Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         return getStatisticsResponse(
                 getContributionList(gitRepoMembers, gitRepoMember -> gitRepoMember.getGitRepoContribution().getCommits()),
                 getContributionList(gitRepoMembers, gitRepoMember -> gitRepoMember.getGitRepoContribution().getAdditions()),

@@ -22,7 +22,7 @@ import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
-import com.dragonguard.backend.domain.organization.repository.OrganizationQueryRepository;
+import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.IdResponse;
@@ -53,7 +53,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private final ContributionService contributionService;
     private final BlockchainService blockchainService;
     private final AuthService authService;
-    private final OrganizationQueryRepository organizationQueryRepository;
+    private final OrganizationRepository organizationRepository;
     private final PullRequestService pullRequestService;
     private final IssueService issueService;
     private final GitOrganizationService gitOrganizationService;
@@ -178,7 +178,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
                 memberRepository.findRankingById(memberId),
                 member.getSumOfTokens(),
                 member.getOrganization().getName(),
-                organizationQueryRepository.findRankingByMemberId(memberId));
+                organizationRepository.findRankingByMemberId(memberId));
     }
 
     public Member findByGithubIdOrSaveWithAuthStep(final String githubId, final AuthStep authStep) {

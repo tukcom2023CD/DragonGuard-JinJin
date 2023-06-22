@@ -3,7 +3,7 @@ package com.dragonguard.backend.config.security.jwt;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +25,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtValidator {
     private final Key key;
-    private final MemberQueryRepository memberQueryRepository;
+    private final MemberRepository memberRepository;
     private final UserDetailsMapper userDetailsMapper;
 
     @Transactional
     public Authentication getAuthentication(String accessToken) {
         Claims claims = getTokenBodyClaims(accessToken);
-        Optional<Member> member = memberQueryRepository.findById(extractUUID(claims));
+        Optional<Member> member = memberRepository.findById(extractUUID(claims));
         if (member.isEmpty()) {
             return null;
         }

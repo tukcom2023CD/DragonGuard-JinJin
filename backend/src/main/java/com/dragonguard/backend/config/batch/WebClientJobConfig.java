@@ -25,13 +25,10 @@ import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilde
 import org.springframework.batch.item.function.FunctionItemProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +48,7 @@ public class WebClientJobConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final EntityManagerFactory entityManagerFactory;
     private final GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
-    private final AdminApiTokens adminApiTokens;
+    private final AdminApiToken adminApiToken;
 
     @Bean
     public Job clientJob() {
@@ -84,7 +81,7 @@ public class WebClientJobConfig {
     @Bean
     @StepScope
     public FunctionItemProcessor<GitRepo, Set<GitRepoMember>> processor() {
-        String apiToken = adminApiTokens.getApiToken();
+        String apiToken = adminApiToken.getApiToken();
 
         return new FunctionItemProcessor<>(gitRepo -> {
                 List<GitRepoMemberClientResponse> list = Arrays.asList(gitRepoMemberClient.requestToGithub(new GitRepoInfoRequest(apiToken, gitRepo.getName(), LocalDateTime.now().getYear())));

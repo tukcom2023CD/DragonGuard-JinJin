@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.member.messagequeue;
 
 import com.dragonguard.backend.domain.member.dto.kafka.RepositoryClientResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.member.service.MemberClientService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaConsumer;
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class KafkaRepositoryClientConsumer implements KafkaConsumer<RepositoryClientResponse> {
     private final MemberClientService memberClientService;
-    private final MemberQueryRepository memberQueryRepository;
+    private final MemberRepository memberRepository;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -31,7 +31,7 @@ public class KafkaRepositoryClientConsumer implements KafkaConsumer<RepositoryCl
     @KafkaListener(topics = "gitrank.to.backend.repository.client", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         RepositoryClientResponse response = readValue(message);
-        Member member = memberQueryRepository.findByGithubId(response.getGithubId())
+        Member member = memberRepository.findByGithubId(response.getGithubId())
                 .orElseThrow(EntityNotFoundException::new);
 
         memberClientService.addMemberGitRepoAndGitOrganization(member);

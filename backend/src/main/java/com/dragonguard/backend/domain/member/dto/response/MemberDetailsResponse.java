@@ -6,6 +6,11 @@ import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * @author 김승진
+ * @description 멤버 상세 조회 응답 정보를 갖는 dto 클래스
+ */
+
 @Getter
 @Builder
 @AllArgsConstructor

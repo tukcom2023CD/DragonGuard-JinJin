@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author 김승진
+ * @description 블록체인 테이블의 DB 접근을 수행하는 로직을 가진 인터페이스
+ */
+
 public interface BlockchainRepository {
     List<Blockchain> findAllByMemberId(UUID memberId);
     boolean existsByMemberId(UUID memberId);

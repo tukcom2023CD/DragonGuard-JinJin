@@ -23,6 +23,11 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
+/**
+ * @author 김승진
+ * @description 이메일 로직을 처리하는 서비스 클래스
+ */
+
 @TransactionService
 @RequiredArgsConstructor
 public class EmailService implements EntityLoader<Email, Long> {
