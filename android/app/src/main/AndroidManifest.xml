@@ -21,10 +21,6 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.UserDetailActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.ranking.TotalOrgRankingActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
