@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.search.controller;
 
+import com.dragonguard.backend.domain.result.dto.response.GitRepoResultResponse;
 import com.dragonguard.backend.domain.result.dto.response.UserResultResponse;
 import com.dragonguard.backend.domain.search.service.SearchService;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,20 +65,20 @@ class SearchControllerTest extends RestDocumentTest {
     @DisplayName("검색 결과 필터링 조회")
     void getSearchResultByFiltering() throws Exception {
         // given
-        List<UserResultResponse> expected = Arrays.asList(
-                new UserResultResponse(1L, "ohksj77"),
-                new UserResultResponse(2L, "HJ39"),
-                new UserResultResponse(3L, "posite"),
-                new UserResultResponse(4L, "Sammuelwoojae"),
-                new UserResultResponse(5L, "And"),
-                new UserResultResponse(6L, "DragonGuard-JinJin"));
+        List<GitRepoResultResponse> expected = List.of(
+                new GitRepoResultResponse(1L, "tukcom2023CD/DragonGuard-JinJin", "java", "블록체인기반깃랭크시스템", LocalDateTime.now().toString()),
+                new GitRepoResultResponse(2L, "tukcom2023CD/DragonGuard", "swift", "블록체인기반깃랭크시스템", LocalDateTime.now().toString()),
+                new GitRepoResultResponse(3L, "tukcom2023CD/JinJin", "java", "진진시스템", LocalDateTime.now().toString()),
+                new GitRepoResultResponse(4L, "tukcom2023CD/Dragon", "java", "드래곤시스템", LocalDateTime.now().toString()),
+                new GitRepoResultResponse(5L, "tukcom2023CD/Dragon-Jin", "java", "드래곤진", LocalDateTime.now().toString())
+        );
 
-        given(searchService.getUserSearchResultByClient(any(), any(), any())).willReturn(expected);
+        given(searchService.getGitRepoSearchResultByClient(any(), any(), any())).willReturn(expected);
 
         // when
         ResultActions perform =
                 mockMvc.perform(
-                        get("/search?page=1&name=gitrank&type=USERS&filters=language:swift,language:kotlin,language:java")
+                        get("/search?page=1&name=gitrank&type=REPOSITORIES&filters=language:swift,language:kotlin,language:java")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 

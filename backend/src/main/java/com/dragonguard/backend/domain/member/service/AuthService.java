@@ -84,8 +84,4 @@ public class AuthService {
         return ((UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
                 .getMember();
     }
-
-    public UUID getLoginUserId() {
-        return UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
-    }
 }

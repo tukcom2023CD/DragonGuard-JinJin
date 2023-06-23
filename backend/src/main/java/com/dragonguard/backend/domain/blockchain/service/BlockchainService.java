@@ -78,7 +78,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     public List<BlockchainResponse> getBlockchainList() {
-        return blockchainMapper.toResponseList(blockchainRepository.findAllByMemberId(authService.getLoginUserId()));
+        return blockchainMapper.toResponseList(blockchainRepository.findAllByMemberId(authService.getLoginUser().getId()));
     }
 
     @Override
