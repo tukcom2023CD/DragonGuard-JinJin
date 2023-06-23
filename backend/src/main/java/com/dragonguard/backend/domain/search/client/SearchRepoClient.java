@@ -50,12 +50,12 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
                     .queryParam("page", request.getPage())
                     .build();
         }
-        String query = String.join(" ", filters);
+        String query = String.join("%20", filters);
 
         return uriBuilder -> uriBuilder
                 .path("search")
                 .path("/" + request.getType().toString().toLowerCase())
-                .queryParam("q", request.getName().strip().concat(" " + query))
+                .queryParam("q", request.getName().strip().concat("%20" + query))
                 .queryParam("per_page", 10)
                 .queryParam("page", request.getPage())
                 .build();
