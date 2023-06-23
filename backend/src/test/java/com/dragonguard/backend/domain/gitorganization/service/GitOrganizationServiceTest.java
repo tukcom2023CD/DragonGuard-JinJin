@@ -4,7 +4,7 @@ import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.repository.GitOrganizationRepository;
 import com.dragonguard.backend.domain.gitorganization.repository.JpaGitOrganizationRepository;
 import com.dragonguard.backend.domain.member.dto.client.MemberOrganizationResponse;
-import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +23,7 @@ class GitOrganizationServiceTest extends LoginTest {
     @Autowired private GitOrganizationService gitOrganizationService;
     @Autowired private GitOrganizationRepository gitOrganizationRepository;
     @Autowired private JpaGitOrganizationRepository jpaGitOrganizationRepository;
-    @Autowired private MemberQueryRepository memberQueryRepository;
+    @Autowired private MemberRepository memberRepository;
 
     @Test
     @DisplayName("전체 저장이 수행되는가")
@@ -58,7 +58,7 @@ class GitOrganizationServiceTest extends LoginTest {
         gitOrganizationRepository.saveAll(given);
 
         //when
-        List<GitOrganization> gitOrganization = gitOrganizationService.findGitOrganizationByMember(memberQueryRepository.findById(loginUser.getId()).orElse(null));
+        List<GitOrganization> gitOrganization = gitOrganizationService.findGitOrganizationByMember(memberRepository.findById(loginUser.getId()).orElse(null));
 
         //then
         assertThat(gitOrganization).hasSameElementsAs(given);

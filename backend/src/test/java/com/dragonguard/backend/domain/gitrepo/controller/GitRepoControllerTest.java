@@ -3,10 +3,7 @@ package com.dragonguard.backend.domain.gitrepo.controller;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.*;
 import com.dragonguard.backend.domain.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
@@ -150,18 +147,18 @@ class GitRepoControllerTest extends RestDocumentTest {
     void getGitRepoMembersForCompare() throws Exception {
         TwoGitRepoResponse expected = new TwoGitRepoResponse(
                 new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
-                        new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
-                                new IntSummaryStatistics(4, 1800, 30000, 50000),
-                                new IntSummaryStatistics(4, 5000, 15000, 30000)),
+                        new StatisticsResponse(new SummaryResponse(new IntSummaryStatistics(4, 33, 146, 430)),
+                                new SummaryResponse(new IntSummaryStatistics(4, 1800, 30000, 50000)),
+                                new SummaryResponse(new IntSummaryStatistics(4, 5000, 15000, 30000))),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new IntSummaryStatistics(4, 9998, 10000, 29997),
+                        new SummaryResponse(new IntSummaryStatistics(4, 9998, 10000, 29997)),
                         List.of("http://profileImage", "http://profileImage")),
                 new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
-                        new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
-                                new IntSummaryStatistics(4, 1800, 30000, 50000),
-                                new IntSummaryStatistics(4, 5000, 15000, 30000)),
+                        new StatisticsResponse(new SummaryResponse(new IntSummaryStatistics(4, 33, 146, 430)),
+                                new SummaryResponse(new IntSummaryStatistics(4, 1800, 30000, 50000)),
+                                        new SummaryResponse(new IntSummaryStatistics(4, 5000, 15000, 30000))),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new IntSummaryStatistics(4, 9998, 10000, 29997),
+                        new SummaryResponse(new IntSummaryStatistics(4, 9998, 10000, 29997)),
                         List.of("http://profileImage", "http://profileImage")));
         given(gitRepoService.findTwoGitRepos(any())).willReturn(expected);
 
@@ -185,18 +182,18 @@ class GitRepoControllerTest extends RestDocumentTest {
     void getGitRepoMembersForCompareForUpdate() throws Exception {
         TwoGitRepoResponse expected = new TwoGitRepoResponse(
                 new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
-                        new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
-                                new IntSummaryStatistics(4, 1800, 30000, 50000),
-                                new IntSummaryStatistics(4, 5000, 15000, 30000)),
+                        new StatisticsResponse(new SummaryResponse(new IntSummaryStatistics(4, 33, 146, 430)),
+                                new SummaryResponse(new IntSummaryStatistics(4, 1800, 30000, 50000)),
+                                new SummaryResponse(new IntSummaryStatistics(4, 5000, 15000, 30000))),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new IntSummaryStatistics(4, 9998, 10000, 29997),
+                        new SummaryResponse(new IntSummaryStatistics(4, 9998, 10000, 29997)),
                         List.of("http://profileImage", "http://profileImage")),
                 new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
-                        new StatisticsResponse(new IntSummaryStatistics(4, 33, 146, 430),
-                                new IntSummaryStatistics(4, 1800, 30000, 50000),
-                                new IntSummaryStatistics(4, 5000, 15000, 30000)),
+                        new StatisticsResponse(new SummaryResponse(new IntSummaryStatistics(4, 33, 146, 430)),
+                                new SummaryResponse(new IntSummaryStatistics(4, 1800, 30000, 50000)),
+                                new SummaryResponse(new IntSummaryStatistics(4, 5000, 15000, 30000))),
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new IntSummaryStatistics(4, 9998, 10000, 29997),
+                        new SummaryResponse(new IntSummaryStatistics(4, 9998, 10000, 29997)),
                         List.of("http://profileImage", "http://profileImage")));
         given(gitRepoService.findTwoGitReposAndUpdate(any())).willReturn(expected);
 

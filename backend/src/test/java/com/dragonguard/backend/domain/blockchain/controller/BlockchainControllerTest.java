@@ -12,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -38,8 +37,8 @@ class BlockchainControllerTest extends RestDocumentTest {
     @DisplayName("블록체인 부여 기록 리스트 조회가 수행되는가")
     void getBlockchainInfo() throws Exception {
         List<BlockchainResponse> expected = List.of(
-                new BlockchainResponse(1L, ContributeType.COMMIT, new BigInteger("10"), "ohksj77", UUID.randomUUID(), LocalDateTime.now(), "123123123"),
-                new BlockchainResponse(2L, ContributeType.COMMIT, new BigInteger("5"), "ohksj77", UUID.randomUUID(), LocalDateTime.now(), "321321321"));
+                new BlockchainResponse(1L, ContributeType.COMMIT.toString(), 10L, "ohksj77", UUID.randomUUID(), LocalDateTime.now().toString(), "123123123"),
+                new BlockchainResponse(2L, ContributeType.COMMIT.toString(), 5L, "ohksj77", UUID.randomUUID(), LocalDateTime.now().toString(), "321321321"));
         given(blockchainService.getBlockchainList()).willReturn(expected);
 
         ResultActions perform =

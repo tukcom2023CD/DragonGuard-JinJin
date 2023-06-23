@@ -16,6 +16,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
@@ -46,7 +47,7 @@ import static org.mockito.Mockito.when;
 @DisplayName("Member 서비스의")
 class MemberServiceTest extends LoginTest {
     @Autowired private MemberService memberService;
-    @Autowired private MemberQueryRepository memberQueryRepository;
+    @Autowired private MemberRepository memberRepository;
     @Autowired private CommitRepository commitRepository;
     @Autowired private IssueRepository issueRepository;
     @Autowired private PullRequestRepository pullRequestRepository;
@@ -63,8 +64,8 @@ class MemberServiceTest extends LoginTest {
         //when
         UUID userId = memberService.saveMember(MemberRequestFixture.HJ39.toMemberRequest(), Role.ROLE_USER).getId();
 
-        UUID adminResult = memberQueryRepository.findById(loginUser.getId()).orElseThrow().getId();
-        UUID userResult = memberQueryRepository.findById(userId).orElseThrow().getId();
+        UUID adminResult = memberRepository.findById(loginUser.getId()).orElseThrow().getId();
+        UUID userResult = memberRepository.findById(userId).orElseThrow().getId();
 
         //then
         assertThat(adminResult).isEqualTo(loginUser.getId());
@@ -166,7 +167,7 @@ class MemberServiceTest extends LoginTest {
         //when
         String after = "Dragon1234Guard4321JinJin";
         memberService.updateWalletAddress(new WalletRequest(after));
-        String walletAddress = memberQueryRepository.findById(loginUser.getId()).get().getWalletAddress();
+        String walletAddress = memberRepository.findById(loginUser.getId()).get().getWalletAddress();
 
         //then
         assertThat(before).isNotEqualTo(after);

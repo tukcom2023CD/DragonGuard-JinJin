@@ -5,7 +5,7 @@ import com.dragonguard.backend.domain.email.dto.request.EmailRequest;
 import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
 import com.dragonguard.backend.domain.email.entity.Email;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
-import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
@@ -34,7 +34,7 @@ class EmailServiceTest extends LoginTest {
     @Autowired private EmailRepository emailRepository;
     @Autowired private EntityManager em;
     @Autowired private OrganizationRepository organizationRepository;
-    @Autowired private MemberQueryRepository memberQueryRepository;
+    @Autowired private MemberRepository memberRepository;
     @MockBean private KafkaProducer<KafkaEmail> kafkaEmailProducer;
 
     @Test
@@ -42,7 +42,7 @@ class EmailServiceTest extends LoginTest {
     void sendEmail() {
         //given
         Organization organization = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
-        organization.addMember(memberQueryRepository.findById(loginUser.getId()).orElse(null), "ohksj77@tukorea.ac.kr");
+        organization.addMember(memberRepository.findById(loginUser.getId()).orElse(null), "ohksj77@tukorea.ac.kr");
 
         doNothing().when(kafkaEmailProducer).send(any());
 
@@ -82,8 +82,8 @@ class EmailServiceTest extends LoginTest {
         CheckCodeResponse trueResult = emailService.isCodeMatching(new EmailRequest(given, code));
 
         //then
-        assertThat(falseResult.isValidCode()).isFalse();
-        assertThat(trueResult.isValidCode()).isTrue();
+        assertThat(falseResult.getIsValidCode()).isFalse();
+        assertThat(trueResult.getIsValidCode()).isTrue();
     }
 
     @Test
