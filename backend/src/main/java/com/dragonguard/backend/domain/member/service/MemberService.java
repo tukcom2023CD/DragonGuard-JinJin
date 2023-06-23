@@ -164,6 +164,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberResponse getMemberResponseWithValidateOrganization(final Member member) {
+        member.validateWalletAddressAndUpdateTier();
         if (hasNoOrganization(member)) {
             return memberMapper.toResponse(member, memberRepository.findRankingById(member.getId()), member.getSumOfTokens());
         }
