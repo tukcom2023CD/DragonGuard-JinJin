@@ -3,7 +3,7 @@ package com.dragonguard.backend.domain.member.service;
 import com.dragonguard.backend.config.security.jwt.JwtToken;
 import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
 import com.dragonguard.backend.config.security.jwt.JwtValidator;
-import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
+import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
@@ -32,28 +32,28 @@ public class AuthService {
     public JwtToken refreshToken(final String oldRefreshToken, final String oldAccessToken) {
         validateTokens(oldRefreshToken, oldAccessToken);
 
-        Optional<UserDetailsImpl> user = getUserDetails(oldAccessToken);
+        Optional<UserPrinciple> user = getUserDetails(oldAccessToken);
 
         user.ifPresent(userDetails -> validateSavedRefreshTokenIfExpired(oldRefreshToken, UUID.fromString(userDetails.getName())));
 
         return findMemberAndUpdateRefreshToken(user.orElse(null));
     }
 
-    private JwtToken findMemberAndUpdateRefreshToken(final UserDetailsImpl user) {
+    private JwtToken findMemberAndUpdateRefreshToken(final UserPrinciple user) {
         if (user == null) return null;
 
         JwtToken jwtToken = jwtTokenProvider.createToken(user);
 
-        memberRepository.findById(((UserDetailsImpl) SecurityContextHolder
+        memberRepository.findById(((UserPrinciple) SecurityContextHolder
                         .getContext().getAuthentication().getPrincipal()).getMember().getId())
                 .orElseThrow(EntityNotFoundException::new)
                 .updateRefreshToken(jwtToken.getRefreshToken());
         return jwtToken;
     }
 
-    private Optional<UserDetailsImpl> getUserDetails(final String oldAccessToken) {
+    private Optional<UserPrinciple> getUserDetails(final String oldAccessToken) {
         Authentication authentication = jwtValidator.getAuthentication(oldAccessToken);
-        return Optional.ofNullable((UserDetailsImpl) authentication.getPrincipal());
+        return Optional.ofNullable((UserPrinciple) authentication.getPrincipal());
     }
 
     private void validateTokens(final String oldRefreshToken, final String oldAccessToken) {
@@ -81,7 +81,11 @@ public class AuthService {
     }
 
     public Member getLoginUser() {
-        return ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+        return ((UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
                 .getMember();
+    }
+
+    public UUID getLoginUserId() {
+        return UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }

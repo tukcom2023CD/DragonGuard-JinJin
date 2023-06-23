@@ -7,67 +7,34 @@
 
 == Member 멤버
 === 멤버 생성
-==== HTTP request
-include::../../build/generated-snippets/create member/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/create member/http-response.adoc[]
+operation::create member[snippets='http-request,http-response']
 
 === 멤버 티어 조회
-==== HTTP request
-include::../../build/generated-snippets/get member tier/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get member tier/http-response.adoc[]
+operation::get member tier[snippets='http-request,http-response']
 
 === 멤버 커밋 내역 업데이트
-==== HTTP request
-include::../../build/generated-snippets/update member contributions/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/update member contributions/http-response.adoc[]
+operation::update member contributions[snippets='http-request,http-response']
 
 === 멤버 전체 랭킹 조회
-==== HTTP request
-include::../../build/generated-snippets/get member ranking/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get member ranking/http-response.adoc[]
+operation::get member ranking[snippets='http-request,http-response']
 
 === 멤버 지갑 주소 갱신
-==== HTTP request
-include::../../build/generated-snippets/update member wallet/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/update member wallet/http-response.adoc[]
+operation::update member wallet[snippets='http-request,http-response']
 
 === 조직 내부 멤버 랭킹
-==== HTTP request
-include::../../build/generated-snippets/get member ranking in a organization/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get member ranking in a organization/http-response.adoc[]
+operation::get member ranking in a organization[snippets='http-request,http-response']
 
 === 멤버 Jwt 토큰으로 조회
-==== HTTP request
-include::../../build/generated-snippets/get member by jwt/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get member by jwt/http-response.adoc[]
+operation::get member by jwt[snippets='http-request,http-response']
 
 === 멤버 github 조직 및 레포 목록 조회
-==== HTTP request
-include::../../build/generated-snippets/get member details/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get member details/http-response.adoc[]
+operation::get member details[snippets='http-request,http-response']
 
 === 멤버 블록체인 업데이트
-==== HTTP request
-include::../../build/generated-snippets/update member blockchains/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/update member blockchains/http-response.adoc[]
+operation::update member blockchains[snippets='http-request,http-response']
 
 === 멤버 github 조직의 레포 목록 조회
-==== HTTP request
-include::../../build/generated-snippets/get member repositories in a organization/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get member repositories in a organization/http-response.adoc[]
+operation::get member repositories in a organization[snippets='http-request,http-response']
 
 === 타 멤버의 프로필 조회
-==== HTTP request
-include::../../build/generated-snippets/get other member details/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get other member details/http-response.adoc[]
+operation::get other member details[snippets='http-request,http-response']

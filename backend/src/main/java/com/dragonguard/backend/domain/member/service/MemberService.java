@@ -235,7 +235,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member getLoginUserWithPersistence() {
-        return loadEntity(authService.getLoginUser().getId());
+        return loadEntity(authService.getLoginUserId());
     }
 
     public Member scrapeAndGetSavedMember(final String githubId, final Role role, final AuthStep authStep) {

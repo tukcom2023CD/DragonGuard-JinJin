@@ -39,6 +39,9 @@ spring:
       time-to-live: 1000
       cache-null-values: true
 
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
   kafka:
     bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
     consumer:

@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-public class UserDetailsImpl implements UserDetails, OAuth2User {
+public class UserPrinciple implements UserDetails, OAuth2User {
     private Member member;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;

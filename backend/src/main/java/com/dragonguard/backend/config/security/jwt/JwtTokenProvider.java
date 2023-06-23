@@ -1,6 +1,6 @@
 package com.dragonguard.backend.config.security.jwt;
 
-import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
+import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class JwtTokenProvider {
     private static final Long REFRESH_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 14 * 1000; // 14 Days
     private final MemberRepository memberRepository;
 
-    public JwtToken createToken(UserDetailsImpl userDetails) {
+    public JwtToken createToken(UserPrinciple userDetails) {
         Claims claims = getClaims(userDetails);
 
         String accessToken = getToken(userDetails, claims, ACCESS_TOKEN_EXPIRE_LENGTH);
@@ -50,19 +50,19 @@ public class JwtTokenProvider {
         return false;
     }
 
-    private void saveRefreshToken(String refreshToken, UserDetailsImpl userDetails) {
+    private void saveRefreshToken(String refreshToken, UserPrinciple userDetails) {
         UUID id = UUID.fromString(userDetails.getName());
 
         memberRepository.updateRefreshToken(id, refreshToken);
     }
 
-    private Claims getClaims(UserDetailsImpl userDetails) {
+    private Claims getClaims(UserPrinciple userDetails) {
         Claims claims = Jwts.claims();
         claims.put("id", userDetails.getName());
         return claims;
     }
 
-    private String getToken(UserDetailsImpl loginUser, Claims claims, Long validationSecond) {
+    private String getToken(UserPrinciple loginUser, Claims claims, Long validationSecond) {
         long now = new Date().getTime();
 
         return Jwts.builder()

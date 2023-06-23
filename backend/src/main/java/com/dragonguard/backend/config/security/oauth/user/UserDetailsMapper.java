@@ -13,9 +13,9 @@ import java.util.Map;
 
 @Component
 public class UserDetailsMapper {
-    public UserDetailsImpl mapToLoginUser(Member user) {
+    public UserPrinciple mapToLoginUser(Member user) {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("id", user.getId());
-        return new UserDetailsImpl(user, user.getRole(), attributes);
+        return new UserPrinciple(user, user.getRole(), attributes);
     }
 }

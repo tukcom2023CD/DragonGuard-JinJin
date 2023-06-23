@@ -9,6 +9,9 @@ spring:
     username: root
     password: 1234
 
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
   config:
     import:
       - classpath:env.yml

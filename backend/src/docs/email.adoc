@@ -6,19 +6,10 @@
 
 == Email
 === 이메일 전송
-==== HTTP request
-include::../../build/generated-snippets/send email/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/send email/http-response.adoc[]
+operation::send email[snippets='http-request,http-response']
 
 === 메일 코드 확인
-==== HTTP request
-include::../../build/generated-snippets/validate email code/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/validate email code/http-response.adoc[]
+operation::validate email code[snippets='http-request,http-response']
 
 === 메일 코드 삭제
-==== HTTP request
-include::../../build/generated-snippets/delete email code/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/delete email code/http-response.adoc[]
+operation::delete email code[snippets='http-request,http-response']

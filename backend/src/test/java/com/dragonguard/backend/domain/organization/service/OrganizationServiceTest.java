@@ -136,12 +136,13 @@ class OrganizationServiceTest extends LoginTest {
         Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
 
         //when
-//        organizationService.findAndAddMember(new AddMemberRequest(org.getId(), "tukorea.ac.kr"));
+        org.addMember(loginUser, "tukorea.ac.kr");
+
         Member member = memberService.getLoginUserWithPersistence();
         member.finishAuth();
 
         //then
-        assertThat(org.getMembers()).contains(member);
+        assertThat(org.getMembers()).contains(loginUser);
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.dragonguard.backend.config.security.oauth;
 
 import com.dragonguard.backend.config.security.jwt.JwtSetupService;
 import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
-import com.dragonguard.backend.config.security.oauth.user.UserDetailsImpl;
+import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -38,14 +38,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
         clearAuthenticationAttributes(request, response);
 
-        UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
+        UserPrinciple loginUser = (UserPrinciple) authentication.getPrincipal();
         jwtSetupService.addJwtTokensInCookie(response, loginUser);
         getRedirectStrategy().sendRedirect(request, response, targetUri);
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
-        String accessToken = tokenProvider.createToken((UserDetailsImpl) authentication.getPrincipal()).getAccessToken();
+        String accessToken = tokenProvider.createToken((UserPrinciple) authentication.getPrincipal()).getAccessToken();
 
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("accessToken", accessToken)

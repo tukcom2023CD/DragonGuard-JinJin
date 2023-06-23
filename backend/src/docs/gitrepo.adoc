@@ -6,43 +6,22 @@
 
 == GitHub Repository
 === 레포 구성원 기여정도 조회
-==== HTTP request
-include::../../build/generated-snippets/get git-repo contributors/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get git-repo contributors/http-response.adoc[]
+operation::get git-repo contributors[snippets='http-request,http-response']
 
 === 레포 구성원 기여정도 조회 (수동)
-==== HTTP request
-include::../../build/generated-snippets/get git-repo contributors for update/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get git-repo contributors for update/http-response.adoc[]
+operation::get git-repo contributors for update[snippets='http-request,http-response']
 
 === 두 레포의 구성원 기여정도 비교 조회
-==== HTTP request
-include::../../build/generated-snippets/get comparing two git-repos members/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get comparing two git-repos members/http-response.adoc[]
+operation::get comparing two git-repos members[snippets='http-request,http-response']
 
 === 두 레포의 구성원 기여정도 비교 조회 (수동)
-==== HTTP request
-include::../../build/generated-snippets/get comparing two git-repos members for update/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get comparing two git-repos members for update/http-response.adoc[]
+operation::get comparing two git-repos members for update[snippets='http-request,http-response']
 
 === 두 레포 비교 조회
-==== HTTP request
-include::../../build/generated-snippets/get comparing two git-repos/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get comparing two git-repos/http-response.adoc[]
+operation::get comparing two git-repos[snippets='http-request,http-response']
 
 === 두 레포 비교 조회 (수동)
-==== HTTP request
-include::../../build/generated-snippets/get comparing two git-repos for update/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get comparing two git-repos for update/http-response.adoc[]
+operation::get comparing two git-repos for update[snippets='http-request,http-response']
 
 === 두 기여자의 기여정도 비교 조회
-==== HTTP request
-include::../../build/generated-snippets/get comparing two members contribution/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get comparing two members contribution/http-response.adoc[]
+operation::get comparing two members contribution[snippets='http-request,http-response']

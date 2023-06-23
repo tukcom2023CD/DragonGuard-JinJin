@@ -12,6 +12,9 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
   jpa:
     show-sql: false
     hibernate:

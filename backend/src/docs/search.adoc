@@ -7,13 +7,7 @@
 
 == Search Result
 === 검색에 대한 결과 조회
-==== HTTP request
-include::../../build/generated-snippets/get search result/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get search result/http-response.adoc[]
+operation::get search result[snippets='http-request,http-response']
 
 === 필터링을 통한 검색에 대한 결과 조회
-==== HTTP request
-include::../../build/generated-snippets/get search result by filtering/http-request.adoc[]
-==== HTTP response
-include::../../build/generated-snippets/get search result by filtering/http-response.adoc[]
+operation::get search result by filtering[snippets='http-request,http-response']

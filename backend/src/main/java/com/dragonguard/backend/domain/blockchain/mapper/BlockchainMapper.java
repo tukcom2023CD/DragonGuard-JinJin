@@ -23,7 +23,7 @@ public interface BlockchainMapper {
     @Mapping(target = "amount", source = "amount")
     @Mapping(target = "transactionHash", source = "transactionHash")
     Blockchain toEntity(final BigInteger amount, final Member member, final ContractRequest request, final String transactionHash);
-    @Mapping(target = "amount", expression = "java(Long.parseLong(String.valueOf(blockchain.getAmount())))")
+    @Mapping(target = "amount", expression = "java(blockchain.getAmount().longValue())")
     @Mapping(target = "memberId", source = "blockchain.member.id")
     @Mapping(target = "githubId", source = "blockchain.member.githubId")
     @Mapping(target = "createdAt", expression = "java(blockchain.getBaseTime().getCreatedAt().toString())")

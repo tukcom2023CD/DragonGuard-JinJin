@@ -7,11 +7,11 @@
 
 = GIT-RANK API
 
-include::./member.adoc[]
-include::./search.adoc[]
-include::./gitrepo.adoc[]
-include::./blockchain.adoc[]
-include::./auth.adoc[]
-include::./email.adoc[]
-include::./organization.adoc[]
-include::./admin.adoc[]
+include::member.adoc[]
+include::search.adoc[]
+include::gitrepo.adoc[]
+include::blockchain.adoc[]
+include::auth.adoc[]
+include::email.adoc[]
+include::organization.adoc[]
+include::admin.adoc[]

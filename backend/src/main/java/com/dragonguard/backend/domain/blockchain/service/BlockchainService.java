@@ -51,7 +51,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     private long getNumOfNewContributionsWithoutSaved(final ContractRequest request, final UUID memberId) {
-        return Long.parseLong(String.valueOf(request.getAmount())) - getSumOfMemberBlockchainTokens(request, memberId);
+        return request.getAmount().longValue() - getSumOfMemberBlockchainTokens(request, memberId);
     }
 
     private long getSumOfMemberBlockchainTokens(final ContractRequest request, final UUID memberId) {
@@ -78,7 +78,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     public List<BlockchainResponse> getBlockchainList() {
-        return blockchainMapper.toResponseList(blockchainRepository.findAllByMemberId(authService.getLoginUser().getId()));
+        return blockchainMapper.toResponseList(blockchainRepository.findAllByMemberId(authService.getLoginUserId()));
     }
 
     @Override
