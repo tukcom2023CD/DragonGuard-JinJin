@@ -98,7 +98,9 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
         userActivity.put("commits", info.commits!!)
         userActivity.put("issues", info.issues!!)
         userActivity.put("pullRequests", info.pullRequests!!)
-        userActivity.put("review", info.reviews!!)
+        info.reviews?.let {
+            userActivity.put("pullRequests", it)
+        }
         Log.d("map", "hashMap: $userActivity")
         binding.userUtil.adapter = UserActivityAdapter(userActivity, typeList, requireContext())
         binding.userUtil.orientation = ViewPager2.ORIENTATION_HORIZONTAL

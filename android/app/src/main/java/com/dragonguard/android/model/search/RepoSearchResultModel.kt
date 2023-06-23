@@ -7,5 +7,8 @@ import java.io.Serializable
  */
 data class RepoSearchResultModel(
     val id: Long,
-    val name: String
+    val name: String,
+    val language: String?,
+    val description: String?,
+    val createdAt: String?
 ):Serializable

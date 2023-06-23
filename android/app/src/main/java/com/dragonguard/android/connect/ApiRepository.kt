@@ -70,7 +70,7 @@ class ApiRepository {
         queryMap.put("name",name)
         queryMap.put("type",type)
         queryMap.put("filters", filters)
-
+        Log.d("api 호출", "이름: $name, type: $type filters: $filters")
         Log.d("api 호출", "$count 페이지 검색")
 
         val repoName = api.getRepoName(queryMap, "Bearer $token")
