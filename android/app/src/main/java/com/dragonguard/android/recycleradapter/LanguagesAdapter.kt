@@ -18,23 +18,49 @@ import com.google.android.material.chip.Chip
 class LanguagesAdapter(private val languages: MutableList<String>, context: Context, private val type: String,
                         private val activityBinding: ActivitySearchFilterBinding):
     RecyclerView.Adapter<LanguagesAdapter.ViewHolder>() {
-    private lateinit var binding: LanguageListBinding
+
     private val filterActivity = context as SearchFilterActivity
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LanguagesAdapter.ViewHolder {
-        binding = LanguageListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding.root)
+        val binding = LanguageListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int = languages.size
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(private val binding: LanguageListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int){
             binding.languageText.text = languages[position]
+            val chip = Chip(filterActivity)
             binding.languageText.setOnClickListener {
                 if(binding.languageText.tag == "on") {
                     binding.languageText.tag = "off"
                     binding.languageText.setBackgroundColor(Color.rgb(195, 202, 251))
-                    filterActivity.map[type] = ""
+                    when(type) {
+                        "language" -> {
+                            for (i in 0 until activityBinding.languageFilters.childCount) {
+                                val chipL: Chip = activityBinding.languageFilters.getChildAt(i) as Chip
+                                if (chipL.text.toString() == binding.languageText.text.toString()) {
+                                    val chipId: Int = chipL.id
+                                    val language = filterActivity.map[type]!!.split(",").toMutableList()
+                                    language.remove(chipL.text.toString())
+                                    val sb = StringBuilder()
+                                    language.forEachIndexed { index, s ->
+                                        if(index != language.lastIndex) {
+                                            sb.append("$s,")
+                                        } else {
+                                            sb.append(s)
+                                        }
+                                    }
+                                    filterActivity.map[type] = sb.toString()
+                                    activityBinding.languageFilters.removeViewAt(chipId)
+                                    break // 원하는 Chip을 찾았으므로 반복문을 종료합니다.
+                                }
+                            }
+                        }
+                        else -> {
+                            filterActivity.map[type] = ""
+                        }
+                    }
                 } else {
                     binding.languageText.tag = "on"
                     binding.languageText.setBackgroundColor(Color.rgb(225, 228, 253))
@@ -46,7 +72,6 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                             } else {
                                 filterActivity.map.put(type, binding.languageText.text.toString())
                             }
-                            val chip = Chip(filterActivity)
                             chip.chipBackgroundColor = ColorStateList.valueOf(Color.rgb(225, 228, 253))
                             chip.setTextAppearanceResource(R.style.textAppearance)
                             chip.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
@@ -69,7 +94,6 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                         }
                         else -> {
                             filterActivity.map.put(type, binding.languageText.text.toString())
-                            val chip = Chip(filterActivity)
                             chip.chipBackgroundColor = ColorStateList.valueOf(Color.rgb(225, 228, 253))
                             chip.setTextAppearanceResource(R.style.textAppearance)
                             chip.textAlignment = TextView.TEXT_ALIGNMENT_CENTER

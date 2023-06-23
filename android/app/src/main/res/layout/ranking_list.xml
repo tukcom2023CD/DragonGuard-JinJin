@@ -26,6 +26,7 @@
             android:textSize="25sp" />
 
         <LinearLayout
+            android:id="@+id/ranker_content"
             android:layout_marginStart="10dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -70,6 +71,7 @@
 
         </LinearLayout>
         <ImageView
+            android:id="@+id/profile_link"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="top"

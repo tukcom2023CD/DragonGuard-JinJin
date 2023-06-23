@@ -5,5 +5,6 @@ data class RepoStats(
     val gitRepo: GitRepo?,
     val statistics: Statistics?,
     val languages: Map<String, Int>?,
-    val languagesStats: RepoContributionStats?
+    val languagesStats: RepoContributionStats?,
+    val profileUrls: List<String>?
 )

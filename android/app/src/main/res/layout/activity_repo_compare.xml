@@ -34,21 +34,18 @@
             android:orientation="vertical"
             android:weightSum="5">
 
-            <FrameLayout
-                android:id="@+id/compare_frame"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/compare_tab"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="4.5" />
+                android:layout_height="wrap_content"
+                app:tabIconTint="@drawable/menu_selector"/>
 
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bottom_navigation"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/fragment_content"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:background="@color/white"
-                android:elevation="10dp"
-                app:itemTextColor="@drawable/compare_menu_selector"
-                app:menu="@menu/repo_compare_menu" />
+                android:layout_height="match_parent" />
+
+
 
         </LinearLayout>
 

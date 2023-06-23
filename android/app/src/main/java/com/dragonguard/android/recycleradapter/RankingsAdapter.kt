@@ -45,8 +45,12 @@ class RankingsAdapter(private val rankings: List<*>): RecyclerView.Adapter<Ranki
                             binding.rankingItem.setBackgroundResource(R.drawable.shadow)
                         }
                     }
+                    binding.rankerContent.setOnClickListener {
+
+                    }
                 }
                 is OrgInternalRankingsModel -> {
+                    binding.profileLink.visibility = View.GONE
                     binding.eachRanking.text = data1.ranking.toString()
                     Glide.with(binding.eachProfile).load(data1.profileImage)
                         .into(binding.eachProfile)
@@ -54,6 +58,7 @@ class RankingsAdapter(private val rankings: List<*>): RecyclerView.Adapter<Ranki
                     binding.rankingContribute.text = data1.tokens.toString()
                 }
                 is TotalOrganizationModel -> {
+                    binding.profileLink.visibility = View.GONE
                     binding.eachRanking.text = data1.ranking.toString()
                     binding.rankingGithubId.text = data1.name
                     when(data1.organizationType) {
