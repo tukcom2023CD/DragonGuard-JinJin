@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -98,7 +99,7 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
         userActivity.put("issues", info.issues!!)
         userActivity.put("pullRequests", info.pullRequests!!)
         userActivity.put("review", info.reviews!!)
-
+        Log.d("map", "hashMap: $userActivity")
         binding.userUtil.adapter = UserActivityAdapter(userActivity, typeList, requireContext())
         binding.userUtil.orientation = ViewPager2.ORIENTATION_HORIZONTAL
     }

@@ -41,6 +41,9 @@ interface GitRankAPI {
     @POST("members/contributions")
     fun postCommits(@Header("Authorization")token: String) : Call<Unit>
 
+    @GET("members/git-organizations/git-repos")
+    fun getOrgRepoList(@Query("name") orgName: String, @Header("Authorization")token: String): Call<GithubOrgReposModel>
+
 //
     @POST("prepare")
     @Headers("accept: application/json", "content-type: application/json")

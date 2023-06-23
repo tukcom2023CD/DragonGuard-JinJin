@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.ActivityRepoContributorsBinding
-import com.dragonguard.android.model.contributors.RepoContributorsItem
+import com.dragonguard.android.model.contributors.GitRepoMember
+import com.dragonguard.android.model.contributors.RepoContributorsModel
 import com.dragonguard.android.recycleradapter.ContributorsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
@@ -34,7 +35,7 @@ import kotlinx.coroutines.*
 class RepoContributorsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRepoContributorsBinding
     lateinit var contributorsAdapter: ContributorsAdapter
-    private var contributors = ArrayList<RepoContributorsItem>()
+    private var contributors = ArrayList<GitRepoMember>()
     private var repoName = ""
     var viewmodel = Viewmodel()
     private var count = 0
@@ -59,7 +60,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    repo의 contributors 검색
     fun repoContributors(repoName: String) {
-        if(!this@RepoContributorsActivity.isFinishing){
+        if(!this@RepoContributorsActivity.isFinishing && count < 10){
             Log.d("check", "repoName $repoName")
             Log.d("check", "token $token")
             val coroutine = CoroutineScope(Dispatchers.Main)
@@ -77,17 +78,17 @@ class RepoContributorsActivity : AppCompatActivity() {
     }
 
     //    검색한 결과가 잘 왔는지 확인
-    fun checkContributors(result: ArrayList<RepoContributorsItem>) {
-        if (result.isNotEmpty()) {
-            if (result[0].additions == null) {
+    fun checkContributors(result: RepoContributorsModel) {
+        if (result.gitRepoMembers != null) {
+            if (result.gitRepoMembers[0].additions == null) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({ repoContributors(repoName) }, 2000)
             } else {
-                for (i in 0 until result.size) {
-                    val compare = contributors.filter { it.githubId == result[i].githubId }
+                for (i in 0 until result.gitRepoMembers.size) {
+                    val compare = contributors.filter { it.githubId == result.gitRepoMembers[i].githubId }
                     if (compare.isEmpty()) {
-                        contributors.add(result[i])
+                        contributors.add(result.gitRepoMembers[i])
                     }
                 }
                 initRecycler()
@@ -111,6 +112,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         contributorsAdapter = ContributorsAdapter(contributors, this, colorsets, token, repoName)
         binding.repoContributors.adapter = contributorsAdapter
         binding.repoContributors.layoutManager = LinearLayoutManager(this)
+        binding.repoTitle.text = repoName
         binding.repoContributors.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
         initGraph()
@@ -196,8 +198,8 @@ class RepoContributorsActivity : AppCompatActivity() {
     /*    그래프 x축을 contributor의 이름으로 변경하는 코드
           x축 label을 githubId의 앞의 4글자를 기입하여 곂치는 문제 해결
      */
-    class MyXAxisFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
-        private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,4)) }
+    class MyXAxisFormatter(contributors: ArrayList<GitRepoMember>) : ValueFormatter() {
+        private val days = contributors.flatMap { if(it.githubId!!.length <4) {arrayListOf(it.githubId!!.substring(0,it.githubId!!.length))} else arrayListOf(it.githubId!!.substring(0,3)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString()
         }
@@ -207,8 +209,8 @@ class RepoContributorsActivity : AppCompatActivity() {
     }
 
 //    막대 위의 커밋수 정수로 변경
-    class ScoreCustomFormatter(contributors: ArrayList<RepoContributorsItem>) : ValueFormatter() {
-        private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,4)) }
+    class ScoreCustomFormatter(contributors: ArrayList<GitRepoMember>) : ValueFormatter() {
+        private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,3)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
         }

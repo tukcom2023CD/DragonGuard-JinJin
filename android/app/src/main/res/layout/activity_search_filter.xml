@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.search.SearchFilterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="3.4"
+        tools:context=".activity.ranking.TypeOrgRankingActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="0.3"
+            android:background="#ffffff"
+            android:gravity="center"
+            app:layout_collapseMode="pin">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <EditText
+                        android:id="@+id/search_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:background="@drawable/search_bar_border"
+                        android:drawableStart="@drawable/ic_baseline_search_24"
+                        android:drawablePadding="10dp"
+                        android:hint=" 검색어 입력"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:padding="5dp"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3.1"
+            android:orientation="vertical"
+            android:weightSum="5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/filter_user"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="User"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/textAppearance"
+                    app:chipBackgroundColor="#E1E4FD" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/filter_repository"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="Repository"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/textAppearance"
+                    app:chipBackgroundColor="#E1E4FD" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/filter_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:weightSum="5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.25"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/language_filter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:text="Language"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/textAppearance"
+                        app:chipBackgroundColor="#E1E4FD" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
+
+                    <HorizontalScrollView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="2.5">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/language_filters"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="bottom" />
+
+                    </HorizontalScrollView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.25"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/fork_filter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:text="Forks"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/textAppearance"
+                        app:chipBackgroundColor="#E1E4FD" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
+
+                    <HorizontalScrollView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.5"
+                        android:layout_gravity="center">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/fork_filters"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </HorizontalScrollView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.25"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/star_filter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:text="Stars"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/textAppearance"
+                        app:chipBackgroundColor="#E1E4FD" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
+
+                    <HorizontalScrollView
+                        android:layout_width="0dp"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.5">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/star_filters"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent" />
+
+                    </HorizontalScrollView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.25"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/topic_filter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:text="Topics"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/textAppearance"
+                        app:chipBackgroundColor="#E1E4FD" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
+
+                    <HorizontalScrollView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="2.5">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/topic_filters"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent" />
+                    </HorizontalScrollView>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

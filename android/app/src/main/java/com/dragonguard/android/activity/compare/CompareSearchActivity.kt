@@ -61,35 +61,9 @@ class CompareSearchActivity : AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
  */
-            if (viewmodel.onOptionListener.value == "down") {
-                binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
-                Log.d("option", "down")
-            } else {
-                binding.optionIcon.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24)
-                Log.d("option", "up")
-            }
+
         })
 
-//        검색 아이콘 눌렀을때 검색 구현
-        binding.searchIcon.setOnClickListener {
-            if (!viewmodel.onSearchListener.value.isNullOrEmpty()) {
-                if (lastSearch != viewmodel.onSearchListener.value!!) {
-                    repoNames.clear()
-                    binding.searchResult.visibility = View.GONE
-                    count = 0
-                    position = 0
-                }
-                changed = true
-                lastSearch = viewmodel.onSearchListener.value!!
-                Log.d("api 시도", "callSearchApi 실행")
-                callSearchApi(viewmodel.onSearchListener.value!!)
-                binding.searchResult.visibility = View.VISIBLE
-                binding.searchName.isFocusable = true
-            } else {
-                Toast.makeText(applicationContext, "아이콘 검색어를 입력하세요!!", Toast.LENGTH_SHORT).show()
-                closeKeyboard()
-            }
-        }
 
 //        edittext에 엔터를 눌렀을때 검색되게 하는 리스너
         binding.searchName.setOnEditorActionListener { textView, i, keyEvent ->
@@ -164,7 +138,7 @@ class CompareSearchActivity : AppCompatActivity() {
 
     //    repo 검색 api 호출 및 결과 출력
     private fun callSearchApi(name: String) {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.loadingLottie.visibility = View.VISIBLE
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             if(!this@CompareSearchActivity.isFinishing) {
@@ -181,7 +155,7 @@ class CompareSearchActivity : AppCompatActivity() {
                     if (checkSearchResult(second)) {
                         initRecycler()
                     } else {
-                        binding.progressBar.visibility = View.GONE
+                        binding.loadingLottie.visibility = View.GONE
                     }
                 } else {
                     initRecycler()
@@ -230,15 +204,15 @@ class CompareSearchActivity : AppCompatActivity() {
         count++
         binding.searchResult.adapter?.notifyDataSetChanged()
         Log.d("api 횟수", "$count 페이지 검색")
-        binding.progressBar.visibility = View.GONE
+        binding.loadingLottie.visibility = View.GONE
         initScrollListener()
     }
 
 
     //    데이터 더 받아오는 함수 loadMorePosts() 구현
     private fun loadMorePosts() {
-        if (binding.progressBar.visibility == View.GONE && count != 0) {
-            binding.progressBar.visibility = View.VISIBLE
+        if (binding.loadingLottie.visibility == View.GONE && count != 0) {
+            binding.loadingLottie.visibility = View.VISIBLE
             changed = true
             CoroutineScope(Dispatchers.Main).launch {
                 Log.d("api 시도", "callSearchApi 실행  load more")

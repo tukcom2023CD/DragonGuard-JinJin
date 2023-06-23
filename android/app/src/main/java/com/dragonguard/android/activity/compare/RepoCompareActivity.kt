@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.MainActivity
@@ -16,6 +15,8 @@ import com.dragonguard.android.databinding.ActivityRepoCompareBinding
 import com.dragonguard.android.fragment.CompareRepoFragment
 import com.dragonguard.android.fragment.CompareUserFragment
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
+import com.dragonguard.android.recycleradapter.CompareAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 
 class RepoCompareActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRepoCompareBinding
+    private lateinit var adapter: CompareAdapter
     var viewmodel = Viewmodel()
     private var repo1 = ""
     private var repo2 = ""
@@ -88,31 +90,41 @@ class RepoCompareActivity : AppCompatActivity() {
     private fun startFragment() {
         compareRepoFragment = CompareRepoFragment(repo1, repo2, token)
         compareUserFragment = CompareUserFragment(repo1, repo2, token)
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.compare_frame, compareRepoFragment)
-            .add(R.id.compare_frame, compareUserFragment)
-            .hide(compareUserFragment)
-            .commit()
+        adapter = CompareAdapter(this, token)
 
-        binding.bottomNavigation.setOnItemSelectedListener {
-            when(it.itemId) {
-                R.id.compare_repo -> {
-                    supportActionBar?.title = "Repository 비교"
-                    val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.hide(compareUserFragment)
-                        .show(compareRepoFragment)
-                        .commit()
-                }
-                R.id.compare_user -> {
-                    supportActionBar?.title = "Repository 구성원 비교"
-                    val transactionN = supportFragmentManager.beginTransaction()
-                    transactionN.show(compareUserFragment)
-                        .hide(compareRepoFragment)
-                        .commit()
-                }
-            }
-            true
-        }
+        adapter.addFragment(compareRepoFragment)
+        adapter.addFragment(compareUserFragment)
+
+        binding.fragmentContent.adapter = adapter
+        val tabs = arrayOf("Repository", "User")
+        TabLayoutMediator(binding.compareTab, binding.fragmentContent) { tab, position ->
+            tab.text = tabs[position]
+        }.attach()
+//        val transaction = supportFragmentManager.beginTransaction()
+//        transaction.add(R.id.compare_frame, compareRepoFragment)
+//            .add(R.id.compare_frame, compareUserFragment)
+//            .hide(compareUserFragment)
+//            .commit()
+//
+//        binding.bottomNavigation.setOnItemSelectedListener {
+//            when(it.itemId) {
+//                R.id.compare_repo -> {
+//                    supportActionBar?.title = "Repository 비교"
+//                    val transactionN = supportFragmentManager.beginTransaction()
+//                    transactionN.hide(compareUserFragment)
+//                        .show(compareRepoFragment)
+//                        .commit()
+//                }
+//                R.id.compare_user -> {
+//                    supportActionBar?.title = "Repository 구성원 비교"
+//                    val transactionN = supportFragmentManager.beginTransaction()
+//                    transactionN.show(compareUserFragment)
+//                        .hide(compareRepoFragment)
+//                        .commit()
+//                }
+//            }
+//            true
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

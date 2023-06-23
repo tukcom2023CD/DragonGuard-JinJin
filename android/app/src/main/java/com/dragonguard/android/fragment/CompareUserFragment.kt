@@ -15,7 +15,7 @@ import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentCompareUserBinding
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
-import com.dragonguard.android.model.contributors.RepoContributorsItem
+import com.dragonguard.android.model.contributors.GitRepoMember
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -32,8 +32,8 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
 
     private var repo1 = repoName1
     private var repo2 = repoName2
-    private var contributors1 = ArrayList<RepoContributorsItem>()
-    private var contributors2 = ArrayList<RepoContributorsItem>()
+    private var contributors1 = ArrayList<GitRepoMember>()
+    private var contributors2 = ArrayList<GitRepoMember>()
     private var count = 0
     private lateinit var binding : FragmentCompareUserBinding
     private var viewmodel = Viewmodel()
@@ -77,25 +77,25 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors(repo1, repo2)}, 5000)
             } else {
-                var compare1 = mutableListOf<RepoContributorsItem>()
+                var compare1 = mutableListOf<GitRepoMember>()
                 for (i in 0 until result.firstResult.size) {
                     compare1 = contributors1.filter { it.githubId == result.firstResult[i].githubId }.toMutableList()
                     if (compare1.isEmpty()) {
                         contributors1.add(
-                            RepoContributorsItem(result.firstResult[i].additions,result.firstResult[i].commits,
-                            result.firstResult[i].deletions, result.firstResult[i].githubId)
+                            GitRepoMember(result.firstResult[i].additions,result.firstResult[i].commits,
+                            result.firstResult[i].deletions, result.firstResult[i].githubId, result.firstResult[i].isServiceMember, result.firstResult[i].profileUrl)
                         )
                     } else {
                         compare1.clear()
                     }
                 }
-                var compare2 = mutableListOf<RepoContributorsItem>()
+                var compare2 = mutableListOf<GitRepoMember>()
                 for (i in 0 until result.secondResult.size) {
                     compare2 = contributors2.filter { it.githubId == result.secondResult[i].githubId }.toMutableList()
                     if (compare2.isEmpty()) {
                         contributors2.add(
-                            RepoContributorsItem(result.secondResult[i].additions,result.secondResult[i].commits,
-                            result.secondResult[i].deletions, result.secondResult[i].githubId)
+                            GitRepoMember(result.secondResult[i].additions,result.secondResult[i].commits,
+                            result.secondResult[i].deletions, result.secondResult[i].githubId, result.secondResult[i].isServiceMember, result.secondResult[i].profileUrl)
                         )
                     } else {
                         compare2.clear()

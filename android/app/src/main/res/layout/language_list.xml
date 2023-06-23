@@ -9,29 +9,22 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="5"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5" />
-
-        <CheckBox
-            android:id="@+id/language_check"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:checked="false" />
 
         <TextView
+            android:background="@drawable/shadow"
+            android:backgroundTint="#C3CAFB"
             android:id="@+id/language_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3.5"
-            android:gravity="center"
+            android:textAlignment="center"
             android:fontFamily="@font/ibm_semibold"
             android:textColor="@color/black"
             android:maxLines="1"
+            android:tag="off"
             android:ellipsize="end"
             android:textSize="25sp" />
 

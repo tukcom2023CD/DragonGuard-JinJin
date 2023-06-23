@@ -10,156 +10,67 @@
             type="com.dragonguard.android.viewmodel.Viewmodel" />
     </data>
 
-    <FrameLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".fragment.CompareRepoFragment">
 
-        <!-- TODO: Update blank fragment layout -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="5">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.8"
-                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom"
                 android:weightSum="5">
 
-
-
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="2.5"
-                    android:orientation="horizontal"
-                    android:weightSum="5">
-                    <TextView
-                        android:id="@+id/compare_repo1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/ibm_semibold"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/user_color1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:src="@drawable/ic_baseline_circle_24"
-                        app:tint="#00ff00" />
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/repo1_language"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2.5"
-                    android:weightSum="5"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/compare_repo2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/ibm_semibold"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-
-                    <ImageView
-                        android:id="@+id/user_color2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:src="@drawable/ic_baseline_circle_24"
-                        app:tint="#000000" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.36"
-                android:weightSum="5"
-                android:orientation="horizontal">
-
                 <View
-                    android:layout_width="0dp"
+                    android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.44" />
+                    android:layout_marginVertical="3dp"
+                    android:background="#aaaaaa"/>
 
-                <ImageView
-                    android:id="@+id/repo_color1"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.8"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_baseline_circle_24"
-                    app:tint="#00ff00" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/repo_color2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.8"
-                    android:src="@drawable/ic_baseline_circle_24"
-                    app:tint="#000000" />
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/repo2_language"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.02"
-                android:background="@color/black" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/repo_compare_list"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.8"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 tools:listitem="@layout/repo_compare_list" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.02"
-                android:background="@color/black" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                android:layout_gravity="bottom"
-                android:gravity="bottom"
-                android:layout_weight="2">
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/repo_compare_chart_viewpager"
-                    android:layout_width="match_parent"
-                    android:layout_gravity="bottom"
-                    android:foregroundGravity="bottom"
-                    android:layout_marginTop="10dp"
-                    android:layout_margin="0dp"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
 
 
         </LinearLayout>
 
-    </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

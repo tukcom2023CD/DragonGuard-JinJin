@@ -5,5 +5,6 @@ data class OrgInternalRankingModelItem(
     val id: String?,
     val name: String?,
     val tier: String?,
-    val tokens: Int?
+    val tokens: Int?,
+    val profileImage: String
 )

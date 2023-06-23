@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.service.notification.NotificationListenerService.Ranking
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -17,6 +18,7 @@ import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityMainBinding
 import com.dragonguard.android.fragment.MainFragment
+import com.dragonguard.android.fragment.RankingFragment
 import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
@@ -72,9 +74,11 @@ class MainActivity : AppCompatActivity() {
     private var state = true
     private var count = 0
     private var realCount = 0
-    private  var mainFrag: MainFragment? = null
+    private var refreshCount = 0
+    private var mainFrag: MainFragment? = null
+    private var rankingFrag: RankingFragment? = null
     private var added = false
-    private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+    private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
     override fun onNewIntent(intent: Intent?) {
         count = 0
         super.onNewIntent(intent)
@@ -148,6 +152,12 @@ class MainActivity : AppCompatActivity() {
                         added = true
                     }
                 }
+                R.id.bottom_rankings -> {
+                    rankingFrag = RankingFragment(token)
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(binding.contentFrame.id, rankingFrag!!)
+                        .commit()
+                }
             }
             true
         }
@@ -167,12 +177,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        state = true
+    }
+
     override fun onRestart() {
-        count = 0
         super.onRestart()
+        count = 0
         state = true
         multipleSearchUser()
-        refreshCommits()
     }
 
     override fun onPause() {
@@ -205,6 +219,7 @@ class MainActivity : AppCompatActivity() {
                     if (userInfo.githubId == null) {
                         if (prefs.getRefreshToken("").isBlank()) {
                             if (!this@MainActivity.isFinishing && state) {
+                                Log.d("not login", "login activity로 이동")
                                 Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                                 loginOut = true
                                 prefs.setJwtToken("")
@@ -218,6 +233,7 @@ class MainActivity : AppCompatActivity() {
                                 activityResultLauncher.launch(intent)
                             }
                         } else {
+                            Log.d("not login", "refreshToken() 호출")
                             refreshToken()
                         }
                     } else {
@@ -250,14 +266,20 @@ class MainActivity : AppCompatActivity() {
                             realModel.organizationRank = userInfo.organizationRank
                         }
                         count = 0
+                        if(refreshCount == 0) {
+                            refreshCommits()
+                            refreshCount++
+                        }
+                        realModel.authStep = userInfo.authStep
                         Log.d("token", "token: $token")
                         Log.d("userInfo", "realModel:$realModel")
-                        if(realModel.commits != null && realModel.githubId != null && realModel.profileImage != null) {
+                        if(realModel.commits != null && realModel.githubId != null && realModel.profileImage != null && realModel.authStep != null) {
                             Log.d("userInfo", "id:${userInfo.githubId}")
                             mainFrag = MainFragment(token, realModel)
                             refreshMain()
+                        } else {
+                            refreshToken()
                         }
-
                     }
                 }
             }
@@ -348,8 +370,10 @@ class MainActivity : AppCompatActivity() {
                     prefs.setRefreshToken(refresh.refreshToken)
                     token = refresh.accessToken
                     multipleSearchUser()
+                    Log.d("refresh success", "token refresh 성공")
                 } else {
                     if (!this@MainActivity.isFinishing && state) {
+                        Log.d("refresh fail", "token refresh 실패")
                         Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                         if(refreshState) {
                             refreshState = false

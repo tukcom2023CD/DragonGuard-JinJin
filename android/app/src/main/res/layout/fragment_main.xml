@@ -39,19 +39,14 @@
                 android:background="@drawable/search_border"
                 android:focusable="false"
                 android:imeOptions="actionSearch"
+                android:drawableStart="@drawable/ic_baseline_search_24"
+                android:drawablePadding="10dp"
                 android:maxLines="1"
                 android:onClick="@{()->mainFragViewmodel.clickSearchIcon()}"
                 android:textColor="@color/black"
-                android:textSize="25dp" />
+                android:textSize="25sp" />
 
-            <ImageView
-                android:id="@+id/search_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-                android:adjustViewBounds="true"
-                android:onClick="@{()->mainFragViewmodel.clickSearchIcon()}"
-                android:src="@drawable/ic_baseline_search_24" />
+
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -158,6 +153,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="10dp"
                             android:layout_marginTop="15dp"
+                            android:layout_marginBottom="5dp"
                             android:adjustViewBounds="true" />
 
 
@@ -222,6 +218,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
+                            android:fontFamily="@font/ibm_semibold"
                             android:gravity="center"
                             android:textColor="@color/black"
                             android:textSize="20sp" />

@@ -86,19 +86,19 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String) :
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors()}, 2000)
             } else {
-                val name1 = repo1.split("/")
-                val name2 = repo2.split("/")
-                if(name1.size > 2) {
-                    binding.compareRepo1.text = "${name1.last()}"
-                } else {
-                    binding.compareRepo1.text = name1.last()
-                }
-                if(name2.size > 2) {
-                    binding.compareRepo2.text = "${name2.last()}"
-                } else {
-                    binding.compareRepo2.text = name2.last()
-                }
-                count = 0
+//                val name1 = repo1.split("/")
+//                val name2 = repo2.split("/")
+//                if(name1.size > 2) {
+//                    binding.compareRepo1.text = "${name1.last()}"
+//                } else {
+//                    binding.compareRepo1.text = name1.last()
+//                }
+//                if(name2.size > 2) {
+//                    binding.compareRepo2.text = "${name2.last()}"
+//                } else {
+//                    binding.compareRepo2.text = name2.last()
+//                }
+//                count = 0
                 repoCompare()
             }
         } else {
@@ -182,50 +182,10 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String) :
     가로로 슬라이딩하며 애니메이션 적용함
      */
     private fun initGraph(result: CompareRepoResponseModel) {
-        binding.repoCompareChartViewpager.adapter = RepoCompareChartAdapter(result.firstRepo!!, result.secondRepo!!, requireContext())
-        binding.repoCompareChartViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        binding.repoCompareChartViewpager.setPageTransformer(ZoomOutPageTransformer())
-        binding.repoCompareChartViewpager.isUserInputEnabled = true
+//        binding.repoCompareChartViewpager.adapter = RepoCompareChartAdapter(result.firstRepo!!, result.secondRepo!!, requireContext())
+//        binding.repoCompareChartViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+//        binding.repoCompareChartViewpager.isUserInputEnabled = true
 
-    }
-
-    //viewpager의 슬라이딩 애니메이션을 넣는 클래스
-    inner class ZoomOutPageTransformer : ViewPager2.PageTransformer {
-        override fun transformPage(view: View, position: Float) {
-            view.apply {
-                val pageWidth = width
-                val pageHeight = height
-                when {
-                    position < -1 -> { // [-Infinity,-1)
-                        // This page is way off-screen to the left.
-                        alpha = 0f
-                    }
-                    position <= 1 -> { // [-1,1]
-                        // Modify the default slide transition to shrink the page as well
-                        val scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position))
-                        val vertMargin = pageHeight * (1 - scaleFactor) / 2
-                        val horzMargin = pageWidth * (1 - scaleFactor) / 2
-                        translationX = if (position < 0) {
-                            horzMargin - vertMargin / 2
-                        } else {
-                            horzMargin + vertMargin / 2
-                        }
-
-                        // Scale the page down (between MIN_SCALE and 1)
-                        scaleX = scaleFactor
-                        scaleY = scaleFactor
-
-                        // Fade the page relative to its size.
-                        alpha = (MIN_ALPHA +
-                                (((scaleFactor - MIN_SCALE) / (1 - MIN_SCALE)) * (1 - MIN_ALPHA)))
-                    }
-                    else -> { // (1,+Infinity]
-                        // This page is way off-screen to the right.
-                        alpha = 0f
-                    }
-                }
-            }
-        }
     }
 
 }

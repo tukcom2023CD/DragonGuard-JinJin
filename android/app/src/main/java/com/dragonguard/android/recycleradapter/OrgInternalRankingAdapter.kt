@@ -5,10 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.dragonguard.android.R
-import com.dragonguard.android.activity.UserDetailActivity
 import com.dragonguard.android.databinding.TotalUsersRankingListBinding
 import com.dragonguard.android.model.rankings.OrgInternalRankingsModel
 
@@ -38,10 +35,10 @@ class OrgInternalRankingAdapter (private val datas : ArrayList<OrgInternalRankin
                 }
 
                 binding.rankerId.setOnClickListener {
-                    Intent(context, UserDetailActivity::class.java).apply{
-                        putExtra("githubId", data1.githubId)
-                        putExtra("token", token)
-                    }.run{context.startActivity(this)}
+//                    Intent(context, UserDetailActivity::class.java).apply{
+//                        putExtra("githubId", data1.githubId)
+//                        putExtra("token", token)
+//                    }.run{context.startActivity(this)}
                 }
             }
         }
