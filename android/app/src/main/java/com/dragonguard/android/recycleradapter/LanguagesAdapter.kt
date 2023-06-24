@@ -31,16 +31,16 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
         fun bind(position: Int){
             binding.languageText.text = languages[position]
             val chip = Chip(filterActivity)
+            chip.chipBackgroundColor = ColorStateList.valueOf(Color.rgb(195, 202,251))
             binding.languageText.setOnClickListener {
                 if(binding.languageText.tag == "on") {
                     binding.languageText.tag = "off"
-                    binding.languageText.setBackgroundColor(Color.rgb(195, 202, 251))
+                    binding.languageText.setBackgroundResource(R.drawable.shadow_off)
                     when(type) {
                         "language" -> {
                             for (i in 0 until activityBinding.languageFilters.childCount) {
                                 val chipL: Chip = activityBinding.languageFilters.getChildAt(i) as Chip
                                 if (chipL.text.toString() == binding.languageText.text.toString()) {
-                                    val chipId: Int = chipL.id
                                     val language = filterActivity.map[type]!!.split(",").toMutableList()
                                     language.remove(chipL.text.toString())
                                     val sb = StringBuilder()
@@ -52,7 +52,7 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                                         }
                                     }
                                     filterActivity.map[type] = sb.toString()
-                                    activityBinding.languageFilters.removeViewAt(chipId)
+                                    activityBinding.languageFilters.removeView(chipL)
                                     break // 원하는 Chip을 찾았으므로 반복문을 종료합니다.
                                 }
                             }
@@ -63,7 +63,7 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                     }
                 } else {
                     binding.languageText.tag = "on"
-                    binding.languageText.setBackgroundColor(Color.rgb(225, 228, 253))
+                    binding.languageText.setBackgroundResource(R.drawable.shadow_on)
                     when(type) {
                         "language" -> {
                             val before = filterActivity.map[type]
@@ -72,7 +72,6 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                             } else {
                                 filterActivity.map.put(type, binding.languageText.text.toString())
                             }
-                            chip.chipBackgroundColor = ColorStateList.valueOf(Color.rgb(225, 228, 253))
                             chip.setTextAppearanceResource(R.style.textAppearance)
                             chip.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
                             chip.text =binding.languageText.text.toString()
@@ -94,7 +93,6 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                         }
                         else -> {
                             filterActivity.map.put(type, binding.languageText.text.toString())
-                            chip.chipBackgroundColor = ColorStateList.valueOf(Color.rgb(225, 228, 253))
                             chip.setTextAppearanceResource(R.style.textAppearance)
                             chip.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
                             chip.text =binding.languageText.text.toString()
@@ -102,7 +100,17 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                                 filterActivity.map[type] = ""
                                 activityBinding.languageFilters.removeView(it)
                             }
-                            activityBinding.languageFilters.addView(chip)
+                            when(type) {
+                                "stars" -> {
+                                    activityBinding.starFilters.addView(chip)
+                                }
+                                "forks" -> {
+                                    activityBinding.forkFilters.addView(chip)
+                                }
+                                "topics" -> {
+                                    activityBinding.topicFilters.addView(chip)
+                                }
+                            }
                         }
                     }
                 }

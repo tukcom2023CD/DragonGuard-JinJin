@@ -14,8 +14,7 @@
 
 
         <TextView
-            android:background="@drawable/shadow"
-            android:backgroundTint="#C3CAFB"
+            android:background="@drawable/shadow_off"
             android:id="@+id/language_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
