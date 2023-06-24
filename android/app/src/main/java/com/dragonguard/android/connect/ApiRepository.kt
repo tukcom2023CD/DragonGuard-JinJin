@@ -28,10 +28,9 @@ import java.util.concurrent.TimeUnit
  */
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
-        .connectTimeout(5, TimeUnit.MINUTES)
-        .readTimeout(15, TimeUnit.SECONDS)
-        .writeTimeout(15, TimeUnit.SECONDS)
-        .cookieJar(JavaNetCookieJar(CookieManager()))
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS)
         .retryOnConnectionFailure(false)
         .build()
 

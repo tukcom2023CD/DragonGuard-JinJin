@@ -99,7 +99,7 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
         userActivity.put("issues", info.issues!!)
         userActivity.put("pullRequests", info.pullRequests!!)
         info.reviews?.let {
-            userActivity.put("pullRequests", it)
+            userActivity.put("review", it)
         }
         Log.d("map", "hashMap: $userActivity")
         binding.userUtil.adapter = UserActivityAdapter(userActivity, typeList, requireContext())

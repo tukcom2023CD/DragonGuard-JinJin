@@ -79,9 +79,11 @@ class MainActivity : AppCompatActivity() {
     private var rankingFrag: RankingFragment? = null
     private var added = false
     private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+    private var finish = false
     override fun onNewIntent(intent: Intent?) {
-        count = 0
         super.onNewIntent(intent)
+        count = 0
+        finish = false
         Log.d("on", "onnewintent")
         val logout = intent?.getBooleanExtra("logout", false)
         if (logout != null) {
@@ -210,7 +212,7 @@ class MainActivity : AppCompatActivity() {
             count++
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
-                if(!this@MainActivity.isFinishing) {
+                if(!this@MainActivity.isFinishing && !finish) {
                     val resultDeferred = coroutine.async(Dispatchers.IO) {
                         viewmodel.getUserInfo(token)
                     }
@@ -270,6 +272,7 @@ class MainActivity : AppCompatActivity() {
                             refreshCommits()
                             refreshCount++
                         }
+
                         realModel.authStep = userInfo.authStep
                         Log.d("token", "token: $token")
                         Log.d("userInfo", "realModel:$realModel")
@@ -277,6 +280,9 @@ class MainActivity : AppCompatActivity() {
                             Log.d("userInfo", "id:${userInfo.githubId}")
                             mainFrag = MainFragment(token, realModel)
                             refreshMain()
+                            realModel.tier?.let {
+                                finish = true
+                            }
                         } else {
                             refreshToken()
                         }
@@ -374,8 +380,8 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     if (!this@MainActivity.isFinishing && state) {
                         Log.d("refresh fail", "token refresh 실패")
-                        Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                         if(refreshState) {
+                            Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
                             refreshState = false
                             loginOut = true
                             prefs.setJwtToken("")
