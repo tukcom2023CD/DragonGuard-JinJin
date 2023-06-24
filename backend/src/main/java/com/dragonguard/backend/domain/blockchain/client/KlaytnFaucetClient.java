@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 public class KlaytnFaucetClient {
     private final BlockchainProperties blockchainProperties;
 
-    @Scheduled(cron = "0 5 24 * * *")
+    @Scheduled(cron = "0 5 0 * * *", zone = "Asia/Seoul")
     public void requestKlaytnFaucet() throws SSLException {
         webClient().post()
                 .uri(
