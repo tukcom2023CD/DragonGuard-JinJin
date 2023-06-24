@@ -28,8 +28,6 @@ public class BlockchainConfig {
     private static final String TOKEN_NAME = "Gitter";
     private static final String TOKEN_SYMBOL = "GTR";
     private static final Long TOKEN_AMOUNT = 10000000000000L;
-    @Value("${blockchain.contract-address}")
-    private String contractAddress;
 
     @Bean
     public AbstractKeyring keyring() {
@@ -51,7 +49,7 @@ public class BlockchainConfig {
         AbstractKeyring keyring = keyring();
         caver.wallet.add(keyring);
         try {
-            Contract contract = caver.contract.create(blockchainProperties.getAbi(), contractAddress);
+            Contract contract = caver.contract.create(blockchainProperties.getAbi(), blockchainProperties.getContractAddress());
             contract.call("balanceOf", keyring.getAddress());
             return contract;
         } catch (Exception e) {

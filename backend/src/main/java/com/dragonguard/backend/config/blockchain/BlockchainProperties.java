@@ -19,4 +19,8 @@ public class BlockchainProperties {
     private final String password;
     private final String abi;
     private final String keyring;
+    private final String contractAddress;
+    private final String walletAddress;
+    private final String klaytnApiUrl;
+    private final String userAgent;
 }
