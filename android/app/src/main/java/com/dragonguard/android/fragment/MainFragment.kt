@@ -104,6 +104,65 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
         Log.d("map", "hashMap: $userActivity")
         binding.userUtil.adapter = UserActivityAdapter(userActivity, typeList, requireContext())
         binding.userUtil.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+        if(info.organization == null) {
+            binding.mainOrgFrame.visibility = View.GONE
+        } else {
+            when(info.organizationRank) {
+                1 -> {
+                    when(info.memberGithubIds?.size){
+                        1 -> {
+                            binding.user1Githubid.text = info.memberGithubIds!![0]
+                            binding.user1Ranking.text = "1"
+                        }
+                        2 -> {
+                            binding.user1Githubid.text = info.memberGithubIds!![0]
+                            binding.user1Ranking.text = "1"
+                            binding.user2Githubid.text = info.memberGithubIds!![1]
+                            binding.user2Ranking.text = "2"
+                        }
+                        3 -> {
+                            binding.user1Githubid.text = info.memberGithubIds!![0]
+                            binding.user1Ranking.text = "1"
+                            binding.user2Githubid.text = info.memberGithubIds!![1]
+                            binding.user2Ranking.text = "2"
+                            binding.user3Githubid.text = info.memberGithubIds!![2]
+                            binding.user3Ranking.text = "3"
+                        }
+                    }
+                }
+                else -> {
+                    when(info.memberGithubIds?.size){
+                        2 -> {
+                            binding.user1Githubid.text = info.memberGithubIds!![0]
+                            binding.user1Ranking.text = info.organizationRank!!.minus(1).toString()
+                            binding.user2Githubid.text = info.memberGithubIds!![1]
+                            binding.user2Ranking.text = info.organizationRank!!.toString()
+                        }
+                        3 -> {
+                            when(info.isLast) {
+                                true -> {
+                                    binding.user1Githubid.text = info.memberGithubIds!![0]
+                                    binding.user1Ranking.text = info.organizationRank!!.minus(2).toString()
+                                    binding.user2Githubid.text = info.memberGithubIds!![1]
+                                    binding.user2Ranking.text = info.organizationRank!!.minus(1).toString()
+                                    binding.user3Githubid.text = info.memberGithubIds!![2]
+                                    binding.user3Ranking.text = info.organizationRank!!.toString()
+                                }
+                                false -> {
+                                    binding.user1Githubid.text = info.memberGithubIds!![0]
+                                    binding.user1Ranking.text = info.organizationRank!!.minus(1).toString()
+                                    binding.user2Githubid.text = info.memberGithubIds!![1]
+                                    binding.user2Ranking.text = info.organizationRank!!.toString()
+                                    binding.user3Githubid.text = info.memberGithubIds!![2]
+                                    binding.user3Ranking.text = info.organizationRank!!.plus(1).toString()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun setPage(){
