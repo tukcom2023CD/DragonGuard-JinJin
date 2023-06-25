@@ -91,7 +91,7 @@
                 android:bottom="1.5dp" />
             <corners android:radius="20dp" />
 
-            <solid android:color="#1ACCCCCC" />
+            <solid android:color="#CCCCCC" />
         </shape>
     </item>
 

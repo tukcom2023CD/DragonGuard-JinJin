@@ -6,5 +6,7 @@ data class TokenHistoryModelItem(
     val contributeType: String?,
     val githubId: String?,
     val id: Long?,
-    val memberId: String?
+    val memberId: String?,
+    val created_at: String?,
+    val transaction_hash_url: String?
 )

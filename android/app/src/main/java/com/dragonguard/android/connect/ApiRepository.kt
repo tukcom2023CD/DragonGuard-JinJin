@@ -131,14 +131,14 @@ class ApiRepository {
     }
 
     //사용자의 토큰 부여 내역을 확인하기 위한 함수
-    fun getTokenHistory(id: Long, token: String): ArrayList<TokenHistoryModelItem> {
-        val tokenHistory = api.getTokenHistory(id, "Bearer $token")
-        var tokenHistoryResult = arrayListOf(TokenHistoryModelItem(null,null,null,null, null))
+    fun getTokenHistory(token: String): ArrayList<TokenHistoryModelItem>? {
+        val tokenHistory = api.getTokenHistory("Bearer $token")
+        var tokenHistoryResult: ArrayList<TokenHistoryModelItem>? = null
         try {
             val result = tokenHistory.execute()
             tokenHistoryResult = result.body()!!
         } catch (e: Exception) {
-            return tokenHistoryResult
+            return null
         }
         return tokenHistoryResult
     }

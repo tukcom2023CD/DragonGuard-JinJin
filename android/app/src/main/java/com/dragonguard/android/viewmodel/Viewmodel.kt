@@ -101,8 +101,8 @@ class Viewmodel: ViewModel() {
         return repository.getAuthResult(key)
     }
 
-    fun getTokenHistory(id: Long, token: String): ArrayList<TokenHistoryModelItem> {
-        return repository.getTokenHistory(id, token)
+    fun getTokenHistory(token: String): ArrayList<TokenHistoryModelItem>? {
+        return repository.getTokenHistory(token)
     }
 
     fun postWalletAddress(walletAddress: String, token: String): Boolean {

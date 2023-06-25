@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.TokenHistoryActivity
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.databinding.FragmentMainBinding
 import com.dragonguard.android.model.UserInfoModel
@@ -45,6 +46,13 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tokenFrame.setOnClickListener {
+            val intent = Intent(requireActivity(), TokenHistoryActivity::class.java)
+            intent.putExtra("token", token)
+            startActivity(intent)
+        }
+
         drawInfo()
         CoroutineScope(Dispatchers.IO).launch{
             while(true){

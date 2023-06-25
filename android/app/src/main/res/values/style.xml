@@ -8,7 +8,7 @@
 
     <style name="textAppearance" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:textColor">@color/black</item>
-        <item name="fontFamily">@font/ibm_semibold</item>
+        <item name="android:fontFamily">@font/ibm_semibold</item>
         <item name="android:textSize">15sp</item>
     </style>
 </resources>
