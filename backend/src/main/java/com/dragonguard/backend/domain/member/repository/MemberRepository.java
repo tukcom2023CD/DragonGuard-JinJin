@@ -1,11 +1,14 @@
 package com.dragonguard.backend.domain.member.repository;
 
 import com.dragonguard.backend.domain.member.entity.Member;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -22,4 +25,8 @@ public interface MemberRepository extends JpaRepository<Member, UUID>, MemberQue
     @Transactional
     @Query("UPDATE Member m SET m.refreshToken = :token WHERE m.id = :id")
     void updateRefreshToken(UUID id, String token);
+
+    @EntityGraph(attributePaths = {"gitRepoMembers"})
+    @Query("SELECT m FROM Member m WHERE m.githubId = :githubId")
+    Optional<Member> findByGithubIdWithGitRepoMember(@Param("githubId") String githubId);
 }
