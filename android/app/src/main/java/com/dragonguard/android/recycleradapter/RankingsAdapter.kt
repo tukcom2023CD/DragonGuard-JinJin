@@ -45,7 +45,7 @@ class RankingsAdapter(private val rankings: List<*>): RecyclerView.Adapter<Ranki
                             binding.rankingItem.setBackgroundResource(R.drawable.shadow)
                         }
                     }
-                    binding.rankerContent.setOnClickListener {
+                    binding.rankingItem.setOnClickListener {
 
                     }
                 }
