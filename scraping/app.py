@@ -56,7 +56,7 @@ async def commits(member):
         image = soup.find('img', attrs={ "class" : "avatar avatar-user width-full border color-bg-default"})['src']
         contribution = int(h2.text.strip().split(' ')[0].rstrip().replace(',', ''))
         
-        response = { "name" : name, "contribution" : contribution, "githubId" : m, "profileImage" : image}
+        response = { "name" : name, "contribution" : contribution, "github_id" : m, "profile_image" : image}
         
         sink = app.topic('gitrank.to.backend.contribution', value_type=dict)
         await sink.send(value=response)
@@ -73,7 +73,7 @@ async def issues(issues):
         soup = BeautifulSoup(result.text, "lxml")
         issue_result = int(soup.find('a', attrs={"data-ga-click" : "Issues, Table state, Closed"}).text.strip().split(" ")[0].strip().replace(',', ''))
         
-        response = { "name" : name, "closedIssue" : issue_result}
+        response = { "name" : name, "closed_issue" : issue_result}
         
         sink = app.topic('gitrank.to.backend.issues', value_type=dict)
         await sink.send(value=response)
@@ -115,7 +115,7 @@ async def git_repos(git_repos):
                                  "commits" : int(commits.get_attribute('innerText').split(' ')[0].replace(',', '')), 
                                  "addition" : int(addition.get_attribute('innerText').split(' ')[0].replace(',', '')), 
                                  "deletion" : int(deletion.get_attribute('innerText').split(' ')[0].replace(',', '')),
-                                 "gitRepo" : name})
+                                 "git_repo" : name})
                 
             except selenium.common.exceptions.NoSuchElementException as e:
                     break
