@@ -32,6 +32,9 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
             binding.languageText.text = languages[position]
             val chip = Chip(filterActivity)
             chip.chipBackgroundColor = ColorStateList.valueOf(Color.rgb(195, 202,251))
+            chip.setTextAppearanceResource(R.style.textAppearance)
+            chip.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+            chip.text =binding.languageText.text.toString()
             binding.languageText.setOnClickListener {
                 if(binding.languageText.tag == "on") {
                     binding.languageText.tag = "off"
@@ -57,7 +60,37 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                                 }
                             }
                         }
-                        else -> {
+                        "stars" -> {
+                            for (i in 0 until activityBinding.languageFilters.childCount) {
+                                val chipL: Chip = activityBinding.starFilters.getChildAt(i) as Chip
+                                if (chipL.text.toString() == binding.languageText.text.toString()) {
+                                    filterActivity.map[type] = ""
+                                    activityBinding.languageFilters.removeView(chipL)
+                                    break // 원하는 Chip을 찾았으므로 반복문을 종료합니다.
+                                }
+                            }
+                            filterActivity.map[type] = ""
+                        }
+                        "forks" -> {
+                            for (i in 0 until activityBinding.languageFilters.childCount) {
+                                val chipL: Chip = activityBinding.forkFilters.getChildAt(i) as Chip
+                                if (chipL.text.toString() == binding.languageText.text.toString()) {
+                                    filterActivity.map[type] = ""
+                                    activityBinding.languageFilters.removeView(chipL)
+                                    break // 원하는 Chip을 찾았으므로 반복문을 종료합니다.
+                                }
+                            }
+                            filterActivity.map[type] = ""
+                        }
+                        "topics" -> {
+                            for (i in 0 until activityBinding.languageFilters.childCount) {
+                                val chipL: Chip = activityBinding.topicFilters.getChildAt(i) as Chip
+                                if (chipL.text.toString() == binding.languageText.text.toString()) {
+                                    filterActivity.map[type] = ""
+                                    activityBinding.languageFilters.removeView(chipL)
+                                    break // 원하는 Chip을 찾았으므로 반복문을 종료합니다.
+                                }
+                            }
                             filterActivity.map[type] = ""
                         }
                     }
@@ -72,9 +105,6 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                             } else {
                                 filterActivity.map.put(type, binding.languageText.text.toString())
                             }
-                            chip.setTextAppearanceResource(R.style.textAppearance)
-                            chip.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                            chip.text =binding.languageText.text.toString()
                             chip.setOnClickListener {
                                 val language = filterActivity.map[type]!!.split(",").toMutableList()
                                 language.remove(chip.text.toString())
@@ -93,9 +123,6 @@ class LanguagesAdapter(private val languages: MutableList<String>, context: Cont
                         }
                         else -> {
                             filterActivity.map.put(type, binding.languageText.text.toString())
-                            chip.setTextAppearanceResource(R.style.textAppearance)
-                            chip.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                            chip.text =binding.languageText.text.toString()
                             chip.setOnClickListener {
                                 filterActivity.map[type] = ""
                                 activityBinding.languageFilters.removeView(it)
