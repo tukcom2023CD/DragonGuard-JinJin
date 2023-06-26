@@ -40,7 +40,7 @@ public class AuthService {
     private JwtToken findMemberAndUpdateRefreshToken(final UserPrinciple user) {
         JwtToken jwtToken = jwtTokenProvider.createToken(user);
 
-        memberRepository.findById(UUID.fromString(((UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getName()))
+        memberRepository.findById(UUID.fromString(user.getName()))
                 .orElseThrow(EntityNotFoundException::new)
                 .updateRefreshToken(jwtToken.getRefreshToken());
         return jwtToken;
@@ -76,7 +76,11 @@ public class AuthService {
     }
 
     public UUID getLoginUserId() {
-        return UUID.fromString(((UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                .getName());
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserPrinciple) {
+            return UUID.fromString(((UserPrinciple) principal)
+                    .getName());
+        }
+        return null;
     }
 }
