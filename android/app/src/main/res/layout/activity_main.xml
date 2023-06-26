@@ -31,7 +31,8 @@
             android:layout_weight="0.3"
             app:itemIconTint="@drawable/compare_menu_selector"
             app:itemTextColor="@drawable/compare_menu_selector"
-            app:menu="@menu/main_bottom"/>
+            app:menu="@menu/main_bottom"
+            app:labelVisibilityMode="unlabeled"/>
 
     </LinearLayout>
 </layout>

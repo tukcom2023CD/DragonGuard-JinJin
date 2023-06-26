@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     private var mainFrag: MainFragment? = null
     private var rankingFrag: RankingFragment? = null
     private var added = false
-    private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+    private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
     private var finish = false
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -187,7 +187,7 @@ class MainActivity : AppCompatActivity() {
         super.onRestart()
         count = 0
         state = true
-        multipleSearchUser()
+        Handler(Looper.getMainLooper()).postDelayed({multipleSearchUser()}, 2000)
     }
 
     override fun onPause() {
@@ -270,6 +270,9 @@ class MainActivity : AppCompatActivity() {
                         if(refreshCount == 0) {
                             refreshCommits()
                             refreshCount++
+                        }
+                        userInfo.blockchain_url?.let {
+                            realModel.blockchain_url = it
                         }
 
                         realModel.auth_step = userInfo.auth_step
@@ -374,7 +377,7 @@ class MainActivity : AppCompatActivity() {
                     prefs.setJwtToken(refresh.access_token)
                     prefs.setRefreshToken(refresh.refresh_token)
                     token = refresh.access_token
-                    multipleSearchUser()
+                    Handler(Looper.getMainLooper()).postDelayed({multipleSearchUser()}, 2000)
                     Log.d("refresh success", "token refresh 성공")
                 } else {
                     if (!this@MainActivity.isFinishing && state) {
@@ -411,7 +414,7 @@ class MainActivity : AppCompatActivity() {
                         viewmodel.postCommits(prefs.getJwtToken(""))
                     }
                     val refresh = refreshDeffered.await()
-                    multipleSearchUser()
+                    Handler(Looper.getMainLooper()).postDelayed({multipleSearchUser()}, 2000)
                 }
             }
         }

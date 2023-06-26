@@ -41,7 +41,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     private var count = 0
     private val colorsets = ArrayList<Int>()
     private var token = ""
-    private lateinit var sparkLines : List<Int>
+    private var sparkLines = mutableListOf<Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_contributors)
@@ -92,8 +92,8 @@ class RepoContributorsActivity : AppCompatActivity() {
                         contributors.add(result.git_repo_members[i])
                     }
                 }
-                result.sparkLine?.let {
-                    sparkLines = it
+                result.spark_line?.let {
+                    sparkLines = it.toMutableList()
                 }
                 initRecycler()
             }
@@ -152,6 +152,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         val lineDataSet = LineDataSet(sparkEntries, "Line Data Set")
         lineDataSet.apply {
             color = Color.GREEN
+            setDrawCircles(false)
             setDrawValues(false)
         }
 
@@ -202,6 +203,10 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
 
         binding.repoSpark.apply {
+            setTouchEnabled(false) // 차트 터치 막기
+            setPinchZoom(false) // 두손가락으로 줌 설정
+            description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
+            legend.isEnabled = false // 차트 범례 설정(legend object chart)
             xAxis.isEnabled = false
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
@@ -257,7 +262,6 @@ class RepoContributorsActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
         return true
     }
 

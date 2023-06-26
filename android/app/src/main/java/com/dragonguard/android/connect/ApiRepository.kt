@@ -85,7 +85,7 @@ class ApiRepository {
     fun getUserInfo(token: String): UserInfoModel {
         val userInfo = api.getUserInfo("Bearer $token")
         var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null, null, null,
-            null, null, null, null, null)
+            null, null, null, null, null, null)
         try {
             val result = userInfo.execute()
             Log.d("no", "사용자 정보 요청 결과 : ${result.code()}")
