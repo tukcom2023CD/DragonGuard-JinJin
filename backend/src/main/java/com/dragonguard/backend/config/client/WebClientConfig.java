@@ -1,14 +1,16 @@
 package com.dragonguard.backend.config.client;
 
-import com.dragonguard.backend.config.github.GithubProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -24,17 +26,22 @@ import javax.net.ssl.SSLException;
 @Configuration
 @RequiredArgsConstructor
 public class WebClientConfig {
-    private final GithubProperties githubProperties;
     private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";
     private static final String USER_AGENT = "GITRANK WEB CLIENT";
+    private final ObjectMapper objectMapper;
 
     @Bean
-    public WebClient webClient() throws SSLException {
+    public WebClient webClient(
+            @Value("${github.url}") String url,
+            @Value("${github.version-key}") String versionKey,
+            @Value("${github.version-value}") String versionValue) throws SSLException {
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1))
-                .build();
+                .codecs(configurer -> {
+                    configurer.defaultCodecs().maxInMemorySize(-1);
+                    configurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapper));
+                }).build();
 
-        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(githubProperties.getUrl());
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(url);
         factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
 
         SslContext sslContext = SslContextBuilder.forClient()
@@ -47,10 +54,10 @@ public class WebClientConfig {
         return WebClient.builder()
                 .uriBuilderFactory(factory)
                 .exchangeStrategies(exchangeStrategies)
-                .baseUrl(githubProperties.getUrl())
+                .baseUrl(url)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, GITHUB_API_MIME_TYPE)
                 .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
-                .defaultHeader(githubProperties.getVersionKey(), githubProperties.getVersionValue())
+                .defaultHeader(versionKey, versionValue)
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }
