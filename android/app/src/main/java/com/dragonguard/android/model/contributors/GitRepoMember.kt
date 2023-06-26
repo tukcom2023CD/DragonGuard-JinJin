@@ -4,7 +4,7 @@ data class GitRepoMember(
     val additions: Int?,
     val commits: Int?,
     val deletions: Int?,
-    val githubId: String?,
-    val isServiceMember: Boolean?,
-    val profileUrl: String?
+    val github_id: String?,
+    val is_service_member: Boolean?,
+    val profile_url: String?
 )

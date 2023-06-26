@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.TokenHistoryActivity
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.databinding.FragmentMainBinding
 import com.dragonguard.android.model.UserInfoModel
@@ -45,6 +46,13 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tokenFrame.setOnClickListener {
+            val intent = Intent(requireActivity(), TokenHistoryActivity::class.java)
+            intent.putExtra("token", token)
+            startActivity(intent)
+        }
+
         drawInfo()
         CoroutineScope(Dispatchers.IO).launch{
             while(true){
@@ -55,11 +63,11 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
     }
 
     private fun drawInfo() {
-        if (info.githubId!!.isNotBlank()) {
-            binding.userId.text = info.githubId
+        if (info.github_id!!.isNotBlank()) {
+            binding.userId.text = info.github_id
         }
         if(!requireActivity().isFinishing) {
-            Glide.with(binding.githubProfile).load(info.profileImage)
+            Glide.with(binding.githubProfile).load(info.profile_image)
                 .into(binding.githubProfile)
         }
 
@@ -87,8 +95,8 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
                 startActivity(intent)
             }
         } )
-        if (info.tokenAmount != null) {
-            binding.tokenAmount.text = info.tokenAmount.toString()
+        if (info.token_amount != null) {
+            binding.tokenAmount.text = info.token_amount.toString()
         }
         val typeList = listOf("commits", "issues", "pullRequests", "review")
         if(info.organization != null) {
@@ -97,11 +105,72 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
         val userActivity = HashMap<String, Int>()
         userActivity.put("commits", info.commits!!)
         userActivity.put("issues", info.issues!!)
-        userActivity.put("pullRequests", info.pullRequests!!)
-        userActivity.put("review", info.reviews!!)
+        userActivity.put("pullRequests", info.pull_requests!!)
+        info.reviews?.let {
+            userActivity.put("review", it)
+        }
         Log.d("map", "hashMap: $userActivity")
         binding.userUtil.adapter = UserActivityAdapter(userActivity, typeList, requireContext())
         binding.userUtil.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+        if(info.organization == null) {
+            binding.mainOrgFrame.visibility = View.GONE
+        } else {
+            when(info.organization_rank) {
+                1 -> {
+                    when(info.member_github_ids?.size){
+                        1 -> {
+                            binding.user1Githubid.text = info.member_github_ids!![0]
+                            binding.user1Ranking.text = "1"
+                        }
+                        2 -> {
+                            binding.user1Githubid.text = info.member_github_ids!![0]
+                            binding.user1Ranking.text = "1"
+                            binding.user2Githubid.text = info.member_github_ids!![1]
+                            binding.user2Ranking.text = "2"
+                        }
+                        3 -> {
+                            binding.user1Githubid.text = info.member_github_ids!![0]
+                            binding.user1Ranking.text = "1"
+                            binding.user2Githubid.text = info.member_github_ids!![1]
+                            binding.user2Ranking.text = "2"
+                            binding.user3Githubid.text = info.member_github_ids!![2]
+                            binding.user3Ranking.text = "3"
+                        }
+                    }
+                }
+                else -> {
+                    when(info.member_github_ids?.size){
+                        2 -> {
+                            binding.user1Githubid.text = info.member_github_ids!![0]
+                            binding.user1Ranking.text = info.organization_rank!!.minus(1).toString()
+                            binding.user2Githubid.text = info.member_github_ids!![1]
+                            binding.user2Ranking.text = info.organization_rank!!.toString()
+                        }
+                        3 -> {
+                            when(info.is_last) {
+                                true -> {
+                                    binding.user1Githubid.text = info.member_github_ids!![0]
+                                    binding.user1Ranking.text = info.organization_rank!!.minus(2).toString()
+                                    binding.user2Githubid.text = info.member_github_ids!![1]
+                                    binding.user2Ranking.text = info.organization_rank!!.minus(1).toString()
+                                    binding.user3Githubid.text = info.member_github_ids!![2]
+                                    binding.user3Ranking.text = info.organization_rank!!.toString()
+                                }
+                                false -> {
+                                    binding.user1Githubid.text = info.member_github_ids!![0]
+                                    binding.user1Ranking.text = info.organization_rank!!.minus(1).toString()
+                                    binding.user2Githubid.text = info.member_github_ids!![1]
+                                    binding.user2Ranking.text = info.organization_rank!!.toString()
+                                    binding.user3Githubid.text = info.member_github_ids!![2]
+                                    binding.user3Ranking.text = info.organization_rank!!.plus(1).toString()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun setPage(){

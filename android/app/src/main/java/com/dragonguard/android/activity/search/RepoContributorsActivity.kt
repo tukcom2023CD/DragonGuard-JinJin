@@ -1,6 +1,7 @@
 package com.dragonguard.android.activity.search
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -21,11 +22,10 @@ import com.dragonguard.android.recycleradapter.ContributorsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import kotlinx.coroutines.*
 
 /*
@@ -41,6 +41,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     private var count = 0
     private val colorsets = ArrayList<Int>()
     private var token = ""
+    private lateinit var sparkLines : List<Int>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_contributors)
@@ -79,17 +80,20 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    검색한 결과가 잘 왔는지 확인
     fun checkContributors(result: RepoContributorsModel) {
-        if (result.gitRepoMembers != null) {
-            if (result.gitRepoMembers[0].additions == null) {
+        if (result.git_repo_members != null) {
+            if (result.git_repo_members[0].additions == null) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({ repoContributors(repoName) }, 2000)
             } else {
-                for (i in 0 until result.gitRepoMembers.size) {
-                    val compare = contributors.filter { it.githubId == result.gitRepoMembers[i].githubId }
+                for (i in 0 until result.git_repo_members.size) {
+                    val compare = contributors.filter { it.github_id == result.git_repo_members[i].github_id }
                     if (compare.isEmpty()) {
-                        contributors.add(result.gitRepoMembers[i])
+                        contributors.add(result.git_repo_members[i])
                     }
+                }
+                result.sparkLine?.let {
+                    sparkLines = it
                 }
                 initRecycler()
             }
@@ -99,7 +103,8 @@ class RepoContributorsActivity : AppCompatActivity() {
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({ repoContributors(repoName) }, 2000)
             } else {
-                binding.progressBar.visibility = View.GONE
+                binding.loadingLottie.pauseAnimation()
+                binding.loadingLottie.visibility = View.GONE
             }
         }
     }
@@ -114,7 +119,8 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.repoContributors.layoutManager = LinearLayoutManager(this)
         binding.repoTitle.text = repoName
         binding.repoContributors.visibility = View.VISIBLE
-        binding.progressBar.visibility = View.GONE
+        binding.loadingLottie.pauseAnimation()
+        binding.loadingLottie.visibility = View.GONE
         initGraph()
     }
 
@@ -122,11 +128,15 @@ class RepoContributorsActivity : AppCompatActivity() {
     private fun initGraph() {
 //        Toast.makeText(applicationContext,"그래프 그리기 시작", Toast.LENGTH_SHORT).show()
         val entries = ArrayList<BarEntry>()
+        val sparkEntries = ArrayList<Entry>()
         var count = 1
         contributors.forEach {
             entries.add(BarEntry(count.toFloat(), it.commits!!.toFloat()))
             count++
 //                Toast.makeText(applicationContext, "현재 count = $count", Toast.LENGTH_SHORT).show()
+        }
+        sparkLines.forEachIndexed { index, i ->
+            sparkEntries.add(Entry((index+1).toFloat(), i.toFloat()))
         }
 
         val set = BarDataSet(entries,"DataSet")
@@ -138,10 +148,22 @@ class RepoContributorsActivity : AppCompatActivity() {
             valueFormatter = ScoreCustomFormatter(contributors)
             setDrawIcons(true)
         }
+
+        val lineDataSet = LineDataSet(sparkEntries, "Line Data Set")
+        lineDataSet.apply {
+            color = Color.GREEN
+            setDrawValues(false)
+        }
+
+
         val dataSet = ArrayList<IBarDataSet>()
         dataSet.add(set)
         val data = BarData()
         data.addDataSet(set)
+
+        val spartSets = ArrayList<ILineDataSet>()
+        spartSets.add(lineDataSet)
+        val lineData = LineData(spartSets)
 
         binding.contributorsChart.apply {
 //            Toast.makeText(applicationContext, "그래프 entry  = ${entries.size}", Toast.LENGTH_SHORT).show()
@@ -179,6 +201,15 @@ class RepoContributorsActivity : AppCompatActivity() {
             animateY(500) // 밑에서부터 올라오는 애니매이션 적용
         }
 
+        binding.repoSpark.apply {
+            xAxis.isEnabled = false
+            axisLeft.isEnabled = false
+            axisRight.isEnabled = false
+            xAxis.setDrawGridLines(false)
+            axisLeft.setDrawGridLines(false)
+            axisRight.setDrawGridLines(false)
+        }
+
         data.apply {
             setValueTextSize(12f)
             barWidth = 0.3f //막대 너비 설정
@@ -186,6 +217,11 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.contributorsChart.data = data
         binding.contributorsChart.invalidate()
         binding.contributorsChart.visibility = View.VISIBLE
+
+        binding.repoSpark.data = lineData
+        binding.repoSpark.invalidate()
+        binding.repoSpark.visibility = View.VISIBLE
+
 //        binding.contributorsChart.run {
 //            this.data = data //차트의 데이터를 data로 설정해줌.
 //            setFitBars(true)
@@ -199,7 +235,7 @@ class RepoContributorsActivity : AppCompatActivity() {
           x축 label을 githubId의 앞의 4글자를 기입하여 곂치는 문제 해결
      */
     class MyXAxisFormatter(contributors: ArrayList<GitRepoMember>) : ValueFormatter() {
-        private val days = contributors.flatMap { if(it.githubId!!.length <4) {arrayListOf(it.githubId!!.substring(0,it.githubId!!.length))} else arrayListOf(it.githubId!!.substring(0,3)) }
+        private val days = contributors.flatMap { if(it.github_id!!.length <4) {arrayListOf(it.github_id!!.substring(0,it.github_id!!.length))} else arrayListOf(it.github_id!!.substring(0,3)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString()
         }
@@ -210,7 +246,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
 //    막대 위의 커밋수 정수로 변경
     class ScoreCustomFormatter(contributors: ArrayList<GitRepoMember>) : ValueFormatter() {
-        private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,3)) }
+        private val days = contributors.flatMap { arrayListOf(it.github_id!!.substring(0,3)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
         }

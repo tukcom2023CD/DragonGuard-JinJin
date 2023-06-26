@@ -1,5 +1,5 @@
 package com.dragonguard.android.model.org
 
 data class EmailAuthResultModel(
-    val validCode: Boolean
+    val is_valid_code: Boolean
 )

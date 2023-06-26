@@ -28,11 +28,12 @@ class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultMo
         fun bind(data: RepoSearchResultModel) {
             binding.repoName.text = data.name
             binding.repoLanguage.text = ""
-            val img= imgList[""]
+            Log.d("name", "$data.name")
+            val img= imgList[data.language]
             if(img != null) {
                 binding.langImg.setBackgroundResource(img)
             }
-            Log.d("name", "$data.name")
+            binding.repoCreateDate.text = data.created_at
             itemView.setOnClickListener{
 //                Toast.makeText(context, "${repoName.text} 눌림", Toast.LENGTH_SHORT).show()
                 if(type == "USERS") {

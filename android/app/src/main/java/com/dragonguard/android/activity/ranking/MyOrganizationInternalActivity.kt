@@ -89,41 +89,41 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
 
     private fun checkRankings(result: OrgInternalRankingModel) {
         if (result.isNotEmpty()) {
-            Log.d("조직 내 랭킹", "결과 : ${result[0].githubId}")
+            Log.d("조직 내 랭킹", "결과 : ${result[0].github_id}")
             result.forEach {
-                Log.d("조직 내 랭킹", "결과 : ${it.githubId}")
+                Log.d("조직 내 랭킹", "결과 : ${it.github_id}")
                 if (ranking != 0) {
                     if (orgInternalRankings[ranking - 1].tokens == it.tokens) {
                         orgInternalRankings.add(
                             OrgInternalRankingsModel(
-                                it.githubId, it.id, it.name, it.tier, it.tokens,
+                                it.github_id, it.id, it.name, it.tier, it.tokens,
                                 orgInternalRankings[ranking - 1].ranking,
-                                it.profileImage
+                                it.profile_image
                             )
                         )
                     } else {
                         orgInternalRankings.add(
                             OrgInternalRankingsModel(
-                                it.githubId,
+                                it.github_id,
                                 it.id,
                                 it.name,
                                 it.tier,
                                 it.tokens,
                                 ranking + 1,
-                                it.profileImage
+                                it.profile_image
                             )
                         )
                     }
                 } else {
                     orgInternalRankings.add(
                         OrgInternalRankingsModel(
-                            it.githubId,
+                            it.github_id,
                             it.id,
                             it.name,
                             it.tier,
                             it.tokens,
                             1,
-                            it.profileImage
+                            it.profile_image
                         )
                     )
                 }

@@ -10,13 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.widget.ViewPager2
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentCompareRepoBinding
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.recycleradapter.RepoCompareAdapter
-import com.dragonguard.android.recycleradapter.RepoCompareChartAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,8 +78,8 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String) :
      */
 
     fun checkContributors(result: CompareRepoMembersResponseModel) {
-        if ((result.firstResult != null) && (result.secondResult != null)) {
-            if (result.firstResult.isEmpty()) {
+        if ((result.first_result != null) && (result.second_result != null)) {
+            if (result.first_result.isEmpty()) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors()}, 2000)
@@ -131,16 +129,16 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String) :
     recyclerview 그리는 함수 호출
      */
     private fun checkRepos(result: CompareRepoResponseModel) {
-        if(result.firstRepo != null && result.secondRepo != null) {
+        if(result.first_repo != null && result.second_repo != null) {
             try {
-                result.firstRepo.gitRepo!!
-                result.firstRepo.statistics!!
-                result.firstRepo.languagesStats!!
-                result.firstRepo.languages!!
-                result.secondRepo.gitRepo!!
-                result.secondRepo.statistics!!
-                result.secondRepo.languagesStats!!
-                result.secondRepo.languages!!
+                result.first_repo.git_repo!!
+                result.first_repo.statistics!!
+                result.first_repo.languages_stats!!
+                result.first_repo.languages!!
+                result.second_repo.git_repo!!
+                result.second_repo.statistics!!
+                result.second_repo.languages_stats!!
+                result.second_repo.languages!!
                 initRecycler(result)
 
             } catch (e: Exception) {
@@ -162,13 +160,13 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String) :
      */
     private fun initRecycler(result: CompareRepoResponseModel) {
         Log.d("initRecycler()", "리사이클러뷰 구현 시작")
-        if(result.firstRepo!!.languagesStats == null || result.secondRepo!!.languagesStats == null) {
-            Log.d("initRecycler()", "${result.firstRepo.languagesStats} 혹은 ${result.secondRepo!!.languagesStats}이 널입니다.")
+        if(result.first_repo!!.languages_stats == null || result.second_repo!!.languages_stats == null) {
+            Log.d("initRecycler()", "${result.first_repo.languages_stats} 혹은 ${result.second_repo!!.languages_stats}이 널입니다.")
             count++
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({repoCompare()}, 5000)
         } else {
-            val repoCompareAdapter = RepoCompareAdapter(result.firstRepo!!, result.secondRepo!!, compareItems)
+            val repoCompareAdapter = RepoCompareAdapter(result.first_repo!!, result.second_repo!!, compareItems)
             binding.repoCompareList.adapter = repoCompareAdapter
             binding.repoCompareList.layoutManager = LinearLayoutManager(requireContext())
             repoCompareAdapter.notifyDataSetChanged()

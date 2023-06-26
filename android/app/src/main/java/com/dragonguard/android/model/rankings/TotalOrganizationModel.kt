@@ -1,10 +1,10 @@
 package com.dragonguard.android.model.rankings
 
 data class TotalOrganizationModel(
-    val emailEndpoint: String?,
+    val email_endpoint: String?,
     val id: Long?,
     val name: String?,
-    val organizationType: String?,
-    val tokenSum: Long?,
+    val organization_type: String?,
+    val token_sum: Long?,
     val ranking: Int
 )

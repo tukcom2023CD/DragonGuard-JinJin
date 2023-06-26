@@ -4,11 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.dragonguard.android.R
 import com.dragonguard.android.databinding.TotalUsersRankingListBinding
-import com.dragonguard.android.model.rankings.OrgInternalRankingsModel
 import com.dragonguard.android.model.rankings.TotalOrganizationModel
 
 class TotalOrgRankingAdapter(private val datas : ArrayList<TotalOrganizationModel>, private val context: Context) : RecyclerView.Adapter<TotalOrgRankingAdapter.ViewHolder>() {
@@ -25,10 +22,10 @@ class TotalOrgRankingAdapter(private val datas : ArrayList<TotalOrganizationMode
             if(binding.totalUsersRanking.text.isNullOrEmpty() && binding.rankerId.text.isNullOrEmpty() && binding.rankerContribution.text.isNullOrEmpty()) {
                 binding.totalUsersRanking.text = data.ranking.toString()
                 binding.rankerId.text = data.name
-                if(data.tokenSum == null) {
+                if(data.token_sum == null) {
                     binding.rankerContribution.text = "NONE"
                 } else {
-                    binding.rankerContribution.text = data.tokenSum.toString()
+                    binding.rankerContribution.text = data.token_sum.toString()
                 }
             }
         }

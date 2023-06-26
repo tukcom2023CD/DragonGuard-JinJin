@@ -5,8 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.dragonguard.android.FragmentAdapter
-import com.dragonguard.android.R
+import com.dragonguard.android.recycleradapter.FragmentAdapter
 import com.dragonguard.android.databinding.FragmentRankingBinding
 import com.google.android.material.tabs.TabLayoutMediator
 

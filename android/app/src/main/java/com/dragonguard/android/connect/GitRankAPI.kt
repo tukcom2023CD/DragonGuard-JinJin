@@ -54,8 +54,8 @@ interface GitRankAPI {
     fun getAuthResult(@Query("request_key") key: String) : Call<WalletAuthResultModel>
 
 //    사용자의 토큰부여 내역을 가져오기 위한 함수
-    @GET("blockchain/{id}")
-    fun getTokenHistory(@Path("id") userId: Long, @Header("Authorization")token: String) : Call<TokenHistoryModel>
+    @GET("blockchain")
+    fun getTokenHistory(@Header("Authorization")token: String) : Call<TokenHistoryModel>
 
 //    klip wallet address를 서버로 보내는 함수
     @POST("members/wallet-address")
