@@ -1,7 +1,5 @@
 package com.dragonguard.backend.domain.result.dto.client;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GitRepoClientResponse {
     private String fullName;
     private String language;

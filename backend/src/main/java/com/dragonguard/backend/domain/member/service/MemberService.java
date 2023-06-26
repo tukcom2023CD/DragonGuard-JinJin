@@ -195,11 +195,11 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public void updateWalletAddress(final WalletRequest walletRequest) {
         Member member = getLoginUserWithPersistence();
         member.updateWalletAddress(walletRequest.getWalletAddress());
-        sendContributionRequestToKafka(member.getGithubId(), member.getGithubToken());
+        sendContributionRequestToKafka(member.getGithubId());
     }
 
-    private void sendContributionRequestToKafka(final String githubId, final String githubToken) {
-        kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId, githubToken));
+    private void sendContributionRequestToKafka(final String githubId) {
+        kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
     }
 
     public void sendSmartContractTransaction(final Member member) {

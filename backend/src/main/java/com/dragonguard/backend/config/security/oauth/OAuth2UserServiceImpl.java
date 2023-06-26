@@ -41,7 +41,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         String githubId = (String) attributes.get("login");
 
         if (!memberRepository.existsByGithubId(githubId)) {
-            memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY, (String) attributes.get("name"), (String) attributes.get("avatarUrl")));
+            memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY, (String) attributes.get("name"), (String) attributes.get("avatar_url")));
         }
 
         Member user = memberRepository.findByGithubId(githubId)
@@ -55,7 +55,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         user.updateGithubToken(githubToken);
 
         if (StringUtils.hasText(user.getWalletAddress()) && !user.getAuthStep().equals(AuthStep.GITHUB_ONLY)) {
-            kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId, user.getGithubToken()));
+            kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
         }
         kafkaRepositoryClientProducer.send(new KafkaRepositoryRequest(githubId, user.getGithubToken()));
 
