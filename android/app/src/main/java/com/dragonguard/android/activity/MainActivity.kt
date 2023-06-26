@@ -274,8 +274,10 @@ class MainActivity : AppCompatActivity() {
                         userInfo.blockchain_url?.let {
                             realModel.blockchain_url = it
                         }
-
+                        realModel.id = userInfo.id
                         realModel.auth_step = userInfo.auth_step
+                        realModel.member_github_ids = userInfo.member_github_ids
+
                         Log.d("token", "token: $token")
                         Log.d("userInfo", "realModel:$realModel")
                         if(realModel.commits != null && realModel.github_id != null && realModel.profile_image != null && realModel.auth_step != null) {

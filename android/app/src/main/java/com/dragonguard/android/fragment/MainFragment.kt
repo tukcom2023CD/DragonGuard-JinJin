@@ -28,9 +28,6 @@ import kotlinx.coroutines.launch
 class MainFragment(private val token: String, private val info: UserInfoModel) : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private var viewmodel = Viewmodel()
-    private var count = 0
-    private var state = true
-    private var loginOut = false
     val handler= Handler(Looper.getMainLooper()){
         setPage()
         true
@@ -120,22 +117,20 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
                 1 -> {
                     when(info.member_github_ids?.size){
                         1 -> {
-                            binding.user1Githubid.text = info.member_github_ids!![0]
-                            binding.user1Ranking.text = "1"
+                            binding.user2Githubid.text = info.member_github_ids!![0]
+                            binding.user2Ranking.text = "1"
                         }
                         2 -> {
-                            binding.user1Githubid.text = info.member_github_ids!![0]
-                            binding.user1Ranking.text = "1"
-                            binding.user2Githubid.text = info.member_github_ids!![1]
-                            binding.user2Ranking.text = "2"
+                            binding.user2Githubid.text = info.member_github_ids!![0]
+                            binding.user2Ranking.text = "1"
+                            binding.user3Githubid.text = info.member_github_ids!![1]
+                            binding.user3Ranking.text = "2"
                         }
                         3 -> {
-                            binding.user1Githubid.text = info.member_github_ids!![0]
-                            binding.user1Ranking.text = "1"
-                            binding.user2Githubid.text = info.member_github_ids!![1]
-                            binding.user2Ranking.text = "2"
-                            binding.user3Githubid.text = info.member_github_ids!![2]
-                            binding.user3Ranking.text = "3"
+                            binding.user2Githubid.text = info.member_github_ids!![0]
+                            binding.user2Ranking.text = "1"
+                            binding.user3Githubid.text = info.member_github_ids!![1]
+                            binding.user3Ranking.text = "2"
                         }
                     }
                 }
@@ -150,9 +145,7 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
                         3 -> {
                             when(info.is_last) {
                                 true -> {
-                                    binding.user1Githubid.text = info.member_github_ids!![0]
-                                    binding.user1Ranking.text = info.organization_rank!!.minus(2).toString()
-                                    binding.user2Githubid.text = info.member_github_ids!![1]
+                                    binding.user2Githubid.text = info.member_github_ids!![0]
                                     binding.user2Ranking.text = info.organization_rank!!.minus(1).toString()
                                     binding.user3Githubid.text = info.member_github_ids!![2]
                                     binding.user3Ranking.text = info.organization_rank!!.toString()
