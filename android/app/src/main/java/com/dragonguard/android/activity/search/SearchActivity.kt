@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -39,7 +41,7 @@ class SearchActivity : AppCompatActivity() {
     private var filterLanguage = StringBuilder()
     private var filterOptions = StringBuilder()
     private var filterResult = StringBuilder()
-    private var type = ""
+    private var type = "REPOSITORIES"
     private var token = ""
     private val imgList = HashMap<String, Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +49,7 @@ class SearchActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
         binding.searchViewModel = viewmodel
 
-
+//        this.onBackPressedDispatcher.addCallback(this, callback)
         binding.searchResult.addItemDecoration(VerticalItemDecorator(20))
         binding.searchResult.addItemDecoration(HorizontalItemDecorator(10))
 
@@ -117,6 +119,9 @@ class SearchActivity : AppCompatActivity() {
                     Log.d("results", "stars: $stars ")
                     Log.d("results", "forks: $forks ")
                     Log.d("results", "name: $name ")
+                    if(name != lastSearch) {
+                        repoNames.clear()
+                    }
                     checkLanguage(languages=language, type=type, topics=topics, stars=stars, forks=forks, name=name)
                 } catch (e: Exception) {
 
@@ -137,63 +142,50 @@ class SearchActivity : AppCompatActivity() {
         if(type != null) {
             this.type = type
         }
-        val checked = arrayListOf<String>()
-        val notCatLanguage = arrayListOf<String>()
         if(languages != null) {
-            val splitLang = languages.split(",")
-            splitLang.forEach(){
-                if(it.isNotBlank()) {
-                    checked.add("language:$it,")
-                }
-            }
+            val splitLang = languages.split(",").toMutableList()
+            val joinToString: String = splitLang.map {
+                "language:$it"
+            }.joinToString(",")
+            Log.d("test", "filter language: $joinToString")
+            filterLanguage.append(joinToString)
         }
 
-//        Log.d("filters", "filters: ${filterMap["stars"]}")
-//        Toast.makeText(applicationContext, "index : $checked", Toast.LENGTH_SHORT).show()
-        checked.forEachIndexed { index, s ->
-            if(index != checked.size - 1) {
-                filterLanguage.append("${checked[index]},")
-                notCatLanguage.add(checked[index].substring(9,checked[index].lastIndex+1)+",")
-            } else {
-                filterLanguage.append(checked[index])
-                notCatLanguage.add(checked[index].substring(9,checked[index].lastIndex+1)+"")
-            }
-        }
         if(topics != null) {
             when(topics) {
                 "0개" -> {
                     filterOptions.append("topics:0,")
                 }
                 "1개" -> {
-                    filterOptions.append("topics:0,")
+                    filterOptions.append("topics:1,")
                 }
                 "2개" -> {
-                    filterOptions.append("topics:0,")
+                    filterOptions.append("topics:2,")
                 }
                 "3개" -> {
-                    filterOptions.append("topics:0,")
+                    filterOptions.append("topics:3,")
                 }
                 "4개 이상" -> {
-                    filterOptions.append("topics:0,")
+                    filterOptions.append("topics:>=4,")
                 }
             }
         }
         if(stars != null) {
             when(stars) {
                 "10개 미만" -> {
-                    filterOptions.append("stars:$stars,")
+                    filterOptions.append("stars:0..9,")
                 }
                 "50개 미만" -> {
-                    filterOptions.append("stars:$stars,")
+                    filterOptions.append("stars:10..49,")
                 }
                 "100개 미만" -> {
-                    filterOptions.append("stars:$stars,")
+                    filterOptions.append("stars:50..99,")
                 }
                 "500개 미만" -> {
-                    filterOptions.append("stars:$stars,")
+                    filterOptions.append("stars:100..499,")
                 }
                 "500개 이상" -> {
-                    filterOptions.append("stars:$stars,")
+                    filterOptions.append("stars:>500,")
                 }
             }
 
@@ -201,22 +193,28 @@ class SearchActivity : AppCompatActivity() {
         if(forks != null) {
             when(forks) {
                 "10개 미만" -> {
-                    filterOptions.append("forks:$forks,")
+                    filterOptions.append("forks:0..9")
                 }
                 "50개 미만" -> {
-                    filterOptions.append("forks:$forks,")
+                    filterOptions.append("forks:10..49")
                 }
                 "100개 미만" -> {
-                    filterOptions.append("forks:$forks,")
+                    filterOptions.append("forks:50..99")
                 }
                 "500개 미만" -> {
-                    filterOptions.append("forks:$forks,")
+                    filterOptions.append("forks:100..499")
                 }
                 "500개 이상" -> {
-                    filterOptions.append("forks:$forks,")
+                    filterOptions.append("forks:>500")
                 }
             }
         }
+        val splitOption = filterOptions.split(",").toMutableList()
+        val joinToString: String = splitOption.filter {
+            it.isNotBlank()
+        }.joinToString(",")
+        Log.d("test", "filter option: $joinToString")
+        filterOptions = StringBuilder(joinToString)
 //        count = 0
 //        Toast.makeText(applicationContext, "filters:$filterOptions", Toast.LENGTH_SHORT).show()
 //        Toast.makeText(applicationContext, "filters:$filterLanguage", Toast.LENGTH_SHORT).show()
@@ -225,24 +223,23 @@ class SearchActivity : AppCompatActivity() {
 
     private fun filterCat(name: String) {
         lastSearch = name
+        Log.d("횟수", "filtercat 나옴!!!!!!")
         if(filterLanguage.isNotEmpty()) {
             if (filterOptions.isNotEmpty()) {
                 filterResult.append(filterLanguage)
                 filterResult.append(",")
                 filterResult.append(filterOptions)
-                filterResult.deleteAt(filterResult.lastIndex)
             } else {
                 filterResult.append(filterLanguage)
             }
         } else {
             if (filterOptions.isNotEmpty()) {
                 filterResult.append(filterOptions)
-                filterResult.deleteAt(filterResult.lastIndex)
             } else {
                 filterResult = StringBuilder()
             }
         }
-
+        Log.d("횟수", "filtercat $filterResult")
         callSearchApi(name)
 
 
@@ -250,25 +247,6 @@ class SearchActivity : AppCompatActivity() {
 //        binding.chosenFilters.text = chosenFilters.toString()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-            }
-            R.id.home_menu -> {
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     //    화면의 다른곳 눌렀을때 처리
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -286,7 +264,7 @@ class SearchActivity : AppCompatActivity() {
     private fun callSearchApi(name: String) {
         binding.loadingLottie.visibility = View.VISIBLE
         binding.loadingLottie.playAnimation()
-        Log.d("필터", filterResult.toString())
+        Log.d("필터", "total filters: ${filterResult.toString()}")
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             if(!this@SearchActivity.isFinishing) {
@@ -443,5 +421,31 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(intent)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+            R.id.home_menu -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -15,12 +15,10 @@ import com.dragonguard.android.model.rankings.OrganizationRankingModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
 import com.dragonguard.android.model.search.RepoSearchResultModel
 import com.dragonguard.android.model.token.RefreshTokenModel
-import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.net.CookieManager
 import java.util.concurrent.TimeUnit
 
 /*
@@ -28,10 +26,9 @@ import java.util.concurrent.TimeUnit
  */
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
-        .connectTimeout(5, TimeUnit.MINUTES)
-        .readTimeout(15, TimeUnit.SECONDS)
-        .writeTimeout(15, TimeUnit.SECONDS)
-        .cookieJar(JavaNetCookieJar(CookieManager()))
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS)
         .retryOnConnectionFailure(false)
         .build()
 
@@ -70,7 +67,7 @@ class ApiRepository {
         queryMap.put("name",name)
         queryMap.put("type",type)
         queryMap.put("filters", filters)
-
+        Log.d("api 호출", "이름: $name, type: $type filters: $filters")
         Log.d("api 호출", "$count 페이지 검색")
 
         val repoName = api.getRepoName(queryMap, "Bearer $token")
@@ -132,14 +129,14 @@ class ApiRepository {
     }
 
     //사용자의 토큰 부여 내역을 확인하기 위한 함수
-    fun getTokenHistory(id: Long, token: String): ArrayList<TokenHistoryModelItem> {
-        val tokenHistory = api.getTokenHistory(id, "Bearer $token")
-        var tokenHistoryResult = arrayListOf(TokenHistoryModelItem(null,null,null,null, null))
+    fun getTokenHistory(token: String): ArrayList<TokenHistoryModelItem>? {
+        val tokenHistory = api.getTokenHistory("Bearer $token")
+        var tokenHistoryResult: ArrayList<TokenHistoryModelItem>? = null
         try {
             val result = tokenHistory.execute()
             tokenHistoryResult = result.body()!!
         } catch (e: Exception) {
-            return tokenHistoryResult
+            return null
         }
         return tokenHistoryResult
     }
@@ -149,7 +146,7 @@ class ApiRepository {
         val walletAddress = api.postWalletAddress(body, "Bearer $token")
         return try{
             val result = walletAddress.execute()
-            Log.d("dd", "지갑주소 전송 결과 : ${result.code()} ${body.walletAddress}")
+            Log.d("dd", "지갑주소 전송 결과 : ${result.code()} ${body.wallet_address}")
             result.isSuccessful
         } catch (e: Exception) {
             Log.d("dd", "결과 실패")
@@ -257,7 +254,7 @@ class ApiRepository {
         queryMap.put("size", "10")
         val getOrgNames = api.getOrgNames(queryMap, "Bearer $token")
         var orgNames = OrganizationNamesModel()
-        orgNames.add(OrganizationNamesModelItem(null, null, null, null))
+        orgNames.add(OrganizationNamesModelItem(null, null, null, null, null))
         return try{
             val result = getOrgNames.execute()
             orgNames = result.body()!!
@@ -311,7 +308,7 @@ class ApiRepository {
         val emailAuth = api.getEmailAuthResult(queryMap, "Bearer $token")
         return try {
             val result = emailAuth.execute()
-            result.body()!!.validCode
+            result.body()!!.is_valid_code
         } catch (e: Exception) {
             Log.d("status", "이메일 인증 결과 error : ${e.message}")
             false

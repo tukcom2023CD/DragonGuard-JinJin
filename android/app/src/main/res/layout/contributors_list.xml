@@ -20,6 +20,7 @@
 
 
         <ImageView
+            android:layout_marginVertical="5dp"
             android:id="@+id/contributor_profile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

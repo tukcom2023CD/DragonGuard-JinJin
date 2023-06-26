@@ -1,6 +1,6 @@
 package com.dragonguard.android.model
 
 data class GithubOrgReposModel(
-    val gitRepos: List<String>,
-    val profileImage: String
+    val git_repos: List<String>,
+    val profile_image: String
 )

@@ -26,12 +26,12 @@ class ContributorsAdapter (private val datas : ArrayList<GitRepoMember>, private
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(data1: GitRepoMember) {
             binding.contributeRanking.text = data1.commits.toString()
-            binding.contrubutorId.text = data1.githubId
+            binding.contrubutorId.text = data1.github_id
             val red = (Math.random()*255).toInt()
             val green = (Math.random()*255).toInt()
             val blue = (Math.random()*255).toInt()
 //            binding.contributorColor.imageTintList = ColorStateList.valueOf(Color.rgb(red,green,blue))
-            Glide.with(binding.contributorProfile).load(data1.profileUrl)
+            Glide.with(binding.contributorProfile).load(data1.profile_url)
                 .into(binding.contributorProfile)
             colors.add(Color.rgb(red,green,blue))
             binding.contributorsLayout.setOnClickListener {

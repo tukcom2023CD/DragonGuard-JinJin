@@ -1,7 +1,7 @@
 package com.dragonguard.android.model.detail
 
 data class UserDetailModel(
-    val gitOrganizations: List<GitOrganization>?,
-    val gitRepos: List<String>?,
-    val memberProfileImage: String?
+    val git_organizations: List<GitOrganization>?,
+    val git_repos: List<String>?,
+    val member_profile_image: String?
 )

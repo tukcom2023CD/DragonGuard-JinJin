@@ -74,21 +74,21 @@ class TypeOrgRankingActivity : AppCompatActivity() {
             result.forEach {
                 Log.d("조직 내 랭킹", "결과 : ${it.name}")
                 if (ranking != 0) {
-                    if (totalOrgRankings[ranking - 1].tokenSum == it.tokenSum) {
+                    if (totalOrgRankings[ranking - 1].token_sum == it.token_sum) {
                         totalOrgRankings.add(
                             TotalOrganizationModel(
-                                it.emailEndpoint, it.id, it.name, it.organizationType, it.tokenSum,
+                                it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum,
                                 totalOrgRankings[ranking - 1].ranking
                             )
                         )
                     } else {
                         totalOrgRankings.add(
                             TotalOrganizationModel(
-                                it.emailEndpoint,
+                                it.email_endpoint,
                                 it.id,
                                 it.name,
-                                it.organizationType,
-                                it.tokenSum,
+                                it.organization_type,
+                                it.token_sum,
                                 ranking + 1
                             )
                         )
@@ -96,11 +96,11 @@ class TypeOrgRankingActivity : AppCompatActivity() {
                 } else {
                     totalOrgRankings.add(
                         TotalOrganizationModel(
-                            it.emailEndpoint,
+                            it.email_endpoint,
                             it.id,
                             it.name,
-                            it.organizationType,
-                            it.tokenSum,
+                            it.organization_type,
+                            it.token_sum,
                             1
                         )
                     )
