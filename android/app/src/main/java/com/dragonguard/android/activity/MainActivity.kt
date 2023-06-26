@@ -403,6 +403,7 @@ class MainActivity : AppCompatActivity() {
         if (prefs.getRefreshToken("").isNotBlank()) {
 //            Toast.makeText(applicationContext, "refhresh Commits", Toast.LENGTH_SHORT).show()
             Log.d("post", "refresh commits")
+            Log.d("refresh 호출", "refresh 호출")
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
                 if(!this@MainActivity.isFinishing) {
