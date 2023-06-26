@@ -19,7 +19,7 @@ public class AdminApiToken {
     private Integer index = 0;
 
 
-    public String getApiToken() {
+    public synchronized String getApiToken() {
         if (index < adminTokens.size()) {
             return adminTokens.get(index++);
         }

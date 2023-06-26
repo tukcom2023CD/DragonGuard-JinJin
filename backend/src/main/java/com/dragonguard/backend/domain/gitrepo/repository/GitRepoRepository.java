@@ -17,4 +17,5 @@ public interface GitRepoRepository {
     Optional<GitRepo> findByName(String name);
     Optional<GitRepo> findById(Long id);
     boolean existsByName(String name);
+    List<GitRepo> findAll();
 }

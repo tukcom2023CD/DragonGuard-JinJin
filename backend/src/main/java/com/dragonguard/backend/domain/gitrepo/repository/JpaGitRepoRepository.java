@@ -1,10 +1,7 @@
 package com.dragonguard.backend.domain.gitrepo.repository;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.jpa.repository.*;
 
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
@@ -28,4 +25,7 @@ public interface JpaGitRepoRepository extends JpaRepository<GitRepo, Long>, GitR
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1500")})
     boolean existsByName(String name);
+
+    @EntityGraph(attributePaths = {"gitRepoMembers"})
+    List<GitRepo> findAll();
 }

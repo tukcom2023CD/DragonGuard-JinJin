@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 import java.nio.charset.StandardCharsets;
@@ -39,11 +40,12 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Git
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(GitRepoMemberClientResponse[].class)
-                        .map(r -> new ClientBadRequestException()))
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(ClientBadRequestException::new))
+                .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
                 .bodyToMono(GitRepoMemberClientResponse[].class)
                 .retryWhen(
                         Retry.fixedDelay(8, Duration.ofMillis(1500))
+                                .filter(WebClientException.class::isInstance)
                                 .filter(Exception.class::isInstance))
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
