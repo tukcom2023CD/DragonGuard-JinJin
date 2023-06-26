@@ -11,7 +11,6 @@ import SnapKit
 import RxSwift
 
 final class MainViewController: UIViewController {
-    private let img = UIImageView()
     private let disposeBag = DisposeBag()
     private let viewModel = MainViewModel()
     
@@ -440,18 +439,4 @@ final class MainViewController: UIViewController {
         .disposed(by: disposeBag)
     }
     
-}
-
-import SwiftUI
-struct VCPreViewMain1:PreviewProvider {
-    static var previews: some View {
-        MainViewController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewMain2:PreviewProvider {
-    static var previews: some View {
-        MainViewController().toPreview().previewDevice("iPhone 11")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
 }

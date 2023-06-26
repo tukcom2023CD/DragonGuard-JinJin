@@ -638,7 +638,6 @@
 		3B3CE9D929B46A7E00B2594B /* RepositoryContritubutorInfo */ = {
 			isa = PBXGroup;
 			children = (
-				3B5FF1802A2733970022BE90 /* Refactoring */,
 				3B88801F2992881200680F1A /* RepoContributorInfoController.swift */,
 				3BE6AD2C2993904D00B22EBD /* RepoContributorTableView.swift */,
 			);
@@ -754,13 +753,6 @@
 				3B5B5F6529E869F40017C5C9 /* RepoTableViewCell.swift */,
 			);
 			path = RepositoryList;
-			sourceTree = "<group>";
-		};
-		3B5FF1802A2733970022BE90 /* Refactoring */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Refactoring;
 			sourceTree = "<group>";
 		};
 		3B7B1D2C298404AE0038BD67 /* Frameworks */ = {
@@ -1009,11 +1001,11 @@
 		3BE64A012A3DEB70005D9F9E /* View */ = {
 			isa = PBXGroup;
 			children = (
+				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
+				3BE64A152A3E2A87005D9F9E /* MainViewController */,
 				3B2E0DBA2A43740000E6A7AD /* CompareViewController */,
 				3B54FF552A42E506004B21B1 /* YourProfile */,
-				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
 				3B3CE9DA29B46AA700B2594B /* LoginController */,
-				3BE64A152A3E2A87005D9F9E /* MainViewController */,
 				3BE64A052A3DFF9F005D9F9E /* BlockChainList */,
 				3B9756F2298A33E900F27094 /* SettingScreen */,
 				3BE64A042A3DF02A005D9F9E /* RepoDetailController */,

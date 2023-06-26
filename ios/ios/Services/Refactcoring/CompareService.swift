@@ -37,27 +37,27 @@ final class CompareService{
                     case .success(let data):
                         if let jsonData = data.data(using: .utf8) {
                             do {
-                                let decodedData = try JSONDecoder().decode(CompareUserDecodingModel.self, from: jsonData)
+                                let decodedData = try JSONDecoder().decode(CompareUserModel.self, from: jsonData)
                                 print(decodedData)
-                                
-                                for data in decodedData.firstResult{
-                                    firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId ?? "Unknown",
-                                                                             profileUrl: data.profileUrl ?? "",
-                                                                             commits: data.commits ?? 0,
-                                                                             additions: data.additions ?? 0,
-                                                                             deletions: data.deletions ?? 0,
-                                                                             isServiceMember: data.isServiceMember ?? false))
-                                }
-                                for data in decodedData.secondResult{
-                                    secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId ?? "Unknown",
-                                                                               profileUrl: data.profileUrl ?? "",
-                                                                               commits: data.commits ?? 0,
-                                                                               additions: data.additions ?? 0,
-                                                                               deletions: data.deletions ?? 0,
-                                                                               isServiceMember: data.isServiceMember ?? false))
-                                }
-                                let compareUser = CompareUserModel(firstResult: firstRepoUserInfo, secondResult: secondRepoUserInfo)
-                                observer.onNext(compareUser)
+                                observer.onNext(decodedData)
+//                                for data in decodedData.firstResult{
+//                                    firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId ?? "Unknown",
+//                                                                             profileUrl: data.profileUrl ?? "",
+//                                                                             commits: data.commits ?? 0,
+//                                                                             additions: data.additions ?? 0,
+//                                                                             deletions: data.deletions ?? 0,
+//                                                                             isServiceMember: data.isServiceMember ?? false))
+//                                }
+//                                for data in decodedData.secondResult{
+//                                    secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId ?? "Unknown",
+//                                                                               profileUrl: data.profileUrl ?? "",
+//                                                                               commits: data.commits ?? 0,
+//                                                                               additions: data.additions ?? 0,
+//                                                                               deletions: data.deletions ?? 0,
+//                                                                               isServiceMember: data.isServiceMember ?? false))
+//                                }
+//                                let compareUser = CompareUserModel(firstResult: firstRepoUserInfo, secondResult: secondRepoUserInfo)
+//                                observer.onNext(compareUser)
                             }
                             catch {
                                 print("Error decoding data: \(error)")

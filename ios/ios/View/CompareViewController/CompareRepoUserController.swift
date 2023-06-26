@@ -16,7 +16,7 @@ final class CompareRepoUserController: UIViewController{
     private let nameList: [String] = ["forks", "closed issues", "open issues", "stars", "contributers", "deletions average", "languages", "code average"]
     private let selectionList: [String] = ["Repository", "User"]
     private let disposeBag = DisposeBag()
-    private var repoUserInfo: CompareUserModel = CompareUserModel(firstResult: [], secondResult: [])    /// 유저 정보
+    private var repoUserInfo: CompareUserModel = CompareUserModel(first_member: [], second_member: [])    /// 유저 정보
     private var repoInfo: CompareRepoModel?
     private var user1Index: Int?    /// 차트를 그릴때 첫 번째 레포지토리인지 확인
     private var user2Index: Int?     /// 차트를 그릴때 두 번째 레포지토리 인지 확인
@@ -368,28 +368,28 @@ final class CompareRepoUserController: UIViewController{
         CompareViewModel.viewModel.getContributorInfo(firstRepoName: self.firstRepo ?? "", secondRepoName: self.secondRepo ?? "")
             .subscribe(onNext:{ list in
                 self.getData()
-                self.repoUserInfo.firstResult = list.firstResult
-                self.repoUserInfo.secondResult = list.secondResult
-                self.lastIndexOfFisrtArray = self.repoUserInfo.firstResult.count
+                self.repoUserInfo.first_member = list.first_member
+                self.repoUserInfo.second_member = list.second_member
+                self.lastIndexOfFisrtArray = self.repoUserInfo.first_member.count
                 
                 if self.selectedUserNum.isEmpty{
-                    self.repoUserInfo.firstResult.forEach { data in
-                        self.selectedUserNum.append(data.githubId)
-                        self.allUserList.append(CompareUserAllModel(githubId: data.githubId,
-                                                                    profileUrl: data.profileUrl,
-                                                                    commits: data.commits,
-                                                                    additions: data.additions,
-                                                                    deletions: data.deletions,
-                                                                    isServiceMember: data.isServiceMember))
+                    self.repoUserInfo.first_member.forEach { data in
+                        self.selectedUserNum.append(data.github_id ?? "Unknown")
+                        self.allUserList.append(CompareUserAllModel(githubId: data.github_id ?? "Unknown",
+                                                                    profileUrl: data.profile_url ?? "",
+                                                                    commits: data.commits ?? 0,
+                                                                    additions: data.additions ?? 0,
+                                                                    deletions: data.deletions ?? 0,
+                                                                    isServiceMember: data.is_service_member ?? false))
                     }
-                    self.repoUserInfo.secondResult.forEach { data in
-                        self.selectedUserNum.append(data.githubId)
-                        self.allUserList.append(CompareUserAllModel(githubId: data.githubId,
-                                                                    profileUrl: data.profileUrl,
-                                                                    commits: data.commits,
-                                                                    additions: data.additions,
-                                                                    deletions: data.deletions,
-                                                                    isServiceMember: data.isServiceMember))
+                    self.repoUserInfo.second_member.forEach { data in
+                        self.selectedUserNum.append(data.github_id ?? "Unknown")
+                        self.allUserList.append(CompareUserAllModel(githubId: data.github_id ?? "Unknown",
+                                                                    profileUrl: data.profile_url ?? "",
+                                                                    commits: data.commits ?? 0,
+                                                                    additions: data.additions ?? 0,
+                                                                    deletions: data.deletions ?? 0,
+                                                                    isServiceMember: data.is_service_member ?? false))
                     }
                 }
                 
@@ -646,18 +646,18 @@ extension CompareRepoUserController : ChartViewDelegate {
         }
         
         if repo == "first"{
-            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.repoUserInfo.firstResult[newUser1Index].additions))
-            let dataEntry2 = BarChartDataEntry(x: 2, y: Double(self.repoUserInfo.firstResult[newUser1Index].deletions))
+            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.repoUserInfo.first_member[newUser1Index].additions ?? 0))
+            let dataEntry2 = BarChartDataEntry(x: 2, y: Double(self.repoUserInfo.first_member[newUser1Index].deletions ?? 0))
             userInfo.append(dataEntry1)
             userInfo.append(dataEntry2)
-            set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.firstResult[newUser1Index].githubId)
+            set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.first_member[newUser1Index].github_id ?? "UnKnown")
         }
         else if repo == "second"{
-            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.repoUserInfo.secondResult[newUser1Index].additions))
-            let dataEntry2 = BarChartDataEntry(x: 2, y: Double(self.repoUserInfo.secondResult[newUser1Index].deletions))
+            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.repoUserInfo.second_member[newUser1Index].additions ?? 0))
+            let dataEntry2 = BarChartDataEntry(x: 2, y: Double(self.repoUserInfo.second_member[newUser1Index].deletions ?? 0))
             userInfo.append(dataEntry1)
             userInfo.append(dataEntry2)
-            set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.secondResult[newUser1Index].githubId)
+            set1 = BarChartDataSet(entries: userInfo, label: self.repoUserInfo.second_member[newUser1Index].github_id ?? "UnKnown")
         }
         set1.valueTextColor = .black
         set1.valueFont = font
@@ -681,18 +681,18 @@ extension CompareRepoUserController : ChartViewDelegate {
         }
         
         if repo == "first"{
-            let dataEntry1 = BarChartDataEntry(x: 1, y: Double(self.repoUserInfo.firstResult[newUser2Index].additions))
-            let dataEntry2 = BarChartDataEntry(x: 3, y: Double(self.repoUserInfo.firstResult[newUser2Index].deletions))
+            let dataEntry1 = BarChartDataEntry(x: 1, y: Double(self.repoUserInfo.first_member[newUser2Index].additions ?? 0))
+            let dataEntry2 = BarChartDataEntry(x: 3, y: Double(self.repoUserInfo.first_member[newUser2Index].deletions ?? 0))
             userInfo2.append(dataEntry1)
             userInfo2.append(dataEntry2)
-            set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.firstResult[newUser2Index].githubId)
+            set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.first_member[newUser2Index].github_id ?? "UnKnown")
         }
         else if repo == "second"{
-            let dataEntry1 = BarChartDataEntry(x: 1, y: Double(self.repoUserInfo.secondResult[newUser2Index].additions))
-            let dataEntry2 = BarChartDataEntry(x: 3, y: Double(self.repoUserInfo.secondResult[newUser2Index].deletions))
+            let dataEntry1 = BarChartDataEntry(x: 1, y: Double(self.repoUserInfo.second_member[newUser2Index].additions ?? 0))
+            let dataEntry2 = BarChartDataEntry(x: 3, y: Double(self.repoUserInfo.second_member[newUser2Index].deletions ?? 0))
             userInfo2.append(dataEntry1)
             userInfo2.append(dataEntry2)
-            set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.secondResult[newUser2Index].githubId)
+            set2 = BarChartDataSet(entries: userInfo2, label: self.repoUserInfo.second_member[newUser2Index].github_id ?? "UnKnown")
         }
         set2.valueTextColor = .black
         set2.valueFont = font

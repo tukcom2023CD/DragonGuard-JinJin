@@ -10,27 +10,27 @@ import Foundation
 /*
  Model
  */
-struct CompareUserModel{
-    var firstResult: [FirstRepoResult]
-    var secondResult: [SecondRepoResult]
+struct CompareUserModel: Codable{
+    var first_member: [FirstRepoResult]
+    var second_member: [SecondRepoResult]
 }
 
-struct FirstRepoResult{
-    var githubId: String
-    var profileUrl: String
-    var commits: Int
-    var additions: Int
-    var deletions: Int
-    var isServiceMember: Bool
+struct FirstRepoResult: Codable{
+    var github_id: String?
+    var profile_url: String?
+    var commits: Int?
+    var additions: Int?
+    var deletions: Int?
+    var is_service_member: Bool?
 }
 
-struct SecondRepoResult{
-    var githubId: String
-    var profileUrl: String
-    var commits: Int
-    var additions: Int
-    var deletions: Int
-    var isServiceMember: Bool
+struct SecondRepoResult: Codable{
+    var github_id: String?
+    var profile_url: String?
+    var commits: Int?
+    var additions: Int?
+    var deletions: Int?
+    var is_service_member: Bool?
 }
 
 
