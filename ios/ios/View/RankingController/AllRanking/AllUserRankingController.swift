@@ -201,21 +201,21 @@ final class AllUserRankingController: UIViewController{
 
     // MARK: 전체 조직 랭킹 데이터 가져옴
     private func loadAllOrganizationData(){
-        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "AllOrganization", num: 34, link: "s",tier: "GOLD"))
-        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo2", num: 2222, link: "s",tier: "GOLD"))
-        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo3", num: 333, link: "s",tier: "BRONZE"))
-        
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "AllOrganization", num: 333, link: "s",tier: "SILVER"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo5", num: 33113, link: "s",tier: "SILVER"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo6", num: 333, link: "s",tier: "GOLD"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo7", num: 333, link: "s",tier: "BRONZE"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo8", num: 333, link: "s",tier: "SILVER"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo9", num: 333, link: "s",tier: "BRONZE"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo10", num: 333, link: "s",tier: "GOLD"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo11", num: 333, link: "s",tier: "SILVER"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo12", num: 333, link: "s",tier: "GOLD"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo13", num: 333, link: "s",tier: "GOLD"))
-        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo14", num: 333, link: "s",tier: "BRONZE"))
+//        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "AllOrganization", num: 34, link: "s",tier: "GOLD"))
+//        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo2", num: 2222, link: "s",tier: "GOLD"))
+//        topTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo3", num: 333, link: "s",tier: "BRONZE"))
+//
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "AllOrganization", num: 333, link: "s",tier: "SILVER"))
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo5", num: 33113, link: "s",tier: "SILVER"))
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo6", num: 333, link: "s",tier: "GOLD"))
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo7", num: 333, link: "s",tier: "BRONZE"))
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo8", num: 333, link: "s",tier: "SILVER"))
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo9", num: 333, link: "s",tier: "BRONZE"))
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo10", num: 333, link: "s",tier: "GOLD"))
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo11", num: 333, link: "s",tier: "SILVER"))
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo12", num: 333, link: "s",tier: "GOLD"))
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo13", num: 333, link: "s",tier: "GOLD"))
+//        userTierData.append(AllUserRankingModel(profileImg: "aa", userName: "heelo14", num: 333, link: "s",tier: "BRONZE"))
         
         indicatorView.removeFromSuperview()
         addUI_AutoLayout_About_Ranking()

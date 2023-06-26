@@ -576,19 +576,9 @@ extension SearchAndFilterController: UITextFieldDelegate{
         print("seach \(word)")
         let filtering = getFiltering()
         
-//        let list: [SearchResultModel] = [
-//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-//            SearchResultModel(create: "2022", language: "swift", title: "aaa"),
-//        ]
+        let AfterTrim = word.trimmingCharacters(in: .whitespacesAndNewlines)
         
-//        self.delegate?.sendList(list: list)
-//        self.dismiss(animated: true)
-        
-        SearchPageViewModel.viewModel.getSearchData(searchWord: word, type: self.type, filtering: filtering)
+        SearchPageViewModel.viewModel.getSearchData(searchWord: AfterTrim, type: self.type, filtering: filtering)
             .subscribe(onNext: { list in
                 if !list.isEmpty{
                     self.delegate?.sendList(list: list)

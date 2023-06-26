@@ -28,7 +28,7 @@ final class MainService{
     
     
     /// 사용자 정보 받아옴
-    func getUserInfo(token: String) -> Observable<MainModel>{
+    func getUserInfo() -> Observable<MainModel>{
         let url = APIURL.apiUrl.getMembersInfo(ip: ip)
         let access = UserDefaults.standard.string(forKey: "Access")
         
@@ -45,18 +45,21 @@ final class MainService{
                         switch response.result{
                         case.success(let data):
                             let info = MainModel(id: data.id,
-                                                 name: data.name ?? "unknown",
+                                                 name: data.name,
                                                  githubId: data.githubId,
-                                                 commits: data.commits ?? 0,
+                                                 commits: data.commits,
+                                                 issues: data.issues,
+                                                 pullRequests: data.pullRequests,
+                                                 reviews: data.reviews,
                                                  tier: data.tier,
                                                  authStep: data.authStep,
                                                  profileImage: data.profileImage ?? "",
                                                  rank: data.rank,
-                                                 organizationRank: data.organizationRank ?? 0,
-                                                 tokenAmount: data.tokenAmount ?? -1,
+                                                 organizationRank: data.organizationRank ,
+                                                 tokenAmount: data.tokenAmount ,
                                                  organization: data.organization ?? "UnKnown")
                             
-                            if info.profileImage != "" && info.tokenAmount > -1 && info.tier != "" {
+                            if info.profileImage != "" && info.tokenAmount ?? 0 > -1 && info.tier != "" {
                                 timer.invalidate()
                                 observer.onNext(info)
                             }
