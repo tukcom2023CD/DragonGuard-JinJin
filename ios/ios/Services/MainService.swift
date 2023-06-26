@@ -13,16 +13,28 @@ import RxSwift
 final class MainService{
     let ip = APIURL.ip
     
-    func updateProfile() {
+    
+    func updateProfile() -> Observable<Bool> {
         let url = APIURL.apiUrl.updateMyDB(ip: ip)
         let access = UserDefaults.standard.string(forKey: "Access")
         
-        AF.request(url,
-                   method: .post
-                   ,headers: ["Authorization": "Bearer \(access ?? "")"])
-        .validate(statusCode: 200..<201)
-        .responseString{ res in
-            print(res)
+        return Observable.create{ observer in
+            AF.request(url,
+                       method: .post
+                       ,headers: ["Authorization": "Bearer \(access ?? "")"])
+            .validate(statusCode: 200..<201)
+            .response{ res in
+                switch res.result{
+                case .success(_):
+                    print("update success")
+                    observer.onNext(true)
+                case .failure(let error):
+                    print("update error!\n\(error)")
+                    observer.onNext(false)
+                }
+            }
+            
+            return Disposables.create()
         }
     }
     
@@ -33,29 +45,22 @@ final class MainService{
         let access = UserDefaults.standard.string(forKey: "Access")
         
         return Observable.create(){ observer in
-            
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
                 AF.request(url, headers: ["Authorization": "Bearer \(access ?? "")"])
                     .validate(statusCode: 200..<201)
                     .responseDecodable(of: MainModel.self) { response in
                         print("main service")
                         print("used accessToken \(access ?? "") ")
-                        print(response)
                         
+                        print(response)
                         switch response.result{
                         case.success(let data):
-                            
-                            if data.profile_image != "" && data.token_amount ?? 0 > -1 && data.tier != "" {
-                                timer.invalidate()
-                                observer.onNext(data)
-                            }
+                            observer.onNext(data)
                         case .failure(let error):
                             print("삐리삐리 에러발생 !! \(error)")
                         }
                         
                         
                     }
-            })
             return Disposables.create()
             
         }

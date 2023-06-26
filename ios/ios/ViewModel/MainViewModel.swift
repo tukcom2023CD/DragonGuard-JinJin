@@ -17,13 +17,16 @@ final class MainViewModel {
     func getMyInformation() -> Observable<MainModel>{
         return Observable<MainModel>.create(){ observer in
             
-            self.service.updateProfile()
-            
-            self.service.getUserInfo()
-                .subscribe(onNext: { info in
-                    observer.onNext(info)
-                })
-                .disposed(by: self.disposeBag)
+            self.service.updateProfile().subscribe(onNext: { check in
+                if check{
+                    self.service.getUserInfo()
+                        .subscribe(onNext: { info in
+                            observer.onNext(info)
+                        })
+                        .disposed(by: self.disposeBag)
+                }
+            })
+            .disposed(by: self.disposeBag)
             
             return Disposables.create()
         }

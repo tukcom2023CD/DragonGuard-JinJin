@@ -13,12 +13,16 @@ import RxSwift
 final class MainViewController: UIViewController {
     private let img = UIImageView()
     private let disposeBag = DisposeBag()
+    private let viewModel = MainViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        getData()
         clickedBtn()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        getData()
     }
     
     /*
@@ -43,13 +47,15 @@ final class MainViewController: UIViewController {
     // MARK: 사용자 프로필
     private lazy var profileImage: UIImageView = {
         let img = UIImageView()
-        img.image = UIImage(named: "pomi")?.resize(newWidth: 80, newHeight: 80)
-        img.layer.cornerRadius = 120
+        img.image = UIImage(named: "pomi")
         img.backgroundColor = .white
         img.layer.shadowOffset = CGSize(width: 5, height: 5)
         img.layer.shadowOpacity = 0.7
-        img.layer.shadowRadius = 5
+        img.layer.shadowRadius = 20
+        img.layer.cornerRadius = 20
         img.layer.shadowColor = UIColor.gray.cgColor
+        img.clipsToBounds = true
+        img.layer.masksToBounds = true
         return img
     }()
     
@@ -96,10 +102,17 @@ final class MainViewController: UIViewController {
     
     // MARK: tier 이미지
     private lazy var tierImage: UIImageView = {
-        let tier = UIImageView()
-        tier.image = UIImage(named: "tier")
-        tier.backgroundColor = .white
-        return tier
+        let img = UIImageView()
+        img.image = UIImage(named: "tier")
+        img.backgroundColor = .white
+        img.layer.shadowOffset = CGSize(width: 5, height: 5)
+        img.layer.shadowOpacity = 0.7
+        img.layer.shadowRadius = 20
+        img.layer.cornerRadius = 20
+        img.layer.shadowColor = UIColor.gray.cgColor
+        img.clipsToBounds = true
+        img.layer.masksToBounds = true
+        return img
     }()
     
     // MARK: token 글자
@@ -144,7 +157,7 @@ final class MainViewController: UIViewController {
         let label = UILabel()
         label.backgroundColor = .white
         label.textColor = .black
-        label.text = "200"
+        label.text = "0"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
     }()
@@ -202,7 +215,7 @@ final class MainViewController: UIViewController {
     private lazy var groupLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
-        label.text = "TUK"
+        label.text = "None"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
@@ -274,7 +287,7 @@ final class MainViewController: UIViewController {
         
         tierView.snp.makeConstraints { make in
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
-            make.top.equalTo(profileImage.snp.bottom).offset(50)
+            make.top.equalTo(profileImage.snp.bottom).offset(30)
             make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/5)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/5)
         }
@@ -329,8 +342,6 @@ final class MainViewController: UIViewController {
             make.top.equalTo(tokenView.snp.bottom).offset(50)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
-            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/8)
-            
         }
         
         emptyView2.snp.makeConstraints { make in
@@ -348,7 +359,7 @@ final class MainViewController: UIViewController {
             make.top.equalTo(contributionView.snp.bottom).offset(30)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(40)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-40)
-            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/4)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*22/100)
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
         
@@ -369,8 +380,22 @@ final class MainViewController: UIViewController {
     func getData(){
         addUIToView()
         
-        groupView.inputData(top: "MBTI", me: "Boss", under: "AOK")
-        contributionView.inputData(commit: 1, issue: 2, pr: 3, reviews: 4)
+        viewModel.getMyInformation().subscribe(onNext: { data in
+            let imgUrl = URL(string: data.profile_image ?? "")!
+            self.profileImage.load(img: self.profileImage, url: imgUrl)
+            self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
+            self.groupView.inputData(top: data.member_github_ids?[0] ?? "Unknown",
+                                     me: data.member_github_ids?[1] ?? "Unknown",
+                                     under: data.member_github_ids?[2] ?? "Unknown")
+            
+            self.groupLabel.text = data.organization ?? "None"
+            self.contributionView.inputData(commit: data.commits ?? 0,
+                                            issue: data.issues ?? 0,
+                                            pr: data.pull_requests ?? 0,
+                                            reviews: data.reviews ?? 0)
+        })
+        .disposed(by: self.disposeBag)
+        
     }
     
     func clickedBtn(){
@@ -392,4 +417,18 @@ final class MainViewController: UIViewController {
         .disposed(by: disposeBag)
     }
     
+}
+
+import SwiftUI
+struct VCPreViewMain1:PreviewProvider {
+    static var previews: some View {
+        MainViewController().toPreview().previewDevice("iPhone 14 Pro")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
+}
+struct VCPreViewMain2:PreviewProvider {
+    static var previews: some View {
+        MainViewController().toPreview().previewDevice("iPhone 11")
+        // 실행할 ViewController이름 구분해서 잘 지정하기
+    }
 }

@@ -17,7 +17,7 @@ class PostService {
     /// - Parameter walletAddress: 사용자 Klip 지갑 주소
     func sendMyWalletAddress(token: String, walletAddress: String) -> Observable<String> {
         let url = APIURL.apiUrl.inputWalletAddress(ip: ip)
-        let body: Parameters = ["walletAddress" : "\(walletAddress)"]
+        let body: Parameters = ["wallet_address" : "\(walletAddress)"]
         print(token)
         
         return Observable.create(){ observer in

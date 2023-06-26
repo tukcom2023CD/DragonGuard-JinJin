@@ -13,8 +13,8 @@ final class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let size: CGFloat = 25
         
-        // Do any additional setup after loading the view.
         let questionVC = QuestionViewController()
         let rankingVC = AllUserRankingController()
         let homeVC = MainViewController()
@@ -22,17 +22,15 @@ final class TabBarViewController: UITabBarController {
         let profileVC = DetailInfoController()
         
         
-        questionVC.tabBarItem.image = UIImage(named: "question")
-        rankingVC.tabBarItem.image = UIImage(named: "ranking")
-        homeVC.tabBarItem.image = UIImage(named: "home")
-        compareVC.tabBarItem.image = UIImage(named: "compare")
-        profileVC.tabBarItem.image = UIImage(named: "profile")
+        questionVC.tabBarItem.image = UIImage(named: "question")?.resize(newWidth: size)
+        rankingVC.tabBarItem.image = UIImage(named: "ranking")?.resize(newWidth: size)
+        homeVC.tabBarItem.image = UIImage(named: "home")?.resize(newWidth: size)
+        compareVC.tabBarItem.image = UIImage(named: "compare")?.resize(newWidth: size)
+        profileVC.tabBarItem.image = UIImage(named: "profile")?.resize(newWidth: size)
         
-        //self.tabBarItem.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0);
+        self.viewControllers = [questionVC, rankingVC, homeVC, compareVC, profileVC]
+        setViewControllers(viewControllers, animated: false)
         self.selectedIndex = 2
-        self.tabBar.clipsToBounds = true
-        
-        setViewControllers([questionVC, rankingVC, homeVC, compareVC, profileVC], animated: false)
     }
 
     
