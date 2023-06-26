@@ -22,10 +22,10 @@ public interface ResultMapper {
 
     UserResultResponse toUserResponse(final Result result);
 
-    @Mapping(target = "name", source = "dto.full_name")
+    @Mapping(target = "name", source = "dto.fullName")
     @Mapping(target = "language", source = "dto.language")
     @Mapping(target = "description", source = "dto.description")
-    @Mapping(target = "createdAt", source = "dto.created_at")
+    @Mapping(target = "createdAt", source = "dto.createdAt")
     @Mapping(target = "id", source = "searchId")
     GitRepoResultResponse toGitRepoResponse(final Long searchId, final GitRepoClientResponse dto);
 }
