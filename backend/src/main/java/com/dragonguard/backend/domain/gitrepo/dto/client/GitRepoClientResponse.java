@@ -1,5 +1,7 @@
 package com.dragonguard.backend.domain.gitrepo.dto.client;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 /**
@@ -11,6 +13,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GitRepoClientResponse {
     private String fullName;
     private Integer forksCount;
