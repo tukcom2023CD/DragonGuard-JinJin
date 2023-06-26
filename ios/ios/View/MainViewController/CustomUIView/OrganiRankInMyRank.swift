@@ -23,7 +23,6 @@ final class OrganiRankInMyRank: UIView {
     private lazy var groupLabel1: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
-        label.text = "1"
         label.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.5)
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
@@ -51,7 +50,6 @@ final class OrganiRankInMyRank: UIView {
     private lazy var groupLabel2: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
-        label.text = "2"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
@@ -79,8 +77,6 @@ final class OrganiRankInMyRank: UIView {
     private lazy var groupLabel3: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
-
-        label.text = "3"
         label.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.5)
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
@@ -124,10 +120,21 @@ final class OrganiRankInMyRank: UIView {
         }
     }
     
-    func inputData(top: String, me: String, under: String){
+    func inputData(rank1: Int?, top: String?, rank2: Int, me: String, rank3: Int?, under: String?){
         addUI()
-        gNumLabel1.text = top
+        
+        if let rank1 = rank1 {
+            groupLabel1.text = "\(rank1)"
+            gNumLabel1.text = top
+        }
+        
+        groupLabel2.text = "\(rank2)"
         gNumLabel2.text = me
-        gNumLabel3.text = under
+        
+        if let rank3 = rank3 {
+            groupLabel3.text = "\(rank3)"
+            gNumLabel3.text = under
+        }
+        
     }
 }

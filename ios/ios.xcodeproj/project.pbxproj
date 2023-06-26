@@ -259,9 +259,6 @@
 		3B2E0DCE2A43CB5700E6A7AD /* BlockchainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockchainViewModel.swift; sourceTree = "<group>"; };
 		3B2E0DD02A43CB9300E6A7AD /* BlockChainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockChainService.swift; sourceTree = "<group>"; };
 		3B2E0DD42A43D4D000E6A7AD /* CompareUserAllModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareUserAllModel.swift; sourceTree = "<group>"; };
-		3B2E0DDC2A43DFE700E6A7AD /* graphLottie.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = graphLottie.json; sourceTree = "<group>"; };
-		3B2E0DDD2A43DFE700E6A7AD /* launchScreen.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = launchScreen.json; sourceTree = "<group>"; };
-		3B2E0DDE2A43DFE700E6A7AD /* splashScreen.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = splashScreen.json; sourceTree = "<group>"; };
 		3B2E0DDF2A43EF2700E6A7AD /* ContributorAutoUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributorAutoUIView.swift; sourceTree = "<group>"; };
 		3B2E0DE12A43F12100E6A7AD /* ContributorAutoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributorAutoCollectionViewCell.swift; sourceTree = "<group>"; };
 		3B2E0DE32A43F6C200E6A7AD /* OrganiRankInMyRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganiRankInMyRank.swift; sourceTree = "<group>"; };
@@ -677,6 +674,7 @@
 				3B49BABC2A40CD6E009C5963 /* RepoDetailService.swift */,
 				3B3B563329A8DA12005034FC /* CompareService.swift */,
 				3B2E0DD02A43CB9300E6A7AD /* BlockChainService.swift */,
+				3BA2013829980661008978A5 /* MainService.swift */,
 			);
 			path = Refactcoring;
 			sourceTree = "<group>";
@@ -763,16 +761,6 @@
 			children = (
 			);
 			path = Refactoring;
-			sourceTree = "<group>";
-		};
-		3B5FF1882A27364E0022BE90 /* LottieFiles */ = {
-			isa = PBXGroup;
-			children = (
-				3B2E0DDC2A43DFE700E6A7AD /* graphLottie.json */,
-				3B2E0DDD2A43DFE700E6A7AD /* launchScreen.json */,
-				3B2E0DDE2A43DFE700E6A7AD /* splashScreen.json */,
-			);
-			path = LottieFiles;
 			sourceTree = "<group>";
 		};
 		3B7B1D2C298404AE0038BD67 /* Frameworks */ = {
@@ -1113,7 +1101,6 @@
 				A30BA46F29841C97008B594E /* SearchPageService.swift */,
 				3B9CF3D3298F9B8C00495D35 /* ALLUserInfoService.swift */,
 				3BE6AD2E2993C6D300B22EBD /* RepoContributorInfoService.swift */,
-				3BA2013829980661008978A5 /* MainService.swift */,
 				3BAEA776299CFD090054DC5D /* PostService.swift */,
 				3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */,
 				3B7BFF6929CBD63200A2F3F4 /* SearchOraganizationService.swift */,

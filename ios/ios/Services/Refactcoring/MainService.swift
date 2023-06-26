@@ -45,6 +45,8 @@ final class MainService{
         let access = UserDefaults.standard.string(forKey: "Access")
         
         return Observable.create(){ observer in
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+                
                 AF.request(url, headers: ["Authorization": "Bearer \(access ?? "")"])
                     .validate(statusCode: 200..<201)
                     .responseDecodable(of: MainModel.self) { response in
@@ -54,13 +56,15 @@ final class MainService{
                         print(response)
                         switch response.result{
                         case.success(let data):
-                            observer.onNext(data)
+                            if !(data.profile_image?.isEmpty ?? true) && !(data.github_id?.isEmpty ?? true){
+                                observer.onNext(data)
+                                timer.invalidate()
+                            }
                         case .failure(let error):
                             print("삐리삐리 에러발생 !! \(error)")
                         }
-                        
-                        
                     }
+            })
             return Disposables.create()
             
         }

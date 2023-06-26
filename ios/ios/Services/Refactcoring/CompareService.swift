@@ -39,7 +39,7 @@ final class CompareService{
                             do {
                                 let decodedData = try JSONDecoder().decode(CompareUserDecodingModel.self, from: jsonData)
                                 print(decodedData)
-
+                                
                                 for data in decodedData.firstResult{
                                     firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId ?? "Unknown",
                                                                              profileUrl: data.profileUrl ?? "",

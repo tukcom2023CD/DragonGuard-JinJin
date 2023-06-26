@@ -382,11 +382,34 @@ final class MainViewController: UIViewController {
         
         viewModel.getMyInformation().subscribe(onNext: { data in
             let imgUrl = URL(string: data.profile_image ?? "")!
+            
             self.profileImage.load(img: self.profileImage, url: imgUrl)
             self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
-            self.groupView.inputData(top: data.member_github_ids?[0] ?? "Unknown",
-                                     me: data.member_github_ids?[1] ?? "Unknown",
-                                     under: data.member_github_ids?[2] ?? "Unknown")
+            
+            if data.organization_rank == 1{
+                self.groupView.inputData(rank1: nil,
+                                         top: nil,
+                                         rank2: data.organization_rank ?? 1,
+                                         me: data.member_github_ids?[1] ?? "Unknown",
+                                         rank3: (data.organization_rank ?? 1)+1,
+                                         under: data.member_github_ids?[2] ?? "Unknown")
+            }
+            else if data.is_last ?? false{
+                self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                         top: data.member_github_ids?[0] ?? "Unknown",
+                                         rank2: (data.organization_rank ?? 0),
+                                         me: data.member_github_ids?[1] ?? "Unknown",
+                                         rank3: nil,
+                                         under: nil)
+            }
+            else{
+                self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                         top: data.member_github_ids?[0] ?? "Unknown",
+                                         rank2: (data.organization_rank ?? 0),
+                                         me: data.member_github_ids?[1] ?? "Unknown",
+                                         rank3: (data.organization_rank ?? 0)+1,
+                                         under: data.member_github_ids?[2] ?? "Unknown")
+            }
             
             self.groupLabel.text = data.organization ?? "None"
             self.contributionView.inputData(commit: data.commits ?? 0,
