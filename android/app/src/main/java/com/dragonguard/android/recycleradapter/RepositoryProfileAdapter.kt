@@ -33,7 +33,7 @@ class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultMo
             if(img != null) {
                 binding.langImg.setBackgroundResource(img)
             }
-            binding.repoCreateDate.text = data.createdAt
+            binding.repoCreateDate.text = data.created_at
             itemView.setOnClickListener{
 //                Toast.makeText(context, "${repoName.text} 눌림", Toast.LENGTH_SHORT).show()
                 if(type == "USERS") {

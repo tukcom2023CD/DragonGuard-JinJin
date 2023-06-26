@@ -3,9 +3,7 @@ package com.dragonguard.android.recycleradapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.dragonguard.android.R
 import com.dragonguard.android.databinding.RepoCompareListBinding
 import com.dragonguard.android.model.compare.RepoStats
 import kotlin.math.round
@@ -22,105 +20,105 @@ class RepoCompareAdapter(private val data1 : RepoStats, private val data2 : Repo
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(data1 : RepoStats, data2 : RepoStats, position: Int) {
-            data1.gitRepo!!
-            data2.gitRepo!!
+            data1.git_repo!!
+            data2.git_repo!!
             data1.statistics!!
             data2.statistics!!
-            data1.languagesStats!!
-            data2.languagesStats!!
+            data1.languages_stats!!
+            data2.languages_stats!!
             binding.compareHead.text = compareItems[position]
             when(position){
                 0->{
-                    binding.repo1Value.text = data1.gitRepo.forks_count.toString()
-                    binding.repo2Value.text = data2.gitRepo.forks_count.toString()
+                    binding.repo1Value.text = data1.git_repo.forks_count.toString()
+                    binding.repo2Value.text = data2.git_repo.forks_count.toString()
                 }
                 1->{
-                    binding.repo1Value.text = data1.gitRepo.closed_issues_count.toString()
-                    binding.repo2Value.text = data2.gitRepo.closed_issues_count.toString()
+                    binding.repo1Value.text = data1.git_repo.closed_issues_count.toString()
+                    binding.repo2Value.text = data2.git_repo.closed_issues_count.toString()
                 }
                 2->{
-                    binding.repo1Value.text = data1.gitRepo.open_issues_count.toString()
-                    binding.repo2Value.text = data2.gitRepo.open_issues_count.toString()
+                    binding.repo1Value.text = data1.git_repo.open_issues_count.toString()
+                    binding.repo2Value.text = data2.git_repo.open_issues_count.toString()
                 }
                 3->{
-                    binding.repo1Value.text = data1.gitRepo.stargazers_count.toString()
-                    binding.repo2Value.text = data2.gitRepo.stargazers_count.toString()
+                    binding.repo1Value.text = data1.git_repo.stargazers_count.toString()
+                    binding.repo2Value.text = data2.git_repo.stargazers_count.toString()
                 }
                 4->{
-                    binding.repo1Value.text = data1.gitRepo.subscribers_count.toString()
-                    binding.repo2Value.text = data2.gitRepo.subscribers_count.toString()
+                    binding.repo1Value.text = data1.git_repo.subscribers_count.toString()
+                    binding.repo2Value.text = data2.git_repo.subscribers_count.toString()
                 }
                 5->{
-                    binding.repo1Value.text = data1.gitRepo.watchers_count.toString()
-                    binding.repo2Value.text = data2.gitRepo.watchers_count.toString()
+                    binding.repo1Value.text = data1.git_repo.watchers_count.toString()
+                    binding.repo2Value.text = data2.git_repo.watchers_count.toString()
                 }
                 6->{
-                    binding.repo1Value.text = data1.statistics.commitStats.sum.toString()
-                    binding.repo2Value.text = data2.statistics.commitStats.sum.toString()
+                    binding.repo1Value.text = data1.statistics.commit_stats.sum.toString()
+                    binding.repo2Value.text = data2.statistics.commit_stats.sum.toString()
                 }
                 7->{
-                    binding.repo1Value.text = data1.statistics.commitStats.max.toString()
-                    binding.repo2Value.text = data2.statistics.commitStats.max.toString()
+                    binding.repo1Value.text = data1.statistics.commit_stats.max.toString()
+                    binding.repo2Value.text = data2.statistics.commit_stats.max.toString()
                 }
                 8->{
-                    binding.repo1Value.text = data1.statistics.commitStats.min.toString()
-                    binding.repo2Value.text = data2.statistics.commitStats.min.toString()
+                    binding.repo1Value.text = data1.statistics.commit_stats.min.toString()
+                    binding.repo2Value.text = data2.statistics.commit_stats.min.toString()
                 }
                 9->{
-                    binding.repo1Value.text = data1.statistics.commitStats.count.toString()
-                    binding.repo2Value.text = data2.statistics.commitStats.count.toString()
+                    binding.repo1Value.text = data1.statistics.commit_stats.count.toString()
+                    binding.repo2Value.text = data2.statistics.commit_stats.count.toString()
                 }
                 10->{
-                    binding.repo1Value.text = ((round(data1.statistics.commitStats.average*100.0))/100.0).toString()
-                    binding.repo2Value.text = ((round(data2.statistics.commitStats.average*100.0))/100.0).toString()
+                    binding.repo1Value.text = ((round(data1.statistics.commit_stats.average*100.0))/100.0).toString()
+                    binding.repo2Value.text = ((round(data2.statistics.commit_stats.average*100.0))/100.0).toString()
                 }
                 11->{
-                    binding.repo1Value.text = data1.statistics.additionStats.sum.toString()
-                    binding.repo2Value.text = data2.statistics.additionStats.sum.toString()
+                    binding.repo1Value.text = data1.statistics.addition_stats.sum.toString()
+                    binding.repo2Value.text = data2.statistics.addition_stats.sum.toString()
                 }
                 12->{
-                    binding.repo1Value.text = data1.statistics.additionStats.max.toString()
-                    binding.repo2Value.text = data2.statistics.additionStats.max.toString()
+                    binding.repo1Value.text = data1.statistics.addition_stats.max.toString()
+                    binding.repo2Value.text = data2.statistics.addition_stats.max.toString()
                 }
                 13->{
-                    binding.repo1Value.text = data1.statistics.additionStats.min.toString()
-                    binding.repo2Value.text = data2.statistics.additionStats.min.toString()
+                    binding.repo1Value.text = data1.statistics.addition_stats.min.toString()
+                    binding.repo2Value.text = data2.statistics.addition_stats.min.toString()
                 }
                 14->{
-                    binding.repo1Value.text = data1.statistics.additionStats.count.toString()
-                    binding.repo2Value.text = data2.statistics.additionStats.count.toString()
+                    binding.repo1Value.text = data1.statistics.addition_stats.count.toString()
+                    binding.repo2Value.text = data2.statistics.addition_stats.count.toString()
                 }
                 15->{
-                    binding.repo1Value.text = ((round(data1.statistics.additionStats.average*100.0))/100.0).toString()
-                    binding.repo2Value.text = ((round(data2.statistics.additionStats.average*100.0))/100.0).toString()
+                    binding.repo1Value.text = ((round(data1.statistics.addition_stats.average*100.0))/100.0).toString()
+                    binding.repo2Value.text = ((round(data2.statistics.addition_stats.average*100.0))/100.0).toString()
                 }
                 16->{
-                    binding.repo1Value.text = data1.statistics.deletionStats.sum.toString()
-                    binding.repo2Value.text = data2.statistics.deletionStats.sum.toString()
+                    binding.repo1Value.text = data1.statistics.deletion_stats.sum.toString()
+                    binding.repo2Value.text = data2.statistics.deletion_stats.sum.toString()
                 }
                 17->{
-                    binding.repo1Value.text = data1.statistics.deletionStats.max.toString()
-                    binding.repo2Value.text = data2.statistics.deletionStats.max.toString()
+                    binding.repo1Value.text = data1.statistics.deletion_stats.max.toString()
+                    binding.repo2Value.text = data2.statistics.deletion_stats.max.toString()
                 }
                 18->{
-                    binding.repo1Value.text = data1.statistics.deletionStats.min.toString()
-                    binding.repo2Value.text = data2.statistics.deletionStats.min.toString()
+                    binding.repo1Value.text = data1.statistics.deletion_stats.min.toString()
+                    binding.repo2Value.text = data2.statistics.deletion_stats.min.toString()
                 }
                 19->{
-                    binding.repo1Value.text = data1.statistics.deletionStats.count.toString()
-                    binding.repo2Value.text = data2.statistics.deletionStats.count.toString()
+                    binding.repo1Value.text = data1.statistics.deletion_stats.count.toString()
+                    binding.repo2Value.text = data2.statistics.deletion_stats.count.toString()
                 }
                 20->{
-                    binding.repo1Value.text = ((round(data1.statistics.deletionStats.average*100.0))/100.0).toString()
-                    binding.repo2Value.text = ((round(data2.statistics.deletionStats.average*100.0))/100.0).toString()
+                    binding.repo1Value.text = ((round(data1.statistics.deletion_stats.average*100.0))/100.0).toString()
+                    binding.repo2Value.text = ((round(data2.statistics.deletion_stats.average*100.0))/100.0).toString()
                 }
                 21->{
-                    binding.repo1Value.text = data1.languagesStats.count.toString()
-                    binding.repo2Value.text = data2.languagesStats.count.toString()
+                    binding.repo1Value.text = data1.languages_stats.count.toString()
+                    binding.repo2Value.text = data2.languages_stats.count.toString()
                 }
                 22->{
-                    binding.repo1Value.text = ((round(data1.languagesStats.average*100.0))/100.0).toString()
-                    binding.repo2Value.text = ((round(data2.languagesStats.average*100.0))/100.0).toString()
+                    binding.repo1Value.text = ((round(data1.languages_stats.average*100.0))/100.0).toString()
+                    binding.repo2Value.text = ((round(data2.languages_stats.average*100.0))/100.0).toString()
                 }
             }
         }

@@ -80,16 +80,16 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    검색한 결과가 잘 왔는지 확인
     fun checkContributors(result: RepoContributorsModel) {
-        if (result.gitRepoMembers != null) {
-            if (result.gitRepoMembers[0].additions == null) {
+        if (result.git_repo_members != null) {
+            if (result.git_repo_members[0].additions == null) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({ repoContributors(repoName) }, 2000)
             } else {
-                for (i in 0 until result.gitRepoMembers.size) {
-                    val compare = contributors.filter { it.githubId == result.gitRepoMembers[i].githubId }
+                for (i in 0 until result.git_repo_members.size) {
+                    val compare = contributors.filter { it.github_id == result.git_repo_members[i].github_id }
                     if (compare.isEmpty()) {
-                        contributors.add(result.gitRepoMembers[i])
+                        contributors.add(result.git_repo_members[i])
                     }
                 }
                 result.sparkLine?.let {
@@ -235,7 +235,7 @@ class RepoContributorsActivity : AppCompatActivity() {
           x축 label을 githubId의 앞의 4글자를 기입하여 곂치는 문제 해결
      */
     class MyXAxisFormatter(contributors: ArrayList<GitRepoMember>) : ValueFormatter() {
-        private val days = contributors.flatMap { if(it.githubId!!.length <4) {arrayListOf(it.githubId!!.substring(0,it.githubId!!.length))} else arrayListOf(it.githubId!!.substring(0,3)) }
+        private val days = contributors.flatMap { if(it.github_id!!.length <4) {arrayListOf(it.github_id!!.substring(0,it.github_id!!.length))} else arrayListOf(it.github_id!!.substring(0,3)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString()
         }
@@ -246,7 +246,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
 //    막대 위의 커밋수 정수로 변경
     class ScoreCustomFormatter(contributors: ArrayList<GitRepoMember>) : ValueFormatter() {
-        private val days = contributors.flatMap { arrayListOf(it.githubId!!.substring(0,3)) }
+        private val days = contributors.flatMap { arrayListOf(it.github_id!!.substring(0,3)) }
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
         }

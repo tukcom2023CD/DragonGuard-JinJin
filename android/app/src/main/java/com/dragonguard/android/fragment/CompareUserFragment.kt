@@ -71,31 +71,31 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
     이상없으면 spinner에 두 Repository의 github id 리스트 넣는 함수 호출
      */
     fun checkContributors(result: CompareRepoMembersResponseModel) {
-        if ((result.firstResult != null) && (result.secondResult != null)) {
-            if (result.firstResult.isEmpty()) {
+        if ((result.first_result != null) && (result.second_result != null)) {
+            if (result.first_result.isEmpty()) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors(repo1, repo2)}, 5000)
             } else {
                 var compare1 = mutableListOf<GitRepoMember>()
-                for (i in 0 until result.firstResult.size) {
-                    compare1 = contributors1.filter { it.githubId == result.firstResult[i].githubId }.toMutableList()
+                for (i in 0 until result.first_result.size) {
+                    compare1 = contributors1.filter { it.github_id == result.first_result[i].github_id }.toMutableList()
                     if (compare1.isEmpty()) {
                         contributors1.add(
-                            GitRepoMember(result.firstResult[i].additions,result.firstResult[i].commits,
-                            result.firstResult[i].deletions, result.firstResult[i].githubId, result.firstResult[i].isServiceMember, result.firstResult[i].profileUrl)
+                            GitRepoMember(result.first_result[i].additions,result.first_result[i].commits,
+                            result.first_result[i].deletions, result.first_result[i].github_id, result.first_result[i].is_service_member, result.first_result[i].profile_url)
                         )
                     } else {
                         compare1.clear()
                     }
                 }
                 var compare2 = mutableListOf<GitRepoMember>()
-                for (i in 0 until result.secondResult.size) {
-                    compare2 = contributors2.filter { it.githubId == result.secondResult[i].githubId }.toMutableList()
+                for (i in 0 until result.second_result.size) {
+                    compare2 = contributors2.filter { it.github_id == result.second_result[i].github_id }.toMutableList()
                     if (compare2.isEmpty()) {
                         contributors2.add(
-                            GitRepoMember(result.secondResult[i].additions,result.secondResult[i].commits,
-                            result.secondResult[i].deletions, result.secondResult[i].githubId, result.secondResult[i].isServiceMember, result.secondResult[i].profileUrl)
+                            GitRepoMember(result.second_result[i].additions,result.second_result[i].commits,
+                            result.second_result[i].deletions, result.second_result[i].github_id, result.second_result[i].is_service_member, result.second_result[i].profile_url)
                         )
                     } else {
                         compare2.clear()
@@ -119,8 +119,8 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
         if(contributors1.isNotEmpty() && contributors2.isNotEmpty()) {
             val arr1 : MutableList<String> = mutableListOf("선택하세요")
             val arr2 : MutableList<String> = mutableListOf()
-            arr1.addAll(contributors1.flatMap { listOf(it.githubId!!) }.toMutableList())
-            arr2.addAll(contributors2.flatMap { listOf(it.githubId!!) }.toMutableList())
+            arr1.addAll(contributors1.flatMap { listOf(it.github_id!!) }.toMutableList())
+            arr2.addAll(contributors2.flatMap { listOf(it.github_id!!) }.toMutableList())
 //            Toast.makeText(requireContext(), "$arr1", Toast.LENGTH_SHORT).show()
             val spinnerAdapter = ArrayAdapter<String>(requireContext(), R.layout.spinner_list, arr1)
 //            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -189,13 +189,13 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
         binding.userCommitChart.visibility = View.GONE
         binding.userCodeChart.visibility = View.GONE
 //        Toast.makeText(requireContext(), "initGraph()", Toast.LENGTH_SHORT).show()
-        var user1Cont = contributors1.find { it.githubId == user1 }
-        var user2Cont = contributors1.find { it.githubId == user2 }
+        var user1Cont = contributors1.find { it.github_id == user1 }
+        var user2Cont = contributors1.find { it.github_id == user2 }
         if(user1Cont == null) {
-            user1Cont = contributors2.find { it.githubId == user1 }
+            user1Cont = contributors2.find { it.github_id == user1 }
         }
         if(user2Cont == null) {
-            user2Cont = contributors2.find { it.githubId == user2 }
+            user2Cont = contributors2.find { it.github_id == user2 }
         }
         user1Cont!!
         user2Cont!!

@@ -1,6 +1,5 @@
 package com.dragonguard.android.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,16 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
 import com.dragonguard.android.databinding.FragmentAllRankingsBinding
 import com.dragonguard.android.model.rankings.OrganizationRankingModel
 import com.dragonguard.android.model.rankings.TotalOrganizationModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
 import com.dragonguard.android.model.rankings.TotalUsersRankingsModel
 import com.dragonguard.android.recycleradapter.RankingsAdapter
-import com.dragonguard.android.recycleradapter.TotalOrgRankingAdapter
-import com.dragonguard.android.recycleradapter.TotalUsersRankingAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -96,12 +91,12 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 if(it.tokens != null) {
                     if(ranking != 0) {
                         if(usersRanking[ranking-1].tokens == it.tokens) {
-                            usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,usersRanking[ranking-1].ranking, it.profileImage))
+                            usersRanking.add(TotalUsersRankingsModel(it.tokens,it.github_id,it.id,it.name,it.tier,usersRanking[ranking-1].ranking, it.profile_image))
                         } else {
-                            usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,ranking+1, it.profileImage))
+                            usersRanking.add(TotalUsersRankingsModel(it.tokens,it.github_id,it.id,it.name,it.tier,ranking+1, it.profile_image))
                         }
                     } else {
-                        usersRanking.add(TotalUsersRankingsModel(it.tokens,it.githubId,it.id,it.name,it.tier,1, it.profileImage))
+                        usersRanking.add(TotalUsersRankingsModel(it.tokens,it.github_id,it.id,it.name,it.tier,1, it.profile_image))
                     }
 //                Log.d("유져", "랭킹 ${ranking+1} 추가")
                     ranking++
@@ -126,62 +121,62 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
         if(page == 0) {
             when( usersRanking.size) {
                 1 -> {
-                    binding.firstId.text = usersRanking[0].githubId
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profileImage)
+                    binding.firstId.text = usersRanking[0].github_id
+                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
                         .into(binding.firstProfile)
                     binding.firstContribute.text = usersRanking[0].tokens.toString()
                     binding.firstRanker.visibility = View.VISIBLE
                     binding.topRankings.visibility = View.VISIBLE
                 }
                 2 -> {
-                    binding.firstId.text = usersRanking[0].githubId
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profileImage)
+                    binding.firstId.text = usersRanking[0].github_id
+                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
                         .into(binding.firstProfile)
                     binding.firstContribute.text = usersRanking[0].tokens.toString()
                     binding.firstRanker.visibility = View.VISIBLE
 
-                    binding.secondId.text = usersRanking[1].githubId
-                    Glide.with(binding.secondProfile).load(usersRanking[1].profileImage)
+                    binding.secondId.text = usersRanking[1].github_id
+                    Glide.with(binding.secondProfile).load(usersRanking[1].profile_image)
                         .into(binding.secondProfile)
                     binding.secondContribute.text = usersRanking[1].tokens.toString()
                     binding.secondRanker.visibility = View.VISIBLE
                     binding.topRankings.visibility = View.VISIBLE
                 }
                 3 -> {
-                    binding.firstId.text = usersRanking[0].githubId
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profileImage)
+                    binding.firstId.text = usersRanking[0].github_id
+                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
                         .into(binding.firstProfile)
                     binding.firstContribute.text = usersRanking[0].tokens.toString()
                     binding.firstRanker.visibility = View.VISIBLE
 
-                    binding.secondId.text = usersRanking[1].githubId
-                    Glide.with(binding.secondProfile).load(usersRanking[1].profileImage)
+                    binding.secondId.text = usersRanking[1].github_id
+                    Glide.with(binding.secondProfile).load(usersRanking[1].profile_image)
                         .into(binding.secondProfile)
                     binding.secondContribute.text = usersRanking[1].tokens.toString()
                     binding.secondRanker.visibility = View.VISIBLE
 
-                    binding.thirdId.text = usersRanking[2].githubId
-                    Glide.with(binding.thirdProfile).load(usersRanking[2].profileImage)
+                    binding.thirdId.text = usersRanking[2].github_id
+                    Glide.with(binding.thirdProfile).load(usersRanking[2].profile_image)
                         .into(binding.thirdProfile)
                     binding.thirdContribute.text = usersRanking[2].tokens.toString()
                     binding.thirdRanker.visibility = View.VISIBLE
                     binding.topRankings.visibility = View.VISIBLE
                 }
                 else -> {
-                    binding.firstId.text = usersRanking[0].githubId
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profileImage)
+                    binding.firstId.text = usersRanking[0].github_id
+                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
                         .into(binding.firstProfile)
                     binding.firstContribute.text = usersRanking[0].tokens.toString()
                     binding.firstRanker.visibility = View.VISIBLE
 
-                    binding.secondId.text = usersRanking[1].githubId
-                    Glide.with(binding.secondProfile).load(usersRanking[1].profileImage)
+                    binding.secondId.text = usersRanking[1].github_id
+                    Glide.with(binding.secondProfile).load(usersRanking[1].profile_image)
                         .into(binding.secondProfile)
                     binding.secondContribute.text = usersRanking[1].tokens.toString()
                     binding.secondRanker.visibility = View.VISIBLE
 
-                    binding.thirdId.text = usersRanking[2].githubId
-                    Glide.with(binding.thirdProfile).load(usersRanking[2].profileImage)
+                    binding.thirdId.text = usersRanking[2].github_id
+                    Glide.with(binding.thirdProfile).load(usersRanking[2].profile_image)
                         .into(binding.thirdProfile)
                     binding.thirdContribute.text = usersRanking[2].tokens.toString()
                     binding.thirdRanker.visibility = View.VISIBLE
@@ -259,21 +254,21 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
             result.forEach {
                 Log.d("조직 내 랭킹", "결과 : ${it.name}")
                 if (ranking != 0) {
-                    if (totalOrgRankings[ranking - 1].tokenSum == it.tokenSum) {
+                    if (totalOrgRankings[ranking - 1].token_sum == it.token_sum) {
                         totalOrgRankings.add(
                             TotalOrganizationModel(
-                                it.emailEndpoint, it.id, it.name, it.organizationType, it.tokenSum,
+                                it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum,
                                 totalOrgRankings[ranking - 1].ranking
                             )
                         )
                     } else {
                         totalOrgRankings.add(
                             TotalOrganizationModel(
-                                it.emailEndpoint,
+                                it.email_endpoint,
                                 it.id,
                                 it.name,
-                                it.organizationType,
-                                it.tokenSum,
+                                it.organization_type,
+                                it.token_sum,
                                 ranking + 1
                             )
                         )
@@ -281,11 +276,11 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 } else {
                     totalOrgRankings.add(
                         TotalOrganizationModel(
-                            it.emailEndpoint,
+                            it.email_endpoint,
                             it.id,
                             it.name,
-                            it.organizationType,
-                            it.tokenSum,
+                            it.organization_type,
+                            it.token_sum,
                             1
                         )
                     )

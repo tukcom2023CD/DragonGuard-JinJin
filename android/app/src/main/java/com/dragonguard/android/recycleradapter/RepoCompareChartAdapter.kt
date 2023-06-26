@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.RepoCompareChartBinding
 import com.dragonguard.android.model.compare.RepoStats
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
@@ -34,13 +32,13 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(data1: RepoStats, data2: RepoStats, position1: Int, context: Context) {
             data1.languages!!
-            data1.gitRepo!!
+            data1.git_repo!!
             data1.statistics!!
-            data1.languagesStats!!
+            data1.languages_stats!!
             data2.languages!!
-            data2.gitRepo!!
+            data2.git_repo!!
             data2.statistics!!
-            data2.languagesStats!!
+            data2.languages_stats!!
             var count = 0
             val sum = data1.languages.values.sum()
             val colors = ArrayList<Int>()
@@ -63,7 +61,7 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
                     colors.add(Color.rgb(red, green, blue))
                     count++
                 }
-                val dataSet = PieDataSet(entries, data1.gitRepo.full_name)
+                val dataSet = PieDataSet(entries, data1.git_repo.full_name)
                 dataSet.label = null
                 dataSet.setDrawValues(false)
                 dataSet.colors = colors
@@ -87,7 +85,7 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
                     colors.add(Color.rgb(red, green, blue))
                     count++
                 }
-                val dataSet = PieDataSet(entries, data2.gitRepo!!.full_name)
+                val dataSet = PieDataSet(entries, data2.git_repo!!.full_name)
                 dataSet.label = null
                 dataSet.colors = colors
                 dataSet.setDrawValues(false)
@@ -103,18 +101,18 @@ class RepoCompareChartAdapter(private val data1: RepoStats, private val data2: R
 
             } else {
                 val entries1 = ArrayList<RadarEntry>()
-                entries1.add(RadarEntry(data1.statistics.additionStats.average.toFloat()))
-                entries1.add(RadarEntry(data1.statistics.deletionStats.average.toFloat()))
+                entries1.add(RadarEntry(data1.statistics.addition_stats.average.toFloat()))
+                entries1.add(RadarEntry(data1.statistics.deletion_stats.average.toFloat()))
 //                entries1.add(RadarEntry(data1.statistics.additionStats.max.toFloat()))
-                entries1.add(RadarEntry(data1.languagesStats.average.toFloat()))
+                entries1.add(RadarEntry(data1.languages_stats.average.toFloat()))
 //                Toast.makeText(context, "${data1.statistics.additionStats.average.toFloat()}, ${data1.statistics.deletionStats.average.toFloat()}, ${data1.languagesStats.min}",Toast.LENGTH_SHORT).show()
                 val entries2 = ArrayList<RadarEntry>()
-                entries2.add(RadarEntry(data2.statistics.additionStats.average.toFloat()))
-                entries2.add(RadarEntry(data2.statistics.deletionStats.average.toFloat()))
+                entries2.add(RadarEntry(data2.statistics.addition_stats.average.toFloat()))
+                entries2.add(RadarEntry(data2.statistics.deletion_stats.average.toFloat()))
 //                entries2.add(RadarEntry(data2.statistics.additionStats.max.toFloat()))
-                entries2.add(RadarEntry(data2.languagesStats.average.toFloat()))
-                val name1 = data1.gitRepo.full_name.split("/","_","-")
-                val name2 = data2.gitRepo.full_name.split("/","_","-")
+                entries2.add(RadarEntry(data2.languages_stats.average.toFloat()))
+                val name1 = data1.git_repo.full_name.split("/","_","-")
+                val name2 = data2.git_repo.full_name.split("/","_","-")
                 var short1 = ""
                 var short2 = ""
                 if(name1.size > 2) {

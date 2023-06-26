@@ -15,12 +15,10 @@ import com.dragonguard.android.model.rankings.OrganizationRankingModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
 import com.dragonguard.android.model.search.RepoSearchResultModel
 import com.dragonguard.android.model.token.RefreshTokenModel
-import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.net.CookieManager
 import java.util.concurrent.TimeUnit
 
 /*
@@ -256,7 +254,7 @@ class ApiRepository {
         queryMap.put("size", "10")
         val getOrgNames = api.getOrgNames(queryMap, "Bearer $token")
         var orgNames = OrganizationNamesModel()
-        orgNames.add(OrganizationNamesModelItem(null, null, null, null))
+        orgNames.add(OrganizationNamesModelItem(null, null, null, null, null))
         return try{
             val result = getOrgNames.execute()
             orgNames = result.body()!!
@@ -310,7 +308,7 @@ class ApiRepository {
         val emailAuth = api.getEmailAuthResult(queryMap, "Bearer $token")
         return try {
             val result = emailAuth.execute()
-            result.body()!!.validCode
+            result.body()!!.is_valid_code
         } catch (e: Exception) {
             Log.d("status", "이메일 인증 결과 error : ${e.message}")
             false

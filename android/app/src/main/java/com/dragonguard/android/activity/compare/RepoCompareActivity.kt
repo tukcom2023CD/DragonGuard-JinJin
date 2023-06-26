@@ -70,8 +70,8 @@ class RepoCompareActivity : AppCompatActivity() {
     }
 
     fun checkContributors(result: CompareRepoMembersResponseModel) {
-        if ((result.firstResult != null) && (result.secondResult != null)) {
-            if (result.firstResult.isEmpty()) {
+        if ((result.first_result != null) && (result.second_result != null)) {
+            if (result.first_result.isEmpty()) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors()}, 2000)

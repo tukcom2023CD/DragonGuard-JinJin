@@ -35,6 +35,7 @@ class TokenHistoryActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
 
         token = intent.getStringExtra("token")!!
+        callTokenHistory()
     }
 
     private fun callTokenHistory() {

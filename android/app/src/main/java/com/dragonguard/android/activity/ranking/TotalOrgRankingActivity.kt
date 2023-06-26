@@ -63,25 +63,25 @@ class TotalOrgRankingActivity : AppCompatActivity() {
 
     private fun checkRankings(result: OrganizationRankingModel) {
         if (result.isNotEmpty()) {
-            Log.d("조직 내 랭킹", "토큰 : ${result[0].tokenSum}")
+            Log.d("조직 내 랭킹", "토큰 : ${result[0].token_sum}")
             result.forEach {
-                Log.d("조직 내 랭킹", "토큰 : ${it.tokenSum}")
+                Log.d("조직 내 랭킹", "토큰 : ${it.token_sum}")
                 if (ranking != 0) {
-                    if (totalOrgRankings[ranking - 1].tokenSum == it.tokenSum) {
+                    if (totalOrgRankings[ranking - 1].token_sum == it.token_sum) {
                         totalOrgRankings.add(
                             TotalOrganizationModel(
-                                it.emailEndpoint, it.id, it.name, it.organizationType, it.tokenSum,
+                                it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum,
                                 totalOrgRankings[ranking - 1].ranking
                             )
                         )
                     } else {
                         totalOrgRankings.add(
                             TotalOrganizationModel(
-                                it.emailEndpoint,
+                                it.email_endpoint,
                                 it.id,
                                 it.name,
-                                it.organizationType,
-                                it.tokenSum,
+                                it.organization_type,
+                                it.token_sum,
                                 ranking + 1
                             )
                         )
@@ -89,11 +89,11 @@ class TotalOrgRankingActivity : AppCompatActivity() {
                 } else {
                     totalOrgRankings.add(
                         TotalOrganizationModel(
-                            it.emailEndpoint,
+                            it.email_endpoint,
                             it.id,
                             it.name,
-                            it.organizationType,
-                            it.tokenSum,
+                            it.organization_type,
+                            it.token_sum,
                             1
                         )
                     )

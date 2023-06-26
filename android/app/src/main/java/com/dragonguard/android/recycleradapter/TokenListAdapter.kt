@@ -25,7 +25,7 @@ class TokenListAdapter (private val datas : ArrayList<TokenHistoryModelItem>, pr
         //클릭리스너 구현
         fun bind(data: TokenHistoryModelItem) {
             binding.createdDate.text = data.created_at
-            binding.tokenType.text = data.contributeType
+            binding.tokenType.text = data.contribute_type
             binding.tokenAmount.text = data.amount.toString()
             binding.tokenHistoryFrame.setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW)

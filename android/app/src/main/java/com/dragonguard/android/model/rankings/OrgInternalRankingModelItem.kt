@@ -1,10 +1,10 @@
 package com.dragonguard.android.model.rankings
 
 data class OrgInternalRankingModelItem(
-    val githubId: String?,
+    val github_id: String?,
     val id: String?,
     val name: String?,
     val tier: String?,
     val tokens: Int?,
-    val profileImage: String
+    val profile_image: String
 )

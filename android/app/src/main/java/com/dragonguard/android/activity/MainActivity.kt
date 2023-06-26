@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.service.notification.NotificationListenerService.Ranking
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -218,7 +217,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     val userInfo = resultDeferred.await()
 //                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
-                    if (userInfo.githubId == null) {
+                    if (userInfo.github_id == null) {
                         if (prefs.getRefreshToken("").isBlank()) {
                             if (!this@MainActivity.isFinishing && state) {
                                 Log.d("not login", "login activity로 이동")
@@ -239,8 +238,8 @@ class MainActivity : AppCompatActivity() {
                             refreshToken()
                         }
                     } else {
-                        if (userInfo.githubId!!.isNotBlank()) {
-                            realModel.githubId = userInfo.githubId
+                        if (userInfo.github_id!!.isNotBlank()) {
+                            realModel.github_id = userInfo.github_id
                         }
                         if (userInfo.commits != 0 && userInfo.tier == "SPROUT") {
                             if (prefs.getWalletAddress("") != "") {
@@ -251,21 +250,21 @@ class MainActivity : AppCompatActivity() {
                             realModel.commits = userInfo.commits
                             realModel.tier = userInfo.tier
                         }
-                        if (userInfo.tokenAmount == null) {
-                            realModel.tokenAmount = userInfo.commits
+                        if (userInfo.token_amount == null) {
+                            realModel.token_amount = userInfo.commits
                         } else {
-                            realModel.tokenAmount = userInfo.tokenAmount
+                            realModel.token_amount = userInfo.token_amount
                         }
                         if(userInfo.organization != null) {
                             realModel.organization = userInfo.organization
                         }
-                        realModel.profileImage = userInfo.profileImage
+                        realModel.profile_image = userInfo.profile_image
                         realModel.rank = userInfo.rank
                         realModel.issues = userInfo.issues
-                        realModel.pullRequests = userInfo.pullRequests
+                        realModel.pull_requests = userInfo.pull_requests
                         realModel.reviews = userInfo.reviews
-                        if(userInfo.organizationRank !=null) {
-                            realModel.organizationRank = userInfo.organizationRank
+                        if(userInfo.organization_rank !=null) {
+                            realModel.organization_rank = userInfo.organization_rank
                         }
                         count = 0
                         if(refreshCount == 0) {
@@ -273,11 +272,11 @@ class MainActivity : AppCompatActivity() {
                             refreshCount++
                         }
 
-                        realModel.authStep = userInfo.authStep
+                        realModel.auth_step = userInfo.auth_step
                         Log.d("token", "token: $token")
                         Log.d("userInfo", "realModel:$realModel")
-                        if(realModel.commits != null && realModel.githubId != null && realModel.profileImage != null && realModel.authStep != null) {
-                            Log.d("userInfo", "id:${userInfo.githubId}")
+                        if(realModel.commits != null && realModel.github_id != null && realModel.profile_image != null && realModel.auth_step != null) {
+                            Log.d("userInfo", "id:${userInfo.github_id}")
                             mainFrag = MainFragment(token, realModel)
                             refreshMain()
                             realModel.tier?.let {
@@ -371,10 +370,10 @@ class MainActivity : AppCompatActivity() {
                     viewmodel.getNewToken(prefs.getJwtToken(""), prefs.getRefreshToken(""))
                 }
                 val refresh = refreshDeffered.await()
-                if (refresh.refreshToken != null && refresh.accessToken != null) {
-                    prefs.setJwtToken(refresh.accessToken)
-                    prefs.setRefreshToken(refresh.refreshToken)
-                    token = refresh.accessToken
+                if (refresh.refresh_token != null && refresh.access_token != null) {
+                    prefs.setJwtToken(refresh.access_token)
+                    prefs.setRefreshToken(refresh.refresh_token)
+                    token = refresh.access_token
                     multipleSearchUser()
                     Log.d("refresh success", "token refresh 성공")
                 } else {

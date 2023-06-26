@@ -63,11 +63,11 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
     }
 
     private fun drawInfo() {
-        if (info.githubId!!.isNotBlank()) {
-            binding.userId.text = info.githubId
+        if (info.github_id!!.isNotBlank()) {
+            binding.userId.text = info.github_id
         }
         if(!requireActivity().isFinishing) {
-            Glide.with(binding.githubProfile).load(info.profileImage)
+            Glide.with(binding.githubProfile).load(info.profile_image)
                 .into(binding.githubProfile)
         }
 
@@ -95,8 +95,8 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
                 startActivity(intent)
             }
         } )
-        if (info.tokenAmount != null) {
-            binding.tokenAmount.text = info.tokenAmount.toString()
+        if (info.token_amount != null) {
+            binding.tokenAmount.text = info.token_amount.toString()
         }
         val typeList = listOf("commits", "issues", "pullRequests", "review")
         if(info.organization != null) {
@@ -105,7 +105,7 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
         val userActivity = HashMap<String, Int>()
         userActivity.put("commits", info.commits!!)
         userActivity.put("issues", info.issues!!)
-        userActivity.put("pullRequests", info.pullRequests!!)
+        userActivity.put("pullRequests", info.pull_requests!!)
         info.reviews?.let {
             userActivity.put("review", it)
         }
@@ -116,54 +116,54 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
         if(info.organization == null) {
             binding.mainOrgFrame.visibility = View.GONE
         } else {
-            when(info.organizationRank) {
+            when(info.organization_rank) {
                 1 -> {
-                    when(info.memberGithubIds?.size){
+                    when(info.member_github_ids?.size){
                         1 -> {
-                            binding.user1Githubid.text = info.memberGithubIds!![0]
+                            binding.user1Githubid.text = info.member_github_ids!![0]
                             binding.user1Ranking.text = "1"
                         }
                         2 -> {
-                            binding.user1Githubid.text = info.memberGithubIds!![0]
+                            binding.user1Githubid.text = info.member_github_ids!![0]
                             binding.user1Ranking.text = "1"
-                            binding.user2Githubid.text = info.memberGithubIds!![1]
+                            binding.user2Githubid.text = info.member_github_ids!![1]
                             binding.user2Ranking.text = "2"
                         }
                         3 -> {
-                            binding.user1Githubid.text = info.memberGithubIds!![0]
+                            binding.user1Githubid.text = info.member_github_ids!![0]
                             binding.user1Ranking.text = "1"
-                            binding.user2Githubid.text = info.memberGithubIds!![1]
+                            binding.user2Githubid.text = info.member_github_ids!![1]
                             binding.user2Ranking.text = "2"
-                            binding.user3Githubid.text = info.memberGithubIds!![2]
+                            binding.user3Githubid.text = info.member_github_ids!![2]
                             binding.user3Ranking.text = "3"
                         }
                     }
                 }
                 else -> {
-                    when(info.memberGithubIds?.size){
+                    when(info.member_github_ids?.size){
                         2 -> {
-                            binding.user1Githubid.text = info.memberGithubIds!![0]
-                            binding.user1Ranking.text = info.organizationRank!!.minus(1).toString()
-                            binding.user2Githubid.text = info.memberGithubIds!![1]
-                            binding.user2Ranking.text = info.organizationRank!!.toString()
+                            binding.user1Githubid.text = info.member_github_ids!![0]
+                            binding.user1Ranking.text = info.organization_rank!!.minus(1).toString()
+                            binding.user2Githubid.text = info.member_github_ids!![1]
+                            binding.user2Ranking.text = info.organization_rank!!.toString()
                         }
                         3 -> {
-                            when(info.isLast) {
+                            when(info.is_last) {
                                 true -> {
-                                    binding.user1Githubid.text = info.memberGithubIds!![0]
-                                    binding.user1Ranking.text = info.organizationRank!!.minus(2).toString()
-                                    binding.user2Githubid.text = info.memberGithubIds!![1]
-                                    binding.user2Ranking.text = info.organizationRank!!.minus(1).toString()
-                                    binding.user3Githubid.text = info.memberGithubIds!![2]
-                                    binding.user3Ranking.text = info.organizationRank!!.toString()
+                                    binding.user1Githubid.text = info.member_github_ids!![0]
+                                    binding.user1Ranking.text = info.organization_rank!!.minus(2).toString()
+                                    binding.user2Githubid.text = info.member_github_ids!![1]
+                                    binding.user2Ranking.text = info.organization_rank!!.minus(1).toString()
+                                    binding.user3Githubid.text = info.member_github_ids!![2]
+                                    binding.user3Ranking.text = info.organization_rank!!.toString()
                                 }
                                 false -> {
-                                    binding.user1Githubid.text = info.memberGithubIds!![0]
-                                    binding.user1Ranking.text = info.organizationRank!!.minus(1).toString()
-                                    binding.user2Githubid.text = info.memberGithubIds!![1]
-                                    binding.user2Ranking.text = info.organizationRank!!.toString()
-                                    binding.user3Githubid.text = info.memberGithubIds!![2]
-                                    binding.user3Ranking.text = info.organizationRank!!.plus(1).toString()
+                                    binding.user1Githubid.text = info.member_github_ids!![0]
+                                    binding.user1Ranking.text = info.organization_rank!!.minus(1).toString()
+                                    binding.user2Githubid.text = info.member_github_ids!![1]
+                                    binding.user2Ranking.text = info.organization_rank!!.toString()
+                                    binding.user3Githubid.text = info.member_github_ids!![2]
+                                    binding.user3Ranking.text = info.organization_rank!!.plus(1).toString()
                                 }
                             }
                         }

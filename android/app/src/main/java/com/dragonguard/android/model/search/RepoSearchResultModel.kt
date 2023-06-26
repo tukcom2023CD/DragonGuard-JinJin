@@ -10,5 +10,5 @@ data class RepoSearchResultModel(
     val name: String,
     val language: String?,
     val description: String?,
-    val createdAt: String?
+    val created_at: String?
 ):Serializable

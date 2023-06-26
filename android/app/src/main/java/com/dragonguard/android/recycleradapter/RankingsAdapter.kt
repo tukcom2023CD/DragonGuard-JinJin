@@ -21,9 +21,9 @@ class RankingsAdapter(private val rankings: List<*>): RecyclerView.Adapter<Ranki
             when(data1) {
                 is TotalUsersRankingsModel -> {
                     binding.eachRanking.text = data1.ranking.toString()
-                    Glide.with(binding.eachProfile).load(data1.profileImage)
+                    Glide.with(binding.eachProfile).load(data1.profile_image)
                         .into(binding.eachProfile)
-                    binding.rankingGithubId.text = data1.githubId
+                    binding.rankingGithubId.text = data1.github_id
                     binding.rankingContribute.text = data1.tokens.toString()
                     when(data1.tier) {
                         "BRONZE" -> {
@@ -61,7 +61,7 @@ class RankingsAdapter(private val rankings: List<*>): RecyclerView.Adapter<Ranki
                     binding.profileLink.visibility = View.GONE
                     binding.eachRanking.text = data1.ranking.toString()
                     binding.rankingGithubId.text = data1.name
-                    when(data1.organizationType) {
+                    when(data1.organization_type) {
                         "COMPANY" -> {
                             binding.eachProfile.setImageResource(R.drawable.company)
                         }
@@ -75,7 +75,7 @@ class RankingsAdapter(private val rankings: List<*>): RecyclerView.Adapter<Ranki
 
                         }
                     }
-                    binding.rankingContribute.text = data1.tokenSum.toString()
+                    binding.rankingContribute.text = data1.token_sum.toString()
                 }
             }
         }

@@ -133,7 +133,7 @@ class Viewmodel: ViewModel() {
     }
 
     fun registerOrg(name: String, orgType: String, emailEndPoint: String, token: String): RegistOrgResultModel {
-        return repository.postRegistOrg(RegistOrgModel(emailEndpoint = emailEndPoint, organizationType = orgType, name = name), token)
+        return repository.postRegistOrg(RegistOrgModel(email_endpoint = emailEndPoint, organization_type = orgType, name = name), token)
     }
 
     fun addOrgMember(orgId: Long, email: String, token: String): Long{
