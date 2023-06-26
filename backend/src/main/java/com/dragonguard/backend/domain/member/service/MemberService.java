@@ -96,7 +96,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return loadEntity(member.getId());
     }
 
-    public void addMemberCommitAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
+    public void addMemberContributionsAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
         Member member = findMemberAndUpdate(contributionKafkaResponse);
 
         if (addContributionsIfNotEmpty(
