@@ -34,7 +34,7 @@ class GitOrganizationServiceTest extends LoginTest {
                 new MemberOrganizationResponse("C-B-U", "http://githubProfileImage2"));
 
         //when
-        gitOrganizationService.findAndSaveGitOrganizations(gitOrganizationNames, authService.getLoginUser());
+        gitOrganizationService.findAndSaveGitOrganizations(gitOrganizationNames, memberRepository.findById(authService.getLoginUserId()).orElseThrow());
 
         long count = gitOrganizationNames.stream()
                 .map(MemberOrganizationResponse::getLogin)

@@ -7,7 +7,6 @@ import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.mapper.BlockchainMapper;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
@@ -78,7 +77,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     public List<BlockchainResponse> getBlockchainList() {
-        return blockchainMapper.toResponseList(blockchainRepository.findAllByMemberId(authService.getLoginUser().getId()));
+        return blockchainMapper.toResponseList(blockchainRepository.findAllByMemberId(authService.getLoginUserId()));
     }
 
     @Override

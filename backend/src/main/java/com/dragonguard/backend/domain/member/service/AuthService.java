@@ -4,7 +4,6 @@ import com.dragonguard.backend.config.security.jwt.JwtToken;
 import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
 import com.dragonguard.backend.config.security.jwt.JwtValidator;
 import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
-import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
@@ -41,8 +40,7 @@ public class AuthService {
     private JwtToken findMemberAndUpdateRefreshToken(final UserPrinciple user) {
         JwtToken jwtToken = jwtTokenProvider.createToken(user);
 
-        memberRepository.findById(((UserPrinciple) SecurityContextHolder
-                        .getContext().getAuthentication().getPrincipal()).getMember().getId())
+        memberRepository.findById(UUID.fromString(((UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getName()))
                 .orElseThrow(EntityNotFoundException::new)
                 .updateRefreshToken(jwtToken.getRefreshToken());
         return jwtToken;
@@ -77,8 +75,8 @@ public class AuthService {
         }
     }
 
-    public Member getLoginUser() {
-        return ((UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                .getMember();
+    public UUID getLoginUserId() {
+        return UUID.fromString(((UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                .getName());
     }
 }
