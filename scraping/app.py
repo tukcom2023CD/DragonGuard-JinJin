@@ -44,7 +44,7 @@ async def search(result):
 async def commits(member):
     async for mem in member:
         
-        m = str(mem['githubId'])
+        m = str(mem['github_id'])
         year = str(mem['year'])
         
         result = requests.get('https://github.com/' + m + '?tab=overview&from=' + year + '-01-01')
