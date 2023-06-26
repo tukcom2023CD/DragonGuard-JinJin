@@ -20,7 +20,6 @@ import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -83,7 +82,7 @@ public class SearchService implements EntityLoader<Search, Long> {
         SearchRepoResponse clientResult = githubRepoClient.requestToGithub(searchRequest);
         return Arrays.stream(clientResult.getItems())
                 .map(request -> {
-                    Result result = resultRepository.save(resultMapper.toEntity(request.getFull_name(), search.getId()));
+                    Result result = resultRepository.save(resultMapper.toEntity(request.getFullName(), search.getId()));
                     return resultMapper.toGitRepoResponse(result.getId(), request);
                 }).collect(Collectors.toList());
     }

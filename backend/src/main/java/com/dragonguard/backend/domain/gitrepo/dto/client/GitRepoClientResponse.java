@@ -12,12 +12,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoClientResponse {
-    private String full_name;
-    private Integer forks_count;
-    private Integer stargazers_count;
-    private Integer watchers_count;
-    private Integer open_issues_count;
+    private String fullName;
+    private Integer forksCount;
+    private Integer stargazersCount;
+    private Integer watchersCount;
+    private Integer openIssuesCount;
     @Setter
-    private Integer closed_issues_count;
-    private Integer subscribers_count;
+    private Integer closedIssuesCount;
+    private Integer subscribersCount;
 }

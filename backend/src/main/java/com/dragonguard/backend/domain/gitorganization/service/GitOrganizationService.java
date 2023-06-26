@@ -34,7 +34,7 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
     private Set<GitOrganization> getNotSavedGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
         return gitOrganizationNames.stream()
                 .filter(org -> !gitOrganizationRepository.existsByName(org.getLogin()))
-                .map(org -> gitOrganizationMapper.toEntity(org.getLogin(), org.getAvatar_url(), member))
+                .map(org -> gitOrganizationMapper.toEntity(org.getLogin(), org.getAvatarUrl(), member))
                 .collect(Collectors.toSet());
     }
 

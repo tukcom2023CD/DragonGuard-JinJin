@@ -67,7 +67,7 @@ public class Member implements Auditable {
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<GitRepoMember> gitRepoMembers = new ArrayList<>();
 
     @JoinColumn

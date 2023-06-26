@@ -14,5 +14,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MemberOrganizationResponse {
     private String login;
-    private String avatar_url;
+    private String avatarUrl;
 }

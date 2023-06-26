@@ -59,17 +59,17 @@ public class MemberClientService {
     }
 
     public void requestPullRequestClientAndSave(final Member member, final int year, final MemberClientRequest request) {
-        int pullRequestNum = memberPullRequestClient.requestToGithub(request).getTotal_count();
+        int pullRequestNum = memberPullRequestClient.requestToGithub(request).getTotalCount();
         pullRequestService.savePullRequests(member, pullRequestNum, year);
     }
 
     public void requestIssueClientAndSave(final Member member, final int year, final MemberClientRequest request) {
-        int issueNum = memberIssueClient.requestToGithub(request).getTotal_count();
+        int issueNum = memberIssueClient.requestToGithub(request).getTotalCount();
         issueService.saveIssues(member, issueNum, year);
     }
 
     public void requestCommitClientAndSave(final Member member, final String githubId, final MemberClientRequest request) {
-        int commitNum = memberCommitClient.requestToGithub(request).getTotal_count();
+        int commitNum = memberCommitClient.requestToGithub(request).getTotalCount();
         commitService.saveCommits(new ContributionScrapingResponse(githubId, commitNum), member);
     }
 
@@ -85,7 +85,7 @@ public class MemberClientService {
 
     public Set<String> getMemberRepoNames(final MemberClientRequest request) {
         return Arrays.stream(memberRepoClient.requestToGithub(request))
-                .map(MemberRepoResponse::getFull_name)
+                .map(MemberRepoResponse::getFullName)
                 .collect(Collectors.toSet());
     }
 
@@ -127,7 +127,7 @@ public class MemberClientService {
         OrganizationRepoResponse[] clientResponse = memberOrganizationRepoClient.requestToGithub(new MemberClientRequest(gitOrganizationName, githubToken, LocalDate.now().getYear()));
 
         return Arrays.stream(clientResponse)
-                .map(OrganizationRepoResponse::getFull_name)
+                .map(OrganizationRepoResponse::getFullName)
                 .collect(Collectors.toList());
     }
 }

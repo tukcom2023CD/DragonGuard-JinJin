@@ -29,7 +29,7 @@ public class GitRepoMember implements Auditable {
     private GitRepo gitRepo;
 
     @JoinColumn
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Member member;
 
     @Embedded

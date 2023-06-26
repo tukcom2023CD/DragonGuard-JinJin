@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberRepoResponse {
-    private String full_name;
+    private String fullName;
 }

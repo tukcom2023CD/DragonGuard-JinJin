@@ -168,7 +168,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         GitRepoClientResponse repoResponse = requestClientGitRepo(repoName, githubToken);
 
-        repoResponse.setClosed_issues_count(getEntityByName(repoName).getClosedIssueNum());
+        repoResponse.setClosedIssuesCount(getEntityByName(repoName).getClosedIssueNum());
         requestKafkaIssue(new GitRepoNameRequest(repoName));
 
         return getGitRepoResponse(repoName, repoResponse, requestClientGitRepoLanguage(repoName, githubToken));
@@ -252,7 +252,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return contributions.stream()
                 .map(clientResponse -> {
                     String githubId = clientResponse.getAuthor().getLogin();
-                    String profileUrl = clientResponse.getAuthor().getAvatar_url();
+                    String profileUrl = clientResponse.getAuthor().getAvatarUrl();
                     return new GitRepoMemberResponse(
                             githubId,
                             profileUrl,

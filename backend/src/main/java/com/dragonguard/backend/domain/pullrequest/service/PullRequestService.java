@@ -31,7 +31,8 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
     }
 
     private void updatePullRequestNum(final Member member, final Integer pullRequestNum, final Integer year) {
-        PullRequest pullRequest = pullRequestRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
+        PullRequest pullRequest = pullRequestRepository.findByMemberAndYear(member, year)
+                .orElseThrow(EntityNotFoundException::new);
         pullRequest.updatePullRequestNum(pullRequestNum);
     }
 

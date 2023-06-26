@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberCommitResponse {
-    private Integer total_count;
+    private Integer totalCount;
 }

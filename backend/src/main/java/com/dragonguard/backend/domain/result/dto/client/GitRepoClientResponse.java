@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoClientResponse {
-    private String full_name;
+    private String fullName;
     private String language;
     private String description;
-    private String created_at;
+    private String createdAt;
 }

@@ -41,7 +41,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         String githubId = (String) attributes.get("login");
 
         if (!memberRepository.existsByGithubId(githubId)) {
-            memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY));
+            memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY, (String) attributes.get("name"), (String) attributes.get("avatarUrl")));
         }
 
         Member user = memberRepository.findByGithubId(githubId)

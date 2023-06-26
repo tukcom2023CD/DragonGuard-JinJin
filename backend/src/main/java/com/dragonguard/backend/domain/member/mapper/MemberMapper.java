@@ -33,6 +33,8 @@ public interface MemberMapper {
 
     Member toEntity(final String githubId, final Role role, final AuthStep authStep);
 
+    Member toEntity(final String githubId, final Role role, final AuthStep authStep, final String name, final String profileImage);
+
     @Mapping(target = "organizationRank", source = "relatedRank.organizationRank")
     @Mapping(target = "memberGithubIds", source = "relatedRank.memberGithubIds")
     @Mapping(target = "isLast", source = "relatedRank.isLast")
