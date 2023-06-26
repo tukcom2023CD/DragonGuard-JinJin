@@ -28,7 +28,7 @@ final class MainService{
     
     
     /// 사용자 정보 받아옴
-    func getUserInfo(token: String) -> Observable<MainModel>{
+    func getUserInfo() -> Observable<MainModel>{
         let url = APIURL.apiUrl.getMembersInfo(ip: ip)
         let access = UserDefaults.standard.string(forKey: "Access")
         
@@ -37,28 +37,17 @@ final class MainService{
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
                 AF.request(url, headers: ["Authorization": "Bearer \(access ?? "")"])
                     .validate(statusCode: 200..<201)
-                    .responseDecodable(of: MainDecodingModel.self) { response in
+                    .responseDecodable(of: MainModel.self) { response in
                         print("main service")
                         print("used accessToken \(access ?? "") ")
                         print(response)
                         
                         switch response.result{
                         case.success(let data):
-                            let info = MainModel(id: data.id,
-                                                 name: data.name ?? "unknown",
-                                                 githubId: data.githubId,
-                                                 commits: data.commits ?? 0,
-                                                 tier: data.tier,
-                                                 authStep: data.authStep,
-                                                 profileImage: data.profileImage ?? "",
-                                                 rank: data.rank,
-                                                 organizationRank: data.organizationRank ?? 0,
-                                                 tokenAmount: data.tokenAmount ?? -1,
-                                                 organization: data.organization ?? "UnKnown")
                             
-                            if info.profileImage != "" && info.tokenAmount > -1 && info.tier != "" {
+                            if data.profile_image != "" && data.token_amount ?? 0 > -1 && data.tier != "" {
                                 timer.invalidate()
-                                observer.onNext(info)
+                                observer.onNext(data)
                             }
                         case .failure(let error):
                             print("삐리삐리 에러발생 !! \(error)")

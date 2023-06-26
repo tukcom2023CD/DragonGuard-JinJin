@@ -99,6 +99,9 @@
 		3B7BFF7129CBDE7C00A2F3F4 /* AddOrganizationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7BFF7029CBDE7C00A2F3F4 /* AddOrganizationController.swift */; };
 		3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
 		3B80B6DC298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
+		3B83DFA52A4951A0003EF5F1 /* graphLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B83DFA22A4951A0003EF5F1 /* graphLottie.json */; };
+		3B83DFA62A4951A0003EF5F1 /* launchScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B83DFA32A4951A0003EF5F1 /* launchScreen.json */; };
+		3B83DFA72A4951A0003EF5F1 /* splashScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B83DFA42A4951A0003EF5F1 /* splashScreen.json */; };
 		3B87E57029D7173D000734BE /* AddOrganizationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B87E56F29D7173D000734BE /* AddOrganizationModel.swift */; };
 		3B8880202992881200680F1A /* RepoContributorInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B88801F2992881200680F1A /* RepoContributorInfoController.swift */; };
 		3B8C165629B7824A00B881F4 /* LanguageFillteringTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8C165529B7824A00B881F4 /* LanguageFillteringTableView.swift */; };
@@ -306,6 +309,9 @@
 		3B7BFF6B29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchOrganizationListModel.swift; sourceTree = "<group>"; };
 		3B7BFF7029CBDE7C00A2F3F4 /* AddOrganizationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrganizationController.swift; sourceTree = "<group>"; };
 		3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansKR-SemiBold.otf"; sourceTree = "<group>"; };
+		3B83DFA22A4951A0003EF5F1 /* graphLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = graphLottie.json; path = ../../../../lottie/graphLottie.json; sourceTree = "<group>"; };
+		3B83DFA32A4951A0003EF5F1 /* launchScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = launchScreen.json; path = ../../../../lottie/launchScreen.json; sourceTree = "<group>"; };
+		3B83DFA42A4951A0003EF5F1 /* splashScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = splashScreen.json; path = ../../../../lottie/splashScreen.json; sourceTree = "<group>"; };
 		3B87E56F29D7173D000734BE /* AddOrganizationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrganizationModel.swift; sourceTree = "<group>"; };
 		3B88801F2992881200680F1A /* RepoContributorInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoController.swift; sourceTree = "<group>"; };
 		3B8C165529B7824A00B881F4 /* LanguageFillteringTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageFillteringTableView.swift; sourceTree = "<group>"; };
@@ -499,7 +505,7 @@
 		3B1DB8762963428A00308F43 /* ios */ = {
 			isa = PBXGroup;
 			children = (
-				3B5FF1882A27364E0022BE90 /* LottieFiles */,
+				3B83DFA12A49515C003EF5F1 /* LottieFiles */,
 				3B9756F8298A775900F27094 /* APIURL.swift */,
 				3B18AA1F29A7BD0E0051C086 /* Notification.swift */,
 				3BE649EC2A3D9184005D9F9E /* Extension.swift */,
@@ -790,6 +796,16 @@
 				3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		3B83DFA12A49515C003EF5F1 /* LottieFiles */ = {
+			isa = PBXGroup;
+			children = (
+				3B83DFA22A4951A0003EF5F1 /* graphLottie.json */,
+				3B83DFA32A4951A0003EF5F1 /* launchScreen.json */,
+				3B83DFA42A4951A0003EF5F1 /* splashScreen.json */,
+			);
+			path = LottieFiles;
 			sourceTree = "<group>";
 		};
 		3B8C165429B7821100B881F4 /* Filltering */ = {
@@ -1267,6 +1283,9 @@
 				3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */,
 				3B1DB8842963428B00308F43 /* LaunchScreen.storyboard in Resources */,
 				3B1DB8812963428B00308F43 /* Assets.xcassets in Resources */,
+				3B83DFA62A4951A0003EF5F1 /* launchScreen.json in Resources */,
+				3B83DFA72A4951A0003EF5F1 /* splashScreen.json in Resources */,
+				3B83DFA52A4951A0003EF5F1 /* graphLottie.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1634,7 +1653,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R3B9284796;
+				DEVELOPMENT_TEAM = SN5J3DYFX4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ios/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GitRank;
@@ -1648,7 +1667,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin1.ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1663,7 +1682,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = R3B9284796;
+				DEVELOPMENT_TEAM = SN5J3DYFX4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ios/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GitRank;
@@ -1677,7 +1696,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = "DragonGuard-JinJin1.ios";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
