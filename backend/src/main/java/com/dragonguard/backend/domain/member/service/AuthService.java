@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -32,16 +31,14 @@ public class AuthService {
     public JwtToken refreshToken(final String oldRefreshToken, final String oldAccessToken) {
         validateTokens(oldRefreshToken, oldAccessToken);
 
-        Optional<UserPrinciple> user = getUserDetails(oldAccessToken);
+        UserPrinciple user = getUserDetails(oldAccessToken);
 
-        user.ifPresent(userDetails -> validateSavedRefreshTokenIfExpired(oldRefreshToken, UUID.fromString(userDetails.getName())));
+        validateSavedRefreshTokenIfExpired(oldRefreshToken, UUID.fromString(user.getName()));
 
-        return findMemberAndUpdateRefreshToken(user.orElse(null));
+        return findMemberAndUpdateRefreshToken(user);
     }
 
     private JwtToken findMemberAndUpdateRefreshToken(final UserPrinciple user) {
-        if (user == null) return null;
-
         JwtToken jwtToken = jwtTokenProvider.createToken(user);
 
         memberRepository.findById(((UserPrinciple) SecurityContextHolder
@@ -51,9 +48,9 @@ public class AuthService {
         return jwtToken;
     }
 
-    private Optional<UserPrinciple> getUserDetails(final String oldAccessToken) {
+    private UserPrinciple getUserDetails(final String oldAccessToken) {
         Authentication authentication = jwtValidator.getAuthentication(oldAccessToken);
-        return Optional.ofNullable((UserPrinciple) authentication.getPrincipal());
+        return (UserPrinciple) authentication.getPrincipal();
     }
 
     private void validateTokens(final String oldRefreshToken, final String oldAccessToken) {
