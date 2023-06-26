@@ -401,6 +401,14 @@ final class MainViewController: UIViewController {
                                          rank3: nil,
                                          under: nil)
             }
+            else if ((data.member_github_ids?.isEmpty) == nil){
+                self.groupView.inputData(rank1: nil,
+                                         top: nil,
+                                         rank2: nil,
+                                         me: nil,
+                                         rank3: nil,
+                                         under: nil)
+            }
             else{
                 self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
                                          top: data.member_github_ids?[0] ?? "Unknown",
@@ -411,6 +419,7 @@ final class MainViewController: UIViewController {
             }
             
             self.groupLabel.text = data.organization ?? "None"
+            
             self.contributionView.inputData(commit: data.commits ?? 0,
                                             issue: data.issues ?? 0,
                                             pr: data.pull_requests ?? 0,

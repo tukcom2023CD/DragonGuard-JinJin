@@ -56,7 +56,7 @@ final class MainService{
                         print(response)
                         switch response.result{
                         case.success(let data):
-                            if !(data.profile_image?.isEmpty ?? true) && !(data.github_id?.isEmpty ?? true){
+                            if !(data.profile_image?.isEmpty ?? true) && !(data.github_id?.isEmpty ?? true) && ((data.commits) != nil){
                                 observer.onNext(data)
                                 timer.invalidate()
                             }
