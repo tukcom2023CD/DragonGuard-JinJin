@@ -117,7 +117,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         contributorsAdapter = ContributorsAdapter(contributors, this, colorsets, token, repoName)
         binding.repoContributors.adapter = contributorsAdapter
         binding.repoContributors.layoutManager = LinearLayoutManager(this)
-        binding.repoTitle.text = repoName
+        binding.repoTitle.text = repoName.split("/").last()
         binding.repoContributors.visibility = View.VISIBLE
         binding.loadingLottie.pauseAnimation()
         binding.loadingLottie.visibility = View.GONE

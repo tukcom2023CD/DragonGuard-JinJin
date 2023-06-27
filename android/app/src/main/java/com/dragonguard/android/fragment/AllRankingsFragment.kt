@@ -157,37 +157,11 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
     }
 
     private fun profileBackground(model: TotalUsersRankingsModel, number: Int) {
+        binding.firstProfile.clipToOutline = true
+        binding.secondProfile.clipToOutline = true
+        binding.thirdProfile.clipToOutline = true
         when(number) {
             1 -> {
-                when(model.tier) {
-                    "BRONZE" -> {
-                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_bronze)
-
-                    }
-                    "SILVER" -> {
-                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_silver)
-                    }
-                    "GOLD" -> {
-                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_gold)
-                    }
-                    "PLATINUM" -> {
-                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_platinum)
-                    }
-                    "DIAMOND" -> {
-                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_diamond)
-                    }
-                    else -> {
-                        binding.secondFrame.setBackgroundResource(R.drawable.shadow)
-                    }
-                }
-                binding.firstId.text = model.github_id
-                Glide.with(binding.firstProfile).load(model.profile_image)
-                    .into(binding.firstProfile)
-                binding.firstContribute.text = model.tokens.toString()
-                binding.firstRanker.visibility = View.VISIBLE
-                binding.topRankings.visibility = View.VISIBLE
-            }
-            2 -> {
                 when(model.tier) {
                     "BRONZE" -> {
                         binding.firstFrame.setBackgroundResource(R.drawable.shadow_bronze)
@@ -207,6 +181,35 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                     }
                     else -> {
                         binding.firstFrame.setBackgroundResource(R.drawable.shadow)
+                    }
+                }
+                binding.firstId.text = model.github_id
+                Glide.with(binding.firstProfile).load(model.profile_image)
+                    .into(binding.firstProfile)
+                binding.firstContribute.text = model.tokens.toString()
+                binding.firstRanker.visibility = View.VISIBLE
+                binding.topRankings.visibility = View.VISIBLE
+            }
+            2 -> {
+                when(model.tier) {
+                    "BRONZE" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_bronze)
+
+                    }
+                    "SILVER" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_silver)
+                    }
+                    "GOLD" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_gold)
+                    }
+                    "PLATINUM" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_platinum)
+                    }
+                    "DIAMOND" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_diamond)
+                    }
+                    else -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow)
                     }
                 }
                 binding.secondId.text = model.github_id
