@@ -1,4 +1,4 @@
-package com.dragonguard.android.recycleradapter
+package com.dragonguard.android.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -6,11 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.dragonguard.android.R
 import com.dragonguard.android.activity.compare.CompareSearchActivity
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.databinding.RepositoryListBinding
 import com.dragonguard.android.model.search.RepoSearchResultModel
 

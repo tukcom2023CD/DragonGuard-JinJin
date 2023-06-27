@@ -1,19 +1,15 @@
-package com.dragonguard.android.recycleradapter
+package com.dragonguard.android.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.databinding.TotalUsersRankingListBinding
-import com.dragonguard.android.model.rankings.OrgInternalRankingsModel
+import com.dragonguard.android.model.rankings.TotalOrganizationModel
 
-class OrgInternalRankingAdapter (private val datas : ArrayList<OrgInternalRankingsModel>,
-                                 private val context: Context,
-                                 private val token: String) : RecyclerView.Adapter<OrgInternalRankingAdapter.ViewHolder>() {
+class TotalOrgRankingAdapter(private val datas : ArrayList<TotalOrganizationModel>, private val context: Context) : RecyclerView.Adapter<TotalOrgRankingAdapter.ViewHolder>() {
     private lateinit var binding: TotalUsersRankingListBinding
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         binding = TotalUsersRankingListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding.root)
@@ -22,23 +18,14 @@ class OrgInternalRankingAdapter (private val datas : ArrayList<OrgInternalRankin
 
     //리사이클러 뷰의 요소들을 넣어줌
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        fun bind(data1: OrgInternalRankingsModel) {
+        fun bind(data: TotalOrganizationModel) {
             if(binding.totalUsersRanking.text.isNullOrEmpty() && binding.rankerId.text.isNullOrEmpty() && binding.rankerContribution.text.isNullOrEmpty()) {
-                binding.totalUsersRanking.text = data1.ranking.toString()
-                binding.rankerId.text = data1.githubId
-//                Toast.makeText(context, "${data.tokens}", Toast.LENGTH_SHORT).show()
-                if(data1.tokens == null) {
+                binding.totalUsersRanking.text = data.ranking.toString()
+                binding.rankerId.text = data.name
+                if(data.token_sum == null) {
                     binding.rankerContribution.text = "NONE"
                 } else {
-                    binding.rankerContribution.text = data1.tokens.toString()
-                }
-
-                binding.rankerId.setOnClickListener {
-//                    Intent(context, UserDetailActivity::class.java).apply{
-//                        putExtra("githubId", data1.githubId)
-//                        putExtra("token", token)
-//                    }.run{context.startActivity(this)}
+                    binding.rankerContribution.text = data.token_sum.toString()
                 }
             }
         }

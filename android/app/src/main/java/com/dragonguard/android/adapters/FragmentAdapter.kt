@@ -1,4 +1,4 @@
-package com.dragonguard.android.recycleradapter
+package com.dragonguard.android.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

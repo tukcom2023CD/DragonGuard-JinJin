@@ -1,4 +1,4 @@
-package com.dragonguard.android.recycleradapter
+package com.dragonguard.android.adapters
 
 import android.graphics.Rect
 import android.view.View

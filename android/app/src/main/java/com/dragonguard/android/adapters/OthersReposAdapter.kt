@@ -1,23 +1,21 @@
-package com.dragonguard.android.recycleradapter
+package com.dragonguard.android.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.dragonguard.android.R
+import com.bumptech.glide.Glide
 import com.dragonguard.android.activity.search.RepoContributorsActivity
-import com.dragonguard.android.databinding.RepositoryListBinding
-import com.dragonguard.android.model.search.RepoSearchResultModel
+import com.dragonguard.android.databinding.OthersReposListBinding
 
-class UserRepoAdapter (private val datas : List<String>, private val context: Context, private val token: String) : RecyclerView.Adapter<UserRepoAdapter.ViewHolder>() {
-    private lateinit var binding: RepositoryListBinding
+class OthersReposAdapter (private val datas : List<String>, private val context: Context,
+                          private val token: String, private val img: String, private val userName: String)
+    : RecyclerView.Adapter<OthersReposAdapter.ViewHolder>() {
+    private lateinit var binding: OthersReposListBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = RepositoryListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding = OthersReposListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding.root)
     }
     override fun getItemCount(): Int = datas.size
@@ -27,23 +25,27 @@ class UserRepoAdapter (private val datas : List<String>, private val context: Co
         //클릭리스너 구현
         fun bind(data: String) {
             binding.repoName.text = data
-            Log.d("name", "$data.name")
-            itemView.setOnClickListener{
-//                Toast.makeText(context, "${repoName.text} 눌림", Toast.LENGTH_SHORT).show()
+            Glide.with(binding.othersProfileImg).load(img)
+                .into(binding.othersProfileImg)
+            binding.othersProfileImg.clipToOutline = true
+            binding.userName.text = userName
+            binding.repoContributeImg.setOnClickListener {
                 Intent(context, RepoContributorsActivity::class.java).apply{
-                    putExtra("repoName", data)
+                    putExtra("githubId", binding.repoName.text.toString())
                     putExtra("token", token)
-                    addFlags(FLAG_ACTIVITY_NEW_TASK)
                 }.run{context.startActivity(this)}
             }
+
         }
     }
+
     override fun getItemId(position: Int): Long {
         return super.getItemId(position)
     }
     override fun getItemViewType(position: Int): Int {
         return position
     }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(datas[position])
     }

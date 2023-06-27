@@ -1,4 +1,4 @@
-package com.dragonguard.android.recycleradapter
+package com.dragonguard.android.adapters
 
 import android.view.LayoutInflater
 import android.view.View

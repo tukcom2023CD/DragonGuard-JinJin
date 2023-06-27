@@ -1,4 +1,4 @@
-package com.dragonguard.android.recycleradapter
+package com.dragonguard.android.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.databinding.UserActivityListBinding
-import com.dragonguard.android.model.UserInfoModel
 
 class UserActivityAdapter (private val datas : HashMap<String, Int>, private val type: List<String> ,private val context: Context) : RecyclerView.Adapter<UserActivityAdapter.ViewHolder>() {
     private lateinit var binding: UserActivityListBinding
