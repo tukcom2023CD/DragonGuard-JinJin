@@ -23,8 +23,8 @@ public class PullRequest implements Auditable {
     @GeneratedValue
     private Long id;
 
-    @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition = "BINARY(16)")
     private Member member;
 
     @Column(nullable = false)

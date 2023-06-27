@@ -26,8 +26,8 @@ public class GitOrganizationMember implements Auditable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private GitOrganization gitOrganization;
 
-    @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition = "BINARY(16)")
     private Member member;
 
     @Setter

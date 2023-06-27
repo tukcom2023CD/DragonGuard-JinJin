@@ -28,8 +28,8 @@ public class GitRepoMember implements Auditable {
     @ManyToOne(fetch = FetchType.LAZY)
     private GitRepo gitRepo;
 
-    @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition = "BINARY(16)")
     private Member member;
 
     @Embedded
