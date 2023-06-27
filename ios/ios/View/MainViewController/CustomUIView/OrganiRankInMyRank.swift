@@ -137,6 +137,22 @@ final class OrganiRankInMyRank: UIView {
             groupLabel3.text = "\(rank3)"
             gNumLabel3.text = under
         }
+    }
+    
+    func inputAfterData(rank1: Int?, top: String?, rank2: Int?, me: String?, rank3: Int?, under: String?){
+        if let rank1 = rank1, let top = top{
+            groupLabel1.text = "\(rank1)"
+            gNumLabel1.text = top
+        }
         
+        if let rank2 = rank2, let me = me{
+            groupLabel2.text = "\(rank2)"
+            gNumLabel2.text = me
+        }
+        
+        if let rank3 = rank3, let under = under{
+            groupLabel3.text = "\(rank3)"
+            gNumLabel3.text = under
+        }
     }
 }

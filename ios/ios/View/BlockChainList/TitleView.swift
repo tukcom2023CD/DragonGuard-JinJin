@@ -64,7 +64,7 @@ final class TitleView: UIView{
     
     func inputData(link: String?){
         self.link = link
-        print("link~~ \(link)")
+//        print("link~~ \(link)")
     }
     
 }

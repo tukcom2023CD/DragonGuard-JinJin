@@ -13,10 +13,11 @@ final class ContributorAutoUIView: UIView{
     private var titleList: [String] = ["Commit", "Issue", "Pull-Request", "Reviews"]
     private var numList: [Int] = []
     private var nowPage: Int = 0
-
+    private var timer: Timer?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
     }
     
     required init?(coder: NSCoder) {
@@ -49,34 +50,43 @@ final class ContributorAutoUIView: UIView{
     }
     
     func inputData(commit: Int, issue: Int, pr: Int, reviews: Int){
-        addUI()
         bannerTimer()
+        numList = []
         numList.append(commit)
         numList.append(issue)
         numList.append(pr)
         numList.append(reviews)
-        
+        addUI()
     }
     
     // 2초마다 실행되는 타이머
     func bannerTimer() {
-        let _: Timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { (Timer) in
+        var index = 0
+        self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { (Timer) in
+            index += 1
             self.bannerMove()
         }
+        
+    }
+    
+    func stopTimer(){
+        timer?.invalidate()
     }
     
     // 배너 움직이는 매서드
     func bannerMove() {
-        // 현재페이지가 마지막 페이지일 경우
-        if nowPage == numList.count-1 {
-            // 맨 처음 페이지로 돌아감
-            collectionView.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath, at: .right, animated: true)
-            nowPage = 0
-            return
+        DispatchQueue.main.async {
+            // 현재페이지가 마지막 페이지일 경우
+            if self.nowPage == self.numList.count-1 {
+                // 맨 처음 페이지로 돌아감
+                self.collectionView.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath, at: .right, animated: true)
+                self.nowPage = 0
+                return
+            }
+            // 다음 페이지로 전환
+            self.nowPage += 1
+            self.collectionView.scrollToItem(at: NSIndexPath(item: self.nowPage, section: 0) as IndexPath, at: .right, animated: true)
         }
-        // 다음 페이지로 전환
-        nowPage += 1
-        collectionView.scrollToItem(at: NSIndexPath(item: nowPage, section: 0) as IndexPath, at: .right, animated: true)
     }
     
 }

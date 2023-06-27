@@ -17,7 +17,9 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        
         clickedBtn()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -340,6 +342,7 @@ final class MainViewController: UIViewController {
         contributionView.snp.makeConstraints { make in
             make.top.equalTo(tokenView.snp.bottom).offset(50)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
+//            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/6)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
         
@@ -358,7 +361,7 @@ final class MainViewController: UIViewController {
             make.top.equalTo(contributionView.snp.bottom).offset(30)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(40)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-40)
-            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*22/100)
+//            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*22/100)
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
         
@@ -426,8 +429,58 @@ final class MainViewController: UIViewController {
                                             reviews: data.reviews ?? 0)
         })
         .disposed(by: self.disposeBag)
-        
     }
+    
+    func getAfterData(){
+        viewModel.getMyInformation().subscribe(onNext: { data in
+            let imgUrl = URL(string: data.profile_image ?? "")!
+            
+            self.profileImage.load(img: self.profileImage, url: imgUrl)
+            self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
+            
+            if data.organization_rank == 1{
+                self.groupView.inputData(rank1: nil,
+                                         top: nil,
+                                         rank2: data.organization_rank ?? 1,
+                                         me: data.member_github_ids?[1] ?? "Unknown",
+                                         rank3: (data.organization_rank ?? 1)+1,
+                                         under: data.member_github_ids?[2] ?? "Unknown")
+            }
+            else if data.is_last ?? false{
+                self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                         top: data.member_github_ids?[0] ?? "Unknown",
+                                         rank2: (data.organization_rank ?? 0),
+                                         me: data.member_github_ids?[1] ?? "Unknown",
+                                         rank3: nil,
+                                         under: nil)
+            }
+            else if ((data.member_github_ids?.isEmpty) == nil){
+                self.groupView.inputData(rank1: nil,
+                                         top: nil,
+                                         rank2: nil,
+                                         me: nil,
+                                         rank3: nil,
+                                         under: nil)
+            }
+            else{
+                self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                         top: data.member_github_ids?[0] ?? "Unknown",
+                                         rank2: (data.organization_rank ?? 0),
+                                         me: data.member_github_ids?[1] ?? "Unknown",
+                                         rank3: (data.organization_rank ?? 0)+1,
+                                         under: data.member_github_ids?[2] ?? "Unknown")
+            }
+            
+            self.groupLabel.text = data.organization ?? "None"
+            
+            self.contributionView.inputData(commit: data.commits ?? 0,
+                                            issue: data.issues ?? 0,
+                                            pr: data.pull_requests ?? 0,
+                                            reviews: data.reviews ?? 0)
+        })
+        .disposed(by: self.disposeBag)
+    }
+    
     
     func clickedBtn(){
         searchBtn.rx.tap.subscribe(onNext:{
@@ -440,9 +493,9 @@ final class MainViewController: UIViewController {
         
         
         tokenView.rx.tap.subscribe(onNext:{
-            print("called")
             let nextPage = BlockChainListController()
             nextPage.modalPresentationStyle = .fullScreen
+            self.contributionView.stopTimer()
             self.present(nextPage ,animated: false)
         })
         .disposed(by: disposeBag)
