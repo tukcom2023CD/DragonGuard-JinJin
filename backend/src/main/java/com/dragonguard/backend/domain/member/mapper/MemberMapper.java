@@ -64,7 +64,7 @@ public interface MemberMapper {
     @Mapping(target = "reviews", expression = "java(member.getSumOfReviews().orElse(null))")
     @Mapping(target = "profileImage", source = "member.profileImage")
     @Mapping(target = "gitRepos", expression = "java(member.getGitRepoMembers().stream().map(GitRepoMember::getGitRepo).map(GitRepo::getName).collect(Collectors.toList()))")
-    @Mapping(target = "organization", expression = "java(member.isServiceMember() ? member.getOrganization().getName() : null)")
+    @Mapping(target = "organization", expression = "java(member.getOrganization() != null ? member.getOrganization().getName() : null)")
     @Mapping(target = "rank", source = "rank")
     MemberDetailsResponse toDetailsResponse(Member member, Integer rank);
 

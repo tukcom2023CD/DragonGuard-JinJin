@@ -80,8 +80,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public Member findMemberOrSaveWithRole(final String githubId, final Role role, final AuthStep authStep) {
         if (memberRepository.existsByGithubId(githubId)) {
-            return memberRepository.findByGithubId(githubId)
-                    .orElseThrow(EntityNotFoundException::new);
+            return getMemberByGithubId(githubId);
         }
         Member member = memberRepository.save(memberMapper.toEntity(githubId, role, authStep));
         return loadEntity(member.getId());
@@ -89,8 +88,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public Member findMemberOrSave(final MemberRequest memberRequest, final AuthStep authStep, String profileUrl) {
         if (memberRepository.existsByGithubId(memberRequest.getGithubId())) {
-            return memberRepository.findByGithubId(memberRequest.getGithubId())
-                    .orElseThrow(EntityNotFoundException::new);
+            return getMemberByGithubId(memberRequest.getGithubId());
         }
         Member member = memberRepository.save(memberMapper.toEntity(memberRequest, authStep, profileUrl));
         return loadEntity(member.getId());
@@ -307,8 +305,13 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberDetailsResponse getMemberDetails(String githubId) {
-        Member member = getMemberOrSaveAndScrape(githubId);
+        Member member = getMemberByGithubId(githubId);
         Integer rank = memberRepository.findRankingById(member.getId());
         return memberMapper.toDetailsResponse(member, rank);
+    }
+
+    private Member getMemberByGithubId(String githubId) {
+        return memberRepository.findByGithubId(githubId)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }
