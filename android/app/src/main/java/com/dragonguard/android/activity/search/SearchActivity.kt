@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,12 +14,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.model.search.RepoSearchResultModel
 import com.dragonguard.android.databinding.ActivitySearchBinding
-import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
-import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
-import com.dragonguard.android.recycleradapter.VerticalItemDecorator
+import com.dragonguard.android.adapters.HorizontalItemDecorator
+import com.dragonguard.android.adapters.RepositoryProfileAdapter
+import com.dragonguard.android.adapters.VerticalItemDecorator
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
 
@@ -56,7 +55,7 @@ class SearchActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
 
         val intent = intent
         token = intent.getStringExtra("token")!!
@@ -432,10 +431,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
-        return true
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

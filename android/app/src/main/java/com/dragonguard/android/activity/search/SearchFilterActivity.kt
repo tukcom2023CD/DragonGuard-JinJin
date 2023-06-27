@@ -3,12 +3,14 @@ package com.dragonguard.android.activity.search
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivitySearchFilterBinding
 import com.dragonguard.android.fragment.FilterSheetFragment
 
@@ -23,6 +25,11 @@ class SearchFilterActivity : AppCompatActivity() {
             "Kotlin", "Objective-C", "Perl", "PHP", "PowerShell", "Python", "Ruby", "Rust", "Scala", "Shell", "Swift", "TypeScript")
         val extras = mutableListOf("10개 미만", "50개 미만", "100개 미만", "500개 미만", "500개 이상")
         val topics = mutableListOf("0개", "1개", "2개", "3개", "4개 이상")
+
+        setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
+
         binding.filterUser.setOnClickListener {
             binding.languageFilters.removeAllViews()
             binding.starFilters.removeAllViews()
@@ -87,5 +94,15 @@ class SearchFilterActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(binding.searchName.windowToken, 0)
     }
 
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+            R.id.home_menu -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
