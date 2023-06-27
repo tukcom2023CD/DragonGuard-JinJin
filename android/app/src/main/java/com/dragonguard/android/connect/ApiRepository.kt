@@ -8,6 +8,7 @@ import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsModel
 import com.dragonguard.android.model.detail.UserDetailModel
+import com.dragonguard.android.model.detail.UserProfileModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
@@ -451,12 +452,24 @@ class ApiRepository {
     }
 
     fun userGitOrgRepoList(orgName: String, token: String): GithubOrgReposModel? {
-        val repoList = api.getOrgRepoList(orgName, token)
+        val repoList = api.getOrgRepoList(orgName, "Bearer $token")
         return try {
             val result = repoList.execute()
             result.body()
         } catch (e: Exception) {
             Log.d("error", "조직의 레포 리스트 조회 실패: ${e.message}")
+            null
+        }
+    }
+
+    fun otherProfile(githubId: String, token: String): UserProfileModel? {
+        val profile = api.getOthersProfile(githubId, "Bearer $token")
+        return try {
+            val result = profile.execute()
+            Log.d("결과", "타인의 프로필 호출 결과 ${result.code()}")
+            result.body()
+        } catch (e: Exception) {
+            Log.d("error", "타인의 프로필 조회 실패: ${e.message}")
             null
         }
     }

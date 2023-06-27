@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="3.4"
-        tools:context=".activity.MainActivity">
+        tools:context=".activity.basic.MainActivity">
 
         <FrameLayout
             android:id="@+id/content_frame"

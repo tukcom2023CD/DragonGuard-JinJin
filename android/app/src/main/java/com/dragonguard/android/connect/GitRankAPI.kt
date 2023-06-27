@@ -6,6 +6,7 @@ import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsModel
 import com.dragonguard.android.model.detail.UserDetailModel
+import com.dragonguard.android.model.detail.UserProfileModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
@@ -118,5 +119,8 @@ interface GitRankAPI {
     fun postOrgApproval(@Body body: OrgApprovalModel, @Header("Authorization")access: String): Call<ApproveRequestOrgModel>
 
     @GET("admin/organizations")
-    fun getOrgStatus(@QueryMap query: Map<String, String> ,@Header("Authorization")access: String): Call<ApproveRequestOrgModel>
+    fun getOrgStatus(@QueryMap query: Map<String, String>, @Header("Authorization")access: String): Call<ApproveRequestOrgModel>
+
+    @GET("members/details")
+    fun getOthersProfile(@Query("githubId") query: String, @Header("Authorization")access: String): Call<UserProfileModel>
 }

@@ -14,11 +14,11 @@ import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.TokenHistoryActivity
+import com.dragonguard.android.activity.basic.TokenHistoryActivity
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.databinding.FragmentMainBinding
 import com.dragonguard.android.model.UserInfoModel
-import com.dragonguard.android.recycleradapter.UserActivityAdapter
+import com.dragonguard.android.adapters.UserActivityAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

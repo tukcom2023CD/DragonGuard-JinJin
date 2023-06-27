@@ -1,6 +1,6 @@
 package com.dragonguard.android.fragment
 
-import android.graphics.Color
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.profile.UserProfileActivity
 import com.dragonguard.android.databinding.FragmentAllRankingsBinding
 import com.dragonguard.android.model.rankings.*
-import com.dragonguard.android.recycleradapter.RankingsAdapter
+import com.dragonguard.android.adapters.RankingsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -187,6 +188,12 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 Glide.with(binding.firstProfile).load(model.profile_image)
                     .into(binding.firstProfile)
                 binding.firstContribute.text = model.tokens.toString()
+                binding.firstFrame.setOnClickListener {
+                    val intent = Intent(requireContext(), UserProfileActivity::class.java)
+                    intent.putExtra("userName", model.github_id)
+                    intent.putExtra("token", token)
+                    startActivity(intent)
+                }
                 binding.firstRanker.visibility = View.VISIBLE
                 binding.topRankings.visibility = View.VISIBLE
             }
@@ -216,6 +223,12 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 Glide.with(binding.secondProfile).load(model.profile_image)
                     .into(binding.secondProfile)
                 binding.secondContribute.text = model.tokens.toString()
+                binding.secondFrame.setOnClickListener {
+                    val intent = Intent(requireContext(), UserProfileActivity::class.java)
+                    intent.putExtra("userName", model.github_id)
+                    intent.putExtra("token", token)
+                    startActivity(intent)
+                }
                 binding.secondRanker.visibility = View.VISIBLE
                 binding.topRankings.visibility = View.VISIBLE
             }
@@ -245,6 +258,12 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 Glide.with(binding.thirdProfile).load(model.profile_image)
                     .into(binding.thirdProfile)
                 binding.thirdContribute.text = model.tokens.toString()
+                binding.thirdFrame.setOnClickListener {
+                    val intent = Intent(requireContext(), UserProfileActivity::class.java)
+                    intent.putExtra("userName", model.github_id)
+                    intent.putExtra("token", token)
+                    startActivity(intent)
+                }
                 binding.thirdRanker.visibility = View.VISIBLE
                 binding.topRankings.visibility = View.VISIBLE
             }
