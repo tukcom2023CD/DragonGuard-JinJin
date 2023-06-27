@@ -15,17 +15,10 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.LoginActivity
-import com.dragonguard.android.activity.MainActivity
-import com.dragonguard.android.connect.NetworkCheck
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.databinding.ActivityAuthOrgBinding
 import com.dragonguard.android.viewmodel.Viewmodel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 class AuthOrgActivity : AppCompatActivity() {
     private val activityResultLauncher: ActivityResultLauncher<Intent> =

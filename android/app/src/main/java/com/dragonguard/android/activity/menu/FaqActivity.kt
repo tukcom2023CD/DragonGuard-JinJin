@@ -8,12 +8,12 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.databinding.ActivityFaqBinding
 import com.dragonguard.android.model.menu.FaqModel
-import com.dragonguard.android.recycleradapter.FaqAdapter
-import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
-import com.dragonguard.android.recycleradapter.VerticalItemDecorator
+import com.dragonguard.android.adapters.FaqAdapter
+import com.dragonguard.android.adapters.HorizontalItemDecorator
+import com.dragonguard.android.adapters.VerticalItemDecorator
 
 /*
  자주 묻는 질문들과 답을 보여주는 activity

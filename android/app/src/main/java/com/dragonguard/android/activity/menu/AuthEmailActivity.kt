@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.databinding.ActivityAuthEmailBinding
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.dragonguard.android.viewmodel.Viewmodel.Companion.MIllIS_IN_FUTURE

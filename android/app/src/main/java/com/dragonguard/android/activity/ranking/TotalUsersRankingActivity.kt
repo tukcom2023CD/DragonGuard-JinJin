@@ -13,11 +13,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.databinding.ActivityTotalUsersRankingBinding
 import com.dragonguard.android.model.rankings.TotalUsersRankingsModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
-import com.dragonguard.android.recycleradapter.TotalUsersRankingAdapter
+import com.dragonguard.android.adapters.TotalUsersRankingAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
