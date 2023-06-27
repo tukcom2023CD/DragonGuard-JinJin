@@ -32,8 +32,7 @@ final class CustomFirstRankingUserViewElementView: UIView{
     // MARK:
     private lazy var userView: UserProfileImgView = {
         let view = UserProfileImgView()
-        view.userLink = self.firstUserData?.profileImg
-        view.layer.borderColor = .init(red: 255/255, green: 200/255, blue: 10/255, alpha: 1)
+        view.userLink = self.firstUserData?.profile_image
         view.layer.borderWidth = 1
         view.layer.cornerRadius = 20
         return view
@@ -43,14 +42,14 @@ final class CustomFirstRankingUserViewElementView: UIView{
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = firstUserData?.userName ?? ""
+        label.text = firstUserData?.github_id ?? ""
         return label
     }()
     
     // MARK:
     private lazy var numLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(firstUserData?.num ?? 0)"
+        label.text = "\(firstUserData?.tokens ?? 0)"
         label.textAlignment = .center
         return label
     }()
@@ -94,9 +93,26 @@ final class CustomFirstRankingUserViewElementView: UIView{
         
     func updateData(data: AllUserRankingModel){
         self.firstUserData = data
-        titleLabel.text = data.userName
-        numLabel.text = "\(data.num ?? 0)"
-        userView.updateData(img: data.profileImg ?? "")
+        titleLabel.text = data.github_id
+        numLabel.text = "\(data.tokens ?? 0)"
+        
+        switch data.tier ?? ""{
+        case "BRONZE":
+            userView.layer.borderColor = CGColor(red: 101/255, green: 4/255, blue: 4/255, alpha: 1.0) /* #650404 */
+        case "SILVER":
+            userView.layer.borderColor = CGColor(red: 192/255, green: 192/255, blue: 192/255, alpha: 1.0) /* #c0c0c0 */
+        case "GOLD":
+            userView.layer.borderColor = CGColor(red: 245/255, green: 238/255, blue: 176/255, alpha: 1.0) /* #f5eeb0 */
+        case "PLATINUM":
+            userView.layer.borderColor = CGColor(red: 46/255, green: 198/255, blue: 189/255, alpha: 1.0) /* #2ec6bd */
+        case "DIAMOND":
+            userView.layer.borderColor = CGColor(red: 0/255, green: 219/255, blue: 249/255, alpha: 1.0) /* #00dbf9 */
+        default:
+            userView.layer.borderColor = CGColor(red: 255/255, green: 25/255, blue: 255/255, alpha: 1.0) 
+        }
+        
+        // 티어 색상마다 색깔 다르게
+        userView.updateData(img: data.profile_image ?? "")
     }
 }
 

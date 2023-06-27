@@ -144,7 +144,6 @@
 		3BEFEC3329D3E1A100DBBCA8 /* AddOrganizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */; };
 		3BEFEC3529D3FB9500DBBCA8 /* EmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */; };
 		3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */; };
-		3BF0C08B2A3EF3B800823271 /* CompanyRankController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0C08A2A3EF3B800823271 /* CompanyRankController.swift */; };
 		3BF0C08D2A3F08BC00823271 /* SelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0C08C2A3F08BC00823271 /* SelectionCollectionViewCell.swift */; };
 		3BF40D5E2A3E2E1B0052FA7C /* CustomLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF40D5D2A3E2E1B0052FA7C /* CustomLoginButton.swift */; };
 		3BFF623329CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */; };
@@ -309,7 +308,6 @@
 		3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrganizationService.swift; sourceTree = "<group>"; };
 		3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailService.swift; sourceTree = "<group>"; };
 		3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailModel.swift; sourceTree = "<group>"; };
-		3BF0C08A2A3EF3B800823271 /* CompanyRankController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyRankController.swift; sourceTree = "<group>"; };
 		3BF0C08C2A3F08BC00823271 /* SelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		3BF40D5D2A3E2E1B0052FA7C /* CustomLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLoginButton.swift; sourceTree = "<group>"; };
 		3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifiedOrganizationViewModel.swift; sourceTree = "<group>"; };
@@ -571,7 +569,6 @@
 			isa = PBXGroup;
 			children = (
 				3BE649E92A3D8747005D9F9E /* Refactoring */,
-				3B9CF3D5298FB5A700495D35 /* ALLUserInfoViewModel.swift */,
 				3B060FD529911158000B2518 /* MainViewModel.swift */,
 				3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */,
 				3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */,
@@ -664,6 +661,7 @@
 				A30BA46C298415B8008B594E /* SearchPageViewModel.swift */,
 				3B29804429AC85A800967B6E /* CompareViewModel.swift */,
 				3BDF0FA429A619F900816837 /* LoginViewModel.swift */,
+				3B9CF3D5298FB5A700495D35 /* ALLUserInfoViewModel.swift */,
 				3B2E0DCE2A43CB5700E6A7AD /* BlockchainViewModel.swift */,
 			);
 			path = Refactoring;
@@ -702,15 +700,15 @@
 			isa = PBXGroup;
 			children = (
 				3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */,
+				3B3CE9DA29B46AA700B2594B /* LoginController */,
 				3BE64A152A3E2A87005D9F9E /* MainViewController */,
+				3BE64A052A3DFF9F005D9F9E /* BlockChainList */,
+				3BE64A022A3DEBCF005D9F9E /* RankingController */,
 				3B2E0DBA2A43740000E6A7AD /* CompareViewController */,
 				3B54FF552A42E506004B21B1 /* YourProfile */,
-				3B3CE9DA29B46AA700B2594B /* LoginController */,
-				3BE64A052A3DFF9F005D9F9E /* BlockChainList */,
 				3B9756F2298A33E900F27094 /* SettingScreen */,
 				3BE64A042A3DF02A005D9F9E /* RepoDetailController */,
 				3BE64A032A3DEFC6005D9F9E /* SearchController */,
-				3BE64A022A3DEBCF005D9F9E /* RankingController */,
 				3BE649EE2A3DA089005D9F9E /* InfomationDetail */,
 			);
 			path = View;
@@ -719,8 +717,10 @@
 		3BE64A022A3DEBCF005D9F9E /* RankingController */ = {
 			isa = PBXGroup;
 			children = (
-				3BF0C0892A3EF39600823271 /* CompanyRanking */,
-				3BF0C0862A3EE57E00823271 /* AllRanking */,
+				3BE649D52A3CB7EE005D9F9E /* AllUserRankingController.swift */,
+				3BF0C08C2A3F08BC00823271 /* SelectionCollectionViewCell.swift */,
+				3BE649D72A3CBBFF005D9F9E /* TopRanking */,
+				3BE649DC2A3CBD0A005D9F9E /* CustomUnderRanking */,
 			);
 			path = RankingController;
 			sourceTree = "<group>";
@@ -765,25 +765,6 @@
 				3BE64A162A3E2AB1005D9F9E /* QuestionViewController.swift */,
 			);
 			path = MainViewController;
-			sourceTree = "<group>";
-		};
-		3BF0C0862A3EE57E00823271 /* AllRanking */ = {
-			isa = PBXGroup;
-			children = (
-				3BE649D52A3CB7EE005D9F9E /* AllUserRankingController.swift */,
-				3BF0C08C2A3F08BC00823271 /* SelectionCollectionViewCell.swift */,
-				3BE649DC2A3CBD0A005D9F9E /* CustomUnderRanking */,
-				3BE649D72A3CBBFF005D9F9E /* TopRanking */,
-			);
-			path = AllRanking;
-			sourceTree = "<group>";
-		};
-		3BF0C0892A3EF39600823271 /* CompanyRanking */ = {
-			isa = PBXGroup;
-			children = (
-				3BF0C08A2A3EF3B800823271 /* CompanyRankController.swift */,
-			);
-			path = CompanyRanking;
 			sourceTree = "<group>";
 		};
 		A30BA46E29841C1E008B594E /* Services */ = {
@@ -1087,7 +1068,6 @@
 				3B5FF1822A2733AD0022BE90 /* RepoDetailController.swift in Sources */,
 				3BE649FC2A3DC23C005D9F9E /* OrganizationDetailController.swift in Sources */,
 				3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */,
-				3BF0C08B2A3EF3B800823271 /* CompanyRankController.swift in Sources */,
 				3BE64A142A3E2A53005D9F9E /* TabBarViewController.swift in Sources */,
 				3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */,
 				A3342B9C2A43CAA1002C85A7 /* TokenUIButton.swift in Sources */,

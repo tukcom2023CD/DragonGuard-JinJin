@@ -361,7 +361,7 @@ final class MainViewController: UIViewController {
             make.top.equalTo(contributionView.snp.bottom).offset(30)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(40)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-40)
-//            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*22/100)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*22/100)
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
         
@@ -385,7 +385,7 @@ final class MainViewController: UIViewController {
         viewModel.getMyInformation().subscribe(onNext: { data in
             let imgUrl = URL(string: data.profile_image ?? "")!
             
-            self.profileImage.load(img: self.profileImage, url: imgUrl)
+            self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
             self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
             
             if data.organization_rank == 1{
@@ -435,7 +435,7 @@ final class MainViewController: UIViewController {
         viewModel.getMyInformation().subscribe(onNext: { data in
             let imgUrl = URL(string: data.profile_image ?? "")!
             
-            self.profileImage.load(img: self.profileImage, url: imgUrl)
+            self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
             self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
             
             if data.organization_rank == 1{

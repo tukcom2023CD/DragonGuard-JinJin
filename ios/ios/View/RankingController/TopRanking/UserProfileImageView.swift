@@ -27,6 +27,8 @@ final class UserProfileImgView: UIView{
     private lazy var userImgView: UIImageView = {
         let imgview = UIImageView()
         imgview.image = UIImage(named: "pomi")?.resize(newWidth: 60)
+        imgview.layer.cornerRadius = 20
+        imgview.clipsToBounds = true
         return imgview
     }()
     
@@ -43,6 +45,6 @@ final class UserProfileImgView: UIView{
     }
     
     func updateData(img: String){
-        
+        userImgView.load(img: userImgView, url: URL(string: img)!, size: 60)
     }
 }

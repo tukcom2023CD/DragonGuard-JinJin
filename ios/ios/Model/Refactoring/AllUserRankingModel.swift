@@ -7,12 +7,13 @@
 
 import Foundation
 
-struct AllUserRankingModel{
-    var profileImg: String?
-    var userName: String?
-    var num: Int?
-    var link: String?
-    var tier: String?
+struct AllUserRankingModel: Codable{
+    let id: String?
+    let profile_image: String?
+    let name: String?
+    let github_id: String?
+    let tokens: Int?
+    let tier: String?
 }
 
 

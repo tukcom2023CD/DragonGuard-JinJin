@@ -27,24 +27,32 @@ final class ALLUserInfoService{
             AF.request(url,
                        headers: ["Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
-                .responseDecodable(of: [AllUserRankingCodableModel].self) { response in
-                    print("claaa")
+                .responseDecodable(of: [AllUserRankingModel].self) { response in
+                    print("getMemberInfo\n")
                     print(response)
-                    guard let responseResult = response.value else {return}
                     
-                    if responseResult.count != 0 && resultArray.count == 0{
-                        for data in responseResult {
-                            let dataBundle = AllUserRankingModel(profileImg: data.profileImg,
-                                                                 userName: data.githubId,
-                                                                 num: data.tokens,
-                                                                 link: nil,
-                                                                 tier: data.tier)
-                            resultArray.append(dataBundle)
-                        }
-                        
-                        print(resultArray)
-                        observer.onNext(resultArray)
+                    switch response.result{
+                    case .success(let data):
+                        observer.onNext(data)
+                    case .failure(let error):
+                        print("getMemberInfo\n\(error)")
                     }
+                    
+//                    guard let responseResult = response.value else {return}
+//
+//                    if responseResult.count != 0 && resultArray.count == 0{
+//                        for data in responseResult {
+//                            let dataBundle = AllUserRankingModel(profileImg: data.profileImg,
+//                                                                 userName: data.githubId,
+//                                                                 num: data.tokens,
+//                                                                 link: nil,
+//                                                                 tier: data.tier)
+//                            resultArray.append(dataBundle)
+//                        }
+//
+//                        print(resultArray)
+//                        observer.onNext(resultArray)
+//                    }
                 }
             return Disposables.create()
         }

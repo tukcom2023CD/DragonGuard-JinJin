@@ -24,7 +24,6 @@ final class CustomTopView: UIView{
     // MARK: 1등
     private lazy var firstRankView: CustomFirstRankingUserViewElementView = {
         let view = CustomFirstRankingUserViewElementView()
-        view.getData(data: topTierData[0])
         view.backgroundColor = .white
         return view
     }()
@@ -33,7 +32,7 @@ final class CustomTopView: UIView{
     // MARK: 2등
     private lazy var secondRankView: CustomETCRankingUserViewElementView = {
         let view = CustomETCRankingUserViewElementView()
-        view.getData(data: topTierData[1], rank: 2)
+        
         view.backgroundColor = .white
         return view
     }()
@@ -41,7 +40,7 @@ final class CustomTopView: UIView{
     // MARK: 3등
     private lazy var thirdRankView: CustomETCRankingUserViewElementView = {
         let view = CustomETCRankingUserViewElementView()
-        view.getData(data: topTierData[2] ,rank: 3)
+        
         view.backgroundColor = .white
         return view
     }()
@@ -62,6 +61,7 @@ final class CustomTopView: UIView{
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(-20)
             make.trailing.equalToSuperview()
+            make.top.equalToSuperview()
             make.height.equalTo(250).priority(250)
         }
     }
@@ -71,6 +71,24 @@ final class CustomTopView: UIView{
         self.topTierData = list
         
         addUI()
+        print("getData")
+        print(list)
+        switch list.count{
+        case 0:
+            print("CustomTopView None")
+        case 1:
+            firstRankView.getData(data: topTierData[0])
+        case 2:
+            firstRankView.getData(data: topTierData[0])
+            secondRankView.getData(data: topTierData[1], rank: 2)
+        case 3:
+            firstRankView.getData(data: topTierData[0])
+            secondRankView.getData(data: topTierData[1], rank: 2)
+            thirdRankView.getData(data: topTierData[2] ,rank: 3)
+        default:
+            print("CustomTopView Error\n")
+        }
+        
         firstRankView.layoutIfNeeded()
         secondRankView.layoutIfNeeded()
         thirdRankView.layoutIfNeeded()
@@ -78,9 +96,24 @@ final class CustomTopView: UIView{
     
     func updateData(list: [AllUserRankingModel]){
         self.topTierData = list
-        firstRankView.updateData(data: list[0])
-        secondRankView.updateData(data: list[1])
-        thirdRankView.updateData(data: list[2])
+        print("update")
+        print(list)
+        switch list.count{
+        case 0:
+            print("CustomTopView None")
+        case 1:
+            firstRankView.updateData(data: list[0])
+        case 2:
+            firstRankView.updateData(data: list[0])
+            secondRankView.updateData(data: list[1])
+        case 3:
+            firstRankView.updateData(data: list[0])
+            secondRankView.updateData(data: list[1])
+            thirdRankView.updateData(data: list[2])
+        default:
+            print("CustomTopView Error\n")
+        }
+        
     }
     
 }

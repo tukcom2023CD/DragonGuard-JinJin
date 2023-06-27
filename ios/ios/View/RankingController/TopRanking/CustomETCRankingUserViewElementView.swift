@@ -40,14 +40,14 @@ final class CustomETCRankingUserViewElementView: UIView{
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = etcUserData?.userName ?? ""
+        label.text = etcUserData?.github_id ?? ""
         return label
     }()
     
     // MARK:
     private lazy var numLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(etcUserData?.num ?? 0)"
+        label.text = "\(etcUserData?.tokens ?? 0)"
         label.textAlignment = .center
         return label
     }()
@@ -98,9 +98,9 @@ final class CustomETCRankingUserViewElementView: UIView{
     
     func updateData(data: AllUserRankingModel){
         self.etcUserData = data
-        titleLabel.text = data.userName
-        numLabel.text = "\(data.num ?? 0)"
-        userView.updateData(img: data.profileImg ?? "")
+        titleLabel.text = data.github_id
+        numLabel.text = "\(data.tokens ?? 0)"
+        userView.updateData(img: data.profile_image ?? "")
     }
     
 }

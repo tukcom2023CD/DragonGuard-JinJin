@@ -34,10 +34,6 @@ final class CompareViewModel{
         }
     }
     
-//    var sendData: BehaviorSubject<CompareUserModel> = BehaviorSubject(value: CompareUserModel(firstResult: [], secondResult: []))
-//    var compareUser: CompareUserModel?
-//    var compareRepo: CompareRepoModel?
-    
     // 유저 정보 가져오는 함수
     func getContributorInfo(firstRepoName: String, secondRepoName: String) -> Observable<CompareUserModel>{
         return Observable.create(){ observer in
@@ -49,29 +45,6 @@ final class CompareViewModel{
             return Disposables.create()
         }
     }
-    
-//    // 받아온 유저 정보를 CompareUserController 파일로 보냄
-//    func getUserInfo() -> Observable<CompareUserModel> {
-//        return Observable.create(){ observer in
-//            self.sendData.subscribe(onNext: { data in
-//                observer.onNext(data)
-//            }).disposed(by: self.disposeBag)
-//
-//            return Disposables.create()
-//        }
-//    }
-    
-//    func start(){
-//        self.service.getCompareInfo(firstRepo: self.firstRepo, secondRepo: self.secondRepo)
-//            .subscribe(onNext: { repoInfo in
-//                print("called")
-//                print(repoInfo)
-////                    observer.onNext(repoInfo)
-//                self.compareRepo = repoInfo
-//            })
-//            .disposed(by: self.disposeBag)
-//    }
-    
     
     // MARK: 레포지토리 정보 받음
     func getRepositoryInfo(firstRepo: String, secondRepo: String)-> Observable<CompareRepoModel>{
@@ -85,27 +58,5 @@ final class CompareViewModel{
             return Disposables.create()
         }
     }
-    
-    
-//    func getRepoInfo() -> Observable<CompareRepoModel>{
-//
-//        return Observable.create(){ observer in
-//            self.service.getCompareInfo(firstRepo: self.firstRepo, secondRepo: self.secondRepo)
-//                .subscribe(onNext: { repoInfo in
-//                    print("called")
-//                    print(repoInfo)
-//                    observer.onNext(repoInfo)
-//                })
-//                .disposed(by: self.disposeBag)
-//
-////            if self.compareRepo != nil{
-////                print("not nil here")
-////                observer.onNext(self.compareRepo!)
-////            }
-//
-//            return Disposables.create()
-//        }
-//    }
-    
     
 }

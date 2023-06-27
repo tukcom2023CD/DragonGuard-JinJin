@@ -89,8 +89,8 @@ final class CustomUserView: UIView{
     func getData(data: AllUserRankingModel){
         addUI_SetAutoLayout()
         
-        nameLabel.text = data.userName
-        numLabel.text = "\(data.num ?? 0)"
+        nameLabel.text = data.github_id
+        numLabel.text = "\(data.tokens ?? 0)"
     }
     
 }
