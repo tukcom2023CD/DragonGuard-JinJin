@@ -3,6 +3,7 @@ package com.dragonguard.android.recycleradapter
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,11 @@ class TokenListAdapter (private val datas : ArrayList<TokenHistoryModelItem>, pr
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         //클릭리스너 구현
         fun bind(data: TokenHistoryModelItem) {
-            binding.createdDate.text = data.created_at
+            val parts = data.created_at!!.split("T")
+            val textToShow = "${parts[0]} ${parts[1]}"
+            Log.d("parts", "나누기 $parts")
+            Log.d("parts", "합치기 $textToShow")
+            binding.createdDate.text = textToShow.split(".")[0]
             binding.tokenType.text = data.contribute_type
             binding.tokenAmount.text = data.amount.toString()
             binding.tokenHistoryFrame.setOnClickListener {

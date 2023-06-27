@@ -18,7 +18,7 @@
             android:id="@+id/repo_spark"
             android:visibility="invisible"
             android:layout_width="match_parent"
-            android:layout_height="150dp"/>
+            android:layout_height="70dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,7 +51,9 @@
                         android:id="@+id/repo_title"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="30sp"
+                        android:maxLines="1"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMaxTextSize="25sp"
                         android:fontFamily="@font/ibm_semibold"
                         android:textColor="@color/black"
                         android:gravity="center"/>
@@ -83,7 +85,7 @@
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     app:lottie_loop="true"
                     android:layout_gravity="top"
-                    app:lottie_rawRes="@raw/loading_page"/>
+                    app:lottie_rawRes="@raw/compare_loading"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

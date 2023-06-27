@@ -1,5 +1,6 @@
 package com.dragonguard.android.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,11 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentAllRankingsBinding
-import com.dragonguard.android.model.rankings.OrganizationRankingModel
-import com.dragonguard.android.model.rankings.TotalOrganizationModel
-import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
-import com.dragonguard.android.model.rankings.TotalUsersRankingsModel
+import com.dragonguard.android.model.rankings.*
 import com.dragonguard.android.recycleradapter.RankingsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
@@ -121,66 +120,21 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
         if(page == 0) {
             when( usersRanking.size) {
                 1 -> {
-                    binding.firstId.text = usersRanking[0].github_id
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
-                        .into(binding.firstProfile)
-                    binding.firstContribute.text = usersRanking[0].tokens.toString()
-                    binding.firstRanker.visibility = View.VISIBLE
-                    binding.topRankings.visibility = View.VISIBLE
+                    profileBackground(usersRanking[0], 1)
                 }
                 2 -> {
-                    binding.firstId.text = usersRanking[0].github_id
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
-                        .into(binding.firstProfile)
-                    binding.firstContribute.text = usersRanking[0].tokens.toString()
-                    binding.firstRanker.visibility = View.VISIBLE
-
-                    binding.secondId.text = usersRanking[1].github_id
-                    Glide.with(binding.secondProfile).load(usersRanking[1].profile_image)
-                        .into(binding.secondProfile)
-                    binding.secondContribute.text = usersRanking[1].tokens.toString()
-                    binding.secondRanker.visibility = View.VISIBLE
-                    binding.topRankings.visibility = View.VISIBLE
+                    profileBackground(usersRanking[0], 1)
+                    profileBackground(usersRanking[1], 2)
                 }
                 3 -> {
-                    binding.firstId.text = usersRanking[0].github_id
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
-                        .into(binding.firstProfile)
-                    binding.firstContribute.text = usersRanking[0].tokens.toString()
-                    binding.firstRanker.visibility = View.VISIBLE
-
-                    binding.secondId.text = usersRanking[1].github_id
-                    Glide.with(binding.secondProfile).load(usersRanking[1].profile_image)
-                        .into(binding.secondProfile)
-                    binding.secondContribute.text = usersRanking[1].tokens.toString()
-                    binding.secondRanker.visibility = View.VISIBLE
-
-                    binding.thirdId.text = usersRanking[2].github_id
-                    Glide.with(binding.thirdProfile).load(usersRanking[2].profile_image)
-                        .into(binding.thirdProfile)
-                    binding.thirdContribute.text = usersRanking[2].tokens.toString()
-                    binding.thirdRanker.visibility = View.VISIBLE
-                    binding.topRankings.visibility = View.VISIBLE
+                    profileBackground(usersRanking[0], 1)
+                    profileBackground(usersRanking[1], 2)
+                    profileBackground(usersRanking[2], 3)
                 }
                 else -> {
-                    binding.firstId.text = usersRanking[0].github_id
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
-                        .into(binding.firstProfile)
-                    binding.firstContribute.text = usersRanking[0].tokens.toString()
-                    binding.firstRanker.visibility = View.VISIBLE
-
-                    binding.secondId.text = usersRanking[1].github_id
-                    Glide.with(binding.secondProfile).load(usersRanking[1].profile_image)
-                        .into(binding.secondProfile)
-                    binding.secondContribute.text = usersRanking[1].tokens.toString()
-                    binding.secondRanker.visibility = View.VISIBLE
-
-                    binding.thirdId.text = usersRanking[2].github_id
-                    Glide.with(binding.thirdProfile).load(usersRanking[2].profile_image)
-                        .into(binding.thirdProfile)
-                    binding.thirdContribute.text = usersRanking[2].tokens.toString()
-                    binding.thirdRanker.visibility = View.VISIBLE
-                    binding.topRankings.visibility = View.VISIBLE
+                    profileBackground(usersRanking[0], 1)
+                    profileBackground(usersRanking[1], 2)
+                    profileBackground(usersRanking[2], 3)
 
                     usersRanking.removeFirst()
                     usersRanking.removeFirst()
@@ -200,6 +154,98 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
         binding.rankingLottie.pauseAnimation()
         binding.rankingLottie.visibility = View.GONE
         initScrollListener()
+    }
+
+    private fun profileBackground(model: TotalUsersRankingsModel, number: Int) {
+        when(number) {
+            1 -> {
+                when(model.tier) {
+                    "BRONZE" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_bronze)
+
+                    }
+                    "SILVER" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_silver)
+                    }
+                    "GOLD" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_gold)
+                    }
+                    "PLATINUM" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_platinum)
+                    }
+                    "DIAMOND" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_diamond)
+                    }
+                    else -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow)
+                    }
+                }
+                binding.firstId.text = model.github_id
+                Glide.with(binding.firstProfile).load(model.profile_image)
+                    .into(binding.firstProfile)
+                binding.firstContribute.text = model.tokens.toString()
+                binding.firstRanker.visibility = View.VISIBLE
+                binding.topRankings.visibility = View.VISIBLE
+            }
+            2 -> {
+                when(model.tier) {
+                    "BRONZE" -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_bronze)
+
+                    }
+                    "SILVER" -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_silver)
+                    }
+                    "GOLD" -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_gold)
+                    }
+                    "PLATINUM" -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_platinum)
+                    }
+                    "DIAMOND" -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_diamond)
+                    }
+                    else -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow)
+                    }
+                }
+                binding.secondId.text = model.github_id
+                Glide.with(binding.secondProfile).load(model.profile_image)
+                    .into(binding.secondProfile)
+                binding.secondContribute.text = model.tokens.toString()
+                binding.secondRanker.visibility = View.VISIBLE
+                binding.topRankings.visibility = View.VISIBLE
+            }
+            3 -> {
+                when(model.tier) {
+                    "BRONZE" -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_bronze)
+
+                    }
+                    "SILVER" -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_silver)
+                    }
+                    "GOLD" -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_gold)
+                    }
+                    "PLATINUM" -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_platinum)
+                    }
+                    "DIAMOND" -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_diamond)
+                    }
+                    else -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow)
+                    }
+                }
+                binding.thirdId.text = model.github_id
+                Glide.with(binding.thirdProfile).load(model.profile_image)
+                    .into(binding.thirdProfile)
+                binding.thirdContribute.text = model.tokens.toString()
+                binding.thirdRanker.visibility = View.VISIBLE
+                binding.topRankings.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun loadMorePosts() {

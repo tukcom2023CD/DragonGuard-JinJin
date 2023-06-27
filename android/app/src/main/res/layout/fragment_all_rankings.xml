@@ -39,14 +39,20 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:src="@drawable/second"/>
-                <ImageView
-                    android:id="@+id/second_profile"
-                    android:layout_width="match_parent"
+
+                <LinearLayout
+                    android:id="@+id/second_frame"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:layout_marginHorizontal="25dp"
-                    android:background="@drawable/shadow"
-                    android:src="@drawable/second"/>
+                    android:padding="7.5dp"
+                    android:gravity="center">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/second_profile"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp" />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/second_id"
                     android:layout_width="match_parent"
@@ -84,14 +90,20 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:src="@drawable/first"/>
-                <ImageView
-                    android:id="@+id/first_profile"
-                    android:layout_width="match_parent"
+
+                <LinearLayout
+                    android:id="@+id/first_frame"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/shadow"
-                    android:adjustViewBounds="true"
-                    android:layout_marginHorizontal="25dp"
-                    android:src="@drawable/first"/>
+                    android:padding="7.5dp"
+                    android:gravity="center">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/first_profile"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp" />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/first_id"
                     android:layout_width="match_parent"
@@ -130,14 +142,20 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:src="@drawable/third"/>
-                <ImageView
-                    android:id="@+id/third_profile"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/shadow"
+
+                <LinearLayout
+                    android:id="@+id/third_frame"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:layout_marginHorizontal="25dp"
-                    android:src="@drawable/first"/>
+                    android:padding="7.5dp"
+                    android:gravity="center">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/third_profile"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp" />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/third_id"
                     android:layout_width="match_parent"
