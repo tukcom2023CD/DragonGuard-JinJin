@@ -35,10 +35,12 @@
                     android:background="@drawable/round_title" />
 
                 <TextView
+                    android:layout_marginStart="8dp"
                     android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="start"
+                    android:gravity="start|center_vertical"
+                    android:layout_gravity="center_vertical"
                     android:textAppearance="@style/textAppearance" />
 
             </LinearLayout>
@@ -46,12 +48,15 @@
 
             <TextView
                 android:id="@+id/repo_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="40dp"
-                android:gravity="start"
+                android:layout_marginEnd="25dp"
+                android:gravity="start|center_vertical"
+                android:lines="2"
                 android:textAppearance="@style/textAppearance"
-                android:textSize="25sp" />
+                android:autoSizeTextType="uniform"
+                android:autoSizeMaxTextSize="20sp"
+                android:autoSizeMinTextSize="17sp"/>
         </LinearLayout>
     </LinearLayout>
 

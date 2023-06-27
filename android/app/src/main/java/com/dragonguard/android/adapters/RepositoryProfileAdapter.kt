@@ -27,13 +27,18 @@ class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultMo
         //클릭리스너 구현
         fun bind(data: RepoSearchResultModel) {
             binding.repoName.text = data.name
-            binding.repoLanguage.text = ""
-            Log.d("name", "$data.name")
+            Log.d("name", "${data.name}")
             val img= imgList[data.language]
             if(img != null) {
                 binding.langImg.setBackgroundResource(img)
             }
-            binding.repoCreateDate.text = data.created_at
+            data.created_at?.let{
+                val parts = it.split("T")
+                val textToShow = parts[0] + " " + parts[1]
+                val last = textToShow.replace("Z", "")
+                binding.repoCreateDate.text = last
+            }
+            binding.repoLanguage.text = data.language
             itemView.setOnClickListener{
 //                Toast.makeText(context, "${repoName.text} 눌림", Toast.LENGTH_SHORT).show()
                 if(type == "USERS") {

@@ -57,11 +57,7 @@ class TokenHistoryActivity : AppCompatActivity() {
         tokenAdapter.notifyDataSetChanged()
         binding.tokenContributeList.visibility = View.VISIBLE
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
-        return true
-    }
+    
 
     //    뒤로가기, 홈으로 화면전환 기능
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

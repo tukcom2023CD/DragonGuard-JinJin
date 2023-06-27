@@ -61,12 +61,12 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    repo의 contributors 검색
     fun repoContributors(repoName: String) {
-        if(!this@RepoContributorsActivity.isFinishing && count < 10){
+        if (!this@RepoContributorsActivity.isFinishing && count < 10) {
             Log.d("check", "repoName $repoName")
             Log.d("check", "token $token")
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
-                if(!this@RepoContributorsActivity.isFinishing) {
+                if (!this@RepoContributorsActivity.isFinishing) {
                     val resultDeferred = coroutine.async(Dispatchers.IO) {
                         viewmodel.getRepoContributors(repoName, token)
                     }
@@ -87,7 +87,8 @@ class RepoContributorsActivity : AppCompatActivity() {
                 handler.postDelayed({ repoContributors(repoName) }, 2000)
             } else {
                 for (i in 0 until result.git_repo_members.size) {
-                    val compare = contributors.filter { it.github_id == result.git_repo_members[i].github_id }
+                    val compare =
+                        contributors.filter { it.github_id == result.git_repo_members[i].github_id }
                     if (compare.isEmpty()) {
                         contributors.add(result.git_repo_members[i])
                     }
@@ -98,7 +99,7 @@ class RepoContributorsActivity : AppCompatActivity() {
                 initRecycler()
             }
         } else {
-            if (count<10) {
+            if (count < 10) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({ repoContributors(repoName) }, 2000)
@@ -117,7 +118,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         contributorsAdapter = ContributorsAdapter(contributors, this, colorsets, token, repoName)
         binding.repoContributors.adapter = contributorsAdapter
         binding.repoContributors.layoutManager = LinearLayoutManager(this)
-        binding.repoTitle.text = repoName.split("/").last()
+        binding.repoTitle.text = repoName
         binding.repoContributors.visibility = View.VISIBLE
         binding.loadingLottie.pauseAnimation()
         binding.loadingLottie.visibility = View.GONE
@@ -131,17 +132,19 @@ class RepoContributorsActivity : AppCompatActivity() {
         val sparkEntries = ArrayList<Entry>()
         var count = 1
         contributors.forEach {
-            entries.add(BarEntry(count.toFloat(), it.commits!!.toFloat()))
-            count++
+            it.commits?.let { commit ->
+                entries.add(BarEntry(count.toFloat(), commit.toFloat()))
+                count++
+            }
 //                Toast.makeText(applicationContext, "현재 count = $count", Toast.LENGTH_SHORT).show()
         }
         sparkLines.forEachIndexed { index, i ->
-            sparkEntries.add(Entry((index+1).toFloat(), i.toFloat()))
+            sparkEntries.add(Entry((index + 1).toFloat(), i.toFloat()))
         }
 
-        val set = BarDataSet(entries,"DataSet")
+        val set = BarDataSet(entries, "DataSet")
         set.colors = colorsets
-        set.apply{
+        set.apply {
             formSize = 15f
             valueTextSize = 12f
             setDrawValues(true)
@@ -240,21 +243,33 @@ class RepoContributorsActivity : AppCompatActivity() {
           x축 label을 githubId의 앞의 4글자를 기입하여 곂치는 문제 해결
      */
     class MyXAxisFormatter(contributors: ArrayList<GitRepoMember>) : ValueFormatter() {
-        private val days = contributors.flatMap { if(it.github_id!!.length <4) {arrayListOf(it.github_id!!.substring(0,it.github_id!!.length))} else arrayListOf(it.github_id!!.substring(0,3)) }
+        private val days = contributors.flatMap {
+            if (it.github_id!!.length < 4) {
+                arrayListOf(it.github_id!!.substring(0, it.github_id!!.length))
+            } else arrayListOf(it.github_id!!.substring(0, 3))
+        }
+
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString()
         }
+
         override fun getFormattedValue(value: Float): String {
             return "" + value.toInt()
         }
     }
 
-//    막대 위의 커밋수 정수로 변경
+    //    막대 위의 커밋수 정수로 변경
     class ScoreCustomFormatter(contributors: ArrayList<GitRepoMember>) : ValueFormatter() {
-        private val days = contributors.flatMap { arrayListOf(it.github_id!!.substring(0,3)) }
-        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
+        private val days = contributors.flatMap {
+            if (it.github_id!!.length < 4) {
+                arrayListOf(it.github_id!!.substring(0, it.github_id!!.length))
+            } else arrayListOf(it.github_id!!.substring(0, 3))
         }
+
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0, 2)
+        }
+
         override fun getFormattedValue(value: Float): String {
             return "" + value.toInt()
         }
@@ -265,7 +280,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         return true
     }
 
-//    뒤로가기, 홈으로 화면전환 기능
+    //    뒤로가기, 홈으로 화면전환 기능
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
