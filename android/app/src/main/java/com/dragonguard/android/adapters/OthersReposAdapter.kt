@@ -31,7 +31,7 @@ class OthersReposAdapter (private val datas : List<String>, private val context:
             binding.userName.text = userName
             binding.repoContributeImg.setOnClickListener {
                 Intent(context, RepoContributorsActivity::class.java).apply{
-                    putExtra("githubId", binding.repoName.text.toString())
+                    putExtra("repoName", binding.repoName.text.toString())
                     putExtra("token", token)
                 }.run{context.startActivity(this)}
             }

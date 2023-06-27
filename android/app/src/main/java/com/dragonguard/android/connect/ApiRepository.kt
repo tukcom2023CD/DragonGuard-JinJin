@@ -467,6 +467,7 @@ class ApiRepository {
         return try {
             val result = profile.execute()
             Log.d("결과", "타인의 프로필 호출 결과 ${result.code()}")
+            Log.d("결과", "타인의 프로필 호출 결과 ${result.message()}")
             result.body()
         } catch (e: Exception) {
             Log.d("error", "타인의 프로필 조회 실패: ${e.message}")

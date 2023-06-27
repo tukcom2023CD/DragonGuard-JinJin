@@ -79,7 +79,7 @@
                     android:id="@+id/loading_lottie"
                     android:layout_width="wrap_content"
                     android:layout_height="250dp"
-                    android:scaleType="fitXY"
+                    android:scaleType="fitCenter"
                     android:layout_marginTop="100dp"
                     app:lottie_autoPlay="true"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"

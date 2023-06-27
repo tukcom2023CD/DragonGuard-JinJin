@@ -34,6 +34,7 @@ class ContributorsAdapter (private val datas : ArrayList<GitRepoMember>, private
             Glide.with(binding.contributorProfile).load(data1.profile_url)
                 .into(binding.contributorProfile)
             colors.add(Color.rgb(red,green,blue))
+            binding.contributorProfile.clipToOutline = true
             binding.contributorsLayout.setOnClickListener {
 //                Intent(context, UserDetailActivity::class.java).apply{
 //                    putExtra("githubId", data1.githubId)
