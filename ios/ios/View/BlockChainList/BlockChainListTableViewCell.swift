@@ -50,7 +50,7 @@ final class BlockChainListTableViewCell: UITableViewCell{
         timeLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.centerY.equalToSuperview()
-            make.width.equalTo(50)
+//            make.width.equalTo(50)
         }
         
         typeLabel.snp.makeConstraints { make in
@@ -70,14 +70,17 @@ final class BlockChainListTableViewCell: UITableViewCell{
         let date = time.split(separator: "T")[0]
         let time = time.split(separator: "T")[1].split(separator: ".")[0]
         
-        timeLabel.text = "\(date) \(time)"
+        
         
 //        let newSize = timeLabel.sizeThatFits(timeLabel.frame.size) //1
-//        newSize = timeLabel.sizeThatFits( CGSize(width: timeLabel.frame.width, height: CGFloat.greatestFiniteMagnitude)) //2
-        let newSize = timeLabel.sizeThatFits(self.frame.size) //3
+//        let newSize = timeLabel.sizeThatFits( CGSize(width: timeLabel.frame.width, height: CGFloat.greatestFiniteMagnitude)) //2
+        let newSize = timeLabel.sizeThatFits(self.frame.size)
         print(self.frame.size)
         print(newSize)
+        print("\n")
+        
         timeLabel.frame.size = newSize
+        timeLabel.text = "\(date) \(time)"
         
         typeLabel.text = type
         countLabel.text = count
@@ -86,3 +89,6 @@ final class BlockChainListTableViewCell: UITableViewCell{
     }
     
 }
+
+
+
