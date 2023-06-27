@@ -1,4 +1,4 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.basic
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

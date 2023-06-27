@@ -1,4 +1,4 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.basic
 
 import android.content.Intent
 import android.graphics.Color

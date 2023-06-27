@@ -1,4 +1,4 @@
-package com.dragonguard.android.activity
+package com.dragonguard.android.activity.basic
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,13 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.ActivityTokenHistoryBinding
 import com.dragonguard.android.model.klip.TokenHistoryModelItem
-import com.dragonguard.android.recycleradapter.TokenListAdapter
+import com.dragonguard.android.adapters.TokenListAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import okhttp3.internal.notifyAll
 
 class TokenHistoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTokenHistoryBinding
@@ -32,7 +31,7 @@ class TokenHistoryActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
 
         token = intent.getStringExtra("token")!!
         callTokenHistory()
