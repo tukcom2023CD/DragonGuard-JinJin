@@ -38,7 +38,10 @@
                 android:id="@+id/compare_tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabIconTint="@drawable/menu_selector"/>
+                app:tabSelectedTextColor="@color/black"
+                app:tabIconTint="@drawable/menu_selector"
+                app:tabTextAppearance="@style/tabText"
+                app:tabIndicatorColor="@color/black"/>
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/fragment_content"

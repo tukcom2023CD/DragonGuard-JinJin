@@ -324,33 +324,16 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 if (ranking != 0) {
                     if (totalOrgRankings[ranking - 1].token_sum == it.token_sum) {
                         totalOrgRankings.add(
-                            TotalOrganizationModel(
-                                it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum,
-                                totalOrgRankings[ranking - 1].ranking
-                            )
+                            TotalOrganizationModel(it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum,
+                                totalOrgRankings[ranking - 1].ranking)
                         )
                     } else {
                         totalOrgRankings.add(
-                            TotalOrganizationModel(
-                                it.email_endpoint,
-                                it.id,
-                                it.name,
-                                it.organization_type,
-                                it.token_sum,
-                                ranking + 1
-                            )
-                        )
+                            TotalOrganizationModel(it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum, ranking + 1))
                     }
                 } else {
                     totalOrgRankings.add(
-                        TotalOrganizationModel(
-                            it.email_endpoint,
-                            it.id,
-                            it.name,
-                            it.organization_type,
-                            it.token_sum,
-                            1
-                        )
+                        TotalOrganizationModel(it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum, 1)
                     )
                 }
                 Log.d("유져", "랭킹 ${ranking+1} 추가")
@@ -372,13 +355,39 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
     }
 
     private fun initOrgRecycler() {
-        Log.d("recycler", "initrecycler()")
-        binding.eachRankings.setItemViewCacheSize(totalOrgRankings.size)
-        if (page == 0) {
-            rankingsAdapter = RankingsAdapter(totalOrgRankings)
-            binding.eachRankings.adapter = rankingsAdapter
-            binding.eachRankings.layoutManager = LinearLayoutManager(requireContext())
-            binding.eachRankings.visibility = View.VISIBLE
+        binding.firstProfile.clipToOutline = true
+        binding.secondProfile.clipToOutline = true
+        binding.thirdProfile.clipToOutline = true
+        if(page == 0) {
+            when( totalOrgRankings.size) {
+                1 -> {
+                    profileOrgBackground(totalOrgRankings[0], 1)
+                }
+                2 -> {
+                    profileOrgBackground(totalOrgRankings[0], 1)
+                    profileOrgBackground(totalOrgRankings[1], 2)
+                }
+                3 -> {
+                    profileOrgBackground(totalOrgRankings[0], 1)
+                    profileOrgBackground(totalOrgRankings[1], 2)
+                    profileOrgBackground(totalOrgRankings[2], 3)
+                }
+                else -> {
+                    profileOrgBackground(totalOrgRankings[0], 1)
+                    profileOrgBackground(totalOrgRankings[1], 2)
+                    profileOrgBackground(totalOrgRankings[2], 3)
+
+                    totalOrgRankings.removeFirst()
+                    totalOrgRankings.removeFirst()
+                    totalOrgRankings.removeFirst()
+
+                    rankingsAdapter = RankingsAdapter(totalOrgRankings)
+                    binding.eachRankings.adapter = rankingsAdapter
+                    binding.eachRankings.layoutManager = LinearLayoutManager(requireContext())
+//            totalUserRankingAdapter.notifyDataSetChanged()
+                    binding.eachRankings.visibility = View.VISIBLE
+                }
+            }
         }
         binding.eachRankings.adapter?.notifyDataSetChanged()
         page++
@@ -386,6 +395,72 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
         binding.rankingLottie.pauseAnimation()
         binding.rankingLottie.visibility = View.GONE
         initOrgScrollListener()
+
+    }
+
+    private fun profileOrgBackground(model: TotalOrganizationModel, number: Int) {
+        when(number) {
+            1-> {
+//                Glide.with(binding.firstProfile).load()
+//                    .into(binding.firstProfile)
+                binding.firstId.text = model.name
+                binding.firstContribute.text = model.token_sum.toString()
+                binding.firstRanker.visibility = View.VISIBLE
+                when(model.organization_type) {
+                    "COMPANY" -> {
+                        binding.firstProfile.setImageResource(R.drawable.company)
+                    }
+                    "UNIVERSITY" -> {
+                        binding.firstProfile.setImageResource(R.drawable.university)
+                    }
+                    "HIGH_SCHOOL" -> {
+                        binding.firstProfile.setImageResource(R.drawable.high_school)
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+            2 -> {
+                binding.secondId.text = model.name
+                binding.secondContribute.text = model.token_sum.toString()
+                binding.secondRanker.visibility = View.VISIBLE
+                when(model.organization_type) {
+                    "COMPANY" -> {
+                        binding.secondProfile.setImageResource(R.drawable.company)
+                    }
+                    "UNIVERSITY" -> {
+                        binding.secondProfile.setImageResource(R.drawable.university)
+                    }
+                    "HIGH_SCHOOL" -> {
+                        binding.secondProfile.setImageResource(R.drawable.high_school)
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+            3 -> {
+                binding.thirdId.text = model.name
+                binding.thirdContribute.text = model.token_sum.toString()
+                binding.thirdRanker.visibility = View.VISIBLE
+
+                when(model.organization_type) {
+                    "COMPANY" -> {
+                        binding.thirdProfile.setImageResource(R.drawable.company)
+                    }
+                    "UNIVERSITY" -> {
+                        binding.thirdProfile.setImageResource(R.drawable.university)
+                    }
+                    "HIGH_SCHOOL" -> {
+                        binding.thirdProfile.setImageResource(R.drawable.high_school)
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+        }
     }
 
     private fun loadOrgMorePosts() {

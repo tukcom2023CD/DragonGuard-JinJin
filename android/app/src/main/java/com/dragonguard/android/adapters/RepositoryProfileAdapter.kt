@@ -7,14 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.dragonguard.android.activity.basic.MainActivity
+import com.dragonguard.android.activity.compare.CompareSearchActivity
 import com.dragonguard.android.activity.search.RepoContributorsActivity
+import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.databinding.RepositoryListBinding
 import com.dragonguard.android.model.search.RepoSearchResultModel
 
 //검색한 레포지토리 나열하는 리사이클러뷰 어댑터 구현
 class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultModel>, private val context: Context,
-                                private val token: String, private val type: String,
-                                private val imgList: HashMap<String, Int>) : RecyclerView.Adapter<RepositoryProfileAdapter.ViewHolder>() {
+                                private val token: String, private val type: String, private val imgList: HashMap<String, Int>,
+                                private val repoCount: Int) : RecyclerView.Adapter<RepositoryProfileAdapter.ViewHolder>() {
     private lateinit var binding: RepositoryListBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         binding = RepositoryListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -47,10 +50,23 @@ class RepositoryProfileAdapter (private val datas : ArrayList<RepoSearchResultMo
 //                        putExtra("token", token)
 //                    }.run{context.startActivity(this)}
                 } else {
-                    Intent(context, RepoContributorsActivity::class.java).apply{
-                        putExtra("repoName", data.name)
-                        putExtra("token", token)
-                    }.run{context.startActivity(this)}
+                    Log.d("몇번", "현재 repoCount : $repoCount")
+                    when(repoCount) {
+                        0 -> {
+                            Intent(context, RepoContributorsActivity::class.java).apply{
+                                putExtra("repoName", data.name)
+                                putExtra("token", token)
+                            }.run{context.startActivity(this)}
+                        }
+                        else -> {
+                            context as SearchActivity
+                            val intent = Intent()
+                            intent.putExtra("repoName", data.name)
+                            intent.putExtra("token", token)
+                            context.setResult(repoCount, intent)
+                            context.finish()
+                        }
+                    }
                 }
             }
         }

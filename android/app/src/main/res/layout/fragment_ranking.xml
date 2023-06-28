@@ -18,8 +18,10 @@
             android:id="@+id/ranking_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextColor="@color/black"
-            app:tabIndicatorColor="@color/black" />
+            app:tabSelectedTextColor="@color/black"
+            app:tabIconTint="@drawable/menu_selector"
+            app:tabIndicatorColor="@android:color/transparent"
+            android:background="@drawable/shadow_rect"/>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/fragment_content"

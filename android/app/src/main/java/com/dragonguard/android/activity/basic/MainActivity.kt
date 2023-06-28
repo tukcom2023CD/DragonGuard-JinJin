@@ -16,6 +16,7 @@ import com.dragonguard.android.R
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityMainBinding
+import com.dragonguard.android.fragment.CompareSearchFragment
 import com.dragonguard.android.fragment.MainFragment
 import com.dragonguard.android.fragment.RankingFragment
 import com.dragonguard.android.model.UserInfoModel
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity() {
     private var refreshCount = 0
     private var mainFrag: MainFragment? = null
     private var rankingFrag: RankingFragment? = null
+    private var compareFrag: CompareSearchFragment? = null
     private var added = false
     private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
     private var finish = false
@@ -157,6 +159,12 @@ class MainActivity : AppCompatActivity() {
                     rankingFrag = RankingFragment(token)
                     val transaction = supportFragmentManager.beginTransaction()
                     transaction.replace(binding.contentFrame.id, rankingFrag!!)
+                        .commit()
+                }
+                R.id.bottom_compare -> {
+                    compareFrag = CompareSearchFragment(token)
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(binding.contentFrame.id, compareFrag!!)
                         .commit()
                 }
             }

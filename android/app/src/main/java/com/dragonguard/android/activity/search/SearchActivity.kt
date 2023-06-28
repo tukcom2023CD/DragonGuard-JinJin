@@ -43,6 +43,7 @@ class SearchActivity : AppCompatActivity() {
     private var type = "REPOSITORIES"
     private var token = ""
     private val imgList = HashMap<String, Int>()
+    private var repoCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -59,6 +60,7 @@ class SearchActivity : AppCompatActivity() {
 
         val intent = intent
         token = intent.getStringExtra("token")!!
+        repoCount = intent.getIntExtra("count", 0)
         popularLanguages = arrayListOf("C", "C#", "C++", "CoffeeScript ", "CSS", "Dart", "DM", "Elixir", "Go", "Groovy", "HTML", "Java", "JavaScript",
             "Kotlin", "Objective-C", "Perl", "PHP", "PowerShell", "Python", "Ruby", "Rust", "Scala", "Shell", "Swift", "TypeScript")
         imgList.apply {
@@ -364,9 +366,9 @@ class SearchActivity : AppCompatActivity() {
         if (count == 0) {
             Log.d("values", "names: $repoNames")
             repositoryProfileAdapter = if(type.isBlank()) {
-                RepositoryProfileAdapter(repoNames, this, token, "REPOSITORIES", imgList)
+                RepositoryProfileAdapter(repoNames, this, token, "REPOSITORIES", imgList, repoCount)
             } else {
-                RepositoryProfileAdapter(repoNames, this, token, type, imgList)
+                RepositoryProfileAdapter(repoNames, this, token, type, imgList, repoCount)
             }
             binding.searchResult.adapter = repositoryProfileAdapter
             binding.searchResult.layoutManager = LinearLayoutManager(this)
