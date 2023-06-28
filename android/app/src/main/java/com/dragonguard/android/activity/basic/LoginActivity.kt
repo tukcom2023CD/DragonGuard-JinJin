@@ -200,6 +200,7 @@ class LoginActivity : AppCompatActivity() {
             binding.loginMain.visibility = View.GONE
             binding.loginGithub.visibility = View.VISIBLE
             binding.oauthWebView.isEnabled = true
+            Log.d("이동", "웹뷰로 이동 ${BuildConfig.api}oauth2/authorize/github")
             binding.oauthWebView.loadUrl("${BuildConfig.api}oauth2/authorize/github")
         }
         binding.walletAuth.setOnClickListener {

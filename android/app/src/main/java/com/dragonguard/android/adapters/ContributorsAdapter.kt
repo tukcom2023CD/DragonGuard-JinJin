@@ -1,12 +1,14 @@
 package com.dragonguard.android.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dragonguard.android.activity.profile.UserProfileActivity
 import com.dragonguard.android.databinding.ContributorsListBinding
 import com.dragonguard.android.model.contributors.GitRepoMember
 
@@ -36,10 +38,12 @@ class ContributorsAdapter (private val datas : ArrayList<GitRepoMember>, private
             colors.add(Color.rgb(red,green,blue))
             binding.contributorProfile.clipToOutline = true
             binding.contributorsLayout.setOnClickListener {
-//                Intent(context, UserDetailActivity::class.java).apply{
-//                    putExtra("githubId", data1.githubId)
-//                    putExtra("token", token)
-//                }.run{context.startActivity(this)}
+                if(data1.is_service_member == true) {
+                    Intent(context, UserProfileActivity::class.java).apply{
+                        putExtra("userName", data1.github_id)
+                        putExtra("token", token)
+                    }.run{context.startActivity(this)}
+                }
             }
         }
     }
