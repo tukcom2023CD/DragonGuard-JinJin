@@ -46,6 +46,7 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("type", "랭킹 type: $rankingType")
         when(rankingType) {
             "total" -> {
                 getTotalUsersRanking(page, size)
