@@ -122,6 +122,8 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.repoContributors.visibility = View.VISIBLE
         binding.loadingLottie.pauseAnimation()
         binding.loadingLottie.visibility = View.GONE
+        binding.repoContributeFrame.setBackgroundResource(R.drawable.shadow)
+        binding.hiddenText.visibility = View.VISIBLE
         initGraph()
     }
 

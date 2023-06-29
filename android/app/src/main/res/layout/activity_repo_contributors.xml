@@ -12,7 +12,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <com.github.mikephil.charting.charts.LineChart
             android:layout_marginTop="20dp"
             android:id="@+id/repo_spark"
@@ -20,92 +19,104 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"/>
 
-        <LinearLayout
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="3.4"
-            tools:context=".activity.search.RepoContributorsActivity">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.3"
-                android:background="@android:color/transparent"/>
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_weight="3"
-                android:weightSum="5">
+                tools:context=".activity.search.RepoContributorsActivity">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"/>
 
                 <LinearLayout
+                    android:id="@+id/repo_contribute_frame"
+                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.4"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/repo_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:maxLines="1"
-                        android:autoSizeTextType="uniform"
-                        android:autoSizeMaxTextSize="25sp"
-                        android:fontFamily="@font/ibm_semibold"
-                        android:textColor="@color/black"
-                        android:gravity="center"/>
-
-
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/repo_contributors"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:orientation="vertical"
-                    android:layout_weight="2.28"
-                    android:visibility="gone"
-                    android:layout_gravity="center_horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:listitem="@layout/contributors_list" />
-
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/loading_lottie"
-                    android:layout_width="wrap_content"
-                    android:layout_height="250dp"
-                    android:scaleType="fitCenter"
-                    android:layout_marginTop="100dp"
-                    app:lottie_autoPlay="true"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    app:lottie_loop="true"
-                    android:layout_gravity="top"
-                    app:lottie_rawRes="@raw/compare_loading"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2.3"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <com.github.mikephil.charting.charts.BarChart
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:id="@+id/contributors_chart"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/repo_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:lines="1"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMaxTextSize="25sp"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:layout_marginStart="20dp"
+                            android:textColor="@color/black"
+                            android:gravity="center"/>
+
+                        <TextView
+                            android:id="@+id/hidden_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:lines="1"
+                            android:visibility="invisible"
+                            android:text="User List"
+                            android:fontFamily="@font/ibm_semibold"
+                            android:textColor="@color/black"
+                            android:gravity="start|center_vertical"
+                            android:layout_marginStart="30dp"/>
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/repo_contributors"
+                        android:layout_width="match_parent"
+                        android:layout_height="350dp"
+                        android:orientation="vertical"
                         android:visibility="gone"
-                        android:layout_gravity="top|center_horizontal" />
+                        android:layout_gravity="center_horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:listitem="@layout/contributors_list" />
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/loading_lottie"
+                        android:layout_width="wrap_content"
+                        android:layout_height="250dp"
+                        android:scaleType="fitCenter"
+                        android:layout_marginTop="100dp"
+                        app:lottie_autoPlay="true"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        app:lottie_loop="true"
+                        android:layout_gravity="top"
+                        app:lottie_rawRes="@raw/compare_loading"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:layout_width="match_parent"
+                            android:id="@+id/contributors_chart"
+                            android:layout_height="350dp"
+                            android:visibility="gone"
+                            android:layout_gravity="top|center_horizontal" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
 
-
-
-        </LinearLayout>
     </FrameLayout>
 </layout>
