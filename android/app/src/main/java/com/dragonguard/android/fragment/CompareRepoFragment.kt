@@ -208,30 +208,38 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
         data2.git_repo!!
         data2.statistics!!
         data2.languages_stats!!
-        var count = 0
         val sum1 = data1.languages.values.sum()
         val sum2 = data2.languages.values.sum()
-        val colors = ArrayList<Int>()
+        val colors1 = ArrayList<Int>()
+        val colors2 = ArrayList<Int>()
         var red1 = 0
         var green1 = 0
         var blue1 = 0
         var red2 = 0
         var green2 = 0
         var blue2 = 0
+        var etc1 : Float = 0f
+        var etc2 : Float = 0f
         val entries1 = ArrayList<PieEntry>()
         val legendEntry1 = HashMap<String, Int>()
         val legendEntry2 = HashMap<String, Int>()
         val entries2 = ArrayList<PieEntry>()
 
         data1.languages.forEach {
-            entries1.add(PieEntry((it.value.toFloat() / sum1)*100, it.key))
-            red1 = (Math.random() * 255).toInt()
-            green1 = (Math.random() * 255).toInt()
-            blue1 = (Math.random() * 255).toInt()
-            colors.add(Color.rgb(red1, green1, blue1))
-
-            legendEntry1[it.key] = Color.rgb(red1, green1, blue1)
+            if((it.value.toFloat() / sum1)*100 < 7) {
+                etc1 += (it.value.toFloat() / sum1)*100
+            } else {
+                entries1.add(PieEntry((it.value.toFloat() / sum1)*100, it.key))
+                red1 = (Math.random() * 255).toInt()
+                green1 = (Math.random() * 255).toInt()
+                blue1 = (Math.random() * 255).toInt()
+                colors1.add(Color.rgb(red1, green1, blue1))
+                legendEntry1[it.key] = Color.rgb(red1, green1, blue1)
+            }
         }
+        entries1.add(PieEntry(etc1, "etc"))
+        colors1.add(Color.BLACK)
+        legendEntry1["etc"] = Color.BLACK
 
         legendEntry1.forEach {
             val linear = LinearLayout(requireContext())
@@ -258,8 +266,8 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
         val dataSet1 = PieDataSet(entries1, data1.git_repo.full_name)
         dataSet1.label = null
         dataSet1.setDrawValues(true)
-        dataSet1.valueTextSize = 15f
-        dataSet1.colors = colors
+        dataSet1.valueTextSize = 12f
+        dataSet1.colors = colors1
         dataSet1.valueFormatter = ScoreCustomFormatter()
         dataSet1.valueTextColor = Color.WHITE
         val firstData = PieData(dataSet1)
@@ -274,21 +282,28 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
         binding.repo1Language.visibility = View.VISIBLE
 
         data2.languages!!.forEach {
-            entries2.add(PieEntry((it.value.toFloat() / sum2)*100, it.key))
-            red2 = (Math.random() * 255).toInt()
-            green2 = (Math.random() * 255).toInt()
-            blue2 = (Math.random() * 255).toInt()
-            colors.add(Color.rgb(red2, green2, blue2))
-
-            legendEntry2[it.key] = Color.rgb(red2, green2, blue2)
+            if((it.value.toFloat() / sum2)*100<7) {
+                etc2 += (it.value.toFloat() / sum2)*100
+            } else {
+                entries2.add(PieEntry((it.value.toFloat() / sum2)*100, it.key))
+                red2 = (Math.random() * 255).toInt()
+                green2 = (Math.random() * 255).toInt()
+                blue2 = (Math.random() * 255).toInt()
+                colors2.add(Color.rgb(red2, green2, blue2))
+                legendEntry2[it.key] = Color.rgb(red2, green2, blue2)
+            }
         }
+        entries2.add(PieEntry(etc2, "etc"))
+        colors2.add(Color.BLACK)
+        legendEntry2["etc"] = Color.BLACK
+
         val dataSet2 = PieDataSet(entries2, data2.git_repo!!.full_name)
         dataSet2.label = null
-        dataSet2.colors = colors
+        dataSet2.colors = colors2
         dataSet2.setDrawValues(true)
         dataSet2.valueFormatter = ScoreCustomFormatter()
         dataSet2.valueTextColor = Color.WHITE
-        dataSet2.valueTextSize = 15f
+        dataSet2.valueTextSize = 12f
 
         legendEntry2.forEach {
             val linear = LinearLayout(requireContext())
@@ -325,6 +340,8 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
     }
 
     private fun initProfiles() {
+        Log.d("frist", "first : $firstRepoMember")
+        Log.d("second", "first : $secondRepoMember")
         when(firstRepoMember.size) {
             0 -> {
                 binding.repo1User1.visibility = View.INVISIBLE
