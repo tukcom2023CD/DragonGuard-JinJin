@@ -228,7 +228,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     public List<GitRepoMemberResponse> requestToGithub(final GitRepoInfoRequest gitRepoInfoRequest, final GitRepo gitRepo) {
-        Set<GitRepoMemberClientResponse> contributions = Arrays.stream(requestClientGitRepoMember(gitRepoInfoRequest)).collect(Collectors.toSet());
+        Optional<GitRepoMemberClientResponse[]> responses = requestClientGitRepoMember(gitRepoInfoRequest);
+        if (responses.isEmpty()) {
+            return List.of();
+        }
+        Set<GitRepoMemberClientResponse> contributions = Arrays.stream(responses.get()).collect(Collectors.toSet());
         if (contributions.isEmpty()) return List.of();
 
         List<GitRepoMemberResponse> result = getResponseList(
@@ -240,8 +244,12 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return result;
     }
 
-    private GitRepoMemberClientResponse[] requestClientGitRepoMember(final GitRepoInfoRequest gitRepoInfoRequest) {
-        return gitRepoMemberClient.requestToGithub(gitRepoInfoRequest);
+    private Optional<GitRepoMemberClientResponse[]> requestClientGitRepoMember(final GitRepoInfoRequest gitRepoInfoRequest) {
+        GitRepoMemberClientResponse[] responses = gitRepoMemberClient.requestToGithub(gitRepoInfoRequest);
+        if (responses == null || responses.length == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(responses);
     }
 
     private List<GitRepoMemberResponse> getResponseList(

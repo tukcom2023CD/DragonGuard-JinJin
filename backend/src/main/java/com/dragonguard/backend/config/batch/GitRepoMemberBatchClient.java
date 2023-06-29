@@ -57,9 +57,10 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                 .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
                 .bodyToMono(GitRepoBatchResponse[].class)
                 .retryWhen(
-                        Retry.fixedDelay(8, Duration.ofMillis(1500))
+                        Retry.fixedDelay(10, Duration.ofMillis(1500))
                                 .filter(WebClientException.class::isInstance)
-                                .filter(WebClientRequestException.class::isInstance))
+                                .filter(WebClientRequestException.class::isInstance)
+                                .filter(Throwable.class::isInstance))
                 .mapNotNull(result -> {
                     Set<GitRepoMember> gitRepoMembers = request.getGitRepo().getGitRepoMembers();
 

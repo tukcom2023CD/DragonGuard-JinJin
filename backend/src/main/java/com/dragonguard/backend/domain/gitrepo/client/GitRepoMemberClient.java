@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
@@ -44,9 +45,10 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Git
                 .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
                 .bodyToMono(GitRepoMemberClientResponse[].class)
                 .retryWhen(
-                        Retry.fixedDelay(8, Duration.ofMillis(1500))
+                        Retry.fixedDelay(10, Duration.ofMillis(1500))
                                 .filter(WebClientException.class::isInstance)
-                                .filter(Exception.class::isInstance))
+                                .filter(WebClientRequestException.class::isInstance)
+                                .filter(Throwable.class::isInstance))
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
     }
