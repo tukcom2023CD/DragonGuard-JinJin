@@ -1,28 +1,49 @@
 package com.dragonguard.android.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.view.marginStart
+import androidx.core.view.setMargins
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentCompareRepoBinding
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.adapters.RepoCompareAdapter
+import com.dragonguard.android.model.compare.RepoMembersResult
+import com.dragonguard.android.model.compare.RepoStats
+import com.dragonguard.android.model.contributors.GitRepoMember
 import com.dragonguard.android.viewmodel.Viewmodel
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.LegendEntry
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 //선택한 두 Repository를 비교하기 위한 fragment
-class CompareRepoFragment(repoName1: String, repoName2: String, token: String) : Fragment() {
+class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
+                          private val firstRepoMember: List<RepoMembersResult>, private val secondRepoMember: List<RepoMembersResult>) : Fragment() {
     // TODO: Rename and change types of parameters
     private var repo1 = repoName1
     private var repo2 = repoName2
@@ -31,9 +52,9 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String) :
     private var count = 0
     private val MIN_SCALE = 0.85f
     private val MIN_ALPHA = 0.5f
-    private val compareItems = arrayListOf("forks", "close된\n 이슈 수", "open된\n이슈 수", "스타 수", "구독자 수", "watchers 수", "총 커밋 수",
-    "최대 커밋수", "최소 커밋 수", "커밋\n기여자 수", "평균 커밋 수", "총\naddtions", "최대\naddtions", "최소\nadditions", "additions\n기여자 수",
-    "평균\naddtions", "총\ndeletions", "최대\ndeletions", "최소\ndeletions", "deletions\n기여자 수", "평균\ndeletions", "사용된\n언어 수", "평균 코드 수")
+    private val compareItems = arrayListOf("forks", "closed issues", "open issues", "stars", "subscribers", "watchers", "total commits",
+    "max commits", "min commits", "commiters", "average commits", "total additions", "max addtions", "min additions", "adders",
+    "average addtions", "total deletions", "max deletions", "min deletions", "deleters", "average deletions", "languages", "average lines")
     private val token = token
 
 
@@ -170,8 +191,7 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String) :
             binding.repoCompareList.adapter = repoCompareAdapter
             binding.repoCompareList.layoutManager = LinearLayoutManager(requireContext())
             repoCompareAdapter.notifyDataSetChanged()
-            binding.repoCompareList.visibility = View.VISIBLE
-            initGraph(result)
+            initGraph(result.first_repo, result.second_repo)
         }
     }
 
@@ -179,11 +199,253 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String) :
     두 Repository를 비교하기 위한 그래프를 그리는 함수
     가로로 슬라이딩하며 애니메이션 적용함
      */
-    private fun initGraph(result: CompareRepoResponseModel) {
-//        binding.repoCompareChartViewpager.adapter = RepoCompareChartAdapter(result.firstRepo!!, result.secondRepo!!, requireContext())
-//        binding.repoCompareChartViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-//        binding.repoCompareChartViewpager.isUserInputEnabled = true
+    private fun initGraph(data1: RepoStats, data2: RepoStats) {
+        data1.languages!!
+        data1.git_repo!!
+        data1.statistics!!
+        data1.languages_stats!!
+        data2.languages!!
+        data2.git_repo!!
+        data2.statistics!!
+        data2.languages_stats!!
+        var count = 0
+        val sum1 = data1.languages.values.sum()
+        val sum2 = data2.languages.values.sum()
+        val colors = ArrayList<Int>()
+        var red1 = 0
+        var green1 = 0
+        var blue1 = 0
+        var red2 = 0
+        var green2 = 0
+        var blue2 = 0
+        val entries1 = ArrayList<PieEntry>()
+        val legendEntry1 = HashMap<String, Int>()
+        val legendEntry2 = HashMap<String, Int>()
+        val entries2 = ArrayList<PieEntry>()
 
+        data1.languages.forEach {
+            entries1.add(PieEntry((it.value.toFloat() / sum1)*100, it.key))
+            red1 = (Math.random() * 255).toInt()
+            green1 = (Math.random() * 255).toInt()
+            blue1 = (Math.random() * 255).toInt()
+            colors.add(Color.rgb(red1, green1, blue1))
+
+            legendEntry1[it.key] = Color.rgb(red1, green1, blue1)
+        }
+
+        legendEntry1.forEach {
+            val linear = LinearLayout(requireContext())
+            linear.orientation = LinearLayout.HORIZONTAL
+            linear.gravity = Gravity.CENTER
+            val param = LinearLayout.LayoutParams(30,30)
+            param.setMargins(5, 0, 0, 0)
+            val color = View(requireContext())
+            color.setBackgroundColor(it.value)
+            color.layoutParams = param
+            val text = TextView(requireContext())
+            text.text = it.key
+            text.textSize = 11f
+            text.setTextColor(Color.BLACK)
+            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+            params.setMargins(5, 0, 10, 0)
+            text.layoutParams = params
+            linear.addView(color)
+            linear.addView(text)
+            binding.repo1Legend.addView(linear)
+        }
+
+        Log.d("entry", "legendEntry $legendEntry1")
+        val dataSet1 = PieDataSet(entries1, data1.git_repo.full_name)
+        dataSet1.label = null
+        dataSet1.setDrawValues(true)
+        dataSet1.valueTextSize = 15f
+        dataSet1.colors = colors
+        dataSet1.valueFormatter = ScoreCustomFormatter()
+        dataSet1.valueTextColor = Color.WHITE
+        val firstData = PieData(dataSet1)
+        binding.repo1Language.setTouchEnabled(true)
+        binding.repo1Language.description.isEnabled = false
+        binding.repo1Language.data = firstData
+        binding.repo1Language.setDrawEntryLabels(true)
+        binding.repo1Language.setEntryLabelColor(Color.BLACK)
+        binding.repo1Language.legend.isEnabled = false
+        binding.repo1Language.invalidate()
+        binding.repo1Language.visibility = View.GONE
+        binding.repo1Language.visibility = View.VISIBLE
+
+        data2.languages!!.forEach {
+            entries2.add(PieEntry((it.value.toFloat() / sum2)*100, it.key))
+            red2 = (Math.random() * 255).toInt()
+            green2 = (Math.random() * 255).toInt()
+            blue2 = (Math.random() * 255).toInt()
+            colors.add(Color.rgb(red2, green2, blue2))
+
+            legendEntry2[it.key] = Color.rgb(red2, green2, blue2)
+        }
+        val dataSet2 = PieDataSet(entries2, data2.git_repo!!.full_name)
+        dataSet2.label = null
+        dataSet2.colors = colors
+        dataSet2.setDrawValues(true)
+        dataSet2.valueFormatter = ScoreCustomFormatter()
+        dataSet2.valueTextColor = Color.WHITE
+        dataSet2.valueTextSize = 15f
+
+        legendEntry2.forEach {
+            val linear = LinearLayout(requireContext())
+            linear.orientation = LinearLayout.HORIZONTAL
+            linear.gravity = Gravity.CENTER
+            val param = LinearLayout.LayoutParams(30,30)
+            param.setMargins(5, 0, 0, 0)
+            val color = View(requireContext())
+            color.setBackgroundColor(it.value)
+            color.layoutParams = param
+            val text = TextView(requireContext())
+            text.text = it.key
+            text.textSize = 11f
+            val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+            params.setMargins(5, 0, 10, 0)
+            text.layoutParams = params
+            linear.addView(color)
+            linear.addView(text)
+            text.setTextColor(Color.BLACK)
+            binding.repo2Legend.addView(linear)
+        }
+
+        val secondData = PieData(dataSet2)
+        binding.repo2Language.setTouchEnabled(true)
+        binding.repo2Language.description.isEnabled = false
+        binding.repo2Language.data = secondData
+        binding.repo2Language.legend.isEnabled = false
+        binding.repo2Language.setDrawEntryLabels(true)
+        binding.repo2Language.setEntryLabelColor(Color.BLACK)
+        binding.repo2Language.invalidate()
+        binding.repo2Language.visibility = View.GONE
+        binding.repo2Language.visibility = View.VISIBLE
+        initProfiles()
+    }
+
+    private fun initProfiles() {
+        when(firstRepoMember.size) {
+            0 -> {
+                binding.repo1User1.visibility = View.INVISIBLE
+                binding.repo1User2.visibility = View.INVISIBLE
+                binding.repo1User3.visibility = View.INVISIBLE
+                binding.repo1User4.visibility = View.INVISIBLE
+            }
+            1 -> {
+                adaptProfile(1, firstRepoMember[0].profile_url)
+                binding.repo1User2.visibility = View.INVISIBLE
+                binding.repo1User3.visibility = View.INVISIBLE
+                binding.repo1User4.visibility = View.INVISIBLE
+            }
+            2 -> {
+                adaptProfile(1, firstRepoMember[0].profile_url)
+                adaptProfile(2, firstRepoMember[1].profile_url)
+                binding.repo1User3.visibility = View.INVISIBLE
+                binding.repo1User4.visibility = View.INVISIBLE
+            }
+            3 -> {
+                adaptProfile(1, firstRepoMember[0].profile_url)
+                adaptProfile(2, firstRepoMember[1].profile_url)
+                adaptProfile(3, firstRepoMember[2].profile_url)
+                binding.repo1User4.visibility = View.INVISIBLE
+            }
+            else -> {
+                adaptProfile(1, firstRepoMember[0].profile_url)
+                adaptProfile(2, firstRepoMember[1].profile_url)
+                adaptProfile(3, firstRepoMember[2].profile_url)
+                adaptProfile(4, firstRepoMember[3].profile_url)
+            }
+
+        }
+
+        when(secondRepoMember.size) {
+            0 -> {
+                binding.repo2User1.visibility = View.INVISIBLE
+                binding.repo2User2.visibility = View.INVISIBLE
+                binding.repo2User3.visibility = View.INVISIBLE
+                binding.repo2User4.visibility = View.INVISIBLE
+            }
+            1 -> {
+                adaptProfile(5, secondRepoMember[0].profile_url)
+                binding.repo2User2.visibility = View.INVISIBLE
+                binding.repo2User3.visibility = View.INVISIBLE
+                binding.repo2User4.visibility = View.INVISIBLE
+            }
+            2 -> {
+                adaptProfile(5, secondRepoMember[0].profile_url)
+                adaptProfile(6, secondRepoMember[1].profile_url)
+                binding.repo2User3.visibility = View.INVISIBLE
+                binding.repo2User4.visibility = View.INVISIBLE
+            }
+            3 -> {
+                adaptProfile(5, secondRepoMember[0].profile_url)
+                adaptProfile(6, secondRepoMember[1].profile_url)
+                adaptProfile(7, secondRepoMember[2].profile_url)
+                binding.repo2User4.visibility = View.INVISIBLE
+            }
+            else -> {
+                adaptProfile(5, secondRepoMember[0].profile_url)
+                adaptProfile(7, secondRepoMember[1].profile_url)
+                adaptProfile(7, secondRepoMember[2].profile_url)
+                adaptProfile(8, secondRepoMember[3].profile_url)
+            }
+        }
+
+        binding.repo1Name.text = repo1
+        binding.repo2Name.text = repo2
+        binding.compareRepoFrame.visibility = View.VISIBLE
+    }
+
+    private fun adaptProfile(order: Int, url: String) {
+        when(order) {
+            1 -> {
+                Glide.with(binding.repo1User1).load(url)
+                    .into(binding.repo1User1)
+                binding.compareRepoFrame.visibility = View.VISIBLE
+            }
+            2 -> {
+                Glide.with(binding.repo1User2).load(url)
+                    .into(binding.repo1User2)
+                binding.compareRepoFrame.visibility = View.VISIBLE
+            }
+            3 -> {
+                Glide.with(binding.repo1User3).load(url)
+                    .into(binding.repo1User3)
+                binding.compareRepoFrame.visibility = View.VISIBLE
+            }
+            4 -> {
+                Glide.with(binding.repo1User4).load(url)
+                    .into(binding.repo1User4)
+                binding.compareRepoFrame.visibility = View.VISIBLE
+            }
+            5 -> {
+                Glide.with(binding.repo2User1).load(url)
+                    .into(binding.repo2User1)
+                binding.compareRepoFrame.visibility = View.VISIBLE
+            }
+            6 -> {
+                Glide.with(binding.repo2User2).load(url)
+                    .into(binding.repo2User2)
+                binding.compareRepoFrame.visibility = View.VISIBLE
+            }
+            7 -> {
+                Glide.with(binding.repo2User3).load(url)
+                    .into(binding.repo2User3)
+                binding.compareRepoFrame.visibility = View.VISIBLE
+            }
+            8 -> {
+                Glide.with(binding.repo2User4).load(url)
+                    .into(binding.repo2User4)
+                binding.compareRepoFrame.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    class ScoreCustomFormatter() : ValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            return "${DecimalFormat("#.##").format(value)}%"
+        }
     }
 
 }

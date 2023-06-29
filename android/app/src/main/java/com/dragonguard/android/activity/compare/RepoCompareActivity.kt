@@ -16,6 +16,7 @@ import com.dragonguard.android.fragment.CompareRepoFragment
 import com.dragonguard.android.fragment.CompareUserFragment
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.adapters.CompareAdapter
+import com.dragonguard.android.model.compare.RepoMembersResult
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -71,12 +72,12 @@ class RepoCompareActivity : AppCompatActivity() {
 
     fun checkContributors(result: CompareRepoMembersResponseModel) {
         if ((result.first_result != null) && (result.second_result != null)) {
-            if (result.first_result.isEmpty()) {
+            if (result.first_result.isEmpty() || result.second_result.isEmpty()) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors()}, 2000)
             } else {
-                startFragment()
+                startFragment(result.first_result, result.second_result)
             }
         } else {
             if(count<10) {
@@ -87,8 +88,8 @@ class RepoCompareActivity : AppCompatActivity() {
         }
     }
 
-    private fun startFragment() {
-        compareRepoFragment = CompareRepoFragment(repo1, repo2, token)
+    private fun startFragment(resultFirst: List<RepoMembersResult>, resultSecond: List<RepoMembersResult>) {
+        compareRepoFragment = CompareRepoFragment(repo1, repo2, token, resultFirst, resultSecond)
         compareUserFragment = CompareUserFragment(repo1, repo2, token)
         adapter = CompareAdapter(this, token)
 
@@ -127,22 +128,22 @@ class RepoCompareActivity : AppCompatActivity() {
 //        }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
+//        return true
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
             }
-            R.id.home_menu -> {
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
-            }
+//            R.id.home_menu -> {
+//                val intent = Intent(applicationContext, MainActivity::class.java)
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+//                startActivity(intent)
+//            }
         }
         return super.onOptionsItemSelected(item)
     }

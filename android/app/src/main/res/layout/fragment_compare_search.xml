@@ -48,16 +48,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:autoSizeMaxTextSize="30sp"
+                    android:autoSizeMaxTextSize="23sp"
                     android:autoSizeTextType="uniform"
                     android:background="@drawable/shadow"
                     android:ellipsize="end"
                     android:fontFamily="@font/ibm_semibold"
                     android:gravity="center"
-                    android:maxLines="1"
+                    android:lines="1"
                     android:text="Repository 1"
                     android:textAllCaps="false"
-                    android:textSize="30sp"/>
+                    android:textSize="23sp"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -91,16 +91,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:autoSizeMaxTextSize="30sp"
+                        android:autoSizeMaxTextSize="23sp"
                         android:autoSizeTextType="uniform"
                         android:background="@drawable/shadow"
                         android:ellipsize="end"
                         android:fontFamily="@font/ibm_semibold"
                         android:gravity="center"
-                        android:maxLines="1"
+                        android:lines="1"
                         android:text="Repository 2"
                         android:textAllCaps="false"
-                        android:textSize="30sp" />
+                        android:textSize="23sp"/>
                 </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
