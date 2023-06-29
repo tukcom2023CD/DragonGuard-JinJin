@@ -403,58 +403,63 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
             }
             else -> {
                 adaptProfile(5, secondRepoMember[0].profile_url)
-                adaptProfile(7, secondRepoMember[1].profile_url)
+                adaptProfile(6, secondRepoMember[1].profile_url)
                 adaptProfile(7, secondRepoMember[2].profile_url)
                 adaptProfile(8, secondRepoMember[3].profile_url)
             }
         }
 
+        binding.rankingLottie.pauseAnimation()
+        binding.rankingLottie.visibility = View.GONE
+        binding.repoCompareList.visibility = View.VISIBLE
         binding.repo1Name.text = repo1
         binding.repo2Name.text = repo2
         binding.compareRepoFrame.visibility = View.VISIBLE
     }
 
-    private fun adaptProfile(order: Int, url: String) {
-        when(order) {
-            1 -> {
-                Glide.with(binding.repo1User1).load(url)
-                    .into(binding.repo1User1)
-                binding.compareRepoFrame.visibility = View.VISIBLE
-            }
-            2 -> {
-                Glide.with(binding.repo1User2).load(url)
-                    .into(binding.repo1User2)
-                binding.compareRepoFrame.visibility = View.VISIBLE
-            }
-            3 -> {
-                Glide.with(binding.repo1User3).load(url)
-                    .into(binding.repo1User3)
-                binding.compareRepoFrame.visibility = View.VISIBLE
-            }
-            4 -> {
-                Glide.with(binding.repo1User4).load(url)
-                    .into(binding.repo1User4)
-                binding.compareRepoFrame.visibility = View.VISIBLE
-            }
-            5 -> {
-                Glide.with(binding.repo2User1).load(url)
-                    .into(binding.repo2User1)
-                binding.compareRepoFrame.visibility = View.VISIBLE
-            }
-            6 -> {
-                Glide.with(binding.repo2User2).load(url)
-                    .into(binding.repo2User2)
-                binding.compareRepoFrame.visibility = View.VISIBLE
-            }
-            7 -> {
-                Glide.with(binding.repo2User3).load(url)
-                    .into(binding.repo2User3)
-                binding.compareRepoFrame.visibility = View.VISIBLE
-            }
-            8 -> {
-                Glide.with(binding.repo2User4).load(url)
-                    .into(binding.repo2User4)
-                binding.compareRepoFrame.visibility = View.VISIBLE
+    private fun adaptProfile(order: Int, url: String?) {
+        url?.let{
+            when(order) {
+                1 -> {
+                    Glide.with(binding.repo1User1).load(url)
+                        .into(binding.repo1User1)
+                    binding.compareRepoFrame.visibility = View.VISIBLE
+                }
+                2 -> {
+                    Glide.with(binding.repo1User2).load(url)
+                        .into(binding.repo1User2)
+                    binding.compareRepoFrame.visibility = View.VISIBLE
+                }
+                3 -> {
+                    Glide.with(binding.repo1User3).load(url)
+                        .into(binding.repo1User3)
+                    binding.compareRepoFrame.visibility = View.VISIBLE
+                }
+                4 -> {
+                    Glide.with(binding.repo1User4).load(url)
+                        .into(binding.repo1User4)
+                    binding.compareRepoFrame.visibility = View.VISIBLE
+                }
+                5 -> {
+                    Glide.with(binding.repo2User1).load(url)
+                        .into(binding.repo2User1)
+                    binding.compareRepoFrame.visibility = View.VISIBLE
+                }
+                6 -> {
+                    Glide.with(binding.repo2User2).load(url)
+                        .into(binding.repo2User2)
+                    binding.compareRepoFrame.visibility = View.VISIBLE
+                }
+                7 -> {
+                    Glide.with(binding.repo2User3).load(url)
+                        .into(binding.repo2User3)
+                    binding.compareRepoFrame.visibility = View.VISIBLE
+                }
+                8 -> {
+                    Glide.with(binding.repo2User4).load(url)
+                        .into(binding.repo2User4)
+                    binding.compareRepoFrame.visibility = View.VISIBLE
+                }
             }
         }
     }

@@ -6,6 +6,6 @@ data class RepoMembersResult (
     val commits: Int,
     val deletions: Int,
     val github_id: String,
-    val profile_url: String,
+    val profile_url: String?,
     val is_service_member: Boolean
 )
