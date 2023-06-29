@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "bronze.png",
+      "filename" : "highschool.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "bronze 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "bronze 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

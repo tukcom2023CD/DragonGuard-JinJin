@@ -12,7 +12,6 @@ import RxSwift
 
 // MARK: 1등 보여주는 뷰
 final class CustomFirstRankingUserViewElementView: UIView{
-    var firstUserData: AllUserRankingModel?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,7 +31,7 @@ final class CustomFirstRankingUserViewElementView: UIView{
     // MARK:
     private lazy var userView: UserProfileImgView = {
         let view = UserProfileImgView()
-        view.userLink = self.firstUserData?.profile_image
+        
         view.layer.borderWidth = 1
         view.layer.cornerRadius = 20
         return view
@@ -42,14 +41,12 @@ final class CustomFirstRankingUserViewElementView: UIView{
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.text = firstUserData?.github_id ?? ""
         return label
     }()
     
     // MARK:
     private lazy var numLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(firstUserData?.tokens ?? 0)"
         label.textAlignment = .center
         return label
     }()
@@ -87,14 +84,10 @@ final class CustomFirstRankingUserViewElementView: UIView{
     
     // MARK: 1등 데이터 삽입
     func getData(data: AllUserRankingModel){
-        self.firstUserData = data
         addUI()
-    }
-        
-    func updateData(data: AllUserRankingModel){
-        self.firstUserData = data
-        titleLabel.text = data.github_id
+        titleLabel.text = data.github_id ?? ""
         numLabel.text = "\(data.tokens ?? 0)"
+        userView.userLink = data.profile_image
         
         switch data.tier ?? ""{
         case "BRONZE":
@@ -108,11 +101,28 @@ final class CustomFirstRankingUserViewElementView: UIView{
         case "DIAMOND":
             userView.layer.borderColor = CGColor(red: 0/255, green: 219/255, blue: 249/255, alpha: 1.0) /* #00dbf9 */
         default:
-            userView.layer.borderColor = CGColor(red: 255/255, green: 25/255, blue: 255/255, alpha: 1.0) 
+            userView.layer.borderColor = CGColor(red: 255/255, green: 25/255, blue: 255/255, alpha: 1.0)
         }
         
         // 티어 색상마다 색깔 다르게
         userView.updateData(img: data.profile_image ?? "")
+        
+    }
+    
+    /*
+     organization
+     */
+    
+    // MARK: 1 등 organization 데이터 삽입
+    func getData(data: TypeRankingModel){
+        addUI()
+        titleLabel.text = data.name ?? ""
+        numLabel.text = "\(data.token_sum ?? 0)"
+        
+        // 티어 색상마다 색깔 다르게
+        userView.updateData(type: data.organization_type ?? "")
+        
+        
     }
 }
 

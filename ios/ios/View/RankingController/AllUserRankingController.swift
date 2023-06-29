@@ -13,11 +13,13 @@ import Lottie
 
 // MARK: 전체 사용자 랭킹
 final class AllUserRankingController: UIViewController{
-    private let allRankingViewModel = ALLUserInfoViewModel()
+    private let rankingViewModel = RankingViewModel()
     private let disposeBag = DisposeBag()
     private let selectionList: [String] = ["사용자 전체", "조직 전체" ,"회사", "대학교", "고등학교", "ETC"]
     private var topTierData: [AllUserRankingModel] = []
     private var userTierData: [AllUserRankingModel] = []
+    private var topTierTypeOfRankingData: [TypeRankingModel] = []
+    private var userTierTypeOfRankingData: [TypeRankingModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,7 +60,6 @@ final class AllUserRankingController: UIViewController{
     // MARK: 상위 랭킹 보여주는 뷰
     private lazy var topView: CustomTopView = {
         let view = CustomTopView()
-        view.getData(list: self.topTierData)
         view.backgroundColor = .white
         view.layer.shadowOpacity = 1
         view.layer.shadowOffset = CGSize(width: 0, height: 3)
@@ -179,13 +180,9 @@ final class AllUserRankingController: UIViewController{
     
     // MARK: 전체 사용자 랭킹 데이터 가져옴
     private func loadAllRankingData(){
-        
-        allRankingViewModel.getAllRanking()
+        scrollView.removeFromSuperview()
+        rankingViewModel.getAllRanking(check: true)
             .subscribe(onNext:{ list in
-                print("?A")
-                print(list)
-                
-                
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -195,63 +192,170 @@ final class AllUserRankingController: UIViewController{
                             self.userTierData.append(list[i])
                         }
                     }
-                    
-                    self.topView.updateData(list: list)
-                    self.tableView.reloadData()
                 }
                 else{
                     for i in 0..<list.count{
                         self.topTierData.append(list[i])
                     }
-                    self.topView.updateData(list: list)
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
+                self.topView.getData(list: self.topTierData)
+                self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
-        
         
     }
 
     // MARK: 전체 조직 랭킹 데이터 가져옴
     private func loadAllOrganizationData(){
-        
-        indicatorView.removeFromSuperview()
-        addUI_AutoLayout_About_Ranking()
-        topView.updateData(list: topTierData)
-        tableView.reloadData()
+        scrollView.removeFromSuperview()
+
+        rankingViewModel.allRankingOfType(check: true)
+            .subscribe(onNext:{ list in
+                print("loadAllOrganizationData\n\(list)")
+                if list.count > 3{
+                    for i in 0..<list.count{
+                        if(i<3){
+                            self.topTierTypeOfRankingData.append(list[i])
+                        }
+                        else{
+                            self.userTierTypeOfRankingData.append(list[i])
+                        }
+                    }
+                }
+                else{
+                    for i in 0..<list.count{
+                        self.topTierTypeOfRankingData.append(list[i])
+                    }
+                }
+                
+                self.addUI_AutoLayout_About_Ranking()
+                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
 
     // MARK: 회사 데이터 가져옴
     private func loadCompanyData(){
         
-        addUI_AutoLayout_About_Ranking()
-        topView.updateData(list: topTierData)
-        tableView.reloadData()
+        scrollView.removeFromSuperview()
+        
+        rankingViewModel.rankingOfType(type: "COMPANY", check: true)
+            .subscribe(onNext:{ list in
+                print("loadCompanyData\n\(list)")
+                if list.count > 3{
+                    for i in 0..<list.count{
+                        if(i<3){
+                            self.topTierTypeOfRankingData.append(list[i])
+                        }
+                        else{
+                            self.userTierTypeOfRankingData.append(list[i])
+                        }
+                    }
+                }
+                else{
+                    for i in 0..<list.count{
+                        self.topTierTypeOfRankingData.append(list[i])
+                    }
+                }
+                
+                self.addUI_AutoLayout_About_Ranking()
+                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
     
     // MARK: 대학교 데이터 가져옴
     private func loadUniversityData(){
+        scrollView.removeFromSuperview()
         
-        addUI_AutoLayout_About_Ranking()
-        topView.updateData(list: topTierData)
-        tableView.reloadData()
+        rankingViewModel.rankingOfType(type: "UNIVERSITY", check: true)
+            .subscribe(onNext:{ list in
+                print("loadUniversityData\n\(list)")
+                if list.count > 3{
+                    for i in 0..<list.count{
+                        if(i<3){
+                            self.topTierTypeOfRankingData.append(list[i])
+                        }
+                        else{
+                            self.userTierTypeOfRankingData.append(list[i])
+                        }
+                    }
+                }
+                else{
+                    for i in 0..<list.count{
+                        self.topTierTypeOfRankingData.append(list[i])
+                    }
+                }
+                
+                self.addUI_AutoLayout_About_Ranking()
+                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
     
     // MARK: 고등학교 데이터 가져옴
     private func loadHighSchoolData(){
+        scrollView.removeFromSuperview()
         
-        addUI_AutoLayout_About_Ranking()
-        topView.updateData(list: topTierData)
-        tableView.reloadData()
+        rankingViewModel.rankingOfType(type: "HIGH_SCHOOL", check: true)
+            .subscribe(onNext:{ list in
+                print("loadHighSchoolData\n\(list)")
+                if list.count > 3{
+                    for i in 0..<list.count{
+                        if(i<3){
+                            self.topTierTypeOfRankingData.append(list[i])
+                        }
+                        else{
+                            self.userTierTypeOfRankingData.append(list[i])
+                        }
+                    }
+                }
+                else{
+                    for i in 0..<list.count{
+                        self.topTierTypeOfRankingData.append(list[i])
+                    }
+                }
+                
+                self.addUI_AutoLayout_About_Ranking()
+                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
     
     // MARK: ETC 데이터 가져옴
     private func loadETCData(){
+        scrollView.removeFromSuperview()
         
-        addUI_AutoLayout_About_Ranking()
-        topView.updateData(list: topTierData)
-        tableView.reloadData()
+        rankingViewModel.rankingOfType(type: "ETC", check: true)
+            .subscribe(onNext:{ list in
+                print("loadETCData\n\(list)")
+                if list.count > 3{
+                    for i in 0..<list.count{
+                        if(i<3){
+                            self.topTierTypeOfRankingData.append(list[i])
+                        }
+                        else{
+                            self.userTierTypeOfRankingData.append(list[i])
+                        }
+                    }
+                }
+                else{
+                    for i in 0..<list.count{
+                        self.topTierTypeOfRankingData.append(list[i])
+                    }
+                }
+                
+                self.addUI_AutoLayout_About_Ranking()
+                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
     
 }

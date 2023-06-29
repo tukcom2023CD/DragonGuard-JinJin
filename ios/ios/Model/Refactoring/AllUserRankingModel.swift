@@ -15,13 +15,3 @@ struct AllUserRankingModel: Codable{
     let tokens: Int?
     let tier: String?
 }
-
-
-struct AllUserRankingCodableModel: Codable{
-    let id: String?
-    let profileImg: String?
-    let name: String?
-    let githubId: String?
-    let tokens: Int?
-    let tier: String?
-}

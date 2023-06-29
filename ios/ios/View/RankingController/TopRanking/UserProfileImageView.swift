@@ -47,4 +47,23 @@ final class UserProfileImgView: UIView{
     func updateData(img: String){
         userImgView.load(img: userImgView, url: URL(string: img)!, size: 60)
     }
+    
+    
+    func updateData(type: String){
+        
+        switch type{
+        case "UNIVERSITY":
+            userImgView.image = UIImage(named: "university")?.resize(newWidth: 60)
+        case "COMPANY":
+            userImgView.image = UIImage(named: "company")?.resize(newWidth: 60)
+        case "HIGH_SCHOOL":
+            userImgView.image = UIImage(named: "highschool")?.resize(newWidth: 60)
+        case "ETC":
+            userImgView.image = UIImage(named: "2")?.resize(newWidth: 60)
+        default:
+            print("UserProfileImgView error!\n")
+        }
+            
+        
+    }
 }
