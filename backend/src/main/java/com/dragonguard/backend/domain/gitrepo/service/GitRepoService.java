@@ -265,7 +265,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
 
     private GitRepoContributionMap getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function) {
         return new GitRepoContributionMap(contributions.stream()
-                .collect(Collectors.toMap(Function.identity(), mem -> Arrays.stream(mem.getWeeks()).mapToInt(function).sum())));
+                .collect(Collectors.toMap(Function.identity(), mem -> Arrays.stream(mem.getWeeks()).filter(Objects::nonNull).mapToInt(function).sum())));
     }
 
     public GitRepo getEntityByName(final String name) {
