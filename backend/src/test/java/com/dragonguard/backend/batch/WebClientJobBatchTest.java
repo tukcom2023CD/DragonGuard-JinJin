@@ -56,7 +56,7 @@ public class WebClientJobBatchTest extends GitRepoBatchTest {
 
         jobLauncherTestUtils.launchJob();
 
-        Thread.sleep(5000);
+        Thread.sleep(10000);
 
         log.info("AFTER SIZE: {}", gitRepoMemberRepository.findAll().size());
     }

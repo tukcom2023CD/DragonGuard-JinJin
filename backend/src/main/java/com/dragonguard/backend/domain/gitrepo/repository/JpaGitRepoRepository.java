@@ -26,6 +26,6 @@ public interface JpaGitRepoRepository extends JpaRepository<GitRepo, Long>, GitR
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1500")})
     boolean existsByName(String name);
 
-    @EntityGraph(attributePaths = {"gitRepoMembers"})
+    @Query("SELECT gr FROM GitRepo gr LEFT JOIN FETCH gr.gitRepoMembers grm LEFT JOIN FETCH grm.member")
     List<GitRepo> findAll();
 }
