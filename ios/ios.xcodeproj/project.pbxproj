@@ -38,7 +38,6 @@
 		3B2E0DCD2A438F5800E6A7AD /* ChooseUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DCC2A438F5800E6A7AD /* ChooseUserTableViewCell.swift */; };
 		3B2E0DCF2A43CB5700E6A7AD /* BlockchainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DCE2A43CB5700E6A7AD /* BlockchainViewModel.swift */; };
 		3B2E0DD12A43CB9300E6A7AD /* BlockChainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DD02A43CB9300E6A7AD /* BlockChainService.swift */; };
-		3B2E0DD52A43D4D000E6A7AD /* CompareUserAllModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DD42A43D4D000E6A7AD /* CompareUserAllModel.swift */; };
 		3B2E0DE02A43EF2700E6A7AD /* ContributorAutoUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DDF2A43EF2700E6A7AD /* ContributorAutoUIView.swift */; };
 		3B2E0DE22A43F12100E6A7AD /* ContributorAutoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DE12A43F12100E6A7AD /* ContributorAutoCollectionViewCell.swift */; };
 		3B2E0DE42A43F6C200E6A7AD /* OrganiRankInMyRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DE32A43F6C200E6A7AD /* OrganiRankInMyRank.swift */; };
@@ -209,7 +208,6 @@
 		3B2E0DCC2A438F5800E6A7AD /* ChooseUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseUserTableViewCell.swift; sourceTree = "<group>"; };
 		3B2E0DCE2A43CB5700E6A7AD /* BlockchainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockchainViewModel.swift; sourceTree = "<group>"; };
 		3B2E0DD02A43CB9300E6A7AD /* BlockChainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockChainService.swift; sourceTree = "<group>"; };
-		3B2E0DD42A43D4D000E6A7AD /* CompareUserAllModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareUserAllModel.swift; sourceTree = "<group>"; };
 		3B2E0DDF2A43EF2700E6A7AD /* ContributorAutoUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributorAutoUIView.swift; sourceTree = "<group>"; };
 		3B2E0DE12A43F12100E6A7AD /* ContributorAutoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributorAutoCollectionViewCell.swift; sourceTree = "<group>"; };
 		3B2E0DE32A43F6C200E6A7AD /* OrganiRankInMyRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganiRankInMyRank.swift; sourceTree = "<group>"; };
@@ -375,8 +373,10 @@
 				3BE649FF2A3DC6C5005D9F9E /* RepositoryListInOrganizationModel.swift */,
 				3BE64A0F2A3E05E1005D9F9E /* BlockChainListModel.swift */,
 				3B49BAB92A40CC37009C5963 /* DetailRepoModel.swift */,
-				3B2E0DD42A43D4D000E6A7AD /* CompareUserAllModel.swift */,
 				3B5B174A29DC584800571A8D /* TypeRankingModel.swift */,
+				3B6E075929ABBD64002676DF /* CompareUserModel.swift */,
+				3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */,
+				3B18AA1D29A7B1E90051C086 /* KlipModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -434,11 +434,11 @@
 		3B2E0DBA2A43740000E6A7AD /* CompareViewController */ = {
 			isa = PBXGroup;
 			children = (
+				3B2E0DBC2A43743900E6A7AD /* CompareChooseRepoViewController.swift */,
 				3B2E0DC02A43746A00E6A7AD /* CompareRepoUserController.swift */,
 				3B2E0DCA2A438D7A00E6A7AD /* ChooseUserViewController.swift */,
 				3B2E0DCC2A438F5800E6A7AD /* ChooseUserTableViewCell.swift */,
 				3B2E0DC22A43748B00E6A7AD /* CompareTableViewCell.swift */,
-				3B2E0DBC2A43743900E6A7AD /* CompareChooseRepoViewController.swift */,
 				3B2E0DBE2A43745100E6A7AD /* CompareCollectionViewCell.swift */,
 				3B2E0DBB2A43741F00E6A7AD /* CustomUIView */,
 			);
@@ -486,6 +486,7 @@
 				3B2E0DD02A43CB9300E6A7AD /* BlockChainService.swift */,
 				3BA2013829980661008978A5 /* MainService.swift */,
 				3B9CF3D3298F9B8C00495D35 /* RankingService.swift */,
+				3BAEA776299CFD090054DC5D /* PostService.swift */,
 			);
 			path = Refactcoring;
 			sourceTree = "<group>";
@@ -571,13 +572,12 @@
 			isa = PBXGroup;
 			children = (
 				3BE649E92A3D8747005D9F9E /* Refactoring */,
-				3B060FD529911158000B2518 /* MainViewModel.swift */,
 				3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */,
 				3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */,
-				3B5B174E29DC595D00571A8D /* OrganizationRankingViewModel.swift */,
 				3BD6EDDD29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift */,
 				3B61080929E9A0F5000D7A5A /* MyProfileviewModel.swift */,
 				3BA78D952A04F112000ACAD1 /* AdminViewModel.swift */,
+				3B5B174E29DC595D00571A8D /* OrganizationRankingViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -586,13 +586,10 @@
 			isa = PBXGroup;
 			children = (
 				3B110FF42A24CA35008C99F0 /* Refactoring */,
-				3B18AA1D29A7B1E90051C086 /* KlipModel.swift */,
 				A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */,
 				3B9CF3D1298F997B00495D35 /* UserInfoModel.swift */,
 				3BE6AD322993D0D800B22EBD /* RepoContributorInfoModel.swift */,
 				3BA20136299805AE008978A5 /* MainModel.swift */,
-				3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */,
-				3B6E075929ABBD64002676DF /* CompareUserModel.swift */,
 				3B3CE9DB29B47EDF00B2594B /* UserDBId.swift */,
 				3B43B5A229B87FB100EBB379 /* UserDBIdModel.swift */,
 				3B5E07FE29BEF7E50090E8A6 /* GithubTokenModel.swift */,
@@ -664,6 +661,7 @@
 				3BDF0FA429A619F900816837 /* LoginViewModel.swift */,
 				3B9CF3D5298FB5A700495D35 /* RankingViewModel.swift */,
 				3B2E0DCE2A43CB5700E6A7AD /* BlockchainViewModel.swift */,
+				3B060FD529911158000B2518 /* MainViewModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -774,17 +772,16 @@
 				3B49BABB2A40CD64009C5963 /* Refactcoring */,
 				A30BA46F29841C97008B594E /* SearchPageService.swift */,
 				3BE6AD2E2993C6D300B22EBD /* RepoContributorInfoService.swift */,
-				3BAEA776299CFD090054DC5D /* PostService.swift */,
 				3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */,
 				3B7BFF6929CBD63200A2F3F4 /* SearchOraganizationService.swift */,
 				3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */,
 				3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */,
-				3B5B174C29DC593100571A8D /* AllOrganizationRankingService.swift */,
-				3B5B175C29DC7B2900571A8D /* TypeOrganizationRankingService.swift */,
 				3BD6EDD929DD646D00DEF7E0 /* RankingInOrganizationService.swift */,
 				3B61080B29E9A10F000D7A5A /* MyProfileService.swift */,
 				3BA78D932A04EED9000ACAD1 /* AdminCheckService.swift */,
 				3BA78D972A04F346000ACAD1 /* AdminService.swift */,
+				3B5B174C29DC593100571A8D /* AllOrganizationRankingService.swift */,
+				3B5B175C29DC7B2900571A8D /* TypeOrganizationRankingService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -997,7 +994,6 @@
 				3BE649ED2A3D9184005D9F9E /* Extension.swift in Sources */,
 				3BFF623329CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift in Sources */,
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,
-				3B2E0DD52A43D4D000E6A7AD /* CompareUserAllModel.swift in Sources */,
 				3BE649F82A3DA84D005D9F9E /* DetailInfoModel.swift in Sources */,
 				3BC994E629CAD018005150FB /* TokenModel.swift in Sources */,
 				3B3D2E0D29D5DA74001A702C /* OrganizationSearchController.swift in Sources */,

@@ -51,9 +51,10 @@ final class UserUIButton: UIButton{
         }
     }
     
-    func inputData(img: UIImage, name: String){
+    func inputData(imgPath: String, name: String){
         addUI()
-        imgView.image = img.resize(newWidth: 80, newHeight: 80)
+//        imgView.image = img.resize(newWidth: 80, newHeight: 80)
+        imgView.load(img: imgView, url: URL(string: imgPath)!, size: 80)
         userName.text = name
     }
     

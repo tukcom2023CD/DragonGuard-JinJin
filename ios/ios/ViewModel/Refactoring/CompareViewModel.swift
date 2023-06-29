@@ -11,6 +11,7 @@ import RxCocoa
 
 final class CompareViewModel{
     static let viewModel = CompareViewModel()
+    private init() {}
 //    var firstRepo = ""
 //    var secondRepo = ""
 //    var repositryInfo: BehaviorSubject<[String]> = BehaviorSubject(value: [])

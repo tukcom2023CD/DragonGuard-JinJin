@@ -7,72 +7,21 @@
 
 import Foundation
 
-struct CompareRepoModel{
-    var firstRepo: FirstRepoModel
-    var secondRepo: secondRepoModel
+struct CompareRepoModel: Codable{
+    var first_repo: FirstRepo
+    var second_repo: SecondRepo
+    var profile_urls: [String]
 }
 
-struct FirstRepoModel{
-    var gitRepo: GitRepoModel
-    var statistics: StatisticsModel
-    var languages: LanguagesModel
-    var languagesStats: StatisticsStatsModel
-    var profileUrls: [String]
-}
-
-struct secondRepoModel{
-    var gitRepo: GitRepoModel
-    var statistics: StatisticsModel
-    var languages: LanguagesModel
-    var languagesStats: StatisticsStatsModel
-    var profileUrls: [String]
-}
-
-struct GitRepoModel{
-    var full_name: String
-    var forks_count, stargazers_count, watchers_count, open_issues_count, closed_issues_count: Int
-    var subscribers_count: Int
-}
-
-struct StatisticsModel{
-    let commitStats: StatisticsStatsModel
-    let additionStats: StatisticsStatsModel
-    let deletionStats: StatisticsStatsModel
-}
-
-struct LanguagesModel{
-    var language: [String]
-    var count: [Int]
-}
-
-struct StatisticsStatsModel{
-    var count: Int
-    var sum: Int
-    var min: Int
-    var max: Int
-    var average: Double
-}
-
-
-
-/*
- Decoding Model
- */
-
-struct CompareRepoDecodingModel: Decodable{
-    var firstRepo: FirstRepo
-    var secondRepo: SecondRepo
-}
-
-struct FirstRepo: Decodable{
-    var gitRepo: GitRepo
+struct FirstRepo: Codable{
+    var git_repo: GitRepo
     var statistics: Statistics
     var languages: Languages
     var languagesStats: StatisticsStats
     var profileUrls: [String]
 }
 
-struct SecondRepo: Decodable{
+struct SecondRepo: Codable{
     let gitRepo: GitRepo
     let statistics: Statistics
     var languages: Languages
@@ -88,9 +37,9 @@ struct GitRepo: Codable{
 }
 
 struct Statistics: Codable{
-    let commitStats: StatisticsStats
-    let additionStats: StatisticsStats
-    let deletionStats: StatisticsStats
+    let commit_stats: StatisticsStats
+    let addition_stats: StatisticsStats
+    let deletion_stats: StatisticsStats
 }
 
 struct StatisticsStats: Codable{
@@ -101,7 +50,7 @@ struct StatisticsStats: Codable{
     let average: Double?
 }
 
-struct Languages: Decodable{
+struct Languages: Codable{
     var language: [String] = []
     var count: [Int] = []
     

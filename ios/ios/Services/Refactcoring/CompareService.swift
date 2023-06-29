@@ -18,11 +18,11 @@ final class CompareService{
     ///   - secondRepo: 두 번째 선택된 레포지토리
     func beforeSendingInfo(firstRepo: String, secondRepo: String) -> Observable<CompareUserModel> {
         let url = APIURL.apiUrl.compareBeforeAPI(ip: ip)
-        let body = ["firstRepo": firstRepo, "secondRepo": secondRepo]
-        var firstRepoUserInfo: [FirstRepoResult] = []   // 첫 번째 레포 내부 유저 리스트
-        var secondRepoUserInfo: [SecondRepoResult] = []  // 두 번째 레포 내부 유저 리스트
+        let body = ["first_repo": firstRepo, "second_repo": secondRepo]
         let access = UserDefaults.standard.string(forKey: "Access")
+        
         print("beforeSendingInfo\n\(url)")
+        print("body \(body)")
         return Observable.create(){ observer in
             
                 AF.request(url,
@@ -32,40 +32,16 @@ final class CompareService{
                            headers: ["Content-type": "application/json",
                                      "Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
-                .responseString { response in
-                    switch response.result {
+                .responseDecodable(of: CompareUserModel.self) { res in
+                    
+                    switch res.result{
                     case .success(let data):
-                        if let jsonData = data.data(using: .utf8) {
-                            do {
-                                let decodedData = try JSONDecoder().decode(CompareUserModel.self, from: jsonData)
-                                print(decodedData)
-                                observer.onNext(decodedData)
-//                                for data in decodedData.firstResult{
-//                                    firstRepoUserInfo.append(FirstRepoResult(githubId: data.githubId ?? "Unknown",
-//                                                                             profileUrl: data.profileUrl ?? "",
-//                                                                             commits: data.commits ?? 0,
-//                                                                             additions: data.additions ?? 0,
-//                                                                             deletions: data.deletions ?? 0,
-//                                                                             isServiceMember: data.isServiceMember ?? false))
-//                                }
-//                                for data in decodedData.secondResult{
-//                                    secondRepoUserInfo.append(SecondRepoResult(githubId: data.githubId ?? "Unknown",
-//                                                                               profileUrl: data.profileUrl ?? "",
-//                                                                               commits: data.commits ?? 0,
-//                                                                               additions: data.additions ?? 0,
-//                                                                               deletions: data.deletions ?? 0,
-//                                                                               isServiceMember: data.isServiceMember ?? false))
-//                                }
-//                                let compareUser = CompareUserModel(firstResult: firstRepoUserInfo, secondResult: secondRepoUserInfo)
-//                                observer.onNext(compareUser)
-                            }
-                            catch {
-                                print("Error decoding data: \(error)")
-                            }
-                        }
+                        print(data)
+                        observer.onNext(data)
                     case .failure(let error):
-                        print("Request failed with error: \(error)")
-                       }
+                        print("beforeSendingInfo error!\n\(error)")
+                    }
+                    
                 }
                 
             return Disposables.create()
@@ -81,9 +57,10 @@ final class CompareService{
     ///   - secondRepo: 두 번쨰 선택된 레포 이름
     func getCompareInfo(firstRepo: String, secondRepo: String) -> Observable<CompareRepoModel> {
         let url = APIURL.apiUrl.compareRepoAPI(ip: ip)
-        let body = ["firstRepo": firstRepo, "secondRepo": secondRepo]
+        let body = ["first_repo": firstRepo, "second_repo": secondRepo]
         let access = UserDefaults.standard.string(forKey: "Access")
         print("getCompareInfo\n\(url)")
+        print("body \(body)")
         return Observable.create() { observer in
                 AF.request(url,
                            method: .post,
@@ -91,7 +68,7 @@ final class CompareService{
                            encoding: JSONEncoding.default,
                            headers: ["Content-type": "application/json",
                                      "Authorization": "Bearer \(access ?? "")"])
-                .validate(statusCode: 200..<500)
+                .validate(statusCode: 200..<506)
                 .responseJSON { res in
                     print(res)
                 }
