@@ -246,6 +246,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         if(contributions == null || contributions.isEmpty()) return List.of();
 
         return contributions.stream()
+                .filter(c -> c.getWeeks() != null && !c.getWeeks().isEmpty() && c.getTotal() != null && c.getAuthor() != null)
                 .map(clientResponse -> {
                     String githubId = clientResponse.getAuthor().getLogin();
                     String profileUrl = clientResponse.getAuthor().getAvatarUrl();
