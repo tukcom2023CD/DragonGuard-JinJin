@@ -11,8 +11,8 @@ import Foundation
  Model
  */
 struct CompareUserModel: Codable{
-    let first_member: [FirstRepoResult]
-    let second_member: [SecondRepoResult]
+    let first_result: [FirstRepoResult]
+    let second_result: [SecondRepoResult]
 }
 
 struct FirstRepoResult: Codable{

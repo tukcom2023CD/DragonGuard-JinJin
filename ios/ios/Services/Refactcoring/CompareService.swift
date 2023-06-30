@@ -24,7 +24,7 @@ final class CompareService{
         print("beforeSendingInfo\n\(url)")
         print("body \(body)")
         return Observable.create(){ observer in
-            
+            Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { timer in
                 AF.request(url,
                            method: .post,
                            parameters: body,
@@ -33,17 +33,20 @@ final class CompareService{
                                      "Authorization": "Bearer \(access ?? "")"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: CompareUserModel.self) { res in
-                    
+
                     switch res.result{
                     case .success(let data):
                         print(data)
-                        observer.onNext(data)
+                        if !data.first_result.isEmpty && !data.second_result.isEmpty{
+                            observer.onNext(data)
+                            timer.invalidate()
+                        }
                     case .failure(let error):
                         print("beforeSendingInfo error!\n\(error)")
                     }
-                    
+
                 }
-                
+            })
             return Disposables.create()
         }
         
@@ -68,10 +71,11 @@ final class CompareService{
                            encoding: JSONEncoding.default,
                            headers: ["Content-type": "application/json",
                                      "Authorization": "Bearer \(access ?? "")"])
-                .validate(statusCode: 200..<506)
+                .validate(statusCode: 200..<201)
                 .responseDecodable(of: CompareRepoModel.self) { res in
                     switch res.result{
                     case .success(let data):
+                        print(data)
                         observer.onNext(data)
                     case .failure(let error):
                         print("getCompareInfo error!\n\(error)")

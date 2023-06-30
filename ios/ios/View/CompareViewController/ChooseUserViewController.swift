@@ -16,7 +16,7 @@ final class ChooseUserViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-            
+        print("choose User \(userList)")
         addUI()
     }
     
