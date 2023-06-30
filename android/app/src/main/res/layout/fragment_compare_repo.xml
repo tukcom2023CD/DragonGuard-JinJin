@@ -57,7 +57,9 @@
                         android:background="@drawable/shadow"
                         android:layout_marginHorizontal="10dp"
                         android:layout_gravity="center"
-                        android:padding="20dp">
+                        android:paddingHorizontal="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="20dp">
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/repo1_user1"
@@ -151,7 +153,9 @@
                         android:background="@drawable/shadow"
                         android:layout_marginHorizontal="10dp"
                         android:layout_gravity="center"
-                        android:padding="20dp">
+                        android:paddingHorizontal="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="20dp">
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/repo2_user1"

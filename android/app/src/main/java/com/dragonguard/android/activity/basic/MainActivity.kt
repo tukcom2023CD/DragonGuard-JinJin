@@ -293,9 +293,6 @@ class MainActivity : AppCompatActivity() {
                             Log.d("userInfo", "id:${userInfo.github_id}")
                             mainFrag = MainFragment(token, realModel)
                             refreshMain()
-                            if(realModel.tier == "SPROUT" && realModel.token_amount == 0) {
-                                finish = true
-                            }
                             if(realModel.tier != "SPROUT") {
                                 finish = true
                             }

@@ -28,8 +28,10 @@ import kotlinx.coroutines.launch
 class MainFragment(private val token: String, private val info: UserInfoModel) : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private var viewmodel = Viewmodel()
+    private var repeat = false
     val handler= Handler(Looper.getMainLooper()){
         setPage()
+        repeat = true
         true
     }
     override fun onCreateView(
@@ -52,9 +54,11 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
 
         drawInfo()
         CoroutineScope(Dispatchers.IO).launch{
-            while(true){
-                Thread.sleep(3000)
-                handler.sendEmptyMessage(0)
+            if(!repeat) {
+                while(true){
+                    Thread.sleep(3000)
+                    handler.sendEmptyMessage(0)
+                }
             }
         }
     }
