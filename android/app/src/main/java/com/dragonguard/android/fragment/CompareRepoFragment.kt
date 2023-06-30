@@ -230,9 +230,11 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
                 legendEntry1[it.key] = Color.rgb(red1, green1, blue1)
             }
         }
-        entries1.add(PieEntry(etc1, "etc"))
-        colors1.add(Color.BLACK)
-        legendEntry1["etc"] = Color.BLACK
+        if(etc1 != 0f) {
+            entries1.add(PieEntry(etc1, "etc"))
+            colors1.add(Color.BLACK)
+            legendEntry1["etc"] = Color.BLACK
+        }
 
         legendEntry1.forEach {
             val linear = LinearLayout(requireContext())
@@ -286,9 +288,11 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
                 legendEntry2[it.key] = Color.rgb(red2, green2, blue2)
             }
         }
-        entries2.add(PieEntry(etc2, "etc"))
-        colors2.add(Color.BLACK)
-        legendEntry2["etc"] = Color.BLACK
+        if(etc2 != 0f) {
+            entries2.add(PieEntry(etc2, "etc"))
+            colors2.add(Color.BLACK)
+            legendEntry2["etc"] = Color.BLACK
+        }
 
         val dataSet2 = PieDataSet(entries2, data2.git_repo!!.full_name)
         dataSet2.label = null
