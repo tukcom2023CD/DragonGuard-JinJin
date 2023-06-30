@@ -7,20 +7,12 @@
 
 import Foundation
 
-struct BlockChainListModel{
-    let contributeType: String?
-    let amount: Int?
-    let githubId: String?
-    let createdAt: String?
-    let transactionHashUrl: String?
-}
-
-struct BlockChainListCodableModel: Codable{
+struct BlockChainListModel: Codable{
     let id: Int?
-    let contributeType: String?
+    let contribute_type: String?
     let amount: Int?
-    let githubId: String?
-    let memberId: String?
-    let createdAt: String?
-    let transactionHashUrl: String?
+    let github_id: String?
+    let member_id: String?
+    let created_at: String?
+    let transaction_hash_url: String?
 }

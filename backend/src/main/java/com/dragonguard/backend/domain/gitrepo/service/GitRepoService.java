@@ -262,13 +262,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         if (contributions == null || contributions.isEmpty()
                 || contributions.stream().map(GitRepoMemberClientResponse::getWeeks).filter(Objects::nonNull).findFirst().isEmpty()) return null;
         return new GitRepoContributionMap(contributions.stream()
-                .collect(Collectors.toMap(Function.identity(), mem ->
-                        Arrays.stream(mem.getWeeks())
-                                .filter(Objects::nonNull)
-                                .map(function)
-                                .filter(Objects::nonNull)
-                                .mapToInt(Integer::intValue)
-                                .sum())));
+                .collect(Collectors.toMap(Function.identity(), mem -> mem.getWeeks().stream().mapToInt(function).sum())));
     }
 
     public GitRepo getEntityByName(final String name) {

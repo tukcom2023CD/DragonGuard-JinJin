@@ -74,8 +74,8 @@ extension OutsideView: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BlockChainListTableViewCell.identfider, for: indexPath) as? BlockChainListTableViewCell else {return UITableViewCell()}
         
-        cell.inputData(time: dataList[indexPath.row].createdAt ?? "",
-                       type: dataList[indexPath.row].contributeType ?? "",
+        cell.inputData(time: dataList[indexPath.row].created_at ?? "",
+                       type: dataList[indexPath.row].contribute_type ?? "",
                        count: "\(dataList[indexPath.row].amount ?? 0)GTR")
         return cell
     }
@@ -83,9 +83,9 @@ extension OutsideView: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        print("selectLink \(dataList[indexPath.row].transactionHashUrl)")
+        print("selectLink \(dataList[indexPath.row].transaction_hash_url)")
         
-        delegate?.sendURL(url: dataList[indexPath.row].transactionHashUrl ?? "")
+        delegate?.sendURL(url: dataList[indexPath.row].transaction_hash_url ?? "")
         
     }
     

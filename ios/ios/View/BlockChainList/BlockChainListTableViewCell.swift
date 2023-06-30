@@ -64,11 +64,27 @@ final class BlockChainListTableViewCell: UITableViewCell{
     }
     
     func inputData(time: String, type: String, count: String){
-        timeLabel.text = time
+        addUI()
+        
+        let date = time.split(separator: "T")[0]
+        let time = time.split(separator: "T")[1].split(separator: ".")[0]
+        
+        
+        
+//        let newSize = timeLabel.sizeThatFits(timeLabel.frame.size) //1
+//        let newSize = timeLabel.sizeThatFits( CGSize(width: timeLabel.frame.width, height: CGFloat.greatestFiniteMagnitude)) //2
+        let newSize = timeLabel.sizeThatFits(self.frame.size)
+        
+        timeLabel.frame.size = newSize
+        timeLabel.text = "\(date) \(time)"
+        
         typeLabel.text = type
         countLabel.text = count
         
-        addUI()
+        
     }
     
 }
+
+
+

@@ -7,20 +7,11 @@
 
 import Foundation
 
-struct AllUserRankingModel{
-    var profileImg: String?
-    var userName: String?
-    var num: Int?
-    var link: String?
-    var tier: String?
-}
-
-
-struct AllUserRankingCodableModel: Codable{
+struct AllUserRankingModel: Codable{
     let id: String?
-    let profileImg: String?
+    let profile_image: String?
     let name: String?
-    let githubId: String?
+    let github_id: String?
     let tokens: Int?
     let tier: String?
 }

@@ -52,10 +52,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     func checkValidUser(accessToken: String, refreshToken: String, complete: @escaping () -> () ){
         let url = APIURL.apiUrl.getMembersInfo(ip: APIURL.ip)
         
+        guard let accessToken = UserDefaults.standard.string(forKey: "Access") else {return}
+        
         AF.request(url,
                    headers: ["Authorization": "Bearer \(accessToken)"])
         .validate(statusCode: 200..<205)
-        .responseDecodable(of: MainDecodingModel.self ){ response in
+        .responseDecodable(of: MainModel.self ){ response in
                 switch response.result{
                 case .success(let data):
                     if data.id != ""{

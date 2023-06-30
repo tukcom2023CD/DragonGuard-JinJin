@@ -82,8 +82,6 @@ final class BlockChainListController: UIViewController{
         
         self.viewModel.getData()
             .subscribe(onNext: { list in
-                print(list)
-                
                 self.addUI()
                 self.outsideView.delegate = self
                 self.outsideView.inputData(list: list, totalLink: self.blockchainUrl)
