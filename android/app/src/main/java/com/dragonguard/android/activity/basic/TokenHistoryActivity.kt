@@ -3,6 +3,8 @@ package com.dragonguard.android.activity.basic
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +25,7 @@ class TokenHistoryActivity : AppCompatActivity() {
     private var token = ""
     var viewmodel = Viewmodel()
     private lateinit var tokenAdapter : TokenListAdapter
+    private var refresh = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +58,13 @@ class TokenHistoryActivity : AppCompatActivity() {
         binding.tokenContributeList.adapter = tokenAdapter
         binding.tokenContributeList.layoutManager = LinearLayoutManager(this)
         tokenAdapter.notifyDataSetChanged()
-        binding.tokenContributeList.visibility = View.VISIBLE
+
+        Handler(Looper.getMainLooper()).postDelayed({binding.tokenContributeList.visibility = View.VISIBLE}, 500)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.refresh, binding.toolbar.menu)
+        return true
     }
     
 
@@ -64,6 +73,25 @@ class TokenHistoryActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
+            }
+
+            R.id.refresh_button -> {
+                if(refresh) {
+                    refresh = false
+                    val coroutine = CoroutineScope(Dispatchers.Main)
+                    coroutine.launch {
+                        if(!this@TokenHistoryActivity.isFinishing) {
+                            val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.updateToken(token)
+                            }
+                            val resultRepo = resultRepoDeferred.await()
+                            resultRepo?.let { it->
+                                binding.tokenContributeList.visibility = View.INVISIBLE
+                                initRecycler(it)
+                            }
+                        }
+                    }
+                }
             }
         }
         return super.onOptionsItemSelected(item)

@@ -61,6 +61,9 @@ interface GitRankAPI {
     @GET("blockchain")
     fun getTokenHistory(@Header("Authorization")token: String) : Call<TokenHistoryModel>
 
+    @POST("blockchain/update")
+    fun updateToken(@Header("Authorization")token: String) : Call<TokenHistoryModel>
+
 //    klip wallet address를 서버로 보내는 함수
     @POST("members/wallet-address")
     @Headers("accept: application/json", "content-type: application/json")

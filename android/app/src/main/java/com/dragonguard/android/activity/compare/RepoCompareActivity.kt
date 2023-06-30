@@ -127,7 +127,7 @@ class RepoCompareActivity : AppCompatActivity() {
                     coroutine.launch {
                         if(!this@RepoCompareActivity.isFinishing) {
                             val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
-                                viewmodel.postCompareRepoRequest(repo1, repo2, token)
+                                viewmodel.updateCompareRepo(repo1, repo2, token)
                             }
                             val resultRepo = resultRepoDeferred.await()
 

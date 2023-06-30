@@ -205,4 +205,8 @@ class Viewmodel: ViewModel() {
     fun updateContribute(repoName: String, token: String): RepoContributorsModel {
         return repository.manualContribute(repoName, token)
     }
+
+    fun updateToken(token: String): ArrayList<TokenHistoryModelItem>? {
+        return repository.manualToken(token)
+    }
 }

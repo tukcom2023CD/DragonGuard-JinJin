@@ -92,7 +92,7 @@ class ApiRepository {
             Log.d("no", "사용자 정보 요청 결과 : ${result.code()}")
             userResult = result.body()!!
         } catch (e: Exception) {
-            Log.d("exception", "exception : ${e.printStackTrace()}")
+            Log.d("exception", "exception : ${e.message}")
             return userResult
         }
         return userResult
@@ -201,7 +201,7 @@ class ApiRepository {
             compareRepoResult = result.body()!!
             Log.d("token", "1 결과 ${result.code()}")
         } catch (e: Exception) {
-            Log.d("token", "1 결과 ${e.printStackTrace()}")
+            Log.d("token", "1 결과 ${e.message}")
             return compareRepoResult
         }
         return compareRepoResult
@@ -217,7 +217,7 @@ class ApiRepository {
             compareRepoResult = result.body()!!
             Log.d("token", "2 결과 ${result.code()}")
         } catch (e: Exception) {
-            Log.d("token", "2 결과 ${e.printStackTrace()}")
+            Log.d("token", "2 결과 ${e.message}")
             return compareRepoResult
         }
         return compareRepoResult
@@ -231,7 +231,7 @@ class ApiRepository {
             newToken = result.body()!!
             Log.d("e", "result ${result.code()}  ${result.message()}")
         } catch (e: Exception) {
-            Log.d("e", "error ${e.printStackTrace()}")
+            Log.d("e", "error ${e.message}")
             return newToken
         }
         return newToken
@@ -243,7 +243,7 @@ class ApiRepository {
             val result = postCommit.execute()
             Log.d("postCommits", "result ${result.code()}")
         } catch (e: Exception) {
-            Log.d("e", "error ${e.printStackTrace()}")
+            Log.d("e", "error ${e.message}")
         }
     }
 
@@ -261,7 +261,7 @@ class ApiRepository {
             orgNames = result.body()!!
             orgNames
         } catch (e: Exception) {
-            Log.d("error", "error : ${e.printStackTrace()}")
+            Log.d("error", "error : ${e.message}")
             orgNames
         }
     }
@@ -484,7 +484,7 @@ class ApiRepository {
             compareRepoResult = result.body()!!
             Log.d("token", "1 결과 ${result.code()}")
         } catch (e: Exception) {
-            Log.d("token", "1 결과 ${e.printStackTrace()}")
+            Log.d("token", "1 결과 ${e.message}")
             return compareRepoResult
         }
         return compareRepoResult
@@ -499,7 +499,7 @@ class ApiRepository {
             compareRepoResult = result.body()!!
             Log.d("token", "2 결과 ${result.code()}")
         } catch (e: Exception) {
-            Log.d("token", "2 결과 ${e.printStackTrace()}")
+            Log.d("token", "2 결과 ${e.message}")
             return compareRepoResult
         }
         return compareRepoResult
@@ -515,5 +515,19 @@ class ApiRepository {
             return repoContResult
         }
         return repoContResult
+    }
+
+    fun manualToken(token: String): ArrayList<TokenHistoryModelItem>? {
+        val tokenHistory = api.updateToken("Bearer $token")
+        var tokenHistoryResult: ArrayList<TokenHistoryModelItem>? = null
+        try {
+            val result = tokenHistory.execute()
+            Log.d("result", "블록체인 부여내역 업데이트 ${result.code()}")
+            tokenHistoryResult = result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "블록체인 부여내역 업데이트 오류 ${e.message}")
+            return null
+        }
+        return tokenHistoryResult
     }
 }

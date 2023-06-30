@@ -155,6 +155,7 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
         Log.d("api 횟수", "$page 페이지 검색")
         binding.rankingLottie.pauseAnimation()
         binding.rankingLottie.visibility = View.GONE
+        Log.d("전부", "유저 랭킹: $usersRanking")
         initScrollListener()
     }
 
