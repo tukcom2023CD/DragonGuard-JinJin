@@ -7,12 +7,14 @@ import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.mapper.BlockchainMapper;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -30,6 +32,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private final SmartContractService smartContractService;
     private final BlockchainMapper blockchainMapper;
     private final AuthService authService;
+    private final MemberRepository memberRepository;
     @Value("#{'${admin}'.split(',')}")
     private List<String> admins;
 
@@ -76,8 +79,14 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         return smartContractService.transfer(request, walletAddress);
     }
 
+    @Transactional(readOnly = true)
     public List<BlockchainResponse> getBlockchainList() {
-        return blockchainMapper.toResponseList(blockchainRepository.findAllByMemberId(authService.getLoginUserId()));
+        UUID memberId = authService.getLoginUserId();
+        return getBlockchainResponses(memberId);
+    }
+
+    private List<BlockchainResponse> getBlockchainResponses(UUID memberId) {
+        return blockchainMapper.toResponseList(blockchainRepository.findAllByMemberId(memberId));
     }
 
     @Override
@@ -94,5 +103,37 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
     private boolean hasSameAmount(final ContractRequest request, final BigInteger amount) {
         return amount.equals(request.getAmount());
+    }
+
+    public List<BlockchainResponse> updateAndGetBlockchainInfo() {
+        Member member = memberRepository.findById(authService.getLoginUserId()).orElseThrow(EntityNotFoundException::new);
+        if (!member.isWalletAddressExists()) return List.of();
+
+        sendSmartContractTransaction(member);
+
+        member.validateWalletAddressAndUpdateTier();
+        return getBlockchainResponses(member.getId());
+    }
+
+    private boolean checkAndTransaction(final Member member, final int contribution, final ContributeType contributeType) {
+        if (contribution <= 0) return true;
+
+        setTransaction(
+                new ContractRequest(
+                        contributeType.toString(),
+                        BigInteger.valueOf(contribution)),
+                member);
+
+        return false;
+    }
+
+    public void sendSmartContractTransaction(final Member member) {
+        if (checkAndTransaction(member, member.getCommitSumWithRelation(), ContributeType.COMMIT)) return;
+
+        if (checkAndTransaction(member, member.getIssueSumWithRelation(), ContributeType.ISSUE)) return;
+
+        if (checkAndTransaction(member, member.getPullRequestSumWithRelation(), ContributeType.PULL_REQUEST)) return;
+
+        member.getSumOfReviews().ifPresent(rv -> checkAndTransaction(member, rv, ContributeType.CODE_REVIEW));
     }
 }

@@ -5,6 +5,7 @@ import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,5 +25,10 @@ public class BlockchainController {
     @GetMapping
     public ResponseEntity<List<BlockchainResponse>> getBlockchainInfo() {
         return ResponseEntity.ok(blockchainService.getBlockchainList());
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<List<BlockchainResponse>> updateAndGetBlockchainInfo() {
+        return ResponseEntity.ok(blockchainService.updateAndGetBlockchainInfo());
     }
 }
