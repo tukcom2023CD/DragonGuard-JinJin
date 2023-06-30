@@ -21,7 +21,8 @@ final class CompareRepoUserController: UIViewController{
     private var allUserList: [AllMemberInfoModel] = []
     private var user1Index: Int?
     private var user2Index: Int?
-    private var count = 0
+    private var checkUserData: Bool = false
+    private var checkRepoData: Bool = false
 //    private var lastIndexOfFisrtArray: Int? /// 첫 번째 배열의 마지막 인덱스 저장
 //    private var selectedUserNum: [String] = []
     
@@ -349,18 +350,9 @@ final class CompareRepoUserController: UIViewController{
         CompareViewModel.viewModel.getRepositoryInfo(firstRepo: self.firstRepo ?? "", secondRepo: self.secondRepo ?? "")
             .subscribe(onNext:{ list in
                 self.repoInfo = list
-//                self.repoInfo?.first_repo = list.first_repo
-//                self.repoInfo?.second_repo = list.second_repo
                 
-//                for count in list.first_repo.languages.count {
-//                    self.repo1LanguagesCount.append(Double(count))
-//                }
-//
-//                for count in list.secondRepo.languages.count {
-//                    self.repo2LanguagesCount.append(Double(count))
-//                }
-                
-
+                self.checkRepoData = true
+                self.selectionCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
         
@@ -389,8 +381,8 @@ final class CompareRepoUserController: UIViewController{
                                                                deletions: data.deletions ?? 0,
                                                                is_service_member: data.is_service_member ?? false))
                 }
-                
-                
+                self.checkUserData = true
+                self.selectionCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
         
@@ -493,28 +485,31 @@ extension CompareRepoUserController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompareCollectionViewCell.identfier, for: indexPath) as? CompareCollectionViewCell else { return UICollectionViewCell() }
         cell.inputData(text: selectionTitleList[indexPath.row])
+        
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == 0{
             scrollView_User.removeFromSuperview()
-            addUI()
-            
-//            self.leftView.inputData(repo1: repo1LanguagesCount,
-//                                   values: repo1Language,
-//                                    repoName: repoInfo?.firstRepo.gitRepo.full_name ?? "none",
-//                                    imgList: repoInfo?.firstRepo.profileUrls ?? [])
-//           self.rightView.inputData(repo1: repo2LanguagesCount,
-//                                    values: repo2Language,
-//                                    repoName: repoInfo?.secondRepo.gitRepo.full_name ?? "none",
-//                                    imgList: repoInfo?.secondRepo.profileUrls ?? [])
-            
+            if checkRepoData{
+                addUI()
+                self.leftView.inputData(repo1: repoInfo?.first_repo.languages.count as? [Double] ?? [],
+                                        values: repoInfo?.first_repo.languages.language,
+                                        repoName: repoInfo?.first_repo.git_repo.full_name ?? "none",
+                                        imgList: repoInfo?.first_repo.profile_urls ?? [])
+                self.rightView.inputData(repo1: repoInfo?.second_repo.languages.count as? [Double] ?? [],
+                                        values: repoInfo?.second_repo.languages.language,
+                                        repoName: repoInfo?.second_repo.git_repo.full_name ?? "none",
+                                        imgList: repoInfo?.second_repo.profile_urls ?? [])
+            }
             
         }
         else if indexPath.row == 1{
             scrollView.removeFromSuperview()
-            self.addUI_User()
+            if checkUserData{
+                self.addUI_User()
+            }
 
         }
     }

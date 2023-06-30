@@ -10,23 +10,22 @@ import Foundation
 struct CompareRepoModel: Codable{
     var first_repo: FirstRepo
     var second_repo: SecondRepo
-    var profile_urls: [String]
 }
 
 struct FirstRepo: Codable{
     var git_repo: GitRepo
     var statistics: Statistics
     var languages: Languages
-    var languagesStats: StatisticsStats
-    var profileUrls: [String]
+    var languages_stats: StatisticsStats
+    var profile_urls: [String]
 }
 
 struct SecondRepo: Codable{
-    let gitRepo: GitRepo
-    let statistics: Statistics
+    var git_repo: GitRepo
+    var statistics: Statistics
     var languages: Languages
-    let languagesStats: StatisticsStats
-    var profileUrls: [String]
+    var languages_stats: StatisticsStats
+    var profile_urls: [String]
 }
 
 struct GitRepo: Codable{
