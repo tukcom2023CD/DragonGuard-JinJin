@@ -261,6 +261,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     private GitRepoContributionMap getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final Function<Week, Integer> function) {
+        if (contributions == null || contributions.isEmpty()) return null;
         return new GitRepoContributionMap(contributions.stream()
                 .collect(Collectors.toMap(Function.identity(), mem ->
                         Arrays.stream(mem.getWeeks())

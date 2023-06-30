@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.18">
+<meta name="generator" content="Asciidoctor 2.0.20">
 <title>GIT-RANK API</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -208,13 +208,10 @@ table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
 .exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
-.exampleblock>.content>:first-child{margin-top:0}
-.exampleblock>.content>:last-child{margin-bottom:0}
 .sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
-.sidebarblock>:first-child{margin-top:0}
-.sidebarblock>:last-child{margin-bottom:0}
 .sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
-.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
 .literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
@@ -393,7 +390,7 @@ b.conum *{color:inherit!important}
 dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
 h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
 p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
-p,blockquote,dt,td.content,span.alt,summary{font-size:1.0625rem}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
 p{margin-bottom:1.25rem}
 .sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
 .exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
@@ -584,6 +581,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_블록체인_부여_기록_리스트_조회_http_response">HTTP response</a></li>
 </ul>
 </li>
+<li><a href="#_블록체인_내역_수동_업데이트_및_조회">블록체인 내역 수동 업데이트 및 조회</a>
+<ul class="sectlevel3">
+<li><a href="#_블록체인_내역_수동_업데이트_및_조회_http_request">HTTP request</a></li>
+<li><a href="#_블록체인_내역_수동_업데이트_및_조회_http_response">HTTP response</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_auth">Auth</a>
@@ -702,11 +705,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /members HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 30
+Content-Length: 29
 Host: localhost:8080
 
 {
-  "githubId" : "ohksj77"
+  "github_id" : "ohksj77"
 }</code></pre>
 </div>
 </div>
@@ -717,10 +720,10 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 201 Created
 Content-Type: application/json;charset=UTF-8
-Content-Length: 53
+Content-Length: 51
 
 {
-  "id" : "439fe3cd-2fb2-4a38-b757-3beee5508e0e"
+  "id" : "b4559734-897b-41e7-a7ad-6acfc7ea5051"
 }</code></pre>
 </div>
 </div>
@@ -793,43 +796,43 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 1026
+Content-Length: 1001
 
 [ {
-  "id" : "5345f6a1-e108-4292-aef3-33ec4a5fc487",
+  "id" : "1089779e-7096-4707-bad9-3d863417e525",
   "name" : "Kim",
-  "githubId" : "ohksj77",
+  "github_id" : "ohksj77",
   "tokens" : 10000,
   "tier" : "MASTER",
-  "profileImage" : "http://github123123412412412profileUrl"
+  "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "64ef1842-6404-4f85-9afd-27e64d7792a1",
+  "id" : "13fc9a71-7e06-4f55-a4e5-f3f27c9f8fd2",
   "name" : "Seung",
-  "githubId" : "ohksj",
+  "github_id" : "ohksj",
   "tokens" : 5000,
   "tier" : "RUBY",
-  "profileImage" : "http://github123123412412412profileUrl"
+  "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "ce5662e1-b589-4b0e-9661-ae3ab3733363",
+  "id" : "e54ae409-074f-41a2-8731-83746e828b8a",
   "name" : "Jin",
-  "githubId" : "ohksj777",
+  "github_id" : "ohksj777",
   "tokens" : 3000,
   "tier" : "DIAMOND",
-  "profileImage" : "http://github123123412412412profileUrl"
+  "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "327e299d-a39d-4d8c-ae55-3e1f14030b59",
+  "id" : "187ed8b5-aa58-44e5-b6e7-3b29a77dfc97",
   "name" : "Lee",
-  "githubId" : "ohksjj",
+  "github_id" : "ohksjj",
   "tokens" : 1000,
   "tier" : "PLATINUM",
-  "profileImage" : "http://github123123412412412profileUrl"
+  "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "afe45bf0-8fc8-4fa4-a7b0-96aaea532901",
+  "id" : "9e94d404-d519-432c-a10c-56a84ab6b700",
   "name" : "Da",
-  "githubId" : "ohksjksj",
+  "github_id" : "ohksjksj",
   "tokens" : 500,
   "tier" : "GOLD",
-  "profileImage" : "http://github123123412412412profileUrl"
+  "profile_image" : "http://github123123412412412profileUrl"
 } ]</code></pre>
 </div>
 </div>
@@ -844,11 +847,11 @@ Content-Length: 1026
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /members/wallet-address HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 44
+Content-Length: 43
 Host: localhost:8080
 
 {
-  "walletAddress" : "asdfasdf12341234"
+  "wallet_address" : "asdfasdf12341234"
 }</code></pre>
 </div>
 </div>
@@ -880,36 +883,36 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 825
+Content-Length: 805
 
 [ {
-  "id" : "e55dc20f-6f25-4630-b137-a0b99d48ffaa",
+  "id" : "3d1addf8-2fca-4198-8dd6-deedd82b4881",
   "name" : "정해진",
-  "githubId" : "HJ39",
+  "github_id" : "HJ39",
   "tokens" : 20,
   "tier" : "SPROUT",
-  "profileImage" : "http://githubUserProfileImageUrl"
+  "profile_image" : "http://githubUserProfileImageUrl"
 }, {
-  "id" : "fe23170e-4ea7-4cb2-8ff1-ce4ebdf50a58",
+  "id" : "20eb6892-a2c3-419d-a908-387c961163d5",
   "name" : "넓은관용",
-  "githubId" : "Sammuelwoojae",
+  "github_id" : "Sammuelwoojae",
   "tokens" : 20,
   "tier" : "SPROUT",
-  "profileImage" : "http://githubUserProfileImageUrl"
+  "profile_image" : "http://githubUserProfileImageUrl"
 }, {
-  "id" : "4844e7f6-6a1c-47b4-81c2-e7353986431f",
+  "id" : "507db2b3-737f-4e90-8b79-1ccb34d9b1ee",
   "name" : "회사승진",
-  "githubId" : "ohksj77",
+  "github_id" : "ohksj77",
   "tokens" : 20,
   "tier" : "SPROUT",
-  "profileImage" : "http://githubUserProfileImageUrl"
+  "profile_image" : "http://githubUserProfileImageUrl"
 }, {
-  "id" : "5f62cf6b-3af9-4545-b3db-f987c3fee126",
+  "id" : "82d1a35f-95b1-44d9-b2d1-9e220279374a",
   "name" : "영어수학",
-  "githubId" : "posite",
+  "github_id" : "posite",
   "tokens" : 20,
   "tier" : "SPROUT",
-  "profileImage" : "http://githubUserProfileImageUrl"
+  "profile_image" : "http://githubUserProfileImageUrl"
 } ]</code></pre>
 </div>
 </div>
@@ -933,26 +936,26 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 503
+Content-Length: 495
 
 {
-  "id" : "30d0a935-a6b5-474a-8457-f270001ac16b",
+  "id" : "4aaef781-e452-41ef-a5e8-7c06cb25770f",
   "name" : "김승진",
-  "githubId" : "ohksj77",
+  "github_id" : "ohksj77",
   "commits" : 100,
   "issues" : 100,
-  "pullRequests" : 100,
+  "pull_requests" : 100,
   "reviews" : 100,
   "tier" : "SILVER",
-  "authStep" : "GITHUB_ONLY",
-  "profileImage" : "http://abcd.efgh",
+  "auth_step" : "GITHUB_ONLY",
+  "profile_image" : "http://abcd.efgh",
   "rank" : 1000,
-  "tokenAmount" : 1000,
+  "token_amount" : 1000,
   "organization" : "한국공학대학교",
-  "blockchainUrl" : "http://abcd.efgh",
-  "organizationRank" : 1,
-  "isLast" : true,
-  "memberGithubIds" : [ "ohksj", "ksj77" ]
+  "blockchain_url" : "http://abcd.efgh",
+  "organization_rank" : 1,
+  "is_last" : true,
+  "member_github_ids" : [ "ohksj", "ksj77" ]
 }</code></pre>
 </div>
 </div>
@@ -977,15 +980,15 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 280
+Content-Length: 278
 
 {
-  "gitOrganizations" : [ {
+  "git_organizations" : [ {
     "name" : "tukcom2023CD",
-    "profileImage" : "http://orgGithubProfile"
+    "profile_image" : "http://orgGithubProfile"
   } ],
-  "gitRepos" : [ "tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/DragonGuard", "tukcom2023CD/Jin-Jin" ],
-  "memberProfileImage" : "http://memberGithubProfile"
+  "git_repos" : [ "tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/DragonGuard", "tukcom2023CD/Jin-Jin" ],
+  "member_profile_image" : "http://memberGithubProfile"
 }</code></pre>
 </div>
 </div>
@@ -1031,11 +1034,11 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 162
+Content-Length: 161
 
 {
-  "profileImage" : "http://someProfileImageOfOrg",
-  "gitRepos" : [ "tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/DragonGuard", "tukcom2023CD/Yongari" ]
+  "profile_image" : "http://someProfileImageOfOrg",
+  "git_repos" : [ "tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/DragonGuard", "tukcom2023CD/Yongari" ]
 }</code></pre>
 </div>
 </div>
@@ -1059,15 +1062,15 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 227
+Content-Length: 221
 
 {
   "commits" : 1,
   "issues" : 2,
-  "pullRequests" : 3,
+  "pull_requests" : 3,
   "reviews" : 4,
-  "profileImage" : "http://profileImage",
-  "gitRepos" : [ "gitRepo1", "gitRepo2" ],
+  "profile_image" : "http://profileImage",
+  "git_repos" : [ "gitRepo1", "gitRepo2" ],
   "organization" : "한국공학대학교",
   "rank" : 10
 }</code></pre>
@@ -1099,7 +1102,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 257
+Content-Length: 239
 
 [ {
   "id" : 1,
@@ -1143,38 +1146,38 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 876
+Content-Length: 851
 
 [ {
   "id" : 1,
   "name" : "tukcom2023CD/DragonGuard-JinJin",
   "language" : "java",
   "description" : "블록체인기반깃랭크시스템",
-  "createdAt" : "2023-06-23T21:44:45.308850"
+  "created_at" : "2023-06-30T23:54:49.126616"
 }, {
   "id" : 2,
   "name" : "tukcom2023CD/DragonGuard",
   "language" : "swift",
   "description" : "블록체인기반깃랭크시스템",
-  "createdAt" : "2023-06-23T21:44:45.308850"
+  "created_at" : "2023-06-30T23:54:49.126636"
 }, {
   "id" : 3,
   "name" : "tukcom2023CD/JinJin",
   "language" : "java",
   "description" : "진진시스템",
-  "createdAt" : "2023-06-23T21:44:45.308850"
+  "created_at" : "2023-06-30T23:54:49.126640"
 }, {
   "id" : 4,
   "name" : "tukcom2023CD/Dragon",
   "language" : "java",
   "description" : "드래곤시스템",
-  "createdAt" : "2023-06-23T21:44:45.308850"
+  "created_at" : "2023-06-30T23:54:49.126643"
 }, {
   "id" : 5,
   "name" : "tukcom2023CD/Dragon-Jin",
   "language" : "java",
   "description" : "드래곤진",
-  "createdAt" : "2023-06-23T21:44:45.308850"
+  "created_at" : "2023-06-30T23:54:49.126646"
 } ]</code></pre>
 </div>
 </div>
@@ -1204,38 +1207,38 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 842
+Content-Length: 830
 
 {
-  "sparkLine" : [ 1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4 ],
-  "gitRepoMembers" : [ {
-    "githubId" : "ohksj77",
-    "profileUrl" : "http://somethingProfileUrl",
+  "spark_line" : [ 1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4 ],
+  "git_repo_members" : [ {
+    "github_id" : "ohksj77",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 100,
     "additions" : 1000,
     "deletions" : 500,
-    "isServiceMember" : true
+    "is_service_member" : true
   }, {
-    "githubId" : "HJ39",
-    "profileUrl" : "http://somethingProfileUrl",
+    "github_id" : "HJ39",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 101,
     "additions" : 999,
     "deletions" : 500,
-    "isServiceMember" : true
+    "is_service_member" : true
   }, {
-    "githubId" : "posite",
-    "profileUrl" : "http://somethingProfileUrl",
+    "github_id" : "posite",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 99,
     "additions" : 1001,
     "deletions" : 500,
-    "isServiceMember" : true
+    "is_service_member" : true
   }, {
-    "githubId" : "Sammuelwoojae",
-    "profileUrl" : "http://somethingProfileUrl",
+    "github_id" : "Sammuelwoojae",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 100,
     "additions" : 1001,
     "deletions" : 499,
-    "isServiceMember" : true
+    "is_service_member" : true
   } ]
 }</code></pre>
 </div>
@@ -1273,12 +1276,12 @@ Host: localhost:8080</code></pre>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /git-repos/compare/git-repos-members HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 90
+Content-Length: 89
 Host: localhost:8080
 
 {
-  "firstRepo" : "tukcom2023CD/DragonGuard-JinJin",
-  "secondRepo" : "tukcom2023CD/"
+  "first_repo" : "tukcom2023CD/DragonGuard-JinJin",
+  "second_repo" : "tukcom2023CD/"
 }</code></pre>
 </div>
 </div>
@@ -1289,66 +1292,66 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 1554
+Content-Length: 1529
 
 {
-  "firstResult" : [ {
-    "githubId" : "ohksj77",
-    "profileUrl" : "http://somethingProfileUrl",
+  "first_result" : [ {
+    "github_id" : "ohksj77",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 100,
     "additions" : 1000,
     "deletions" : 500,
-    "isServiceMember" : true
+    "is_service_member" : true
   }, {
-    "githubId" : "HJ39",
-    "profileUrl" : "http://somethingProfileUrl",
+    "github_id" : "HJ39",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 101,
     "additions" : 999,
     "deletions" : 500,
-    "isServiceMember" : true
+    "is_service_member" : true
   }, {
-    "githubId" : "posite",
-    "profileUrl" : "http://somethingProfileUrl",
+    "github_id" : "posite",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 99,
     "additions" : 1001,
     "deletions" : 500,
-    "isServiceMember" : true
+    "is_service_member" : true
   }, {
-    "githubId" : "Sammuelwoojae",
-    "profileUrl" : "http://somethingProfileUrl",
+    "github_id" : "Sammuelwoojae",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 100,
     "additions" : 1001,
     "deletions" : 499,
-    "isServiceMember" : true
+    "is_service_member" : true
   } ],
-  "secondResult" : [ {
-    "githubId" : "ohksj77",
-    "profileUrl" : "http://somethingProfileUrl",
+  "second_result" : [ {
+    "github_id" : "ohksj77",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 100,
     "additions" : 1000,
     "deletions" : 500,
-    "isServiceMember" : true
+    "is_service_member" : true
   }, {
-    "githubId" : "HJ39",
-    "profileUrl" : "http://somethingProfileUrl",
+    "github_id" : "HJ39",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 101,
     "additions" : 999,
     "deletions" : 500,
-    "isServiceMember" : true
+    "is_service_member" : true
   }, {
-    "githubId" : "posite",
-    "profileUrl" : "http://somethingProfileUrl",
+    "github_id" : "posite",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 99,
     "additions" : 1001,
     "deletions" : 500,
-    "isServiceMember" : true
+    "is_service_member" : true
   }, {
-    "githubId" : "Sammuelwoojae",
-    "profileUrl" : "http://somethingProfileUrl",
+    "github_id" : "Sammuelwoojae",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 100,
     "additions" : 1001,
     "deletions" : 499,
-    "isServiceMember" : true
+    "is_service_member" : true
   } ]
 }</code></pre>
 </div>
@@ -1364,12 +1367,12 @@ Content-Length: 1554
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /git-repos/compare/git-repos-members HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 90
+Content-Length: 89
 Host: localhost:8080
 
 {
-  "firstRepo" : "tukcom2023CD/DragonGuard-JinJin",
-  "secondRepo" : "tukcom2023CD/"
+  "first_repo" : "tukcom2023CD/DragonGuard-JinJin",
+  "second_repo" : "tukcom2023CD/"
 }</code></pre>
 </div>
 </div>
@@ -1392,12 +1395,12 @@ Host: localhost:8080
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /git-repos/compare HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 90
+Content-Length: 89
 Host: localhost:8080
 
 {
-  "firstRepo" : "tukcom2023CD/DragonGuard-JinJin",
-  "secondRepo" : "tukcom2023CD/"
+  "first_repo" : "tukcom2023CD/DragonGuard-JinJin",
+  "second_repo" : "tukcom2023CD/"
 }</code></pre>
 </div>
 </div>
@@ -1408,11 +1411,11 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 2188
+Content-Length: 2107
 
 {
-  "firstRepo" : {
-    "gitRepo" : {
+  "first_repo" : {
+    "git_repo" : {
       "full_name" : "tukcom2023CD/DragonGuard-JinJin",
       "forks_count" : 1,
       "stargazers_count" : 4,
@@ -1422,21 +1425,21 @@ Content-Length: 2188
       "subscribers_count" : 0
     },
     "statistics" : {
-      "commitStats" : {
+      "commit_stats" : {
         "count" : 4,
         "sum" : 430,
         "min" : 33,
         "max" : 146,
         "average" : 107.5
       },
-      "additionStats" : {
+      "addition_stats" : {
         "count" : 4,
         "sum" : 50000,
         "min" : 1800,
         "max" : 30000,
         "average" : 12500.0
       },
-      "deletionStats" : {
+      "deletion_stats" : {
         "count" : 4,
         "sum" : 30000,
         "min" : 5000,
@@ -1445,21 +1448,21 @@ Content-Length: 2188
       }
     },
     "languages" : {
+      "java" : 10000,
       "swift" : 9998,
-      "kotlin" : 9999,
-      "java" : 10000
+      "kotlin" : 9999
     },
-    "languagesStats" : {
+    "languages_stats" : {
       "count" : 4,
       "sum" : 29997,
       "min" : 9998,
       "max" : 10000,
       "average" : 7499.25
     },
-    "profileUrls" : [ "http://profileImage", "http://profileImage" ]
+    "profile_urls" : [ "http://profileImage", "http://profileImage" ]
   },
-  "secondRepo" : {
-    "gitRepo" : {
+  "second_repo" : {
+    "git_repo" : {
       "full_name" : "tukcom2023CD/",
       "forks_count" : 1,
       "stargazers_count" : 4,
@@ -1469,21 +1472,21 @@ Content-Length: 2188
       "subscribers_count" : 0
     },
     "statistics" : {
-      "commitStats" : {
+      "commit_stats" : {
         "count" : 4,
         "sum" : 430,
         "min" : 33,
         "max" : 146,
         "average" : 107.5
       },
-      "additionStats" : {
+      "addition_stats" : {
         "count" : 4,
         "sum" : 50000,
         "min" : 1800,
         "max" : 30000,
         "average" : 12500.0
       },
-      "deletionStats" : {
+      "deletion_stats" : {
         "count" : 4,
         "sum" : 30000,
         "min" : 5000,
@@ -1492,18 +1495,18 @@ Content-Length: 2188
       }
     },
     "languages" : {
+      "java" : 10000,
       "swift" : 9998,
-      "kotlin" : 9999,
-      "java" : 10000
+      "kotlin" : 9999
     },
-    "languagesStats" : {
+    "languages_stats" : {
       "count" : 4,
       "sum" : 29997,
       "min" : 9998,
       "max" : 10000,
       "average" : 7499.25
     },
-    "profileUrls" : [ "http://profileImage", "http://profileImage" ]
+    "profile_urls" : [ "http://profileImage", "http://profileImage" ]
   }
 }</code></pre>
 </div>
@@ -1519,12 +1522,12 @@ Content-Length: 2188
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /git-repos/compare HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 90
+Content-Length: 89
 Host: localhost:8080
 
 {
-  "firstRepo" : "tukcom2023CD/DragonGuard-JinJin",
-  "secondRepo" : "tukcom2023CD/"
+  "first_repo" : "tukcom2023CD/DragonGuard-JinJin",
+  "second_repo" : "tukcom2023CD/"
 }</code></pre>
 </div>
 </div>
@@ -1547,14 +1550,14 @@ Host: localhost:8080
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /git-repos/compare/members HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 153
+Content-Length: 154
 Host: localhost:8080
 
 {
-  "firstGithubId" : "ohksj77",
-  "firstRepo" : "tukcom2023CD/DragonGuard-JinJin",
-  "secondGithubId" : "ohksj",
-  "secondRepo" : "tukcom2023CD/"
+  "first_github_id" : "ohksj77",
+  "first_repo" : "tukcom2023CD/DragonGuard-JinJin",
+  "second_github_id" : "ohksj",
+  "second_repo" : "tukcom2023CD/"
 }</code></pre>
 </div>
 </div>
@@ -1565,24 +1568,24 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 416
+Content-Length: 409
 
 {
-  "firstMember" : {
-    "githubId" : "ohksj77",
-    "profileUrl" : "http://somethingProfileUrl",
+  "first_member" : {
+    "github_id" : "ohksj77",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 100,
     "additions" : 1000,
     "deletions" : 500,
-    "isServiceMember" : true
+    "is_service_member" : true
   },
-  "secondMember" : {
-    "githubId" : "ohksj",
-    "profileUrl" : "http://somethingProfileUrl",
+  "second_member" : {
+    "github_id" : "ohksj",
+    "profile_url" : "http://somethingProfileUrl",
     "commits" : 101,
     "additions" : 1001,
     "deletions" : 501,
-    "isServiceMember" : true
+    "is_service_member" : true
   }
 }</code></pre>
 </div>
@@ -1613,24 +1616,66 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 481
+Content-Length: 471
 
 [ {
   "id" : 1,
-  "contributeType" : "COMMIT",
+  "contribute_type" : "COMMIT",
   "amount" : 10,
-  "githubId" : "ohksj77",
-  "memberId" : "41e378ed-34f3-4551-a3f1-453f9cfb07e0",
-  "createdAt" : "2023-06-23T12:13:02.810153800",
-  "transactionHashUrl" : "123123123"
+  "github_id" : "ohksj77",
+  "member_id" : "856871d6-8d4a-4d88-85ec-4e6d685d830c",
+  "created_at" : "2023-06-30T23:54:42.897891",
+  "transaction_hash_url" : "123123123"
 }, {
   "id" : 2,
-  "contributeType" : "COMMIT",
+  "contribute_type" : "COMMIT",
   "amount" : 5,
-  "githubId" : "ohksj77",
-  "memberId" : "447bcb79-2f10-4e0a-8cf7-d6b4236fcc40",
-  "createdAt" : "2023-06-23T12:13:02.810153800",
-  "transactionHashUrl" : "321321321"
+  "github_id" : "ohksj77",
+  "member_id" : "0aabc4be-6344-4c33-9bcc-30d8b913c5cb",
+  "created_at" : "2023-06-30T23:54:42.897926",
+  "transaction_hash_url" : "321321321"
+} ]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_블록체인_내역_수동_업데이트_및_조회"><a class="link" href="#_블록체인_내역_수동_업데이트_및_조회">블록체인 내역 수동 업데이트 및 조회</a></h3>
+<div class="sect3">
+<h4 id="_블록체인_내역_수동_업데이트_및_조회_http_request"><a class="link" href="#_블록체인_내역_수동_업데이트_및_조회_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /blockchain/update HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_블록체인_내역_수동_업데이트_및_조회_http_response"><a class="link" href="#_블록체인_내역_수동_업데이트_및_조회_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 471
+
+[ {
+  "id" : 1,
+  "contribute_type" : "COMMIT",
+  "amount" : 10,
+  "github_id" : "ohksj77",
+  "member_id" : "6310dd1d-4066-48c9-a260-3197a7a6ecd7",
+  "created_at" : "2023-06-30T23:54:42.904724",
+  "transaction_hash_url" : "123123123"
+}, {
+  "id" : 2,
+  "contribute_type" : "COMMIT",
+  "amount" : 5,
+  "github_id" : "ohksj77",
+  "member_id" : "0cbd21f6-b2fd-40c5-b5ed-a1e1305f8488",
+  "created_at" : "2023-06-30T23:54:42.904741",
+  "transaction_hash_url" : "321321321"
 } ]</code></pre>
 </div>
 </div>
@@ -1661,12 +1706,12 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 105
+Content-Length: 104
 
 {
-  "accessToken" : "1234.1234.1234",
-  "refreshToken" : "4321.4321.4321",
-  "grantType" : "bearer"
+  "access_token" : "1234.1234.1234",
+  "refresh_token" : "4321.4321.4321",
+  "grant_type" : "bearer"
 }</code></pre>
 </div>
 </div>
@@ -1696,7 +1741,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 16
+Content-Length: 14
 
 {
   "id" : 1
@@ -1727,7 +1772,7 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 28
 
 {
-  "isValidCode" : true
+  "is_valid_code" : true
 }</code></pre>
 </div>
 </div>
@@ -1769,13 +1814,13 @@ Host: localhost:8080</code></pre>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /organizations HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 116
+Content-Length: 114
 Host: localhost:8080
 
 {
   "name" : "한국공학대학교",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "tukorea.ac.kr"
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "tukorea.ac.kr"
 }</code></pre>
 </div>
 </div>
@@ -1786,7 +1831,7 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 16
+Content-Length: 14
 
 {
   "id" : 1
@@ -1814,7 +1859,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 16
+Content-Length: 14
 
 {
   "id" : 1
@@ -1832,11 +1877,11 @@ Content-Length: 16
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /organizations/add-member HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 66
+Content-Length: 64
 Host: localhost:8080
 
 {
-  "organizationId" : 1,
+  "organization_id" : 1,
   "email" : "ohksj77@tukorea.ac.kr"
 }</code></pre>
 </div>
@@ -1848,7 +1893,7 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 16
+Content-Length: 14
 
 {
   "id" : 1
@@ -1876,26 +1921,26 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 436
+Content-Length: 427
 
 [ {
   "id" : 1,
   "name" : "한국공학대학교",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "tukorea.ac.kr",
-  "tokenSum" : 100000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "tukorea.ac.kr",
+  "token_sum" : 100000
 }, {
   "id" : 2,
   "name" : "서울대학교",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "snu.ac.kr",
-  "tokenSum" : 10000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "snu.ac.kr",
+  "token_sum" : 10000
 }, {
   "id" : 3,
   "name" : "KAIST",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "kaist.ac.kr",
-  "tokenSum" : 1000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "kaist.ac.kr",
+  "token_sum" : 1000
 } ]</code></pre>
 </div>
 </div>
@@ -1920,26 +1965,26 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 436
+Content-Length: 427
 
 [ {
   "id" : 1,
   "name" : "한국공학대학교",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "tukorea.ac.kr",
-  "tokenSum" : 100000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "tukorea.ac.kr",
+  "token_sum" : 100000
 }, {
   "id" : 2,
   "name" : "서울대학교",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "snu.ac.kr",
-  "tokenSum" : 10000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "snu.ac.kr",
+  "token_sum" : 10000
 }, {
   "id" : 3,
   "name" : "KAIST",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "kaist.ac.kr",
-  "tokenSum" : 1000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "kaist.ac.kr",
+  "token_sum" : 1000
 } ]</code></pre>
 </div>
 </div>
@@ -1964,26 +2009,26 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 436
+Content-Length: 427
 
 [ {
   "id" : 1,
   "name" : "한국공학대학교",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "tukorea.ac.kr",
-  "tokenSum" : 100000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "tukorea.ac.kr",
+  "token_sum" : 100000
 }, {
   "id" : 2,
   "name" : "서울대학교",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "snu.ac.kr",
-  "tokenSum" : 10000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "snu.ac.kr",
+  "token_sum" : 10000
 }, {
   "id" : 3,
   "name" : "KAIST",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "kaist.ac.kr",
-  "tokenSum" : 1000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "kaist.ac.kr",
+  "token_sum" : 1000
 } ]</code></pre>
 </div>
 </div>
@@ -2008,26 +2053,26 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 436
+Content-Length: 427
 
 [ {
   "id" : 1,
   "name" : "한국공학대학교",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "tukorea.ac.kr",
-  "tokenSum" : 100000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "tukorea.ac.kr",
+  "token_sum" : 100000
 }, {
   "id" : 2,
   "name" : "서울대학교",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "snu.ac.kr",
-  "tokenSum" : 10000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "snu.ac.kr",
+  "token_sum" : 10000
 }, {
   "id" : 3,
   "name" : "KAIST",
-  "organizationType" : "UNIVERSITY",
-  "emailEndpoint" : "kaist.ac.kr",
-  "tokenSum" : 1000
+  "organization_type" : "UNIVERSITY",
+  "email_endpoint" : "kaist.ac.kr",
+  "token_sum" : 1000
 } ]</code></pre>
 </div>
 </div>
@@ -2069,7 +2114,7 @@ Host: localhost:8080</code></pre>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /admin/organizations/decide HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 42
+Content-Length: 39
 Host: localhost:8080
 
 {
@@ -2085,7 +2130,7 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 146
+Content-Length: 138
 
 [ {
   "id" : 2,
@@ -2119,7 +2164,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 146
+Content-Length: 138
 
 [ {
   "id" : 2,
@@ -2139,7 +2184,7 @@ Content-Length: 146
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-23 11:06:21 +0900
+Last updated 2023-06-24 21:30:41 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

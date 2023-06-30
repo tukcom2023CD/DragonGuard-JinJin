@@ -15,5 +15,5 @@ public interface GitOrganizationMapper {
     @Mapping(target = "name", source = "name")
     @Mapping(target = "member", source = "member")
     @Mapping(target = "profileImage", source = "profileImage")
-    GitOrganization toEntity(final String name, String profileImage, final Member member);
+    GitOrganization toEntity(final String name, final String profileImage, final Member member);
 }
