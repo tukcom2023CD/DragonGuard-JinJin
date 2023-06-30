@@ -42,6 +42,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     private val colorsets = ArrayList<Int>()
     private var token = ""
     private var sparkLines = mutableListOf<Int>()
+    private var refresh = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_contributors)
@@ -61,6 +62,8 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    repo의 contributors 검색
     fun repoContributors(repoName: String) {
+        binding.loadingLottie.resumeAnimation()
+        binding.loadingLottie.visibility = View.VISIBLE
         if (!this@RepoContributorsActivity.isFinishing && count < 10) {
             Log.d("check", "repoName $repoName")
             Log.d("check", "token $token")
@@ -279,6 +282,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.refresh, binding.toolbar.menu)
         return true
     }
 
@@ -287,6 +291,22 @@ class RepoContributorsActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
+            }
+
+            R.id.refresh_button -> {
+                if(refresh) {
+                    refresh = false
+                    val coroutine = CoroutineScope(Dispatchers.Main)
+                    coroutine.launch {
+                        if(!this@RepoContributorsActivity.isFinishing) {
+                            val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.updateContribute(repoName, token)
+                            }
+                            val resultRepo = resultRepoDeferred.await()
+                            checkContributors(resultRepo)
+                        }
+                    }
+                }
             }
         }
         return super.onOptionsItemSelected(item)

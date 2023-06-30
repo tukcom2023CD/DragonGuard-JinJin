@@ -11,6 +11,11 @@ class CompareAdapter (fragmentActivity: FragmentActivity, token: String) : Fragm
         notifyDataSetChanged()
     }
 
+    fun removeAll() {
+        fragments.clear()
+        notifyDataSetChanged()
+    }
+
     private val fragments: MutableList<Fragment> = mutableListOf()
     override fun getItemCount(): Int = fragments.size
 

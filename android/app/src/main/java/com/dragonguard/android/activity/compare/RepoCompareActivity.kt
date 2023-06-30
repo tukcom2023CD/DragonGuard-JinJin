@@ -17,6 +17,7 @@ import com.dragonguard.android.fragment.CompareRepoFragment
 import com.dragonguard.android.fragment.CompareUserFragment
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.adapters.CompareAdapter
+import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.compare.RepoMembersResult
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
@@ -34,6 +35,7 @@ class RepoCompareActivity : AppCompatActivity() {
     private lateinit var compareUserFragment: CompareUserFragment
     private lateinit var compareRepoFragment: CompareRepoFragment
     private var token = ""
+    private var refresh = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,50 +107,41 @@ class RepoCompareActivity : AppCompatActivity() {
         TabLayoutMediator(binding.compareTab, binding.fragmentContent) { tab, position ->
             tab.text = tabs[position]
         }.attach()
-//        val transaction = supportFragmentManager.beginTransaction()
-//        transaction.add(R.id.compare_frame, compareRepoFragment)
-//            .add(R.id.compare_frame, compareUserFragment)
-//            .hide(compareUserFragment)
-//            .commit()
-//
-//        binding.bottomNavigation.setOnItemSelectedListener {
-//            when(it.itemId) {
-//                R.id.compare_repo -> {
-//                    supportActionBar?.title = "Repository 비교"
-//                    val transactionN = supportFragmentManager.beginTransaction()
-//                    transactionN.hide(compareUserFragment)
-//                        .show(compareRepoFragment)
-//                        .commit()
-//                }
-//                R.id.compare_user -> {
-//                    supportActionBar?.title = "Repository 구성원 비교"
-//                    val transactionN = supportFragmentManager.beginTransaction()
-//                    transactionN.show(compareUserFragment)
-//                        .hide(compareRepoFragment)
-//                        .commit()
-//                }
-//            }
-//            true
-//        }
+
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
-//        return true
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.refresh, binding.toolbar.menu)
+        return true
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
             }
-//            R.id.home_menu -> {
-//                val intent = Intent(applicationContext, MainActivity::class.java)
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-//                startActivity(intent)
-//            }
+            R.id.refresh_button -> {
+                if(refresh) {
+                    refresh = false
+                    val coroutine = CoroutineScope(Dispatchers.Main)
+                    coroutine.launch {
+                        if(!this@RepoCompareActivity.isFinishing) {
+                            val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.postCompareRepoRequest(repo1, repo2, token)
+                            }
+                            val resultRepo = resultRepoDeferred.await()
+
+                            val resultMemberDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.updateCompareMembers(repo1, repo2, token)
+                            }
+                            val resultMember = resultMemberDeferred.await()
+                            checkContributors(resultMember)
+                        }
+                    }
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
+
 }
