@@ -182,7 +182,10 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         GitRepo gitRepo = getEntityByName(repoName);
         if (gitRepo == null) return null;
 
-        List<String> profileUrls = gitRepo.getGitRepoMembers().stream()
+        Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
+        if (gitRepoMembers.isEmpty()) return null;
+
+        List<String> profileUrls = gitRepoMembers.stream()
                 .map(gitRepoMember -> gitRepoMember.getMember().getProfileImage())
                 .collect(Collectors.toList());
 
@@ -319,7 +322,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return requestToGithub(new GitRepoInfoRequest(githubToken, gitRepo.getName(), LocalDate.now().getYear()), gitRepo);
     }
 
-    @Cacheable(value = "twoGitRepos", key = "{#request.firstRepo, #request.secondRepo}", cacheManager = "cacheManager")
+    @Cacheable(value = "twoGitRepos", key = "{#request.firstRepo, #request.secondRepo}", cacheManager = "cacheManager", unless = "#result.firstRepo.getProfileUrls().?[#this == null].size() > 0 || #result.secondRepo.getProfileUrls().?[#this == null].size() > 0")
     public TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request) {
         String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
         String firstRepo = request.getFirstRepo();

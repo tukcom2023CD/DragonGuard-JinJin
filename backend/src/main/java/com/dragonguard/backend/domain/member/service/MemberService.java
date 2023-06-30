@@ -105,7 +105,9 @@ public class MemberService implements EntityLoader<Member, UUID> {
             return;
         }
 
-        if (validateContributionAndUpdateReviews(contributionKafkaResponse, member)) return;
+        int sumOfReviews = contributionKafkaResponse.getContribution() - getContributionSumWithoutReviews(member);
+        if (member.validateContributionsAndDeleteIfInvalid(sumOfReviews)) return;
+        member.updateSumOfReviews(sumOfReviews);
 
         sendTransactionIfWalletAddressExists(member);
     }
@@ -119,13 +121,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public void sendTransactionIfWalletAddressExists(final Member member) {
         if (member.validateWalletAddressAndUpdateTier()) return;
         transactionAndUpdateTier(member);
-    }
-
-    public boolean validateContributionAndUpdateReviews(final ContributionKafkaResponse contributionKafkaResponse, final Member member) {
-        int sumOfReviews = contributionKafkaResponse.getContribution() - getContributionSumWithoutReviews(member);
-        if (member.validateContributionsAndDeleteIfInvalid(sumOfReviews)) return true;
-        member.updateSumOfReviews(sumOfReviews);
-        return false;
     }
 
     public boolean addContributionsIfNotEmpty(
@@ -249,10 +244,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
         sendGitRepoAndContributionSumRequestToKafka(githubId, member.getGithubToken());
 
         return getMemberGitReposAndGitOrganizations(githubId, member);
-    }
-
-    public Member getMemberOrSaveAndScrape(final String githubId) {
-        return memberRepository.findByGithubId(githubId).orElseGet(() -> scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
     }
 
     public void updateBlockchain() {
