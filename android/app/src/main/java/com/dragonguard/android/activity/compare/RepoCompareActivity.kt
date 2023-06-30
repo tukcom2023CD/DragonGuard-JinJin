@@ -125,6 +125,9 @@ class RepoCompareActivity : AppCompatActivity() {
                     refresh = false
                     val coroutine = CoroutineScope(Dispatchers.Main)
                     coroutine.launch {
+                        binding.rankingLottie.resumeAnimation()
+                        binding.rankingLottie.visibility = View.VISIBLE
+                        binding.compareFrame.visibility = View.GONE
                         if(!this@RepoCompareActivity.isFinishing) {
                             val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
                                 viewmodel.updateCompareRepo(repo1, repo2, token)

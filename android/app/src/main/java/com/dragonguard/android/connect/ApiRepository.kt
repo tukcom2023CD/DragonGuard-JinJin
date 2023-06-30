@@ -53,9 +53,10 @@ class ApiRepository {
         val repoName = api.getRepoName(queryMap, "Bearer $token")
         try{
             val result = repoName.execute()
+            Log.d("result", "레포 필터없는 검색 결과: ${result.code()}}")
             repoNames = result.body()!!
         }catch (e : Exception){
-            Log.d("error", "레포 필터없는 검색: ${e.message}")
+            Log.d("error", "레포 필터없는 검색 error: ${e.message}")
             return repoNames
         }
         return repoNames
@@ -74,6 +75,7 @@ class ApiRepository {
         val repoName = api.getRepoName(queryMap, "Bearer $token")
         try{
             val result = repoName.execute()
+            Log.d("result", "레포 필터별 검색: ${result.code()}")
             repoNames = result.body()!!
         }catch (e : Exception){
             Log.d("error", "레포 필터별 검색: ${e.message}")
@@ -89,10 +91,10 @@ class ApiRepository {
             null, null, null, null, null, null)
         try {
             val result = userInfo.execute()
-            Log.d("no", "사용자 정보 요청 결과 : ${result.code()}")
+            Log.d("result", "사용자 정보 요청 결과 : ${result.code()}")
             userResult = result.body()!!
         } catch (e: Exception) {
-            Log.d("exception", "exception : ${e.message}")
+            Log.d("error", "사용자 정보 요청 에러 : ${e.message}")
             return userResult
         }
         return userResult
@@ -104,8 +106,10 @@ class ApiRepository {
         var repoContResult = RepoContributorsModel(null, null)
         try{
             val result = repoContributors.execute()
+            Log.d("error", "레포 상세조회 결과 ${result.code()}")
             repoContResult = result.body()!!
         } catch (e: Exception) {
+            Log.d("error", "레포 상세조회 에러 ${e.message}")
             return repoContResult
         }
         return repoContResult
@@ -121,6 +125,7 @@ class ApiRepository {
         val ranking = api.getTotalUsersRanking(queryMap, "Bearer $token")
         try {
             val result = ranking.execute()
+            Log.d("result", "유저랭킹 api 결과 ${result.code()}")
             rankingResult = result.body()!!
         } catch (e: Exception) {
             Log.d("error", "유저랭킹 api 에러 ${e.message}")
@@ -135,8 +140,10 @@ class ApiRepository {
         var tokenHistoryResult: ArrayList<TokenHistoryModelItem>? = null
         try {
             val result = tokenHistory.execute()
+            Log.d("result", "토큰 부여 내역 결과 ${result.code()}")
             tokenHistoryResult = result.body()!!
         } catch (e: Exception) {
+            Log.d("error", "토큰 부여 내역 결과 ${e.message}")
             return null
         }
         return tokenHistoryResult
@@ -166,8 +173,10 @@ class ApiRepository {
         val authWallet = apiWallet.postWalletAuth(body)
         try{
             val result = authWallet.execute()
+            Log.d("result", "지갑주소 인증 결과 ${result.code()}")
             authResult = result.body()!!
         } catch (e: Exception) {
+            Log.d("result", "지갑주소 인증 실패 ${e.message}")
             return authResult
         }
         return authResult
@@ -184,8 +193,10 @@ class ApiRepository {
         val authWallet = apiWallet.getAuthResult(key)
         try{
             val result = authWallet.execute()
+            Log.d("result", "klip 인증 결과 ${result.code()}")
             authResult = result.body()!!
         } catch (e: Exception) {
+            Log.d("error", "klip 인증 오류 ${e.message}")
             return authResult
         }
         return authResult
@@ -198,10 +209,11 @@ class ApiRepository {
         val compareRepoMembers = api.postCompareRepoMembers(body, "Bearer $token")
         try{
             val result = compareRepoMembers.execute()
+            Log.d("token", "사용자 비교 결과 ${result.code()}")
             compareRepoResult = result.body()!!
-            Log.d("token", "1 결과 ${result.code()}")
+
         } catch (e: Exception) {
-            Log.d("token", "1 결과 ${e.message}")
+            Log.d("token", "사용자 비교 실패 ${e.message}")
             return compareRepoResult
         }
         return compareRepoResult
@@ -214,10 +226,10 @@ class ApiRepository {
         val compareRepo = api.postCompareRepo(body, "Bearer $token")
         try{
             val result = compareRepo.execute()
+            Log.d("token", "레포 비교 결과 ${result.code()}")
             compareRepoResult = result.body()!!
-            Log.d("token", "2 결과 ${result.code()}")
         } catch (e: Exception) {
-            Log.d("token", "2 결과 ${e.message}")
+            Log.d("token", "레포 비교 실패 ${e.message}")
             return compareRepoResult
         }
         return compareRepoResult
@@ -229,9 +241,9 @@ class ApiRepository {
         try {
             val result = getToken.execute()
             newToken = result.body()!!
-            Log.d("e", "result ${result.code()}  ${result.message()}")
+            Log.d("e", "access token 받아오기 결과 ${result.code()} ")
         } catch (e: Exception) {
-            Log.d("e", "error ${e.message}")
+            Log.d("e", "access token 받아오기 실패 ${e.message}")
             return newToken
         }
         return newToken
@@ -241,9 +253,9 @@ class ApiRepository {
         val postCommit = api.postCommits("Bearer $token")
         try{
             val result = postCommit.execute()
-            Log.d("postCommits", "result ${result.code()}")
+            Log.d("postCommits", "commit 업데이트 결과 ${result.code()}")
         } catch (e: Exception) {
-            Log.d("e", "error ${e.message}")
+            Log.d("e", "commit 업데이트 실패 ${e.message}")
         }
     }
 
@@ -258,10 +270,11 @@ class ApiRepository {
         orgNames.add(OrganizationNamesModelItem(null, null, null, null, null))
         return try{
             val result = getOrgNames.execute()
+            Log.d("error", "조직 이름 찾기 결과 : ${result.code()}")
             orgNames = result.body()!!
             orgNames
         } catch (e: Exception) {
-            Log.d("error", "error : ${e.message}")
+            Log.d("error", "조직 이름 찾기 error : ${e.message}")
             orgNames
         }
     }
@@ -271,6 +284,7 @@ class ApiRepository {
         var registResult = RegistOrgResultModel(0)
         return try {
             val result = postRegist.execute()
+            Log.d("error", "RegisterOrganization error: ${result.code()}}")
             registResult = result.body()!!
             registResult
         } catch (e: Exception) {
@@ -295,6 +309,7 @@ class ApiRepository {
         val sendEmail = api.postAuthEmail("Bearer $token")
         return try{
             val result = sendEmail.execute()
+            Log.d("status", "이메일 인증 시도 결과 : ${result.code()}")
             result.body()!!.id
         } catch (e: Exception) {
             Log.d("status", "이메일 인증 시도 error : ${e.message}")
@@ -309,6 +324,7 @@ class ApiRepository {
         val emailAuth = api.getEmailAuthResult(queryMap, "Bearer $token")
         return try {
             val result = emailAuth.execute()
+            Log.d("status", "이메일 인증 결과 : ${result.code()}")
             result.body()!!.is_valid_code
         } catch (e: Exception) {
             Log.d("status", "이메일 인증 결과 error : ${e.message}")
@@ -333,6 +349,7 @@ class ApiRepository {
         val resultId = 0L
         return try{
             val result = searchId.execute()
+            Log.d("status", "조직 id 검색 결과: ${result.code()}")
             return result.body()!!.id
         }catch (e: Exception) {
             Log.d("status", "조직 id 검색 실패: ${e.message}")
@@ -351,6 +368,7 @@ class ApiRepository {
 
         return try {
             val result = orgInternal.execute()
+            Log.d("error", "조직 내 사용자들의 랭킹 조회 결과: ${result.code()} ")
             return result.body()!!
         } catch (e: Exception) {
             Log.d("error", "조직 내 사용자들의 랭킹 조회 실패: ${e.message} ")
@@ -368,6 +386,7 @@ class ApiRepository {
         val orgTotal = api.getOrgRankings(queryMap, "Bearer $token")
         return try{
             val result = orgTotal.execute()
+            Log.d("error", "전체 조직 랭킹 조회 결과: ${result.code()} ")
             return result.body()!!
         } catch (e: Exception) {
             Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
@@ -383,6 +402,7 @@ class ApiRepository {
         val orgTotal = api.getAllOrgRankings(queryMap,"Bearer $token")
         return try{
             val result = orgTotal.execute()
+            Log.d("error", "전체 조직 랭킹 조회 결과: ${result.code()} ")
             return result.body()!!
         } catch (e: Exception) {
             Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
@@ -395,6 +415,7 @@ class ApiRepository {
         val userDetails = api.getUserDetail(githubId, "Bearer $token")
         return try {
             val result = userDetails.execute()
+            Log.d("error", "사용자 $githubId 의 상세조회 결과 ${result.code()}")
             return result.body()!!
         } catch (e: Exception) {
             Log.d("error", "사용자 $githubId 의 상세조회 실패: ${e.message} ")
@@ -427,6 +448,7 @@ class ApiRepository {
         val approve = api.postOrgApproval(body, "Bearer $token")
         try{
             val result = approve.execute()
+            Log.d("result", "admin ${result.code()}")
             return result.body()!!
         } catch (e: Exception) {
             Log.d("error", "admin error ${e.message}")
@@ -444,6 +466,7 @@ class ApiRepository {
         val orgList = api.getOrgStatus(queryMap,"Bearer $token")
         return try{
             val result = orgList.execute()
+            Log.d("result", "전체 조직 랭킹 조회 결과: ${result.code()} ")
             return result.body()!!
         } catch (e: Exception) {
             Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
@@ -455,6 +478,7 @@ class ApiRepository {
         val repoList = api.getOrgRepoList(orgName, "Bearer $token")
         return try {
             val result = repoList.execute()
+            Log.d("result", "조직의 레포 리스트 조회 결과: ${result.code()}")
             result.body()
         } catch (e: Exception) {
             Log.d("error", "조직의 레포 리스트 조회 실패: ${e.message}")
@@ -466,8 +490,8 @@ class ApiRepository {
         val profile = api.getOthersProfile(githubId, "Bearer $token")
         return try {
             val result = profile.execute()
-            Log.d("결과", "타인의 프로필 호출 결과 ${result.code()}")
-            Log.d("결과", "타인의 프로필 호출 결과 ${result.message()}")
+            Log.d("result", "타인의 프로필 호출 결과 ${result.code()}")
+            Log.d("result", "타인의 프로필 호출 결과 ${result.message()}")
             result.body()
         } catch (e: Exception) {
             Log.d("error", "타인의 프로필 조회 실패: ${e.message}")
@@ -481,10 +505,10 @@ class ApiRepository {
         val compareRepoMembers = api.postCompareRepoMembersUpdate(body, "Bearer $token")
         try{
             val result = compareRepoMembers.execute()
+            Log.d("result", "레포 비교 업데이트 멤버 결과 ${result.code()}")
             compareRepoResult = result.body()!!
-            Log.d("token", "1 결과 ${result.code()}")
         } catch (e: Exception) {
-            Log.d("token", "1 결과 ${e.message}")
+            Log.d("error", "레포 비교 업데이트 멤버 에러 ${e.message}")
             return compareRepoResult
         }
         return compareRepoResult
@@ -496,10 +520,10 @@ class ApiRepository {
         val compareRepo = api.postCompareRepoUpdate(body, "Bearer $token")
         try{
             val result = compareRepo.execute()
+            Log.d("result", "레포 비교 업데이트 결과 ${result.code()}")
             compareRepoResult = result.body()!!
-            Log.d("token", "2 결과 ${result.code()}")
         } catch (e: Exception) {
-            Log.d("token", "2 결과 ${e.message}")
+            Log.d("error", "레포 비교 업데이트 에러 ${e.message}")
             return compareRepoResult
         }
         return compareRepoResult
@@ -510,8 +534,10 @@ class ApiRepository {
         var repoContResult = RepoContributorsModel(null, null)
         try{
             val result = repoContributors.execute()
+            Log.d("result", "레포 상세조회 업데이트 결과 ${result.code()}")
             repoContResult = result.body()!!
         } catch (e: Exception) {
+            Log.d("error", "레포 상세조회 업데이트 에러 ${e.message}")
             return repoContResult
         }
         return repoContResult
@@ -522,7 +548,7 @@ class ApiRepository {
         var tokenHistoryResult: ArrayList<TokenHistoryModelItem>? = null
         try {
             val result = tokenHistory.execute()
-            Log.d("result", "블록체인 부여내역 업데이트 ${result.code()}")
+            Log.d("result", "블록체인 부여내역 업데이트 결과 ${result.code()}")
             tokenHistoryResult = result.body()!!
         } catch (e: Exception) {
             Log.d("error", "블록체인 부여내역 업데이트 오류 ${e.message}")

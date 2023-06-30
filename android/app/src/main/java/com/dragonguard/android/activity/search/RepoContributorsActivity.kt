@@ -113,6 +113,38 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkUpdate(result: RepoContributorsModel) {
+        if (result.git_repo_members != null) {
+            if (result.git_repo_members[0].additions == null) {
+                count++
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({ repoContributors(repoName) }, 2000)
+            } else {
+                Log.d("중복확인", "중복확인")
+                for (i in 0 until result.git_repo_members.size) {
+                    val compare =
+                        contributors.filter { it.github_id == result.git_repo_members[i].github_id }
+                    if (compare.isEmpty()) {
+                        contributors.add(result.git_repo_members[i])
+                    }
+                }
+                result.spark_line?.let {
+                    sparkLines = it.toMutableList()
+                }
+                initRecycler()
+            }
+        } else {
+            if (count < 10) {
+                count++
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({ repoContributors(repoName) }, 2000)
+            } else {
+                binding.loadingLottie.pauseAnimation()
+                binding.loadingLottie.visibility = View.GONE
+            }
+        }
+    }
+
     //    리사이클러뷰 실행
     private fun initRecycler() {
         binding.repoContributors.setItemViewCacheSize(contributors.size)
@@ -234,6 +266,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.repoSpark.data = lineData
         binding.repoSpark.invalidate()
         binding.repoSpark.visibility = View.VISIBLE
+        binding.repoContributeFrame.visibility = View.VISIBLE
 
 //        binding.contributorsChart.run {
 //            this.data = data //차트의 데이터를 data로 설정해줌.
@@ -295,6 +328,9 @@ class RepoContributorsActivity : AppCompatActivity() {
 
             R.id.refresh_button -> {
                 if(refresh) {
+                    binding.loadingLottie.resumeAnimation()
+                    binding.loadingLottie.visibility = View.VISIBLE
+                    binding.repoContributeFrame.visibility = View.GONE
                     refresh = false
                     val coroutine = CoroutineScope(Dispatchers.Main)
                     coroutine.launch {
@@ -303,7 +339,7 @@ class RepoContributorsActivity : AppCompatActivity() {
                                 viewmodel.updateContribute(repoName, token)
                             }
                             val resultRepo = resultRepoDeferred.await()
-                            checkContributors(resultRepo)
+                            checkUpdate(resultRepo)
                         }
                     }
                 }
