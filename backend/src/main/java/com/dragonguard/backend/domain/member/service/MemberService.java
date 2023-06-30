@@ -150,6 +150,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public MemberResponse getMember() {
         Member member = getLoginUserWithPersistence();
+        getContributionSumByScraping(member.getGithubId());
         return getMemberResponseWithValidateOrganization(member);
     }
 

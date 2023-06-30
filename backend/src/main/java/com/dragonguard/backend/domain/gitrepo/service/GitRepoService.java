@@ -38,6 +38,7 @@ import org.springframework.cache.annotation.Cacheable;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -258,7 +259,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 }).collect(Collectors.toList());
     }
 
-    private GitRepoContributionMap getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final Function<Week, Integer> function) {
+    private GitRepoContributionMap getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function) {
         if (contributions == null || contributions.isEmpty()
                 || contributions.stream().map(GitRepoMemberClientResponse::getWeeks).filter(Objects::nonNull).findFirst().isEmpty()) return null;
         return new GitRepoContributionMap(contributions.stream()
