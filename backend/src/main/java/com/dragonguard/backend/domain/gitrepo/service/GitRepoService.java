@@ -56,7 +56,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
     private final KafkaProducer<SparkLineKafka> kafkaSparkLineProducer;
     private final KafkaProducer<GitRepoRequest> kafkaGitRepoInfoProducer;
-    private final GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> gitRepoMemberClient;
+    private final GithubClient<GitRepoInfoRequest, List<GitRepoMemberClientResponse>> gitRepoMemberClient;
     private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
     private final GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> gitRepoSparkLineClient;
@@ -211,11 +211,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     }
 
     public List<GitRepoMemberResponse> requestToGithub(final GitRepoInfoRequest gitRepoInfoRequest, final GitRepo gitRepo) {
-        Optional<GitRepoMemberClientResponse[]> responses = requestClientGitRepoMember(gitRepoInfoRequest);
+        Optional<List<GitRepoMemberClientResponse>> responses = requestClientGitRepoMember(gitRepoInfoRequest);
         if (responses.isEmpty()) {
             return List.of();
         }
-        Set<GitRepoMemberClientResponse> contributions = Arrays.stream(responses.get()).collect(Collectors.toSet());
+        Set<GitRepoMemberClientResponse> contributions = new HashSet<>(responses.get());
         if (contributions.isEmpty()) return List.of();
 
         List<GitRepoMemberResponse> result = getResponseList(
@@ -229,9 +229,9 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return result;
     }
 
-    private Optional<GitRepoMemberClientResponse[]> requestClientGitRepoMember(final GitRepoInfoRequest gitRepoInfoRequest) {
-        GitRepoMemberClientResponse[] responses = gitRepoMemberClient.requestToGithub(gitRepoInfoRequest);
-        if (responses == null || responses.length == 0) {
+    private Optional<List<GitRepoMemberClientResponse>> requestClientGitRepoMember(final GitRepoInfoRequest gitRepoInfoRequest) {
+        List<GitRepoMemberClientResponse> responses = gitRepoMemberClient.requestToGithub(gitRepoInfoRequest);
+        if (responses == null || responses.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(responses);

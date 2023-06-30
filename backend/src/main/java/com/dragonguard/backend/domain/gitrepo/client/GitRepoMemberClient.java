@@ -6,7 +6,7 @@ import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
-import org.bouncycastle.util.Arrays;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -16,6 +16,8 @@ import reactor.util.retry.Retry;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author 김승진
@@ -24,11 +26,11 @@ import java.time.Duration;
 
 @Component
 @RequiredArgsConstructor
-public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, GitRepoMemberClientResponse[]> {
+public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, List<GitRepoMemberClientResponse>> {
     private final WebClient webClient;
 
     @Override
-    public GitRepoMemberClientResponse[] requestToGithub(GitRepoInfoRequest request) {
+    public List<GitRepoMemberClientResponse> requestToGithub(GitRepoInfoRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
@@ -43,7 +45,7 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Git
                 .retrieve()
                 .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(ClientBadRequestException::new))
-                .bodyToMono(GitRepoMemberClientResponse[].class)
+                .bodyToMono(new ParameterizedTypeReference<List<GitRepoMemberClientResponse>>() {})
                 .flatMap(response -> {
                     if (response == null) {
                         return Mono.error(WebClientException::new);
@@ -52,7 +54,8 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Git
                 })
                 .retryWhen(
                         Retry.fixedDelay(10, Duration.ofMillis(1500)))
-                .filter(grm -> !Arrays.isNullOrEmpty(grm))
+                .filter(Objects::nonNull)
+                .filter(grm -> !grm.isEmpty())
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
     }
