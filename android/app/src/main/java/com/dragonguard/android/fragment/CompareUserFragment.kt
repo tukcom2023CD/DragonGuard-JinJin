@@ -68,6 +68,8 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
             val bottomSheetFragment = UserSheetfragment(this, allContiributors, 2, binding)
             bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
         }
+        binding.user1Profile.clipToOutline = true
+        binding.user2Profile.clipToOutline = true
         repoContributors(repo1, repo2)
 
 

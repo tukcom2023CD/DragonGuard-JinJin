@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.basic.MainActivity
@@ -89,6 +90,9 @@ class RepoCompareActivity : AppCompatActivity() {
     }
 
     private fun startFragment(resultFirst: List<RepoMembersResult>, resultSecond: List<RepoMembersResult>) {
+        binding.rankingLottie.pauseAnimation()
+        binding.rankingLottie.visibility = View.GONE
+        binding.compareFrame.visibility = View.VISIBLE
         compareRepoFragment = CompareRepoFragment(repo1, repo2, token, resultFirst, resultSecond)
         compareUserFragment = CompareUserFragment(repo1, repo2, token)
         adapter = CompareAdapter(this, token)

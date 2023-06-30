@@ -50,8 +50,6 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
     private var viewmodel = Viewmodel()
     private lateinit var binding : FragmentCompareRepoBinding
     private var count = 0
-    private val MIN_SCALE = 0.85f
-    private val MIN_ALPHA = 0.5f
     private val compareItems = arrayListOf("forks", "closed issues", "open issues", "stars", "subscribers", "watchers", "total commits",
     "max commits", "min commits", "commiters", "average commits", "total additions", "max addtions", "min additions", "adders",
     "average addtions", "total deletions", "max deletions", "min deletions", "deleters", "average deletions", "languages", "average lines")
@@ -75,6 +73,14 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
 
     //activity 구성 이후 화면을 초기화하는 함수
     private fun updateUI() {
+        binding.repo1User1.clipToOutline = true
+        binding.repo1User2.clipToOutline = true
+        binding.repo1User3.clipToOutline = true
+        binding.repo1User4.clipToOutline = true
+        binding.repo2User1.clipToOutline = true
+        binding.repo2User2.clipToOutline = true
+        binding.repo2User3.clipToOutline = true
+        binding.repo2User4.clipToOutline = true
         repoContributors()
     }
 
@@ -105,19 +111,6 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors()}, 2000)
             } else {
-//                val name1 = repo1.split("/")
-//                val name2 = repo2.split("/")
-//                if(name1.size > 2) {
-//                    binding.compareRepo1.text = "${name1.last()}"
-//                } else {
-//                    binding.compareRepo1.text = name1.last()
-//                }
-//                if(name2.size > 2) {
-//                    binding.compareRepo2.text = "${name2.last()}"
-//                } else {
-//                    binding.compareRepo2.text = name2.last()
-//                }
-//                count = 0
                 repoCompare()
             }
         } else {

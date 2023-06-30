@@ -67,6 +67,7 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toStartOf="@id/repo1_user2"
                             android:layout_margin="3dp"
+                            android:background="@drawable/round_title"
                             app:layout_constraintHorizontal_chainStyle="packed"/>
 
                         <androidx.appcompat.widget.AppCompatImageView
@@ -76,6 +77,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             android:layout_margin="3dp"
+                            android:background="@drawable/round_title"
                             app:layout_constraintStart_toEndOf="@id/repo1_user1" />
 
                         <androidx.appcompat.widget.AppCompatImageView
@@ -83,6 +85,7 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_marginTop="5dp"
+                            android:background="@drawable/round_title"
                             app:layout_constraintStart_toStartOf="@+id/repo1_user1"
                             app:layout_constraintTop_toBottomOf="@+id/repo1_user1" />
 
@@ -91,6 +94,7 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_marginTop="5dp"
+                            android:background="@drawable/round_title"
                             app:layout_constraintEnd_toEndOf="@+id/repo1_user2"
                             app:layout_constraintTop_toBottomOf="@+id/repo1_user2" />
 
@@ -156,6 +160,7 @@
                             android:layout_margin="3dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
+                            android:background="@drawable/round_title"
                             app:layout_constraintEnd_toStartOf="@id/repo2_user2"
                             app:layout_constraintHorizontal_chainStyle="packed"/>
 
@@ -166,6 +171,7 @@
                             android:layout_margin="3dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
+                            android:background="@drawable/round_title"
                             app:layout_constraintStart_toEndOf="@id/repo2_user1" />
 
                         <androidx.appcompat.widget.AppCompatImageView
@@ -173,6 +179,7 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_marginTop="5dp"
+                            android:background="@drawable/round_title"
                             app:layout_constraintStart_toStartOf="@+id/repo2_user1"
                             app:layout_constraintTop_toBottomOf="@+id/repo2_user1" />
 
@@ -181,6 +188,7 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_marginTop="5dp"
+                            android:background="@drawable/round_title"
                             app:layout_constraintEnd_toEndOf="@+id/repo2_user2"
                             app:layout_constraintTop_toBottomOf="@+id/repo2_user2" />
 
