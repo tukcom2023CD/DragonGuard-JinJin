@@ -14,11 +14,11 @@ import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.TokenHistoryActivity
+import com.dragonguard.android.activity.basic.TokenHistoryActivity
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.databinding.FragmentMainBinding
 import com.dragonguard.android.model.UserInfoModel
-import com.dragonguard.android.recycleradapter.UserActivityAdapter
+import com.dragonguard.android.adapters.UserActivityAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,11 +28,10 @@ import kotlinx.coroutines.launch
 class MainFragment(private val token: String, private val info: UserInfoModel) : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private var viewmodel = Viewmodel()
-    private var count = 0
-    private var state = true
-    private var loginOut = false
+    private var repeat = false
     val handler= Handler(Looper.getMainLooper()){
         setPage()
+        repeat = true
         true
     }
     override fun onCreateView(
@@ -55,9 +54,11 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
 
         drawInfo()
         CoroutineScope(Dispatchers.IO).launch{
-            while(true){
-                Thread.sleep(3000)
-                handler.sendEmptyMessage(0)
+            if(!repeat) {
+                while(true){
+                    Thread.sleep(3000)
+                    handler.sendEmptyMessage(0)
+                }
             }
         }
     }
@@ -120,22 +121,20 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
                 1 -> {
                     when(info.member_github_ids?.size){
                         1 -> {
-                            binding.user1Githubid.text = info.member_github_ids!![0]
-                            binding.user1Ranking.text = "1"
+                            binding.user2Githubid.text = info.member_github_ids!![0]
+                            binding.user2Ranking.text = "1"
                         }
                         2 -> {
-                            binding.user1Githubid.text = info.member_github_ids!![0]
-                            binding.user1Ranking.text = "1"
-                            binding.user2Githubid.text = info.member_github_ids!![1]
-                            binding.user2Ranking.text = "2"
+                            binding.user2Githubid.text = info.member_github_ids!![0]
+                            binding.user2Ranking.text = "1"
+                            binding.user3Githubid.text = info.member_github_ids!![1]
+                            binding.user3Ranking.text = "2"
                         }
                         3 -> {
-                            binding.user1Githubid.text = info.member_github_ids!![0]
-                            binding.user1Ranking.text = "1"
-                            binding.user2Githubid.text = info.member_github_ids!![1]
-                            binding.user2Ranking.text = "2"
-                            binding.user3Githubid.text = info.member_github_ids!![2]
-                            binding.user3Ranking.text = "3"
+                            binding.user2Githubid.text = info.member_github_ids!![0]
+                            binding.user2Ranking.text = "1"
+                            binding.user3Githubid.text = info.member_github_ids!![1]
+                            binding.user3Ranking.text = "2"
                         }
                     }
                 }
@@ -150,9 +149,7 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
                         3 -> {
                             when(info.is_last) {
                                 true -> {
-                                    binding.user1Githubid.text = info.member_github_ids!![0]
-                                    binding.user1Ranking.text = info.organization_rank!!.minus(2).toString()
-                                    binding.user2Githubid.text = info.member_github_ids!![1]
+                                    binding.user2Githubid.text = info.member_github_ids!![0]
                                     binding.user2Ranking.text = info.organization_rank!!.minus(1).toString()
                                     binding.user3Githubid.text = info.member_github_ids!![2]
                                     binding.user3Ranking.text = info.organization_rank!!.toString()

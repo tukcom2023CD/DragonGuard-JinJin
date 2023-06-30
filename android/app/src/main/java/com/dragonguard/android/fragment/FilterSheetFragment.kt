@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.activity.search.SearchFilterActivity
 import com.dragonguard.android.databinding.ActivitySearchFilterBinding
 import com.dragonguard.android.databinding.FilterSheetBinding
-import com.dragonguard.android.recycleradapter.LanguagesAdapter
+import com.dragonguard.android.adapters.LanguagesAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class FilterSheetFragment(context: Context, private val list: MutableList<String>, private val type: String

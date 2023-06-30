@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,12 +14,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.model.search.RepoSearchResultModel
 import com.dragonguard.android.databinding.ActivitySearchBinding
-import com.dragonguard.android.recycleradapter.HorizontalItemDecorator
-import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
-import com.dragonguard.android.recycleradapter.VerticalItemDecorator
+import com.dragonguard.android.adapters.HorizontalItemDecorator
+import com.dragonguard.android.adapters.RepositoryProfileAdapter
+import com.dragonguard.android.adapters.VerticalItemDecorator
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
 
@@ -44,6 +43,7 @@ class SearchActivity : AppCompatActivity() {
     private var type = "REPOSITORIES"
     private var token = ""
     private val imgList = HashMap<String, Int>()
+    private var repoCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -56,10 +56,11 @@ class SearchActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
 
         val intent = intent
         token = intent.getStringExtra("token")!!
+        repoCount = intent.getIntExtra("count", 0)
         popularLanguages = arrayListOf("C", "C#", "C++", "CoffeeScript ", "CSS", "Dart", "DM", "Elixir", "Go", "Groovy", "HTML", "Java", "JavaScript",
             "Kotlin", "Objective-C", "Perl", "PHP", "PowerShell", "Python", "Ruby", "Rust", "Scala", "Shell", "Swift", "TypeScript")
         imgList.apply {
@@ -365,9 +366,9 @@ class SearchActivity : AppCompatActivity() {
         if (count == 0) {
             Log.d("values", "names: $repoNames")
             repositoryProfileAdapter = if(type.isBlank()) {
-                RepositoryProfileAdapter(repoNames, this, token, "REPOSITORIES", imgList)
+                RepositoryProfileAdapter(repoNames, this, token, "REPOSITORIES", imgList, repoCount)
             } else {
-                RepositoryProfileAdapter(repoNames, this, token, type, imgList)
+                RepositoryProfileAdapter(repoNames, this, token, type, imgList, repoCount)
             }
             binding.searchResult.adapter = repositoryProfileAdapter
             binding.searchResult.layoutManager = LinearLayoutManager(this)
@@ -432,19 +433,13 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
-        return true
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
             }
-            R.id.home_menu -> {
-                finish()
-            }
+
         }
         return super.onOptionsItemSelected(item)
     }

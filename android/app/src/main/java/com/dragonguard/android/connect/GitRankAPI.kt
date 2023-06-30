@@ -6,6 +6,7 @@ import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsModel
 import com.dragonguard.android.model.detail.UserDetailModel
+import com.dragonguard.android.model.detail.UserProfileModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
@@ -33,6 +34,9 @@ interface GitRankAPI {
     @GET("git-repos")
     fun getRepoContributors(@Query("name") repoName: String, @Header("Authorization")token: String): Call<RepoContributorsModel>
 
+    @GET("git-repos")
+    fun getRepoContributorsUpdate(@Query("name") repoName: String, @Header("Authorization")token: String): Call<RepoContributorsModel>
+
 //    모든 사용자들의 랭킹을 받아오는 함수
     @GET("members/ranking")
     fun getTotalUsersRanking(@QueryMap query: Map<String, String>, @Header("Authorization")token: String) : Call<TotalUsersRankingModel>
@@ -57,6 +61,9 @@ interface GitRankAPI {
     @GET("blockchain")
     fun getTokenHistory(@Header("Authorization")token: String) : Call<TokenHistoryModel>
 
+    @POST("blockchain/update")
+    fun updateToken(@Header("Authorization")token: String) : Call<TokenHistoryModel>
+
 //    klip wallet address를 서버로 보내는 함수
     @POST("members/wallet-address")
     @Headers("accept: application/json", "content-type: application/json")
@@ -67,10 +74,18 @@ interface GitRankAPI {
     @Headers("accept: application/json", "content-type: application/json")
     fun postCompareRepoMembers(@Body compare : CompareRepoRequestModel, @Header("Authorization")token: String) : Call<CompareRepoMembersResponseModel>
 
+    @POST("git-repos/compare/git-repos-members/update")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postCompareRepoMembersUpdate(@Body compare : CompareRepoRequestModel, @Header("Authorization")token: String) : Call<CompareRepoMembersResponseModel>
+
 //    두 Repository의 정보를 받아오기 위한 함수
     @POST("git-repos/compare")
     @Headers("accept: application/json", "content-type: application/json")
     fun postCompareRepo(@Body compare: CompareRepoRequestModel, @Header("Authorization")token: String) : Call<CompareRepoResponseModel>
+
+    @POST("git-repos/compare")
+    @Headers("accept: application/json", "content-type: application/json")
+    fun postCompareRepoUpdate(@Body compare: CompareRepoRequestModel, @Header("Authorization")token: String) : Call<CompareRepoResponseModel>
 
     @GET("auth/refresh")
     fun getNewAccessToken(@Header("accessToken")access: String, @Header("refreshToken")refresh: String): Call<RefreshTokenModel>
@@ -118,5 +133,8 @@ interface GitRankAPI {
     fun postOrgApproval(@Body body: OrgApprovalModel, @Header("Authorization")access: String): Call<ApproveRequestOrgModel>
 
     @GET("admin/organizations")
-    fun getOrgStatus(@QueryMap query: Map<String, String> ,@Header("Authorization")access: String): Call<ApproveRequestOrgModel>
+    fun getOrgStatus(@QueryMap query: Map<String, String>, @Header("Authorization")access: String): Call<ApproveRequestOrgModel>
+
+    @GET("members/details")
+    fun getOthersProfile(@Query("githubId") query: String, @Header("Authorization")access: String): Call<UserProfileModel>
 }

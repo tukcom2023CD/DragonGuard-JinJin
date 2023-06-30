@@ -7,15 +7,18 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.dragonguard.android.databinding.ActivityRepoCompareBinding
 import com.dragonguard.android.fragment.CompareRepoFragment
 import com.dragonguard.android.fragment.CompareUserFragment
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
-import com.dragonguard.android.recycleradapter.CompareAdapter
+import com.dragonguard.android.adapters.CompareAdapter
+import com.dragonguard.android.model.compare.CompareRepoResponseModel
+import com.dragonguard.android.model.compare.RepoMembersResult
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +35,7 @@ class RepoCompareActivity : AppCompatActivity() {
     private lateinit var compareUserFragment: CompareUserFragment
     private lateinit var compareRepoFragment: CompareRepoFragment
     private var token = ""
+    private var refresh = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +54,7 @@ class RepoCompareActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
         supportActionBar?.title = "Repository 비교"
 
     }
@@ -71,12 +75,12 @@ class RepoCompareActivity : AppCompatActivity() {
 
     fun checkContributors(result: CompareRepoMembersResponseModel) {
         if ((result.first_result != null) && (result.second_result != null)) {
-            if (result.first_result.isEmpty()) {
+            if (result.first_result.isEmpty() || result.second_result.isEmpty()) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors()}, 2000)
             } else {
-                startFragment()
+                startFragment(result.first_result, result.second_result)
             }
         } else {
             if(count<10) {
@@ -87,8 +91,11 @@ class RepoCompareActivity : AppCompatActivity() {
         }
     }
 
-    private fun startFragment() {
-        compareRepoFragment = CompareRepoFragment(repo1, repo2, token)
+    private fun startFragment(resultFirst: List<RepoMembersResult>, resultSecond: List<RepoMembersResult>) {
+        binding.rankingLottie.pauseAnimation()
+        binding.rankingLottie.visibility = View.GONE
+        binding.compareFrame.visibility = View.VISIBLE
+        compareRepoFragment = CompareRepoFragment(repo1, repo2, token, resultFirst, resultSecond)
         compareUserFragment = CompareUserFragment(repo1, repo2, token)
         adapter = CompareAdapter(this, token)
 
@@ -100,35 +107,11 @@ class RepoCompareActivity : AppCompatActivity() {
         TabLayoutMediator(binding.compareTab, binding.fragmentContent) { tab, position ->
             tab.text = tabs[position]
         }.attach()
-//        val transaction = supportFragmentManager.beginTransaction()
-//        transaction.add(R.id.compare_frame, compareRepoFragment)
-//            .add(R.id.compare_frame, compareUserFragment)
-//            .hide(compareUserFragment)
-//            .commit()
-//
-//        binding.bottomNavigation.setOnItemSelectedListener {
-//            when(it.itemId) {
-//                R.id.compare_repo -> {
-//                    supportActionBar?.title = "Repository 비교"
-//                    val transactionN = supportFragmentManager.beginTransaction()
-//                    transactionN.hide(compareUserFragment)
-//                        .show(compareRepoFragment)
-//                        .commit()
-//                }
-//                R.id.compare_user -> {
-//                    supportActionBar?.title = "Repository 구성원 비교"
-//                    val transactionN = supportFragmentManager.beginTransaction()
-//                    transactionN.show(compareUserFragment)
-//                        .hide(compareRepoFragment)
-//                        .commit()
-//                }
-//            }
-//            true
-//        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
+        menuInflater.inflate(R.menu.refresh, binding.toolbar.menu)
         return true
     }
 
@@ -137,13 +120,31 @@ class RepoCompareActivity : AppCompatActivity() {
             android.R.id.home -> {
                 finish()
             }
-            R.id.home_menu -> {
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
+            R.id.refresh_button -> {
+                if(refresh) {
+                    refresh = false
+                    val coroutine = CoroutineScope(Dispatchers.Main)
+                    coroutine.launch {
+                        binding.rankingLottie.resumeAnimation()
+                        binding.rankingLottie.visibility = View.VISIBLE
+                        binding.compareFrame.visibility = View.GONE
+                        if(!this@RepoCompareActivity.isFinishing) {
+                            val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.updateCompareRepo(repo1, repo2, token)
+                            }
+                            val resultRepo = resultRepoDeferred.await()
+
+                            val resultMemberDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.updateCompareMembers(repo1, repo2, token)
+                            }
+                            val resultMember = resultMemberDeferred.await()
+                            checkContributors(resultMember)
+                        }
+                    }
+                }
             }
         }
         return super.onOptionsItemSelected(item)
     }
+
 }

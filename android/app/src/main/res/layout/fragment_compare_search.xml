@@ -30,15 +30,15 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="4.8">
+                android:layout_weight="4.8"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:fontFamily="@font/ibm_semibold"
                     android:gravity="center"
-                    android:layout_weight="2"
                     android:text="Repository 비교하기"
                     android:textColor="@color/black"
                     android:textSize="30sp" />
@@ -48,15 +48,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-
+                    android:autoSizeMaxTextSize="23sp"
+                    android:autoSizeTextType="uniform"
                     android:background="@drawable/shadow"
                     android:ellipsize="end"
                     android:fontFamily="@font/ibm_semibold"
-                    android:gravity="center_horizontal"
-                    android:maxLines="1"
+                    android:gravity="center"
+                    android:lines="1"
                     android:text="Repository 1"
                     android:textAllCaps="false"
-                    android:textSize="30sp" />
+                    android:textSize="23sp"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -90,16 +91,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:autoSizeMaxTextSize="23sp"
+                        android:autoSizeTextType="uniform"
                         android:background="@drawable/shadow"
                         android:ellipsize="end"
                         android:fontFamily="@font/ibm_semibold"
-                        android:gravity="center_horizontal"
-                        android:maxLines="1"
+                        android:gravity="center"
+                        android:lines="1"
                         android:text="Repository 2"
                         android:textAllCaps="false"
-                        android:textSize="30sp"
-
-                        />
+                        android:textSize="23sp"/>
                 </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatButton

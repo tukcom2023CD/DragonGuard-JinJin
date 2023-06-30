@@ -11,8 +11,7 @@ import android.view.Window
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
-import com.dragonguard.android.activity.compare.RepoChooseActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.databinding.ActivityMenuBinding
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope

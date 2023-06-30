@@ -14,13 +14,17 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.TokenHistoryActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:name=".activity.profile.UserProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.basic.TokenHistoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.search.SearchFilterActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.menu.ApprovalOrgActivity"
             android:exported="false"
@@ -110,15 +114,15 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.basic.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.LoadingActivity"
+            android:name=".activity.basic.LoadingActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.basic.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

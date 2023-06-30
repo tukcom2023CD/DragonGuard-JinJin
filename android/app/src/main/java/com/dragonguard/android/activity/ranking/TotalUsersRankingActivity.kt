@@ -13,11 +13,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.databinding.ActivityTotalUsersRankingBinding
 import com.dragonguard.android.model.rankings.TotalUsersRankingsModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
-import com.dragonguard.android.recycleradapter.TotalUsersRankingAdapter
+import com.dragonguard.android.adapters.TotalUsersRankingAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -114,21 +114,10 @@ class TotalUsersRankingActivity : AppCompatActivity() {
         initScrollListener()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             android.R.id.home->{
                 finish()
-            }
-            R.id.home_menu->{
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)

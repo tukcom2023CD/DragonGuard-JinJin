@@ -34,6 +34,9 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
     private var repo2 = repoName2
     private var contributors1 = ArrayList<GitRepoMember>()
     private var contributors2 = ArrayList<GitRepoMember>()
+    private var allContiributors = ArrayList<GitRepoMember>()
+    var user1 = ""
+    var user2 = ""
     private var count = 0
     private lateinit var binding : FragmentCompareUserBinding
     private var viewmodel = Viewmodel()
@@ -48,6 +51,29 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
         binding.compareUserViewmodel = viewmodel
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        updateUI()
+    }
+
+    //activity 구성 이후 화면을 초기화하는 함수
+    private fun updateUI() {
+        binding.user1Frame.setOnClickListener {
+            val bottomSheetFragment = UserSheetfragment(this, allContiributors, 1, binding)
+            bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
+        }
+        binding.user2Frame.setOnClickListener {
+            val bottomSheetFragment = UserSheetfragment(this, allContiributors, 2, binding)
+            bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
+        }
+        binding.user1Profile.clipToOutline = true
+        binding.user2Profile.clipToOutline = true
+        repoContributors(repo1, repo2)
+
+
+        getActivity()?.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     }
 
     /*
@@ -101,7 +127,8 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
                         compare2.clear()
                     }
                 }
-                initSpinner()
+                allContiributors.addAll(contributors1)
+                allContiributors.addAll(contributors2)
             }
         } else {
             if(count<10) {
@@ -112,82 +139,12 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
         }
     }
 
-    /*
-    spinner에 두 Repository의 github id 리스트 넣는 함수
-     */
-    private fun initSpinner() {
-        if(contributors1.isNotEmpty() && contributors2.isNotEmpty()) {
-            val arr1 : MutableList<String> = mutableListOf("선택하세요")
-            val arr2 : MutableList<String> = mutableListOf()
-            arr1.addAll(contributors1.flatMap { listOf(it.github_id!!) }.toMutableList())
-            arr2.addAll(contributors2.flatMap { listOf(it.github_id!!) }.toMutableList())
-//            Toast.makeText(requireContext(), "$arr1", Toast.LENGTH_SHORT).show()
-            val spinnerAdapter = ArrayAdapter<String>(requireContext(), R.layout.spinner_list, arr1)
-//            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerAdapter.addAll(arr2)
-            binding.compareUserSpinner1.adapter = spinnerAdapter
-            binding.compareUserSpinner1.setSelection(0)
-
-            binding.compareUserSpinner2.adapter = spinnerAdapter
-            binding.compareUserSpinner2.setSelection(0)
-//            binding.compareUserSpinner2.invalidate()
-            binding.compareUserSpinner1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-//                    if(position > contributors1.size) {
-////                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
-//                        val name = contributors2[position-contributors1.size-1].githubId
-//                        binding.compareUser1.text = name
-//                    } else {
-//                        if(position > 0) {
-////                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
-//                            val name = contributors1[position-1].githubId
-//                            binding.compareUser1.text = name
-//                        }
-//                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                }
-            }
-            binding.compareUserSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-//                    if(position > contributors1.size) {
-////                        Toast.makeText(requireContext(), "repo2 구성원", Toast.LENGTH_SHORT).show()
-//                        val name = contributors2[position-contributors1.size-1].githubId
-//                        binding.compareUser2.text = name
-//                    } else {
-//                        if(position > 0) {
-////                            Toast.makeText(requireContext(), "repo1 구성원", Toast.LENGTH_SHORT).show()
-//                            val name = contributors1[position-1].githubId
-//                            binding.compareUser2.text = name
-//                        }
-//                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                }
-            }
-        }
-
-    }
 
     /*
     spinner에 선택된 user들을 비교하는 그래프를 그리는 함수
      */
-    private fun initGraph(user1: String, user2: String) {
-        binding.progressBar.visibility = View.VISIBLE
-        binding.userCommitChart.visibility = View.GONE
-        binding.userCodeChart.visibility = View.GONE
+    fun initGraph() {
+        binding.userCompareLottie.visibility = View.VISIBLE
 //        Toast.makeText(requireContext(), "initGraph()", Toast.LENGTH_SHORT).show()
         var user1Cont = contributors1.find { it.github_id == user1 }
         var user2Cont = contributors1.find { it.github_id == user2 }
@@ -207,49 +164,41 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
         commitEntries1.add(BarEntry(1.toFloat(), user1Cont.commits!!.toFloat()))
         codeEntries1.add(BarEntry(1.toFloat(), user1Cont.additions!!.toFloat()))
         codeEntries1.add(BarEntry(2.toFloat(), user1Cont.deletions!!.toFloat()))
-        commitEntries2.add(BarEntry(1.toFloat(), user2Cont.commits!!.toFloat()))
+        commitEntries1.add(BarEntry(2.toFloat(), user2Cont.commits!!.toFloat()))
         codeEntries2.add(BarEntry(1.toFloat(), user2Cont.additions!!.toFloat()))
         codeEntries2.add(BarEntry(2.toFloat(), user2Cont.deletions!!.toFloat()))
 //        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
 
         val commitSet1 = BarDataSet(commitEntries1,user1)
-        commitSet1.color= Color.rgb(153,255,119)
+        commitSet1.colors= listOf(Color.rgb(176,225,255), Color.rgb(0,0,128))
         commitSet1.apply{
             valueTextSize = 12f
             setDrawValues(true)
-            valueFormatter = ScoreCustomFormatter()
+            valueFormatter = ScoreCustomFormatter(listOf(user1, user2))
         }
 
-        val commitSet2 = BarDataSet(commitEntries2,user2)
-        commitSet2.color = Color.BLACK
-        commitSet2.apply{
-            valueTextSize = 12f
-            setDrawValues(true)
-            valueFormatter = ScoreCustomFormatter()
-        }
+
         val commitDataSet1 = ArrayList<IBarDataSet>()
         commitDataSet1.add(commitSet1)
-        commitDataSet1.add(commitSet2)
-        val dataSet2 = ArrayList<IBarDataSet>()
-        dataSet2.add(commitSet2)
+//        commitDataSet1.add(commitSet2)
+
         val commitData = BarData(commitDataSet1)
         commitData.barWidth = 0.4f
-        commitData.groupBars(0.5f, 0.2f, 0f)
 
         val codeSet1 = BarDataSet(codeEntries1,user1)
-        codeSet1.color= Color.rgb(153,255,119)
+        codeSet1.color= Color.rgb(176,225,255)
         codeSet1.apply{
             valueTextSize = 12f
             setDrawValues(true)
-            valueFormatter = ScoreCustomFormatter()
+            valueFormatter = CodeFormatter()
         }
 
         val codeSet2 = BarDataSet(codeEntries2,user2)
-        codeSet2.color = Color.BLACK
+        codeSet2.color = Color.rgb(0,0,128)
         codeSet2.apply{
             valueTextSize = 12f
             setDrawValues(true)
-            valueFormatter = ScoreCustomFormatter()
+            valueFormatter = CodeFormatter()
         }
         val codeDataSet1 = ArrayList<IBarDataSet>()
         codeDataSet1.add(codeSet1)
@@ -288,7 +237,7 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
                 setDrawGridLines(false) // 격자
                 textColor = ContextCompat.getColor(context, R.color.black) //라벨 색상
                 textSize = 12f // 텍스트 크기
-                valueFormatter = CommitsFormatter() // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
+                valueFormatter = ScoreCustomFormatter(listOf(user1, user2)) // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
             }
             animateY(500) // 밑에서부터 올라오는 애니매이션 적용
         }
@@ -331,7 +280,6 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
         binding.userCodeChart.data = codeData
 //        binding.userChart.data.addDataSet(set2)
 //        binding.userChart.invalidate()
-        binding.progressBar.visibility = View.GONE
         binding.userCommitChart.visibility = View.VISIBLE
         binding.userCodeChart.visibility = View.VISIBLE
 
@@ -343,6 +291,8 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
 //            invalidate()
 //        }
         count = 0
+        binding.userCompareLottie.pauseAnimation()
+        binding.userCompareLottie.visibility = View.GONE
     }
 
     /*    그래프 x축을 contributor의 이름으로 변경하는 코드
@@ -371,38 +321,14 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
     }
 
     //    막대 위의 커밋수 정수로 변경
-    class ScoreCustomFormatter() : ValueFormatter() {
-        private val days = listOf("commits", "additions", "deletions")
+    class ScoreCustomFormatter(private val users: List<String>) : ValueFormatter() {
 //        private val days = listOf( "additions", "deletions")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
+            return users.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
         }
         override fun getFormattedValue(value: Float): String {
             return "" + value.toInt()
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        updateUI()
-    }
-
-    //activity 구성 이후 화면을 초기화하는 함수
-     private fun updateUI() {
-
-         binding.userCompareChoice.setOnClickListener {
-             if(binding.compareUserSpinner1.selectedItem.toString() == binding.compareUserSpinner2.selectedItem.toString() ||
-                 binding.compareUserSpinner1.selectedItem.toString() == "선택하세요" ||binding.compareUserSpinner2.selectedItem.toString() == "선택하세요") {
-                 Toast.makeText(context, "서로 다른 사용자를 선택하세요!!", Toast.LENGTH_SHORT).show()
-             } else {
-                 initGraph(binding.compareUserSpinner1.selectedItem.toString(), binding.compareUserSpinner2.selectedItem.toString())
-             }
-         }
-
-         repoContributors(repo1, repo2)
-
-
-         getActivity()?.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     }
 
 }

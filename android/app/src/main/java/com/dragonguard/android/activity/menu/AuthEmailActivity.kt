@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.databinding.ActivityAuthEmailBinding
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.dragonguard.android.viewmodel.Viewmodel.Companion.MIllIS_IN_FUTURE
@@ -162,22 +162,17 @@ class AuthEmailActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(binding.emailCode.windowToken, 0)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
+//        return true
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
             }
-            R.id.home_menu -> {
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
-            }
+
         }
         return super.onOptionsItemSelected(item)
     }

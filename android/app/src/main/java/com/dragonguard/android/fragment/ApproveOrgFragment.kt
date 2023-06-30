@@ -14,10 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentApproveOrgBinding
 import com.dragonguard.android.enums.RequestStatus
-import com.dragonguard.android.model.org.ApproveRequestOrgModel
 import com.dragonguard.android.model.org.ApproveRequestOrgModelItem
-import com.dragonguard.android.recycleradapter.ApproveRequestOrgAdapter
-import com.dragonguard.android.recycleradapter.RepositoryProfileAdapter
+import com.dragonguard.android.adapters.ApproveRequestOrgAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

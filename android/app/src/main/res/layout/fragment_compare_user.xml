@@ -10,10 +10,11 @@
             type="com.dragonguard.android.viewmodel.Viewmodel" />
     </data>
 
-    <FrameLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragment.CompareUserFragment">
+        tools:context=".fragment.CompareUserFragment"
+        android:fillViewport="true">
 
         <!-- TODO: Update blank fragment layout -->
         <LinearLayout
@@ -25,97 +26,84 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.2"
+                android:layout_weight="0.7"
                 android:orientation="horizontal"
                 android:weightSum="5">
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2" />
+                    android:layout_weight="0.5"/>
 
-                <ImageView
-                    android:id="@+id/user_color1"
+                <LinearLayout
+                    android:id="@+id/user1_frame"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2.2"
-                    android:src="@drawable/ic_baseline_circle_24"
-                    app:tint="#00ff00" />
+                    android:orientation="vertical"
+                    android:layout_weight="1.75"
+                    android:background="@drawable/shadow"
+                    android:gravity="bottom|center_horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/user1_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginHorizontal="25dp"
+                        android:src="@drawable/search_background"
+                        android:background="@drawable/round_title"/>
+
+                    <TextView
+                        android:id="@+id/user1_githubId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/textAppearance"
+                        android:text="User1"/>
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2" />
+                    android:layout_weight="0.5"/>
 
-                <ImageView
-                    android:id="@+id/user_color2"
+                <LinearLayout
+                    android:id="@+id/user2_frame"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2.2"
-                    android:src="@drawable/ic_baseline_circle_24"
-                    app:tint="#000000" />
+                    android:orientation="vertical"
+                    android:layout_weight="1.75"
+                    android:background="@drawable/shadow"
+                    android:gravity="bottom|center_horizontal">
 
-            </LinearLayout>
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/user2_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginHorizontal="25dp"
+                        android:src="@drawable/search_background"
+                        android:background="@drawable/round_title"/>
 
-            <LinearLayout
-                android:id="@+id/compare_user_linear"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.3"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                    <TextView
+                        android:id="@+id/user2_githubId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/textAppearance"
+                        android:text="User1"/>
+
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2" />
-
-                <Spinner
-                    android:id="@+id/compare_user_spinner1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2.2"
-                    android:dropDownWidth="wrap_content"
-                    android:spinnerMode="dropdown" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.2" />
-
-                <Spinner
-                    android:id="@+id/compare_user_spinner2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2.2"
-                    android:dropDownWidth="wrap_content"
-                    android:spinnerMode="dropdown" />
+                    android:layout_weight="0.3"/>
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.05" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.3"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/user_compare_choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:gravity="center"
-                    android:text="비교하기"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -130,13 +118,16 @@
                 android:orientation="vertical"
                 android:weightSum="5">
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyle"
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/user_compare_lottie"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:visibility="gone" />
+                    android:layout_height="250dp"
+                    android:scaleType="fitCenter"
+                    app:lottie_autoPlay="true"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:lottie_loop="true"
+                    android:visibility="gone"
+                    app:lottie_rawRes="@raw/compare_loading"/>
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/user_commit_chart"
@@ -154,5 +145,5 @@
 
             </LinearLayout>
         </LinearLayout>
-    </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

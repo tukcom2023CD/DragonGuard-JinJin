@@ -25,27 +25,52 @@
             android:layout_weight="0.3"
             android:background="@android:color/transparent" />
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:weightSum="3.4"
             android:layout_weight="3.1"
             android:orientation="vertical"
-            android:weightSum="5">
+            android:gravity="center">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/compare_tab"
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/ranking_lottie"
+                android:layout_width="wrap_content"
+                android:layout_height="250dp"
+                android:scaleType="fitCenter"
+                app:lottie_autoPlay="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/compare_loading"/>
+
+
+            <LinearLayout
+                android:id="@+id/compare_frame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tabIconTint="@drawable/menu_selector"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:weightSum="5">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/fragment_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/compare_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabSelectedTextColor="@color/black"
+                    app:tabIconTint="@drawable/menu_selector"
+                    app:tabTextAppearance="@style/tabText"
+                    app:tabIndicatorColor="@color/black"/>
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/fragment_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
 
+
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="right"
+    android:layout_marginHorizontal="5dp"
     android:background="@drawable/shadow"
     android:id="@+id/contributors_layout">
 
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        android:gravity="left"
+        android:gravity="left|center_vertical"
         android:orientation="horizontal"
         android:weightSum="5"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,6 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:background="@drawable/round_title"
             android:layout_weight="1" />
 
         <TextView

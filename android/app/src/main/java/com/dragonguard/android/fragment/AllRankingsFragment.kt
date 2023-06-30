@@ -1,5 +1,6 @@
 package com.dragonguard.android.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,12 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dragonguard.android.R
+import com.dragonguard.android.activity.profile.UserProfileActivity
 import com.dragonguard.android.databinding.FragmentAllRankingsBinding
-import com.dragonguard.android.model.rankings.OrganizationRankingModel
-import com.dragonguard.android.model.rankings.TotalOrganizationModel
-import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
-import com.dragonguard.android.model.rankings.TotalUsersRankingsModel
-import com.dragonguard.android.recycleradapter.RankingsAdapter
+import com.dragonguard.android.model.rankings.*
+import com.dragonguard.android.adapters.RankingsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +46,7 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("type", "랭킹 type: $rankingType")
         when(rankingType) {
             "total" -> {
                 getTotalUsersRanking(page, size)
@@ -121,66 +122,21 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
         if(page == 0) {
             when( usersRanking.size) {
                 1 -> {
-                    binding.firstId.text = usersRanking[0].github_id
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
-                        .into(binding.firstProfile)
-                    binding.firstContribute.text = usersRanking[0].tokens.toString()
-                    binding.firstRanker.visibility = View.VISIBLE
-                    binding.topRankings.visibility = View.VISIBLE
+                    profileBackground(usersRanking[0], 1)
                 }
                 2 -> {
-                    binding.firstId.text = usersRanking[0].github_id
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
-                        .into(binding.firstProfile)
-                    binding.firstContribute.text = usersRanking[0].tokens.toString()
-                    binding.firstRanker.visibility = View.VISIBLE
-
-                    binding.secondId.text = usersRanking[1].github_id
-                    Glide.with(binding.secondProfile).load(usersRanking[1].profile_image)
-                        .into(binding.secondProfile)
-                    binding.secondContribute.text = usersRanking[1].tokens.toString()
-                    binding.secondRanker.visibility = View.VISIBLE
-                    binding.topRankings.visibility = View.VISIBLE
+                    profileBackground(usersRanking[0], 1)
+                    profileBackground(usersRanking[1], 2)
                 }
                 3 -> {
-                    binding.firstId.text = usersRanking[0].github_id
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
-                        .into(binding.firstProfile)
-                    binding.firstContribute.text = usersRanking[0].tokens.toString()
-                    binding.firstRanker.visibility = View.VISIBLE
-
-                    binding.secondId.text = usersRanking[1].github_id
-                    Glide.with(binding.secondProfile).load(usersRanking[1].profile_image)
-                        .into(binding.secondProfile)
-                    binding.secondContribute.text = usersRanking[1].tokens.toString()
-                    binding.secondRanker.visibility = View.VISIBLE
-
-                    binding.thirdId.text = usersRanking[2].github_id
-                    Glide.with(binding.thirdProfile).load(usersRanking[2].profile_image)
-                        .into(binding.thirdProfile)
-                    binding.thirdContribute.text = usersRanking[2].tokens.toString()
-                    binding.thirdRanker.visibility = View.VISIBLE
-                    binding.topRankings.visibility = View.VISIBLE
+                    profileBackground(usersRanking[0], 1)
+                    profileBackground(usersRanking[1], 2)
+                    profileBackground(usersRanking[2], 3)
                 }
                 else -> {
-                    binding.firstId.text = usersRanking[0].github_id
-                    Glide.with(binding.firstProfile).load(usersRanking[0].profile_image)
-                        .into(binding.firstProfile)
-                    binding.firstContribute.text = usersRanking[0].tokens.toString()
-                    binding.firstRanker.visibility = View.VISIBLE
-
-                    binding.secondId.text = usersRanking[1].github_id
-                    Glide.with(binding.secondProfile).load(usersRanking[1].profile_image)
-                        .into(binding.secondProfile)
-                    binding.secondContribute.text = usersRanking[1].tokens.toString()
-                    binding.secondRanker.visibility = View.VISIBLE
-
-                    binding.thirdId.text = usersRanking[2].github_id
-                    Glide.with(binding.thirdProfile).load(usersRanking[2].profile_image)
-                        .into(binding.thirdProfile)
-                    binding.thirdContribute.text = usersRanking[2].tokens.toString()
-                    binding.thirdRanker.visibility = View.VISIBLE
-                    binding.topRankings.visibility = View.VISIBLE
+                    profileBackground(usersRanking[0], 1)
+                    profileBackground(usersRanking[1], 2)
+                    profileBackground(usersRanking[2], 3)
 
                     usersRanking.removeFirst()
                     usersRanking.removeFirst()
@@ -199,7 +155,121 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
         Log.d("api 횟수", "$page 페이지 검색")
         binding.rankingLottie.pauseAnimation()
         binding.rankingLottie.visibility = View.GONE
+        Log.d("전부", "유저 랭킹: $usersRanking")
         initScrollListener()
+    }
+
+    private fun profileBackground(model: TotalUsersRankingsModel, number: Int) {
+        binding.firstProfile.clipToOutline = true
+        binding.secondProfile.clipToOutline = true
+        binding.thirdProfile.clipToOutline = true
+        when(number) {
+            1 -> {
+                when(model.tier) {
+                    "BRONZE" -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_bronze)
+
+                    }
+                    "SILVER" -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_silver)
+                    }
+                    "GOLD" -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_gold)
+                    }
+                    "PLATINUM" -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_platinum)
+                    }
+                    "DIAMOND" -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_diamond)
+                    }
+                    else -> {
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow)
+                    }
+                }
+                binding.firstId.text = model.github_id
+                Glide.with(binding.firstProfile).load(model.profile_image)
+                    .into(binding.firstProfile)
+                binding.firstContribute.text = model.tokens.toString()
+                binding.firstFrame.setOnClickListener {
+                    val intent = Intent(requireContext(), UserProfileActivity::class.java)
+                    intent.putExtra("userName", model.github_id)
+                    intent.putExtra("token", token)
+                    startActivity(intent)
+                }
+                binding.firstRanker.visibility = View.VISIBLE
+                binding.topRankings.visibility = View.VISIBLE
+            }
+            2 -> {
+                when(model.tier) {
+                    "BRONZE" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_bronze)
+
+                    }
+                    "SILVER" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_silver)
+                    }
+                    "GOLD" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_gold)
+                    }
+                    "PLATINUM" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_platinum)
+                    }
+                    "DIAMOND" -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_diamond)
+                    }
+                    else -> {
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow)
+                    }
+                }
+                binding.secondId.text = model.github_id
+                Glide.with(binding.secondProfile).load(model.profile_image)
+                    .into(binding.secondProfile)
+                binding.secondContribute.text = model.tokens.toString()
+                binding.secondFrame.setOnClickListener {
+                    val intent = Intent(requireContext(), UserProfileActivity::class.java)
+                    intent.putExtra("userName", model.github_id)
+                    intent.putExtra("token", token)
+                    startActivity(intent)
+                }
+                binding.secondRanker.visibility = View.VISIBLE
+                binding.topRankings.visibility = View.VISIBLE
+            }
+            3 -> {
+                when(model.tier) {
+                    "BRONZE" -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_bronze)
+
+                    }
+                    "SILVER" -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_silver)
+                    }
+                    "GOLD" -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_gold)
+                    }
+                    "PLATINUM" -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_platinum)
+                    }
+                    "DIAMOND" -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_diamond)
+                    }
+                    else -> {
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow)
+                    }
+                }
+                binding.thirdId.text = model.github_id
+                Glide.with(binding.thirdProfile).load(model.profile_image)
+                    .into(binding.thirdProfile)
+                binding.thirdContribute.text = model.tokens.toString()
+                binding.thirdFrame.setOnClickListener {
+                    val intent = Intent(requireContext(), UserProfileActivity::class.java)
+                    intent.putExtra("userName", model.github_id)
+                    intent.putExtra("token", token)
+                    startActivity(intent)
+                }
+                binding.thirdRanker.visibility = View.VISIBLE
+                binding.topRankings.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun loadMorePosts() {
@@ -256,33 +326,16 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 if (ranking != 0) {
                     if (totalOrgRankings[ranking - 1].token_sum == it.token_sum) {
                         totalOrgRankings.add(
-                            TotalOrganizationModel(
-                                it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum,
-                                totalOrgRankings[ranking - 1].ranking
-                            )
+                            TotalOrganizationModel(it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum,
+                                totalOrgRankings[ranking - 1].ranking)
                         )
                     } else {
                         totalOrgRankings.add(
-                            TotalOrganizationModel(
-                                it.email_endpoint,
-                                it.id,
-                                it.name,
-                                it.organization_type,
-                                it.token_sum,
-                                ranking + 1
-                            )
-                        )
+                            TotalOrganizationModel(it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum, ranking + 1))
                     }
                 } else {
                     totalOrgRankings.add(
-                        TotalOrganizationModel(
-                            it.email_endpoint,
-                            it.id,
-                            it.name,
-                            it.organization_type,
-                            it.token_sum,
-                            1
-                        )
+                        TotalOrganizationModel(it.email_endpoint, it.id, it.name, it.organization_type, it.token_sum, 1)
                     )
                 }
                 Log.d("유져", "랭킹 ${ranking+1} 추가")
@@ -304,13 +357,39 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
     }
 
     private fun initOrgRecycler() {
-        Log.d("recycler", "initrecycler()")
-        binding.eachRankings.setItemViewCacheSize(totalOrgRankings.size)
-        if (page == 0) {
-            rankingsAdapter = RankingsAdapter(totalOrgRankings)
-            binding.eachRankings.adapter = rankingsAdapter
-            binding.eachRankings.layoutManager = LinearLayoutManager(requireContext())
-            binding.eachRankings.visibility = View.VISIBLE
+        binding.firstProfile.clipToOutline = true
+        binding.secondProfile.clipToOutline = true
+        binding.thirdProfile.clipToOutline = true
+        if(page == 0) {
+            when( totalOrgRankings.size) {
+                1 -> {
+                    profileOrgBackground(totalOrgRankings[0], 1)
+                }
+                2 -> {
+                    profileOrgBackground(totalOrgRankings[0], 1)
+                    profileOrgBackground(totalOrgRankings[1], 2)
+                }
+                3 -> {
+                    profileOrgBackground(totalOrgRankings[0], 1)
+                    profileOrgBackground(totalOrgRankings[1], 2)
+                    profileOrgBackground(totalOrgRankings[2], 3)
+                }
+                else -> {
+                    profileOrgBackground(totalOrgRankings[0], 1)
+                    profileOrgBackground(totalOrgRankings[1], 2)
+                    profileOrgBackground(totalOrgRankings[2], 3)
+
+                    totalOrgRankings.removeFirst()
+                    totalOrgRankings.removeFirst()
+                    totalOrgRankings.removeFirst()
+
+                    rankingsAdapter = RankingsAdapter(totalOrgRankings)
+                    binding.eachRankings.adapter = rankingsAdapter
+                    binding.eachRankings.layoutManager = LinearLayoutManager(requireContext())
+//            totalUserRankingAdapter.notifyDataSetChanged()
+                    binding.eachRankings.visibility = View.VISIBLE
+                }
+            }
         }
         binding.eachRankings.adapter?.notifyDataSetChanged()
         page++
@@ -318,6 +397,72 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
         binding.rankingLottie.pauseAnimation()
         binding.rankingLottie.visibility = View.GONE
         initOrgScrollListener()
+
+    }
+
+    private fun profileOrgBackground(model: TotalOrganizationModel, number: Int) {
+        when(number) {
+            1-> {
+//                Glide.with(binding.firstProfile).load()
+//                    .into(binding.firstProfile)
+                binding.firstId.text = model.name
+                binding.firstContribute.text = model.token_sum.toString()
+                binding.firstRanker.visibility = View.VISIBLE
+                when(model.organization_type) {
+                    "COMPANY" -> {
+                        binding.firstProfile.setImageResource(R.drawable.company)
+                    }
+                    "UNIVERSITY" -> {
+                        binding.firstProfile.setImageResource(R.drawable.university)
+                    }
+                    "HIGH_SCHOOL" -> {
+                        binding.firstProfile.setImageResource(R.drawable.high_school)
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+            2 -> {
+                binding.secondId.text = model.name
+                binding.secondContribute.text = model.token_sum.toString()
+                binding.secondRanker.visibility = View.VISIBLE
+                when(model.organization_type) {
+                    "COMPANY" -> {
+                        binding.secondProfile.setImageResource(R.drawable.company)
+                    }
+                    "UNIVERSITY" -> {
+                        binding.secondProfile.setImageResource(R.drawable.university)
+                    }
+                    "HIGH_SCHOOL" -> {
+                        binding.secondProfile.setImageResource(R.drawable.high_school)
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+            3 -> {
+                binding.thirdId.text = model.name
+                binding.thirdContribute.text = model.token_sum.toString()
+                binding.thirdRanker.visibility = View.VISIBLE
+
+                when(model.organization_type) {
+                    "COMPANY" -> {
+                        binding.thirdProfile.setImageResource(R.drawable.company)
+                    }
+                    "UNIVERSITY" -> {
+                        binding.thirdProfile.setImageResource(R.drawable.university)
+                    }
+                    "HIGH_SCHOOL" -> {
+                        binding.thirdProfile.setImageResource(R.drawable.high_school)
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+        }
     }
 
     private fun loadOrgMorePosts() {

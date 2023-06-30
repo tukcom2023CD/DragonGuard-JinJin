@@ -12,6 +12,7 @@ import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsModel
 import com.dragonguard.android.model.detail.UserDetailModel
+import com.dragonguard.android.model.detail.UserProfileModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
@@ -185,5 +186,27 @@ class Viewmodel: ViewModel() {
 
     fun statusOrgList(status: String, page: Int, token: String): ApproveRequestOrgModel {
         return repository.statusOrgList(status, page, token)
+    }
+
+    fun othersProfile(githubId: String, token: String): UserProfileModel? {
+        return repository.otherProfile(githubId, token)
+    }
+
+    fun updateCompareMembers(firstRepo: String, secondRepo: String, token: String): CompareRepoMembersResponseModel {
+        val body = CompareRepoRequestModel(firstRepo, secondRepo)
+        return repository.manualCompareMembers(body, token)
+    }
+
+    fun updateCompareRepo(firstRepo: String, secondRepo: String, token: String): CompareRepoResponseModel {
+        val body = CompareRepoRequestModel(firstRepo, secondRepo)
+        return repository.manualCompareRepo(body, token)
+    }
+
+    fun updateContribute(repoName: String, token: String): RepoContributorsModel {
+        return repository.manualContribute(repoName, token)
+    }
+
+    fun updateToken(token: String): ArrayList<TokenHistoryModelItem>? {
+        return repository.manualToken(token)
     }
 }

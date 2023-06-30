@@ -14,11 +14,11 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.R
-import com.dragonguard.android.activity.MainActivity
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.databinding.ActivityRepoContributorsBinding
 import com.dragonguard.android.model.contributors.GitRepoMember
 import com.dragonguard.android.model.contributors.RepoContributorsModel
-import com.dragonguard.android.recycleradapter.ContributorsAdapter
+import com.dragonguard.android.adapters.ContributorsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -41,7 +41,8 @@ class RepoContributorsActivity : AppCompatActivity() {
     private var count = 0
     private val colorsets = ArrayList<Int>()
     private var token = ""
-    private lateinit var sparkLines : List<Int>
+    private var sparkLines = mutableListOf<Int>()
+    private var refresh = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_contributors)
@@ -50,7 +51,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
         val intent = intent
         token = intent.getStringExtra("token")!!
 
@@ -61,12 +62,14 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    repo의 contributors 검색
     fun repoContributors(repoName: String) {
-        if(!this@RepoContributorsActivity.isFinishing && count < 10){
+        binding.loadingLottie.resumeAnimation()
+        binding.loadingLottie.visibility = View.VISIBLE
+        if (!this@RepoContributorsActivity.isFinishing && count < 10) {
             Log.d("check", "repoName $repoName")
             Log.d("check", "token $token")
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
-                if(!this@RepoContributorsActivity.isFinishing) {
+                if (!this@RepoContributorsActivity.isFinishing) {
                     val resultDeferred = coroutine.async(Dispatchers.IO) {
                         viewmodel.getRepoContributors(repoName, token)
                     }
@@ -87,18 +90,51 @@ class RepoContributorsActivity : AppCompatActivity() {
                 handler.postDelayed({ repoContributors(repoName) }, 2000)
             } else {
                 for (i in 0 until result.git_repo_members.size) {
-                    val compare = contributors.filter { it.github_id == result.git_repo_members[i].github_id }
+                    val compare =
+                        contributors.filter { it.github_id == result.git_repo_members[i].github_id }
                     if (compare.isEmpty()) {
                         contributors.add(result.git_repo_members[i])
                     }
                 }
-                result.sparkLine?.let {
-                    sparkLines = it
+                result.spark_line?.let {
+                    sparkLines = it.toMutableList()
                 }
                 initRecycler()
             }
         } else {
-            if (count<10) {
+            if (count < 10) {
+                count++
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({ repoContributors(repoName) }, 2000)
+            } else {
+                binding.loadingLottie.pauseAnimation()
+                binding.loadingLottie.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun checkUpdate(result: RepoContributorsModel) {
+        if (result.git_repo_members != null) {
+            if (result.git_repo_members[0].additions == null) {
+                count++
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({ repoContributors(repoName) }, 2000)
+            } else {
+                Log.d("중복확인", "중복확인")
+                for (i in 0 until result.git_repo_members.size) {
+                    val compare =
+                        contributors.filter { it.github_id == result.git_repo_members[i].github_id }
+                    if (compare.isEmpty()) {
+                        contributors.add(result.git_repo_members[i])
+                    }
+                }
+                result.spark_line?.let {
+                    sparkLines = it.toMutableList()
+                }
+                initRecycler()
+            }
+        } else {
+            if (count < 10) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({ repoContributors(repoName) }, 2000)
@@ -121,6 +157,8 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.repoContributors.visibility = View.VISIBLE
         binding.loadingLottie.pauseAnimation()
         binding.loadingLottie.visibility = View.GONE
+        binding.repoContributeFrame.setBackgroundResource(R.drawable.shadow)
+        binding.hiddenText.visibility = View.VISIBLE
         initGraph()
     }
 
@@ -131,17 +169,19 @@ class RepoContributorsActivity : AppCompatActivity() {
         val sparkEntries = ArrayList<Entry>()
         var count = 1
         contributors.forEach {
-            entries.add(BarEntry(count.toFloat(), it.commits!!.toFloat()))
-            count++
+            it.commits?.let { commit ->
+                entries.add(BarEntry(count.toFloat(), commit.toFloat()))
+                count++
+            }
 //                Toast.makeText(applicationContext, "현재 count = $count", Toast.LENGTH_SHORT).show()
         }
         sparkLines.forEachIndexed { index, i ->
-            sparkEntries.add(Entry((index+1).toFloat(), i.toFloat()))
+            sparkEntries.add(Entry((index + 1).toFloat(), i.toFloat()))
         }
 
-        val set = BarDataSet(entries,"DataSet")
+        val set = BarDataSet(entries, "DataSet")
         set.colors = colorsets
-        set.apply{
+        set.apply {
             formSize = 15f
             valueTextSize = 12f
             setDrawValues(true)
@@ -152,6 +192,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         val lineDataSet = LineDataSet(sparkEntries, "Line Data Set")
         lineDataSet.apply {
             color = Color.GREEN
+            setDrawCircles(false)
             setDrawValues(false)
         }
 
@@ -202,6 +243,10 @@ class RepoContributorsActivity : AppCompatActivity() {
         }
 
         binding.repoSpark.apply {
+            setTouchEnabled(false) // 차트 터치 막기
+            setPinchZoom(false) // 두손가락으로 줌 설정
+            description.isEnabled = false // 그래프 오른쪽 하단에 라벨 표시
+            legend.isEnabled = false // 차트 범례 설정(legend object chart)
             xAxis.isEnabled = false
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
@@ -221,6 +266,7 @@ class RepoContributorsActivity : AppCompatActivity() {
         binding.repoSpark.data = lineData
         binding.repoSpark.invalidate()
         binding.repoSpark.visibility = View.VISIBLE
+        binding.repoContributeFrame.visibility = View.VISIBLE
 
 //        binding.contributorsChart.run {
 //            this.data = data //차트의 데이터를 data로 설정해줌.
@@ -235,21 +281,33 @@ class RepoContributorsActivity : AppCompatActivity() {
           x축 label을 githubId의 앞의 4글자를 기입하여 곂치는 문제 해결
      */
     class MyXAxisFormatter(contributors: ArrayList<GitRepoMember>) : ValueFormatter() {
-        private val days = contributors.flatMap { if(it.github_id!!.length <4) {arrayListOf(it.github_id!!.substring(0,it.github_id!!.length))} else arrayListOf(it.github_id!!.substring(0,3)) }
+        private val days = contributors.flatMap {
+            if (it.github_id!!.length < 4) {
+                arrayListOf(it.github_id!!.substring(0, it.github_id!!.length))
+            } else arrayListOf(it.github_id!!.substring(0, 3))
+        }
+
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt() - 1) ?: value.toString()
         }
+
         override fun getFormattedValue(value: Float): String {
             return "" + value.toInt()
         }
     }
 
-//    막대 위의 커밋수 정수로 변경
+    //    막대 위의 커밋수 정수로 변경
     class ScoreCustomFormatter(contributors: ArrayList<GitRepoMember>) : ValueFormatter() {
-        private val days = contributors.flatMap { arrayListOf(it.github_id!!.substring(0,3)) }
-        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
+        private val days = contributors.flatMap {
+            if (it.github_id!!.length < 4) {
+                arrayListOf(it.github_id!!.substring(0, it.github_id!!.length))
+            } else arrayListOf(it.github_id!!.substring(0, 3))
         }
+
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0, 2)
+        }
+
         override fun getFormattedValue(value: Float): String {
             return "" + value.toInt()
         }
@@ -257,21 +315,34 @@ class RepoContributorsActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.home, binding.toolbar.menu)
+        menuInflater.inflate(R.menu.refresh, binding.toolbar.menu)
         return true
     }
 
-//    뒤로가기, 홈으로 화면전환 기능
+    //    뒤로가기, 홈으로 화면전환 기능
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
             }
-            R.id.home_menu -> {
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
+
+            R.id.refresh_button -> {
+                if(refresh) {
+                    binding.loadingLottie.resumeAnimation()
+                    binding.loadingLottie.visibility = View.VISIBLE
+                    binding.repoContributeFrame.visibility = View.GONE
+                    refresh = false
+                    val coroutine = CoroutineScope(Dispatchers.Main)
+                    coroutine.launch {
+                        if(!this@RepoContributorsActivity.isFinishing) {
+                            val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.updateContribute(repoName, token)
+                            }
+                            val resultRepo = resultRepoDeferred.await()
+                            checkUpdate(resultRepo)
+                        }
+                    }
+                }
             }
         }
         return super.onOptionsItemSelected(item)

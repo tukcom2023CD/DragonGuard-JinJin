@@ -40,7 +40,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.3"
-                android:background="@drawable/shadow"
+                android:background="@drawable/round_title"
                 android:adjustViewBounds="true"/>
 
             <LinearLayout
@@ -70,16 +70,20 @@
 
 
         </LinearLayout>
-        <ImageView
-            android:id="@+id/profile_link"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:layout_weight="0.3"
-            android:adjustViewBounds="true"
-            android:alpha="0.3"
-            android:foregroundGravity="top"
-            android:src="@drawable/external_link"/>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/profile_link"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="top"
+        android:adjustViewBounds="true"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="8dp"
+        android:alpha="0.3"
+        android:foregroundGravity="top"
+        android:src="@drawable/external_link"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
