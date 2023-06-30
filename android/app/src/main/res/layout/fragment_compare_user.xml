@@ -42,7 +42,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1.75"
                     android:background="@drawable/shadow"
-                    android:gravity="center_horizontal">
+                    android:gravity="bottom|center_horizontal">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/user1_profile"
@@ -75,7 +75,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1.75"
                     android:background="@drawable/shadow"
-                    android:gravity="center_horizontal">
+                    android:gravity="bottom|center_horizontal">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/user2_profile"

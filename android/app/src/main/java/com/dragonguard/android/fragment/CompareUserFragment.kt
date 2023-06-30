@@ -164,49 +164,41 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
         commitEntries1.add(BarEntry(1.toFloat(), user1Cont.commits!!.toFloat()))
         codeEntries1.add(BarEntry(1.toFloat(), user1Cont.additions!!.toFloat()))
         codeEntries1.add(BarEntry(2.toFloat(), user1Cont.deletions!!.toFloat()))
-        commitEntries2.add(BarEntry(1.toFloat(), user2Cont.commits!!.toFloat()))
+        commitEntries1.add(BarEntry(2.toFloat(), user2Cont.commits!!.toFloat()))
         codeEntries2.add(BarEntry(1.toFloat(), user2Cont.additions!!.toFloat()))
         codeEntries2.add(BarEntry(2.toFloat(), user2Cont.deletions!!.toFloat()))
 //        Toast.makeText(requireContext(), "entries1 : $entries1", Toast.LENGTH_SHORT).show()
 
         val commitSet1 = BarDataSet(commitEntries1,user1)
-        commitSet1.color= Color.rgb(153,255,119)
+        commitSet1.colors= listOf(Color.rgb(176,225,255), Color.rgb(0,0,128))
         commitSet1.apply{
             valueTextSize = 12f
             setDrawValues(true)
-            valueFormatter = ScoreCustomFormatter()
+            valueFormatter = ScoreCustomFormatter(listOf(user1, user2))
         }
 
-        val commitSet2 = BarDataSet(commitEntries2,user2)
-        commitSet2.color = Color.BLACK
-        commitSet2.apply{
-            valueTextSize = 12f
-            setDrawValues(true)
-            valueFormatter = ScoreCustomFormatter()
-        }
+
         val commitDataSet1 = ArrayList<IBarDataSet>()
         commitDataSet1.add(commitSet1)
-        commitDataSet1.add(commitSet2)
-        val dataSet2 = ArrayList<IBarDataSet>()
-        dataSet2.add(commitSet2)
+//        commitDataSet1.add(commitSet2)
+
         val commitData = BarData(commitDataSet1)
         commitData.barWidth = 0.4f
-        commitData.groupBars(0.5f, 0.2f, 0f)
 
         val codeSet1 = BarDataSet(codeEntries1,user1)
-        codeSet1.color= Color.rgb(153,255,119)
+        codeSet1.color= Color.rgb(176,225,255)
         codeSet1.apply{
             valueTextSize = 12f
             setDrawValues(true)
-            valueFormatter = ScoreCustomFormatter()
+            valueFormatter = CodeFormatter()
         }
 
         val codeSet2 = BarDataSet(codeEntries2,user2)
-        codeSet2.color = Color.BLACK
+        codeSet2.color = Color.rgb(0,0,128)
         codeSet2.apply{
             valueTextSize = 12f
             setDrawValues(true)
-            valueFormatter = ScoreCustomFormatter()
+            valueFormatter = CodeFormatter()
         }
         val codeDataSet1 = ArrayList<IBarDataSet>()
         codeDataSet1.add(codeSet1)
@@ -245,7 +237,7 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
                 setDrawGridLines(false) // 격자
                 textColor = ContextCompat.getColor(context, R.color.black) //라벨 색상
                 textSize = 12f // 텍스트 크기
-                valueFormatter = CommitsFormatter() // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
+                valueFormatter = ScoreCustomFormatter(listOf(user1, user2)) // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
             }
             animateY(500) // 밑에서부터 올라오는 애니매이션 적용
         }
@@ -329,11 +321,10 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
     }
 
     //    막대 위의 커밋수 정수로 변경
-    class ScoreCustomFormatter() : ValueFormatter() {
-        private val days = listOf("commits", "additions", "deletions")
+    class ScoreCustomFormatter(private val users: List<String>) : ValueFormatter() {
 //        private val days = listOf( "additions", "deletions")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return days.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
+            return users.getOrNull(value.toInt() - 1) ?: value.toString().substring(0,2)
         }
         override fun getFormattedValue(value: Float): String {
             return "" + value.toInt()
