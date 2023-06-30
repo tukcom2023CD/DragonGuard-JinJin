@@ -1,7 +1,7 @@
 package com.dragonguard.backend.config.batch;
 
 import com.dragonguard.backend.domain.gitrepo.dto.batch.GitRepoBatchRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.batch.GitRepoBatchResponse;
+import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepomember.dto.response.Week;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
@@ -28,7 +28,10 @@ import reactor.util.retry.Retry;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -55,7 +58,8 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()
                 .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
-                .bodyToMono(GitRepoBatchResponse[].class)
+                .bodyToFlux(GitRepoMemberClientResponse.class)
+                .collectList()
                 .retryWhen(
                         Retry.fixedDelay(10, Duration.ofMillis(1500))
                                 .filter(WebClientException.class::isInstance)
@@ -64,7 +68,7 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                 .mapNotNull(result -> {
                     Set<GitRepoMember> gitRepoMembers = request.getGitRepo().getGitRepoMembers();
 
-                    return Arrays.stream(result).map(r -> {
+                    return result.stream().map(r -> {
                         if (r.getAuthor() == null || !StringUtils.hasText(r.getAuthor().getLogin())) {
                             return null;
                         }
@@ -91,7 +95,7 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                                     .filter(grm -> grm != null && grm.getMember().getGithubId().equals(r.getAuthor().getLogin()))
                                     .findFirst()
                                     .map(gitRepoMember -> {
-                                        List<Week> weeks = Arrays.asList(r.getWeeks());
+                                        List<Week> weeks = r.getWeeks();
                                         gitRepoMember.updateGitRepoContribution(
                                                 r.getTotal(),
                                                 weeks.stream().mapToInt(Week::getA).sum(),
