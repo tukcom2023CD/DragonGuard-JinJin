@@ -6,7 +6,6 @@ import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -45,9 +44,10 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Lis
                 .retrieve()
                 .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(ClientBadRequestException::new))
-                .bodyToMono(new ParameterizedTypeReference<List<GitRepoMemberClientResponse>>() {})
+                .bodyToFlux(GitRepoMemberClientResponse.class)
+                .collectList()
                 .flatMap(response -> {
-                    if (response == null) {
+                    if (response == null || response.isEmpty()) {
                         return Mono.error(WebClientException::new);
                     }
                     return Mono.just(response);
