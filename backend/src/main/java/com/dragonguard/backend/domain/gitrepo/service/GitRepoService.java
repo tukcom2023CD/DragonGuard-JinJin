@@ -71,17 +71,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         }
 
         int year = LocalDate.now().getYear();
-        String githubToken = setGithubTokenAndGet(new GitRepoInfoRequest(name, year));
+        String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
 
         return new GitRepoResponse(
                 updateAndGetSparkLine(name, githubToken, findGitRepo(name)),
                 getGitRepoMemberResponses(name, year, githubToken));
-    }
-
-    private String setGithubTokenAndGet(final GitRepoInfoRequest gitRepoInfoRequest) {
-        String githubToken = memberService.getLoginUserWithPersistence().getGithubToken();
-        gitRepoInfoRequest.setGithubToken(githubToken);
-        return githubToken;
     }
 
     public List<Integer> updateAndGetSparkLine(final String name, final String githubToken, final GitRepo gitRepo) {
@@ -229,6 +223,8 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 getContributionMap(contributions, Week::getA),
                 getContributionMap(contributions, Week::getD));
 
+        if (result.isEmpty()) return List.of();
+
         gitRepoMemberService.saveAll(result, gitRepo);
         return result;
     }
@@ -245,6 +241,8 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
             final Set<GitRepoMemberClientResponse> contributions,
             final GitRepoContributionMap additions,
             final GitRepoContributionMap deletions) {
+
+        if(contributions == null || contributions.isEmpty()) return List.of();
 
         return contributions.stream()
                 .map(clientResponse -> {

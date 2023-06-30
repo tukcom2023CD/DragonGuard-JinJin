@@ -12,13 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitRepoInfoRequest {
-    @Setter
     private String githubToken;
     private String name;
     private Integer year;
-
-    public GitRepoInfoRequest(String name, Integer year) {
-        this.name = name;
-        this.year = year;
-    }
 }
