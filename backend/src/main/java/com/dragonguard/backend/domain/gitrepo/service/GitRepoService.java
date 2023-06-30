@@ -107,20 +107,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
     private List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final GitRepoInfoRequest gitRepoInfoRequest) {
         GitRepo gitRepo = findGitRepo(gitRepoInfoRequest.getName());
 
-        Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
-        if (isContributionNotValid(gitRepoMembers)) return requestToGithub(gitRepoInfoRequest, gitRepo);
-
-        return getGitRepoMemberResponses(gitRepoMembers);
-    }
-
-    private boolean isContributionNotValid(final Set<GitRepoMember> gitRepoMembers) {
-        return gitRepoMembers.isEmpty() || gitRepoMembers.stream().findFirst().orElseThrow(EntityNotFoundException::new).getGitRepoContribution() == null;
-    }
-
-    private List<GitRepoMemberResponse> getGitRepoMemberResponses(final Set<GitRepoMember> gitRepoMembers) {
-        return gitRepoMembers.stream()
-                .map(gitRepoMemberMapper::toResponse)
-                .collect(Collectors.toList());
+        return requestToGithub(gitRepoInfoRequest, gitRepo);
     }
 
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompareAndUpdate(final GitRepoCompareRequest gitRepoCompareRequest) {
