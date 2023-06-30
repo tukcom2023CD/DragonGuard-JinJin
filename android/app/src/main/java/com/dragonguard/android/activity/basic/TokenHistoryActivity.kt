@@ -65,12 +65,6 @@ class TokenHistoryActivity : AppCompatActivity() {
             android.R.id.home -> {
                 finish()
             }
-            R.id.home_menu -> {
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                startActivity(intent)
-            }
         }
         return super.onOptionsItemSelected(item)
     }

@@ -439,9 +439,7 @@ class SearchActivity : AppCompatActivity() {
             android.R.id.home -> {
                 finish()
             }
-            R.id.home_menu -> {
-                finish()
-            }
+
         }
         return super.onOptionsItemSelected(item)
     }
