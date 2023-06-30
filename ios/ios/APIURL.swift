@@ -170,8 +170,8 @@ final class APIURL{
     }
     
     // MARK: 전체 조직 랭킹 조회
-    func allOrganizationRanking(ip: String) -> String{
-        let url = "http://\(ip)/api/organizations/ranking/all"
+    func allOrganizationRanking(ip: String, page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/organizations/ranking/all?page=\(page)&size=\(size)"
         return url
     }
     
