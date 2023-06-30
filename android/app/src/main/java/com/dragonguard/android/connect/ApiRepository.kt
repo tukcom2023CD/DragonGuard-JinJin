@@ -474,4 +474,46 @@ class ApiRepository {
             null
         }
     }
+
+    fun manualCompareMembers (body: CompareRepoRequestModel, token: String): CompareRepoMembersResponseModel {
+        Log.d("token", "token: $token")
+        var compareRepoResult = CompareRepoMembersResponseModel(null, null)
+        val compareRepoMembers = api.postCompareRepoMembersUpdate(body, "Bearer $token")
+        try{
+            val result = compareRepoMembers.execute()
+            compareRepoResult = result.body()!!
+            Log.d("token", "1 결과 ${result.code()}")
+        } catch (e: Exception) {
+            Log.d("token", "1 결과 ${e.printStackTrace()}")
+            return compareRepoResult
+        }
+        return compareRepoResult
+    }
+
+    fun manualCompareRepo (body: CompareRepoRequestModel, token: String): CompareRepoResponseModel {
+        Log.d("token", "token: $token")
+        var compareRepoResult = CompareRepoResponseModel(null, null)
+        val compareRepo = api.postCompareRepoUpdate(body, "Bearer $token")
+        try{
+            val result = compareRepo.execute()
+            compareRepoResult = result.body()!!
+            Log.d("token", "2 결과 ${result.code()}")
+        } catch (e: Exception) {
+            Log.d("token", "2 결과 ${e.printStackTrace()}")
+            return compareRepoResult
+        }
+        return compareRepoResult
+    }
+
+    fun manualContribute(repoName: String, token: String): RepoContributorsModel {
+        val repoContributors = api.getRepoContributorsUpdate(repoName, "Bearer $token")
+        var repoContResult = RepoContributorsModel(null, null)
+        try{
+            val result = repoContributors.execute()
+            repoContResult = result.body()!!
+        } catch (e: Exception) {
+            return repoContResult
+        }
+        return repoContResult
+    }
 }

@@ -191,4 +191,18 @@ class Viewmodel: ViewModel() {
     fun othersProfile(githubId: String, token: String): UserProfileModel? {
         return repository.otherProfile(githubId, token)
     }
+
+    fun updateCompareMembers(firstRepo: String, secondRepo: String, token: String): CompareRepoMembersResponseModel {
+        val body = CompareRepoRequestModel(firstRepo, secondRepo)
+        return repository.manualCompareMembers(body, token)
+    }
+
+    fun updateCompareRepo(firstRepo: String, secondRepo: String, token: String): CompareRepoResponseModel {
+        val body = CompareRepoRequestModel(firstRepo, secondRepo)
+        return repository.manualCompareRepo(body, token)
+    }
+
+    fun updateContribute(repoName: String, token: String): RepoContributorsModel {
+        return repository.manualContribute(repoName, token)
+    }
 }
