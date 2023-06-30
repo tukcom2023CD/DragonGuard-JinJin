@@ -23,21 +23,22 @@ final class BlockChainListTableViewCell: UITableViewCell{
     // MARK: 시간
     private lazy var timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "a"
+        label.font = .systemFont(ofSize: 15)
+        label.textAlignment = .center
         return label
     }()
     
     // MARK: 타입
     private lazy var typeLabel: UILabel = {
         let label = UILabel()
-        label.text = "b"
+        label.textAlignment = .center
         return label
     }()
     
     // MARK: 토큰 개수
     private lazy var countLabel: UILabel = {
         let label = UILabel()
-        label.text = "c"
+        label.textAlignment = .center
         return label
     }()
     
@@ -69,11 +70,9 @@ final class BlockChainListTableViewCell: UITableViewCell{
         let date = time.split(separator: "T")[0]
         let time = time.split(separator: "T")[1].split(separator: ".")[0]
         
-        
-        
 //        let newSize = timeLabel.sizeThatFits(timeLabel.frame.size) //1
-//        let newSize = timeLabel.sizeThatFits( CGSize(width: timeLabel.frame.width, height: CGFloat.greatestFiniteMagnitude)) //2
-        let newSize = timeLabel.sizeThatFits(self.frame.size)
+        let newSize = timeLabel.sizeThatFits( CGSize(width: timeLabel.frame.width, height: CGFloat.greatestFiniteMagnitude)) //2
+//        let newSize = timeLabel.sizeThatFits(self.frame.size)
         
         timeLabel.frame.size = newSize
         timeLabel.text = "\(date) \(time)"

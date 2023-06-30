@@ -62,7 +62,7 @@ final class CompareTableViewCell: UITableViewCell{
         }
     }
     
-    func inputData(repo1: Double, title: String, repo2: Double){
+    func inputData(repo1: Int, title: String, repo2: Int){
         addUI()
         
         repo1Info.text = "\(repo1)"
