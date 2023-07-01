@@ -276,8 +276,10 @@ public class Member implements Auditable {
         return !this.authStep.equals(AuthStep.NONE);
     }
 
-    public void updateAuthStep(AuthStep authStep) {
+    public void updateAuthStepAndNameAndProfileImage(AuthStep authStep, String name, String profileImage) {
         this.authStep = authStep;
+        this.name = name;
+        this.profileImage = profileImage;
     }
 
     public void updateSumOfReviewsWithCalculation(Integer contribution) {

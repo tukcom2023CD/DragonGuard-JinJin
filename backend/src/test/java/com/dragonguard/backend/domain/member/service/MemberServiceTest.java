@@ -15,7 +15,6 @@ import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.entity.Tier;
-import com.dragonguard.backend.domain.member.repository.MemberQueryRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;

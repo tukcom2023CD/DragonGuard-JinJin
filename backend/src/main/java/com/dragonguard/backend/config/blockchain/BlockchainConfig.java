@@ -7,7 +7,6 @@ import com.klaytn.caver.contract.SendOptions;
 import com.klaytn.caver.wallet.keyring.AbstractKeyring;
 import com.klaytn.caver.wallet.keyring.KeyringFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.web3j.crypto.CipherException;
@@ -49,17 +48,11 @@ public class BlockchainConfig {
         AbstractKeyring keyring = keyring();
         caver.wallet.add(keyring);
         try {
-            Contract contract = caver.contract.create(blockchainProperties.getAbi(), blockchainProperties.getContractAddress());
-            contract.call("balanceOf", keyring.getAddress());
-            return contract;
-        } catch (Exception e) {
-            try {
-                Contract contract = caver.contract.create(blockchainProperties.getAbi());
-                return contract.deploy(sendOptions(), blockchainProperties.getByteCode(), TOKEN_NAME, TOKEN_SYMBOL, BigInteger.valueOf(TOKEN_AMOUNT));
-            } catch(Exception ignored) {
-                e.printStackTrace();
-                throw new BlockchainException();
-            }
+            Contract contract = caver.contract.create(blockchainProperties.getAbi());
+            return contract.deploy(sendOptions(), blockchainProperties.getByteCode(), TOKEN_NAME, TOKEN_SYMBOL, BigInteger.valueOf(TOKEN_AMOUNT));
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new BlockchainException();
         }
     }
 

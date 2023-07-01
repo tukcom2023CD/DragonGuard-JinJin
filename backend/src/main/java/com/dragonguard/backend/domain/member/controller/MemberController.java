@@ -41,6 +41,11 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/me/update")
+    public ResponseEntity<MemberResponse> updateContributionsAndGetProfile() {
+        return ResponseEntity.ok(memberService.updateContributionsAndGetProfile());
+    }
+
     @PostMapping("/blockchains")
     public ResponseEntity<Void> updateBlockchain() {
         memberService.updateBlockchain();

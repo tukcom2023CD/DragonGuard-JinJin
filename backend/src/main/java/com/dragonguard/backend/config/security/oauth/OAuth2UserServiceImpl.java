@@ -39,16 +39,18 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String githubId = (String) attributes.get("login");
+        String profileImage = (String) attributes.get("avatar_url");
+        String name = (String) attributes.get("name");
 
         if (!memberRepository.existsByGithubId(githubId)) {
-            memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY, (String) attributes.get("name"), (String) attributes.get("avatar_url")));
+            memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY, name, profileImage));
         }
 
         Member user = memberRepository.findByGithubId(githubId)
                 .orElseThrow(EntityNotFoundException::new);
 
         if (user.getAuthStep().equals(AuthStep.NONE)) {
-            user.updateAuthStep(AuthStep.GITHUB_ONLY);
+            user.updateAuthStepAndNameAndProfileImage(AuthStep.GITHUB_ONLY, name, profileImage);
         }
 
         String githubToken = userRequest.getAccessToken().getTokenValue();

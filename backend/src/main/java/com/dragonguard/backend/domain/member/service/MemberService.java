@@ -227,9 +227,9 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private void sendGitRepoAndContributionRequestToKafka(final String githubId, final String githubToken) {
+        getContributionSumByScraping(githubId);
         sendGitRepoRequestToKafka(githubId, githubToken);
         sendContributionRequestToKafka(githubId);
-        getContributionSumByScraping(githubId);
     }
 
     private void sendGitRepoRequestToKafka(final String githubId, final String githubToken) {
@@ -255,5 +255,16 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private Member getMemberByGithubId(final String githubId) {
         return memberRepository.findByGithubId(githubId)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public MemberResponse updateContributionsAndGetProfile() {
+        Member member = getLoginUserWithPersistence();
+
+        contributionService.scrapingCommits(member.getGithubId());
+        memberClientService.addMemberGitRepoAndGitOrganization(member);
+        updateContributionAndTransaction(member);
+
+        if (member.isWalletAddressExists()) transactionAndUpdateTier(member);
+        return getMemberResponseWithValidateOrganization(member);
     }
 }

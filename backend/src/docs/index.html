@@ -509,6 +509,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_타_멤버의_프로필_조회_http_response">HTTP response</a></li>
 </ul>
 </li>
+<li><a href="#_멤버_프로필_정보_업데이트">멤버 프로필 정보 업데이트</a>
+<ul class="sectlevel3">
+<li><a href="#_멤버_프로필_정보_업데이트_http_request">HTTP request</a></li>
+<li><a href="#_멤버_프로필_정보_업데이트_http_response">HTTP response</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_search_result">Search Result</a>
@@ -723,7 +729,7 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 51
 
 {
-  "id" : "b4559734-897b-41e7-a7ad-6acfc7ea5051"
+  "id" : "e090a757-62e6-4ccf-b876-5ec12083d182"
 }</code></pre>
 </div>
 </div>
@@ -799,35 +805,35 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 1001
 
 [ {
-  "id" : "1089779e-7096-4707-bad9-3d863417e525",
+  "id" : "fe0f71bc-8858-466f-a72a-6069ede9f853",
   "name" : "Kim",
   "github_id" : "ohksj77",
   "tokens" : 10000,
   "tier" : "MASTER",
   "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "13fc9a71-7e06-4f55-a4e5-f3f27c9f8fd2",
+  "id" : "ddbff4cc-6006-4574-83e4-f35044800d4e",
   "name" : "Seung",
   "github_id" : "ohksj",
   "tokens" : 5000,
   "tier" : "RUBY",
   "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "e54ae409-074f-41a2-8731-83746e828b8a",
+  "id" : "86347d43-587d-4665-b190-460a879a924a",
   "name" : "Jin",
   "github_id" : "ohksj777",
   "tokens" : 3000,
   "tier" : "DIAMOND",
   "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "187ed8b5-aa58-44e5-b6e7-3b29a77dfc97",
+  "id" : "5c92d7dd-fa89-40a9-bc8b-330e0898ee7d",
   "name" : "Lee",
   "github_id" : "ohksjj",
   "tokens" : 1000,
   "tier" : "PLATINUM",
   "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "9e94d404-d519-432c-a10c-56a84ab6b700",
+  "id" : "c5a9a24a-95b1-48f5-9bd9-50d5b094ca95",
   "name" : "Da",
   "github_id" : "ohksjksj",
   "tokens" : 500,
@@ -886,28 +892,28 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 805
 
 [ {
-  "id" : "3d1addf8-2fca-4198-8dd6-deedd82b4881",
+  "id" : "7c44a379-34db-4421-be8c-ad9971fb80b5",
   "name" : "정해진",
   "github_id" : "HJ39",
   "tokens" : 20,
   "tier" : "SPROUT",
   "profile_image" : "http://githubUserProfileImageUrl"
 }, {
-  "id" : "20eb6892-a2c3-419d-a908-387c961163d5",
+  "id" : "2a67afec-f05d-481b-84a4-23a604abf880",
   "name" : "넓은관용",
   "github_id" : "Sammuelwoojae",
   "tokens" : 20,
   "tier" : "SPROUT",
   "profile_image" : "http://githubUserProfileImageUrl"
 }, {
-  "id" : "507db2b3-737f-4e90-8b79-1ccb34d9b1ee",
+  "id" : "0ba31e67-a593-4c8c-9d06-fecd70c75e70",
   "name" : "회사승진",
   "github_id" : "ohksj77",
   "tokens" : 20,
   "tier" : "SPROUT",
   "profile_image" : "http://githubUserProfileImageUrl"
 }, {
-  "id" : "82d1a35f-95b1-44d9-b2d1-9e220279374a",
+  "id" : "b6d05719-819a-4660-8e3d-a899144d3822",
   "name" : "영어수학",
   "github_id" : "posite",
   "tokens" : 20,
@@ -939,7 +945,7 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 495
 
 {
-  "id" : "4aaef781-e452-41ef-a5e8-7c06cb25770f",
+  "id" : "6eccbf9b-6f4f-41ec-ab79-9a44a0816e79",
   "name" : "김승진",
   "github_id" : "ohksj77",
   "commits" : 100,
@@ -1078,6 +1084,49 @@ Content-Length: 221
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_멤버_프로필_정보_업데이트"><a class="link" href="#_멤버_프로필_정보_업데이트">멤버 프로필 정보 업데이트</a></h3>
+<div class="sect3">
+<h4 id="_멤버_프로필_정보_업데이트_http_request"><a class="link" href="#_멤버_프로필_정보_업데이트_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /members/me/update HTTP/1.1
+Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_멤버_프로필_정보_업데이트_http_response"><a class="link" href="#_멤버_프로필_정보_업데이트_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 495
+
+{
+  "id" : "43274d1b-06a9-4e22-a336-97c61243d6b1",
+  "name" : "김승진",
+  "github_id" : "ohksj77",
+  "commits" : 100,
+  "issues" : 100,
+  "pull_requests" : 100,
+  "reviews" : 100,
+  "tier" : "SILVER",
+  "auth_step" : "GITHUB_ONLY",
+  "profile_image" : "http://abcd.efgh",
+  "rank" : 1000,
+  "token_amount" : 1000,
+  "organization" : "한국공학대학교",
+  "blockchain_url" : "http://abcd.efgh",
+  "organization_rank" : 1,
+  "is_last" : true,
+  "member_github_ids" : [ "ohksj", "ksj77" ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1153,31 +1202,31 @@ Content-Length: 851
   "name" : "tukcom2023CD/DragonGuard-JinJin",
   "language" : "java",
   "description" : "블록체인기반깃랭크시스템",
-  "created_at" : "2023-06-30T23:54:49.126616"
+  "created_at" : "2023-07-02T00:56:49.647693"
 }, {
   "id" : 2,
   "name" : "tukcom2023CD/DragonGuard",
   "language" : "swift",
   "description" : "블록체인기반깃랭크시스템",
-  "created_at" : "2023-06-30T23:54:49.126636"
+  "created_at" : "2023-07-02T00:56:49.647717"
 }, {
   "id" : 3,
   "name" : "tukcom2023CD/JinJin",
   "language" : "java",
   "description" : "진진시스템",
-  "created_at" : "2023-06-30T23:54:49.126640"
+  "created_at" : "2023-07-02T00:56:49.647722"
 }, {
   "id" : 4,
   "name" : "tukcom2023CD/Dragon",
   "language" : "java",
   "description" : "드래곤시스템",
-  "created_at" : "2023-06-30T23:54:49.126643"
+  "created_at" : "2023-07-02T00:56:49.647725"
 }, {
   "id" : 5,
   "name" : "tukcom2023CD/Dragon-Jin",
   "language" : "java",
   "description" : "드래곤진",
-  "created_at" : "2023-06-30T23:54:49.126646"
+  "created_at" : "2023-07-02T00:56:49.647728"
 } ]</code></pre>
 </div>
 </div>
@@ -1448,9 +1497,9 @@ Content-Length: 2107
       }
     },
     "languages" : {
-      "java" : 10000,
+      "kotlin" : 9999,
       "swift" : 9998,
-      "kotlin" : 9999
+      "java" : 10000
     },
     "languages_stats" : {
       "count" : 4,
@@ -1495,9 +1544,9 @@ Content-Length: 2107
       }
     },
     "languages" : {
-      "java" : 10000,
+      "kotlin" : 9999,
       "swift" : 9998,
-      "kotlin" : 9999
+      "java" : 10000
     },
     "languages_stats" : {
       "count" : 4,
@@ -1623,16 +1672,16 @@ Content-Length: 471
   "contribute_type" : "COMMIT",
   "amount" : 10,
   "github_id" : "ohksj77",
-  "member_id" : "856871d6-8d4a-4d88-85ec-4e6d685d830c",
-  "created_at" : "2023-06-30T23:54:42.897891",
+  "member_id" : "27d27c6e-d273-4a6c-bbc9-00be3c0f799a",
+  "created_at" : "2023-07-02T00:56:38.157151",
   "transaction_hash_url" : "123123123"
 }, {
   "id" : 2,
   "contribute_type" : "COMMIT",
   "amount" : 5,
   "github_id" : "ohksj77",
-  "member_id" : "0aabc4be-6344-4c33-9bcc-30d8b913c5cb",
-  "created_at" : "2023-06-30T23:54:42.897926",
+  "member_id" : "80c2eaf3-dc66-47f7-8934-49b58f8236e5",
+  "created_at" : "2023-07-02T00:56:38.157181",
   "transaction_hash_url" : "321321321"
 } ]</code></pre>
 </div>
@@ -1665,16 +1714,16 @@ Content-Length: 471
   "contribute_type" : "COMMIT",
   "amount" : 10,
   "github_id" : "ohksj77",
-  "member_id" : "6310dd1d-4066-48c9-a260-3197a7a6ecd7",
-  "created_at" : "2023-06-30T23:54:42.904724",
+  "member_id" : "6430fae1-220a-4250-b062-06d0f71ae116",
+  "created_at" : "2023-07-02T00:56:38.163524",
   "transaction_hash_url" : "123123123"
 }, {
   "id" : 2,
   "contribute_type" : "COMMIT",
   "amount" : 5,
   "github_id" : "ohksj77",
-  "member_id" : "0cbd21f6-b2fd-40c5-b5ed-a1e1305f8488",
-  "created_at" : "2023-06-30T23:54:42.904741",
+  "member_id" : "d07b7d47-b661-4811-9d13-65346ce4ce36",
+  "created_at" : "2023-07-02T00:56:38.163543",
   "transaction_hash_url" : "321321321"
 } ]</code></pre>
 </div>

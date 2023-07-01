@@ -312,4 +312,25 @@ class MemberControllerTest extends RestDocumentTest {
         perform.andDo(print())
                 .andDo(document("get other member details", getDocumentRequest(), getDocumentResponse()));
     }
+
+    @Test
+    @DisplayName("멤버 정보 업데이트 후 조회가 수행되는가")
+    void updateAndGetMemberProfile() throws Exception {
+        // given
+        MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1000L, "한국공학대학교", "http://abcd.efgh", 1, true, List.of("ohksj", "ksj77"));
+        given(memberService.updateContributionsAndGetProfile()).willReturn(expected);
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        post("/members/me/update")
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("update and get member by jwt", getDocumentRequest(), getDocumentResponse()));
+    }
 }

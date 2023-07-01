@@ -38,3 +38,6 @@ operation::get member repositories in a organization[snippets='http-request,http
 
 === 타 멤버의 프로필 조회
 operation::get other member details[snippets='http-request,http-response']
+
+=== 멤버 프로필 정보 업데이트
+operation::update and get member by jwt[snippets='http-request,http-response']
