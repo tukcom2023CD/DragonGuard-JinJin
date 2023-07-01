@@ -43,7 +43,7 @@ spring:
     consumer:
       group-id: gitrank
       auto-offset-reset: earliest
-      enable-auto-commit: false
+      enable-auto-commit: true
 
   batch:
     jdbc:

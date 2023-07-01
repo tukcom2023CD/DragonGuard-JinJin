@@ -43,7 +43,7 @@ spring:
     bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
     consumer:
       group-id: gitrank
-      enable-auto-commit: false
+      enable-auto-commit: true
       auto-offset-reset: earliest
     retry:
       topic:
