@@ -1,12 +1,10 @@
 package com.dragonguard.backend.domain.member.service;
 
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
-import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.contribution.dto.kafka.ContributionKafkaResponse;
 import com.dragonguard.backend.domain.contribution.service.ContributionService;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
-import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.member.dto.kafka.KafkaContributionRequest;
 import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
@@ -19,7 +17,6 @@ import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
-import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
@@ -89,7 +86,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
         if (addContributionsIfNotEmpty(member, contributionKafkaResponse.getContribution())) return;
 
-        sendTransactionIfWalletAddressExists(member);
+        sendTransactionIfWalletAddressValid(member);
     }
 
     private Member findMemberAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
@@ -98,7 +95,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return member;
     }
 
-    private void sendTransactionIfWalletAddressExists(final Member member) {
+    private void sendTransactionIfWalletAddressValid(final Member member) {
         if (member.validateWalletAddressAndUpdateTier()) return;
         transactionAndUpdateTier(member);
     }
@@ -106,11 +103,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private boolean addContributionsIfNotEmpty(
             final Member member,
             final Integer contribution) {
-        List<Commit> commits = member.getCommits();
-        List<PullRequest> pullRequests = member.getPullRequests();
-        List<Issue> issues = member.getIssues();
-
-        if (isContributionEmpty(commits, pullRequests, issues, contribution, member.getSumOfTokens())) return true;
+        if (isContributionEmpty(member, contribution)) return true;
         member.updateSumOfReviewsWithCalculation(contribution);
         return false;
     }
@@ -236,8 +229,10 @@ public class MemberService implements EntityLoader<Member, UUID> {
         kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId, githubToken));
     }
 
-    private boolean isContributionEmpty(final List<Commit> commits, final List<PullRequest> pullRequests, final List<Issue> issues, final Integer contribution, final Long tokenSum) {
-        return commits.isEmpty() || pullRequests.isEmpty() || issues.isEmpty() || contribution.longValue() == tokenSum;
+    private boolean isContributionEmpty(final Member member, final Integer contribution) {
+        if (member.getSumOfTokens().intValue() == contribution.intValue()) return true;
+        if (member.getContributionSumWithoutReviews() + member.getSumOfReviews().orElse(0).intValue() <= contribution.intValue()) return true;
+        return false;
     }
 
     public MemberGitOrganizationRepoResponse getMemberGitOrganizationRepo(final String gitOrganizationName) {

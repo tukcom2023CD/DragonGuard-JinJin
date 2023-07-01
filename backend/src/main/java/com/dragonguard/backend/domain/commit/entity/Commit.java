@@ -29,8 +29,8 @@ public class Commit implements Auditable {
     @Column(nullable = false)
     private Integer amount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition = "BINARY(16)")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Member member;
 
     @Setter

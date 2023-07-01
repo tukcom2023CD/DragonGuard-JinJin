@@ -9,8 +9,8 @@ import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.member.service.AuthService;
-import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -130,23 +129,23 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     public void sendSmartContractTransaction(final Member member) {
-        int commits = member.getCommitSumWithRelation();
-        int issues = member.getIssueSumWithRelation();
-        int pullRequests = member.getPullRequestSumWithRelation();
-        Optional<Integer> reviews = member.getSumOfReviews();
+        int commitSum = member.getCommitSumWithRelation();
+        int issueSum = member.getIssueSumWithRelation();
+        int pullRequestSum = member.getPullRequestSumWithRelation();
+        int reviewSum = member.getSumOfReviews().orElse(0);
 
         List<Blockchain> commit = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.COMMIT);
         List<Blockchain> issue = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.ISSUE);
         List<Blockchain> pullRequest = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.PULL_REQUEST);
         List<Blockchain> review = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.CODE_REVIEW);
 
-        if (isValidToTransaction(commits, commit)) checkAndTransaction(member, commits, ContributeType.COMMIT);
-        if (isValidToTransaction(issues, issue)) checkAndTransaction(member, commits, ContributeType.ISSUE);
-        if (isValidToTransaction(pullRequests, pullRequest)) checkAndTransaction(member, commits, ContributeType.PULL_REQUEST);
-        if (isValidToTransaction(reviews.orElse(0), review)) checkAndTransaction(member, commits, ContributeType.CODE_REVIEW);
+        if (isValidToTransaction(commitSum, commit)) checkAndTransaction(member, commitSum, ContributeType.COMMIT);
+        if (isValidToTransaction(issueSum, issue)) checkAndTransaction(member, commitSum, ContributeType.ISSUE);
+        if (isValidToTransaction(pullRequestSum, pullRequest)) checkAndTransaction(member, commitSum, ContributeType.PULL_REQUEST);
+        if (isValidToTransaction(reviewSum, review)) checkAndTransaction(member, commitSum, ContributeType.CODE_REVIEW);
     }
 
-    private boolean isValidToTransaction(int commits, List<Blockchain> blockchains) {
-        return commits != blockchains.stream().map(Blockchain::getAmount).mapToLong(BigInteger::intValue).sum();
+    private boolean isValidToTransaction(int contribution, List<Blockchain> blockchains) {
+        return contribution != blockchains.stream().map(Blockchain::getAmount).mapToLong(BigInteger::intValue).sum();
     }
 }
