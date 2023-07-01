@@ -16,7 +16,6 @@ import reactor.util.retry.Retry;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author 김승진
@@ -42,20 +41,21 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Lis
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()
-                .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
+                .onStatus(HttpStatus.NO_CONTENT::equals, response -> Mono.error(WebClientException::new))
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(ClientBadRequestException::new))
                 .bodyToFlux(GitRepoMemberClientResponse.class)
                 .collectList()
                 .flatMap(response -> {
-                    if (response == null || response.isEmpty()) {
+                    if (response == null || response.isEmpty() || response.stream()
+                            .filter(g -> g.getTotal() != null || g.getWeeks() == null || g.getWeeks().isEmpty()
+                                    || g.getAuthor() == null || g.getAuthor().getLogin() == null).findAny().isEmpty()) {
                         return Mono.error(WebClientException::new);
                     }
                     return Mono.just(response);
                 })
                 .retryWhen(
-                        Retry.fixedDelay(10, Duration.ofMillis(1500)))
-                .filter(Objects::nonNull)
-                .filter(grm -> !grm.isEmpty())
+                        Retry.fixedDelay(10, Duration.ofMillis(1500))
+                                .filter(WebClientException.class::isInstance))
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
     }

@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Week {
-    private Long w;
     private Integer a;
     private Integer d;
     private Integer c;

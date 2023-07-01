@@ -9,14 +9,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.netty.http.client.HttpClient;
 
 import javax.net.ssl.SSLException;
+import java.time.Duration;
 
 /**
  * @author 김승진
@@ -38,7 +41,8 @@ public class WebClientConfig {
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
                 .codecs(configurer -> {
                     configurer.defaultCodecs().maxInMemorySize(-1);
-                    configurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapper));
+                    configurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapper, MediaType.APPLICATION_JSON));
+                    configurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON));
                 }).build();
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(url);
@@ -49,6 +53,7 @@ public class WebClientConfig {
                 .build();
 
         HttpClient httpClient = HttpClient.create()
+                .responseTimeout(Duration.ofSeconds(20L))
                 .secure(t -> t.sslContext(sslContext));
 
         return WebClient.builder()

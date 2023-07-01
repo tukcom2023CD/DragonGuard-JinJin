@@ -253,18 +253,12 @@ public class Member implements Auditable {
         return Optional.ofNullable(sumOfPullRequests);
     }
 
-    public boolean validateContributionsAndDeleteIfInvalid(int sumOfReviews) {
-        if (sumOfReviews < 0) return true;
-        deleteContributions();
-        updateTier();
-        return false;
-    }
-
     private void deleteContributions() {
         this.commits.forEach(Commit::delete);
         this.pullRequests.forEach(PullRequest::delete);
         this.issues.forEach(Issue::delete);
         this.sumOfReviews = 0;
+        updateTier();
     }
 
     public boolean validateWalletAddressAndUpdateTier() {
@@ -284,5 +278,15 @@ public class Member implements Auditable {
 
     public void updateAuthStep(AuthStep authStep) {
         this.authStep = authStep;
+    }
+
+    public void updateSumOfReviewsWithCalculation(Integer contribution) {
+        int reviews = contribution - getContributionSumWithoutReviews();
+        if (reviews < 0) deleteContributions();
+        this.sumOfReviews = reviews;
+    }
+
+    public Integer getContributionSumWithoutReviews() {
+        return getCommitSumWithRelation() + getPullRequestSumWithRelation() + getIssueSumWithRelation();
     }
 }

@@ -243,8 +243,6 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
             final GitRepoContributionMap additions,
             final GitRepoContributionMap deletions) {
 
-        if(contributions == null || contributions.isEmpty()) return List.of();
-
         return contributions.stream()
                 .filter(c -> c.getWeeks() != null && !c.getWeeks().isEmpty() && c.getTotal() != null && c.getAuthor() != null)
                 .map(clientResponse -> {

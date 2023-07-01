@@ -22,7 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
@@ -60,11 +59,17 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                 .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
                 .bodyToFlux(GitRepoMemberClientResponse.class)
                 .collectList()
+                .flatMap(response -> {
+                    if (response == null || response.isEmpty() || response.stream()
+                            .filter(g -> g.getTotal() != null || g.getWeeks() == null || g.getWeeks().isEmpty()
+                                    || g.getAuthor() == null || g.getAuthor().getLogin() == null).findAny().isEmpty()) {
+                        return Mono.error(WebClientException::new);
+                    }
+                    return Mono.just(response);
+                })
                 .retryWhen(
                         Retry.fixedDelay(10, Duration.ofMillis(1500))
-                                .filter(WebClientException.class::isInstance)
-                                .filter(WebClientRequestException.class::isInstance)
-                                .filter(Throwable.class::isInstance))
+                                .filter(WebClientException.class::isInstance))
                 .mapNotNull(result -> {
                     Set<GitRepoMember> gitRepoMembers = request.getGitRepo().getGitRepoMembers();
 

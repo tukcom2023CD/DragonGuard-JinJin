@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -128,12 +129,14 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     public void sendSmartContractTransaction(final Member member) {
-        if (checkAndTransaction(member, member.getCommitSumWithRelation(), ContributeType.COMMIT)) return;
+        int commits = member.getCommitSumWithRelation();
+        int issues = member.getIssueSumWithRelation();
+        int pullRequests = member.getPullRequestSumWithRelation();
+        Optional<Integer> reviews = member.getSumOfReviews();
 
-        if (checkAndTransaction(member, member.getIssueSumWithRelation(), ContributeType.ISSUE)) return;
-
-        if (checkAndTransaction(member, member.getPullRequestSumWithRelation(), ContributeType.PULL_REQUEST)) return;
-
-        member.getSumOfReviews().ifPresent(rv -> checkAndTransaction(member, rv, ContributeType.CODE_REVIEW));
+        if (checkAndTransaction(member, commits, ContributeType.COMMIT)) return;
+        if (checkAndTransaction(member, issues, ContributeType.ISSUE)) return;
+        if (checkAndTransaction(member, pullRequests, ContributeType.PULL_REQUEST)) return;
+        reviews.ifPresent(rv -> checkAndTransaction(member, rv, ContributeType.CODE_REVIEW));
     }
 }
