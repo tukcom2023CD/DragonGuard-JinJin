@@ -134,15 +134,28 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         int pullRequestSum = member.getPullRequestSumWithRelation();
         int reviewSum = member.getSumOfReviews().orElse(0);
 
+        applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum);
+    }
+
+    public void sendSmartContractTransaction(final Member member, final Integer contribution) {
+        int commitSum = member.getCommitSumWithRelation();
+        int issueSum = member.getIssueSumWithRelation();
+        int pullRequestSum = member.getPullRequestSumWithRelation();
+        int reviewSum = contribution - (commitSum + issueSum + pullRequestSum);
+
+        applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum);
+    }
+
+    private void applyTransactions(Member member, int commitSum, int issueSum, int pullRequestSum, int reviewSum) {
         List<Blockchain> commit = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.COMMIT);
         List<Blockchain> issue = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.ISSUE);
         List<Blockchain> pullRequest = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.PULL_REQUEST);
         List<Blockchain> review = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.CODE_REVIEW);
 
         if (isValidToTransaction(commitSum, commit)) checkAndTransaction(member, commitSum, ContributeType.COMMIT);
-        if (isValidToTransaction(issueSum, issue)) checkAndTransaction(member, commitSum, ContributeType.ISSUE);
-        if (isValidToTransaction(pullRequestSum, pullRequest)) checkAndTransaction(member, commitSum, ContributeType.PULL_REQUEST);
-        if (isValidToTransaction(reviewSum, review)) checkAndTransaction(member, commitSum, ContributeType.CODE_REVIEW);
+        if (isValidToTransaction(issueSum, issue)) checkAndTransaction(member, issueSum, ContributeType.ISSUE);
+        if (isValidToTransaction(pullRequestSum, pullRequest)) checkAndTransaction(member, pullRequestSum, ContributeType.PULL_REQUEST);
+        if (isValidToTransaction(reviewSum, review)) checkAndTransaction(member, reviewSum, ContributeType.CODE_REVIEW);
     }
 
     private boolean isValidToTransaction(int contribution, List<Blockchain> blockchains) {

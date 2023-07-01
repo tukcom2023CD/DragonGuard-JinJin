@@ -14,5 +14,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class KafkaRepositoryRequest {
     private String githubId;
-    private String githubToken;
 }

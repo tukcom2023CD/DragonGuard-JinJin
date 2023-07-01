@@ -3,10 +3,9 @@ package com.dragonguard.backend.domain.member.messagequeue;
 import com.dragonguard.backend.domain.member.dto.kafka.ContributionClientResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
-import com.dragonguard.backend.domain.member.service.MemberClientService;
 import com.dragonguard.backend.domain.member.service.MemberService;
-import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class KafkaContributionClientConsumer implements KafkaConsumer<ContributionClientResponse> {
-    private final MemberClientService memberClientService;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final ObjectMapper objectMapper;

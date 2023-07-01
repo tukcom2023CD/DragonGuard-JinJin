@@ -53,24 +53,24 @@ public class MemberClientService {
 
         MemberClientRequest request = new MemberClientRequest(githubId,  member.getGithubToken(), year);
 
-        requestCommitClientAndSave(member, githubId, request);
-        requestIssueClientAndSave(member, year, request);
-        requestPullRequestClientAndSave(member, year, request);
+        requestCommitClientAndSave(member, request);
+        requestIssueClientAndSave(member, request);
+        requestPullRequestClientAndSave(member, request);
     }
 
-    private void requestPullRequestClientAndSave(final Member member, final int year, final MemberClientRequest request) {
+    private void requestPullRequestClientAndSave(final Member member, final MemberClientRequest request) {
         int pullRequestNum = memberPullRequestClient.requestToGithub(request).getTotalCount();
-        pullRequestService.savePullRequests(member, pullRequestNum, year);
+        pullRequestService.savePullRequests(member, pullRequestNum, request.getYear());
     }
 
-    private void requestIssueClientAndSave(final Member member, final int year, final MemberClientRequest request) {
+    private void requestIssueClientAndSave(final Member member, final MemberClientRequest request) {
         int issueNum = memberIssueClient.requestToGithub(request).getTotalCount();
-        issueService.saveIssues(member, issueNum, year);
+        issueService.saveIssues(member, issueNum, request.getYear());
     }
 
-    private void requestCommitClientAndSave(final Member member, final String githubId, final MemberClientRequest request) {
+    private void requestCommitClientAndSave(final Member member, final MemberClientRequest request) {
         int commitNum = memberCommitClient.requestToGithub(request).getTotalCount();
-        commitService.saveCommits(new ContributionScrapingResponse(githubId, commitNum), member);
+        commitService.saveCommits(new ContributionScrapingResponse(member.getGithubId(), commitNum), member);
     }
 
     public void addMemberGitRepoAndGitOrganization(final Member member) {

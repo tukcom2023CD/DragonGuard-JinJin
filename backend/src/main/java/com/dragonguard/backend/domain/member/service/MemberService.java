@@ -84,9 +84,10 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public void addMemberContributionsAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
         Member member = findMemberAndUpdate(contributionKafkaResponse);
 
-        if (addContributionsIfNotEmpty(member, contributionKafkaResponse.getContribution())) return;
+        Integer contribution = contributionKafkaResponse.getContribution();
+        if (addContributionsIfNotEmpty(member, contribution)) return;
 
-        sendTransactionIfWalletAddressValid(member);
+        sendTransactionIfWalletAddressValid(member, contribution);
     }
 
     private Member findMemberAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
@@ -95,9 +96,12 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return member;
     }
 
-    private void sendTransactionIfWalletAddressValid(final Member member) {
+    private void sendTransactionIfWalletAddressValid(final Member member, final Integer contribution) {
         if (member.validateWalletAddressAndUpdateTier()) return;
-        transactionAndUpdateTier(member);
+        if (!member.isWalletAddressExists()) return;
+
+        blockchainService.sendSmartContractTransaction(member, contribution);
+        member.validateWalletAddressAndUpdateTier();
     }
 
     private boolean addContributionsIfNotEmpty(
@@ -200,8 +204,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public void updateContributionAndTransaction(final Member member) {
-        transactionAndUpdateTier(member);
         memberClientService.addMemberContribution(member);
+        transactionAndUpdateTier(member);
     }
 
     private void getContributionSumByScraping(final String githubId) {
@@ -221,12 +225,12 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     private void sendGitRepoAndContributionRequestToKafka(final String githubId, final String githubToken) {
         getContributionSumByScraping(githubId);
-        sendGitRepoRequestToKafka(githubId, githubToken);
+        sendGitRepoRequestToKafka(githubId);
         sendContributionRequestToKafka(githubId);
     }
 
-    private void sendGitRepoRequestToKafka(final String githubId, final String githubToken) {
-        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId, githubToken));
+    private void sendGitRepoRequestToKafka(final String githubId) {
+        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
     }
 
     private boolean isContributionEmpty(final Member member, final Integer contribution) {
