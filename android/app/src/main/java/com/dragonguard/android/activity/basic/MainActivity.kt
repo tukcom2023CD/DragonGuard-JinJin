@@ -276,10 +276,6 @@ class MainActivity : AppCompatActivity() {
                             realModel.organization_rank = userInfo.organization_rank
                         }
                         count = 0
-                        if(refreshCount == 0) {
-                            refreshCommits()
-                            refreshCount++
-                        }
                         userInfo.blockchain_url?.let {
                             realModel.blockchain_url = it
                         }
@@ -297,7 +293,10 @@ class MainActivity : AppCompatActivity() {
                                 finish = true
                             }
                         } else {
-                            refreshToken()
+                            if(refreshCount ==0) {
+                                refreshCount = 1
+                                refreshCommits()
+                            }
                         }
                     }
                 }
@@ -340,6 +339,7 @@ class MainActivity : AppCompatActivity() {
                         viewmodel.postWalletAddress(address, prefs.getJwtToken(""))
                     }
                     val postWalletResponse = postwalletDeferred.await()
+                    Log.d("지갑주소", "지갑주소 전송 $postWalletResponse")
                     if (postWalletResponse) {
                         refreshCommits()
                     }
