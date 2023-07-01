@@ -690,17 +690,3 @@ extension CompareRepoUserController : ChartViewDelegate {
         chartAddDel.highlightPerDragEnabled = false
     }
 }
-
-import SwiftUI
-struct VCPreViewCompareRepoUserController:PreviewProvider {
-    static var previews: some View {
-        CompareRepoUserController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewCompareRepoUserController2:PreviewProvider {
-    static var previews: some View {
-        CompareRepoUserController().toPreview().previewDevice("iPhone 11")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}

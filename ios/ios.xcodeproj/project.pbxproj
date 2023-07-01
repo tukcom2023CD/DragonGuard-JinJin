@@ -487,6 +487,8 @@
 				3BA2013829980661008978A5 /* MainService.swift */,
 				3B9CF3D3298F9B8C00495D35 /* RankingService.swift */,
 				3BAEA776299CFD090054DC5D /* PostService.swift */,
+				3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */,
+				A30BA46F29841C97008B594E /* SearchPageService.swift */,
 			);
 			path = Refactcoring;
 			sourceTree = "<group>";
@@ -704,9 +706,9 @@
 				3BE64A052A3DFF9F005D9F9E /* BlockChainList */,
 				3BE64A022A3DEBCF005D9F9E /* RankingController */,
 				3B2E0DBA2A43740000E6A7AD /* CompareViewController */,
+				3BE64A042A3DF02A005D9F9E /* RepoDetailController */,
 				3B54FF552A42E506004B21B1 /* YourProfile */,
 				3B9756F2298A33E900F27094 /* SettingScreen */,
-				3BE64A042A3DF02A005D9F9E /* RepoDetailController */,
 				3BE64A032A3DEFC6005D9F9E /* SearchController */,
 				3BE649EE2A3DA089005D9F9E /* InfomationDetail */,
 			);
@@ -770,9 +772,7 @@
 			isa = PBXGroup;
 			children = (
 				3B49BABB2A40CD64009C5963 /* Refactcoring */,
-				A30BA46F29841C97008B594E /* SearchPageService.swift */,
 				3BE6AD2E2993C6D300B22EBD /* RepoContributorInfoService.swift */,
-				3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */,
 				3B7BFF6929CBD63200A2F3F4 /* SearchOraganizationService.swift */,
 				3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */,
 				3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */,

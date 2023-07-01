@@ -7,31 +7,16 @@
 
 import Foundation
 
-struct DetailRepoModel {
-    let sparkLine: [Int]?
-    let gitRepoMembers: [GitRepoMembers]?
+struct DetailRepoModel: Codable {
+    let spark_line: [Int]?
+    let git_repo_members: [GitRepoMembers]?
 }
 
-struct GitRepoMembers{
-    let githubId: String
-    let profileUrl: String
+struct GitRepoMembers: Codable{
+    let github_id: String
+    let profile_url: String
     let commits: Int
     let additions: Int
     let deletions: Int
-    let isServiceMember: Bool
-}
-
-
-struct DetailRepoCodableModel: Codable {
-    let sparkLine: [Int]?
-    let gitRepoMembers: [GitRepoMembersCodable]?
-}
-
-struct GitRepoMembersCodable: Codable{
-    let githubId: String
-    let profileUrl: String
-    let commits: Int
-    let additions: Int
-    let deletions: Int
-    let isServiceMember: Bool
+    let is_service_member: Bool
 }

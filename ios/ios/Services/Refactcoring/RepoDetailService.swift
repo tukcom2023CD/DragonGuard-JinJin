@@ -18,30 +18,24 @@ final class RepoDetailService{
         let access = UserDefaults.standard.string(forKey: "Access")
         
         return Observable.create { observer in
-            AF.request(url,
-                       method: .get,
-                       headers: ["Authorization": "Bearer \(access ?? "")"])
-            .validate(statusCode: 200..<500)
-
-            .responseDecodable(of: DetailRepoCodableModel.self) { res in
-                print("RepoDetailService\n\(res)")
-                switch res.result{
-                case .success(let data):
-                    var memberList: [GitRepoMembers] = []
-                    data.gitRepoMembers?.forEach({ member in
-                        memberList.append(GitRepoMembers(githubId: member.githubId,
-                                                         profileUrl: member.profileUrl,
-                                                         commits: member.commits,
-                                                         additions: member.additions,
-                                                         deletions: member.deletions,
-                                                         isServiceMember: member.isServiceMember))
-                    })
-                    let data = DetailRepoModel(sparkLine: data.sparkLine, gitRepoMembers: memberList)
-                    observer.onNext(data)
-                case .failure(let error):
-                    print("RepoDetailService error!\(error)")
+            Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { timer in
+                AF.request(url,
+                           method: .get,
+                           headers: ["Authorization": "Bearer \(access ?? "")"])
+                .validate(statusCode: 200..<201)
+                .responseDecodable(of: DetailRepoModel.self) { res in
+                    print("RepoDetailService\n\(res)")
+                    switch res.result{
+                    case .success(let data):
+                        if !(data.git_repo_members?.isEmpty ?? true) && !(data.spark_line?.isEmpty ?? true){
+                            observer.onNext(data)
+                            timer.invalidate()
+                        }
+                    case .failure(let error):
+                        print("RepoDetailService error!\(error)")
+                    }
                 }
-            }
+            })
             return Disposables.create()
         }
     }
