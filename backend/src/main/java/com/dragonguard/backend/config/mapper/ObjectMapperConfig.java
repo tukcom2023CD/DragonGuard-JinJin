@@ -20,8 +20,6 @@ public class ObjectMapperConfig {
         return new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-                .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true)
-                .configure(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES, true)
                 .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     }
 }

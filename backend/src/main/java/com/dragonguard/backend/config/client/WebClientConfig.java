@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
-import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -30,7 +28,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class WebClientConfig {
     private static final String GITHUB_API_MIME_TYPE = "application/vnd.github+json";
-    private static final String USER_AGENT = "GITRANK WEB CLIENT";
+    private static final String USER_AGENT = "request";
     private final ObjectMapper objectMapper;
 
     @Bean
@@ -41,8 +39,7 @@ public class WebClientConfig {
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
                 .codecs(configurer -> {
                     configurer.defaultCodecs().maxInMemorySize(-1);
-                    configurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapper, MediaType.APPLICATION_JSON));
-                    configurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON));
+                    configurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapper));
                 }).build();
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(url);

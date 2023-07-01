@@ -58,17 +58,17 @@ public class MemberClientService {
         requestPullRequestClientAndSave(member, year, request);
     }
 
-    public void requestPullRequestClientAndSave(final Member member, final int year, final MemberClientRequest request) {
+    private void requestPullRequestClientAndSave(final Member member, final int year, final MemberClientRequest request) {
         int pullRequestNum = memberPullRequestClient.requestToGithub(request).getTotalCount();
         pullRequestService.savePullRequests(member, pullRequestNum, year);
     }
 
-    public void requestIssueClientAndSave(final Member member, final int year, final MemberClientRequest request) {
+    private void requestIssueClientAndSave(final Member member, final int year, final MemberClientRequest request) {
         int issueNum = memberIssueClient.requestToGithub(request).getTotalCount();
         issueService.saveIssues(member, issueNum, year);
     }
 
-    public void requestCommitClientAndSave(final Member member, final String githubId, final MemberClientRequest request) {
+    private void requestCommitClientAndSave(final Member member, final String githubId, final MemberClientRequest request) {
         int commitNum = memberCommitClient.requestToGithub(request).getTotalCount();
         commitService.saveCommits(new ContributionScrapingResponse(githubId, commitNum), member);
     }
@@ -89,12 +89,12 @@ public class MemberClientService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<MemberOrganizationResponse> getMemberOrganizationNames(final MemberClientRequest request) {
+    private Set<MemberOrganizationResponse> getMemberOrganizationNames(final MemberClientRequest request) {
         return Arrays.stream(memberOrganizationClient.requestToGithub(request))
                 .collect(Collectors.toSet());
     }
 
-    public void saveGitRepos(final Set<String> gitRepoNames, final Member member) {
+    private void saveGitRepos(final Set<String> gitRepoNames, final Member member) {
         Set<GitRepo> gitRepos = findIfGitRepoNotExists(gitRepoNames);
         saveAllGitRepos(gitRepos);
 
@@ -102,21 +102,21 @@ public class MemberClientService {
         saveAllGitRepoMembers(list);
     }
 
-    public void saveAllGitRepoMembers(final Set<GitRepoMember> list) {
+    private void saveAllGitRepoMembers(final Set<GitRepoMember> list) {
         gitRepoMemberRepository.saveAll(list);
     }
 
-    public Set<GitRepoMember> findIfGitRepoMemberNotExists(final Member member, final Set<GitRepo> gitRepos) {
+    private Set<GitRepoMember> findIfGitRepoMemberNotExists(final Member member, final Set<GitRepo> gitRepos) {
         return gitRepos.stream()
                 .map(gr -> gitRepoMemberMapper.toEntity(member, gr))
                 .collect(Collectors.toSet());
     }
 
-    public void saveAllGitRepos(final Set<GitRepo> gitRepos) {
+    private void saveAllGitRepos(final Set<GitRepo> gitRepos) {
         gitRepoRepository.saveAll(gitRepos);
     }
 
-    public Set<GitRepo> findIfGitRepoNotExists(final Set<String> gitRepoNames) {
+    private Set<GitRepo> findIfGitRepoNotExists(final Set<String> gitRepoNames) {
         return gitRepoNames.stream()
                 .filter(name -> !gitRepoRepository.existsByName(name))
                 .map(gitRepoMapper::toEntity)

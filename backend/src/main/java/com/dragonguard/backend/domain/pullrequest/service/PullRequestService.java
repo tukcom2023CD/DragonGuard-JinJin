@@ -9,8 +9,6 @@ import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 /**
  * @author 김승진
  * @description PullRequest 관련 서비스 로직을 수행하는 클래스
@@ -34,10 +32,6 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
         PullRequest pullRequest = pullRequestRepository.findByMemberAndYear(member, year)
                 .orElseThrow(EntityNotFoundException::new);
         pullRequest.updatePullRequestNum(pullRequestNum);
-    }
-
-    public List<PullRequest> findPullRequestByMember(final Member member) {
-        return pullRequestRepository.findAllByMember(member);
     }
 
     @Override

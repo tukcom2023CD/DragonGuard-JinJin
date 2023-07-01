@@ -37,21 +37,23 @@ public interface MemberMapper {
 
     @Mapping(target = "organizationRank", source = "relatedRank.organizationRank")
     @Mapping(target = "memberGithubIds", source = "relatedRank.memberGithubIds")
+    @Mapping(target = "tokenAmount", expression = "java(member.getSumOfTokens())")
     @Mapping(target = "isLast", source = "relatedRank.isLast")
     @Mapping(target = "organization", source = "organization")
     @Mapping(target = "commits", expression = "java(member.getSumOfCommits().orElse(null))")
     @Mapping(target = "issues", expression = "java(member.getSumOfIssues().orElse(null))")
     @Mapping(target = "pullRequests", expression = "java(member.getSumOfPullRequests().orElse(null))")
     @Mapping(target = "reviews", expression = "java(member.getSumOfReviews().orElse(null))")
-    MemberResponse toResponse(final Member member, final Integer rank, final Long tokenAmount, final String organization, final RelatedRankWithMemberResponse relatedRank);
+    MemberResponse toResponse(final Member member, final Integer rank, final String organization, final RelatedRankWithMemberResponse relatedRank);
 
     @Mapping(target = "tokenAmount", source = "amount")
+    @Mapping(target = "tokenAmount", expression = "java(member.getSumOfTokens())")
     @Mapping(target = "organization", source = "member.organization.name")
     @Mapping(target = "commits", expression = "java(member.getSumOfCommits().orElse(null))")
     @Mapping(target = "issues", expression = "java(member.getSumOfIssues().orElse(null))")
     @Mapping(target = "pullRequests", expression = "java(member.getSumOfPullRequests().orElse(null))")
     @Mapping(target = "reviews", expression = "java(member.getSumOfReviews().orElse(null))")
-    MemberResponse toResponse(final Member member, final Integer rank, final Long amount);
+    MemberResponse toResponse(final Member member, final Integer rank);
 
     @Mapping(target = "gitOrganizations", source = "gitOrganizations", qualifiedByName = "getGitOrganizationNames")
     @Mapping(target = "gitRepos", source = "gitRepos", qualifiedByName = "getGitRepoNames")

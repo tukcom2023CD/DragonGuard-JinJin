@@ -9,8 +9,6 @@ import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 /**
  * @author 김승진
  * @description issue Entity의 서비스 로직을 담당하는 클래스
@@ -33,11 +31,6 @@ public class IssueService implements EntityLoader<Issue, Long> {
     private void findIssueAndUpdateNum(final Member member, final Integer issueNum, final Integer year) {
         Issue issue = issueRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
         issue.updateIssueNum(issueNum);
-    }
-
-
-    public List<Issue> findIssuesByMember(final Member member) {
-        return issueRepository.findAllByMember(member);
     }
 
     @Override
