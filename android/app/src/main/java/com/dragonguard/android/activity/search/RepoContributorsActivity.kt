@@ -83,7 +83,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
     //    검색한 결과가 잘 왔는지 확인
     fun checkContributors(result: RepoContributorsModel) {
-        if (result.git_repo_members != null) {
+        if (result.git_repo_members != null && result.git_repo_members.isNotEmpty()) {
             if (result.git_repo_members[0].additions == null) {
                 count++
                 val handler = Handler(Looper.getMainLooper())

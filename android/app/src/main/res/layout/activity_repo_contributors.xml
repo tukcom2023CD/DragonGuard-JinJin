@@ -68,8 +68,9 @@
                             android:visibility="invisible"
                             android:text="User List"
                             android:fontFamily="@font/ibm_semibold"
+                            android:textSize="17sp"
                             android:textColor="@color/black"
-                            android:gravity="start|center_vertical"
+                            android:gravity="start|bottom"
                             android:layout_marginStart="30dp"/>
 
                     </LinearLayout>
