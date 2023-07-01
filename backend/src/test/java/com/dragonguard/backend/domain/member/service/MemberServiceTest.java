@@ -102,6 +102,8 @@ class MemberServiceTest extends LoginTest {
         em.flush();
         em.clear();
 
+        loginUser = memberRepository.findById(loginUser.getId()).orElseThrow();
+
         commitRepository.save(Commit.builder().year(year).member(loginUser).amount(200).build());
         issueRepository.save(Issue.builder().year(year).member(loginUser).amount(200).build());
         pullRequestRepository.save(PullRequest.builder().year(year).member(loginUser).amount(200).build());
@@ -163,6 +165,9 @@ class MemberServiceTest extends LoginTest {
         //given
         Member member = memberService.getLoginUserWithPersistence();
         String before = member.getWalletAddress();
+
+        em.flush();
+        em.clear();
 
         //when
         String after = "Dragon1234Guard4321JinJin";

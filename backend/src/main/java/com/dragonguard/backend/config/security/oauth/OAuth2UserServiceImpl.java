@@ -59,7 +59,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         if (StringUtils.hasText(user.getWalletAddress()) && !user.getAuthStep().equals(AuthStep.GITHUB_ONLY)) {
             kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
         }
-        kafkaRepositoryClientProducer.send(new KafkaRepositoryRequest(githubId, user.getGithubToken()));
+        kafkaRepositoryClientProducer.send(new KafkaRepositoryRequest(githubId));
 
         return userDetailsMapper.mapToLoginUser(user);
     }
