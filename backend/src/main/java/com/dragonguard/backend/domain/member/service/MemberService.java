@@ -124,8 +124,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public MemberResponse getMember() {
         Member member = getLoginUserWithPersistence();
-        String githubId = member.getGithubId();
-        sendGitRepoAndContributionRequestToKafka(githubId, member.getGithubToken());
         return getMemberResponseWithValidateOrganization(member);
     }
 
@@ -202,6 +200,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private void transactionAndUpdateTier(final Member member) {
+        if (!member.isWalletAddressExists()) return;
+
         blockchainService.sendSmartContractTransaction(member);
         member.validateWalletAddressAndUpdateTier();
     }

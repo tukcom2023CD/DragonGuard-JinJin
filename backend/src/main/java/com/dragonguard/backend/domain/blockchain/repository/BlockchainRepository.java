@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.blockchain.repository;
 
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
+import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.member.entity.Member;
 
 import java.util.List;
@@ -18,4 +19,5 @@ public interface BlockchainRepository {
     boolean existsByMemberId(UUID memberId);
     Blockchain save(Blockchain blockchain);
     Optional<Blockchain> findById(Long id);
+    List<Blockchain> findAllByMemberAndContributeType(Member member, ContributeType contributeType);
 }

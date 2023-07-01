@@ -46,11 +46,12 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         String transactionHash = transferTransaction(request, walletAddress);
         BigInteger amount = transferAndGetBalanceOfTransaction(walletAddress);
 
+        if (checkAdminAndSaveBlockchain(transactionHash, request, member)) return;
+
         if (hasSameAmount(request, amount)) {
             blockchainRepository.save(blockchainMapper.toEntity(amount, member, request, transactionHash));
             return;
         }
-        checkAdminAndSaveBlockchain(transactionHash, request, member);
     }
 
     private long getNumOfNewContributionsWithoutSaved(final ContractRequest request, final UUID memberId) {
@@ -96,10 +97,12 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private void checkAdminAndSaveBlockchain(final String transactionHash, final ContractRequest request, final Member member) {
+    private boolean checkAdminAndSaveBlockchain(final String transactionHash, final ContractRequest request, final Member member) {
         if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
             blockchainRepository.save(blockchainMapper.toEntity(request.getAmount(), member, request, transactionHash));
+            return true;
         }
+        return false;
     }
 
     private boolean hasSameAmount(final ContractRequest request, final BigInteger amount) {
@@ -116,16 +119,14 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         return getBlockchainResponses(member.getId());
     }
 
-    private boolean checkAndTransaction(final Member member, final int contribution, final ContributeType contributeType) {
-        if (contribution <= 0) return true;
+    private void checkAndTransaction(final Member member, final int contribution, final ContributeType contributeType) {
+        if (contribution <= 0) return;
 
         setTransaction(
                 new ContractRequest(
                         contributeType.toString(),
                         BigInteger.valueOf(contribution)),
                 member);
-
-        return false;
     }
 
     public void sendSmartContractTransaction(final Member member) {
@@ -134,9 +135,18 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         int pullRequests = member.getPullRequestSumWithRelation();
         Optional<Integer> reviews = member.getSumOfReviews();
 
-        if (checkAndTransaction(member, commits, ContributeType.COMMIT)) return;
-        if (checkAndTransaction(member, issues, ContributeType.ISSUE)) return;
-        if (checkAndTransaction(member, pullRequests, ContributeType.PULL_REQUEST)) return;
-        reviews.ifPresent(rv -> checkAndTransaction(member, rv, ContributeType.CODE_REVIEW));
+        List<Blockchain> commit = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.COMMIT);
+        List<Blockchain> issue = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.ISSUE);
+        List<Blockchain> pullRequest = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.PULL_REQUEST);
+        List<Blockchain> review = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.CODE_REVIEW);
+
+        if (isValidToTransaction(commits, commit)) checkAndTransaction(member, commits, ContributeType.COMMIT);
+        if (isValidToTransaction(issues, issue)) checkAndTransaction(member, commits, ContributeType.ISSUE);
+        if (isValidToTransaction(pullRequests, pullRequest)) checkAndTransaction(member, commits, ContributeType.PULL_REQUEST);
+        if (isValidToTransaction(reviews.orElse(0), review)) checkAndTransaction(member, commits, ContributeType.CODE_REVIEW);
+    }
+
+    private boolean isValidToTransaction(int commits, List<Blockchain> blockchains) {
+        return commits != blockchains.stream().map(Blockchain::getAmount).mapToLong(BigInteger::intValue).sum();
     }
 }
