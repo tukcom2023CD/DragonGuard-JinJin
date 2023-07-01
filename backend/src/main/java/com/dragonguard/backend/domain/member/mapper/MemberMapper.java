@@ -46,7 +46,7 @@ public interface MemberMapper {
     @Mapping(target = "reviews", expression = "java(member.getSumOfReviews().orElse(null))")
     MemberResponse toResponse(final Member member, final Integer rank, final String organization, final RelatedRankWithMemberResponse relatedRank);
 
-    @Mapping(target = "tokenAmount", source = "amount")
+    @Mapping(target = "rank", source = "rank")
     @Mapping(target = "tokenAmount", expression = "java(member.getSumOfTokens())")
     @Mapping(target = "organization", source = "member.organization.name")
     @Mapping(target = "commits", expression = "java(member.getSumOfCommits().orElse(null))")

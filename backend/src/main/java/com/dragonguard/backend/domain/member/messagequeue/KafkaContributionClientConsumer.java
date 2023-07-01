@@ -36,8 +36,7 @@ public class KafkaContributionClientConsumer implements KafkaConsumer<Contributi
         Member member = memberRepository.findByGithubId(response.getGithubId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        memberClientService.addMemberContribution(member);
-        memberService.transactionAndUpdateTier(member);
+        memberService.updateContributionAndTransaction(member);
     }
 
     @Override

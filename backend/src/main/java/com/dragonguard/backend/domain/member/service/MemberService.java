@@ -64,9 +64,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     private Member saveAndRequestClient(final String githubId, final Role role, final AuthStep authStep) {
         Member member = findMemberOrSaveWithRole(githubId, role, authStep);
-        sendContributionRequestToKafka(githubId);
-        getContributionSumByScraping(githubId);
-        sendGitRepoRequestToKafka(githubId, member.getGithubToken());
+        sendGitRepoAndContributionRequestToKafka(githubId, member.getGithubToken());
         return member;
     }
 
@@ -119,8 +117,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public void updateContributions() {
         Member member = getLoginUserWithPersistence();
-        sendContributionRequestToKafka(member.getGithubId());
-        getContributionSumByScraping(member.getGithubId());
+        sendGitRepoAndContributionRequestToKafka(member.getGithubId(), member.getGithubToken());
 
         if (member.isWalletAddressExists()) transactionAndUpdateTier(member);
     }
@@ -128,8 +125,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public MemberResponse getMember() {
         Member member = getLoginUserWithPersistence();
         String githubId = member.getGithubId();
-        sendContributionRequestToKafka(githubId);
-        getContributionSumByScraping(githubId);
+        sendGitRepoAndContributionRequestToKafka(githubId, member.getGithubToken());
         return getMemberResponseWithValidateOrganization(member);
     }
 
@@ -164,7 +160,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public void updateWalletAddress(final WalletRequest walletRequest) {
         Member member = getLoginUserWithPersistence();
         member.updateWalletAddress(walletRequest.getWalletAddress());
-        sendContributionRequestToKafka(member.getGithubId());
+        sendGitRepoAndContributionRequestToKafka(member.getGithubId(), member.getGithubToken());
     }
 
     private void sendContributionRequestToKafka(final String githubId) {
@@ -189,8 +185,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     private Member scrapeAndGetSavedMember(final String githubId, final Role role, final AuthStep authStep) {
         Member member = saveAndRequestClient(githubId, role, authStep);
-        sendContributionRequestToKafka(githubId);
-        getContributionSumByScraping(githubId);
+        sendGitRepoAndContributionRequestToKafka(githubId, member.getGithubToken());
         return member;
     }
 
@@ -206,9 +201,14 @@ public class MemberService implements EntityLoader<Member, UUID> {
         transactionAndUpdateTier(getLoginUserWithPersistence());
     }
 
-    public void transactionAndUpdateTier(final Member member) {
+    private void transactionAndUpdateTier(final Member member) {
         blockchainService.sendSmartContractTransaction(member);
         member.validateWalletAddressAndUpdateTier();
+    }
+
+    public void updateContributionAndTransaction(final Member member) {
+        transactionAndUpdateTier(member);
+        memberClientService.addMemberContribution(member);
     }
 
     private void getContributionSumByScraping(final String githubId) {
