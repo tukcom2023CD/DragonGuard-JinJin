@@ -166,12 +166,13 @@ class MemberServiceTest extends LoginTest {
         Member member = memberService.getLoginUserWithPersistence();
         String before = member.getWalletAddress();
 
-        em.flush();
-        em.clear();
-
         //when
         String after = "Dragon1234Guard4321JinJin";
         memberService.updateWalletAddress(new WalletRequest(after));
+
+        em.flush();
+        em.clear();
+
         String walletAddress = memberRepository.findById(loginUser.getId()).get().getWalletAddress();
 
         //then

@@ -31,8 +31,6 @@ public class KafkaConsumerConfig {
     private final KafkaConsumerProperties kafkaConsumerProperties;
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
-    @Value("${kafka-timeout}")
-    private Integer timeout;
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
@@ -43,7 +41,6 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaConsumerProperties.getAutoOffsetReset());
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, kafkaConsumerProperties.isAutoCommit());
-        props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, timeout);
         props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, String.class);
 
         return new DefaultKafkaConsumerFactory<>(props);
