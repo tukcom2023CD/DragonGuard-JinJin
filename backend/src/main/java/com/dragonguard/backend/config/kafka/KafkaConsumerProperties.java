@@ -16,6 +16,6 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ConfigurationProperties(prefix = "spring.kafka.consumer")
 public class KafkaConsumerProperties {
     private final String groupId;
-    private final boolean autoCommit;
+    private final boolean enableAutoCommit;
     private final String autoOffsetReset;
 }
