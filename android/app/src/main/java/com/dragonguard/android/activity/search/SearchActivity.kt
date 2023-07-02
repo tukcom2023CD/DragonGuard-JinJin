@@ -424,14 +424,6 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-    private val callback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            startActivity(intent)
-        }
-    }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -293,8 +293,8 @@ class MainActivity : AppCompatActivity() {
                                 finish = true
                             }
                         } else {
-                            if(refreshCount ==0) {
-                                refreshCount = 1
+                            if(refreshCount == 0) {
+                                refreshCount++
                                 refreshCommits()
                             }
                         }
