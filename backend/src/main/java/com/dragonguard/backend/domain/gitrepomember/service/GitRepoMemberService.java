@@ -6,13 +6,12 @@ import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberRe
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
-import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.service.MemberService;
-import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
@@ -85,7 +84,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
     }
 
     private Member getMemberByGitRepoResponse(final GitRepoMemberResponse gitRepoMemberResponse) {
-        return memberService.findMemberOrSave(new MemberRequest(gitRepoMemberResponse.getGithubId()), AuthStep.NONE, gitRepoMemberResponse.getProfileUrl());
+        return memberService.findMemberOrSave(gitRepoMemberResponse.getGithubId(), AuthStep.NONE, gitRepoMemberResponse.getProfileUrl());
     }
 
     public GitRepoMember findByNameAndMemberGithubId(final String gitRepoName, final String githubId) {

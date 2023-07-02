@@ -3,7 +3,6 @@ package com.dragonguard.backend.domain.member.mapper;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
-import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.response.MemberDetailsResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberGitOrganizationResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
@@ -26,10 +25,10 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", imports = {GitRepo.class, GitRepoMember.class, Collectors.class})
 public interface MemberMapper {
-    @Mapping(target = "githubId", source = "memberRequest.githubId")
+    @Mapping(target = "githubId", source = "githubId")
     @Mapping(target = "profileImage", source = "profileUrl")
     @Mapping(target = "authStep", source = "authStep")
-    Member toEntity(final MemberRequest memberRequest, final AuthStep authStep, final String profileUrl);
+    Member toEntity(final String githubId, final AuthStep authStep, final String profileUrl);
 
     Member toEntity(final String githubId, final Role role, final AuthStep authStep);
 

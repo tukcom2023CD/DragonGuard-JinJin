@@ -73,11 +73,11 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return loadEntity(member.getId());
     }
 
-    public Member findMemberOrSave(final MemberRequest memberRequest, final AuthStep authStep, String profileUrl) {
-        if (memberRepository.existsByGithubId(memberRequest.getGithubId())) {
-            return getMemberByGithubId(memberRequest.getGithubId());
+    public Member findMemberOrSave(final String githubId, final AuthStep authStep, String profileUrl) {
+        if (memberRepository.existsByGithubId(githubId)) {
+            return getMemberByGithubId(githubId);
         }
-        Member member = memberRepository.save(memberMapper.toEntity(memberRequest, authStep, profileUrl));
+        Member member = memberRepository.save(memberMapper.toEntity(githubId, authStep, profileUrl));
         return loadEntity(member.getId());
     }
 
@@ -91,7 +91,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private Member findMemberAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
-        Member member = findByGithubIdOrSaveWithAuthStep(contributionKafkaResponse.getGithubId());
+        Member member = findMemberOrSave(contributionKafkaResponse.getGithubId(), AuthStep.NONE, contributionKafkaResponse.getProfileImage());
         member.updateNameAndImage(contributionKafkaResponse.getName(), contributionKafkaResponse.getProfileImage());
         return member;
     }

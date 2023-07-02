@@ -24,7 +24,6 @@ import com.dragonguard.backend.domain.gitrepomember.dto.response.Week;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
-import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.global.GithubClient;
@@ -254,7 +253,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                             clientResponse.getTotal(),
                             additions.getContributionByKey(clientResponse),
                             deletions.getContributionByKey(clientResponse),
-                            memberService.findMemberOrSave(new MemberRequest(githubId), AuthStep.NONE, profileUrl).isServiceMember());
+                            memberService.findMemberOrSave(githubId, AuthStep.NONE, profileUrl).isServiceMember());
                 }).collect(Collectors.toList());
     }
 
