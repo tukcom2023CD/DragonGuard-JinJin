@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dragonguard.android.activity.search.RepoContributorsActivity
 import com.dragonguard.android.databinding.GitOrganizationListBinding
 import com.dragonguard.android.model.detail.GitOrganization
 
@@ -29,7 +30,11 @@ class ClientGitOrgAdapter (private val datas : List<GitOrganization>, private va
 
             binding.gitOrganizationName.text = data.name
             binding.gitOrgImg.setOnClickListener {
-
+                Intent(context, ClientGitOrgAdapter::class.java).apply{
+                    putExtra("orgName", data.name)
+                    putExtra("token", token)
+                    putExtra("img", data.profile_image)
+                }.run{context.startActivity(this)}
             }
         }
     }
