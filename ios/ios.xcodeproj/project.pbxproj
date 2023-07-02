@@ -44,6 +44,9 @@
 		3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */; };
 		3B3B563429A8DA12005034FC /* CompareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563329A8DA12005034FC /* CompareService.swift */; };
 		3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */; };
+		3B3BBE052A516692009963D9 /* YourProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3BBE042A516692009963D9 /* YourProfileViewModel.swift */; };
+		3B3BBE072A5166FB009963D9 /* YourProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3BBE062A5166FB009963D9 /* YourProfileModel.swift */; };
+		3B3BBE092A516784009963D9 /* YourProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3BBE082A516784009963D9 /* YourProfileService.swift */; };
 		3B3CE9DC29B47EDF00B2594B /* UserDBId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3CE9DB29B47EDF00B2594B /* UserDBId.swift */; };
 		3B3D2E0929D5C0B8001A702C /* OrganizationCertificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0829D5C0B8001A702C /* OrganizationCertificationController.swift */; };
 		3B3D2E0B29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D2E0A29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift */; };
@@ -214,6 +217,9 @@
 		3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipLoginCheckview.swift; sourceTree = "<group>"; };
 		3B3B563329A8DA12005034FC /* CompareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareService.swift; sourceTree = "<group>"; };
 		3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoModel.swift; sourceTree = "<group>"; };
+		3B3BBE042A516692009963D9 /* YourProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourProfileViewModel.swift; sourceTree = "<group>"; };
+		3B3BBE062A5166FB009963D9 /* YourProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourProfileModel.swift; sourceTree = "<group>"; };
+		3B3BBE082A516784009963D9 /* YourProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourProfileService.swift; sourceTree = "<group>"; };
 		3B3CE9DB29B47EDF00B2594B /* UserDBId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDBId.swift; sourceTree = "<group>"; };
 		3B3D2E0829D5C0B8001A702C /* OrganizationCertificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationCertificationController.swift; sourceTree = "<group>"; };
 		3B3D2E0A29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OraganizationTypeTableViewAndCell.swift; sourceTree = "<group>"; };
@@ -377,6 +383,7 @@
 				3B6E075929ABBD64002676DF /* CompareUserModel.swift */,
 				3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */,
 				3B18AA1D29A7B1E90051C086 /* KlipModel.swift */,
+				3B3BBE062A5166FB009963D9 /* YourProfileModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -489,6 +496,7 @@
 				3BAEA776299CFD090054DC5D /* PostService.swift */,
 				3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */,
 				A30BA46F29841C97008B594E /* SearchPageService.swift */,
+				3B3BBE082A516784009963D9 /* YourProfileService.swift */,
 			);
 			path = Refactcoring;
 			sourceTree = "<group>";
@@ -664,6 +672,7 @@
 				3B9CF3D5298FB5A700495D35 /* RankingViewModel.swift */,
 				3B2E0DCE2A43CB5700E6A7AD /* BlockchainViewModel.swift */,
 				3B060FD529911158000B2518 /* MainViewModel.swift */,
+				3B3BBE042A516692009963D9 /* YourProfileViewModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -956,6 +965,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B6E075A29ABBD64002676DF /* CompareUserModel.swift in Sources */,
+				3B3BBE052A516692009963D9 /* YourProfileViewModel.swift in Sources */,
 				3B7BFF7129CBDE7C00A2F3F4 /* AddOrganizationController.swift in Sources */,
 				3B9CF3D2298F997B00495D35 /* UserInfoModel.swift in Sources */,
 				3B2E0DD12A43CB9300E6A7AD /* BlockChainService.swift in Sources */,
@@ -980,6 +990,7 @@
 				3B43B5A329B87FB100EBB379 /* UserDBIdModel.swift in Sources */,
 				3BEFEC3329D3E1A100DBBCA8 /* AddOrganizationService.swift in Sources */,
 				3B3D2E0F29D5E252001A702C /* OrganizationSearchTableViewCell.swift in Sources */,
+				3B3BBE092A516784009963D9 /* YourProfileService.swift in Sources */,
 				3BE64A0E2A3E03E4005D9F9E /* BlockChainListTableViewCell.swift in Sources */,
 				3B110FED2A23B9AC008C99F0 /* SearchViewTableViewCell.swift in Sources */,
 				3BDF0FA529A619F900816837 /* LoginViewModel.swift in Sources */,
@@ -991,6 +1002,7 @@
 				3B2E0DCD2A438F5800E6A7AD /* ChooseUserTableViewCell.swift in Sources */,
 				3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */,
 				3BEFEC3529D3FB9500DBBCA8 /* EmailService.swift in Sources */,
+				3B3BBE072A5166FB009963D9 /* YourProfileModel.swift in Sources */,
 				3BE649ED2A3D9184005D9F9E /* Extension.swift in Sources */,
 				3BFF623329CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift in Sources */,
 				3B9756F9298A775900F27094 /* APIURL.swift in Sources */,

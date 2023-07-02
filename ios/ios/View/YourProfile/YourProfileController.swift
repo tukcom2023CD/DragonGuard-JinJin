@@ -14,6 +14,7 @@ final class YourProfileController: UIViewController{
     var userName: String?
     private var listCount: Int?
     private let disposeBag = DisposeBag()
+    private let viewModel = YourProfileViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -194,16 +195,28 @@ final class YourProfileController: UIViewController{
     
     // MARK:
     private func getData(){
-        self.userName = "JJ"
-        let rank = 2
-        let commit = 2
-        let issue = 2
-        let repo = ["aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa"]
-        listCount = repo.count
+//        self.userName = "JJ"
+//        let rank = 2
+//        let commit = 2
+//        let issue = 2
+//        let repo = ["aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa"]
+//        listCount = repo.count
         
-        addUI()
-        contributorView.inputData(ranking: rank, commit: commit, issue: issue)
-        repoListView.inputData(img: "", userName: self.userName ?? "a", repoName: repo, height: view.safeAreaLayoutGuide.layoutFrame.height)
+        guard let userName = userName else { return }
+        viewModel.getData(githubId: userName)
+            .subscribe(onNext:{ data in
+                self.listCount = data.git_repos?.count
+                self.addUI()
+                self.contributorView.inputData(ranking: data.rank ?? 0,
+                                               commit: data.commits ?? 0,
+                                               issue: data.issues ?? 0)
+                self.repoListView.inputData(img: data.profile_image ?? "",
+                                            userName: self.userName ?? "none",
+                                            repoName: data.git_repos ?? [],
+                                            height: self.view.safeAreaLayoutGuide.layoutFrame.height)
+            })
+            .disposed(by: disposeBag)
+        
         
     }
     

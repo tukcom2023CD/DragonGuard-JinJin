@@ -278,6 +278,7 @@ extension RepoDetailController: UICollectionViewDelegate, UICollectionViewDataSo
         return cell
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return userInfo?.git_repo_members?.count ?? 0 }
         
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -290,6 +291,11 @@ extension RepoDetailController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.row)
         collectionView.deselectItem(at: indexPath, animated: true)
+        
+        let nextPage = YourProfileController()
+        nextPage.userName = self.userInfo?.git_repo_members?[indexPath.row].github_id ?? ""
+        nextPage.modalPresentationStyle = .fullScreen
+        present(nextPage, animated: false)
     }
 }
 
