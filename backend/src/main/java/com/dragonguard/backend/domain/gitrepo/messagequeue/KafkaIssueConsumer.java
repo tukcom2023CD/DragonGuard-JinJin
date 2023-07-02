@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +26,9 @@ public class KafkaIssueConsumer implements KafkaConsumer<ClosedIssueKafkaRespons
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.issues", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(String message) {
+    public void consume(String message, Acknowledgment acknowledgment) {
         gitRepoService.updateClosedIssues(readValue(message));
+        acknowledgment.acknowledge();
     }
 
     @Override
