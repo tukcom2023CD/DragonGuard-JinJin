@@ -7,7 +7,7 @@ import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsModel
-import com.dragonguard.android.model.detail.UserDetailModel
+import com.dragonguard.android.model.detail.ClientDetailModel
 import com.dragonguard.android.model.detail.UserProfileModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
@@ -98,6 +98,18 @@ class ApiRepository {
             return userResult
         }
         return userResult
+    }
+
+    fun getClientDetails(token: String): ClientDetailModel? {
+        val userDetails = api.getMemberDetails("Bearer $token")
+        return try {
+            val result = userDetails.execute()
+            Log.d("result", "client 정보 요청 결과 : ${result.code()}")
+            result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "client 정보 요청 에러 : ${e.message}")
+            return null
+        }
     }
 
     //Repository의 기여자들의 정보를 받아오기 위한 함수
@@ -410,18 +422,6 @@ class ApiRepository {
         }
     }
 
-    fun userDetail(githubId: String, token: String): UserDetailModel {
-        val details = UserDetailModel(null, null, null)
-        val userDetails = api.getUserDetail(githubId, "Bearer $token")
-        return try {
-            val result = userDetails.execute()
-            Log.d("error", "사용자 $githubId 의 상세조회 결과 ${result.code()}")
-            return result.body()!!
-        } catch (e: Exception) {
-            Log.d("error", "사용자 $githubId 의 상세조회 실패: ${e.message} ")
-            return details
-        }
-    }
 
     fun checkAdmin(token: String): Boolean {
         val check = api.getPermissionState("Bearer $token")
@@ -478,10 +478,10 @@ class ApiRepository {
         val repoList = api.getOrgRepoList(orgName, "Bearer $token")
         return try {
             val result = repoList.execute()
-            Log.d("result", "조직의 레포 리스트 조회 결과: ${result.code()}")
+            Log.d("result", "git org 레포 리스트 조회 결과: ${result.code()}")
             result.body()
         } catch (e: Exception) {
-            Log.d("error", "조직의 레포 리스트 조회 실패: ${e.message}")
+            Log.d("error", "git org 레포 리스트 조회 실패: ${e.message}")
             null
         }
     }
@@ -555,5 +555,20 @@ class ApiRepository {
             return null
         }
         return tokenHistoryResult
+    }
+
+    fun manualUserInfo(token: String): UserInfoModel {
+        val userInfo = api.userInfoUpdate("Bearer $token")
+        var userResult = UserInfoModel(null, null, null, null, null, null, null, null,null, null, null,
+            null, null, null, null, null, null)
+        try {
+            val result = userInfo.execute()
+            Log.d("result", "사용자 정보 업데이트 결과 : ${result.code()}")
+            userResult = result.body()!!
+        } catch (e: Exception) {
+            Log.d("error", "사용자 정보 업데이트 에러 : ${e.message}")
+            return userResult
+        }
+        return userResult
     }
 }
