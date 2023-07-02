@@ -257,9 +257,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
         contributionService.scrapingCommits(member.getGithubId());
         memberClientService.addMemberGitRepoAndGitOrganization(member);
-        updateContributionAndTransaction(member);
 
-        if (member.isWalletAddressExists()) transactionAndUpdateTier(member);
+        if (member.isWalletAddressExists()) updateContributionAndTransaction(member);
         return getMemberResponseWithValidateOrganization(member);
     }
 }
