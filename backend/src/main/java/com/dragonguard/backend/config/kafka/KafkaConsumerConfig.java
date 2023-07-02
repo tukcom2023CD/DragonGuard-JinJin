@@ -34,7 +34,6 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 2000);
         props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, String.class);
 
         return new DefaultKafkaConsumerFactory<>(props);
