@@ -88,7 +88,6 @@ final class BlockChainListController: UIViewController{
             })
             .disposed(by: disposeBag)
         
-        
         clickedBackBtn()
     }
         
