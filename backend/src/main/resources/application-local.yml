@@ -47,6 +47,8 @@ spring:
     consumer:
       group-id: gitrank
       enable-auto-commit: false
+    listener:
+      ack-mode: manual
 
   batch:
     jdbc:
