@@ -26,7 +26,7 @@ public class KafkaEmailConsumer implements KafkaConsumer<KafkaEmail> {
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.email", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.email", groupId = "from.backend.email", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message, Acknowledgment acknowledgment) {
         KafkaEmail kafkaEmail = readValue(message);
         emailService.sendEmail(kafkaEmail.getMemberEmail(), kafkaEmail.getRandom());

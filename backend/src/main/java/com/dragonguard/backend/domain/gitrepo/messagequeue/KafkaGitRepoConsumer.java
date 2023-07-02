@@ -31,7 +31,7 @@ public class KafkaGitRepoConsumer implements KafkaConsumer<GitRepoKafkaResponse>
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.git-repos", groupId = "from.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message, Acknowledgment acknowledgment) {
         GitRepoKafkaResponse response = readValue(message);
 

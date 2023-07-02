@@ -29,7 +29,7 @@ public class KafkaRepositoryClientConsumer implements KafkaConsumer<RepositoryCl
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.repository.client", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.repository.client", groupId = "from.backend.repository.client", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message, Acknowledgment acknowledgment) {
         RepositoryClientResponse response = readValue(message);
         Member member = memberRepository.findByGithubId(response.getGithubId())

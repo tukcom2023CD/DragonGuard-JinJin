@@ -34,7 +34,7 @@ public class KafkaResultScrapeConsumer implements KafkaConsumer<ResultKafkaRespo
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.result", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.result", groupId = "from.backend.result", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message, Acknowledgment acknowledgment) {
         ResultKafkaResponse resultResponse = readValue(message);
 

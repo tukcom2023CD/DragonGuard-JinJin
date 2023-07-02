@@ -25,7 +25,7 @@ public class KafkaIssueConsumer implements KafkaConsumer<ClosedIssueKafkaRespons
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.issues", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.issues", groupId = "from.backend.issues", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message, Acknowledgment acknowledgment) {
         gitRepoService.updateClosedIssues(readValue(message));
         acknowledgment.acknowledge();

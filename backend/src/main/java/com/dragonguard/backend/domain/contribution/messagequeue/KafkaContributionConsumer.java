@@ -25,7 +25,7 @@ public class KafkaContributionConsumer implements KafkaConsumer<ContributionKafk
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.contribution", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.contribution", groupId = "from.backend.contribution", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message, Acknowledgment acknowledgment) {
         memberService.addMemberContributionsAndUpdate(readValue(message));
         acknowledgment.acknowledge();

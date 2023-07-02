@@ -25,7 +25,7 @@ public class KafkaSparkLineConsumer implements KafkaConsumer<SparkLineKafka> {
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.spark-line", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.spark-line", groupId = "from.backend.spark-line", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message, Acknowledgment acknowledgment) {
         SparkLineKafka sparkLine = readValue(message);
         gitRepoService.updateSparkLine(sparkLine.getId(), sparkLine.getGithubToken());
