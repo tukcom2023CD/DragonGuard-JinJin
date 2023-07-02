@@ -155,7 +155,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public void updateWalletAddress(final WalletRequest walletRequest) {
         Member member = getLoginUserWithPersistence();
         member.updateWalletAddress(walletRequest.getWalletAddress());
-        sendGitRepoAndContributionRequestToKafka(member.getGithubId());
     }
 
     private void sendContributionRequestToKafka(final String githubId) {
@@ -179,15 +178,12 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private Member scrapeAndGetSavedMember(final String githubId, final Role role, final AuthStep authStep) {
-        Member member = saveAndRequestClient(githubId, role, authStep);
-        sendGitRepoAndContributionRequestToKafka(githubId);
-        return member;
+        return saveAndRequestClient(githubId, role, authStep);
     }
 
     public MemberGitReposAndGitOrganizationsResponse findMemberDetails() {
         Member member = getLoginUserWithPersistence();
         String githubId = member.getGithubId();
-        sendGitRepoAndContributionRequestToKafka(githubId);
 
         return getMemberGitReposAndGitOrganizations(githubId, member);
     }
