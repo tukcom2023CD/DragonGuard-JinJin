@@ -87,6 +87,7 @@ class TokenHistoryActivity : AppCompatActivity() {
                             val resultRepo = resultRepoDeferred.await()
                             resultRepo?.let { it->
                                 binding.tokenContributeList.visibility = View.INVISIBLE
+                                item.isVisible = false
                                 initRecycler(it)
                             }
                         }
