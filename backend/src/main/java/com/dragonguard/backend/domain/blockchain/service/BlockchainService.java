@@ -96,6 +96,8 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         int pullRequestSum = member.getPullRequestSumWithRelation();
         int reviewSum = member.getSumOfReviews().orElse(0);
 
+        if (commitSum + issueSum + pullRequestSum + reviewSum == contribution) return;
+
         applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum, flag, contribution);
     }
 
@@ -112,18 +114,26 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         List<Blockchain> pullRequest = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.PULL_REQUEST);
         List<Blockchain> review = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.CODE_REVIEW);
 
+        int savedSum = blockchainRepository.findAllByMemberId(member.getId()).stream()
+                .map(Blockchain::getAmount)
+                .mapToInt(BigInteger::intValue)
+                .sum();
+
         long newCommit = getNewContribution(commitSum, commit);
-        if (newCommit > 0) setTransaction(member, newCommit, ContributeType.COMMIT);
-
         long newIssue = getNewContribution(issueSum, issue);
-        if (newIssue > 0) setTransaction(member, newIssue, ContributeType.ISSUE);
-
         long newPullRequest = getNewContribution(pullRequestSum, pullRequest);
-        if (newPullRequest > 0) setTransaction(member, newPullRequest, ContributeType.PULL_REQUEST);
-
-        if (newCommit + newIssue + newPullRequest + reviewSum == contribution) return;
         long newCodeReview = getNewContribution(reviewSum, review);
-        if ((flag && newCodeReview > 0) || (review.isEmpty() && newCodeReview > 0)) setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
+
+        if (newCommit > 0) setTransaction(member, newCommit, ContributeType.COMMIT);
+        if (newCommit + savedSum == contribution) return;
+
+        if (newIssue > 0) setTransaction(member, newIssue, ContributeType.ISSUE);
+        if (newCommit + newIssue + savedSum == contribution) return;
+
+        if (newPullRequest > 0) setTransaction(member, newPullRequest, ContributeType.PULL_REQUEST);
+        if (newCommit + newIssue + newPullRequest + savedSum == contribution) return;
+
+        if ((flag && newCodeReview > 0) || (review.isEmpty() && reviewSum > 0)) setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
     }
 
     private long getNewContribution(final int contribution, final List<Blockchain> blockchains) {
