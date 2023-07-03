@@ -107,7 +107,7 @@ public class Member implements Auditable {
     private Integer sumOfCodeReviews;
 
     @Formula("(SELECT COALESCE(sum(h.amount), 0) FROM blockchain b left join history h ON b.member_id = id)")
-    private Integer sumOfTokens;
+    private Long sumOfTokens;
 
     @Builder
     public Member(String name, String githubId, String walletAddress, String profileImage, Role role, AuthStep authStep) {
