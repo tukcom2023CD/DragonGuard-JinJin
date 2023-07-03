@@ -104,7 +104,7 @@ public class Member implements Auditable {
     private Integer sumOfPullRequests;
 
     @Formula("(SELECT COALESCE(sum(cr.amount), 0) FROM code_review cr WHERE cr.member_id = id)")
-    private Integer sumOfReviews;
+    private Integer sumOfCodeReviews;
 
     @Formula("(SELECT COALESCE(sum(b.amount), 0) FROM blockchain b WHERE b.member_id = id)")
     private Long sumOfTokens;
@@ -254,8 +254,8 @@ public class Member implements Auditable {
         return "";
     }
 
-    public Optional<Integer> getSumOfReviews() {
-        return Optional.ofNullable(sumOfReviews);
+    public Optional<Integer> getSumOfCodeReviews() {
+        return Optional.ofNullable(sumOfCodeReviews);
     }
 
     public Optional<Integer> getSumOfCommits() {

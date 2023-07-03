@@ -78,7 +78,7 @@ class MemberServiceTest extends LoginTest {
         Integer issue = loginUser.getSumOfIssues().orElse(0);
         Integer commit = loginUser.getSumOfCommits().orElse(0);
         Integer pullRequest = loginUser.getSumOfPullRequests().orElse(0);
-        Integer review = loginUser.getSumOfReviews().orElse(0);
+        Integer review = loginUser.getSumOfCodeReviews().orElse(0);
 
         //when
         memberService.updateContributions();
@@ -87,7 +87,7 @@ class MemberServiceTest extends LoginTest {
         assertThat(loginUser.getIssueSumWithRelation()).isNotEqualTo(issue);
         assertThat(loginUser.getCommitSumWithRelation()).isNotEqualTo(commit);
         assertThat(loginUser.getPullRequestSumWithRelation()).isNotEqualTo(pullRequest);
-        assertThat(loginUser.getSumOfReviews().orElse(0)).isNotEqualTo(review);
+        assertThat(loginUser.getSumOfCodeReviews().orElse(0)).isNotEqualTo(review);
     }
 
     @Test
