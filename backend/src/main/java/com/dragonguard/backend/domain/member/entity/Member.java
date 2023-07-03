@@ -75,6 +75,7 @@ public class Member implements Auditable {
     private Organization organization;
 
     @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "member_role")
     @ElementCollection(fetch = FetchType.EAGER)
     private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
 
