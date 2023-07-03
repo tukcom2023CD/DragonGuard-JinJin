@@ -270,7 +270,7 @@ public class Member implements Auditable {
         return Optional.ofNullable(sumOfPullRequests);
     }
 
-    private void deleteContributions() {
+    public void deleteContributions() {
         this.commit.delete();
         this.pullRequest.delete();
         this.issue.delete();

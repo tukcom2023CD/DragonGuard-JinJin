@@ -4,7 +4,6 @@ import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaReques
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
-import com.dragonguard.backend.domain.blockchain.entity.History;
 import com.dragonguard.backend.domain.blockchain.mapper.BlockchainMapper;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
@@ -97,6 +96,14 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     public void sendSmartContractTransaction(final Member member) {
+        long blockchainSum = blockchainRepository.findByMemberId(member.getId()).stream().mapToLong(Blockchain::getSumOfAmount).sum();
+        long contributionSum = member.getContributionSum().longValue();
+        if (blockchainSum == contributionSum) return;
+        if (blockchainSum > contributionSum) {
+            member.deleteContributions();
+            return;
+        }
+
         int commitSum = member.getCommitSumWithRelation();
         int issueSum = member.getIssueSumWithRelation();
         int pullRequestSum = member.getPullRequestSumWithRelation();
@@ -117,22 +124,24 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         Blockchain pullRequest = getBlockchainOfType(member, ContributeType.PULL_REQUEST);
         Blockchain codeReview = getBlockchainOfType(member, ContributeType.CODE_REVIEW);
 
-        long newCommit = getNewContribution(commitSum, commit.getHistories());
-        long newIssue = getNewContribution(issueSum, issue.getHistories());
-        long newPullRequest = getNewContribution(pullRequestSum, pullRequest.getHistories());
-        long newCodeReview = getNewContribution(codeReviewSum, codeReview.getHistories());
+        long newCommit = getNewContribution(commitSum, commit);
+        long newIssue = getNewContribution(issueSum, issue);
+        long newPullRequest = getNewContribution(pullRequestSum, pullRequest);
+        long newCodeReview = getNewContribution(codeReviewSum, codeReview);
 
-        if (commit.isNewHistory(commitSum)) sendRequestToKafka(member.getId(), newCommit, ContributeType.COMMIT, commit.getId());
+        UUID memberId = member.getId();
 
-        if (issue.isNewHistory(issueSum)) sendRequestToKafka(member.getId(), newIssue, ContributeType.ISSUE, issue.getId());
+        if (commit.isNewHistory(commitSum)) sendRequestToKafka(memberId, newCommit, ContributeType.COMMIT, commit.getId());
 
-        if (pullRequest.isNewHistory(pullRequestSum)) sendRequestToKafka(member.getId(), newPullRequest, ContributeType.PULL_REQUEST, pullRequest.getId());
+        if (issue.isNewHistory(issueSum)) sendRequestToKafka(memberId, newIssue, ContributeType.ISSUE, issue.getId());
 
-        if (codeReview.isNewHistory(codeReviewSum)) sendRequestToKafka(member.getId(), newCodeReview, ContributeType.CODE_REVIEW, codeReview.getId());
+        if (pullRequest.isNewHistory(pullRequestSum)) sendRequestToKafka(memberId, newPullRequest, ContributeType.PULL_REQUEST, pullRequest.getId());
+
+        if (codeReview.isNewHistory(codeReviewSum)) sendRequestToKafka(memberId, newCodeReview, ContributeType.CODE_REVIEW, codeReview.getId());
     }
 
-    private long getNewContribution(final int contribution, final List<History> histories) {
-        return contribution - histories.stream().map(History::getAmount).mapToLong(BigInteger::longValue).sum();
+    private long getNewContribution(final int contribution, final Blockchain blockchain) {
+        return contribution - blockchain.getSumOfAmount();
     }
 
     private Blockchain getBlockchainOfType(Member member, ContributeType contributeType) {
