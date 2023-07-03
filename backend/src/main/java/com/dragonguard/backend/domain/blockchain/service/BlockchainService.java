@@ -114,7 +114,8 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         List<Blockchain> pullRequest = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.PULL_REQUEST);
         List<Blockchain> review = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.CODE_REVIEW);
 
-        int savedSum = blockchainRepository.findAllByMemberId(member.getId()).stream()
+        List<Blockchain> blockchains = blockchainRepository.findAllByMemberId(member.getId());
+        int savedSum = blockchains.stream()
                 .map(Blockchain::getAmount)
                 .mapToInt(BigInteger::intValue)
                 .sum();
@@ -133,6 +134,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         if (newPullRequest > 0) setTransaction(member, newPullRequest, ContributeType.PULL_REQUEST);
         if (newCommit + newIssue + newPullRequest + savedSum == contribution) return;
 
+        if (blockchains.size() == member.getContributionSize() || newCommit + newIssue + newPullRequest + savedSum == member.getContribution()) return;
         if ((flag && newCodeReview > 0) || (review.isEmpty() && reviewSum > 0)) setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
     }
 

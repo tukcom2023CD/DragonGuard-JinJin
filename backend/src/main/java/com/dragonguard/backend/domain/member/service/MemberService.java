@@ -85,7 +85,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Integer contribution = contributionKafkaResponse.getContribution();
         if (isContributionEmpty(member, contribution)) return;
 
-        member.updateMemberContribution(new MemberContribution(contribution));
+        member.updateMemberContribution(contribution);
         sendTransactionIfWalletAddressValid(member, contribution);
     }
 
@@ -187,7 +187,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public void updateContributionAndTransaction(final Member member) {
         memberClientService.addMemberContribution(member);
-        member.updateSumOfReviewsWithCalculation();
         if (StringUtils.hasText(member.getWalletAddress()) && !member.getAuthStep().equals(AuthStep.GITHUB_ONLY)) {
             transactionAndUpdateTier(member, true);
             getContributionSumByScraping(member.getGithubId());
