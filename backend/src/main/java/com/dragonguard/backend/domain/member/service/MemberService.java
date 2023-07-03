@@ -224,10 +224,10 @@ public class MemberService implements EntityLoader<Member, UUID> {
         kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
     }
 
-    private boolean isContributionEmpty(final Member member, final Integer contribution) {
-        if (member.getSumOfTokens().intValue() == contribution.intValue()) return true;
-        if (member.getContributionSumWithoutReviews() + member.getSumOfReviews().orElse(0).intValue() <= contribution.intValue()) return true;
-        return false;
+    private boolean isContributionEmpty(final Member member, final int contribution) {
+        if (member.getSumOfTokens().intValue() == contribution) return true;
+        int contributionSum = member.getContributionSumWithoutReviews() + member.getSumOfReviews().orElse(0);
+        return contributionSum == contribution;
     }
 
     public MemberGitOrganizationRepoResponse getMemberGitOrganizationRepo(final String gitOrganizationName) {

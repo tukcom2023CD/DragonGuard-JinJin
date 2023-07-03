@@ -42,10 +42,13 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         String transactionHash = transferTransaction(contribution, contributeType, walletAddress);
         BigInteger amount = transferAndGetBalanceOfTransaction(walletAddress);
 
-        if (checkAdminAndSaveBlockchain(transactionHash, contribution, contributeType, member)) return;
-
         if (hasSameAmount(contribution, amount)) {
             blockchainRepository.save(blockchainMapper.toEntity(amount, member, contributeType, transactionHash));
+            return;
+        }
+
+        if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
+            blockchainRepository.save(blockchainMapper.toEntity(BigInteger.valueOf(contribution), member, contributeType, transactionHash));
         }
     }
 
@@ -73,16 +76,8 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private boolean checkAdminAndSaveBlockchain(final String transactionHash, final long contribution, final ContributeType contributeType, final Member member) {
-        if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
-            blockchainRepository.save(blockchainMapper.toEntity(BigInteger.valueOf(contribution), member, contributeType, transactionHash));
-            return true;
-        }
-        return false;
-    }
-
     private boolean hasSameAmount(final long contribution, final BigInteger amount) {
-        return amount.longValue() == contribution;
+        return contribution == amount.longValue();
     }
 
     public List<BlockchainResponse> updateAndGetBlockchainInfo() {
