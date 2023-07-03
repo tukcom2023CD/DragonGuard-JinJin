@@ -135,18 +135,17 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
         if (newPullRequest > 0) setTransaction(member, newPullRequest, ContributeType.PULL_REQUEST);
 
-        if (newCodeReview == 0) return;
+        if (newCodeReview <= 0) return;
 
-        if (review.isEmpty() && newCodeReview > 0) {
+        if (review.isEmpty() || flag && (member.getContributionSize() != null && blockchains.size() < member.getContributionSize())) {
             setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
             return;
         }
 
         if (newCommit + newIssue + newPullRequest + savedSum == contribution ||
-                (member.getContributionSize() != null && blockchains.size() == member.getContributionSize()) ||
                 (member.getContribution() != null && newCommit + newIssue + newPullRequest + savedSum == member.getContribution())) return;
 
-        if ((flag && newCodeReview > 0)) setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
+        setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
     }
 
     private long getNewContribution(final int contribution, final List<Blockchain> blockchains) {
