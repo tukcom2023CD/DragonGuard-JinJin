@@ -160,6 +160,9 @@ public class Member implements Auditable {
                 .map(Blockchain::getAmount)
                 .mapToLong(b -> Long.parseLong(b.toString()))
                 .sum();
+
+        if (amount < 0) deleteContributions();
+
         this.tier = checkTier(amount);
     }
 
@@ -258,8 +261,9 @@ public class Member implements Auditable {
         this.commits.forEach(Commit::delete);
         this.pullRequests.forEach(PullRequest::delete);
         this.issues.forEach(Issue::delete);
+        this.blockchains.forEach(Blockchain::delete);
         this.sumOfReviews = 0;
-        updateTier();
+        this.tier = Tier.SPROUT;
     }
 
     public boolean validateWalletAddressAndUpdateTier() {
