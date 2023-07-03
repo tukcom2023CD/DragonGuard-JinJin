@@ -146,7 +146,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
         kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
     }
 
-
     @Transactional(readOnly = true)
     public List<MemberRankResponse> getMemberRankingByOrganization(final Long organizationId, final Pageable pageable) {
         return memberRepository.findRankingByOrganization(organizationId, pageable);
@@ -208,13 +207,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private void sendGitRepoAndContributionRequestToKafka(final String githubId) {
-        getContributionSumByScraping(githubId);
-        sendGitRepoRequestToKafka(githubId);
         sendContributionRequestToKafka(githubId);
-    }
-
-    private void sendGitRepoRequestToKafka(final String githubId) {
-        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
     }
 
     private boolean isContributionEmpty(final Member member, final int contribution) {
