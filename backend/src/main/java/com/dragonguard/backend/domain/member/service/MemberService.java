@@ -142,11 +142,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
                 organizationRepository.findRankingByMemberId(memberId));
     }
 
-    private Member findByGithubIdOrSaveWithAuthStep(final String githubId) {
-        return memberRepository.findByGithubId(githubId)
-                .orElse(scrapeAndGetSavedMember(githubId, Role.ROLE_USER, AuthStep.NONE));
-    }
-
     @Transactional(readOnly = true)
     public List<MemberRankResponse> getMemberRanking(final Pageable pageable) {
         return memberRepository.findRanking(pageable);
@@ -255,7 +250,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public MemberResponse updateContributionsAndGetProfile() {
         Member member = getLoginUserWithPersistence();
 
-        contributionService.scrapingCommits(member.getGithubId());
+        getContributionSumByScraping(member.getGithubId());
         memberClientService.addMemberGitRepoAndGitOrganization(member);
 
         if (member.isWalletAddressExists()) updateContributionAndTransaction(member);

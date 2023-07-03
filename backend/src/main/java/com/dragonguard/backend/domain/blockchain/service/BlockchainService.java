@@ -146,19 +146,26 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum);
     }
 
-    private void applyTransactions(Member member, int commitSum, int issueSum, int pullRequestSum, int reviewSum) {
+    private void applyTransactions(final Member member, final int commitSum, final int issueSum, final int pullRequestSum, final int reviewSum) {
         List<Blockchain> commit = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.COMMIT);
         List<Blockchain> issue = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.ISSUE);
         List<Blockchain> pullRequest = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.PULL_REQUEST);
         List<Blockchain> review = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.CODE_REVIEW);
 
-        if (isValidToTransaction(commitSum, commit)) checkAndTransaction(member, commitSum, ContributeType.COMMIT);
-        if (isValidToTransaction(issueSum, issue)) checkAndTransaction(member, issueSum, ContributeType.ISSUE);
-        if (isValidToTransaction(pullRequestSum, pullRequest)) checkAndTransaction(member, pullRequestSum, ContributeType.PULL_REQUEST);
-        if (isValidToTransaction(reviewSum, review)) checkAndTransaction(member, reviewSum, ContributeType.CODE_REVIEW);
+        long newCommit = getNewContribution(commitSum, commit);
+        if (newCommit > 0) checkAndTransaction(member, commitSum, ContributeType.COMMIT);
+
+        long newIssue = getNewContribution(issueSum, issue);
+        if (newIssue > 0) checkAndTransaction(member, issueSum, ContributeType.ISSUE);
+
+        long newPullRequest = getNewContribution(pullRequestSum, pullRequest);
+        if (newPullRequest > 0) checkAndTransaction(member, pullRequestSum, ContributeType.PULL_REQUEST);
+
+        long newCodeReview = getNewContribution(reviewSum, review);
+        if (newCodeReview > 0) checkAndTransaction(member, reviewSum, ContributeType.CODE_REVIEW);
     }
 
-    private boolean isValidToTransaction(int contribution, List<Blockchain> blockchains) {
-        return contribution != blockchains.stream().map(Blockchain::getAmount).mapToLong(BigInteger::intValue).sum();
+    private long getNewContribution(final int contribution, final List<Blockchain> blockchains) {
+        return blockchains.stream().map(Blockchain::getAmount).mapToLong(BigInteger::longValue).sum() - contribution;
     }
 }
