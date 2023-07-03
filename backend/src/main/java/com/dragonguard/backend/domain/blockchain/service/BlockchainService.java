@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -109,12 +110,13 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
             final int reviewSum,
             final boolean flag,
             final int contribution) {
-        List<Blockchain> commit = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.COMMIT);
-        List<Blockchain> issue = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.ISSUE);
-        List<Blockchain> pullRequest = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.PULL_REQUEST);
-        List<Blockchain> review = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.CODE_REVIEW);
-
         List<Blockchain> blockchains = blockchainRepository.findAllByMemberId(member.getId());
+
+        List<Blockchain> commit = getBlockchainOfType(blockchains, ContributeType.COMMIT);
+        List<Blockchain> issue = getBlockchainOfType(blockchains, ContributeType.ISSUE);
+        List<Blockchain> pullRequest = getBlockchainOfType(blockchains, ContributeType.PULL_REQUEST);
+        List<Blockchain> review = getBlockchainOfType(blockchains, ContributeType.CODE_REVIEW);
+
         int savedSum = blockchains.stream()
                 .map(Blockchain::getAmount)
                 .mapToInt(BigInteger::intValue)
@@ -144,5 +146,11 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
     private long getNewContribution(final int contribution, final List<Blockchain> blockchains) {
         return contribution - blockchains.stream().map(Blockchain::getAmount).mapToLong(BigInteger::longValue).sum();
+    }
+
+    private List<Blockchain> getBlockchainOfType(List<Blockchain> blockchains, ContributeType contributeType) {
+        return blockchains.stream()
+                .filter(b -> b.getContributeType().equals(contributeType))
+                .collect(Collectors.toList());
     }
 }

@@ -1,8 +1,6 @@
 package com.dragonguard.backend.domain.blockchain.repository;
 
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
-import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
-import com.dragonguard.backend.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.QueryHints;
@@ -10,6 +8,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author 김승진
@@ -18,6 +17,6 @@ import java.util.List;
 
 public interface JpaBlockchainRepository extends JpaRepository<Blockchain, Long>, BlockchainRepository {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="250")})
-    List<Blockchain> findAllByMemberAndContributeType(Member member, ContributeType contributeType);
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1000")})
+    List<Blockchain> findAllByMemberId(UUID memberId);
 }
