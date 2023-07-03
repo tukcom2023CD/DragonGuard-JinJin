@@ -6,8 +6,10 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 
 import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import java.util.List;
 
 /**
@@ -16,10 +18,12 @@ import java.util.List;
  */
 
 public interface JpaBlockchainRepository extends JpaRepository<Blockchain, Long>, BlockchainRepository {
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_READ)
     @Query("SELECT b FROM Blockchain b WHERE b.member = :member")
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1500")})
     List<Blockchain> findAllByMember(Member member);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1500")})
     List<Blockchain> findAllByMemberAndContributeType(Member member, ContributeType contributeType);
 }
