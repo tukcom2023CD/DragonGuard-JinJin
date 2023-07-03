@@ -1,6 +1,5 @@
 package com.dragonguard.backend.domain.blockchain.mapper;
 
-import com.dragonguard.backend.domain.blockchain.dto.request.ContractRequest;
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
@@ -19,10 +18,10 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", imports = {ContributeType.class})
 public interface BlockchainMapper {
-    @Mapping(target = "contributeType", expression = "java(ContributeType.valueOf(request.getContributeType()))")
+    @Mapping(target = "contributeType", source = "contributeType")
     @Mapping(target = "amount", source = "amount")
     @Mapping(target = "transactionHash", source = "transactionHash")
-    Blockchain toEntity(final BigInteger amount, final Member member, final ContractRequest request, final String transactionHash);
+    Blockchain toEntity(final BigInteger amount, final Member member, final ContributeType contributeType, final String transactionHash);
     @Mapping(target = "amount", expression = "java(blockchain.getAmount().longValue())")
     @Mapping(target = "memberId", source = "blockchain.member.id")
     @Mapping(target = "githubId", source = "blockchain.member.githubId")

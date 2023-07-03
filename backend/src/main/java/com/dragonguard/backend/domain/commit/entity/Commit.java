@@ -47,7 +47,7 @@ public class Commit implements Auditable {
     }
 
     public boolean customEqualsWithAmount(Commit commit) {
-        return year.equals(commit.year) && amount.equals(commit.amount) && member.getGithubId().equals(commit.member.getGithubId());
+        return year.equals(commit.year) && amount.intValue() == commit.amount.intValue() && member.getGithubId().equals(commit.member.getGithubId());
     }
 
     public boolean customEquals(Commit commit) {

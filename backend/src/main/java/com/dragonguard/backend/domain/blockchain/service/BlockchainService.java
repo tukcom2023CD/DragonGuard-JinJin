@@ -1,6 +1,5 @@
 package com.dragonguard.backend.domain.blockchain.service;
 
-import com.dragonguard.backend.domain.blockchain.dto.request.ContractRequest;
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
@@ -36,48 +35,24 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     @Value("#{'${admin}'.split(',')}")
     private List<String> admins;
 
-    public void setTransaction(final ContractRequest request, final Member member) {
-        UUID memberId = member.getId();
-        if (isMemberBlockchainSaved(memberId)) request.setAmount(BigInteger.valueOf(getNumOfNewContributionsWithoutSaved(request, memberId)));
-
-        if (hasNoContribution(request)) return;
+    public void setTransaction(final Member member, final long contribution, final ContributeType contributeType) {
         String walletAddress = member.getWalletAddress();
-        String transactionHash = transferTransaction(request, walletAddress);
+        String transactionHash = transferTransaction(contribution, contributeType, walletAddress);
         BigInteger amount = transferAndGetBalanceOfTransaction(walletAddress);
 
-        if (checkAdminAndSaveBlockchain(transactionHash, request, member)) return;
+        if (checkAdminAndSaveBlockchain(transactionHash, contribution, contributeType, member)) return;
 
-        if (hasSameAmount(request, amount)) {
-            blockchainRepository.save(blockchainMapper.toEntity(amount, member, request, transactionHash));
-            return;
+        if (hasSameAmount(contribution, amount)) {
+            blockchainRepository.save(blockchainMapper.toEntity(amount, member, contributeType, transactionHash));
         }
-    }
-
-    private long getNumOfNewContributionsWithoutSaved(final ContractRequest request, final UUID memberId) {
-        return request.getAmount().longValue() - getSumOfMemberBlockchainTokens(request, memberId);
-    }
-
-    private long getSumOfMemberBlockchainTokens(final ContractRequest request, final UUID memberId) {
-        return blockchainRepository.findAllByMemberId(memberId).stream()
-                .filter(b -> b.getContributeType().equals(ContributeType.valueOf(request.getContributeType())))
-                .mapToLong(b -> Long.parseLong(String.valueOf(b.getAmount())))
-                .sum();
-    }
-
-    private boolean hasNoContribution(final ContractRequest request) {
-        return request.getAmount().equals(BigInteger.ZERO);
-    }
-
-    private boolean isMemberBlockchainSaved(final UUID memberId) {
-        return blockchainRepository.existsByMemberId(memberId);
     }
 
     private BigInteger transferAndGetBalanceOfTransaction(final String walletAddress) {
         return smartContractService.balanceOf(walletAddress);
     }
 
-    private String transferTransaction(final ContractRequest request, String walletAddress) {
-        return smartContractService.transfer(request, walletAddress);
+    private String transferTransaction(final long contribution, final ContributeType contributeType, final String walletAddress) {
+        return smartContractService.transfer(contribution, contributeType, walletAddress);
     }
 
     @Transactional(readOnly = true)
@@ -96,16 +71,16 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private boolean checkAdminAndSaveBlockchain(final String transactionHash, final ContractRequest request, final Member member) {
+    private boolean checkAdminAndSaveBlockchain(final String transactionHash, final long contribution, final ContributeType contributeType, final Member member) {
         if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
-            blockchainRepository.save(blockchainMapper.toEntity(request.getAmount(), member, request, transactionHash));
+            blockchainRepository.save(blockchainMapper.toEntity(BigInteger.valueOf(contribution), member, contributeType, transactionHash));
             return true;
         }
         return false;
     }
 
-    private boolean hasSameAmount(final ContractRequest request, final BigInteger amount) {
-        return amount.equals(request.getAmount());
+    private boolean hasSameAmount(final long contribution, final BigInteger amount) {
+        return amount.longValue() == contribution;
     }
 
     public List<BlockchainResponse> updateAndGetBlockchainInfo() {
@@ -116,16 +91,6 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
         member.validateWalletAddressAndUpdateTier();
         return getBlockchainResponses(member.getId());
-    }
-
-    private void checkAndTransaction(final Member member, final int contribution, final ContributeType contributeType) {
-        if (contribution <= 0) return;
-
-        setTransaction(
-                new ContractRequest(
-                        contributeType.toString(),
-                        BigInteger.valueOf(contribution)),
-                member);
     }
 
     public void sendSmartContractTransaction(final Member member) {
@@ -153,16 +118,16 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         List<Blockchain> review = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.CODE_REVIEW);
 
         long newCommit = getNewContribution(commitSum, commit);
-        if (newCommit > 0) checkAndTransaction(member, commitSum, ContributeType.COMMIT);
+        if (newCommit > 0) setTransaction(member, newCommit, ContributeType.COMMIT);
 
         long newIssue = getNewContribution(issueSum, issue);
-        if (newIssue > 0) checkAndTransaction(member, issueSum, ContributeType.ISSUE);
+        if (newIssue > 0) setTransaction(member, newIssue, ContributeType.ISSUE);
 
         long newPullRequest = getNewContribution(pullRequestSum, pullRequest);
-        if (newPullRequest > 0) checkAndTransaction(member, pullRequestSum, ContributeType.PULL_REQUEST);
+        if (newPullRequest > 0) setTransaction(member, newPullRequest, ContributeType.PULL_REQUEST);
 
         long newCodeReview = getNewContribution(reviewSum, review);
-        if (newCodeReview > 0) checkAndTransaction(member, reviewSum, ContributeType.CODE_REVIEW);
+        if (newCodeReview > 0) setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
     }
 
     private long getNewContribution(final int contribution, final List<Blockchain> blockchains) {

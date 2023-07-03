@@ -96,7 +96,7 @@ class MemberServiceTest extends LoginTest {
         //given
         int year = LocalDate.now().getYear();
         List<Blockchain> before = loginUser.getBlockchains();
-        when(smartContractService.transfer(any(), any())).thenReturn("123123");
+        when(smartContractService.transfer(any(), any(), any())).thenReturn("123123");
         when(smartContractService.balanceOf(any())).thenReturn(BigInteger.valueOf(200L));
 
         em.flush();

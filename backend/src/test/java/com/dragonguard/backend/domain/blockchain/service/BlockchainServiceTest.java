@@ -1,6 +1,5 @@
 package com.dragonguard.backend.domain.blockchain.service;
 
-import com.dragonguard.backend.domain.blockchain.dto.request.ContractRequest;
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
@@ -40,11 +39,11 @@ class BlockchainServiceTest extends LoginTest {
     void setTransaction() {
         //given
         memberRepository.findById(loginUser.getId()).ifPresent(m -> m.updateWalletAddress(walletAddress));
-        when(smartContractService.transfer(any(), any())).thenReturn("123123123");
+        when(smartContractService.transfer(any(), any(), any())).thenReturn("123123123");
         when(smartContractService.balanceOf(any())).thenReturn(BigInteger.valueOf(1));
 
         //when
-        blockchainService.setTransaction(new ContractRequest(ContributeType.COMMIT.toString(), BigInteger.ONE), loginUser);
+        blockchainService.setTransaction(loginUser, 1L, ContributeType.COMMIT);
         List<Blockchain> blockchains = blockchainRepository.findAllByMember(loginUser);
 
         //then

@@ -7,7 +7,6 @@ import com.dragonguard.backend.global.audit.BaseTime;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 /**
  * @author 김승진
@@ -52,11 +51,11 @@ public class Issue implements Auditable {
     }
 
     public boolean customEqualsWithAmount(Issue issue) {
-        return Objects.equals(member.getGithubId(), issue.member.getGithubId()) && Objects.equals(amount, issue.amount) && Objects.equals(year, issue.year);
+        return member.getGithubId().equals(issue.member.getGithubId()) && amount.intValue() == issue.amount.intValue() && year.intValue() == issue.year.intValue();
     }
 
     public boolean customEquals(Issue issue) {
-        return year.equals(issue.year) && member.getGithubId().equals(issue.member.getGithubId());
+        return year.intValue() == issue.year.intValue() && member.getGithubId().equals(issue.member.getGithubId());
     }
 
     private void organize(Member member) {

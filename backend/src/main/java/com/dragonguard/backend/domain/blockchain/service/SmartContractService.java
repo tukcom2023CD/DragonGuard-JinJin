@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.blockchain.service;
 
-import com.dragonguard.backend.domain.blockchain.dto.request.ContractRequest;
+import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.exception.BlockchainException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,9 +28,9 @@ public class SmartContractService {
     private static final String SET_METHOD = "set";
     private static final String BALANCE_OF_METHOD = "balanceOf";
 
-    public String transfer(ContractRequest request, String walletAddress) {
+    public String transfer(long contribution, ContributeType contributeType, String walletAddress) {
         try {
-            return contract.send(sendOptions, SET_METHOD, walletAddress, request.getAmount(), request.getContributeType()).getTransactionHash();
+            return contract.send(sendOptions, SET_METHOD, walletAddress, BigInteger.valueOf(contribution), contributeType).getTransactionHash();
         } catch (Exception e) {
             e.printStackTrace();
             throw new BlockchainException();
