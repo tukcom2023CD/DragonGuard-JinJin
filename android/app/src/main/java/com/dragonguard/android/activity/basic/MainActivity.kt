@@ -144,6 +144,7 @@ class MainActivity : AppCompatActivity() {
             if (NetworkCheck.checkNetworkState(this)) {
                 binding.mainLoading.resumeAnimation()
                 binding.mainLoading.visibility = View.VISIBLE
+                postCommits()
                 refreshCommits()
             }
         }
@@ -273,7 +274,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun postWalletAddress(address: String) {
 //        Toast.makeText(applicationContext, "address: $address", Toast.LENGTH_SHORT).show()
-        if (!addressPost && count<7) {
+        if (!addressPost && count<8) {
             addressPost = true
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
@@ -386,9 +387,9 @@ class MainActivity : AppCompatActivity() {
                 binding.mainLoading.visibility = View.GONE
                 binding.mainNav.visibility = View.VISIBLE
                 refreshMain()
-                if(realModel.tier != "SPROUT") {
-                    finish = true
-                }
+//                if(realModel.tier != "SPROUT") {
+//                    finish = true
+//                }
             } else {
                 if(refreshCount == 0) {
                     refreshCount++
@@ -453,6 +454,20 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun postCommits() {
+        val coroutine2 = CoroutineScope(Dispatchers.Main)
+        coroutine2.launch {
+            Log.d("post", "post commit")
+            if(!this@MainActivity.isFinishing) {
+                val refreshDeffered = coroutine2.async(Dispatchers.IO) {
+                    viewmodel.postCommits(prefs.getJwtToken(""))
+                }
+                val refreshResult = refreshDeffered.await()
+                multipleSearchUser()
+            }
+        }
     }
 
 
