@@ -101,7 +101,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         if (member.validateWalletAddressAndUpdateTier()) return;
         if (!member.isWalletAddressExists()) return;
 
-        blockchainService.sendSmartContractTransaction(member);
+        blockchainService.sendSmartContractTransaction(member, false);
         member.validateWalletAddressAndUpdateTier();
     }
 
@@ -117,7 +117,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Member member = getLoginUserWithPersistence();
         sendGitRepoAndContributionRequestToKafka(member.getGithubId());
 
-        if (member.isWalletAddressExists()) transactionAndUpdateTier(member);
+        if (member.isWalletAddressExists()) transactionAndUpdateTier(member, false);
     }
 
     public MemberResponse getMember() {
@@ -185,20 +185,20 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public void updateBlockchain() {
-        transactionAndUpdateTier(getLoginUserWithPersistence());
+        transactionAndUpdateTier(getLoginUserWithPersistence(), false);
     }
 
-    private void transactionAndUpdateTier(final Member member) {
+    private void transactionAndUpdateTier(final Member member, final boolean flag) {
         if (!member.isWalletAddressExists()) return;
 
-        blockchainService.sendSmartContractTransaction(member);
+        blockchainService.sendSmartContractTransaction(member, flag);
         member.validateWalletAddressAndUpdateTier();
     }
 
     public void updateContributionAndTransaction(final Member member) {
         memberClientService.addMemberContribution(member);
         if (StringUtils.hasText(member.getWalletAddress()) && !member.getAuthStep().equals(AuthStep.GITHUB_ONLY)) {
-            transactionAndUpdateTier(member);
+            transactionAndUpdateTier(member, true);
             getContributionSumByScraping(member.getGithubId());
         }
     }

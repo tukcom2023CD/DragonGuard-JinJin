@@ -84,22 +84,28 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         Member member = memberRepository.findById(authService.getLoginUserId()).orElseThrow(EntityNotFoundException::new);
         if (!member.isWalletAddressExists()) return List.of();
 
-        sendSmartContractTransaction(member);
+        sendSmartContractTransaction(member, false);
 
         member.validateWalletAddressAndUpdateTier();
         return getBlockchainResponses(member.getId());
     }
 
-    public void sendSmartContractTransaction(final Member member) {
+    public void sendSmartContractTransaction(final Member member, final boolean flag) {
         int commitSum = member.getCommitSumWithRelation();
         int issueSum = member.getIssueSumWithRelation();
         int pullRequestSum = member.getPullRequestSumWithRelation();
         int reviewSum = member.getSumOfReviews().orElse(0);
 
-        applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum);
+        applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum, flag);
     }
 
-    private void applyTransactions(final Member member, final int commitSum, final int issueSum, final int pullRequestSum, final int reviewSum) {
+    private void applyTransactions(
+            final Member member,
+            final int commitSum,
+            final int issueSum,
+            final int pullRequestSum,
+            final int reviewSum,
+            final boolean flag) {
         List<Blockchain> commit = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.COMMIT);
         List<Blockchain> issue = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.ISSUE);
         List<Blockchain> pullRequest = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.PULL_REQUEST);
@@ -115,7 +121,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         if (newPullRequest > 0) setTransaction(member, newPullRequest, ContributeType.PULL_REQUEST);
 
         long newCodeReview = getNewContribution(reviewSum, review);
-        if (newCodeReview > 0) setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
+        if ((flag && newCodeReview > 0) || (review.isEmpty() && newCodeReview > 0)) setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
     }
 
     private long getNewContribution(final int contribution, final List<Blockchain> blockchains) {
