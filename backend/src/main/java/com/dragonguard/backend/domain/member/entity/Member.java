@@ -106,7 +106,7 @@ public class Member implements Auditable {
 
     private Integer contribution;
 
-    private Integer contributionSize;
+    private Integer contributionSize = 0;
 
     @Builder
     public Member(String name, String githubId, String walletAddress, String profileImage, Role role, AuthStep authStep) {
@@ -130,7 +130,7 @@ public class Member implements Auditable {
             });
         }
         this.commits.add(commit);
-        updateContributionSize();
+        this.contributionSize++;
     }
 
     public void addIssue(Issue issue) {
@@ -142,7 +142,7 @@ public class Member implements Auditable {
             });
         }
         this.issues.add(issue);
-        updateContributionSize();
+        this.contributionSize++;
     }
 
     public void addPullRequest(PullRequest pullRequest) {
@@ -154,7 +154,7 @@ public class Member implements Auditable {
             });
         }
         this.pullRequests.add(pullRequest);
-        updateContributionSize();
+        this.contributionSize++;
     }
 
     public void updateNameAndImage(String name, String profileImage) {
@@ -317,10 +317,5 @@ public class Member implements Auditable {
 
     public void updateMemberContribution(Integer contribution) {
         this.contribution = contribution;
-        updateContributionSize();
-    }
-
-    private void updateContributionSize() {
-        this.contributionSize = this.commits.size() + this.pullRequests.size() + this.issues.size();
     }
 }
