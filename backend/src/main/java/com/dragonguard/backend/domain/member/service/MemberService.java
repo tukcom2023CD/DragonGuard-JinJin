@@ -25,6 +25,7 @@ import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -196,7 +197,10 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public void updateContributionAndTransaction(final Member member) {
         memberClientService.addMemberContribution(member);
-        transactionAndUpdateTier(member);
+        if (StringUtils.hasText(member.getWalletAddress()) && !member.getAuthStep().equals(AuthStep.GITHUB_ONLY)) {
+            transactionAndUpdateTier(member);
+            getContributionSumByScraping(member.getGithubId());
+        }
     }
 
     private void getContributionSumByScraping(final String githubId) {

@@ -2,7 +2,6 @@ package com.dragonguard.backend.config.security.oauth;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
 import com.dragonguard.backend.domain.member.dto.kafka.KafkaContributionRequest;
-import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
@@ -16,7 +15,6 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -32,7 +30,6 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     private final UserDetailsMapper userDetailsMapper;
     private final MemberMapper memberMapper;
     private final KafkaProducer<KafkaContributionRequest> kafkaContributionClientProducer;
-    private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryClientProducer;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -56,11 +53,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         String githubToken = userRequest.getAccessToken().getTokenValue();
         user.updateGithubToken(githubToken);
 
-        if (StringUtils.hasText(user.getWalletAddress()) && !user.getAuthStep().equals(AuthStep.GITHUB_ONLY)) {
-            kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
-        }
-        kafkaRepositoryClientProducer.send(new KafkaRepositoryRequest(githubId));
-
+        kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
         return userDetailsMapper.mapToLoginUser(user);
     }
 }
