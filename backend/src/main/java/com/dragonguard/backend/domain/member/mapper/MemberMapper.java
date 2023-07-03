@@ -51,7 +51,7 @@ public interface MemberMapper {
     @Mapping(target = "commits", expression = "java(member.getSumOfCommits().orElse(null))")
     @Mapping(target = "issues", expression = "java(member.getSumOfIssues().orElse(null))")
     @Mapping(target = "pullRequests", expression = "java(member.getSumOfPullRequests().orElse(null))")
-    @Mapping(target = "reviews", expression = "java(member.getSumOfReviews().orElse(null))")
+    @Mapping(target = "reviews", expression = "java(member.getSumOfReviews().orElse(member.getSumOfTokens().intValue() - member.getContributionSumWithoutReviews()))")
     MemberResponse toResponse(final Member member, final Integer rank);
 
     @Mapping(target = "gitOrganizations", source = "gitOrganizations", qualifiedByName = "getGitOrganizationNames")
