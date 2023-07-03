@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.blockchain.messagequeue;
 
 import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaResponse;
+import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
@@ -34,8 +35,9 @@ public class BlockchainConsumer implements KafkaConsumer<BlockchainKafkaResponse
         BlockchainKafkaResponse response = readValue(message);
         Member member = memberRepository.findById(response.getMemberId())
                 .orElseThrow(EntityNotFoundException::new);
+        Blockchain blockchain = blockchainService.loadEntity(response.getBlockchainId());
 
-        blockchainService.setTransaction(member, response.getAmount(), response.getContributeType());
+        blockchainService.setTransaction(blockchain, member, response.getAmount(), response.getContributeType());
         acknowledgment.acknowledge();
     }
 

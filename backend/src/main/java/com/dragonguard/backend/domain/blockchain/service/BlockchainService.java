@@ -4,6 +4,7 @@ import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaReques
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
+import com.dragonguard.backend.domain.blockchain.entity.History;
 import com.dragonguard.backend.domain.blockchain.mapper.BlockchainMapper;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
@@ -20,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -39,7 +39,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     @Value("#{'${admin}'.split(',')}")
     private List<String> admins;
 
-    public void setTransaction(final Member member, final long contribution, final ContributeType contributeType) {
+    public void setTransaction(final Blockchain blockchain, final Member member, final long contribution, final ContributeType contributeType) {
         if (contribution < 0) return;
 
         String walletAddress = member.getWalletAddress();
@@ -47,12 +47,12 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         BigInteger amount = transferAndGetBalanceOfTransaction(walletAddress);
 
         if (hasSameAmount(contribution, amount)) {
-            blockchainRepository.save(blockchainMapper.toEntity(amount, member, contributeType, transactionHash));
+            blockchain.addHistory(amount, transactionHash);
             return;
         }
 
         if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
-            blockchainRepository.save(blockchainMapper.toEntity(BigInteger.valueOf(contribution), member, contributeType, transactionHash));
+            blockchain.addHistory(amount, transactionHash);
         }
     }
 
@@ -71,7 +71,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     private List<BlockchainResponse> getBlockchainResponses(UUID memberId) {
-        return blockchainMapper.toResponseList(blockchainRepository.findAllByMemberId(memberId));
+        return blockchainMapper.toBlockchainResponseList(blockchainRepository.findByMemberId(memberId));
     }
 
     @Override
@@ -111,39 +111,39 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
             final int issueSum,
             final int pullRequestSum,
             final int reviewSum) {
-        List<Blockchain> blockchains = blockchainRepository.findAllByMember(member);
 
-        List<Blockchain> commit = getBlockchainOfType(blockchains, ContributeType.COMMIT);
-        List<Blockchain> issue = getBlockchainOfType(blockchains, ContributeType.ISSUE);
-        List<Blockchain> pullRequest = getBlockchainOfType(blockchains, ContributeType.PULL_REQUEST);
-        List<Blockchain> review = getBlockchainOfType(blockchains, ContributeType.CODE_REVIEW);
+        Blockchain commit = getBlockchainOfType(member, ContributeType.COMMIT);
+        Blockchain issue = getBlockchainOfType(member, ContributeType.ISSUE);
+        Blockchain pullRequest = getBlockchainOfType(member, ContributeType.PULL_REQUEST);
+        Blockchain codeReview = getBlockchainOfType(member, ContributeType.CODE_REVIEW);
 
-        long newCommit = getNewContribution(commitSum, commit);
-        long newIssue = getNewContribution(issueSum, issue);
-        long newPullRequest = getNewContribution(pullRequestSum, pullRequest);
-        long newCodeReview = getNewContribution(reviewSum, review);
+        long newCommit = getNewContribution(commitSum, commit.getHistories());
+        long newIssue = getNewContribution(issueSum, issue.getHistories());
+        long newPullRequest = getNewContribution(pullRequestSum, pullRequest.getHistories());
+        long newCodeReview = getNewContribution(reviewSum, codeReview.getHistories());
 
-        if (newCommit > 0) sendRequestToKafka(member.getId(), newCommit, ContributeType.COMMIT);
+        if (commit.isNewHistory(newCommit)) sendRequestToKafka(member.getId(), newCommit, ContributeType.COMMIT, commit.getId());
 
-        if (newIssue > 0) sendRequestToKafka(member.getId(), newIssue, ContributeType.ISSUE);
+        if (issue.isNewHistory(newIssue)) sendRequestToKafka(member.getId(), newIssue, ContributeType.ISSUE, issue.getId());
 
-        if (newPullRequest > 0) sendRequestToKafka(member.getId(), newPullRequest, ContributeType.PULL_REQUEST);
+        if (pullRequest.isNewHistory(newPullRequest)) sendRequestToKafka(member.getId(), newPullRequest, ContributeType.PULL_REQUEST, pullRequest.getId());
 
-        if (newCodeReview > 0) sendRequestToKafka(member.getId(), newCodeReview, ContributeType.CODE_REVIEW);
-
+        if (codeReview.isNewHistory(newCodeReview)) sendRequestToKafka(member.getId(), newCodeReview, ContributeType.CODE_REVIEW, codeReview.getId());
     }
 
-    private long getNewContribution(final int contribution, final List<Blockchain> blockchains) {
-        return contribution - blockchains.stream().map(Blockchain::getAmount).mapToLong(BigInteger::longValue).sum();
+    private long getNewContribution(final int contribution, final List<History> histories) {
+        return contribution - histories.stream().map(History::getAmount).mapToLong(BigInteger::longValue).sum();
     }
 
-    private List<Blockchain> getBlockchainOfType(List<Blockchain> blockchains, ContributeType contributeType) {
-        return blockchains.stream()
-                .filter(b -> b.getContributeType().equals(contributeType))
-                .collect(Collectors.toList());
+    private Blockchain getBlockchainOfType(Member member, ContributeType contributeType) {
+        if (blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
+            return blockchainRepository.findByMemberAndContributeType(member, contributeType)
+                    .orElseThrow(EntityNotFoundException::new);
+        }
+        return blockchainRepository.save(blockchainMapper.toEntity(member, contributeType));
     }
 
-    private void sendRequestToKafka(UUID id, Long amount, ContributeType contributeType) {
-        blockchainKafkaProducer.send(new BlockchainKafkaRequest(id, amount, contributeType));
+    private void sendRequestToKafka(UUID memberId, Long amount, ContributeType contributeType, Long blockchainId) {
+        blockchainKafkaProducer.send(new BlockchainKafkaRequest(memberId, amount, contributeType, blockchainId));
     }
 }

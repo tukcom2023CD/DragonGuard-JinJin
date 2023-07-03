@@ -8,6 +8,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author 김승진
@@ -26,15 +28,14 @@ public class Blockchain implements Auditable {
     @Enumerated(EnumType.STRING)
     private ContributeType contributeType;
 
-    private BigInteger amount;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition = "BINARY(16)")
     private Member member;
 
     private String address;
 
-    private String transactionHash;
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "blockchain")
+    private List<History> histories = new ArrayList<>();
 
     @Setter
     @Embedded
@@ -42,20 +43,26 @@ public class Blockchain implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Blockchain(ContributeType contributeType, BigInteger amount, Member member, String transactionHash) {
+    public Blockchain(ContributeType contributeType, Member member) {
         this.contributeType = contributeType;
-        this.amount = amount;
         this.member = member;
         this.address = member.getWalletAddress();
-        this.transactionHash = transactionHash;
-        organize();
+        organizeMember();
     }
 
-    public String getTransactionHashUrl() {
-        return "https://baobab.scope.klaytn.com/tx/" + this.transactionHash + "?tabId=tokenTransfer";
-    }
-
-    private void organize() {
+    private void organizeMember() {
         this.member.organizeBlockchain(this);
+    }
+
+    public void addHistory(BigInteger amount, String transactionHash) {
+        this.histories.add(new History(transactionHash, amount, this));
+    }
+
+    public boolean isNewHistory(long amount) {
+        return amount > 0 && getSumOfAmount() != amount;
+    }
+
+    public long getSumOfAmount() {
+        return this.histories.stream().map(History::getAmount).mapToLong(BigInteger::longValue).sum();
     }
 }

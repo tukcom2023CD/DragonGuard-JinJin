@@ -53,16 +53,16 @@ public class Member implements Auditable {
     @Enumerated(EnumType.STRING)
     private AuthStep authStep;
 
-    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "member")
     private Commit commit;
 
-    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "member")
     private Issue issue;
 
-    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "member")
     private PullRequest pullRequest;
 
-    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "member")
     private CodeReview codeReview;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
@@ -158,7 +158,7 @@ public class Member implements Auditable {
         }
 
         long amount = this.blockchains.stream()
-                .map(Blockchain::getAmount)
+                .map(Blockchain::getSumOfAmount)
                 .mapToLong(b -> Long.parseLong(b.toString()))
                 .sum();
 
