@@ -2,7 +2,6 @@ package com.dragonguard.backend.domain.commit.service;
 
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.commit.repository.CommitRepository;
-import com.dragonguard.backend.domain.contribution.dto.response.ContributionScrapingResponse;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
@@ -26,33 +25,15 @@ class CommitServiceTest extends LoginTest {
     @DisplayName("커밋 내역 저장이 수행되는가")
     void saveCommits() {
         //given
-        ContributionScrapingResponse given = new ContributionScrapingResponse(loginUser.getGithubId(), 100);
 
         //when
-        commitService.saveCommits(given, memberRepository.findById(loginUser.getId()).orElse(null));
+        commitService.saveCommits(memberRepository.findById(loginUser.getId()).orElse(null), 100, LocalDateTime.now().getYear());
         List<Commit> commits = commitRepository.findAllByMember(loginUser);
 
         //then
         assertThat(commits).hasSize(1);
         assertThat(commits.get(0).getAmount()).isEqualTo(100);
         assertThat(commits.get(0).getMember().getGithubId()).isEqualTo(loginUser.getGithubId());
-    }
-
-    @Test
-    @DisplayName("커밋 내역 리스트 조회가 수행되는가")
-    void findCommits() {
-        //given
-        commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(1).member(memberRepository.findById(loginUser.getId()).orElse(null)).build());
-        commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(2).member(memberRepository.findById(loginUser.getId()).orElse(null)).build());
-
-        //when
-        List<Commit> commits = commitService.findCommitsByMember(loginUser);
-
-        //then
-        assertThat(commits).hasSize(2);
-        assertThat(commits.get(0).getAmount()).isEqualTo(1);
-        assertThat(commits.get(1).getAmount()).isEqualTo(2);
-        assertThat(commits.get(0).getMember().getGithubId()).isEqualTo(commits.get(1).getMember().getGithubId()).isEqualTo(loginUser.getGithubId());
     }
 
     @Test

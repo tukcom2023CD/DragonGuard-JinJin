@@ -15,4 +15,6 @@ public interface CommitRepository {
     List<Commit> findAllByMember(Member member);
     Commit save(Commit commit);
     Optional<Commit> findById(Long id);
+    Optional<Commit> findByMemberAndYear(Member member, int year);
+    boolean existsByMemberAndYear(Member member, int year);
 }
