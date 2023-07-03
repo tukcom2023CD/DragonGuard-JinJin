@@ -61,7 +61,7 @@ public class BlockchainConfig {
         AbstractKeyring keyring = keyring();
         SendOptions options = new SendOptions();
         options.setFrom(keyring.getAddress());
-        options.setGas(BigInteger.valueOf(3000000));
+        options.setGas(BigInteger.valueOf(4000000));
         options.setFeeDelegation(true);
         options.setFeePayer(keyring.getAddress());
         return options;

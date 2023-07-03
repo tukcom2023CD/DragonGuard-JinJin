@@ -39,8 +39,10 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     @Value("#{'${admin}'.split(',')}")
     private List<String> admins;
 
-    public void setTransaction(final Blockchain blockchain, final Member member, final long contribution, final ContributeType contributeType) {
+    public void setTransaction(final Long blockchainId, final Member member, final long contribution, final ContributeType contributeType) {
         if (contribution < 0) return;
+
+        Blockchain blockchain = loadEntity(blockchainId);
 
         String walletAddress = member.getWalletAddress();
         String transactionHash = transferTransaction(contribution, contributeType, walletAddress);
@@ -88,21 +90,19 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         Member member = memberRepository.findById(authService.getLoginUserId()).orElseThrow(EntityNotFoundException::new);
         if (!member.isWalletAddressExists()) return List.of();
 
-        sendSmartContractTransaction(member, 0);
+        sendSmartContractTransaction(member);
 
         member.validateWalletAddressAndUpdateTier();
         return getBlockchainResponses(member.getId());
     }
 
-    public void sendSmartContractTransaction(final Member member, final int contribution) {
+    public void sendSmartContractTransaction(final Member member) {
         int commitSum = member.getCommitSumWithRelation();
         int issueSum = member.getIssueSumWithRelation();
         int pullRequestSum = member.getPullRequestSumWithRelation();
-        int reviewSum = member.getCodeReviewSumWithRelation();
+        int codeReviewSum = member.getCodeReviewSumWithRelation();
 
-        if (commitSum + issueSum + pullRequestSum + reviewSum != contribution){
-            applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum);
-        }
+        applyTransactions(member, commitSum, issueSum, pullRequestSum, codeReviewSum);
     }
 
     private void applyTransactions(
@@ -110,7 +110,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
             final int commitSum,
             final int issueSum,
             final int pullRequestSum,
-            final int reviewSum) {
+            final int codeReviewSum) {
 
         Blockchain commit = getBlockchainOfType(member, ContributeType.COMMIT);
         Blockchain issue = getBlockchainOfType(member, ContributeType.ISSUE);
@@ -120,15 +120,15 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         long newCommit = getNewContribution(commitSum, commit.getHistories());
         long newIssue = getNewContribution(issueSum, issue.getHistories());
         long newPullRequest = getNewContribution(pullRequestSum, pullRequest.getHistories());
-        long newCodeReview = getNewContribution(reviewSum, codeReview.getHistories());
+        long newCodeReview = getNewContribution(codeReviewSum, codeReview.getHistories());
 
-        if (commit.isNewHistory(newCommit)) sendRequestToKafka(member.getId(), newCommit, ContributeType.COMMIT, commit.getId());
+        if (commit.isNewHistory(commitSum)) sendRequestToKafka(member.getId(), newCommit, ContributeType.COMMIT, commit.getId());
 
-        if (issue.isNewHistory(newIssue)) sendRequestToKafka(member.getId(), newIssue, ContributeType.ISSUE, issue.getId());
+        if (issue.isNewHistory(issueSum)) sendRequestToKafka(member.getId(), newIssue, ContributeType.ISSUE, issue.getId());
 
-        if (pullRequest.isNewHistory(newPullRequest)) sendRequestToKafka(member.getId(), newPullRequest, ContributeType.PULL_REQUEST, pullRequest.getId());
+        if (pullRequest.isNewHistory(pullRequestSum)) sendRequestToKafka(member.getId(), newPullRequest, ContributeType.PULL_REQUEST, pullRequest.getId());
 
-        if (codeReview.isNewHistory(newCodeReview)) sendRequestToKafka(member.getId(), newCodeReview, ContributeType.CODE_REVIEW, codeReview.getId());
+        if (codeReview.isNewHistory(codeReviewSum)) sendRequestToKafka(member.getId(), newCodeReview, ContributeType.CODE_REVIEW, codeReview.getId());
     }
 
     private long getNewContribution(final int contribution, final List<History> histories) {

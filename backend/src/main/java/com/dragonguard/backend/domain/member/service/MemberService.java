@@ -85,7 +85,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Integer contribution = contributionKafkaResponse.getContribution();
         if (isContributionEmpty(member, contribution)) return;
 
-        sendTransactionIfWalletAddressValid(member, contribution);
+        sendTransactionIfWalletAddressValid(member);
     }
 
     private Member findMemberAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
@@ -94,11 +94,11 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return member;
     }
 
-    private void sendTransactionIfWalletAddressValid(final Member member, final int contribution) {
+    private void sendTransactionIfWalletAddressValid(final Member member) {
         if (member.validateWalletAddressAndUpdateTier()) return;
         if (!member.isWalletAddressExists()) return;
 
-        blockchainService.sendSmartContractTransaction(member, contribution);
+        blockchainService.sendSmartContractTransaction(member);
         member.validateWalletAddressAndUpdateTier();
     }
 
@@ -180,7 +180,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private void transactionAndUpdateTier(final Member member) {
         if (!member.isWalletAddressExists()) return;
 
-        blockchainService.sendSmartContractTransaction(member, 0);
+        blockchainService.sendSmartContractTransaction(member);
         member.validateWalletAddressAndUpdateTier();
     }
 
