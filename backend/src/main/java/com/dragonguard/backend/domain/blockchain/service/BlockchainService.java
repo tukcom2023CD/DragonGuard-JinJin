@@ -99,15 +99,6 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum);
     }
 
-    public void sendSmartContractTransaction(final Member member, final Integer contribution) {
-        int commitSum = member.getCommitSumWithRelation();
-        int issueSum = member.getIssueSumWithRelation();
-        int pullRequestSum = member.getPullRequestSumWithRelation();
-        int reviewSum = contribution - (commitSum + issueSum + pullRequestSum);
-
-        applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum);
-    }
-
     private void applyTransactions(final Member member, final int commitSum, final int issueSum, final int pullRequestSum, final int reviewSum) {
         List<Blockchain> commit = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.COMMIT);
         List<Blockchain> issue = blockchainRepository.findAllByMemberAndContributeType(member, ContributeType.ISSUE);
