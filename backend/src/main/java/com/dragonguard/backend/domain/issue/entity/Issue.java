@@ -24,7 +24,7 @@ public class Issue implements Auditable {
     private Long id;
 
     @JoinColumn(columnDefinition = "BINARY(16)")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Member member;
 
     @Column(nullable = false)
@@ -53,10 +53,6 @@ public class Issue implements Auditable {
 
     public boolean customEqualsWithAmount(Issue issue) {
         return member.getGithubId().equals(issue.member.getGithubId()) && amount.intValue() == issue.amount.intValue() && year.intValue() == issue.year.intValue();
-    }
-
-    public boolean customEquals(Issue issue) {
-        return year.intValue() == issue.year.intValue() && member.getGithubId().equals(issue.member.getGithubId());
     }
 
     private void organize(Member member) {

@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.member.service;
 
+import com.dragonguard.backend.domain.codereview.service.CodeReviewService;
 import com.dragonguard.backend.domain.commit.service.CommitService;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
@@ -34,6 +35,7 @@ public class MemberClientService {
     private final GithubClient<MemberClientRequest, MemberCommitResponse> memberCommitClient;
     private final GithubClient<MemberClientRequest, MemberIssueResponse> memberIssueClient;
     private final GithubClient<MemberClientRequest, MemberPullRequestResponse> memberPullRequestClient;
+    private final GithubClient<MemberClientRequest, MemberCodeReviewResponse> memberCodeReviewClient;
     private final GithubClient<MemberClientRequest, MemberRepoResponse[]> memberRepoClient;
     private final GithubClient<MemberClientRequest, MemberOrganizationResponse[]> memberOrganizationClient;
     private final GithubClient<MemberClientRequest, OrganizationRepoResponse[]> memberOrganizationRepoClient;
@@ -43,6 +45,7 @@ public class MemberClientService {
     private final CommitService commitService;
     private final IssueService issueService;
     private final PullRequestService pullRequestService;
+    private final CodeReviewService codeReviewService;
     private final GitRepoMemberRepository gitRepoMemberRepository;
     private final GitRepoMemberMapper gitRepoMemberMapper;
 
@@ -55,6 +58,12 @@ public class MemberClientService {
         requestCommitClientAndSave(member, request);
         requestIssueClientAndSave(member, request);
         requestPullRequestClientAndSave(member, request);
+        requestCodeReviewClientAndSave(member, request);
+    }
+
+    private void requestCodeReviewClientAndSave(final Member member, final MemberClientRequest request) {
+        int codeReviewNum = memberCodeReviewClient.requestToGithub(request).getTotalCount();
+        codeReviewService.saveCodeReviews(member, codeReviewNum, request.getYear());
     }
 
     private void requestPullRequestClientAndSave(final Member member, final MemberClientRequest request) {

@@ -85,7 +85,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Integer contribution = contributionKafkaResponse.getContribution();
         if (isContributionEmpty(member, contribution)) return;
 
-        member.updateMemberContribution(contribution);
         sendTransactionIfWalletAddressValid(member, contribution);
     }
 
@@ -99,7 +98,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         if (member.validateWalletAddressAndUpdateTier()) return;
         if (!member.isWalletAddressExists()) return;
 
-        blockchainService.sendSmartContractTransaction(member, false, contribution);
+        blockchainService.sendSmartContractTransaction(member, contribution);
         member.validateWalletAddressAndUpdateTier();
     }
 
@@ -107,7 +106,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Member member = getLoginUserWithPersistence();
         sendGitRepoAndContributionRequestToKafka(member.getGithubId());
 
-        if (member.isWalletAddressExists()) transactionAndUpdateTier(member, false);
+        if (member.isWalletAddressExists()) transactionAndUpdateTier(member);
     }
 
     public MemberResponse getMember() {
@@ -175,20 +174,20 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public void updateBlockchain() {
-        transactionAndUpdateTier(getLoginUserWithPersistence(), false);
+        transactionAndUpdateTier(getLoginUserWithPersistence());
     }
 
-    private void transactionAndUpdateTier(final Member member, final boolean flag) {
+    private void transactionAndUpdateTier(final Member member) {
         if (!member.isWalletAddressExists()) return;
 
-        blockchainService.sendSmartContractTransaction(member, flag, 0);
+        blockchainService.sendSmartContractTransaction(member, 0);
         member.validateWalletAddressAndUpdateTier();
     }
 
     public void updateContributionAndTransaction(final Member member) {
         memberClientService.addMemberContribution(member);
         if (StringUtils.hasText(member.getWalletAddress()) && !member.getAuthStep().equals(AuthStep.GITHUB_ONLY)) {
-            transactionAndUpdateTier(member, true);
+            transactionAndUpdateTier(member);
             getContributionSumByScraping(member.getGithubId());
         }
     }
@@ -219,7 +218,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private boolean isContributionEmpty(final Member member, final int contribution) {
-        int contributionSum = member.getContributionSumWithoutReviews() + member.getSumOfReviews().orElse(0);
+        int contributionSum = member.getContributionSum();
         return member.getSumOfTokens().intValue() == contribution || contributionSum == contribution;
     }
 

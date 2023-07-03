@@ -1,4 +1,4 @@
-package com.dragonguard.backend.domain.commit.entity;
+package com.dragonguard.backend.domain.codereview.entity;
 
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.audit.AuditListener;
@@ -10,15 +10,14 @@ import javax.persistence.*;
 
 /**
  * @author 김승진
- * @description 커밋 정보를 담는 DB Entity
+ * @description 코드리뷰 정보를 담는 엔티티 클래스
  */
 
 @Getter
 @Entity
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Commit implements Auditable {
-
+public class CodeReview implements Auditable {
     @Id
     @GeneratedValue
     private Long id;
@@ -39,7 +38,7 @@ public class Commit implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Commit(Integer year, Integer amount, Member member) {
+    public CodeReview(Integer year, Integer amount, Member member) {
         if (amount < 0) return;
         this.year = year;
         this.amount = amount;
@@ -47,16 +46,16 @@ public class Commit implements Auditable {
         organize();
     }
 
-    public boolean customEqualsWithAmount(Commit commit) {
-        return year.intValue() == commit.year && amount.intValue() == commit.amount.intValue()
-                && member.getGithubId().equals(commit.member.getGithubId());
-    }
-
     private void organize() {
-        member.addCommit(this);
+        this.member.addCodeReview(this);
     }
 
-    public void updateCommitNum(Integer commitNum) {
-        this.amount = commitNum;
+    public void updateCodeReviewNum(Integer codeReviewNum) {
+        this.amount = codeReviewNum;
+    }
+
+    public boolean customEqualsWithAmount(CodeReview codeReview) {
+        return year.intValue() == codeReview.year && amount.intValue() == codeReview.amount.intValue()
+                && member.getGithubId().equals(codeReview.member.getGithubId());
     }
 }

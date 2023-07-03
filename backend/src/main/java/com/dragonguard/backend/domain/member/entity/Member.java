@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.member.entity;
 
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
+import com.dragonguard.backend.domain.codereview.entity.CodeReview;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
@@ -52,14 +53,17 @@ public class Member implements Auditable {
     @Enumerated(EnumType.STRING)
     private AuthStep authStep;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
-    private List<Commit> commits = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private Commit commit;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
-    private List<Issue> issues = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private Issue issue;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
-    private List<PullRequest> pullRequests = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private PullRequest pullRequest;
+
+    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private CodeReview codeReview;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
@@ -99,14 +103,11 @@ public class Member implements Auditable {
     @Formula("(SELECT COALESCE(sum(pr.amount), 0) FROM pull_request pr WHERE pr.member_id = id)")
     private Integer sumOfPullRequests;
 
-    @Formula("(SELECT COALESCE(sum(b.amount), 0) FROM blockchain b WHERE b.member_id = id)")
-    private Long sumOfTokens;
-
+    @Formula("(SELECT COALESCE(sum(cr.amount), 0) FROM code_review cr WHERE cr.member_id = id)")
     private Integer sumOfReviews;
 
-    private Integer contribution;
-
-    private Integer contributionSize = 0;
+    @Formula("(SELECT COALESCE(sum(b.amount), 0) FROM blockchain b WHERE b.member_id = id)")
+    private Long sumOfTokens;
 
     @Builder
     public Member(String name, String githubId, String walletAddress, String profileImage, Role role, AuthStep authStep) {
@@ -122,39 +123,23 @@ public class Member implements Auditable {
     }
 
     public void addCommit(Commit commit) {
-        if (commit == null || this.commits.stream().anyMatch(commit::customEqualsWithAmount)) return;
-        if (this.commits.stream().anyMatch(commit::customEquals)) {
-            this.commits.stream().filter(commit::customEquals).findFirst().ifPresent(c -> {
-                this.commits.remove(c);
-                c.delete();
-            });
-        }
-        this.commits.add(commit);
-        this.contributionSize++;
+        if (commit == null || (this.commit != null && this.commit.customEqualsWithAmount(commit))) return;
+        this.commit = commit;
     }
 
     public void addIssue(Issue issue) {
-        if (issue == null || this.issues.stream().anyMatch(issue::customEqualsWithAmount)) return;
-        if (this.issues.stream().anyMatch(issue::customEquals)) {
-            this.issues.stream().filter(issue::customEquals).findFirst().ifPresent(i -> {
-                this.issues.remove(i);
-                i.delete();
-            });
-        }
-        this.issues.add(issue);
-        this.contributionSize++;
+        if (issue == null || (this.issue != null && this.issue.customEqualsWithAmount(issue))) return;
+        this.issue = issue;
     }
 
     public void addPullRequest(PullRequest pullRequest) {
-        if (pullRequest == null || this.pullRequests.stream().anyMatch(pullRequest::customEqualsWithAmount)) return;
-        if (this.pullRequests.stream().anyMatch(pullRequest::customEquals)) {
-            this.pullRequests.stream().filter(pullRequest::customEquals).findFirst().ifPresent(p -> {
-                this.pullRequests.remove(p);
-                p.delete();
-            });
-        }
-        this.pullRequests.add(pullRequest);
-        this.contributionSize++;
+        if (pullRequest == null || (this.pullRequest != null && this.pullRequest.customEqualsWithAmount(pullRequest))) return;
+        this.pullRequest = pullRequest;
+    }
+
+    public void addCodeReview(CodeReview codeReview) {
+        if (codeReview == null || (this.codeReview != null && this.codeReview.customEqualsWithAmount(codeReview))) return;
+        this.codeReview = codeReview;
     }
 
     public void updateNameAndImage(String name, String profileImage) {
@@ -223,21 +208,20 @@ public class Member implements Auditable {
         this.authStep = AuthStep.ALL;
     }
 
-    public void updateSumOfReviews(Integer sumOfReviews) {
-        if (sumOfReviews < 0) return;
-        this.sumOfReviews = sumOfReviews;
-    }
-
     public int getCommitSumWithRelation() {
-        return this.commits.stream().mapToInt(Commit::getAmount).sum();
+        return this.commit.getAmount();
     }
 
     public int getIssueSumWithRelation() {
-        return this.issues.stream().mapToInt(Issue::getAmount).sum();
+        return this.issue.getAmount();
     }
 
     public int getPullRequestSumWithRelation() {
-        return this.pullRequests.stream().mapToInt(PullRequest::getAmount).sum();
+        return this.pullRequest.getAmount();
+    }
+
+    public int getCodeReviewSumWithRelation() {
+        return this.codeReview.getAmount();
     }
 
     public boolean isWalletAddressExists() {
@@ -275,11 +259,19 @@ public class Member implements Auditable {
     }
 
     private void deleteContributions() {
-        this.commits.forEach(Commit::delete);
-        this.pullRequests.forEach(PullRequest::delete);
-        this.issues.forEach(Issue::delete);
+        this.commit.delete();
+        this.pullRequest.delete();
+        this.issue.delete();
+        this.codeReview.delete();
+
+        this.commit = null;
+        this.pullRequest = null;
+        this.issue = null;
+        this.codeReview = null;
+
         this.blockchains.forEach(Blockchain::delete);
-        this.sumOfReviews = 0;
+        this.blockchains.clear();
+
         this.tier = Tier.SPROUT;
     }
 
@@ -304,18 +296,8 @@ public class Member implements Auditable {
         this.profileImage = profileImage;
     }
 
-    public void updateSumOfReviewsWithCalculation(int contribution) {
-        int reviews = contribution - getContributionSumWithoutReviews();
-        if (reviews < 0) return;
-        this.sumOfReviews = reviews;
-    }
-
-    public Integer getContributionSumWithoutReviews() {
-        if (this.commits.isEmpty() || this.issues.isEmpty() || this.pullRequests.isEmpty()) return -1;
-        return getCommitSumWithRelation() + getPullRequestSumWithRelation() + getIssueSumWithRelation();
-    }
-
-    public void updateMemberContribution(Integer contribution) {
-        this.contribution = contribution;
+    public Integer getContributionSum() {
+        if (this.commit == null || this.issue == null || this.pullRequest == null || this.codeReview == null) return -1;
+        return getCommitSumWithRelation() + getPullRequestSumWithRelation() + getIssueSumWithRelation() + getCodeReviewSumWithRelation();
     }
 }

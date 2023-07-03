@@ -85,21 +85,21 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         Member member = memberRepository.findById(authService.getLoginUserId()).orElseThrow(EntityNotFoundException::new);
         if (!member.isWalletAddressExists()) return List.of();
 
-        sendSmartContractTransaction(member, false, 0);
+        sendSmartContractTransaction(member, 0);
 
         member.validateWalletAddressAndUpdateTier();
         return getBlockchainResponses(member.getId());
     }
 
-    public void sendSmartContractTransaction(final Member member, final boolean flag, final int contribution) {
+    public void sendSmartContractTransaction(final Member member, final int contribution) {
         int commitSum = member.getCommitSumWithRelation();
         int issueSum = member.getIssueSumWithRelation();
         int pullRequestSum = member.getPullRequestSumWithRelation();
-        int reviewSum = member.getSumOfReviews().orElse(0);
+        int reviewSum = member.getCodeReviewSumWithRelation();
 
-        if (commitSum + issueSum + pullRequestSum + reviewSum == contribution) return;
-
-        applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum, flag, contribution);
+        if (commitSum + issueSum + pullRequestSum + reviewSum != contribution){
+            applyTransactions(member, commitSum, issueSum, pullRequestSum, reviewSum);
+        }
     }
 
     private void applyTransactions(
@@ -107,9 +107,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
             final int commitSum,
             final int issueSum,
             final int pullRequestSum,
-            final int reviewSum,
-            final boolean flag,
-            final int contribution) {
+            final int reviewSum) {
         List<Blockchain> blockchains = blockchainRepository.findAllByMember(member);
 
         List<Blockchain> commit = getBlockchainOfType(blockchains, ContributeType.COMMIT);
@@ -117,35 +115,19 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         List<Blockchain> pullRequest = getBlockchainOfType(blockchains, ContributeType.PULL_REQUEST);
         List<Blockchain> review = getBlockchainOfType(blockchains, ContributeType.CODE_REVIEW);
 
-        int savedSum = blockchains.stream()
-                .map(Blockchain::getAmount)
-                .mapToInt(BigInteger::intValue)
-                .sum();
-
         long newCommit = getNewContribution(commitSum, commit);
         long newIssue = getNewContribution(issueSum, issue);
         long newPullRequest = getNewContribution(pullRequestSum, pullRequest);
         long newCodeReview = getNewContribution(reviewSum, review);
 
         if (newCommit > 0) setTransaction(member, newCommit, ContributeType.COMMIT);
-        if (newCommit + savedSum == contribution) return;
 
         if (newIssue > 0) setTransaction(member, newIssue, ContributeType.ISSUE);
-        if (newCommit + newIssue + savedSum == contribution) return;
 
         if (newPullRequest > 0) setTransaction(member, newPullRequest, ContributeType.PULL_REQUEST);
 
-        if (newCodeReview <= 0) return;
+        if (newCodeReview > 0) setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
 
-        if (review.isEmpty() || flag && (member.getContributionSize() != null && blockchains.size() < member.getContributionSize())) {
-            setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
-            return;
-        }
-
-        if (newCommit + newIssue + newPullRequest + savedSum == contribution ||
-                (member.getContribution() != null && newCommit + newIssue + newPullRequest + savedSum == member.getContribution())) return;
-
-        setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
     }
 
     private long getNewContribution(final int contribution, final List<Blockchain> blockchains) {

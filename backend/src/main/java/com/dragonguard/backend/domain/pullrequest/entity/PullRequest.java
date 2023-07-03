@@ -23,7 +23,7 @@ public class PullRequest implements Auditable {
     private Long id;
 
     @JoinColumn(columnDefinition = "BINARY(16)")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Member member;
 
     @Column(nullable = false)
@@ -52,10 +52,6 @@ public class PullRequest implements Auditable {
 
     public boolean customEqualsWithAmount(PullRequest pullRequest) {
         return member.getGithubId().equals(pullRequest.member.getGithubId()) && amount.intValue() == pullRequest.amount.intValue() && year.intValue() ==  pullRequest.year.intValue();
-    }
-
-    public boolean customEquals(PullRequest pullRequest) {
-        return year.intValue() == pullRequest.year.intValue() && member.getGithubId().equals(pullRequest.member.getGithubId());
     }
 
     private void organize() {
