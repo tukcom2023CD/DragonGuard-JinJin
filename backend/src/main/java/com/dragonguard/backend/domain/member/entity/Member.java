@@ -217,6 +217,7 @@ public class Member implements Auditable {
     }
 
     public void updateSumOfReviews(Integer sumOfReviews) {
+        if (sumOfReviews < 0) return;
         this.sumOfReviews = sumOfReviews;
     }
 
@@ -298,7 +299,10 @@ public class Member implements Auditable {
 
     public void updateSumOfReviewsWithCalculation(Integer contribution) {
         int reviews = contribution - getContributionSumWithoutReviews();
-        if (reviews < 0) deleteContributions();
+        if (reviews < 0) {
+            deleteContributions();
+            return;
+        }
         this.sumOfReviews = reviews;
     }
 

@@ -133,6 +133,6 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     private long getNewContribution(final int contribution, final List<Blockchain> blockchains) {
-        return blockchains.stream().map(Blockchain::getAmount).mapToLong(BigInteger::longValue).sum() - contribution;
+        return contribution - blockchains.stream().map(Blockchain::getAmount).mapToLong(BigInteger::longValue).sum();
     }
 }
