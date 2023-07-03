@@ -51,7 +51,7 @@ public interface MemberMapper {
     @Mapping(target = "commits", expression = "java(member.getSumOfCommits().orElse(null))")
     @Mapping(target = "issues", expression = "java(member.getSumOfIssues().orElse(null))")
     @Mapping(target = "pullRequests", expression = "java(member.getSumOfPullRequests().orElse(null))")
-    @Mapping(target = "reviews", expression = "java(member.getSumOfReviews().orElse(member.getSumOfTokens().intValue() - member.getContributionSumWithoutReviews()))")
+    @Mapping(target = "reviews", expression = "java(member.getSumOfCodeReviews().orElse(null))")
     MemberResponse toResponse(final Member member, final Integer rank);
 
     @Mapping(target = "gitOrganizations", source = "gitOrganizations", qualifiedByName = "getGitOrganizationNames")
@@ -59,10 +59,10 @@ public interface MemberMapper {
     @Mapping(target = "memberProfileImage", source = "memberProfileImage")
     MemberGitReposAndGitOrganizationsResponse toRepoAndOrgResponse(final String memberProfileImage, final List<GitOrganization> gitOrganizations, final List<GitRepo> gitRepos);
 
-    @Mapping(target = "commits", expression = "java(member.getCommitSumWithRelation())")
-    @Mapping(target = "issues", expression = "java(member.getIssueSumWithRelation())")
-    @Mapping(target = "pullRequests", expression = "java(member.getPullRequestSumWithRelation())")
-    @Mapping(target = "reviews", expression = "java(member.getSumOfReviews().orElse(null))")
+    @Mapping(target = "commits", expression = "java(member.getSumOfCommits().orElse(null))")
+    @Mapping(target = "issues", expression = "java(member.getSumOfIssues().orElse(null))")
+    @Mapping(target = "pullRequests", expression = "java(member.getSumOfPullRequests().orElse(null))")
+    @Mapping(target = "reviews", expression = "java(member.getSumOfCodeReviews().orElse(null))")
     @Mapping(target = "profileImage", source = "member.profileImage")
     @Mapping(target = "gitRepos", expression = "java(member.getGitRepoMembers().stream().map(GitRepoMember::getGitRepo).map(GitRepo::getName).collect(Collectors.toList()))")
     @Mapping(target = "organization", expression = "java(member.getOrganization() != null ? member.getOrganization().getName() : null)")

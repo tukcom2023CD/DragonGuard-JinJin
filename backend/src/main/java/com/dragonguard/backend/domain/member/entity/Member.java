@@ -209,18 +209,30 @@ public class Member implements Auditable {
     }
 
     public int getCommitSumWithRelation() {
+        if (this.commit == null) {
+            return 0;
+        }
         return this.commit.getAmount();
     }
 
     public int getIssueSumWithRelation() {
+        if (this.issue == null) {
+            return 0;
+        }
         return this.issue.getAmount();
     }
 
     public int getPullRequestSumWithRelation() {
+        if (this.pullRequest == null) {
+            return 0;
+        }
         return this.pullRequest.getAmount();
     }
 
     public int getCodeReviewSumWithRelation() {
+        if (this.codeReview == null) {
+            return 0;
+        }
         return this.codeReview.getAmount();
     }
 
