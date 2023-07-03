@@ -106,6 +106,9 @@ public class Member implements Auditable {
     @Formula("(SELECT COALESCE(sum(cr.amount), 0) FROM code_review cr WHERE cr.member_id = id)")
     private Integer sumOfCodeReviews;
 
+    @Formula("(SELECT COALESCE(sum(h.amount), 0) FROM blockchain b left join history h ON b.member_id = id)")
+    private Integer sumOfTokens;
+
     @Builder
     public Member(String name, String githubId, String walletAddress, String profileImage, Role role, AuthStep authStep) {
         this.name = name;
@@ -145,7 +148,6 @@ public class Member implements Auditable {
     }
 
     public void updateTier() {
-        long sumOfTokens = getSumOfTokens();
         if (sumOfTokens > 0) {
             this.tier = checkTier(sumOfTokens);
             return;
@@ -163,10 +165,6 @@ public class Member implements Auditable {
         if (amount < 0) deleteContributions();
 
         this.tier = checkTier(amount);
-    }
-
-    private Long getSumOfTokens() {
-        return this.blockchains.stream().mapToLong(Blockchain::getSumOfAmount).sum();
     }
 
     public Tier checkTier(long amount) {
