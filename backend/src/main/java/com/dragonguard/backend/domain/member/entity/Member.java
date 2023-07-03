@@ -297,8 +297,8 @@ public class Member implements Auditable {
         this.profileImage = profileImage;
     }
 
-    public void updateSumOfReviewsWithCalculation(Integer contribution) {
-        int reviews = contribution - getContributionSumWithoutReviews();
+    public void updateSumOfReviewsWithCalculation() {
+        int reviews = this.sumOfTokens.intValue() - getContributionSumWithoutReviews();
         if (reviews < 0) return;
         this.sumOfReviews = reviews;
     }

@@ -17,7 +17,7 @@ public class ContributionService {
     private final KafkaProducer<ContributionScrapingRequest> kafkaCommitProducer;
     private final ContributionMapper contributionMapper;
 
-    public void scrapingCommits(final String githubId) {
+    public void scrapingContributions(final String githubId) {
         kafkaCommitProducer.send(contributionMapper.toRequest(githubId));
     }
 }

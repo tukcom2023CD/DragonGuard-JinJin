@@ -86,7 +86,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Member member = findMemberAndUpdate(contributionKafkaResponse);
 
         Integer contribution = contributionKafkaResponse.getContribution();
-        if (addContributionsIfNotEmpty(member, contribution)) return;
+        if (isContributionEmpty(member, contribution)) return;
 
         sendTransactionIfWalletAddressValid(member, contribution);
     }
@@ -103,14 +103,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
         blockchainService.sendSmartContractTransaction(member, false, contribution);
         member.validateWalletAddressAndUpdateTier();
-    }
-
-    private boolean addContributionsIfNotEmpty(
-            final Member member,
-            final Integer contribution) {
-        if (isContributionEmpty(member, contribution)) return true;
-        member.updateSumOfReviewsWithCalculation(contribution);
-        return false;
     }
 
     public void updateContributions() {
@@ -197,6 +189,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public void updateContributionAndTransaction(final Member member) {
         memberClientService.addMemberContribution(member);
+        member.updateSumOfReviewsWithCalculation();
         if (StringUtils.hasText(member.getWalletAddress()) && !member.getAuthStep().equals(AuthStep.GITHUB_ONLY)) {
             transactionAndUpdateTier(member, true);
             getContributionSumByScraping(member.getGithubId());
@@ -204,7 +197,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private void getContributionSumByScraping(final String githubId) {
-        contributionService.scrapingCommits(githubId);
+        contributionService.scrapingContributions(githubId);
     }
 
     private MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(final String githubId, final Member member) {
