@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +33,8 @@ public class KafkaResultScrapeConsumer implements KafkaConsumer<ResultKafkaRespo
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.result", groupId = "from.backend.result", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(String message, Acknowledgment acknowledgment) {
+    @KafkaListener(topics = "gitrank.to.backend.result", containerFactory = "kafkaListenerContainerFactory")
+    public void consume(String message) {
         ResultKafkaResponse resultResponse = readValue(message);
 
         List<ScrapeResult> result = resultResponse.getResult().stream()
@@ -49,7 +48,6 @@ public class KafkaResultScrapeConsumer implements KafkaConsumer<ResultKafkaRespo
                 SearchType.valueOf((searchResponse.getType()).toUpperCase()), searchResponse.getPage());
 
         resultService.saveAllResult(result, searchRequest);
-        acknowledgment.acknowledge();
     }
 
     @Override

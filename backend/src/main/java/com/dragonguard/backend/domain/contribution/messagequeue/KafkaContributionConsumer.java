@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +24,9 @@ public class KafkaContributionConsumer implements KafkaConsumer<ContributionKafk
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.contribution", groupId = "from.backend.contribution", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(String message, Acknowledgment acknowledgment) {
+    @KafkaListener(topics = "gitrank.to.backend.contribution", containerFactory = "kafkaListenerContainerFactory")
+    public void consume(String message) {
         memberService.addMemberContributionsAndUpdate(readValue(message));
-        acknowledgment.acknowledge();
     }
 
     @Override

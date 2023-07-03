@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +23,10 @@ public class KafkaGitRepoInfoConsumer implements KafkaConsumer<GitRepoInfoReques
     private final ObjectMapper objectMapper;
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.git-repos-info", groupId = "from.backend.git-repos-info", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(String message, Acknowledgment acknowledgment) {
+    @KafkaListener(topics = "gitrank.to.backend.git-repos-info", containerFactory = "kafkaListenerContainerFactory")
+    public void consume(String message) {
         GitRepoInfoRequest request = readValue(message);
         gitRepoService.requestToGithub(request, gitRepoService.getEntityByName(request.getName()));
-        acknowledgment.acknowledge();
     }
 
     @Override
