@@ -39,6 +39,7 @@ public class PullRequest implements Auditable {
 
     @Builder
     public PullRequest(Member member, Integer amount, Integer year) {
+        if (amount < 0) return;
         this.member = member;
         this.amount = amount;
         this.year = year;
@@ -50,7 +51,7 @@ public class PullRequest implements Auditable {
     }
 
     public boolean customEqualsWithAmount(PullRequest pullRequest) {
-        return member.getGithubId().equals(pullRequest.member.getGithubId()) && amount.intValue() ==  pullRequest.amount.intValue() && year.intValue() ==  pullRequest.year.intValue();
+        return member.getGithubId().equals(pullRequest.member.getGithubId()) && amount.intValue() == pullRequest.amount.intValue() && year.intValue() ==  pullRequest.year.intValue();
     }
 
     public boolean customEquals(PullRequest pullRequest) {

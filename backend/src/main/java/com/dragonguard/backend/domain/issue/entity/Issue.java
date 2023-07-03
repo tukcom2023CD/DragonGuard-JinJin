@@ -40,6 +40,7 @@ public class Issue implements Auditable {
 
     @Builder
     public Issue(Member member, Integer amount, Integer year) {
+        if (amount < 0) return;
         this.member = member;
         this.amount = amount;
         this.year = year;

@@ -119,24 +119,33 @@ public class Member implements Auditable {
 
     public void addCommit(Commit commit) {
         if (commit == null || this.commits.stream().anyMatch(commit::customEqualsWithAmount)) return;
-        else if (this.commits.stream().anyMatch(commit::customEquals)) {
-            this.commits.stream().filter(commit::customEquals).findFirst().ifPresent(this.commits::remove);
+        if (this.commits.stream().anyMatch(commit::customEquals)) {
+            this.commits.stream().filter(commit::customEquals).findFirst().ifPresent(c -> {
+                this.commits.remove(c);
+                c.delete();
+            });
         }
         this.commits.add(commit);
     }
 
     public void addIssue(Issue issue) {
         if (issue == null || this.issues.stream().anyMatch(issue::customEqualsWithAmount)) return;
-        else if (this.issues.stream().anyMatch(issue::customEquals)) {
-            this.issues.stream().filter(issue::customEquals).findFirst().ifPresent(this.issues::remove);
+        if (this.issues.stream().anyMatch(issue::customEquals)) {
+            this.issues.stream().filter(issue::customEquals).findFirst().ifPresent(i -> {
+                this.issues.remove(i);
+                i.delete();
+            });
         }
         this.issues.add(issue);
     }
 
     public void addPullRequest(PullRequest pullRequest) {
         if (pullRequest == null || this.pullRequests.stream().anyMatch(pullRequest::customEqualsWithAmount)) return;
-        else if (this.pullRequests.stream().anyMatch(pullRequest::customEquals)) {
-            this.pullRequests.stream().filter(pullRequest::customEquals).findFirst().ifPresent(this.commits::remove);
+        if (this.pullRequests.stream().anyMatch(pullRequest::customEquals)) {
+            this.pullRequests.stream().filter(pullRequest::customEquals).findFirst().ifPresent(p -> {
+                this.pullRequests.remove(p);
+                p.delete();
+            });
         }
         this.pullRequests.add(pullRequest);
     }

@@ -36,6 +36,8 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private List<String> admins;
 
     public void setTransaction(final Member member, final long contribution, final ContributeType contributeType) {
+        if (contribution < 0) return;
+
         String walletAddress = member.getWalletAddress();
         String transactionHash = transferTransaction(contribution, contributeType, walletAddress);
         BigInteger amount = transferAndGetBalanceOfTransaction(walletAddress);
