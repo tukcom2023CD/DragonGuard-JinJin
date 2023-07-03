@@ -10,10 +10,7 @@ import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.*;
-import com.dragonguard.backend.domain.member.entity.AuthStep;
-import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.entity.Role;
-import com.dragonguard.backend.domain.member.entity.Tier;
+import com.dragonguard.backend.domain.member.entity.*;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
@@ -88,6 +85,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Integer contribution = contributionKafkaResponse.getContribution();
         if (isContributionEmpty(member, contribution)) return;
 
+        member.updateMemberContribution(new MemberContribution(contribution));
         sendTransactionIfWalletAddressValid(member, contribution);
     }
 

@@ -85,6 +85,9 @@ public class Member implements Auditable {
 
     private String emailAddress;
 
+    @Embedded
+    private MemberContribution memberContribution;
+
     @Setter
     @Embedded
     @Column(nullable = false)
@@ -298,13 +301,20 @@ public class Member implements Auditable {
     }
 
     public void updateSumOfReviewsWithCalculation() {
-        int reviews = this.sumOfTokens.intValue() - getContributionSumWithoutReviews();
-        if (reviews < 0) return;
-        this.sumOfReviews = reviews;
+        if (this.memberContribution != null && !this.memberContribution.getIsConsumed()) {
+            int reviews = memberContribution.getAmount() - getContributionSumWithoutReviews();
+            memberContribution.consumed();
+            if (reviews < 0) return;
+            this.sumOfReviews = reviews;
+        }
     }
 
     public Integer getContributionSumWithoutReviews() {
         if (this.commits.isEmpty() || this.issues.isEmpty() || this.pullRequests.isEmpty()) return -1;
         return getCommitSumWithRelation() + getPullRequestSumWithRelation() + getIssueSumWithRelation();
+    }
+
+    public void updateMemberContribution(MemberContribution memberContribution) {
+        this.memberContribution = memberContribution;
     }
 }
