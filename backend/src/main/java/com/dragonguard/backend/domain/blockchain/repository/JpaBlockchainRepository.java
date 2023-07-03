@@ -17,6 +17,6 @@ import java.util.List;
 
 public interface JpaBlockchainRepository extends JpaRepository<Blockchain, Long>, BlockchainRepository {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1000")})
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1500")})
     List<Blockchain> findAllByMember(Member member);
 }

@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.blockchain.service;
 
+import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaRequest;
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
@@ -9,6 +10,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private final BlockchainMapper blockchainMapper;
     private final AuthService authService;
     private final MemberRepository memberRepository;
+    private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
     @Value("#{'${admin}'.split(',')}")
     private List<String> admins;
 
@@ -120,13 +123,13 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         long newPullRequest = getNewContribution(pullRequestSum, pullRequest);
         long newCodeReview = getNewContribution(reviewSum, review);
 
-        if (newCommit > 0) setTransaction(member, newCommit, ContributeType.COMMIT);
+        if (newCommit > 0) sendRequestToKafka(member.getId(), newCommit, ContributeType.COMMIT);
 
-        if (newIssue > 0) setTransaction(member, newIssue, ContributeType.ISSUE);
+        if (newIssue > 0) sendRequestToKafka(member.getId(), newIssue, ContributeType.ISSUE);
 
-        if (newPullRequest > 0) setTransaction(member, newPullRequest, ContributeType.PULL_REQUEST);
+        if (newPullRequest > 0) sendRequestToKafka(member.getId(), newPullRequest, ContributeType.PULL_REQUEST);
 
-        if (newCodeReview > 0) setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
+        if (newCodeReview > 0) sendRequestToKafka(member.getId(), newCodeReview, ContributeType.CODE_REVIEW);
 
     }
 
@@ -138,5 +141,9 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         return blockchains.stream()
                 .filter(b -> b.getContributeType().equals(contributeType))
                 .collect(Collectors.toList());
+    }
+
+    private void sendRequestToKafka(UUID id, Long amount, ContributeType contributeType) {
+        blockchainKafkaProducer.send(new BlockchainKafkaRequest(id, amount, contributeType));
     }
 }

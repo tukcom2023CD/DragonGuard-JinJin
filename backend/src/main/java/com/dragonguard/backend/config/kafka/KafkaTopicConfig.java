@@ -71,9 +71,16 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic gitRepoInfo() {
+    public NewTopic gitRepoInfoTopic() {
         return TopicBuilder
                 .name("gitrank.to.backend.git-repos-info")
+                .build();
+    }
+
+    @Bean
+    public NewTopic blockchainTopic() {
+        return TopicBuilder
+                .name("gitrank.to.backend.blockchain")
                 .build();
     }
 }

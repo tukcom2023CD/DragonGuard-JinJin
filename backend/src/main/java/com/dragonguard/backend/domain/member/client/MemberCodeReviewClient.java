@@ -27,7 +27,7 @@ public class MemberCodeReviewClient implements GithubClient<MemberClientRequest,
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .path("search/issues?q=type:reviewed-by:")
+                                .path("search/issues?q=reviewed-by:")
                                 .path(request.getGithubId() + "+type:pr+created:" + request.getYear() + "-01-01.." + LocalDate.now())
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
