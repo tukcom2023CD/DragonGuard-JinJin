@@ -30,7 +30,7 @@ interface GitRankAPI {
     @GET("members/me")
     fun getUserInfo(@Header("Authorization")token: String) : Call<UserInfoModel>
 
-    @GET("members/me/update")
+    @POST("members/me/update")
     fun userInfoUpdate(@Header("Authorization")token: String) : Call<UserInfoModel>
 
 //    repoName에 해당하는 repo의 정보를 받아오는 함수

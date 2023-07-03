@@ -2,6 +2,7 @@ package com.dragonguard.android.activity.profile
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.adapters.ClientGitOrgAdapter
 import com.dragonguard.android.adapters.OthersReposAdapter
 import com.dragonguard.android.databinding.ActivityClientReposBinding
@@ -56,6 +57,7 @@ class ClientReposActivity : AppCompatActivity() {
     private fun initRecycler(result: GithubOrgReposModel) {
         reposAdapter = OthersReposAdapter(result.git_repos, this, token, img, orgName)
         binding.memberRepositoryList.adapter = reposAdapter
+        binding.memberRepositoryList.layoutManager = LinearLayoutManager(this)
         reposAdapter.notifyDataSetChanged()
     }
 }

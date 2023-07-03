@@ -38,7 +38,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:id="@+id/member_repository_list"
         tools:listitem="@layout/others_repos_list"/>

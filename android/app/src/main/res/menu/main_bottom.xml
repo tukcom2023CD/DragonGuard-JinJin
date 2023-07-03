@@ -28,7 +28,7 @@
     </item>
     <item
         android:id="@+id/bottom_profile"
-        android:icon="@drawable/user"
+        android:icon="@drawable/more"
         android:title="프로필"
         app:showAsAction="ifRoom">
     </item>

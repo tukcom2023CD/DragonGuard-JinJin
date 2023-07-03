@@ -23,6 +23,13 @@
             android:layout_height="0dp"
             android:layout_weight="3.1">
 
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/main_loading"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:lottie_rawRes="@raw/splash_screen"/>
+
         </FrameLayout>
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/main_nav"
@@ -32,6 +39,7 @@
             app:itemIconTint="@drawable/compare_menu_selector"
             app:itemTextColor="@drawable/compare_menu_selector"
             app:menu="@menu/main_bottom"
+            android:visibility="gone"
             app:labelVisibilityMode="unlabeled"/>
 
     </LinearLayout>

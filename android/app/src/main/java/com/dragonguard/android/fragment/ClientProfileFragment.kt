@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.adapters.ClientGitOrgAdapter
 import com.dragonguard.android.adapters.OthersReposAdapter
@@ -40,7 +41,6 @@ class ClientProfileFragment(private val token: String, private val viewmodel: Vi
 
     private fun getClientDetail() {
         val coroutine = CoroutineScope(Dispatchers.Main)
-
         coroutine.launch {
             if (!this@ClientProfileFragment.isRemoving) {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
@@ -56,12 +56,16 @@ class ClientProfileFragment(private val token: String, private val viewmodel: Vi
     }
 
     private fun initRecycler(result: ClientDetailModel) {
+        Log.d("결과", "사용자 org: ${result.git_organizations}")
+        Log.d("결과", "사용자 repos: ${result.git_repos}")
         orgAdapter = ClientGitOrgAdapter(result.git_organizations, requireContext(), token)
         binding.memberOrganizaitonList.adapter = orgAdapter
+        binding.memberOrganizaitonList.layoutManager = LinearLayoutManager(requireContext())
         orgAdapter.notifyDataSetChanged()
 
         repoAdapter = OthersReposAdapter(result.git_repos, requireContext(), token, result.member_profile_image, userName)
         binding.memberRepositoryList.adapter = repoAdapter
+        binding.memberRepositoryList.layoutManager = LinearLayoutManager(requireContext())
         repoAdapter.notifyDataSetChanged()
     }
 
