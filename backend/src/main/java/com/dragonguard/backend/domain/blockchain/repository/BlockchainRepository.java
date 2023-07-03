@@ -15,6 +15,7 @@ import java.util.UUID;
 
 public interface BlockchainRepository {
     List<Blockchain> findAllByMemberId(UUID memberId);
+    List<Blockchain> findAllByMember(Member member);
     Blockchain save(Blockchain blockchain);
     Optional<Blockchain> findById(Long id);
     List<Blockchain> findAllByMemberAndContributeType(Member member, ContributeType contributeType);

@@ -110,7 +110,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
             final int reviewSum,
             final boolean flag,
             final int contribution) {
-        List<Blockchain> blockchains = blockchainRepository.findAllByMemberId(member.getId());
+        List<Blockchain> blockchains = blockchainRepository.findAllByMember(member);
 
         List<Blockchain> commit = getBlockchainOfType(blockchains, ContributeType.COMMIT);
         List<Blockchain> issue = getBlockchainOfType(blockchains, ContributeType.ISSUE);
