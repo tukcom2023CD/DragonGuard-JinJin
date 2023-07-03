@@ -307,6 +307,7 @@ public class Member implements Auditable {
     }
 
     public Integer getContributionSumWithoutReviews() {
+        if (this.commits.isEmpty() || this.issues.isEmpty() || this.pullRequests.isEmpty()) return -1;
         return getCommitSumWithRelation() + getPullRequestSumWithRelation() + getIssueSumWithRelation();
     }
 }
