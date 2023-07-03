@@ -137,7 +137,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
         if (newCodeReview == 0) return;
 
-        if (review.isEmpty() && reviewSum > 0) {
+        if (review.isEmpty() && newCodeReview > 0) {
             setTransaction(member, newCodeReview, ContributeType.CODE_REVIEW);
             return;
         }
