@@ -38,10 +38,12 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     @Value("#{'${admin}'.split(',')}")
     private List<String> admins;
 
-    public void setTransaction(final Long blockchainId, final Member member, final long contribution, final ContributeType contributeType) {
+    public void setTransaction(final Member member, final long contribution, final ContributeType contributeType) {
         if (contribution <= 0) return;
 
-        Blockchain blockchain = loadEntity(blockchainId);
+        if (!blockchainRepository.existsByMemberAndContributeType(member, contributeType)) return;
+        Blockchain blockchain = blockchainRepository.findByMemberAndContributeType(member, contributeType)
+                .orElseThrow(EntityNotFoundException::new);
 
         if (!blockchain.isNewHistory(contribution)) return;
 
@@ -138,13 +140,13 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
         UUID memberId = member.getId();
 
-        if (commit.isNewHistory(commitSum)) sendRequestToKafka(memberId, newCommit, ContributeType.COMMIT, commit.getId());
+        if (commit.isNewHistory(commitSum)) sendRequestToKafka(memberId, newCommit, ContributeType.COMMIT);
 
-        if (issue.isNewHistory(issueSum)) sendRequestToKafka(memberId, newIssue, ContributeType.ISSUE, issue.getId());
+        if (issue.isNewHistory(issueSum)) sendRequestToKafka(memberId, newIssue, ContributeType.ISSUE);
 
-        if (pullRequest.isNewHistory(pullRequestSum)) sendRequestToKafka(memberId, newPullRequest, ContributeType.PULL_REQUEST, pullRequest.getId());
+        if (pullRequest.isNewHistory(pullRequestSum)) sendRequestToKafka(memberId, newPullRequest, ContributeType.PULL_REQUEST);
 
-        if (codeReview.isNewHistory(codeReviewSum)) sendRequestToKafka(memberId, newCodeReview, ContributeType.CODE_REVIEW, codeReview.getId());
+        if (codeReview.isNewHistory(codeReviewSum)) sendRequestToKafka(memberId, newCodeReview, ContributeType.CODE_REVIEW);
     }
 
     private long getNewContribution(final int contribution, final Blockchain blockchain) {
@@ -152,14 +154,14 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     public Blockchain getBlockchainOfType(Member member, ContributeType contributeType) {
-        if (blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
-            return blockchainRepository.findByMemberAndContributeType(member, contributeType)
-                    .orElseThrow(EntityNotFoundException::new);
+        if (!blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
+            blockchainRepository.save(blockchainMapper.toEntity(member, contributeType));
         }
-        return blockchainRepository.save(blockchainMapper.toEntity(member, contributeType));
+        return blockchainRepository.findByMemberAndContributeType(member, contributeType)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
-    private void sendRequestToKafka(UUID memberId, Long amount, ContributeType contributeType, Long blockchainId) {
-        blockchainKafkaProducer.send(new BlockchainKafkaRequest(memberId, amount, contributeType, blockchainId));
+    private void sendRequestToKafka(UUID memberId, Long amount, ContributeType contributeType) {
+        blockchainKafkaProducer.send(new BlockchainKafkaRequest(memberId, amount, contributeType));
     }
 }

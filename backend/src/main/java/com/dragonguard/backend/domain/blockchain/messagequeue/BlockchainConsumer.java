@@ -35,7 +35,7 @@ public class BlockchainConsumer implements KafkaConsumer<BlockchainKafkaResponse
         Member member = memberRepository.findById(response.getMemberId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        blockchainService.setTransaction(response.getBlockchainId(), member, response.getAmount(), response.getContributeType());
+        blockchainService.setTransaction(member, response.getAmount(), response.getContributeType());
     }
 
     @Override

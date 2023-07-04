@@ -14,5 +14,4 @@ public class BlockchainKafkaRequest {
     private UUID memberId;
     private Long amount;
     private ContributeType contributeType;
-    private Long blockchainId;
 }
