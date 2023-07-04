@@ -151,7 +151,7 @@ class RepoContributorsActivity : AppCompatActivity() {
             if (count < 4) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ repoContributors(repoName) }, 2000)
+                handler.postDelayed({ updateContributions() }, 2000)
             } else {
                 binding.loadingLottie.pauseAnimation()
                 binding.loadingLottie.visibility = View.GONE
@@ -291,6 +291,23 @@ class RepoContributorsActivity : AppCompatActivity() {
         count = 0
     }
 
+    private fun updateContributions() {
+        binding.loadingLottie.resumeAnimation()
+        binding.loadingLottie.visibility = View.VISIBLE
+        binding.repoContributeFrame.visibility = View.GONE
+        refresh = false
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            if(!this@RepoContributorsActivity.isFinishing) {
+                val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.updateContribute(repoName, token)
+                }
+                val resultRepo = resultRepoDeferred.await()
+                checkUpdate(resultRepo)
+            }
+        }
+    }
+
     /*    그래프 x축을 contributor의 이름으로 변경하는 코드
           x축 label을 githubId의 앞의 4글자를 기입하여 곂치는 문제 해결
      */
@@ -342,20 +359,7 @@ class RepoContributorsActivity : AppCompatActivity() {
 
             R.id.refresh_button -> {
                 if(refresh) {
-                    binding.loadingLottie.resumeAnimation()
-                    binding.loadingLottie.visibility = View.VISIBLE
-                    binding.repoContributeFrame.visibility = View.GONE
-                    refresh = false
-                    val coroutine = CoroutineScope(Dispatchers.Main)
-                    coroutine.launch {
-                        if(!this@RepoContributorsActivity.isFinishing) {
-                            val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
-                                viewmodel.updateContribute(repoName, token)
-                            }
-                            val resultRepo = resultRepoDeferred.await()
-                            checkUpdate(resultRepo)
-                        }
-                    }
+                    updateContributions()
                 }
             }
         }
