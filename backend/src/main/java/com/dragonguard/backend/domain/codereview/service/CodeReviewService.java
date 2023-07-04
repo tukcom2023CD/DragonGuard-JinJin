@@ -32,16 +32,16 @@ public class CodeReviewService implements EntityLoader<CodeReview, Long> {
 
         if (codeReviewRepository.existsByMemberAndYear(member, year)) {
             findCodeReviewAndUpdateNum(member, codeReviewNum, year);
-            sendTransaction(member, codeReviewNum - blockchain.getSumOfAmount(), blockchain.getId());
+            sendTransaction(member, codeReviewNum - blockchain.getSumOfAmount());
             return;
         }
         codeReviewRepository.save(codeReviewMapper.toEntity(codeReviewNum, year, member));
-        sendTransaction(member, codeReviewNum.longValue(), blockchain.getId());
+        sendTransaction(member, codeReviewNum.longValue());
     }
 
-    private void sendTransaction(Member member, Long amount, Long blockchainId) {
+    private void sendTransaction(Member member, Long amount) {
         if (amount <= 0 || !member.isWalletAddressExists()) return;
-        blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.CODE_REVIEW, blockchainId));
+        blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.CODE_REVIEW));
     }
 
     private void findCodeReviewAndUpdateNum(final Member member, final Integer codeReviewNum, final Integer year) {

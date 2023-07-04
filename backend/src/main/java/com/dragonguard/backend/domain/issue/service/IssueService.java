@@ -32,16 +32,16 @@ public class IssueService implements EntityLoader<Issue, Long> {
 
         if (issueRepository.existsByMemberAndYear(member, year)) {
             findIssueAndUpdateNum(member, issueNum, year);
-            sendTransaction(member, issueNum - blockchain.getSumOfAmount(), blockchain.getId());
+            sendTransaction(member, issueNum - blockchain.getSumOfAmount());
             return;
         }
         issueRepository.save(issueMapper.toEntity(member, issueNum, year));
-        sendTransaction(member, issueNum.longValue(), blockchain.getId());
+        sendTransaction(member, issueNum.longValue());
     }
 
-    private void sendTransaction(Member member, Long amount, Long blockchainId) {
+    private void sendTransaction(Member member, Long amount) {
         if (amount <= 0 || !member.isWalletAddressExists()) return;
-        blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.ISSUE, blockchainId));
+        blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.ISSUE));
     }
 
     private void findIssueAndUpdateNum(final Member member, final Integer issueNum, final Integer year) {
