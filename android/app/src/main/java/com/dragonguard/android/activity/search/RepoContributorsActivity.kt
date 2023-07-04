@@ -64,7 +64,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     fun repoContributors(repoName: String) {
         binding.loadingLottie.resumeAnimation()
         binding.loadingLottie.visibility = View.VISIBLE
-        if (!this@RepoContributorsActivity.isFinishing && count < 2) {
+        if (!this@RepoContributorsActivity.isFinishing && count < 4) {
             Log.d("check", "repoName $repoName")
             Log.d("check", "token $token")
             val coroutine = CoroutineScope(Dispatchers.Main)
@@ -80,7 +80,7 @@ class RepoContributorsActivity : AppCompatActivity() {
             }
         }
 
-        if(count >= 2) {
+        if(count >= 4) {
             //완전 빈 repository 상세조회 시 처리
             binding.loadingLottie.pauseAnimation()
             binding.loadingLottie.visibility = View.GONE
@@ -110,7 +110,7 @@ class RepoContributorsActivity : AppCompatActivity() {
                     initRecycler()
                 }
             } else {
-                if (count < 2) {
+                if (count < 4) {
                     count++
                     val handler = Handler(Looper.getMainLooper())
                     handler.postDelayed({ repoContributors(repoName) }, 2000)
@@ -147,7 +147,7 @@ class RepoContributorsActivity : AppCompatActivity() {
                 initRecycler()
             }
         } else {
-            if (count < 2) {
+            if (count < 4) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({ repoContributors(repoName) }, 2000)
@@ -180,11 +180,11 @@ class RepoContributorsActivity : AppCompatActivity() {
 //        Toast.makeText(applicationContext,"그래프 그리기 시작", Toast.LENGTH_SHORT).show()
         val entries = ArrayList<BarEntry>()
         val sparkEntries = ArrayList<Entry>()
-        var count = 1
+        var countN = 1
         contributors.forEach {
             it.commits?.let { commit ->
-                entries.add(BarEntry(count.toFloat(), commit.toFloat()))
-                count++
+                entries.add(BarEntry(countN.toFloat(), commit.toFloat()))
+                countN++
             }
 //                Toast.makeText(applicationContext, "현재 count = $count", Toast.LENGTH_SHORT).show()
         }
