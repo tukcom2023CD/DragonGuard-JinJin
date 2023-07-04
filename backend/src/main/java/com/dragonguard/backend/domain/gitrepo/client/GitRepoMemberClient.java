@@ -52,11 +52,11 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Lis
                         return Mono.error(WebClientException::new);
                     }
                     return Mono.just(response);
-                })
-                .retryWhen(
+                }).retryWhen(
                         Retry.fixedDelay(10, Duration.ofMillis(1500))
                                 .filter(WebClientException.class::isInstance))
+                .onErrorMap(t -> new WebClientException())
                 .blockOptional()
-                .orElseGet(List::of);
+                .orElseThrow(WebClientException::new);
     }
 }

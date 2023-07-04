@@ -85,7 +85,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
             return savedSparkLine;
         }
         List<Integer> sparkLine = requestClientSparkLine(githubToken, name);
-        if (!sparkLine.isEmpty()) gitRepo.updateSparkLine(sparkLine);
+        gitRepo.updateSparkLine(sparkLine);
         return sparkLine;
     }
 

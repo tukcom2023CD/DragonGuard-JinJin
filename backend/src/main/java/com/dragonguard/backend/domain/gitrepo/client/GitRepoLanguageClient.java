@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.gitrepo.client;
 
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
 import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,6 @@ public class GitRepoLanguageClient implements GithubClient<GitRepoClientRequest,
                 .retrieve()
                 .bodyToMono(Map.class)
                 .blockOptional()
-                .orElseGet(Map::of);
+                .orElseThrow(WebClientException::new);
     }
 }
