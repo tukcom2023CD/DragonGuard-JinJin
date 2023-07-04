@@ -1,46 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.ClientProfileFragment"
-    android:orientation="vertical">
+    android:fillViewport="true"
+    tools:context=".fragment.ClientProfileFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/textAppearance"
-        android:textSize="25sp"
-        android:text="Organization"
-        android:layout_marginStart="25dp"/>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginHorizontal="15dp"
-        android:id="@+id/member_organizaiton_list"
-        tools:listitem="@layout/git_organization_list"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/textAppearance"
+            android:textSize="25sp"
+            android:text="Organization"
+            android:layout_marginStart="25dp"/>
 
-    <TextView
-        android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/textAppearance"
-        android:textSize="25sp"
-        android:text="Repository"
-        android:layout_marginStart="25dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginHorizontal="15dp"
+            android:id="@+id/member_organizaiton_list"
+            tools:listitem="@layout/git_organization_list"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
-        android:id="@+id/member_repository_list"
-        tools:listitem="@layout/others_repos_list"/>
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/textAppearance"
+            android:textSize="25sp"
+            android:text="Repository"
+            android:layout_marginStart="25dp"/>
 
-</LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginHorizontal="15dp"
+            android:id="@+id/member_repository_list"
+            tools:listitem="@layout/others_repos_list"
+            android:layout_marginBottom="60dp"/>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

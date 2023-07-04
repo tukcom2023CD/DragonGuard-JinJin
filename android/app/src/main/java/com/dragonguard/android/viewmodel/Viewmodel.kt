@@ -82,7 +82,7 @@ class Viewmodel: ViewModel() {
         onSearchClickListener.value = true
     }
 
-    fun getRepoContributors(repoName: String, token: String): RepoContributorsModel {
+    fun getRepoContributors(repoName: String, token: String): RepoContributorsModel? {
         return repository.getRepoContributors(repoName, token)
     }
 

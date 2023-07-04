@@ -7,8 +7,14 @@
     tools:context=".activity.profile.ClientReposActivity"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"/>
+
     <TextView
-        android:layout_marginTop="35dp"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/textAppearance"

@@ -28,8 +28,8 @@ import java.util.concurrent.TimeUnit
 class ApiRepository {
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(5, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .writeTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(18, TimeUnit.SECONDS)
+        .writeTimeout(18, TimeUnit.SECONDS)
         .retryOnConnectionFailure(true)
         .build()
 
@@ -115,11 +115,15 @@ class ApiRepository {
     }
 
     //Repository의 기여자들의 정보를 받아오기 위한 함수
-    fun getRepoContributors(repoName: String, token: String): RepoContributorsModel {
+    fun getRepoContributors(repoName: String, token: String): RepoContributorsModel? {
         val repoContributors = api.getRepoContributors(repoName, "Bearer $token")
         var repoContResult = RepoContributorsModel(null, null)
         try{
             val result = repoContributors.execute()
+//            if(result.code() == 204) {
+//                Log.d("error", "레포 상세조회 결과 ${result.code()}")
+//                return null
+//            }
             Log.d("error", "레포 상세조회 결과 ${result.code()}")
             repoContResult = result.body()!!
         } catch (e: Exception) {

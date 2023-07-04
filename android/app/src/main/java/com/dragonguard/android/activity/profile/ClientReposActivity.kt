@@ -2,7 +2,11 @@ package com.dragonguard.android.activity.profile
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dragonguard.android.R
 import com.dragonguard.android.adapters.ClientGitOrgAdapter
 import com.dragonguard.android.adapters.OthersReposAdapter
 import com.dragonguard.android.databinding.ActivityClientReposBinding
@@ -24,6 +28,12 @@ class ClientReposActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityClientReposBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
+
         intent.getStringExtra("token")?.let {
             token = it
         }
@@ -59,5 +69,16 @@ class ClientReposActivity : AppCompatActivity() {
         binding.memberRepositoryList.adapter = reposAdapter
         binding.memberRepositoryList.layoutManager = LinearLayoutManager(this)
         reposAdapter.notifyDataSetChanged()
+    }
+
+
+    //    뒤로가기, 홈으로 화면전환 기능
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -37,7 +37,7 @@ interface GitRankAPI {
     @GET("git-repos")
     fun getRepoContributors(@Query("name") repoName: String, @Header("Authorization")token: String): Call<RepoContributorsModel>
 
-    @GET("git-repos")
+    @GET("git-repos/update")
     fun getRepoContributorsUpdate(@Query("name") repoName: String, @Header("Authorization")token: String): Call<RepoContributorsModel>
 
 //    모든 사용자들의 랭킹을 받아오는 함수
