@@ -1,6 +1,9 @@
 server:
   servlet:
     context-path: /api
+  tomcat:
+    connection-timeout: 5000
+    keep-alive-timeout: 10000
 
 spring:
   datasource:
