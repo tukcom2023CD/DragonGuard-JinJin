@@ -127,6 +127,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     }
 
     private fun checkUpdate(result: RepoContributorsModel) {
+        Log.d("repo", "결과 $result" )
         if (result.git_repo_members != null) {
             if (result.git_repo_members[0].additions == null) {
                 count++
