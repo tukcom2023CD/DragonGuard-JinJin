@@ -106,7 +106,7 @@ public class Member implements Auditable {
     @Formula("(SELECT COALESCE(sum(cr.amount), 0) FROM code_review cr WHERE cr.member_id = id)")
     private Integer sumOfCodeReviews;
 
-    @Formula("(SELECT COALESCE(sum(h.amount), 0) FROM blockchain b left join history h ON b.member_id = id)")
+    @Formula("(SELECT COALESCE(sum(h.amount), 0) FROM member m left join blockchain b on b.member_id = m.id left join history h on h.blockchain_id = b.id where m.id = id)")
     private Long sumOfTokens;
 
     @Builder
