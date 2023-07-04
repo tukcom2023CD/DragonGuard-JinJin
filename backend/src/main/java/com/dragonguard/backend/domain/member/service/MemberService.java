@@ -1,8 +1,5 @@
 package com.dragonguard.backend.domain.member.service;
 
-import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
-import com.dragonguard.backend.domain.contribution.dto.kafka.ContributionKafkaResponse;
-import com.dragonguard.backend.domain.contribution.service.ContributionService;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.member.dto.kafka.KafkaContributionRequest;
@@ -10,7 +7,10 @@ import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
 import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.*;
-import com.dragonguard.backend.domain.member.entity.*;
+import com.dragonguard.backend.domain.member.entity.AuthStep;
+import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.entity.Role;
+import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
@@ -38,8 +38,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private final MemberRepository memberRepository;
     private final MemberClientService memberClientService;
     private final MemberMapper memberMapper;
-    private final ContributionService contributionService;
-    private final BlockchainService blockchainService;
     private final AuthService authService;
     private final OrganizationRepository organizationRepository;
     private final GitOrganizationService gitOrganizationService;
@@ -79,34 +77,9 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return loadEntity(member.getId());
     }
 
-    public void addMemberContributionsAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
-        Member member = findMemberAndUpdate(contributionKafkaResponse);
-
-        Integer contribution = contributionKafkaResponse.getContribution();
-        if (isContributionEmpty(member, contribution)) return;
-
-        sendTransactionIfWalletAddressValid(member);
-    }
-
-    private Member findMemberAndUpdate(final ContributionKafkaResponse contributionKafkaResponse) {
-        Member member = findMemberOrSave(contributionKafkaResponse.getGithubId(), AuthStep.NONE, contributionKafkaResponse.getProfileImage());
-        member.updateNameAndImage(contributionKafkaResponse.getName(), contributionKafkaResponse.getProfileImage());
-        return member;
-    }
-
-    private void sendTransactionIfWalletAddressValid(final Member member) {
-        if (member.validateWalletAddressAndUpdateTier()) return;
-        if (!member.isWalletAddressExists()) return;
-
-        blockchainService.sendSmartContractTransaction(member);
-        member.validateWalletAddressAndUpdateTier();
-    }
-
     public void updateContributions() {
         Member member = getLoginUserWithPersistence();
         sendGitRepoAndContributionRequestToKafka(member.getGithubId());
-
-        if (member.isWalletAddressExists()) transactionAndUpdateTier(member);
     }
 
     public MemberResponse getMember() {
@@ -146,6 +119,10 @@ public class MemberService implements EntityLoader<Member, UUID> {
         kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
     }
 
+    private void sendRepositoryRequestToKafka(final String githubId) {
+        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
+    }
+
     @Transactional(readOnly = true)
     public List<MemberRankResponse> getMemberRankingByOrganization(final Long organizationId, final Pageable pageable) {
         return memberRepository.findRankingByOrganization(organizationId, pageable);
@@ -177,9 +154,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private void transactionAndUpdateTier(final Member member) {
-        if (!member.isWalletAddressExists()) return;
-
-        blockchainService.sendSmartContractTransaction(member);
         member.validateWalletAddressAndUpdateTier();
     }
 
@@ -187,12 +161,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         memberClientService.addMemberContribution(member);
         if (StringUtils.hasText(member.getWalletAddress()) && !member.getAuthStep().equals(AuthStep.GITHUB_ONLY)) {
             transactionAndUpdateTier(member);
-            getContributionSumByScraping(member.getGithubId());
         }
-    }
-
-    private void getContributionSumByScraping(final String githubId) {
-        contributionService.scrapingContributions(githubId);
     }
 
     private MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(final String githubId, final Member member) {
@@ -208,11 +177,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     private void sendGitRepoAndContributionRequestToKafka(final String githubId) {
         sendContributionRequestToKafka(githubId);
-    }
-
-    private boolean isContributionEmpty(final Member member, final int contribution) {
-        int contributionSum = member.getContributionSum();
-        return member.getSumOfTokens().intValue() == contribution || contributionSum == contribution;
+        sendRepositoryRequestToKafka(githubId);
     }
 
     public MemberGitOrganizationRepoResponse getMemberGitOrganizationRepo(final String gitOrganizationName) {
@@ -235,7 +200,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public MemberResponse updateContributionsAndGetProfile() {
         Member member = getLoginUserWithPersistence();
 
-        getContributionSumByScraping(member.getGithubId());
         memberClientService.addMemberGitRepoAndGitOrganization(member);
 
         if (member.isWalletAddressExists()) updateContributionAndTransaction(member);

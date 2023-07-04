@@ -86,12 +86,17 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     public List<BlockchainResponse> updateAndGetBlockchainInfo() {
-        Member member = memberRepository.findById(authService.getLoginUserId()).orElseThrow(EntityNotFoundException::new);
+        UUID memberId = authService.getLoginUserId();
+        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
         if (!member.isWalletAddressExists()) return List.of();
 
-        sendSmartContractTransaction(member);
+        long blockchainSum = blockchainRepository.findByMemberId(memberId).stream().mapToLong(Blockchain::getSumOfAmount).sum();
 
-        member.validateWalletAddressAndUpdateTier();
+        if (member.getContributionSum().longValue() == blockchainSum) return getBlockchainResponses(memberId);
+
+        sendSmartContractTransaction(member);
+        member.updateTier();
+
         return getBlockchainResponses(member.getId());
     }
 
@@ -144,7 +149,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         return contribution - blockchain.getSumOfAmount();
     }
 
-    private Blockchain getBlockchainOfType(Member member, ContributeType contributeType) {
+    public Blockchain getBlockchainOfType(Member member, ContributeType contributeType) {
         if (blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
             return blockchainRepository.findByMemberAndContributeType(member, contributeType)
                     .orElseThrow(EntityNotFoundException::new);
