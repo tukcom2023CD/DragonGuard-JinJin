@@ -43,7 +43,7 @@ public class Organization implements Auditable {
     @Enumerated(EnumType.STRING)
     private OrganizationStatus organizationStatus = OrganizationStatus.REQUESTED;
 
-    @Formula("(SELECT sum(b.amount) FROM blockchain b INNER JOIN member m ON m.id = b.member_id WHERE m.organization_id = id)")
+    @Formula("(SELECT COALESCE(sum(h.amount), 0) FROM history h LEFT JOIN blockchain b on h.blockchain_id = b.id LEFT JOIN member m ON m.id = b.member_id WHERE m.organization_id = id)")
     private Long sumOfMemberTokens;
 
     @Setter

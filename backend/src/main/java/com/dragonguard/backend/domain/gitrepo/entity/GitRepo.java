@@ -57,5 +57,4 @@ public class GitRepo implements Auditable {
     public void updateSparkLine(List<Integer> sparkLine) {
         this.sparkLine = sparkLine;
     }
-
 }

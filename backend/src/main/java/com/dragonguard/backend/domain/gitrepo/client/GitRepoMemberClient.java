@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.gitrepo.client;
 
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
+import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
 import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
@@ -43,6 +44,7 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Lis
                 .retrieve()
                 .onStatus(HttpStatus.NO_CONTENT::equals, response -> Mono.error(WebClientException::new))
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(ClientBadRequestException::new))
+                .onStatus(HttpStatus::is5xxServerError, response -> Mono.empty())
                 .bodyToFlux(GitRepoMemberClientResponse.class)
                 .collectList()
                 .flatMap(response -> {
@@ -54,8 +56,9 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Lis
                     return Mono.just(response);
                 }).retryWhen(
                         Retry.fixedDelay(10, Duration.ofMillis(1500))
-                                .filter(WebClientException.class::isInstance))
-                .onErrorMap(t -> new WebClientException())
+                                .filter(WebClientException.class::isInstance)
+                                .onRetryExhaustedThrow(((retryBackoffSpec, retrySignal) -> new WebClientRetryException())))
+                .onErrorReturn(WebClientRetryException.class, List.of())
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
     }
