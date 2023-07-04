@@ -24,6 +24,7 @@ class OthersReposAdapter (private val datas : List<String>, private val context:
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         //클릭리스너 구현
         fun bind(data: String) {
+            binding.reposFrame.clipToOutline = true
             binding.repoName.text = data
             Glide.with(binding.othersProfileImg).load(img)
                 .into(binding.othersProfileImg)

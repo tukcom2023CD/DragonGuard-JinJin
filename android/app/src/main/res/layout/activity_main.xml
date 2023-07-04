@@ -10,37 +10,42 @@
             type="com.dragonguard.android.viewmodel.Viewmodel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="3.4"
         tools:context=".activity.basic.MainActivity">
-
-        <FrameLayout
-            android:id="@+id/content_frame"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3.1">
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/main_loading"
-                android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <FrameLayout
+                android:id="@+id/content_frame"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:lottie_rawRes="@raw/splash_screen"/>
+                android:layout_height="match_parent">
 
-        </FrameLayout>
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/main_loading"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:lottie_rawRes="@raw/splash_screen"/>
+
+            </FrameLayout>
+        </LinearLayout>
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/main_nav"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:visibility="gone"
             app:itemIconTint="@drawable/compare_menu_selector"
             app:itemTextColor="@drawable/compare_menu_selector"
-            app:menu="@menu/main_bottom"
-            android:visibility="gone"
-            app:labelVisibilityMode="unlabeled"/>
+            app:labelVisibilityMode="unlabeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:menu="@menu/main_bottom" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

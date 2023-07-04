@@ -25,89 +25,102 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/profile_img"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
                 android:background="@drawable/round_title"/>
 
             <TextView
                 android:id="@+id/user_ogr"
-                android:layout_marginVertical="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:textAppearance="@style/textAppearance"/>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginVertical="8dp">
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/linearLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginHorizontal="8dp">
+                    android:layout_marginEnd="24dp"
+                    app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
+                    app:layout_constraintTop_toTopOf="parent">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="전체 랭킹"
-                        android:textSize="20sp"
-                        android:textAppearance="@style/textAppearance"/>
+                        android:textAppearance="@style/textAppearance"
+                        android:textSize="20sp" />
+
                     <TextView
                         android:id="@+id/user_rank"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/textAppearance"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center"
-                        android:textSize="30sp"/>
+                        android:textAppearance="@style/textAppearance"
+                        android:textSize="30sp" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearLayout2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginHorizontal="8dp">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="commit"
-                        android:textSize="20sp"
-                        android:textAppearance="@style/textAppearance"/>
+                        android:textAppearance="@style/textAppearance"
+                        android:textSize="20sp" />
+
                     <TextView
                         android:id="@+id/user_commit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/textAppearance"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center"
-                        android:textSize="30sp"/>
+                        android:textAppearance="@style/textAppearance"
+                        android:textSize="30sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginHorizontal="8dp">
+                    android:layout_marginStart="24dp"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout2"
+                    app:layout_constraintTop_toTopOf="parent">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="issue"
-                        android:textSize="20sp"
-                        android:textAppearance="@style/textAppearance"/>
+                        android:textAppearance="@style/textAppearance"
+                        android:textSize="20sp" />
+
                     <TextView
                         android:id="@+id/user_issue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/textAppearance"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center"
-                        android:textSize="30sp"/>
+                        android:textAppearance="@style/textAppearance"
+                        android:textSize="30sp" />
                 </LinearLayout>
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="400dp"

@@ -30,7 +30,7 @@ class ApiRepository {
         .connectTimeout(5, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
-        .retryOnConnectionFailure(false)
+        .retryOnConnectionFailure(true)
         .build()
 
     private val retrofit = Retrofit.Builder().baseUrl(BuildConfig.api)
@@ -91,6 +91,7 @@ class ApiRepository {
             null, null, null, null, null, null)
         try {
             val result = userInfo.execute()
+            Log.d("error", "사용자 정보 요청 주소 : ${userInfo.request().url}")
             Log.d("result", "사용자 정보 요청 결과 : ${result.code()}")
             userResult = result.body()!!
         } catch (e: Exception) {
@@ -104,6 +105,7 @@ class ApiRepository {
         val userDetails = api.getMemberDetails("Bearer $token")
         return try {
             val result = userDetails.execute()
+            Log.d("error", "client 정보 요청 주소 : ${userDetails.request().url}")
             Log.d("result", "client 정보 요청 결과 : ${result.code()}")
             result.body()!!
         } catch (e: Exception) {
