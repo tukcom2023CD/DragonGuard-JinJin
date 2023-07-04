@@ -51,8 +51,20 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
 
     private List<GitRepoMember> validateAndGetGitRepoMembers(final List<GitRepoMemberResponse> gitRepoMemberResponses, final String gitRepoName) {
         return gitRepoMemberResponses.stream()
-                .map(gitRepoResponse -> findByNameAndMemberGithubId(gitRepoName, gitRepoResponse.getGithubId()))
+                .map(gitRepoResponse -> saveAndGetGitRepoMember(gitRepoName, gitRepoResponse))
                 .collect(Collectors.toList());
+    }
+
+    private GitRepoMember saveAndGetGitRepoMember(final String gitRepoName, final GitRepoMemberResponse response) {
+        String githubId = response.getGithubId();
+        GitRepoMember gitRepoMember = gitRepoMemberRepository.findByNameAndMemberGithubId(gitRepoName, githubId)
+                .orElseGet(() -> {
+                    Long id = gitRepoMemberRepository.save(gitRepoMemberMapper.toEntity(memberService.findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE),
+                            getGitRepoByName(gitRepoName))).getId();
+                    return loadEntity(id);
+                });
+        gitRepoMember.updateProfileImage(response.getProfileUrl(), response.getCommits(), response.getAdditions(), response.getDeletions());
+        return gitRepoMember;
     }
 
     public void saveAll(final List<GitRepoMemberResponse> gitRepoResponses, final GitRepo gitRepo) {
@@ -94,8 +106,7 @@ public class GitRepoMemberService implements EntityLoader<GitRepoMember, Long> {
                             gitRepoMemberMapper.toEntity(
                                     memberService.findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE),
                                     getGitRepoByName(gitRepoName)));
-                    return gitRepoMemberRepository.findById(gitRepoMember.getId())
-                            .orElseThrow(EntityNotFoundException::new);
+                    return loadEntity(gitRepoMember.getId());
                 });
     }
 

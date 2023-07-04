@@ -75,4 +75,9 @@ public class GitRepoMember implements Auditable {
     public void updateGitRepoContribution(Integer commits, Integer additions, Integer deletions) {
         this.gitRepoContribution = new GitRepoContribution(commits, additions, deletions);
     }
+
+    public void updateProfileImage(String profileUrl, Integer commits, Integer additions, Integer deletions) {
+        this.member.updateProfileImage(profileUrl);
+        updateGitRepoContribution(commits, additions, deletions);
+    }
 }
