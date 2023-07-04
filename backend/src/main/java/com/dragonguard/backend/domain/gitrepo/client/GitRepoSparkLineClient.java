@@ -3,7 +3,6 @@ package com.dragonguard.backend.domain.gitrepo.client;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoSparkLineResponse;
 import com.dragonguard.backend.global.GithubClient;
-import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -36,6 +35,6 @@ public class GitRepoSparkLineClient implements GithubClient<GitRepoClientRequest
                 .retrieve()
                 .bodyToMono(GitRepoSparkLineResponse.class)
                 .blockOptional()
-                .orElseThrow(WebClientException::new);
+                .orElse(new GitRepoSparkLineResponse(new Integer[]{}));
     }
 }

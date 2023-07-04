@@ -3,7 +3,6 @@ package com.dragonguard.backend.domain.gitrepo.client;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.global.GithubClient;
-import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -35,6 +34,6 @@ public class GitRepoClient implements GithubClient<GitRepoClientRequest, GitRepo
                 .retrieve()
                 .bodyToMono(GitRepoClientResponse.class)
                 .blockOptional()
-                .orElseThrow(WebClientException::new);
+                .orElseGet(GitRepoClientResponse::new);
     }
 }

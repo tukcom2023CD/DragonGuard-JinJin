@@ -1,6 +1,7 @@
 package com.dragonguard.backend.global.advice;
 
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.exception.WebClientException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.codec.DecodingException;
@@ -53,5 +54,10 @@ public class GlobalErrorAdvice {
     @ExceptionHandler(MismatchedInputException.class)
     public ResponseEntity<ErrorResponse> mismatchedInputException(MismatchedInputException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(WebClientException.class)
+    public ResponseEntity<Void> webClientException(WebClientException e) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

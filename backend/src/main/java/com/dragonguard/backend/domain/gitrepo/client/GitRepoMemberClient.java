@@ -57,6 +57,6 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Lis
                         Retry.fixedDelay(10, Duration.ofMillis(1500))
                                 .filter(WebClientException.class::isInstance))
                 .blockOptional()
-                .orElseThrow(WebClientException::new);
+                .orElseGet(List::of);
     }
 }

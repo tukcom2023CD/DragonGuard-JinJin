@@ -84,18 +84,18 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
             requestKafkaSparkLine(githubToken, gitRepo.getId());
             return savedSparkLine;
         }
-        List<Integer> sparkLine = Arrays.asList(requestClientSparkLine(githubToken, name).getAll());
-        gitRepo.updateSparkLine(sparkLine);
+        List<Integer> sparkLine = requestClientSparkLine(githubToken, name);
+        if (!sparkLine.isEmpty()) gitRepo.updateSparkLine(sparkLine);
         return sparkLine;
     }
 
     public void updateSparkLine(final Long id, final String githubToken) {
         GitRepo gitRepo = loadEntity(id);
-        gitRepo.updateSparkLine(Arrays.asList(requestClientSparkLine(githubToken, gitRepo.getName()).getAll()));
+        gitRepo.updateSparkLine(requestClientSparkLine(githubToken, gitRepo.getName()));
     }
 
-    private GitRepoSparkLineResponse requestClientSparkLine(final String githubToken, final String name) {
-        return gitRepoSparkLineClient.requestToGithub(new GitRepoClientRequest(githubToken, name));
+    private List<Integer> requestClientSparkLine(final String githubToken, final String name) {
+        return Arrays.asList(gitRepoSparkLineClient.requestToGithub(new GitRepoClientRequest(githubToken, name)).getAll());
     }
 
     private List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final GitRepoInfoRequest gitRepoInfoRequest) {
