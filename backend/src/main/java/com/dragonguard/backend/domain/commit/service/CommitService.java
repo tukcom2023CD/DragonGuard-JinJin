@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.commit.service;
 
 import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaRequest;
+import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.commit.entity.Commit;
@@ -27,26 +28,25 @@ public class CommitService implements EntityLoader<Commit, Long> {
     private final BlockchainService blockchainService;
 
     public void saveCommits(final Member member, final Integer commitNum, final Integer year) {
+        Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.COMMIT);
+
         if (commitRepository.existsByMemberAndYear(member, year)) {
-            Integer newAmount = findCommitAndUpdateNum(member, commitNum, year);
-            sendTransaction(member, newAmount.longValue());
+            findCommitAndUpdateNum(member, commitNum, year);
+            sendTransaction(member, commitNum - blockchain.getSumOfAmount(), blockchain.getId());
             return;
         }
         commitRepository.save(commitMapper.toEntity(commitNum, year, member));
-        sendTransaction(member, commitNum.longValue());
+        sendTransaction(member, commitNum.longValue(), blockchain.getId());
     }
 
-    private void sendTransaction(Member member, Long amount) {
+    private void sendTransaction(Member member, Long amount, Long blockchainId) {
         if (amount <= 0 || !member.isWalletAddressExists()) return;
-        Long blockchainId = blockchainService.getBlockchainOfType(member, ContributeType.CODE_REVIEW).getId();
-        blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.CODE_REVIEW, blockchainId));
+        blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.COMMIT, blockchainId));
     }
 
-    private Integer findCommitAndUpdateNum(final Member member, final Integer commitNum, final Integer year) {
+    private void findCommitAndUpdateNum(final Member member, final Integer codeReviewNum, final Integer year) {
         Commit commit = commitRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
-        Integer newAmount = commitNum - commit.getAmount();
-        commit.updateCommitNum(commitNum);
-        return newAmount;
+        commit.updateCommitNum(codeReviewNum);
     }
 
     @Override

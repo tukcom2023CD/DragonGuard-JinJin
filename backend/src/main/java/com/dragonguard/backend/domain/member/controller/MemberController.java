@@ -1,23 +1,18 @@
 package com.dragonguard.backend.domain.member.controller;
 
-import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.*;
-import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.service.MemberService;
-import com.dragonguard.backend.global.IdResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author 김승진
@@ -29,11 +24,6 @@ import java.util.UUID;
 @RequestMapping("/members")
 public class MemberController {
     private final MemberService memberService;
-
-    @PostMapping
-    public ResponseEntity<IdResponse<UUID>> saveMember(@RequestBody @Valid MemberRequest memberRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberService.saveMember(memberRequest, Role.ROLE_USER));
-    }
 
     @PostMapping("/contributions")
     public ResponseEntity<Void> updateContribution() {

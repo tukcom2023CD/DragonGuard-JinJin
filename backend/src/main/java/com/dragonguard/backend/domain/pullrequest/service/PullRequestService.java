@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.pullrequest.service;
 
 import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaRequest;
+import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.member.entity.Member;
@@ -27,27 +28,25 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
     private final BlockchainService blockchainService;
 
     public void savePullRequests(final Member member, final Integer pullRequestNum, final Integer year) {
+        Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.PULL_REQUEST);
+
         if (isExistsByMemberAndYear(member, year)) {
-            Integer newAmount = updatePullRequestNum(member, pullRequestNum, year);
-            sendTransaction(member, newAmount.longValue());
+            updatePullRequestNum(member, pullRequestNum, year);
+            sendTransaction(member, blockchain.getSumOfAmount() - pullRequestNum, blockchain.getId());
             return;
         }
         pullRequestRepository.save(pullRequestMapper.toEntity(member, pullRequestNum, year));
-        sendTransaction(member, pullRequestNum.longValue());
+        sendTransaction(member, pullRequestNum.longValue(), blockchain.getId());
     }
 
-    private void sendTransaction(Member member, Long amount) {
+    private void sendTransaction(Member member, Long amount, Long blockchainId) {
         if (amount <= 0 || !member.isWalletAddressExists()) return;
-        Long blockchainId = blockchainService.getBlockchainOfType(member, ContributeType.CODE_REVIEW).getId();
-        blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.CODE_REVIEW, blockchainId));
+        blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.PULL_REQUEST, blockchainId));
     }
 
-    private Integer updatePullRequestNum(final Member member, final Integer pullRequestNum, final Integer year) {
-        PullRequest pullRequest = pullRequestRepository.findByMemberAndYear(member, year)
-                .orElseThrow(EntityNotFoundException::new);
-        Integer newAmount = pullRequestNum - pullRequest.getAmount();
+    private void updatePullRequestNum(final Member member, final Integer pullRequestNum, final Integer year) {
+        PullRequest pullRequest = pullRequestRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
         pullRequest.updatePullRequestNum(pullRequestNum);
-        return newAmount;
     }
 
     @Override

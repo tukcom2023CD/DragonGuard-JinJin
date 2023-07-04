@@ -4,7 +4,6 @@ import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationSer
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.member.dto.kafka.KafkaContributionRequest;
 import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
-import com.dragonguard.backend.domain.member.dto.request.MemberRequest;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.*;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
@@ -14,7 +13,6 @@ import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
-import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.EntityLoader;
@@ -49,16 +47,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
         Member member = getLoginUserWithPersistence();
         member.updateTier();
         return member.getTier();
-    }
-
-    public IdResponse<UUID> saveMember(final MemberRequest memberRequest, final Role role) {
-        return new IdResponse<>(scrapeAndGetSavedMember(memberRequest.getGithubId(), role, AuthStep.GITHUB_ONLY).getId());
-    }
-
-    private Member saveAndRequestClient(final String githubId, final Role role, final AuthStep authStep) {
-        Member member = findMemberOrSaveWithRole(githubId, role, authStep);
-        sendGitRepoAndContributionRequestToKafka(githubId);
-        return member;
     }
 
     public Member findMemberOrSaveWithRole(final String githubId, final Role role, final AuthStep authStep) {
@@ -136,10 +124,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public Member getLoginUserWithPersistence() {
         return loadEntity(authService.getLoginUserId());
-    }
-
-    private Member scrapeAndGetSavedMember(final String githubId, final Role role, final AuthStep authStep) {
-        return saveAndRequestClient(githubId, role, authStep);
     }
 
     public MemberGitReposAndGitOrganizationsResponse findMemberDetails() {

@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.codereview.service;
 
 import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaRequest;
+import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.codereview.entity.CodeReview;
@@ -27,26 +28,25 @@ public class CodeReviewService implements EntityLoader<CodeReview, Long> {
     private final BlockchainService blockchainService;
 
     public void saveCodeReviews(final Member member, final Integer codeReviewNum, final Integer year) {
+        Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.CODE_REVIEW);
+
         if (codeReviewRepository.existsByMemberAndYear(member, year)) {
-            Integer newAmount = findCodeReviewAndUpdateNum(member, codeReviewNum, year);
-            sendTransaction(member, newAmount.longValue());
+            findCodeReviewAndUpdateNum(member, codeReviewNum, year);
+            sendTransaction(member, codeReviewNum - blockchain.getSumOfAmount(), blockchain.getId());
             return;
         }
         codeReviewRepository.save(codeReviewMapper.toEntity(codeReviewNum, year, member));
-        sendTransaction(member, codeReviewNum.longValue());
+        sendTransaction(member, codeReviewNum.longValue(), blockchain.getId());
     }
 
-    private void sendTransaction(Member member, Long amount) {
+    private void sendTransaction(Member member, Long amount, Long blockchainId) {
         if (amount <= 0 || !member.isWalletAddressExists()) return;
-        Long blockchainId = blockchainService.getBlockchainOfType(member, ContributeType.CODE_REVIEW).getId();
         blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.CODE_REVIEW, blockchainId));
     }
 
-    private Integer findCodeReviewAndUpdateNum(final Member member, final Integer codeReviewNum, final Integer year) {
+    private void findCodeReviewAndUpdateNum(final Member member, final Integer codeReviewNum, final Integer year) {
         CodeReview codeReview = codeReviewRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
-        int newAmount = codeReviewNum - codeReview.getAmount();
         codeReview.updateCodeReviewNum(codeReviewNum);
-        return newAmount;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.issue.service;
 
 import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaRequest;
+import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.issue.entity.Issue;
@@ -27,26 +28,25 @@ public class IssueService implements EntityLoader<Issue, Long> {
     private final BlockchainService blockchainService;
 
     public void saveIssues(final Member member, final Integer issueNum, final Integer year) {
+        Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.ISSUE);
+
         if (issueRepository.existsByMemberAndYear(member, year)) {
-            Integer newAmount = findIssueAndUpdateNum(member, issueNum, year);
-            sendTransaction(member, newAmount.longValue());
+            findIssueAndUpdateNum(member, issueNum, year);
+            sendTransaction(member, issueNum - blockchain.getSumOfAmount(), blockchain.getId());
             return;
         }
         issueRepository.save(issueMapper.toEntity(member, issueNum, year));
-        sendTransaction(member, issueNum.longValue());
+        sendTransaction(member, issueNum.longValue(), blockchain.getId());
     }
 
-    private void sendTransaction(Member member, Long amount) {
+    private void sendTransaction(Member member, Long amount, Long blockchainId) {
         if (amount <= 0 || !member.isWalletAddressExists()) return;
-        Long blockchainId = blockchainService.getBlockchainOfType(member, ContributeType.CODE_REVIEW).getId();
-        blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.CODE_REVIEW, blockchainId));
+        blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.ISSUE, blockchainId));
     }
 
-    private Integer findIssueAndUpdateNum(final Member member, final Integer issueNum, final Integer year) {
+    private void findIssueAndUpdateNum(final Member member, final Integer issueNum, final Integer year) {
         Issue issue = issueRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
-        Integer newAmount = issueNum - issue.getAmount();
         issue.updateIssueNum(issueNum);
-        return newAmount;
     }
 
     @Override

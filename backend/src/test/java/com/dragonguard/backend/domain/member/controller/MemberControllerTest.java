@@ -5,9 +5,7 @@ import com.dragonguard.backend.domain.member.dto.response.*;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.service.MemberService;
-import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
-import com.dragonguard.backend.support.fixture.member.dto.MemberRequestFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -35,32 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MemberControllerTest extends RestDocumentTest {
     @MockBean
     private MemberService memberService;
-
-    @Test
-    @DisplayName("멤버 생성이 수행되는가")
-    void saveMember() throws Exception {
-        // given
-        IdResponse<UUID> expected = new IdResponse<>(UUID.randomUUID());
-        given(memberService.saveMember(any(), any())).willReturn(expected);
-
-        // when
-        ResultActions perform =
-                mockMvc.perform(
-                        post("/members")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(
-                                        toRequestBody(
-                                                MemberRequestFixture.OHKSJ77
-                                                        .toMemberRequest()))
-                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
-
-        // then
-        perform.andExpect(status().isCreated());
-
-        // docs
-        perform.andDo(print())
-                .andDo(document("create member", getDocumentRequest(), getDocumentResponse()));
-    }
 
     @Test
     @DisplayName("멤버 기여도 내역 업데이트가 수행되는가")
