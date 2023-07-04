@@ -16,10 +16,12 @@ import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
 import com.dragonguard.backend.global.GithubClient;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -91,14 +93,18 @@ public class MemberClientService {
         gitOrganizationService.findAndSaveGitOrganizations(getMemberOrganizationNames(request), member);
     }
 
+    @Cacheable(value = "memberRepos", key = "{#request.githubId}", cacheManager = "cacheManager", unless = "#result.size() > 0")
     public Set<String> getMemberRepoNames(final MemberClientRequest request) {
         return Arrays.stream(memberRepoClient.requestToGithub(request))
                 .map(MemberRepoResponse::getFullName)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 
-    private Set<MemberOrganizationResponse> getMemberOrganizationNames(final MemberClientRequest request) {
+    @Cacheable(value = "memberOrgs", key = "{#request.githubId}", cacheManager = "cacheManager", unless = "#result.size() > 0")
+    public Set<MemberOrganizationResponse> getMemberOrganizationNames(final MemberClientRequest request) {
         return Arrays.stream(memberOrganizationClient.requestToGithub(request))
+                .filter(response -> response != null && response.getLogin() != null && response.getAvatarUrl() != null)
                 .collect(Collectors.toSet());
     }
 
