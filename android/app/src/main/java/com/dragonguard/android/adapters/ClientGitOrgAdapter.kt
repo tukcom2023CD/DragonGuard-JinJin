@@ -7,15 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dragonguard.android.activity.profile.ClientReposActivity
 import com.dragonguard.android.activity.search.RepoContributorsActivity
-import com.dragonguard.android.databinding.OthersReposListBinding
+import com.dragonguard.android.databinding.GitOrganizationListBinding
+import com.dragonguard.android.model.detail.GitOrganization
 
-class OthersReposAdapter (private val datas : List<String>, private val context: Context,
-                          private val token: String, private val img: String, private val userName: String)
-    : RecyclerView.Adapter<OthersReposAdapter.ViewHolder>() {
-    private lateinit var binding: OthersReposListBinding
+class ClientGitOrgAdapter (private val datas : List<GitOrganization>, private val context: Context,
+                           private val token: String)
+    : RecyclerView.Adapter<ClientGitOrgAdapter.ViewHolder>() {
+    private lateinit var binding: GitOrganizationListBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = OthersReposListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding = GitOrganizationListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding.root)
     }
     override fun getItemCount(): Int = datas.size
@@ -23,20 +25,18 @@ class OthersReposAdapter (private val datas : List<String>, private val context:
     //리사이클러 뷰의 요소들을 넣어줌
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         //클릭리스너 구현
-        fun bind(data: String) {
-            binding.reposFrame.clipToOutline = true
-            binding.repoName.text = data
-            Glide.with(binding.othersProfileImg).load(img)
-                .into(binding.othersProfileImg)
-            binding.othersProfileImg.clipToOutline = true
-            binding.userName.text = userName
-            binding.repoContributeImg.setOnClickListener {
-                Intent(context, RepoContributorsActivity::class.java).apply{
-                    putExtra("repoName", data)
+        fun bind(data: GitOrganization) {
+            Glide.with(binding.gitOrganizationProfile).load(data.profile_image)
+                .into(binding.gitOrganizationProfile)
+
+            binding.gitOrganizationName.text = data.name
+            binding.gitOrgImg.setOnClickListener {
+                Intent(context, ClientReposActivity::class.java).apply{
+                    putExtra("orgName", data.name)
                     putExtra("token", token)
+                    putExtra("img", data.profile_image)
                 }.run{context.startActivity(this)}
             }
-
         }
     }
 

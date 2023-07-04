@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -16,6 +17,7 @@ import com.dragonguard.android.R
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityMainBinding
+import com.dragonguard.android.fragment.ClientProfileFragment
 import com.dragonguard.android.fragment.CompareSearchFragment
 import com.dragonguard.android.fragment.MainFragment
 import com.dragonguard.android.fragment.RankingFragment
@@ -78,6 +80,7 @@ class MainActivity : AppCompatActivity() {
     private var mainFrag: MainFragment? = null
     private var rankingFrag: RankingFragment? = null
     private var compareFrag: CompareSearchFragment? = null
+    private var profileFrag: ClientProfileFragment? = null
     private var added = false
     private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
     private var finish = false
@@ -139,7 +142,10 @@ class MainActivity : AppCompatActivity() {
             activityResultLauncher.launch(intent)
         } else {
             if (NetworkCheck.checkNetworkState(this)) {
-                multipleSearchUser()
+                binding.mainLoading.resumeAnimation()
+                binding.mainLoading.visibility = View.VISIBLE
+                postCommits()
+                refreshCommits()
             }
         }
 
@@ -166,6 +172,16 @@ class MainActivity : AppCompatActivity() {
                     val transaction = supportFragmentManager.beginTransaction()
                     transaction.replace(binding.contentFrame.id, compareFrag!!)
                         .commit()
+                }
+                R.id.bottom_profile -> {
+                    Log.d("user name", "user name: ${realModel.github_id}")
+                    realModel.github_id?.let {
+                        profileFrag = ClientProfileFragment(token, viewmodel, it)
+                        val transaction = supportFragmentManager.beginTransaction()
+                        transaction.replace(binding.contentFrame.id, profileFrag!!)
+                            .commit()
+                    }
+
                 }
             }
             true
@@ -205,10 +221,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun multipleSearchUser() {
-        searchUser()
-        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 3000)
-        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 7000)
-        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 9000)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 500)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 3500)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 6500)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 9500)
     }
 
     /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
@@ -216,7 +232,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun searchUser() {
 //        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
-        if (token.isNotBlank() && count<7) {
+        if (token.isNotBlank() && count<8) {
             count++
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
@@ -225,81 +241,8 @@ class MainActivity : AppCompatActivity() {
                         viewmodel.getUserInfo(token)
                     }
                     val userInfo = resultDeferred.await()
+                    checkUserInfo(userInfo)
 //                Toast.makeText(applicationContext, "$userInfo", Toast.LENGTH_SHORT).show()
-                    if (userInfo.github_id == null) {
-                        if (prefs.getRefreshToken("").isBlank()) {
-                            if (!this@MainActivity.isFinishing && state) {
-                                Log.d("not login", "login activity로 이동")
-                                Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
-                                loginOut = true
-                                prefs.setJwtToken("")
-                                prefs.setRefreshToken("")
-                                prefs.setPostAddress(false)
-                                prefs.setWalletAddress("")
-                                val intent = Intent(applicationContext, LoginActivity::class.java)
-                                intent.putExtra("wallet_address", prefs.getWalletAddress(""))
-                                intent.putExtra("token", prefs.getJwtToken(""))
-                                intent.putExtra("logout", true)
-                                activityResultLauncher.launch(intent)
-                            }
-                        } else {
-                            Log.d("not login", "refreshToken() 호출")
-                            refreshToken()
-                        }
-                    } else {
-                        if (userInfo.github_id!!.isNotBlank()) {
-                            realModel.github_id = userInfo.github_id
-                        }
-                        if (userInfo.commits != 0 && userInfo.tier == "SPROUT") {
-                            if (prefs.getWalletAddress("") != "") {
-                                postWalletAddress(prefs.getWalletAddress(""))
-                            }
-                            realModel.commits = userInfo.commits
-                        } else {
-                            realModel.commits = userInfo.commits
-                            realModel.tier = userInfo.tier
-                        }
-                        if (userInfo.token_amount == null) {
-                            realModel.token_amount = userInfo.commits
-                        } else {
-                            realModel.token_amount = userInfo.token_amount
-                        }
-                        if(userInfo.organization != null) {
-                            realModel.organization = userInfo.organization
-                        }
-                        realModel.profile_image = userInfo.profile_image
-                        realModel.rank = userInfo.rank
-                        realModel.issues = userInfo.issues
-                        realModel.pull_requests = userInfo.pull_requests
-                        realModel.reviews = userInfo.reviews
-                        if(userInfo.organization_rank !=null) {
-                            realModel.organization_rank = userInfo.organization_rank
-                        }
-                        count = 0
-                        if(refreshCount == 0) {
-                            refreshCommits()
-                            refreshCount++
-                        }
-                        userInfo.blockchain_url?.let {
-                            realModel.blockchain_url = it
-                        }
-                        realModel.id = userInfo.id
-                        realModel.auth_step = userInfo.auth_step
-                        realModel.member_github_ids = userInfo.member_github_ids
-
-                        Log.d("token", "token: $token")
-                        Log.d("userInfo", "realModel:$realModel")
-                        if(realModel.commits != null && realModel.github_id != null && realModel.profile_image != null && realModel.auth_step != null) {
-                            Log.d("userInfo", "id:${userInfo.github_id}")
-                            mainFrag = MainFragment(token, realModel)
-                            refreshMain()
-                            if(realModel.tier != "SPROUT") {
-                                finish = true
-                            }
-                        } else {
-                            refreshToken()
-                        }
-                    }
                 }
             }
         }
@@ -331,7 +274,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun postWalletAddress(address: String) {
 //        Toast.makeText(applicationContext, "address: $address", Toast.LENGTH_SHORT).show()
-        if (!addressPost && count<7) {
+        if (!addressPost && count<8) {
             addressPost = true
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
@@ -340,6 +283,7 @@ class MainActivity : AppCompatActivity() {
                         viewmodel.postWalletAddress(address, prefs.getJwtToken(""))
                     }
                     val postWalletResponse = postwalletDeferred.await()
+                    Log.d("지갑주소", "지갑주소 전송 $postWalletResponse")
                     if (postWalletResponse) {
                         refreshCommits()
                     }
@@ -349,7 +293,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshMain() {
-        if(realCount == 1) {
+        if(realCount >= 1) {
             if(mainFrag != null) {
                 Log.d("added", "added: $added    refreshMain")
                 if(!added) {
@@ -373,6 +317,85 @@ class MainActivity : AppCompatActivity() {
                 .commit()
 
             added = true
+        }
+    }
+
+    private fun checkUserInfo(userInfo: UserInfoModel) {
+        if (userInfo.github_id == null) {
+            if (prefs.getRefreshToken("").isBlank()) {
+                if (!this@MainActivity.isFinishing && state) {
+                    Log.d("not login", "login activity로 이동")
+                    Toast.makeText(applicationContext,"다시 로그인 바랍니다.", Toast.LENGTH_SHORT).show()
+                    loginOut = true
+                    prefs.setJwtToken("")
+                    prefs.setRefreshToken("")
+                    prefs.setPostAddress(false)
+                    prefs.setWalletAddress("")
+                    val intent = Intent(applicationContext, LoginActivity::class.java)
+                    intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+                    intent.putExtra("token", prefs.getJwtToken(""))
+                    intent.putExtra("logout", true)
+                    activityResultLauncher.launch(intent)
+                }
+            } else {
+                Log.d("not login", "refreshToken() 호출")
+                refreshToken()
+            }
+        } else {
+            if (userInfo.github_id!!.isNotBlank()) {
+                realModel.github_id = userInfo.github_id
+            }
+            if (userInfo.commits != 0 && userInfo.tier == "SPROUT") {
+                if (prefs.getWalletAddress("") != "") {
+                    postWalletAddress(prefs.getWalletAddress(""))
+                }
+                realModel.commits = userInfo.commits
+            } else {
+                realModel.commits = userInfo.commits
+                realModel.tier = userInfo.tier
+            }
+            if (userInfo.token_amount == null) {
+                realModel.token_amount = userInfo.commits
+            } else {
+                realModel.token_amount = userInfo.token_amount
+            }
+            if(userInfo.organization != null) {
+                realModel.organization = userInfo.organization
+            }
+            realModel.profile_image = userInfo.profile_image
+            realModel.rank = userInfo.rank
+            realModel.issues = userInfo.issues
+            realModel.pull_requests = userInfo.pull_requests
+            realModel.reviews = userInfo.reviews
+            if(userInfo.organization_rank !=null) {
+                realModel.organization_rank = userInfo.organization_rank
+            }
+            count = 0
+            userInfo.blockchain_url?.let {
+                realModel.blockchain_url = it
+            }
+            realModel.id = userInfo.id
+            realModel.auth_step = userInfo.auth_step
+            realModel.member_github_ids = userInfo.member_github_ids
+
+            Log.d("token", "token: $token")
+            Log.d("userInfo", "realModel:$realModel")
+            if(realModel.commits != null && realModel.github_id != null && realModel.profile_image != null && realModel.auth_step != null) {
+                Log.d("userInfo", "id:${userInfo.github_id}")
+                mainFrag = MainFragment(token, realModel)
+                binding.mainLoading.pauseAnimation()
+                binding.mainLoading.visibility = View.GONE
+                binding.mainNav.visibility = View.VISIBLE
+                refreshMain()
+//                if(realModel.tier != "SPROUT") {
+//                    finish = true
+//                }
+            } else {
+                if(refreshCount == 0) {
+                    refreshCount++
+                    refreshCommits()
+                }
+            }
         }
     }
 
@@ -414,6 +437,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshCommits() {
+        refreshCount++
         if (prefs.getRefreshToken("").isNotBlank()) {
 //            Toast.makeText(applicationContext, "refhresh Commits", Toast.LENGTH_SHORT).show()
             Log.d("post", "refresh commits")
@@ -422,14 +446,28 @@ class MainActivity : AppCompatActivity() {
             coroutine.launch {
                 if(!this@MainActivity.isFinishing) {
                     val refreshDeffered = coroutine.async(Dispatchers.IO) {
-                        viewmodel.postCommits(prefs.getJwtToken(""))
+                        viewmodel.updateUserInfo(prefs.getJwtToken(""))
                     }
-                    val refresh = refreshDeffered.await()
-                    Handler(Looper.getMainLooper()).postDelayed({multipleSearchUser()}, 2000)
+                    val refreshResult = refreshDeffered.await()
+                    checkUserInfo(refreshResult)
                 }
             }
         }
 
+    }
+
+    private fun postCommits() {
+        val coroutine2 = CoroutineScope(Dispatchers.Main)
+        coroutine2.launch {
+            Log.d("post", "post commit")
+            if(!this@MainActivity.isFinishing) {
+                val refreshDeffered = coroutine2.async(Dispatchers.IO) {
+                    viewmodel.postCommits(prefs.getJwtToken(""))
+                }
+                val refreshResult = refreshDeffered.await()
+                multipleSearchUser()
+            }
+        }
     }
 
 

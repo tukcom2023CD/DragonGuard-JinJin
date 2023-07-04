@@ -64,7 +64,7 @@ class RepoContributorsActivity : AppCompatActivity() {
     fun repoContributors(repoName: String) {
         binding.loadingLottie.resumeAnimation()
         binding.loadingLottie.visibility = View.VISIBLE
-        if (!this@RepoContributorsActivity.isFinishing && count < 10) {
+        if (!this@RepoContributorsActivity.isFinishing && count < 2) {
             Log.d("check", "repoName $repoName")
             Log.d("check", "token $token")
             val coroutine = CoroutineScope(Dispatchers.Main)
@@ -79,37 +79,50 @@ class RepoContributorsActivity : AppCompatActivity() {
                 }
             }
         }
+
+        if(count >= 2) {
+            //완전 빈 repository 상세조회 시 처리
+            binding.loadingLottie.pauseAnimation()
+            binding.loadingLottie.visibility = View.GONE
+        }
     }
 
     //    검색한 결과가 잘 왔는지 확인
-    fun checkContributors(result: RepoContributorsModel) {
-        if (result.git_repo_members != null) {
-            if (result.git_repo_members[0].additions == null) {
-                count++
-                val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ repoContributors(repoName) }, 2000)
-            } else {
-                for (i in 0 until result.git_repo_members.size) {
-                    val compare =
-                        contributors.filter { it.github_id == result.git_repo_members[i].github_id }
-                    if (compare.isEmpty()) {
-                        contributors.add(result.git_repo_members[i])
+    fun checkContributors(result: RepoContributorsModel?) {
+        Log.d("repo", "결과 $result" )
+        if(result != null) {
+            if (result.git_repo_members != null && result.git_repo_members.isNotEmpty()) {
+                if (result.git_repo_members[0].additions == null) {
+                    count++
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({ repoContributors(repoName) }, 2000)
+                } else {
+                    for (i in 0 until result.git_repo_members.size) {
+                        val compare =
+                            contributors.filter { it.github_id == result.git_repo_members[i].github_id }
+                        if (compare.isEmpty()) {
+                            contributors.add(result.git_repo_members[i])
+                        }
                     }
+                    result.spark_line?.let {
+                        sparkLines = it.toMutableList()
+                    }
+                    initRecycler()
                 }
-                result.spark_line?.let {
-                    sparkLines = it.toMutableList()
+            } else {
+                if (count < 2) {
+                    count++
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({ repoContributors(repoName) }, 2000)
+                } else {
+                    Log.d("결과", "lottie 멈춤")
+                    binding.loadingLottie.pauseAnimation()
+                    binding.loadingLottie.visibility = View.GONE
                 }
-                initRecycler()
             }
         } else {
-            if (count < 10) {
-                count++
-                val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ repoContributors(repoName) }, 2000)
-            } else {
-                binding.loadingLottie.pauseAnimation()
-                binding.loadingLottie.visibility = View.GONE
-            }
+            binding.loadingLottie.pauseAnimation()
+            binding.loadingLottie.visibility = View.GONE
         }
     }
 
@@ -134,7 +147,7 @@ class RepoContributorsActivity : AppCompatActivity() {
                 initRecycler()
             }
         } else {
-            if (count < 10) {
+            if (count < 2) {
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({ repoContributors(repoName) }, 2000)

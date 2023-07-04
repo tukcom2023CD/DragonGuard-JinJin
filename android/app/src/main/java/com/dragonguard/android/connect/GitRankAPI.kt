@@ -5,7 +5,7 @@ import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsModel
-import com.dragonguard.android.model.detail.UserDetailModel
+import com.dragonguard.android.model.detail.ClientDetailModel
 import com.dragonguard.android.model.detail.UserProfileModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
@@ -30,11 +30,14 @@ interface GitRankAPI {
     @GET("members/me")
     fun getUserInfo(@Header("Authorization")token: String) : Call<UserInfoModel>
 
+    @POST("members/me/update")
+    fun userInfoUpdate(@Header("Authorization")token: String) : Call<UserInfoModel>
+
 //    repoName에 해당하는 repo의 정보를 받아오는 함수
     @GET("git-repos")
     fun getRepoContributors(@Query("name") repoName: String, @Header("Authorization")token: String): Call<RepoContributorsModel>
 
-    @GET("git-repos")
+    @GET("git-repos/update")
     fun getRepoContributorsUpdate(@Query("name") repoName: String, @Header("Authorization")token: String): Call<RepoContributorsModel>
 
 //    모든 사용자들의 랭킹을 받아오는 함수
@@ -47,6 +50,9 @@ interface GitRankAPI {
 
     @GET("members/git-organizations/git-repos")
     fun getOrgRepoList(@Query("name") orgName: String, @Header("Authorization")token: String): Call<GithubOrgReposModel>
+
+    @GET("members/me/details")
+    fun getMemberDetails(@Header("Authorization")token: String) : Call<ClientDetailModel>
 
 //
     @POST("prepare")
@@ -123,8 +129,6 @@ interface GitRankAPI {
     @GET("organizations/ranking/all")
     fun getAllOrgRankings(@QueryMap query: Map<String, String>, @Header("Authorization")access: String): Call<OrganizationRankingModel>
 
-    @GET("members")
-    fun getUserDetail(@Query("githubId")id: String, @Header("Authorization")access: String): Call<UserDetailModel>
 
     @GET("admin/check")
     fun getPermissionState(@Header("Authorization")access: String): Call<Unit>

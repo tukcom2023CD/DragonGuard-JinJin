@@ -1,19 +1,20 @@
 package com.dragonguard.android.fragment
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.activity.basic.TokenHistoryActivity
 import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.databinding.FragmentMainBinding
@@ -22,13 +23,16 @@ import com.dragonguard.android.adapters.UserActivityAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
-class MainFragment(private val token: String, private val info: UserInfoModel) : Fragment() {
+class MainFragment(private val token: String, private var info: UserInfoModel) : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private var viewmodel = Viewmodel()
     private var repeat = false
+    private var refresh = true
+//    private var menuItem: MenuItem? = null
     val handler= Handler(Looper.getMainLooper()){
         setPage()
         repeat = true
@@ -38,14 +42,18 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
         binding.mainFragViewmodel = viewmodel
+//        val main = activity as MainActivity
+//        main.setSupportActionBar(binding.toolbar)
+//        main.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+//        binding.toolbar.inflateMenu(R.menu.refresh)
         binding.tokenFrame.setOnClickListener {
             val intent = Intent(requireActivity(), TokenHistoryActivity::class.java)
             intent.putExtra("token", token)
@@ -169,6 +177,36 @@ class MainFragment(private val token: String, private val info: UserInfoModel) :
             }
         }
     }
+
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.refresh, binding.toolbar.menu)
+//        menuItem = menu.findItem(R.id.refresh_button)
+//        menuItem?.icon?.alpha = 64
+//        super.onCreateOptionsMenu(menu, inflater)
+//    }
+
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.refresh_button -> {
+//                if(refresh) {
+//                    refresh = false
+//                    val coroutine = CoroutineScope(Dispatchers.Main)
+//                    coroutine.launch {
+//                        if(this@MainFragment.isResumed) {
+//                            Log.d("refresh", "refresh main!!")
+//                            val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
+//                                viewmodel.updateUserInfo(token)
+//                            }
+//                            val resultRepo = resultRepoDeferred.await()
+//                            info = resultRepo
+//                            drawInfo()
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
     private fun setPage(){
         binding.userUtil.setCurrentItem((binding.userUtil.currentItem+1)%4,false)

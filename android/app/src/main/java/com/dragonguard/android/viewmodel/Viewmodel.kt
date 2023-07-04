@@ -11,7 +11,7 @@ import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
 import com.dragonguard.android.model.compare.CompareRepoRequestModel
 import com.dragonguard.android.model.compare.CompareRepoResponseModel
 import com.dragonguard.android.model.contributors.RepoContributorsModel
-import com.dragonguard.android.model.detail.UserDetailModel
+import com.dragonguard.android.model.detail.ClientDetailModel
 import com.dragonguard.android.model.detail.UserProfileModel
 import com.dragonguard.android.model.klip.*
 import com.dragonguard.android.model.org.*
@@ -61,6 +61,10 @@ class Viewmodel: ViewModel() {
         return repository.getUserInfo(token)
     }
 
+    fun getClientDetails(token: String): ClientDetailModel? {
+        return repository.getClientDetails(token)
+    }
+
     fun getSearchRepoResult(name: String, count: Int, type: String, token: String): ArrayList<RepoSearchResultModel> {
         return repository.getRepositoryNames(name, count, type, token)
     }
@@ -78,7 +82,7 @@ class Viewmodel: ViewModel() {
         onSearchClickListener.value = true
     }
 
-    fun getRepoContributors(repoName: String, token: String): RepoContributorsModel {
+    fun getRepoContributors(repoName: String, token: String): RepoContributorsModel? {
         return repository.getRepoContributors(repoName, token)
     }
 
@@ -129,6 +133,10 @@ class Viewmodel: ViewModel() {
         repository.postCommits(token)
     }
 
+    fun getOrgRepoList(orgName: String, token: String):GithubOrgReposModel? {
+        return repository.userGitOrgRepoList(orgName, token)
+    }
+
     fun getOrgNames(name: String, token: String,type: String, page: Int): OrganizationNamesModel {
         return repository.getOrgNames(name, token, page, type)
     }
@@ -171,9 +179,6 @@ class Viewmodel: ViewModel() {
         return repository.allOrgRanking(page, token)
     }
 
-    fun userDetails(id: String, token: String): UserDetailModel {
-        return repository.userDetail(id, token)
-    }
 
     fun checkAdmin(token: String): Boolean {
         return repository.checkAdmin(token)
@@ -208,5 +213,10 @@ class Viewmodel: ViewModel() {
 
     fun updateToken(token: String): ArrayList<TokenHistoryModelItem>? {
         return repository.manualToken(token)
+    }
+
+    fun updateUserInfo(token: String): UserInfoModel{
+        Log.d("token", "Bearer : $token")
+        return repository.manualUserInfo(token)
     }
 }
