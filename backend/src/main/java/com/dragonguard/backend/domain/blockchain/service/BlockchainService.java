@@ -39,13 +39,15 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private List<String> admins;
 
     public void setTransaction(final Long blockchainId, final Member member, final long contribution, final ContributeType contributeType) {
-        if (contribution < 0) return;
+        if (contribution <= 0) return;
 
         Blockchain blockchain = loadEntity(blockchainId);
 
+        if (!blockchain.isNewHistory(contribution)) return;
+
         String walletAddress = member.getWalletAddress();
         String transactionHash = transferTransaction(contribution, contributeType, walletAddress);
-        BigInteger amount = transferAndGetBalanceOfTransaction(walletAddress);
+        BigInteger amount = balanceOfTransaction(walletAddress);
 
         if (hasSameAmount(contribution, amount)) {
             blockchain.addHistory(amount, transactionHash);
@@ -53,11 +55,11 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         }
 
         if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
-            blockchain.addHistory(amount, transactionHash);
+            blockchain.addHistory(BigInteger.valueOf(contribution), transactionHash);
         }
     }
 
-    private BigInteger transferAndGetBalanceOfTransaction(final String walletAddress) {
+    private BigInteger balanceOfTransaction(final String walletAddress) {
         return smartContractService.balanceOf(walletAddress);
     }
 

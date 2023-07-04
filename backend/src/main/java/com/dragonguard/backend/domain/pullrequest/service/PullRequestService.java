@@ -32,7 +32,7 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
 
         if (isExistsByMemberAndYear(member, year)) {
             updatePullRequestNum(member, pullRequestNum, year);
-            sendTransaction(member, blockchain.getSumOfAmount() - pullRequestNum, blockchain.getId());
+            sendTransaction(member, pullRequestNum - blockchain.getSumOfAmount(), blockchain.getId());
             return;
         }
         pullRequestRepository.save(pullRequestMapper.toEntity(member, pullRequestNum, year));
