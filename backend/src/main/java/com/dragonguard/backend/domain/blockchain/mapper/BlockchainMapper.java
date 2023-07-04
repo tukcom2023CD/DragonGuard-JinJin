@@ -8,6 +8,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public interface BlockchainMapper {
     BlockchainResponse toResponse(final History history);
 
     default List<BlockchainResponse> toResponseList(final List<History> histories) {
-        return histories.stream().map(this::toResponse).collect(Collectors.toList());
+        return histories.stream().sorted(Comparator.comparing(h -> h.getBaseTime().getCreatedAt())).map(this::toResponse).collect(Collectors.toList());
     }
 
     default List<BlockchainResponse> toBlockchainResponseList(final List<Blockchain> blockchains) {
