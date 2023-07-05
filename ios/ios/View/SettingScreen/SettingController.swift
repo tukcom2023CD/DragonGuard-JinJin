@@ -19,14 +19,12 @@ final class SettingController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-//        self.navigationController?.navigationBar.isHidden = false   // navigation bar 생성
-//        self.navigationItem.title = "설정"
-//        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
-//        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-        // UI view에 추가
+        /// UI view에 추가
         addUIToView()
         
-        // table View AutoLayout
+        clickedBackBtn()
+        
+        /// table View AutoLayout
         settingTableViewSetLayout()
         
     }

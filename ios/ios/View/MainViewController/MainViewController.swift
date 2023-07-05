@@ -342,7 +342,6 @@ final class MainViewController: UIViewController {
         contributionView.snp.makeConstraints { make in
             make.top.equalTo(tokenView.snp.bottom).offset(50)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
-//            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/6)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
         
@@ -387,6 +386,19 @@ final class MainViewController: UIViewController {
             
             self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
             self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
+            
+            switch data.tier{
+            case "BRONZE":
+                self.tierImage.image = UIImage(named: "bronze")
+            case "SILVER":
+                self.tierImage.image = UIImage(named: "silver")
+            case "GOLD":
+                self.tierImage.image = UIImage(named: "gold")
+            case "DIAMOND":
+                self.tierImage.image = UIImage(named: "diamond")
+            default:
+                print("error!\n")
+            }
             
             if data.organization_rank == 1{
                 self.groupView.inputData(rank1: nil,
@@ -437,6 +449,19 @@ final class MainViewController: UIViewController {
             
             self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
             self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
+            
+            switch data.tier{
+            case "BRONZE":
+                self.tierImage.image = UIImage(named: "bronze")
+            case "SILVER":
+                self.tierImage.image = UIImage(named: "silver")
+            case "GOLD":
+                self.tierImage.image = UIImage(named: "gold")
+            case "DIAMOND":
+                self.tierImage.image = UIImage(named: "diamond")
+            default:
+                print("error!\n")
+            }
             
             if data.organization_rank == 1{
                 self.groupView.inputData(rank1: nil,
