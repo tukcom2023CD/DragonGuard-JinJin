@@ -181,7 +181,9 @@ class MainActivity : AppCompatActivity() {
                         transaction.replace(binding.contentFrame.id, profileFrag!!)
                             .commit()
                     }
-
+                }
+                R.id.bottom_questions -> {
+//                    logOut()
                 }
             }
             true
@@ -292,6 +294,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun logOut() {
+        if(!this@MainActivity.isFinishing) {
+            prefs.setWalletAddress("")
+            loginOut = true
+            prefs.setJwtToken("")
+            prefs.setRefreshToken("")
+            prefs.setPostAddress(false)
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+            intent.putExtra("token", prefs.getJwtToken(""))
+            intent.putExtra("logout", true)
+            activityResultLauncher.launch(intent)
+        }
+    }
     private fun refreshMain() {
         if(realCount >= 1) {
             if(mainFrag != null) {
