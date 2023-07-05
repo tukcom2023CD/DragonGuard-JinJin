@@ -353,15 +353,16 @@ final class CompareRepoUserController: UIViewController{
                 
                 self.indicatorView.removeFromSuperview()
                 self.leftView.sendingImgData(imgList: list.first_repo.profile_urls)
-                self.rightView.sendingImgData(imgList: list.first_repo.profile_urls)
                 self.leftView.inputData(repo1: list.first_repo.languages.count,
                                         values: list.first_repo.languages.language,
                                         repoName: list.first_repo.git_repo.full_name,
                                         imgList: list.first_repo.profile_urls)
+                
                 self.rightView.inputData(repo1: list.second_repo.languages.count,
                                         values: list.second_repo.languages.language,
                                         repoName: list.second_repo.git_repo.full_name,
                                         imgList: list.second_repo.profile_urls)
+                self.rightView.sendingImgData(imgList: list.second_repo.profile_urls)
                 
                 self.tableView.reloadData()
             })
@@ -620,6 +621,7 @@ extension CompareRepoUserController : ChartViewDelegate {
         chartCommit.noDataTextColor = .lightGray
         chartCommit.legend.textColor = .black
         chartCommit.legend.font = font
+        chartCommit.pinchZoomEnabled = false
         chartCommit.highlightFullBarEnabled = false
         chartCommit.highlightPerTapEnabled = false
         chartCommit.highlightPerDragEnabled = false

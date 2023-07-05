@@ -131,7 +131,7 @@ final class RepoDetailController: UIViewController{
         
         // back Button
         backBtn.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
         }
     }
@@ -342,6 +342,10 @@ extension RepoDetailController: ChartViewDelegate {
         barChart.noDataText = "출력 데이터가 없습니다."
         barChart.noDataFont = .systemFont(ofSize: 30)
         barChart.noDataTextColor = .lightGray
+        barChart.pinchZoomEnabled = false
+        barChart.highlightFullBarEnabled = false
+        barChart.highlightPerTapEnabled = false
+        barChart.highlightPerDragEnabled = false
     }
     
     // MARK: Spark Line Chart
@@ -356,6 +360,10 @@ extension RepoDetailController: ChartViewDelegate {
         
         let line = LineChartDataSet(entries: lineChartEntry, label: "")
         line.colors = [.green]
+        line.circleRadius = 1
+        line.lineWidth = 3
+        line.mode = .linear
+        line.drawValuesEnabled = false
         
         let data = LineChartData(dataSet: line)
         sparkLineView.data = data
@@ -367,8 +375,9 @@ extension RepoDetailController: ChartViewDelegate {
     private func setSparkLineOption(){
         sparkLineView.rightAxis.enabled = false
         sparkLineView.animate(xAxisDuration: 2, yAxisDuration: 2)
-        sparkLineView.leftAxis.enabled = true
+        sparkLineView.leftAxis.enabled = false
         sparkLineView.doubleTapToZoomEnabled = false
+        sparkLineView.legend.enabled = false
         sparkLineView.xAxis.enabled = false
         sparkLineView.leftAxis.labelFont = .systemFont(ofSize: 15)
         sparkLineView.dragEnabled = false
@@ -376,22 +385,11 @@ extension RepoDetailController: ChartViewDelegate {
         sparkLineView.noDataText = "출력 데이터가 없습니다."
         sparkLineView.noDataFont = .systemFont(ofSize: 30)
         sparkLineView.noDataTextColor = .lightGray
+        sparkLineView.dragEnabled = false
+        sparkLineView.pinchZoomEnabled = false
+        sparkLineView.doubleTapToZoomEnabled = false
+        sparkLineView.highlightPerTapEnabled = false
+        sparkLineView.highlightPerDragEnabled = false
     }
     
-}
-
-
-
-import SwiftUI
-struct VCPreViewRepoDetailController:PreviewProvider {
-    static var previews: some View {
-        RepoDetailController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewRepoDetailController2:PreviewProvider {
-    static var previews: some View {
-        RepoDetailController().toPreview().previewDevice("iPhone 11")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
 }
