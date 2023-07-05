@@ -7,25 +7,13 @@
 
 import Foundation
 
-struct DetailInfoModel{
-    let gitOrganizations: [Organ_InfoModel]?
-    let gitRepos: [String]?
-    let memberProfileImage: String?
+struct DetailInfoModel: Codable{
+    let git_organizations: [Organ_InfoModel]?
+    let git_repos: [String]?
+    let member_profile_image: String?
 }
 
-struct Organ_InfoModel{
-    let imgPath: String?
-    let title: String?
-}
-
-
-struct DetailInfoCodableModel: Codable{
-    let gitOrganizations: [Organ_InfoCodableModel]?
-    let gitRepos: [String]?
-    let memberProfileImage: String?
-}
-
-struct Organ_InfoCodableModel: Codable{
-    let imgPath: String?
-    let title: String?
+struct Organ_InfoModel: Codable{
+    let profile_image: String?
+    let name: String?
 }

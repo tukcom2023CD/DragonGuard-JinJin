@@ -20,6 +20,8 @@
 		3B110FF92A24D868008C99F0 /* SearchAndFilterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FF82A24D868008C99F0 /* SearchAndFilterController.swift */; };
 		3B110FFB2A24DDCA008C99F0 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B110FFA2A24DDCA008C99F0 /* CustomButton.swift */; };
 		3B15C596296FB673004AE007 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 3B15C595296FB673004AE007 /* Alamofire */; };
+		3B181D152A55D91E00B62DEB /* DetailInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B181D142A55D91E00B62DEB /* DetailInfoViewModel.swift */; };
+		3B181D172A55D93B00B62DEB /* DetailInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B181D162A55D93B00B62DEB /* DetailInfoService.swift */; };
 		3B18AA1E29A7B1E90051C086 /* KlipModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18AA1D29A7B1E90051C086 /* KlipModel.swift */; };
 		3B18AA2029A7BD0E0051C086 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B18AA1F29A7BD0E0051C086 /* Notification.swift */; };
 		3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1DB8772963428A00308F43 /* AppDelegate.swift */; };
@@ -191,6 +193,8 @@
 		3B110FF52A24CA47008C99F0 /* SearchResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultModel.swift; sourceTree = "<group>"; };
 		3B110FF82A24D868008C99F0 /* SearchAndFilterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAndFilterController.swift; sourceTree = "<group>"; };
 		3B110FFA2A24DDCA008C99F0 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		3B181D142A55D91E00B62DEB /* DetailInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoViewModel.swift; sourceTree = "<group>"; };
+		3B181D162A55D93B00B62DEB /* DetailInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoService.swift; sourceTree = "<group>"; };
 		3B18AA1D29A7B1E90051C086 /* KlipModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipModel.swift; sourceTree = "<group>"; };
 		3B18AA1F29A7BD0E0051C086 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		3B1DB8742963428A00308F43 /* ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -497,6 +501,7 @@
 				3BDF0FA629A61A4E00816837 /* KlipLoginService.swift */,
 				A30BA46F29841C97008B594E /* SearchPageService.swift */,
 				3B3BBE082A516784009963D9 /* YourProfileService.swift */,
+				3B181D162A55D93B00B62DEB /* DetailInfoService.swift */,
 			);
 			path = Refactcoring;
 			sourceTree = "<group>";
@@ -673,6 +678,7 @@
 				3B2E0DCE2A43CB5700E6A7AD /* BlockchainViewModel.swift */,
 				3B060FD529911158000B2518 /* MainViewModel.swift */,
 				3B3BBE042A516692009963D9 /* YourProfileViewModel.swift */,
+				3B181D142A55D91E00B62DEB /* DetailInfoViewModel.swift */,
 			);
 			path = Refactoring;
 			sourceTree = "<group>";
@@ -716,10 +722,10 @@
 				3BE64A022A3DEBCF005D9F9E /* RankingController */,
 				3B2E0DBA2A43740000E6A7AD /* CompareViewController */,
 				3BE64A042A3DF02A005D9F9E /* RepoDetailController */,
+				3BE649EE2A3DA089005D9F9E /* InfomationDetail */,
 				3B54FF552A42E506004B21B1 /* YourProfile */,
 				3B9756F2298A33E900F27094 /* SettingScreen */,
 				3BE64A032A3DEFC6005D9F9E /* SearchController */,
-				3BE649EE2A3DA089005D9F9E /* InfomationDetail */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1022,6 +1028,7 @@
 				3B2E0DC52A4374BA00E6A7AD /* ContributorUIView.swift in Sources */,
 				3B49BABA2A40CC37009C5963 /* DetailRepoModel.swift in Sources */,
 				3BD6EDDE29DD697200DEF7E0 /* MemberInOrganizationViewModel.swift in Sources */,
+				3B181D172A55D93B00B62DEB /* DetailInfoService.swift in Sources */,
 				3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */,
 				3B00229F29879F7D003FA5CC /* SettingTableViewCell.swift in Sources */,
 				3BE649E42A3D74CE005D9F9E /* UserProfileImageView.swift in Sources */,
@@ -1042,6 +1049,7 @@
 				3B2E0DC92A4374EC00E6A7AD /* UserUIButton.swift in Sources */,
 				3B9CF3D4298F9B8C00495D35 /* RankingService.swift in Sources */,
 				3B110FF92A24D868008C99F0 /* SearchAndFilterController.swift in Sources */,
+				3B181D152A55D91E00B62DEB /* DetailInfoViewModel.swift in Sources */,
 				3B1DB8782963428A00308F43 /* AppDelegate.swift in Sources */,
 				3BA78D962A04F112000ACAD1 /* AdminViewModel.swift in Sources */,
 				3B54FF5D2A42FB8E004B21B1 /* RepositoryListTableViewCell.swift in Sources */,

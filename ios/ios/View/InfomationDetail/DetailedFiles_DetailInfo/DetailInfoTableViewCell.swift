@@ -59,7 +59,7 @@ final class DetailInfoTableViewCell: UITableViewCell{
     func inputData_Organizaion(data: Organ_InfoModel?){
         addUI_Organizaion()
         
-        organzationView.inputData(imgPath: data?.imgPath ?? "", title: data?.title ?? "none")
+        organzationView.inputData(imgPath: data?.profile_image ?? "", title: data?.name ?? "none")
     }
     
     // MARK:
@@ -75,12 +75,12 @@ final class DetailInfoTableViewCell: UITableViewCell{
         
     }
   
-    func inputData_Repository(title: String, imgPath: String){
+    func inputData_Repository(title: String, imgPath: String, myId: String){
         addUI_Repository()
         
-//        let user = title.split(separator: "/")
+        let user = title.split(separator: "/")[0]
         
-        repositoryView.inputData(imgPath: imgPath, title: title, userName: "aa")
+        repositoryView.inputData(imgPath: imgPath, title: title, userName: String(user))
     }
     
 }

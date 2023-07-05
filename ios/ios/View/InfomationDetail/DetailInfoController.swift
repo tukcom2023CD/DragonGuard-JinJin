@@ -13,6 +13,7 @@ import UIKit
 final class DetailInfoController: UIViewController{
     private var dataList: DetailInfoModel?
     private let disposeBag = DisposeBag()
+    private let viewModel = DetailInfoViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,14 +80,12 @@ final class DetailInfoController: UIViewController{
     
     func getData() {
         
-        for i in 1...10{
-            self.dataList = DetailInfoModel(gitOrganizations: [Organ_InfoModel(imgPath: "s", title: "a\(i)"),
-                                                                    Organ_InfoModel(imgPath: "s", title: "aa\(i+1)"),
-                                                                    Organ_InfoModel(imgPath: "s", title: "aaa\(i+2)"),
-                                                                    Organ_InfoModel(imgPath: "s", title: "aaaa\(i+3)")],
-                                                 gitRepos: ["aa\\b\(i)","aa\\bb\(i+1)","aa\\bbb\(i+2)","aa\\bbbb\(i+3)"],
-                                                 memberProfileImage: "ss")
-        }
+        viewModel.service.getData()
+            .subscribe(onNext: { data in
+                self.dataList = data
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
         
         addUI()
     }
@@ -99,10 +98,12 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailInfoTableViewCell.identifier, for: indexPath) as? DetailInfoTableViewCell else {return UITableViewCell() }
         
         if indexPath.section == 0{
-            cell.inputData_Organizaion(data: dataList?.gitOrganizations?[indexPath.row])
+            cell.inputData_Organizaion(data: dataList?.git_organizations?[indexPath.row])
         }
         else if indexPath.section == 1{
-            cell.inputData_Repository(title: dataList?.gitRepos?[indexPath.row] ?? "", imgPath: dataList?.memberProfileImage ?? "" )
+            cell.inputData_Repository(title: dataList?.git_repos?[indexPath.row] ?? "",
+                                      imgPath: dataList?.member_profile_image ?? "",
+                                      myId: "")
         }
         return cell
     }
@@ -110,10 +111,10 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
-            return self.dataList?.gitOrganizations?.count ?? 0
+            return self.dataList?.git_organizations?.count ?? 0
         }
         else{
-            return self.dataList?.gitRepos?.count ?? 0
+            return self.dataList?.git_repos?.count ?? 0
         }
     }
     
@@ -129,7 +130,7 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
         else{   /// Repository
             let nextPage = RepoDetailController()
             nextPage.modalPresentationStyle = .fullScreen
-            nextPage.selectedTitle = dataList?.gitRepos?[indexPath.row] ?? ""
+            nextPage.selectedTitle = dataList?.git_repos?[indexPath.row] ?? ""
             self.present(nextPage,animated: true)
         }
         

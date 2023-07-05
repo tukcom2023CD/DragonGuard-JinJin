@@ -68,7 +68,8 @@ final class OrganizationInfoView: UIView{
     
     func inputData(imgPath: String, title: String){
         addUI_Organization()
-        titleImg.image = UIImage(named: "pomi")?.resize(newWidth: 60, newHeight: 60)
+        titleImg.load(img: titleImg, url: URL(string: imgPath)!, width: 60, height: 60)
+//        titleImg.image = UIImage(named: "pomi")?.resize(newWidth: 60, newHeight: 60)
         titleLabel.text = title
     }
     
