@@ -67,7 +67,7 @@ class SearchOrganizationActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
         supportActionBar?.title = "   조직 검색 및 인증"
 
         binding.orgGroup.setOnCheckedChangeListener { group, checkedId ->

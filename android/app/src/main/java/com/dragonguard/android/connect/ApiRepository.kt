@@ -472,10 +472,10 @@ class ApiRepository {
         val orgList = api.getOrgStatus(queryMap,"Bearer $token")
         return try{
             val result = orgList.execute()
-            Log.d("result", "전체 조직 랭킹 조회 결과: ${result.code()} ")
+            Log.d("result", "승인된 조직 조회 결과: ${result.code()} ")
             return result.body()!!
         } catch (e: Exception) {
-            Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
+            Log.d("error", "승인된 조직 조회 실패: ${e.message} ")
             return statusOrg
         }
     }

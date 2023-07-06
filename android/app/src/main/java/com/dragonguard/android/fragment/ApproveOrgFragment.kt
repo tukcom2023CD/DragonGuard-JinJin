@@ -48,6 +48,14 @@ class ApproveOrgFragment(private val token: String) : Fragment() {
                 viewmodel.onApproveOrgListener.value = false
             }
         })
+
+        viewmodel.onRejectOrgListener.observe(requireActivity(), Observer {
+            if(viewmodel.onRejectOrgListener.value == true) {
+                Toast.makeText(requireContext(), "반려됨", Toast.LENGTH_SHORT).show()
+                binding.waitingOrgList.adapter?.notifyDataSetChanged()
+                viewmodel.onRejectOrgListener.value = false
+            }
+        })
     }
 
     override fun onResume() {

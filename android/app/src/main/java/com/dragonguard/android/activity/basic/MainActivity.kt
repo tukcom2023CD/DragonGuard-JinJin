@@ -505,4 +505,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun getNavSize(): Int {
+        return binding.mainNav.height
+    }
+
 }

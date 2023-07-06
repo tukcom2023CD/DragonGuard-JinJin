@@ -9,15 +9,14 @@ import com.dragonguard.android.databinding.FaqListBinding
 import com.dragonguard.android.model.menu.FaqModel
 
 class FaqAdapter(private val faqList: ArrayList<FaqModel>) : RecyclerView.Adapter<FaqAdapter.ViewHolder>() {
-    private lateinit var binding: FaqListBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FaqAdapter.ViewHolder {
-        binding = FaqListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding.root)
+        val binding = FaqListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int = faqList.size
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(private val binding: FaqListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int){
             binding.faqTitle.text = faqList[position].title
             binding.faqAnswer.text = faqList[position].content

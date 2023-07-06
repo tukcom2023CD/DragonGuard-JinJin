@@ -47,7 +47,7 @@ class AuthEmailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
         supportActionBar?.title = "   이메일 인증"
 
         val coroutine = CoroutineScope(Dispatchers.Main)
@@ -57,7 +57,7 @@ class AuthEmailActivity : AppCompatActivity() {
                     viewmodel.addOrgMember(orgId, email, token)
                 }
                 val result = resultDeferred.await()
-                Toast.makeText(applicationContext, result.toString(), Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, result.toString(), Toast.LENGTH_SHORT).show()
                 if(result != -1L) {
                     emailAuthId = result
                     setUpCountDownTimer()

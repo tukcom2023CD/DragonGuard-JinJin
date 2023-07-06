@@ -8,6 +8,9 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.*
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -72,6 +75,10 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
     }
 
     private fun drawInfo() {
+        val main = activity as MainActivity
+        val layoutParams = binding.mainFrame.layoutParams as FrameLayout.LayoutParams
+        layoutParams.bottomMargin = main.getNavSize()
+        binding.mainFrame.layoutParams = layoutParams
         if (info.github_id!!.isNotBlank()) {
             binding.userId.text = info.github_id
         }

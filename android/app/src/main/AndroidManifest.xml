@@ -28,6 +28,7 @@
         <activity
             android:name=".activity.search.SearchFilterActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.menu.ApprovalOrgActivity"
@@ -56,6 +57,7 @@
         <activity
             android:name=".activity.menu.SearchOrganizationActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.compare.RepoCompareActivity"
