@@ -1,11 +1,15 @@
 package com.dragonguard.android.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dragonguard.android.R
 import com.dragonguard.android.activity.basic.MainActivity
+import com.dragonguard.android.activity.compare.RepoCompareActivity
+import com.dragonguard.android.activity.menu.MenuActivity
 import com.dragonguard.android.adapters.ClientGitOrgAdapter
 import com.dragonguard.android.adapters.OthersReposAdapter
 import com.dragonguard.android.databinding.FragmentClientProfileBinding
@@ -26,15 +30,17 @@ class ClientProfileFragment(private val token: String, private val viewmodel: Vi
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentClientProfileBinding.inflate(inflater, container, false)
+        val main = activity as MainActivity
+        setHasOptionsMenu(true)
+        main.setSupportActionBar(binding.toolbar)
+        main.supportActionBar?.setDisplayShowTitleEnabled(false)
+        main.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val main = activity as MainActivity
-        main.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         getClientDetail()
-
     }
 
 
@@ -69,15 +75,19 @@ class ClientProfileFragment(private val token: String, private val viewmodel: Vi
         repoAdapter.notifyDataSetChanged()
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        inflater.inflate(R.menu., binding.toolbar.menu)
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//
-//
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.setting, binding.toolbar.menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.settings_button -> {
+                val intent = Intent(requireContext(), MenuActivity::class.java)
+                intent.putExtra("token", token)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

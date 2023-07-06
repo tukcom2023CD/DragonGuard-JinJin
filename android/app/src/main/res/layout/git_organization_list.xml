@@ -24,13 +24,12 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:lines="1"
             android:textAppearance="@style/textAppearance"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMaxTextSize="20sp"
-            android:autoSizeMinTextSize="17sp"
+            android:textSize="20sp"
             android:gravity="start|center_vertical"
+            android:layout_gravity="center_vertical"
             android:id="@+id/git_organization_name"/>
 
     </LinearLayout>
