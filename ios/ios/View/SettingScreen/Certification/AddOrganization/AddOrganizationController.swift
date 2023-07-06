@@ -30,11 +30,20 @@ final class AddOrganizationController: UIViewController{
         }
         
         addToView()
+        clickedBackBtn()
     }
     
     /*
      UI 코드 작성
      */
+    
+    
+    // MARK: 뒤로가기 버튼
+    private lazy var backBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
+        return btn
+    }()
     
     private lazy var certifiedLabel: UILabel = {
         let label = UILabel()
@@ -170,12 +179,12 @@ final class AddOrganizationController: UIViewController{
         
         // 조직 인증을 모두 입력한 뒤 전송하는 부분
         if !name.isEmpty && !email.isEmpty && !type.isEmpty {
-//            CertifiedOrganizationViewModel.viewModel.addOrganization(name: name,
-//                                                                     type: type,
-//                                                                     endPoint: email)
-//            .subscribe { id in
-//                print("id \(id)")
-//                if id != 0 {
+            CertifiedOrganizationViewModel.viewModel.addOrganization(name: name,
+                                                                     type: type,
+                                                                     endPoint: email)
+            .subscribe { id in
+                if id != 0 {
+                    self.dismiss(animated: false)
 //                    guard let viewControllerStack = self.navigationController?.viewControllers else { return }
 //
 //                    for viewController in viewControllerStack {
@@ -183,9 +192,9 @@ final class AddOrganizationController: UIViewController{
 //                            self.navigationController?.popToViewController(mainView, animated: true)
 //                        }
 //                    }
-//                }
-//            }
-//            .disposed(by: self.disposeBag)
+                }
+            }
+            .disposed(by: self.disposeBag)
             
         }
     }
@@ -193,11 +202,13 @@ final class AddOrganizationController: UIViewController{
     // MARK: view에 UI 추가
     private func addToView(){
         
-        self.view.addSubview(certifiedLabel)
+        view.addSubview(backBtn)
         
-        self.view.addSubview(allStackView)
+        view.addSubview(certifiedLabel)
         
-        self.view.addSubview(doneBtn)
+        view.addSubview(allStackView)
+        
+        view.addSubview(doneBtn)
         
         settingAutoLayout()
     }
@@ -223,21 +234,11 @@ final class AddOrganizationController: UIViewController{
         })
     }
     
-    
-}
-
-
-import SwiftUI
-
-struct VCPreViewAddOrganizationController:PreviewProvider {
-    static var previews: some View {
-        AddOrganizationController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewAddOrganizationController2:PreviewProvider {
-    static var previews: some View {
-        AddOrganizationController().toPreview().previewDevice("iPad (10th generation)")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
+    // MARK:
+    private func clickedBackBtn(){
+        backBtn.rx.tap.subscribe(onNext: {
+            self.dismiss(animated: true)
+        })
+        .disposed(by: disposeBag)
     }
 }

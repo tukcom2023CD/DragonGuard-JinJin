@@ -24,11 +24,19 @@ final class OrganizationSearchController: UIViewController{
         self.view.backgroundColor = .white
         self.searchResultList = []
         addUIToView()
+        clickedBackBtn()
     }
     
     /*
      UI 코드 작성
      */
+    
+    // MARK: 뒤로가기 버튼
+    private lazy var backBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
+        return btn
+    }()
     
     // MARK: 조직 검색하는 검색 창
     private lazy var searchBar: UISearchBar = {
@@ -66,30 +74,43 @@ final class OrganizationSearchController: UIViewController{
     
     // MARK: Add UI To View
     private func addUIToView(){
-        self.navigationItem.titleView = searchBar
+        view.addSubview(backBtn)
+        view.addSubview(searchBar)
         self.searchBar.delegate = self
         
-        self.view.addSubview(self.resultTableView)
+        view.addSubview(self.resultTableView)
         resultTableView.delegate = self
         resultTableView.dataSource = self
         resultTableView.register(OrganizationSearchTableViewCell.self, forCellReuseIdentifier: OrganizationSearchTableViewCell.identifier)
         
-        self.view.addSubview(addOrganizationBtn)
-        
+        view.addSubview(addOrganizationBtn)
+        setAutoLayout()
     }
     
     // MARK: set UI AutoLayout
     private func setAutoLayout(){
+        
+        backBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(15)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+        }
+        
+        searchBar.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
+        }
+        
         addOrganizationBtn.snp.makeConstraints({ make in
-            make.top.equalTo(self.view.safeAreaLayoutGuide)
-            make.trailing.equalTo(-10)
+            make.top.equalTo(searchBar.snp.bottom).offset(20)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
         })
         
         resultTableView.snp.makeConstraints({ make in
-            make.top.equalTo(self.addOrganizationBtn.snp.bottom).offset(10)
-            make.bottom.equalTo(self.view.safeAreaLayoutGuide)
-            make.leading.equalTo(10)
-            make.trailing.equalTo(-10)
+            make.top.equalTo(addOrganizationBtn.snp.bottom).offset(10)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-10)
         })
     }
     
@@ -102,7 +123,16 @@ final class OrganizationSearchController: UIViewController{
     private func clickedAddOrganizationBtn(){
         let addOrganization = AddOrganizationController()
         addOrganization.type = self.type
-        self.navigationController?.pushViewController(addOrganization, animated: true)
+        addOrganization.modalPresentationStyle = .fullScreen
+        present(addOrganization, animated: false)
+    }
+    
+    // MARK:
+    private func clickedBackBtn(){
+        backBtn.rx.tap.subscribe(onNext: {
+            self.dismiss(animated: true)
+        })
+        .disposed(by: disposeBag)
     }
     
 }
@@ -138,12 +168,8 @@ extension OrganizationSearchController: UISearchBarDelegate{
         .subscribe { resultList in
             
             self.setAutoLayout()
-            for data in resultList{
-                self.searchResultList.append(SearchOrganizationListModel(id: data.id,
-                                                                         name: data.name,
-                                                                         type: data.type,
-                                                                         emailEndpoint: data.emailEndpoint))
-            }
+            self.searchResultList = resultList
+           
             self.resultTableView.reloadData()
         }
         .disposed(by: disposeBag)
@@ -165,7 +191,7 @@ extension OrganizationSearchController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.delegate?.sendName(name: self.searchResultList[indexPath.section].name,
                                 organizationId: self.searchResultList[indexPath.section].id)
-        self.navigationController?.popViewController(animated: true)
+        dismiss(animated: false)
     }
     
     // MARK: 무한 스크롤하면서 API 호출하는 기능
@@ -180,12 +206,7 @@ extension OrganizationSearchController: UITableViewDelegate, UITableViewDataSour
                                                                              type: type,
                                                                              check: true)
                 .subscribe { resultList in
-                    for data in resultList{
-                        self.searchResultList.append(SearchOrganizationListModel(id: data.id,
-                                                                                 name: data.name,
-                                                                                 type: data.type,
-                                                                                 emailEndpoint: data.emailEndpoint))
-                    }
+                    self.searchResultList.append(contentsOf: resultList)
                     self.resultTableView.reloadData()
                 }
                 .disposed(by: disposeBag)

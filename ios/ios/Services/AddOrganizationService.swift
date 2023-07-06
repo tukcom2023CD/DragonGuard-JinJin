@@ -18,11 +18,12 @@ final class AddOrganizationService{
         
         let body: [String: Any] = [
             "name": name,
-            "organizationType": type,
-            "emailEndpoint": endPoint
+            "organization_type": type,
+            "email_endpoint": endPoint
         ]
         let access = UserDefaults.standard.string(forKey: "Access")
-
+        print("body \(body)")
+        
         return Observable.create { observer in
             AF.request(url,
                        method: .post,
@@ -55,12 +56,12 @@ final class AddOrganizationService{
     func addMemberInOrganization(organizationId: Int, email: String) -> Observable<Int>{
         let url = APIURL.apiUrl.addMemberInOrganization(ip: APIURL.ip)
         let body: [String: Any] = [
-            "organizationId" : organizationId,
+            "organization_id" : organizationId,
               "email" : email
         ]
         let encodedString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let access = UserDefaults.standard.string(forKey: "Access")
-
+        print("body \(body)")
         return Observable.create { observer in
             AF.request(encodedString,
                        method: .post,
@@ -72,7 +73,7 @@ final class AddOrganizationService{
                        ])
             .validate(statusCode: 200..<201)
             .responseDecodable(of: EmailIdDecodingModel.self) { response in
-
+                
                 switch response.result{
                 case .success(let data):
                     observer.onNext(data.id)

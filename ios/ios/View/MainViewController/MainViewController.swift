@@ -401,20 +401,41 @@ final class MainViewController: UIViewController {
             }
             
             if data.organization_rank == 1{
-                self.groupView.inputData(rank1: nil,
-                                         top: nil,
-                                         rank2: data.organization_rank ?? 1,
-                                         me: data.member_github_ids?[1] ?? "Unknown",
-                                         rank3: (data.organization_rank ?? 1)+1,
-                                         under: data.member_github_ids?[2] ?? "Unknown")
+                
+                if data.member_github_ids?.count != 1{
+                    self.groupView.inputData(rank1: nil,
+                                             top: nil,
+                                             rank2: data.organization_rank ?? 1,
+                                             me: data.member_github_ids?[0] ?? "Unknown",
+                                             rank3: (data.organization_rank ?? 1)+1,
+                                             under: data.member_github_ids?[1] ?? "Unknown")
+                }
+                else{
+                    self.groupView.inputData(rank1: nil,
+                                             top: nil,
+                                             rank2: data.organization_rank ?? 1,
+                                             me: data.member_github_ids?[0] ?? "Unknown",
+                                             rank3: nil,
+                                             under: nil)
+                }
             }
             else if data.is_last ?? false{
-                self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
-                                         top: data.member_github_ids?[0] ?? "Unknown",
-                                         rank2: (data.organization_rank ?? 0),
-                                         me: data.member_github_ids?[1] ?? "Unknown",
-                                         rank3: nil,
-                                         under: nil)
+                if data.member_github_ids?.count != 1{
+                    self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                             top: data.member_github_ids?[0] ?? "Unknown",
+                                             rank2: (data.organization_rank ?? 0),
+                                             me: data.member_github_ids?[1] ?? "Unknown",
+                                             rank3: nil,
+                                             under: nil)
+                }
+                else{
+                    self.groupView.inputData(rank1: nil,
+                                             top: nil,
+                                             rank2: (data.organization_rank ?? 0),
+                                             me: data.member_github_ids?[1] ?? "Unknown",
+                                             rank3: nil,
+                                             under: nil)
+                }
             }
             else if ((data.member_github_ids?.isEmpty) == nil){
                 self.groupView.inputData(rank1: nil,

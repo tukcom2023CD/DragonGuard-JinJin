@@ -23,7 +23,6 @@ final class SearchOraganizationService {
         
         let encodedString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         print(url)
-        var result: [SearchOrganizationListModel] = []
         let access = UserDefaults.standard.string(forKey: "Access")
 
         return Observable.create(){ observer in
@@ -32,33 +31,35 @@ final class SearchOraganizationService {
                        encoding: JSONEncoding.default,
                        headers: ["Authorization": "Bearer \(access ?? "")"])
             .validate(statusCode: 200..<201)
-            .responseData { response in
-                switch response.result {
+            .responseDecodable(of:[SearchOrganizationListModel].self) { res in
+                print(res)
+                switch res.result{
                 case .success(let data):
-                    do {
-                        if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [Any] {
-                            
-                            let jsonData = try JSONSerialization.data(withJSONObject: jsonArray,options: [])
-                            
-                            let object = try JSONDecoder().decode([SearchOrganizationListDecodingModel].self, from: jsonData)
-                            
-                            object.forEach { data in
-                                result.append(SearchOrganizationListModel(id: data.id,
-                                                                          name: data.name,
-                                                                          type: data.organizationType,
-                                                                          emailEndpoint: data.emailEndpoint))
-                                
-                            }
-                        }
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                    
-                    observer.onNext(result)
+                    observer.onNext(data)
                 case .failure(let error):
-                    print(error.localizedDescription)
+                    print("getOrganizationListService error!\n\(error)")
                 }
             }
+//            .responseData { response in
+//                switch response.result {
+//                case .success(let data):
+//                    do {
+//                        if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [Any] {
+//
+//                            let jsonData = try JSONSerialization.data(withJSONObject: jsonArray,options: [])
+//
+//                            let object = try JSONDecoder().decode([SearchOrganizationListModel].self, from: jsonData)
+//                            print(object)
+//                            observer.onNext(object)
+//                        }
+//                    } catch {
+//                        print(error.localizedDescription)
+//                    }
+//
+//                case .failure(let error):
+//                    print(error.localizedDescription)
+//                }
+//            }
             
             return Disposables.create()
         }

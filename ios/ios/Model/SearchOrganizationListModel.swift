@@ -8,17 +8,9 @@
 import Foundation
 
 // MARK: 조직 검색했을 때 받는 리스트 모델
-struct SearchOrganizationListDecodingModel: Codable{
+struct SearchOrganizationListModel: Codable{
     var id: Int
     var name: String
-    var organizationType: String
-    var emailEndpoint: String
-}
-
-// MARK: 조직 검색했을 때 받는 리스트 모델
-struct SearchOrganizationListModel{
-    var id: Int
-    var name: String
-    var type: String
-    var emailEndpoint: String
+    var organization_type: String
+    var email_endpoint: String
 }

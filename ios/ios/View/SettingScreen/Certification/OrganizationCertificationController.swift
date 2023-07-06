@@ -208,7 +208,8 @@ final class OrganizationCertificationController: UIViewController{
             let searchController = OrganizationSearchController()
             searchController.type = self.urlType
             searchController.delegate = self
-            self.navigationController?.pushViewController(searchController, animated: true)
+            searchController.modalPresentationStyle = .fullScreen
+            present(searchController, animated: true)
         }
     }
     
@@ -227,7 +228,9 @@ final class OrganizationCertificationController: UIViewController{
                     let certificatedEmail = CertificationEmailController()
                     certificatedEmail.organizationId = self.organizationId
                     certificatedEmail.userEmail = self.emailTextField.text ?? ""
-                    self.navigationController?.pushViewController(certificatedEmail, animated: true)   
+                    certificatedEmail.modalPresentationStyle = .fullScreen
+                    self.present(certificatedEmail, animated: false)
+
                 }
                 else{
                     // 팝업창 띄움
@@ -266,6 +269,7 @@ extension OrganizationCertificationController: SendingType, SendingOrganizationN
     
     // MARK: 사용자가 선택한 타입 받아옴
     func sendType(type: String, urlType: String) {
+        print("urltype \(urlType)")
         self.urlType = urlType
         self.typeBtn.setTitle(type, for: .normal)
         self.typeBtn.setTitleColor(.black, for: .normal)
@@ -273,19 +277,4 @@ extension OrganizationCertificationController: SendingType, SendingOrganizationN
     }
     
     
-}
-
-import SwiftUI
-
-struct VCPreViewOrganizationCertificationController:PreviewProvider {
-    static var previews: some View {
-        OrganizationCertificationController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewOrganizationCertificationController2:PreviewProvider {
-    static var previews: some View {
-        OrganizationCertificationController().toPreview().previewDevice("iPad (10th generation)")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
 }
