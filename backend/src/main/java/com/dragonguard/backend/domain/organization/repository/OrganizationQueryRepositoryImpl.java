@@ -120,7 +120,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .fetch()
                 .size();
         if (size == rank) {
-            return rank - 3L;
+            return rank == 2 ? 0L : rank - 3L;
         }
         return rank - 2L;
     }
