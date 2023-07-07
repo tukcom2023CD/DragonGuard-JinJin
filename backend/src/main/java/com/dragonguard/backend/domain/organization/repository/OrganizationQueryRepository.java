@@ -22,7 +22,7 @@ public interface OrganizationQueryRepository {
 
     List<OrganizationResponse> findByTypeAndSearchWord(OrganizationType type, String name, Pageable pageable);
 
-    RelatedRankWithMemberResponse findRankingByMemberId(UUID memberId);
+    RelatedRankWithMemberResponse findRankingByMemberId(UUID memberId, String githubId);
 
     List<Organization> findAllByOrganizationStatus(OrganizationStatus organizationStatus, Pageable pageable);
 }

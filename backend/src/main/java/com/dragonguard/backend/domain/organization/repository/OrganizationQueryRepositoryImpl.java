@@ -74,7 +74,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     }
 
     @Override
-    public RelatedRankWithMemberResponse findRankingByMemberId(UUID memberId) {
+    public RelatedRankWithMemberResponse findRankingByMemberId(UUID memberId, String githubId) {
         return getRelatedRankWithMemberResponse(jpaQueryFactory
                 .select(member)
                 .from(member, organization)
@@ -84,13 +84,12 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                         JPAExpressions
                                 .select(member.sumOfTokens).from(member).where(member.id.eq(memberId))))
                 .distinct()
-                .fetch().size() + 1);
+                .fetch().size() + 1, githubId);
     }
 
-    private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(int rank) {
-        Boolean isLast = false;
-        long offset = getOffset(rank, isLast);
-        return new RelatedRankWithMemberResponse(rank, isLast, jpaQueryFactory
+    private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(int rank, String githubId) {
+        long offset = getOffset(rank);
+        List<String> relatedRank = jpaQueryFactory
                 .select(member.githubId, member.id, member.sumOfTokens)
                 .from(member, organization)
                 .leftJoin(organization.members, member)
@@ -99,7 +98,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .distinct()
                 .offset(offset)
                 .limit(3)
-                .fetch().stream().map(t -> t.get(member.githubId)).collect(Collectors.toList()));
+                .fetch().stream().map(t -> t.get(member.githubId)).collect(Collectors.toList());
+        return new RelatedRankWithMemberResponse(rank, relatedRank.get(relatedRank.size() - 1).equals(githubId), relatedRank);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .fetch();
     }
 
-    private long getOffset(int rank, Boolean isLast) {
+    private long getOffset(int rank) {
         int size = jpaQueryFactory
                 .select(member.id)
                 .from(member, organization)
@@ -123,13 +123,9 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .size();
 
         if (rank == 1) {
-            if (size == 1) {
-                isLast = true;
-            }
             return 0L;
         }
         if (size == rank) {
-            isLast = true;
             if (rank == 2) {
                 return 0L;
             }

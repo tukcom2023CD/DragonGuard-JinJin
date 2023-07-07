@@ -90,7 +90,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
                 member,
                 memberRepository.findRankingById(memberId),
                 member.getOrganization().getName(),
-                organizationRepository.findRankingByMemberId(memberId));
+                organizationRepository.findRankingByMemberId(memberId, member.getGithubId()));
     }
 
     @Transactional(readOnly = true)
