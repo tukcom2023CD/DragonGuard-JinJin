@@ -13,10 +13,10 @@ struct DetailRepoModel: Codable {
 }
 
 struct GitRepoMembers: Codable{
-    let github_id: String
-    let profile_url: String
-    let commits: Int
-    let additions: Int
-    let deletions: Int
-    let is_service_member: Bool
+    let github_id: String?
+    let profile_url: String?
+    let commits: Int?
+    let additions: Int?
+    let deletions: Int?
+    let is_service_member: Bool?
 }

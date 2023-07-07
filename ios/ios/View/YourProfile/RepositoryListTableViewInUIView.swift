@@ -84,7 +84,7 @@ final class RepositoryListTableViewInUIView: UIView{
     func inputData(imgPath: String?, title: String?, userName: String?){
         addUI_Repository()
         
-        titleImg.image = UIImage(named: "pomi")?.resize(newWidth: 30,newHeight: 30)
+        titleImg.load(img: titleImg, url: URL(string: imgPath ?? "")!, size: 30)
         titleLabel.text = title ?? "a"
         userNameLabel.text = userName ?? "a"
     }

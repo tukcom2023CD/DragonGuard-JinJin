@@ -63,7 +63,7 @@ extension RepositoryListUIView: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryListTableViewCell.identfier, for: indexPath) as? RepositoryListTableViewCell else { return UITableViewCell() }
         
-        cell.inputData(title: self.userName, imgPath: self.userProfile, repoName: self.repoList[indexPath.section])
+        cell.inputData(title: self.userName, imgPath: self.userProfile, repoName: self.repoList[indexPath.row])
         
         return cell
     }

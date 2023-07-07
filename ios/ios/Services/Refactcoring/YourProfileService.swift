@@ -25,6 +25,7 @@ final class YourProfileService{
                        ])
             .validate(statusCode: 200..<201)
             .responseDecodable(of: YourProfileModel.self) { res in
+                print("YourProfileService \n\(res)")
                 switch res.result{
                 case .success(let data):
                     observer.onNext(data)

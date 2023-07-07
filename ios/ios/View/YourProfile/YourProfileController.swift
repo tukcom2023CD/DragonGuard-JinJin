@@ -59,6 +59,8 @@ final class YourProfileController: UIViewController{
     private lazy var profileImageView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "2")?.resize(newWidth: view.safeAreaLayoutGuide.layoutFrame.height/5, newHeight: view.safeAreaLayoutGuide.layoutFrame.height/5)
+        imgView.layer.cornerRadius = 20
+        imgView.clipsToBounds = true
         return imgView
     }()
     
@@ -195,18 +197,17 @@ final class YourProfileController: UIViewController{
     
     // MARK:
     private func getData(){
-//        self.userName = "JJ"
-//        let rank = 2
-//        let commit = 2
-//        let issue = 2
-//        let repo = ["aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa"]
-//        listCount = repo.count
-        
         guard let userName = userName else { return }
         viewModel.getData(githubId: userName)
             .subscribe(onNext:{ data in
                 self.listCount = data.git_repos?.count
                 self.addUI()
+                self.profileImageView.load(img: self.profileImageView,
+                                           url: URL(string: data.profile_image ?? "")!,
+                                           width: self.view.safeAreaLayoutGuide.layoutFrame.height/5,
+                                           height: self.view.safeAreaLayoutGuide.layoutFrame.height/5)
+                self.organizationLabel.text = data.organization ?? "None"
+                
                 self.contributorView.inputData(ranking: data.rank ?? 0,
                                                commit: data.commits ?? 0,
                                                issue: data.issues ?? 0)

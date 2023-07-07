@@ -292,10 +292,13 @@ extension RepoDetailController: UICollectionViewDelegate, UICollectionViewDataSo
         print(indexPath.row)
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        let nextPage = YourProfileController()
-        nextPage.userName = self.userInfo?.git_repo_members?[indexPath.row].github_id ?? ""
-        nextPage.modalPresentationStyle = .fullScreen
-        present(nextPage, animated: false)
+        let check = self.userInfo?.git_repo_members?[indexPath.row].is_service_member ?? false
+        if check{
+            let nextPage = YourProfileController()
+            nextPage.userName = self.userInfo?.git_repo_members?[indexPath.row].github_id ?? ""
+            nextPage.modalPresentationStyle = .fullScreen
+            present(nextPage, animated: false)
+        }
     }
 }
 

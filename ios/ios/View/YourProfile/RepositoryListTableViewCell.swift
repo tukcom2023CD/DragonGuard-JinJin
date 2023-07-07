@@ -51,7 +51,7 @@ final class RepositoryListTableViewCell: UITableViewCell{
     func inputData(title: String?, imgPath: String?, repoName: String?){
         addUI()
         
-        repositoryListTableViewInUIView.inputData(imgPath: imgPath, title: title, userName: repoName)
+        repositoryListTableViewInUIView.inputData(imgPath: imgPath, title: repoName , userName: title)
     }
     
     

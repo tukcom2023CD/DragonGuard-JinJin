@@ -141,7 +141,6 @@
 		3BE64A0E2A3E03E4005D9F9E /* BlockChainListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE64A0D2A3E03E4005D9F9E /* BlockChainListTableViewCell.swift */; };
 		3BE64A102A3E05E1005D9F9E /* BlockChainListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE64A0F2A3E05E1005D9F9E /* BlockChainListModel.swift */; };
 		3BE64A142A3E2A53005D9F9E /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE64A132A3E2A53005D9F9E /* TabBarViewController.swift */; };
-		3BE64A172A3E2AB1005D9F9E /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE64A162A3E2AB1005D9F9E /* QuestionViewController.swift */; };
 		3BE6AD2F2993C6D300B22EBD /* RepoContributorInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6AD2E2993C6D300B22EBD /* RepoContributorInfoService.swift */; };
 		3BE6AD312993CF8500B22EBD /* RepoContributorInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */; };
 		3BE6AD332993D0D800B22EBD /* RepoContributorInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6AD322993D0D800B22EBD /* RepoContributorInfoModel.swift */; };
@@ -309,7 +308,6 @@
 		3BE64A0D2A3E03E4005D9F9E /* BlockChainListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockChainListTableViewCell.swift; sourceTree = "<group>"; };
 		3BE64A0F2A3E05E1005D9F9E /* BlockChainListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockChainListModel.swift; sourceTree = "<group>"; };
 		3BE64A132A3E2A53005D9F9E /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TabBarViewController.swift; path = ios/View/MainViewController/TabBarViewController.swift; sourceTree = SOURCE_ROOT; };
-		3BE64A162A3E2AB1005D9F9E /* QuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewController.swift; sourceTree = "<group>"; };
 		3BE6AD2E2993C6D300B22EBD /* RepoContributorInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoService.swift; sourceTree = "<group>"; };
 		3BE6AD302993CF8500B22EBD /* RepoContributorInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoViewModel.swift; sourceTree = "<group>"; };
 		3BE6AD322993D0D800B22EBD /* RepoContributorInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoContributorInfoModel.swift; sourceTree = "<group>"; };
@@ -778,7 +776,6 @@
 				A3342B9A2A439B32002C85A7 /* CustomUIView */,
 				A3E9514E2A42C2B300E8E67F /* MainViewController.swift */,
 				3BE64A132A3E2A53005D9F9E /* TabBarViewController.swift */,
-				3BE64A162A3E2AB1005D9F9E /* QuestionViewController.swift */,
 			);
 			path = MainViewController;
 			sourceTree = "<group>";
@@ -986,7 +983,6 @@
 				3BA78D942A04EED9000ACAD1 /* AdminCheckService.swift in Sources */,
 				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
 				3B5FF1582A25EBED0022BE90 /* ChooseLanguageView.swift in Sources */,
-				3BE64A172A3E2AB1005D9F9E /* QuestionViewController.swift in Sources */,
 				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
 				3BE649F42A3DA4A3005D9F9E /* OrganizationInfoView.swift in Sources */,
 				3BF40D5E2A3E2E1B0052FA7C /* CustomLoginButton.swift in Sources */,
