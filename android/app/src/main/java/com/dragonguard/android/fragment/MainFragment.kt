@@ -57,6 +57,7 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 //        binding.toolbar.inflateMenu(R.menu.refresh)
+        binding.githubProfile.clipToOutline = true
         binding.tokenFrame.setOnClickListener {
             val intent = Intent(requireActivity(), TokenHistoryActivity::class.java)
             intent.putExtra("token", token)
