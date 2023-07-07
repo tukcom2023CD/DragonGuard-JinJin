@@ -33,9 +33,17 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
 
     private Set<GitOrganization> getNotSavedGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
         return gitOrganizationNames.stream()
-                .filter(org -> !gitOrganizationRepository.existsByName(org.getLogin()))
-                .map(org -> gitOrganizationMapper.toEntity(org.getLogin(), org.getAvatarUrl(), member))
-                .collect(Collectors.toSet());
+                .map(org -> {
+                    String gitOrganizationName = org.getLogin();
+                    if (!gitOrganizationRepository.existsByName(gitOrganizationName)) {
+                        return gitOrganizationMapper.toEntity(gitOrganizationName, org.getAvatarUrl(), member);
+                    }
+                    GitOrganization gitOrganization = gitOrganizationRepository.findByName(gitOrganizationName)
+                            .orElseThrow(EntityNotFoundException::new);
+                    gitOrganization.addGitOrganizationMember(member);
+
+                    return gitOrganization;
+                }).collect(Collectors.toSet());
     }
 
     private void saveAllGitOrganizations(final Set<GitOrganization> gitOrganizations) {

@@ -61,7 +61,7 @@ public class GitOrganization implements Auditable {
         return Objects.hash(name);
     }
 
-    private void addGitOrganizationMember(Member member) {
+    public void addGitOrganizationMember(Member member) {
         this.gitOrganizationMembers.add(new GitOrganizationMember(this, member));
     }
 }
