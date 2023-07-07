@@ -64,7 +64,7 @@ final class MainViewController: UIViewController {
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
-        label.text = "HJ39"
+        label.text = "None"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
@@ -386,6 +386,7 @@ final class MainViewController: UIViewController {
             
             self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
             self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
+            self.nameLabel.text = data.github_id ?? ""
             
             switch data.tier{
             case "BRONZE":
@@ -394,6 +395,8 @@ final class MainViewController: UIViewController {
                 self.tierImage.image = UIImage(named: "silver")
             case "GOLD":
                 self.tierImage.image = UIImage(named: "gold")
+            case "PLATINUM":
+                self.tierImage.image = UIImage(named: "platinum")
             case "DIAMOND":
                 self.tierImage.image = UIImage(named: "diamond")
             default:

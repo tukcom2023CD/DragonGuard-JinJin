@@ -212,6 +212,9 @@ final class AllUserRankingController: UIViewController{
 
         rankingViewModel.allRankingOfType(check: true)
             .subscribe(onNext:{ list in
+                self.topTierTypeOfRankingData = []
+                self.userTierTypeOfRankingData = []
+                
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -229,7 +232,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.userTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -242,6 +245,9 @@ final class AllUserRankingController: UIViewController{
         
         rankingViewModel.rankingOfType(type: "COMPANY", check: true)
             .subscribe(onNext:{ list in
+                self.topTierTypeOfRankingData = []
+                self.userTierTypeOfRankingData = []
+                
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -259,7 +265,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.userTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -272,6 +278,9 @@ final class AllUserRankingController: UIViewController{
         rankingViewModel.rankingOfType(type: "UNIVERSITY", check: true)
             .subscribe(onNext:{ list in
                 print("loadUniversityData\n\(list)")
+                self.topTierTypeOfRankingData = []
+                self.userTierTypeOfRankingData = []
+                
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -289,7 +298,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -301,6 +310,8 @@ final class AllUserRankingController: UIViewController{
         
         rankingViewModel.rankingOfType(type: "HIGH_SCHOOL", check: true)
             .subscribe(onNext:{ list in
+                self.topTierTypeOfRankingData = []
+                self.userTierTypeOfRankingData = []
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -318,7 +329,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.userTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -331,6 +342,9 @@ final class AllUserRankingController: UIViewController{
         rankingViewModel.rankingOfType(type: "ETC", check: true)
             .subscribe(onNext:{ list in
                 print("loadETCData\n\(list)")
+                self.topTierTypeOfRankingData = []
+                self.userTierTypeOfRankingData = []
+                
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -348,7 +362,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.userTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)

@@ -67,8 +67,9 @@ final class CustomTopView: UIView{
     
     
     func getData(list: [AllUserRankingModel]){
+        stackView.removeFromSuperview()
         addUI()
-        print("getData")
+        print("getData1")
         print(list)
         switch list.count{
         case 0:
@@ -79,14 +80,14 @@ final class CustomTopView: UIView{
         case 1:
             firstRankView.getData(data: list[0])
             firstRankView.isHidden = false
-            secondRankView.isHidden = false
-            thirdRankView.isHidden = false
+            secondRankView.isHidden = true
+            thirdRankView.isHidden = true
         case 2:
             firstRankView.getData(data: list[0])
             secondRankView.getData(data: list[1], rank: 2)
             firstRankView.isHidden = false
             secondRankView.isHidden = false
-            thirdRankView.isHidden = false
+            thirdRankView.isHidden = true
         case 3:
             firstRankView.getData(data: list[0])
             secondRankView.getData(data: list[1], rank: 2)
@@ -107,31 +108,33 @@ final class CustomTopView: UIView{
      Organization
      */
     
-    func getData(list: [TypeRankingModel]){
+    func getData(typeList: [TypeRankingModel]){
+        stackView.removeFromSuperview()
         addUI()
-        print("getData")
-        print(list)
-        switch list.count{
+        print("getData2")
+        print(typeList)
+        
+        switch typeList.count {
         case 0:
             print("CustomTopView None")
             firstRankView.isHidden = true
             secondRankView.isHidden = true
             thirdRankView.isHidden = true
         case 1:
-            firstRankView.getData(data: list[0])
+            firstRankView.getData(data: typeList[0])
             firstRankView.isHidden = false
-            secondRankView.isHidden = false
-            thirdRankView.isHidden = false
+            secondRankView.isHidden = true
+            thirdRankView.isHidden = true
         case 2:
-            firstRankView.getData(data: list[0])
-            secondRankView.getData(data: list[1], rank: 2)
+            firstRankView.getData(data: typeList[0])
+            secondRankView.getData(data: typeList[1], rank: 2)
             firstRankView.isHidden = false
             secondRankView.isHidden = false
-            thirdRankView.isHidden = false
+            thirdRankView.isHidden = true
         case 3:
-            firstRankView.getData(data: list[0])
-            secondRankView.getData(data: list[1], rank: 2)
-            thirdRankView.getData(data: list[2] ,rank: 3)
+            firstRankView.getData(data: typeList[0])
+            secondRankView.getData(data: typeList[1], rank: 2)
+            thirdRankView.getData(data: typeList[2] ,rank: 3)
             firstRankView.isHidden = false
             secondRankView.isHidden = false
             thirdRankView.isHidden = false
