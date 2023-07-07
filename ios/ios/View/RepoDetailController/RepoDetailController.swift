@@ -121,7 +121,7 @@ final class RepoDetailController: UIViewController{
     private func setIndicactorAutoLayout(){
         indicatorView.snp.makeConstraints { make in
             make.top.equalTo(backBtn.snp.bottom)
-            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -131,7 +131,7 @@ final class RepoDetailController: UIViewController{
         
         // back Button
         backBtn.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
         }
     }
@@ -141,7 +141,6 @@ final class RepoDetailController: UIViewController{
         self.view.addSubview(scrollView)
         
         scrollView.addSubview(contentView)
-        
         
         contentView.addSubview(blankView)
         contentView.addSubview(customView)
@@ -233,7 +232,7 @@ final class RepoDetailController: UIViewController{
     // MARK: 뒤로가기 버튼
     @objc
     private func clickedBackBtn(){
-        self.dismiss(animated: true)
+        self.dismiss(animated: false)
     }
     
     // MARK: 색상 랜덤 설정
@@ -289,7 +288,6 @@ extension RepoDetailController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath.row)
         collectionView.deselectItem(at: indexPath, animated: true)
         
         let check = self.userInfo?.git_repo_members?[indexPath.row].is_service_member ?? false

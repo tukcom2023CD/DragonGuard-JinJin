@@ -30,7 +30,7 @@ final class RepositoryInfoView: UIView{
     // MARK: Repository 제목
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 23)
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -46,7 +46,7 @@ final class RepositoryInfoView: UIView{
     // MARK: 유저 이름 Reposiotry만 할당
     private lazy var userNameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20)
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -84,7 +84,6 @@ final class RepositoryInfoView: UIView{
     func inputData(imgPath: String, title: String, userName: String){
         addUI_Repository()
         titleImg.load(img: titleImg, url: URL(string: imgPath)!, width: 60, height: 60)
-//        titleImg.image = UIImage(named: "pomi")?.resize(newWidth: 30,newHeight: 30)
         titleLabel.text = title
         userNameLabel.text = userName
     }

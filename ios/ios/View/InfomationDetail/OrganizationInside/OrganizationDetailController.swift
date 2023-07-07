@@ -105,8 +105,12 @@ extension OrganizationDetailController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: OrganizationDetailTableViewCell.identifier, for: indexPath) as? OrganizationDetailTableViewCell else {return UITableViewCell()}
+        let organizationTitle = (data?.git_repos?[indexPath.row] ?? "").split(separator: "/")[0]
+        let title = (data?.git_repos?[indexPath.row] ?? "").split(separator: "/")[1]
         
-        cell.inputData(title: data?.git_repos?[indexPath.row] ?? "", imgPath: data?.profile_image ?? "", organizationTitle: "ab")
+        cell.inputData(title: "\(title)",
+                       imgPath: data?.profile_image ?? "",
+                       organizationTitle: "\(organizationTitle)")
         return cell
     }
     
@@ -120,7 +124,7 @@ extension OrganizationDetailController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.safeAreaLayoutGuide.layoutFrame.height/8
+        return view.safeAreaLayoutGuide.layoutFrame.height/6
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return data?.git_repos?.count ?? 0 }

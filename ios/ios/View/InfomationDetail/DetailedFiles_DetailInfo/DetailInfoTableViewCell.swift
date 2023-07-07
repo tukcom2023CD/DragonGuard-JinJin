@@ -64,7 +64,7 @@ final class DetailInfoTableViewCell: UITableViewCell{
     
     // MARK:
     private func addUI_Repository(){
-        self.addSubview(repositoryView)
+        addSubview(repositoryView)
         
         repositoryView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)

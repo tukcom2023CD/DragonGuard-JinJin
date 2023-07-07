@@ -155,19 +155,16 @@ final class CertificationEmailController: UIViewController{
                     // 팝업창 확인 버튼
                     
                     sheet.addAction(UIAlertAction(title: "인증 마치기", style: .default,handler: { action in
-                        
-                        self.dismiss(animated: false) {
-                            self.dismiss(animated: false){
-                                self.dismiss(animated: false)
-                            }
-                        }
-//                        guard let viewControllerStack = self.navigationController?.viewControllers else { return }
+                        print("done")
+                        // 첫 번째 모달 창 닫기
+                        self.presentingViewController?.dismiss(animated: false, completion: nil)
 
-//                        for viewController in viewControllerStack {
-//                            if let mainView = viewController as? MainController {
-//                                self.navigationController?.popToViewController(mainView, animated: true)
-//                            }
-//                        }
+                        // 두 번째 모달 창 닫기
+                        self.presentingViewController?.presentingViewController?.dismiss(animated: false, completion: nil)
+
+                        // 세 번째 모달 창 닫기
+                        self.presentingViewController?.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+
 
                     }))
                     // 화면에 표시

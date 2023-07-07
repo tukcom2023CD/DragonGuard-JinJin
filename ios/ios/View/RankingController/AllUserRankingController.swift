@@ -232,7 +232,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(typeList: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -265,7 +265,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(typeList: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -329,7 +329,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(typeList: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -362,7 +362,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(typeList: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -375,12 +375,11 @@ extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: AllUserTableviewCell.identifier, for: indexPath) as? AllUserTableviewCell else { return UITableViewCell()}
-        cell.inputData(rank: indexPath.row+4, userData: userTierData[indexPath.row])
+        cell.inputData(rank: indexPath.row + 4, userData: userTierData[indexPath.row])
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return userTierData.count
     }
     
@@ -441,7 +440,6 @@ extension AllUserRankingController: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
         return CGSize(width: collectionView.frame.width/5, height: collectionView.frame.height)
     }
     

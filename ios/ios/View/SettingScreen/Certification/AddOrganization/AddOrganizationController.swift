@@ -184,14 +184,13 @@ final class AddOrganizationController: UIViewController{
                                                                      endPoint: email)
             .subscribe { id in
                 if id != 0 {
-                    self.dismiss(animated: false)
-//                    guard let viewControllerStack = self.navigationController?.viewControllers else { return }
-//
-//                    for viewController in viewControllerStack {
-//                        if let mainView = viewController as? MainController {
-//                            self.navigationController?.popToViewController(mainView, animated: true)
-//                        }
-//                    }
+                    self.presentingViewController?.dismiss(animated: false, completion: nil)
+
+                    // 두 번째 모달 창 닫기
+                    self.presentingViewController?.presentingViewController?.dismiss(animated: false, completion: nil)
+
+                    // 세 번째 모달 창 닫기
+                    self.presentingViewController?.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
                 }
             }
             .disposed(by: self.disposeBag)

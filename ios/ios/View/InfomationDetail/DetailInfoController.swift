@@ -52,7 +52,6 @@ final class DetailInfoController: UIViewController{
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(DetailInfoTableViewCell.self, forCellReuseIdentifier: DetailInfoTableViewCell.identifier)
-            
         
         settingBtn.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -79,7 +78,6 @@ final class DetailInfoController: UIViewController{
     }
     
     func getData() {
-        
         viewModel.service.getData()
             .subscribe(onNext: { data in
                 self.dataList = data
@@ -138,7 +136,7 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.safeAreaLayoutGuide.layoutFrame.height/8
+        return view.safeAreaLayoutGuide.layoutFrame.height/6
     }
     
     func numberOfSections(in tableView: UITableView) -> Int { return 2 }

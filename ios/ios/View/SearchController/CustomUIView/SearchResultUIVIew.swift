@@ -24,7 +24,7 @@ final class SearchResultUIVIew: UIView{
     // MARK: title
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 25)
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .black
         return label
     }()
@@ -32,7 +32,7 @@ final class SearchResultUIVIew: UIView{
     // MARK: 생성 날짜
     private lazy var createLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17)
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .black
         return label
     }()
@@ -40,7 +40,7 @@ final class SearchResultUIVIew: UIView{
     // MARK: 사용한 언어
     private lazy var languageLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17)
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .black
         return label
     }()
@@ -69,12 +69,12 @@ final class SearchResultUIVIew: UIView{
         })
         
         createLabel.snp.makeConstraints({ make in
-            make.bottom.equalTo(self.snp.bottom).offset(-10)
+            make.bottom.equalToSuperview().offset(-10)
             make.leading.equalTo(self.titleLabel.snp.leading)
         })
         
         languageLabel.snp.makeConstraints({ make in
-            make.top.equalTo(self.createLabel.snp.top)
+            make.bottom.equalToSuperview().offset(-10)
             make.trailing.equalTo(self.snp.trailing).offset(-20)
         })
     }

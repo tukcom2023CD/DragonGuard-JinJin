@@ -402,6 +402,7 @@ final class MainViewController: UIViewController {
             default:
                 print("error!\n")
             }
+            let check = (data.is_last ?? false)
             
             if data.organization_rank == 1{
                 
@@ -422,7 +423,7 @@ final class MainViewController: UIViewController {
                                              under: nil)
                 }
             }
-            else if data.is_last ?? false{
+            else if check {
                 if data.member_github_ids?.count != 1{
                     self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
                                              top: data.member_github_ids?[0] ?? "Unknown",
@@ -449,6 +450,7 @@ final class MainViewController: UIViewController {
                                          under: nil)
             }
             else{
+                
                 self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
                                          top: data.member_github_ids?[0] ?? "Unknown",
                                          rank2: (data.organization_rank ?? 0),
