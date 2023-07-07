@@ -88,8 +88,9 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     }
 
     private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(int rank) {
-        long offset = getOffset(rank);
-        return new RelatedRankWithMemberResponse(rank, isLast(rank, offset), jpaQueryFactory
+        Boolean isLast = false;
+        long offset = getOffset(rank, isLast);
+        return new RelatedRankWithMemberResponse(rank, isLast, jpaQueryFactory
                 .select(member.githubId, member.id, member.sumOfTokens)
                 .from(member, organization)
                 .leftJoin(organization.members, member)
@@ -111,8 +112,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .fetch();
     }
 
-    private long getOffset(int rank) {
-        if (rank == 1) return 0L;
+    private long getOffset(int rank, Boolean isLast) {
         int size = jpaQueryFactory
                 .select(member.id)
                 .from(member, organization)
@@ -121,13 +121,20 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .distinct()
                 .fetch()
                 .size();
+
+        if (rank == 1) {
+            if (size == 1) {
+                isLast = true;
+            }
+            return 0L;
+        }
         if (size == rank) {
-            return rank == 2 ? 0L : rank - 3L;
+            if (rank == 2) {
+                isLast = true;
+                return 0L;
+            }
+            return rank - 3L;
         }
         return rank - 2L;
-    }
-
-    private boolean isLast(int rank, long offset) {
-        return rank + 3L == offset;
     }
 }
