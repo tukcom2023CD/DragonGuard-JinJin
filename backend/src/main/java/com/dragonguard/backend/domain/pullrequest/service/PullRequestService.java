@@ -32,15 +32,15 @@ public class PullRequestService implements EntityLoader<PullRequest, Long> {
 
         if (isExistsByMemberAndYear(member, year)) {
             updatePullRequestNum(member, pullRequestNum, year);
-            sendTransaction(member, pullRequestNum - blockchain.getSumOfAmount());
+            sendTransaction(member, pullRequestNum - blockchain.getSumOfAmount(), blockchain);
             return;
         }
         pullRequestRepository.save(pullRequestMapper.toEntity(member, pullRequestNum, year));
-        sendTransaction(member, pullRequestNum.longValue());
+        sendTransaction(member, pullRequestNum.longValue(), blockchain);
     }
 
-    private void sendTransaction(Member member, Long amount) {
-        if (amount <= 0 || !member.isWalletAddressExists()) return;
+    private void sendTransaction(final Member member, final Long amount, final Blockchain blockchain) {
+        if (amount <= 0 || !member.isWalletAddressExists() || !blockchain.isNewHistory(amount)) return;
         blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.PULL_REQUEST));
     }
 

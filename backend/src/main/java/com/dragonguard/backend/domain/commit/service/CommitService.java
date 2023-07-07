@@ -32,15 +32,15 @@ public class CommitService implements EntityLoader<Commit, Long> {
 
         if (commitRepository.existsByMemberAndYear(member, year)) {
             findCommitAndUpdateNum(member, commitNum, year);
-            sendTransaction(member, commitNum - blockchain.getSumOfAmount());
+            sendTransaction(member, commitNum - blockchain.getSumOfAmount(), blockchain);
             return;
         }
         commitRepository.save(commitMapper.toEntity(commitNum, year, member));
-        sendTransaction(member, commitNum.longValue());
+        sendTransaction(member, commitNum.longValue(), blockchain);
     }
 
-    private void sendTransaction(Member member, Long amount) {
-        if (amount <= 0 || !member.isWalletAddressExists()) return;
+    private void sendTransaction(final Member member, final Long amount, final Blockchain blockchain) {
+        if (amount <= 0 || !member.isWalletAddressExists() || !blockchain.isNewHistory(amount)) return;
         blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.COMMIT));
     }
 
