@@ -3,7 +3,6 @@ package com.dragonguard.backend.domain.codereview.repository;
 import com.dragonguard.backend.domain.codereview.entity.CodeReview;
 import com.dragonguard.backend.domain.member.entity.Member;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -12,7 +11,6 @@ import java.util.Optional;
  */
 
 public interface CodeReviewRepository {
-    List<CodeReview> findAllByMember(Member member);
     CodeReview save(CodeReview commit);
     Optional<CodeReview> findById(Long id);
     Optional<CodeReview> findByMemberAndYear(Member member, int year);
