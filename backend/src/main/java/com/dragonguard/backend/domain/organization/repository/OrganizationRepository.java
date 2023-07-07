@@ -15,8 +15,9 @@ import java.util.Optional;
  */
 
 public interface OrganizationRepository extends JpaRepository<Organization, Long>, OrganizationQueryRepository {
-    @Query(value = "SELECT o FROM Organization o WHERE o.organizationType = :organizationType")
+    @Query("SELECT o FROM Organization o WHERE o.organizationType = :organizationType AND o.organizationStatus = 'ACCEPTED'")
     List<Organization> findAllByType(OrganizationType organizationType, Pageable pageable);
     Optional<Organization> findByNameAndOrganizationTypeAndEmailEndpoint(String name, OrganizationType organizationType, String emailEndpoint);
+    @Query("SELECT o FROM Organization o WHERE o.name = :name AND o.organizationStatus = 'ACCEPTED'")
     Optional<Organization> findByName(String name);
 }

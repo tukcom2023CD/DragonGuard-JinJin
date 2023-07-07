@@ -1,4 +1,4 @@
-package com.dragonguard.backend.domain.gitrepo.entity;
+package com.dragonguard.backend.domain.gitrepo.dto.collection;
 
 import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
 import lombok.RequiredArgsConstructor;

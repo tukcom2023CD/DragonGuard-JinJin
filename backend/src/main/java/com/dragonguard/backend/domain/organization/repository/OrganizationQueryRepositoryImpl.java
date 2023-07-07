@@ -6,6 +6,7 @@ import com.dragonguard.backend.domain.organization.dto.response.RelatedRankWithM
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -82,16 +83,17 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .where(member.sumOfTokens.gt(
                         JPAExpressions
                                 .select(member.sumOfTokens).from(member).where(member.id.eq(memberId))))
-                .distinct()
-                .fetch().size() + 1);
+                        .distinct()
+                .fetch().size() + 1, organization.id.eq(member.organization.id));
     }
 
-    private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(int rank) {
+    private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(int rank, BooleanExpression eq) {
         long offset = getOffset(rank);
         return new RelatedRankWithMemberResponse(rank, isLast(rank, offset), jpaQueryFactory
                 .select(member.githubId)
                 .from(member)
-                .orderBy(organization.sumOfMemberTokens.desc())
+                .where(eq)
+                .orderBy(member.sumOfTokens.desc())
                 .offset(offset)
                 .limit(3)
                 .fetch());

@@ -20,6 +20,7 @@ import java.util.Set;
 
 @Getter
 @Entity
+@Where(clause = "deleted_at is null")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Organization implements Auditable {

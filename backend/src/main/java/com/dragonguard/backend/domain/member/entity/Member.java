@@ -14,6 +14,7 @@ import com.dragonguard.backend.global.audit.BaseTime;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;
 
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Entity
+@Where(clause = "deleted_at is null")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member implements Auditable {
