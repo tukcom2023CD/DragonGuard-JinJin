@@ -167,7 +167,6 @@ final class AllUserRankingController: UIViewController{
             let height = view.safeAreaLayoutGuide.layoutFrame.height/6
             
             if Int(height)*(userTierData.count-1)+10 > 0{
-                print("height \(Int(height)*(userTierData.count-1)+10)")
                 make.height.equalTo(Int(height)*(userTierData.count-1)+10)
             }
         }
@@ -213,7 +212,6 @@ final class AllUserRankingController: UIViewController{
 
         rankingViewModel.allRankingOfType(check: true)
             .subscribe(onNext:{ list in
-                print("loadAllOrganizationData\n\(list)")
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -244,7 +242,6 @@ final class AllUserRankingController: UIViewController{
         
         rankingViewModel.rankingOfType(type: "COMPANY", check: true)
             .subscribe(onNext:{ list in
-                print("loadCompanyData\n\(list)")
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -304,7 +301,6 @@ final class AllUserRankingController: UIViewController{
         
         rankingViewModel.rankingOfType(type: "HIGH_SCHOOL", check: true)
             .subscribe(onNext:{ list in
-                print("loadHighSchoolData\n\(list)")
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){

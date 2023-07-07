@@ -11,8 +11,6 @@ import SnapKit
 
 // MARK: 상위 1,2,3등 정보 보여주는 View
 final class CustomTopView: UIView{
-//    private var topTierData: [AllUserRankingModel] = []
-//    private var topTierTypeOfRankingData: [TypeRankingModel] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
