@@ -155,19 +155,19 @@ class HighSchoolFragment (private val token: String): Fragment() {
                 binding.firstId.text = model.name
                 binding.firstContribute.text = model.token_sum.toString()
                 binding.firstRanker.visibility = View.VISIBLE
-                binding.firstProfile.setImageResource(R.drawable.company)
+                binding.firstProfile.setImageResource(R.drawable.high_school)
             }
             2 -> {
                 binding.secondId.text = model.name
                 binding.secondContribute.text = model.token_sum.toString()
                 binding.secondRanker.visibility = View.VISIBLE
-                binding.secondProfile.setImageResource(R.drawable.company)
+                binding.secondProfile.setImageResource(R.drawable.high_school)
             }
             3 -> {
                 binding.thirdId.text = model.name
                 binding.thirdContribute.text = model.token_sum.toString()
                 binding.thirdRanker.visibility = View.VISIBLE
-                binding.thirdProfile.setImageResource(R.drawable.company)
+                binding.thirdProfile.setImageResource(R.drawable.high_school)
             }
         }
     }

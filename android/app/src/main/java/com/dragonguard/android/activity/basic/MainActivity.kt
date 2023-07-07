@@ -393,6 +393,8 @@ class MainActivity : AppCompatActivity() {
             realModel.id = userInfo.id
             realModel.auth_step = userInfo.auth_step
             realModel.member_github_ids = userInfo.member_github_ids
+            realModel.is_last = userInfo.is_last
+            realModel.name = userInfo.name
 
             Log.d("token", "token: $token")
             Log.d("userInfo", "realModel:$realModel")

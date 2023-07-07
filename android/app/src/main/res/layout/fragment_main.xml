@@ -402,7 +402,6 @@
                                 android:id="@+id/user2_ranking"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/black"
                                 android:layout_weight="1"
                                 android:textSize="20sp"
                                 android:gravity="center"/>
@@ -411,8 +410,6 @@
                                 android:id="@+id/user2_githubid"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="@style/textAppearance"
-                                android:textColor="@color/black"
                                 android:layout_weight="3.2"
                                 android:textSize="20sp"
                                 android:gravity="center"/>
