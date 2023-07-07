@@ -113,7 +113,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
         if (rank == 1) return 0L;
         int size = jpaQueryFactory
                 .select(member.id)
-                .from(member)
+                .from(member, organization)
                 .leftJoin(organization.members, member)
                 .on(member.organization.id.eq(organization.id))
                 .distinct()
