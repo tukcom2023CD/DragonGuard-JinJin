@@ -1,10 +1,9 @@
 package com.dragonguard.backend.domain.organization.dto.response;
 
-import com.querydsl.core.Tuple;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -12,14 +11,9 @@ import java.util.stream.Collectors;
  */
 
 @Getter
+@AllArgsConstructor
 public class RelatedRankWithMemberResponse {
     private Integer organizationRank;
     private Boolean isLast;
     private List<String> memberGithubIds;
-
-    public RelatedRankWithMemberResponse(Integer organizationRank, Boolean isLast, List<Tuple> memberGithubIds) {
-        this.organizationRank = organizationRank;
-        this.isLast = isLast;
-        this.memberGithubIds = memberGithubIds.stream().map(t -> t.get(0, String.class)).collect(Collectors.toList());
-    }
 }

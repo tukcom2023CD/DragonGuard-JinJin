@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.dragonguard.backend.domain.member.entity.QMember.member;
 import static com.dragonguard.backend.domain.organization.entity.QOrganization.organization;
@@ -97,7 +98,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .distinct()
                 .offset(offset)
                 .limit(3)
-                .fetch());
+                .fetch().stream().map(t -> t.get(member.githubId)).collect(Collectors.toList()));
     }
 
     @Override

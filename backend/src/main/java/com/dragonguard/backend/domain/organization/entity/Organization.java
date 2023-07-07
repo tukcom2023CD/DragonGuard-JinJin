@@ -37,7 +37,6 @@ public class Organization implements Auditable {
     @Column(nullable = false)
     private String emailEndpoint;
 
-    @Where(clause = "auth_step = 'ALL'")
     @OneToMany(mappedBy = "organization")
     private Set<Member> members = new HashSet<>();
 
@@ -70,6 +69,7 @@ public class Organization implements Auditable {
 
     public void updateStatus(OrganizationStatus organizationStatus) {
         this.organizationStatus = organizationStatus;
+        this.members.forEach(Member::finishAuth);
     }
 
     private boolean validateEmailEndpoint(String emailEndpoint) {
