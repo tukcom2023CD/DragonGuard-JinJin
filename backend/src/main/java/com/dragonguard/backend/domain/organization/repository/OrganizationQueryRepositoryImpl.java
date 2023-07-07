@@ -129,8 +129,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
             return 0L;
         }
         if (size == rank) {
+            isLast = true;
             if (rank == 2) {
-                isLast = true;
                 return 0L;
             }
             return rank - 3L;
