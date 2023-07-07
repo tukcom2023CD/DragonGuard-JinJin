@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             if(!this@MainActivity.isFinishing) {
                 loginOut = logout
                 if (loginOut) {
-                    binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(2).itemId
+                    binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(1).itemId
                     prefs.setWalletAddress("")
                     loginOut = true
                     prefs.setJwtToken("")
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
 
         prefs = IdPreference(applicationContext)
         this.onBackPressedDispatcher.addCallback(this, callback)
-        binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(2).itemId
+        binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(1).itemId
         if (loginOut) {
             prefs.setWalletAddress("")
         }
@@ -192,9 +192,9 @@ class MainActivity : AppCompatActivity() {
                             .commit()
                     }
                 }
-                R.id.bottom_questions -> {
+//                R.id.bottom_questions -> {
 //                    logOut()
-                }
+//                }
             }
             true
         }
@@ -326,7 +326,7 @@ class MainActivity : AppCompatActivity() {
             added = true
             return
         }
-        if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(2).itemId && state ) {
+        if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(1).itemId && state ) {
             Log.d("added", "added: $added    refreshMain")
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(binding.contentFrame.id, mainFrag!!)
