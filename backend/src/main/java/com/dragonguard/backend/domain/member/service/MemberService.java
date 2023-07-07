@@ -129,6 +129,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     public MemberGitReposAndGitOrganizationsResponse findMemberDetails() {
         Member member = getLoginUserWithPersistence();
         String githubId = member.getGithubId();
+        sendRepositoryRequestToKafka(githubId);
 
         return getMemberGitReposAndGitOrganizations(githubId, member);
     }
@@ -165,6 +166,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberGitOrganizationRepoResponse getMemberGitOrganizationRepo(final String gitOrganizationName) {
+        sendRepositoryRequestToKafka(getLoginUserWithPersistence().getGithubId());
         return new MemberGitOrganizationRepoResponse(
                 gitOrganizationService.findByName(gitOrganizationName).getProfileImage(),
                 memberClientService.requestGitOrganizationResponse(getLoginUserWithPersistence().getGithubToken(), gitOrganizationName));
