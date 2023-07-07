@@ -13,6 +13,7 @@ import RxSwift
 final class MainViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let viewModel = MainViewModel()
+    private var blockChainUrl: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -387,7 +388,7 @@ final class MainViewController: UIViewController {
             self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
             self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
             self.nameLabel.text = data.github_id ?? ""
-            
+            self.blockChainUrl = data.blockchain_url
             switch data.tier{
             case "BRONZE":
                 self.tierImage.image = UIImage(named: "bronze")
@@ -426,9 +427,9 @@ final class MainViewController: UIViewController {
             else if check {
                 if data.member_github_ids?.count != 1{
                     self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
-                                             top: data.member_github_ids?[0] ?? "Unknown",
+                                             top: data.member_github_ids?[1] ?? "Unknown",
                                              rank2: (data.organization_rank ?? 0),
-                                             me: data.member_github_ids?[1] ?? "Unknown",
+                                             me: data.member_github_ids?[2] ?? "Unknown",
                                              rank3: nil,
                                              under: nil)
                 }
@@ -436,7 +437,7 @@ final class MainViewController: UIViewController {
                     self.groupView.inputData(rank1: nil,
                                              top: nil,
                                              rank2: (data.organization_rank ?? 0),
-                                             me: data.member_github_ids?[1] ?? "Unknown",
+                                             me: data.member_github_ids?[0] ?? "Unknown",
                                              rank3: nil,
                                              under: nil)
                 }
@@ -461,69 +462,7 @@ final class MainViewController: UIViewController {
             
             self.groupLabel.text = data.organization ?? "None"
             
-            self.contributionView.inputData(commit: data.commits ?? 0,
-                                            issue: data.issues ?? 0,
-                                            pr: data.pull_requests ?? 0,
-                                            reviews: data.reviews ?? 0)
-        })
-        .disposed(by: self.disposeBag)
-    }
-    
-    func getAfterData(){
-        viewModel.getMyInformation().subscribe(onNext: { data in
-            let imgUrl = URL(string: data.profile_image ?? "")!
-            
-            self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
-            self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
-            
-            switch data.tier{
-            case "BRONZE":
-                self.tierImage.image = UIImage(named: "bronze")
-            case "SILVER":
-                self.tierImage.image = UIImage(named: "silver")
-            case "GOLD":
-                self.tierImage.image = UIImage(named: "gold")
-            case "DIAMOND":
-                self.tierImage.image = UIImage(named: "diamond")
-            default:
-                print("error!\n")
-            }
-            
-            if data.organization_rank == 1{
-                self.groupView.inputData(rank1: nil,
-                                         top: nil,
-                                         rank2: data.organization_rank ?? 1,
-                                         me: data.member_github_ids?[1] ?? "Unknown",
-                                         rank3: (data.organization_rank ?? 1)+1,
-                                         under: data.member_github_ids?[2] ?? "Unknown")
-            }
-            else if data.is_last ?? false{
-                self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
-                                         top: data.member_github_ids?[0] ?? "Unknown",
-                                         rank2: (data.organization_rank ?? 0),
-                                         me: data.member_github_ids?[1] ?? "Unknown",
-                                         rank3: nil,
-                                         under: nil)
-            }
-            else if ((data.member_github_ids?.isEmpty) == nil){
-                self.groupView.inputData(rank1: nil,
-                                         top: nil,
-                                         rank2: nil,
-                                         me: nil,
-                                         rank3: nil,
-                                         under: nil)
-            }
-            else{
-                self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
-                                         top: data.member_github_ids?[0] ?? "Unknown",
-                                         rank2: (data.organization_rank ?? 0),
-                                         me: data.member_github_ids?[1] ?? "Unknown",
-                                         rank3: (data.organization_rank ?? 0)+1,
-                                         under: data.member_github_ids?[2] ?? "Unknown")
-            }
-            
-            self.groupLabel.text = data.organization ?? "None"
-            
+            self.contributionView.timer?.invalidate()
             self.contributionView.inputData(commit: data.commits ?? 0,
                                             issue: data.issues ?? 0,
                                             pr: data.pull_requests ?? 0,
@@ -546,6 +485,7 @@ final class MainViewController: UIViewController {
         tokenView.rx.tap.subscribe(onNext:{
             let nextPage = BlockChainListController()
             nextPage.modalPresentationStyle = .fullScreen
+            nextPage.blockchainUrl = self.blockChainUrl
             self.contributionView.stopTimer()
             self.present(nextPage ,animated: false)
         })

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SafariServices
 import SnapKit
 import UIKit
 import RxSwift
@@ -13,10 +14,10 @@ import RxSwift
 final class TitleView: UIView{
     private let disposeBag = DisposeBag()
     private var link: String?
+    var delegate: SendingURL?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addUI()
     }
     
     required init?(coder: NSCoder) {
@@ -57,14 +58,18 @@ final class TitleView: UIView{
     // MARK:
     private func clickedLinkButton(){
         linkImage.rx.tap.subscribe(onNext:{
-            print("link~~ \(self.link)")
+            self.delegate?.sendingURL(stringURL: self.link ?? "")
         })
         .disposed(by: disposeBag)
     }
     
     func inputData(link: String?){
+        addUI()
         self.link = link
-//        print("link~~ \(link)")
     }
     
+}
+
+protocol SendingURL{
+    func sendingURL(stringURL: String)
 }

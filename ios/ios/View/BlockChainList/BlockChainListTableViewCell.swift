@@ -33,6 +33,7 @@ final class BlockChainListTableViewCell: UITableViewCell{
     private lazy var typeLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -40,6 +41,7 @@ final class BlockChainListTableViewCell: UITableViewCell{
     private lazy var countLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -48,6 +50,7 @@ final class BlockChainListTableViewCell: UITableViewCell{
         let stack = UIStackView(arrangedSubviews: [timeLabel, typeLabel, countLabel])
         stack.axis = .horizontal
         stack.distribution = .fillEqually
+        stack.spacing = 10
         return stack
     }()
     

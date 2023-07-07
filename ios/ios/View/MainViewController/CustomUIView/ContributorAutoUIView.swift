@@ -13,7 +13,7 @@ final class ContributorAutoUIView: UIView{
     private var titleList: [String] = ["Commit", "Issue", "Pull-Request", "Reviews"]
     private var numList: [Int] = []
     private var nowPage: Int = 0
-    private var timer: Timer?
+    var timer: Timer?
     
     override init(frame: CGRect) {
         super.init(frame: frame)

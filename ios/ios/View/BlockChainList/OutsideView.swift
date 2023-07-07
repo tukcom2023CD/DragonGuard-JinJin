@@ -14,6 +14,7 @@ final class OutsideView: UIView{
     private var dataList: [BlockChainListModel] = []
     var delegate: SendURL?
     
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -43,6 +44,8 @@ final class OutsideView: UIView{
     // MARK: UI 등록
     private func addUI(){
         self.addSubview(titleView)
+        titleView.delegate = self
+        
         self.addSubview(tableView)
         
         tableView.dataSource = self
@@ -66,6 +69,7 @@ final class OutsideView: UIView{
         self.dataList = list
         addUI()
         titleView.inputData(link: totalLink)
+        
     }
     
 }
@@ -83,14 +87,17 @@ extension OutsideView: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        print("selectLink \(dataList[indexPath.row].transaction_hash_url)")
-        
         delegate?.sendURL(url: dataList[indexPath.row].transaction_hash_url ?? "")
         
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataList.count
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return dataList.count }
+    
+}
+
+extension OutsideView: SendingURL{
+    func sendingURL(stringURL: String) {
+        self.delegate?.sendURL(url: stringURL)
     }
 }
 
