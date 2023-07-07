@@ -124,6 +124,7 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
         /// Organization
         if indexPath.section == 0{
             let nextPage = OrganizationDetailController()
+            nextPage.name = dataList?.git_organizations?[indexPath.row].name
             nextPage.modalPresentationStyle = .fullScreen
             self.present(nextPage, animated: true)
         }

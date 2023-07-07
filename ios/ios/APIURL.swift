@@ -222,6 +222,15 @@ final class APIURL{
         let url = "http://\(ip)/api/members/details?githubId=\(githubId)"
         return url
     }
+        
+    func getMyOragnizationRepo(ip: String) -> String{
+        let url = "http://\(ip)/api/members/me/details"
+        return url
+    }
     
+    func getRepositoriesListInOrganization(ip: String, name: String) -> String{
+        let url = "http://\(ip)/api/members/git-organizations/git-repos?name=\(name)"
+        return url
+    }
 }
 

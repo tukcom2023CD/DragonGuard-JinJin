@@ -13,7 +13,10 @@ import RxSwift
 // MARK: 내 조직을 눌렀을 때 내부 레포지토리들 보여주는 화면
 final class OrganizationDetailController: UIViewController{
     private let disposeBag = DisposeBag()
-    var data: RepositoryListInOrganizationModel?
+    var data: RepositoriesInOrganizationModel?
+    var name: String?
+    private let viewModel = RepositoriesInOrganizationViewModel()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,9 +88,14 @@ final class OrganizationDetailController: UIViewController{
     
     // MARK:
     private func getData(){
-        data = RepositoryListInOrganizationModel(gitRepos: ["aa","bb","cccccccc","ddddddddddddd","e","fffff"],
-                                                 imgPath: "")
-        addUI()
+        
+        viewModel.getData(name: self.name ?? "")
+            .subscribe(onNext:{ data in
+                self.data = data
+                self.addUI()
+            })
+            .disposed(by: disposeBag)
+        
     }
     
     
@@ -98,7 +106,7 @@ extension OrganizationDetailController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: OrganizationDetailTableViewCell.identifier, for: indexPath) as? OrganizationDetailTableViewCell else {return UITableViewCell()}
         
-        cell.inputData(title: data?.gitRepos?[indexPath.row] ?? "", imgPath: data?.imgPath ?? "", organizationTitle: "ab")
+        cell.inputData(title: data?.git_repos?[indexPath.row] ?? "", imgPath: data?.profile_image ?? "", organizationTitle: "ab")
         return cell
     }
     
@@ -107,7 +115,7 @@ extension OrganizationDetailController: UITableViewDelegate, UITableViewDataSour
         let nextPage = RepoDetailController()
         nextPage.modalPresentationStyle = .fullScreen
         
-        nextPage.selectedTitle = data?.gitRepos?[indexPath.row] ?? ""
+        nextPage.selectedTitle = data?.git_repos?[indexPath.row] ?? ""
         self.present(nextPage,animated: true)
     }
     
@@ -115,5 +123,5 @@ extension OrganizationDetailController: UITableViewDelegate, UITableViewDataSour
         return view.safeAreaLayoutGuide.layoutFrame.height/8
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return data?.gitRepos?.count ?? 0 }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return data?.git_repos?.count ?? 0 }
 }
