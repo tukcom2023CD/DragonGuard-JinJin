@@ -42,34 +42,6 @@ final class EmailService{
         }
     }
     
-    // MARK: 인증번호 재전송 하는 함수
-    /// - Returns: 이메일 Id
-//    func reSendCertificatedNumber() -> Observable<Int>{
-//        let url = APIURL.apiUrl.sendEmailToAuth(ip: APIURL.ip)
-//        let access = UserDefaults.standard.string(forKey: "Access")
-//
-//
-//        return Observable.create { observer in
-//            AF.request(url,
-//                       method: .post,
-//                       headers: [
-//                        "Content-Type" : "application/json",
-//                        "Authorization" : "Bearer \(access ?? "")"
-//                       ])
-//            .responseDecodable(of: EmailResendModel.self) { response in
-//                switch response.result{
-//                case .success(let data):
-//                    observer.onNext(data.id)
-//                case .failure(let error):
-//                    print("reSendCertificatedNumber error!\n \(error)")
-//                }
-//            }
-//
-//
-//            return Disposables.create()
-//        }
-//    }
-    
     // MARK: 인증번호 삭제
     func removeCertificatedNumber(){
         let url = APIURL.apiUrl.removeCertificatedNumber(ip: APIURL.ip)

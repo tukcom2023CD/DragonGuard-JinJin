@@ -40,26 +40,6 @@ final class SearchOraganizationService {
                     print("getOrganizationListService error!\n\(error)")
                 }
             }
-//            .responseData { response in
-//                switch response.result {
-//                case .success(let data):
-//                    do {
-//                        if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [Any] {
-//
-//                            let jsonData = try JSONSerialization.data(withJSONObject: jsonArray,options: [])
-//
-//                            let object = try JSONDecoder().decode([SearchOrganizationListModel].self, from: jsonData)
-//                            print(object)
-//                            observer.onNext(object)
-//                        }
-//                    } catch {
-//                        print(error.localizedDescription)
-//                    }
-//
-//                case .failure(let error):
-//                    print(error.localizedDescription)
-//                }
-//            }
             
             return Disposables.create()
         }

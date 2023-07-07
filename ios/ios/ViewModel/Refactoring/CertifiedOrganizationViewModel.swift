@@ -102,19 +102,6 @@ final class CertifiedOrganizationViewModel{
         }
     }
     
-//    // MARK: 인증번호 재전송 함수
-//    /// - Returns: 이메일 Id
-//    func reSendCertifiactedNumber() -> Observable<Int>{
-//        return Observable.create { observer in
-//            self.emailService.reSendCertificatedNumber()
-//                .subscribe { num in
-//                    observer.onNext(num)
-//                }
-//                .disposed(by: self.disposeBag)
-//            return Disposables.create()
-//        }
-//    }
-    
     // MARK: 인증번호 검증
     /// - Parameters:
     ///   - id: 이메일 Id
