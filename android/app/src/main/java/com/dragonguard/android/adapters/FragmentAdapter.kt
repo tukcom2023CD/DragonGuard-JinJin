@@ -2,14 +2,22 @@ package com.dragonguard.android.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.dragonguard.android.fragment.AllRankingsFragment
+import com.dragonguard.android.fragment.*
 
 class FragmentAdapter (fragment: Fragment, private val token: String) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = fragmentList.size
 
-    private val fragmentList = listOf<String>("total", "company", "university", "high_school", "etc")
+    private val fragmentList = listOf<String>("전체", "회사", "대학교", "고등학교", "ETC")
 
     override fun createFragment(position: Int): Fragment {
-        return AllRankingsFragment(token, fragmentList[position])
+        val fragmentTag = fragmentList[position]
+        return when (fragmentTag) {
+            "전체" -> AllRankingsFragment(token, fragmentTag)
+            "회사" -> CompanyFragment(token)
+            "대학교" -> UniversityFragment(token)
+            "고등학교" -> HighSchoolFragment(token)
+            "ETC" -> EtcFragment(token)
+            else -> throw IllegalArgumentException("Invalid fragment tag: $fragmentTag")
+        }
     }
 }

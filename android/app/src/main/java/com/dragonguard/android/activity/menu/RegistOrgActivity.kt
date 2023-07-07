@@ -32,6 +32,7 @@ class RegistOrgActivity : AppCompatActivity() {
         val arr1 : MutableList<String> = mutableListOf("선택하세요")
         arr1.apply {
             add("대학교")
+            add("고등학교")
             add("회사")
             add("etc")
         }
@@ -56,6 +57,9 @@ class RegistOrgActivity : AppCompatActivity() {
                     }
                     "회사" -> {
                         orgType = "COMPANY"
+                    }
+                    "고등학교" -> {
+                        orgType = "HIGH_SCHOOL"
                     }
                     "etc" -> {
                         orgType = "ETC"

@@ -404,10 +404,10 @@ class ApiRepository {
         val orgTotal = api.getOrgRankings(queryMap, "Bearer $token")
         return try{
             val result = orgTotal.execute()
-            Log.d("error", "전체 조직 랭킹 조회 결과: ${result.code()} ")
+            Log.d("error", "$type 조회 결과: ${result.code()} ")
             return result.body()!!
         } catch (e: Exception) {
-            Log.d("error", "전체 조직 랭킹 조회 실패: ${e.message} ")
+            Log.d("error", "$type 조회 실패: ${e.message} ")
             return orgRankings
         }
     }

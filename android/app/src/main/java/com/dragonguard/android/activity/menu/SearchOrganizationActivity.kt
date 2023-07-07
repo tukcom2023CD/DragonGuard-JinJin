@@ -51,12 +51,16 @@ class SearchOrganizationActivity : AppCompatActivity() {
                     binding.orgGroup.check(R.id.org_type0)
                     type = "UNIVERSITY"
                 }
-                "회사" -> {
+                "고등학교" -> {
                     binding.orgGroup.check(R.id.org_type1)
+                    type = "HIGH_SCHOOL"
+                }
+                "회사" -> {
+                    binding.orgGroup.check(R.id.org_type2)
                     type = "COMPANY"
                 }
                 "etc" -> {
-                    binding.orgGroup.check(R.id.org_type2)
+                    binding.orgGroup.check(R.id.org_type3)
                     type = "ETC"
                 }
 
@@ -75,10 +79,13 @@ class SearchOrganizationActivity : AppCompatActivity() {
                 R.id.org_type0 -> {
                     type = "UNIVERSITY"
                 }
-                R.id.org_type1 -> {
-                    type = "COMPANY"
+                R.id.org_type0 -> {
+                    type = "HIGH_SCHOOL"
                 }
                 R.id.org_type2 -> {
+                    type = "COMPANY"
+                }
+                R.id.org_type3 -> {
                     type = "ETC"
                 }
 
