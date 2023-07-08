@@ -14,8 +14,6 @@ final class CustomUserView: UIView{
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        
     }
     
     required init?(coder: NSCoder) {
@@ -27,7 +25,7 @@ final class CustomUserView: UIView{
         let imgView = UIImageView()
         imgView.image = UIImage(named: "linkIcon")?.resize(newWidth: 60)
         imgView.layer.cornerRadius = 20
-        
+        imgView.clipsToBounds = true
         return imgView
     }()
     
@@ -85,7 +83,7 @@ final class CustomUserView: UIView{
         
         linkImage.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-10)
-            make.bottom.equalTo(stackView.snp.top)
+            make.top.equalTo(stackView.snp.top).offset(-10)
         }
         
     }
@@ -93,6 +91,7 @@ final class CustomUserView: UIView{
     func getData(data: AllUserRankingModel){
         addUI_SetAutoLayout()
         
+        userImage.load(img: userImage, url: URL(string: data.profile_image ?? "")!, size: 60)
         nameLabel.text = data.github_id
         numLabel.text = "\(data.tokens ?? 0)"
     }
