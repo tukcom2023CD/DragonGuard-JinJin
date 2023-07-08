@@ -30,7 +30,9 @@ final class OrganizationInfoView: UIView{
     // MARK: Organization or Repository 제목
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 25)
+        label.adjustsFontSizeToFitWidth = true
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     
@@ -45,9 +47,9 @@ final class OrganizationInfoView: UIView{
     
     // MARK:
     private func addUI_Organization(){
-        self.addSubview(titleImg)
-        self.addSubview(titleLabel)
-        self.addSubview(sendingImage)
+        addSubview(titleImg)
+        addSubview(titleLabel)
+        addSubview(sendingImage)
         
         titleImg.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(10)
@@ -68,7 +70,8 @@ final class OrganizationInfoView: UIView{
     
     func inputData(imgPath: String, title: String){
         addUI_Organization()
-        titleImg.image = UIImage(named: "pomi")?.resize(newWidth: 60, newHeight: 60)
+        titleImg.load(img: titleImg, url: URL(string: imgPath)!, width: 60, height: 60)
+        
         titleLabel.text = title
     }
     

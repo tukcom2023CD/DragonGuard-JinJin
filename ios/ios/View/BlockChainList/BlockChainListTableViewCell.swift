@@ -23,44 +23,48 @@ final class BlockChainListTableViewCell: UITableViewCell{
     // MARK: 시간
     private lazy var timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "a"
+        label.adjustsFontSizeToFitWidth = true
+        label.textColor = .black
+        label.minimumScaleFactor = 0.5
+        label.textAlignment = .center
         return label
     }()
     
     // MARK: 타입
     private lazy var typeLabel: UILabel = {
         let label = UILabel()
-        label.text = "b"
+        label.textAlignment = .center
+        label.textColor = .black
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
     // MARK: 토큰 개수
     private lazy var countLabel: UILabel = {
         let label = UILabel()
-        label.text = "c"
+        label.textAlignment = .center
+        label.textColor = .black
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
     // MARK:
+    private lazy var stack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [timeLabel, typeLabel, countLabel])
+        stack.axis = .horizontal
+        stack.distribution = .fillEqually
+        stack.spacing = 10
+        stack.backgroundColor = .white
+        return stack
+    }()
+    
+    // MARK:
     private func addUI(){
-        self.addSubview(timeLabel)
-        self.addSubview(typeLabel)
-        self.addSubview(countLabel)
+        self.addSubview(stack)
         
-        timeLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.centerY.equalToSuperview()
+        stack.snp.makeConstraints { make in
+            make.top.bottom.trailing.leading.equalToSuperview()
         }
-        
-        typeLabel.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
-        
-        countLabel.snp.makeConstraints { make in
-            make.trailing.equalToSuperview()
-            make.centerY.equalToSuperview()
-        }
-        
     }
     
     func inputData(time: String, type: String, count: String){
@@ -69,19 +73,10 @@ final class BlockChainListTableViewCell: UITableViewCell{
         let date = time.split(separator: "T")[0]
         let time = time.split(separator: "T")[1].split(separator: ".")[0]
         
-        
-        
-//        let newSize = timeLabel.sizeThatFits(timeLabel.frame.size) //1
-//        let newSize = timeLabel.sizeThatFits( CGSize(width: timeLabel.frame.width, height: CGFloat.greatestFiniteMagnitude)) //2
-        let newSize = timeLabel.sizeThatFits(self.frame.size)
-        
-        timeLabel.frame.size = newSize
         timeLabel.text = "\(date) \(time)"
         
         typeLabel.text = type
         countLabel.text = count
-        
-        
     }
     
 }

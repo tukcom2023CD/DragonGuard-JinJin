@@ -40,6 +40,7 @@ final class OrganizationCertificationController: UIViewController{
         label.text = "조직 인증"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -49,6 +50,7 @@ final class OrganizationCertificationController: UIViewController{
         label.text = "조직 타입"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -59,6 +61,7 @@ final class OrganizationCertificationController: UIViewController{
         btn.setTitleColor(.gray, for: .normal)
         btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.addTarget(self, action: #selector(clickedTypeBtn), for: .touchUpInside)
+        btn.backgroundColor = .clear
         return btn
     }()
     
@@ -67,6 +70,7 @@ final class OrganizationCertificationController: UIViewController{
         let stack = UIStackView(arrangedSubviews: [typeLabel, typeBtn])
         stack.axis = .horizontal
         stack.distribution = .equalSpacing
+        stack.backgroundColor = .clear
         return stack
     }()
     
@@ -76,6 +80,7 @@ final class OrganizationCertificationController: UIViewController{
         label.text = "조직 이름"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -87,6 +92,7 @@ final class OrganizationCertificationController: UIViewController{
         btn.isEnabled = false
         btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.addTarget(self, action: #selector(clickedNameChooseBtnBtn), for: .touchUpInside)
+        btn.backgroundColor = .white
         return btn
     }()
     
@@ -95,6 +101,7 @@ final class OrganizationCertificationController: UIViewController{
         let stack = UIStackView(arrangedSubviews: [nameLabel, nameChooseBtn])
         stack.axis = .horizontal
         stack.distribution = .equalSpacing
+        stack.backgroundColor = .clear
         return stack
     }()
     
@@ -104,6 +111,7 @@ final class OrganizationCertificationController: UIViewController{
         label.text = "사용자 이메일"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -115,6 +123,7 @@ final class OrganizationCertificationController: UIViewController{
         textField.textColor = .black
         textField.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         textField.textAlignment = .right
+        textField.backgroundColor = .white
         return textField
     }()
     
@@ -124,6 +133,7 @@ final class OrganizationCertificationController: UIViewController{
         stack.axis = .horizontal
         stack.spacing = 10
         stack.distribution = .equalSpacing
+        stack.backgroundColor = .white
         return stack
     }()
     
@@ -132,6 +142,7 @@ final class OrganizationCertificationController: UIViewController{
         let stack = UIStackView(arrangedSubviews: [typeStackView, nameStackView, userEmailStackView])
         stack.axis = .vertical
         stack.distribution = .fillEqually
+        stack.backgroundColor = .white
         return stack
     }()
     
@@ -208,7 +219,8 @@ final class OrganizationCertificationController: UIViewController{
             let searchController = OrganizationSearchController()
             searchController.type = self.urlType
             searchController.delegate = self
-            self.navigationController?.pushViewController(searchController, animated: true)
+            searchController.modalPresentationStyle = .fullScreen
+            present(searchController, animated: true)
         }
     }
     
@@ -227,7 +239,9 @@ final class OrganizationCertificationController: UIViewController{
                     let certificatedEmail = CertificationEmailController()
                     certificatedEmail.organizationId = self.organizationId
                     certificatedEmail.userEmail = self.emailTextField.text ?? ""
-                    self.navigationController?.pushViewController(certificatedEmail, animated: true)   
+                    certificatedEmail.modalPresentationStyle = .fullScreen
+                    self.present(certificatedEmail, animated: false)
+
                 }
                 else{
                     // 팝업창 띄움
@@ -266,6 +280,7 @@ extension OrganizationCertificationController: SendingType, SendingOrganizationN
     
     // MARK: 사용자가 선택한 타입 받아옴
     func sendType(type: String, urlType: String) {
+        print("urltype \(urlType)")
         self.urlType = urlType
         self.typeBtn.setTitle(type, for: .normal)
         self.typeBtn.setTitleColor(.black, for: .normal)
@@ -273,19 +288,4 @@ extension OrganizationCertificationController: SendingType, SendingOrganizationN
     }
     
     
-}
-
-import SwiftUI
-
-struct VCPreViewOrganizationCertificationController:PreviewProvider {
-    static var previews: some View {
-        OrganizationCertificationController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewOrganizationCertificationController2:PreviewProvider {
-    static var previews: some View {
-        OrganizationCertificationController().toPreview().previewDevice("iPad (10th generation)")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
 }

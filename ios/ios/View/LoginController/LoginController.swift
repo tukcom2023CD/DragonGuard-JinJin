@@ -24,11 +24,6 @@ final class LoginController: UIViewController{
         addUItoView()
         checkClearAuths()
         
-        if autoLoginCheck ?? false{
-            print("?")
-//            self.navigationController?.pushViewController(MainController(), animated: true)
-        }
-        
     }
     
     /*
@@ -125,10 +120,10 @@ final class LoginController: UIViewController{
         webView.reload()
         newViewController.modalPresentationStyle = .fullScreen
         self.present(newViewController,animated: true)
-//        self.navigationController?.pushViewController(newViewController,animated: true)
+        //        self.navigationController?.pushViewController(newViewController,animated: true)
         
     }
-
+    
     
     // 사용자가 인증을 완료했는지 확인하는 함수
     func checkClearAuths(){
@@ -141,17 +136,17 @@ final class LoginController: UIViewController{
                     
                     let rootView = TabBarViewController()
                     
-//                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
-//                       print("\(key): \(value)")
-//                     }
-
+                    //                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
+                    //                       print("\(key): \(value)")
+                    //                     }
+                    
                     self.klipLoginBtn.isEnabled = false
                     self.goGithubBtn.isEnabled = true
                     self.klipLoginBtn.layer.opacity = 1
                     self.goGithubBtn.layer.opacity = 1
                     rootView.modalPresentationStyle = .fullScreen
                     self.present(rootView, animated: true)
-//                    self.navigationController?.pushViewController(rootView, animated: true)
+                    //                    self.navigationController?.pushViewController(rootView, animated: true)
                     
                 }
                 else if first{
@@ -227,37 +222,37 @@ final class LoginController: UIViewController{
 extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate{
     
     // WKNavigationDelegate 메서드 구현
-        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
-                     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        
+        // 저장되어 있는 쿠키를 확인 구문
+        WKWebsiteDataStore.default().httpCookieStore.getAllCookies { cookies in
+            var accessTokenCheck = false
+            var refreshTokenCheck = false
             
-            // 저장되어 있는 쿠키를 확인 구문
-            WKWebsiteDataStore.default().httpCookieStore.getAllCookies { cookies in
-                var accessTokenCheck = false
-                var refreshTokenCheck = false
-                
-                for cookie in cookies{
-                    if cookie.name == "Access" {
-                        UserDefaults.standard.set(cookie.value, forKey:"Access")
-                        print("@@@ Access  저장하기: \(cookie.value)")
-                        accessTokenCheck = true
-                    }
-                    if cookie.name == "Refresh" {
-                        UserDefaults.standard.set(cookie.value, forKey:"Refresh")
-                        print("@@@ Refresh  저장하기: \(cookie.value)")
-                        refreshTokenCheck = true
-                    }
-               
-                    if accessTokenCheck && refreshTokenCheck{
-                        self.dismiss(animated: true)
-//                        self.navigationController?.popViewController(animated: true)
-                        LoginViewModel.loginService.githubAuthSubject.onNext(true)
-                    }
-                    
+            for cookie in cookies{
+                if cookie.name == "Access" {
+                    UserDefaults.standard.set(cookie.value, forKey:"Access")
+                    print("@@@ Access  저장하기: \(cookie.value)")
+                    accessTokenCheck = true
                 }
+                if cookie.name == "Refresh" {
+                    UserDefaults.standard.set(cookie.value, forKey:"Refresh")
+                    print("@@@ Refresh  저장하기: \(cookie.value)")
+                    refreshTokenCheck = true
+                }
+                
+                if accessTokenCheck && refreshTokenCheck{
+                    self.dismiss(animated: true)
+                    //                        self.navigationController?.popViewController(animated: true)
+                    LoginViewModel.loginService.githubAuthSubject.onNext(true)
+                }
+                
             }
-          
-            decisionHandler(.allow)
         }
+        
+        decisionHandler(.allow)
+    }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         

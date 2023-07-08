@@ -13,17 +13,15 @@ import Charts
 import Lottie
 
 final class CompareRepoUserController: UIViewController{
-    private let repositoryInfoTitleList: [String] = ["forks", "closed issues", "open issues", "stars", "contributers", "deletions average", "languages", "code average"]
+    private let repositoryInfoTitleList: [String] = ["forks", "closed issues", "open issues", "stars", "contributers", "additions average", "deletions average", "languages", "code average"]
     private let selectionTitleList: [String] = ["Repository", "User"]
     private let disposeBag = DisposeBag()
-    private var userInfo: CompareUserModel?
     private var repoInfo: CompareRepoModel?
     private var allUserList: [AllMemberInfoModel] = []
     private var user1Index: Int?
     private var user2Index: Int?
     private var checkUserData: Bool = false
     private var checkRepoData: Bool = false
-    
     var firstRepo: String?
     var secondRepo: String?
     
@@ -31,9 +29,9 @@ final class CompareRepoUserController: UIViewController{
         super.viewDidLoad()
         view.backgroundColor = .white
         
-//        addUIIndicator()
-        checkChooseTwoUser()
         addUIBase()
+        addUIIndicator()
+        checkChooseTwoUser()
         getData_User()
         
     }
@@ -41,6 +39,7 @@ final class CompareRepoUserController: UIViewController{
     // MARK: 로딩 UI
     private lazy var indicatorView: LottieAnimationView = {
         let view = LottieAnimationView(name: "graphLottie")
+        view.backgroundColor = .white
         view.center = self.view.center
         view.loopMode = .loop
         return view
@@ -59,7 +58,8 @@ final class CompareRepoUserController: UIViewController{
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        
+        cv.isScrollEnabled = true
+        cv.backgroundColor = .clear
         return cv
     }()
     
@@ -71,27 +71,28 @@ final class CompareRepoUserController: UIViewController{
     // MARK: 스크롤 뷰
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
+        scroll.backgroundColor = .white
         return scroll
     }()
     
     // MARK: contentView
     private lazy var contentView: UIView = {
         let view = UIView()
-        
+        view.backgroundColor = .white
         return view
     }()
     
     // MARK: 첫 번째 레포 정보
     private lazy var leftView: CustomUIView = {
         let view = CustomUIView()
-        
+        view.backgroundColor = .white
         return view
     }()
     
     // MARK: 두 번째 레포 정보
     private lazy var rightView: CustomUIView = {
         let view = CustomUIView()
-        
+        view.backgroundColor = .white
         return view
     }()
     
@@ -111,6 +112,7 @@ final class CompareRepoUserController: UIViewController{
         table.layer.cornerRadius = 20
         table.layer.shadowOpacity = 0.5
         table.clipsToBounds = true
+        table.backgroundColor = .white
         return table
     }()
     
@@ -121,13 +123,14 @@ final class CompareRepoUserController: UIViewController{
     // MARK: 스크롤 뷰
     private lazy var scrollView_User: UIScrollView = {
         let scroll = UIScrollView()
+        scroll.backgroundColor = .white
         return scroll
     }()
     
     // MARK: contentView
     private lazy var contentView_User: UIView = {
         let view = UIView()
-        
+        view.backgroundColor = .white
         return view
     }()
     
@@ -172,7 +175,6 @@ final class CompareRepoUserController: UIViewController{
     // MARK: Commit chart
     private lazy var chartCommit: BarChartView = {
         let chart1 = BarChartView()
-        
         chart1.backgroundColor = .white
         return chart1
     }()
@@ -180,7 +182,6 @@ final class CompareRepoUserController: UIViewController{
     // MARK: Addition Deletion Chart
     private lazy var chartAddDel: BarChartView = {
         let chart1 = BarChartView()
-        
         chart1.backgroundColor = .white
         return chart1
     }()
@@ -199,9 +200,10 @@ final class CompareRepoUserController: UIViewController{
     // MARK: Indicator View AutoLayout
     private func setIndicactorAutoLayout(){
         indicatorView.snp.makeConstraints { make in
-            make.leading.equalTo(self.view.safeAreaLayoutGuide).offset(40)
-            make.trailing.equalTo(self.view.safeAreaLayoutGuide).offset(-40)
-            make.centerY.equalToSuperview()
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(40)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-40)
+            make.top.equalTo(backBtn.snp.bottom)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -223,6 +225,7 @@ final class CompareRepoUserController: UIViewController{
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
         }
+        
         clickedBtn()
     }
     
@@ -343,9 +346,27 @@ final class CompareRepoUserController: UIViewController{
         CompareViewModel.viewModel.getRepositoryInfo(firstRepo: self.firstRepo ?? "", secondRepo: self.secondRepo ?? "")
             .subscribe(onNext:{ list in
                 self.repoInfo = list
-                
+                print("getData_Repo success\n")
                 self.checkRepoData = true
-                self.selectionCollectionView.reloadData()
+                
+                let firstIndex = IndexPath(item: 0, section: 0)
+                self.selectionCollectionView.selectItem(at: firstIndex, animated: false, scrollPosition: .init())
+                self.collectionView(self.selectionCollectionView, didSelectItemAt: firstIndex)
+                
+                self.indicatorView.removeFromSuperview()
+                self.leftView.sendingImgData(imgList: list.first_repo.profile_urls)
+                self.leftView.inputData(repo1: list.first_repo.languages.count,
+                                        values: list.first_repo.languages.language,
+                                        repoName: list.first_repo.git_repo.full_name,
+                                        imgList: list.first_repo.profile_urls)
+                
+                self.rightView.inputData(repo1: list.second_repo.languages.count,
+                                        values: list.second_repo.languages.language,
+                                        repoName: list.second_repo.git_repo.full_name,
+                                        imgList: list.second_repo.profile_urls)
+                self.rightView.sendingImgData(imgList: list.second_repo.profile_urls)
+                
+                self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
         
@@ -357,10 +378,9 @@ final class CompareRepoUserController: UIViewController{
         CompareViewModel.viewModel.getContributorInfo(firstRepoName: self.firstRepo ?? "", secondRepoName: self.secondRepo ?? "")
             .subscribe(onNext:{ list in
                 self.getData_Repo()
-                self.userInfo = list
                 print("getData_User success\n")
-                self.userInfo?.first_result.forEach { data in
-                    print("fist data: \(data)")
+                
+                list.first_result.forEach { data in
                     self.allUserList.append(AllMemberInfoModel(github_id: data.github_id ?? "Unknown",
                                                                profile_url: data.profile_url ?? "",
                                                                commits: data.commits ?? 0,
@@ -368,8 +388,8 @@ final class CompareRepoUserController: UIViewController{
                                                                deletions: data.deletions ?? 0,
                                                                is_service_member: data.is_service_member ?? false))
                 }
-                self.userInfo?.second_result.forEach { data in
-                    print("sec data: \(data)")
+                
+                list.second_result.forEach { data in
                     self.allUserList.append(AllMemberInfoModel(github_id: data.github_id ?? "Unknown",
                                                                profile_url: data.profile_url ?? "",
                                                                commits: data.commits ?? 0,
@@ -393,14 +413,8 @@ final class CompareRepoUserController: UIViewController{
         Observable.combineLatest(user1, user2)
             .subscribe(onNext: { first, second in
                 if first && second{
-                    
                     self.setChartCommit()
                     self.setChartAddDel()
-                    
-                    /*
-                     유저에 해당하는 정보 찾아서 차트 그리기
-                     차트 그리기
-                     */
                 }
             })
             .disposed(by: disposeBag)
@@ -427,7 +441,6 @@ final class CompareRepoUserController: UIViewController{
             self.present(nextPage,animated: true)
         })
         .disposed(by: disposeBag)
-        
         
         rightUserButton.rx.tap.subscribe(onNext: {
             let nextPage = ChooseUserViewController()
@@ -464,10 +477,54 @@ extension CompareRepoUserController: SendUser{
 
 // MARK: Repository 정보 들
 extension CompareRepoUserController: UITableViewDelegate, UITableViewDataSource{
+    /*
+     ["forks", "closed issues", "open issues", "stars", "contributers", "additions average", "deletions average", "languages", "code average"]
+     */
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CompareTableViewCell.identfier, for: indexPath) as? CompareTableViewCell else { return UITableViewCell() }
-        cell.inputData(repo1: 1, title: repositoryInfoTitleList[indexPath.section], repo2: 2)
+        cell.backgroundColor = .white
+        switch indexPath.section{
+        case 0:
+            cell.inputData(repo1: self.repoInfo?.first_repo.git_repo.forks_count ?? 0,
+                           title: repositoryInfoTitleList[indexPath.section],
+                           repo2: self.repoInfo?.second_repo.git_repo.forks_count ?? 0)
+        case 1:
+            cell.inputData(repo1: self.repoInfo?.first_repo.git_repo.closed_issues_count ?? 0,
+                           title: repositoryInfoTitleList[indexPath.section],
+                           repo2: self.repoInfo?.second_repo.git_repo.closed_issues_count ?? 0)
+        case 2:
+            cell.inputData(repo1: self.repoInfo?.first_repo.git_repo.open_issues_count ?? 0,
+                           title: repositoryInfoTitleList[indexPath.section],
+                           repo2: self.repoInfo?.second_repo.git_repo.open_issues_count ?? 0)
+        case 3:
+            cell.inputData(repo1: self.repoInfo?.first_repo.git_repo.stargazers_count ?? 0,
+                           title: repositoryInfoTitleList[indexPath.section],
+                           repo2: self.repoInfo?.second_repo.git_repo.stargazers_count ?? 0)
+        case 4:
+            cell.inputData(repo1: self.repoInfo?.first_repo.git_repo.subscribers_count ?? 0,
+                           title: repositoryInfoTitleList[indexPath.section],
+                           repo2: self.repoInfo?.second_repo.git_repo.subscribers_count ?? 0)
+        case 5:
+            cell.inputData(repo1: Int(self.repoInfo?.first_repo.statistics.addition_stats.average ?? 0),
+                           title: repositoryInfoTitleList[indexPath.section],
+                           repo2: Int(self.repoInfo?.second_repo.statistics.addition_stats.average ?? 0))
+        case 6:
+            cell.inputData(repo1: Int(self.repoInfo?.first_repo.statistics.deletion_stats.average ?? 0),
+                           title: repositoryInfoTitleList[indexPath.section],
+                           repo2: Int(self.repoInfo?.second_repo.statistics.deletion_stats.average ?? 0))
+        case 7:
+            cell.inputData(repo1: self.repoInfo?.first_repo.languages.language.count ?? 0,
+                           title: repositoryInfoTitleList[indexPath.section],
+                           repo2: self.repoInfo?.second_repo.languages.language.count ?? 0)
+        case 8:
+            cell.inputData(repo1: Int(self.repoInfo?.first_repo.languages_stats.average ?? 0),
+                           title: repositoryInfoTitleList[indexPath.section],
+                           repo2: Int(self.repoInfo?.second_repo.languages_stats.average ?? 0))
+        default:
+            print("잘못된 접근! \n")
+        }
+        
         cell.selectionStyle = .none
         return cell
     }
@@ -484,33 +541,24 @@ extension CompareRepoUserController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompareCollectionViewCell.identfier, for: indexPath) as? CompareCollectionViewCell else { return UICollectionViewCell() }
         cell.inputData(text: selectionTitleList[indexPath.row])
-        
+        cell.backgroundColor = .white
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        indicatorView.removeFromSuperview()
+    
         if indexPath.row == 0{
             scrollView_User.removeFromSuperview()
             if checkRepoData{
                 addUI()
-                self.leftView.inputData(repo1: repoInfo?.first_repo.languages.count as? [Double] ?? [],
-                                        values: repoInfo?.first_repo.languages.language,
-                                        repoName: repoInfo?.first_repo.git_repo.full_name ?? "none",
-                                        imgList: repoInfo?.first_repo.profile_urls ?? [])
-                self.rightView.inputData(repo1: repoInfo?.second_repo.languages.count as? [Double] ?? [],
-                                        values: repoInfo?.second_repo.languages.language,
-                                        repoName: repoInfo?.second_repo.git_repo.full_name ?? "none",
-                                        imgList: repoInfo?.second_repo.profile_urls ?? [])
             }
-            
         }
         else if indexPath.row == 1{
             scrollView.removeFromSuperview()
             if checkUserData{
-                print("called")
                 self.addUI_User()
             }
-
         }
     }
     
@@ -551,7 +599,6 @@ extension CompareRepoUserController : ChartViewDelegate {
             userInfo2.append(dataEntry2)
             set2 = BarChartDataSet(entries: userInfo2, label: allUserList[user2Index].github_id ?? "Unknown")
         }
-        
         set2.valueTextColor = .black
         set2.valueFont = font
         set2.colors = [.blue]
@@ -577,6 +624,7 @@ extension CompareRepoUserController : ChartViewDelegate {
         chartCommit.noDataTextColor = .lightGray
         chartCommit.legend.textColor = .black
         chartCommit.legend.font = font
+        chartCommit.pinchZoomEnabled = false
         chartCommit.highlightFullBarEnabled = false
         chartCommit.highlightPerTapEnabled = false
         chartCommit.highlightPerDragEnabled = false
@@ -594,11 +642,11 @@ extension CompareRepoUserController : ChartViewDelegate {
         var set1 = BarChartDataSet()
         
         if let user1Index = user1Index{
-            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.userInfo?.first_result[user1Index].additions ?? 0))
-            let dataEntry2 = BarChartDataEntry(x: 2, y: Double(self.userInfo?.first_result[user1Index].deletions ?? 0))
+            let dataEntry1 = BarChartDataEntry(x: 0, y: Double(self.allUserList[user1Index].additions ?? 0))
+            let dataEntry2 = BarChartDataEntry(x: 2, y: Double(self.allUserList[user1Index].deletions ?? 0))
             userChartInfo.append(dataEntry1)
             userChartInfo.append(dataEntry2)
-            set1 = BarChartDataSet(entries: userChartInfo, label: self.userInfo?.first_result[user1Index].github_id ?? "UnKnown")
+            set1 = BarChartDataSet(entries: userChartInfo, label: self.allUserList[user1Index].github_id ?? "UnKnown")
         }
         set1.valueTextColor = .black
         set1.valueFont = font
@@ -611,23 +659,19 @@ extension CompareRepoUserController : ChartViewDelegate {
         var userChartInfo2 = [ChartDataEntry]()
 
         if let user2Index = user2Index{
-            let dataEntry1 = BarChartDataEntry(x: 1, y: Double(self.userInfo?.first_result[user2Index].additions ?? 0))
-            let dataEntry2 = BarChartDataEntry(x: 3, y: Double(self.userInfo?.first_result[user2Index].deletions ?? 0))
+            let dataEntry1 = BarChartDataEntry(x: 1, y: Double(self.allUserList[user2Index].additions ?? 0))
+            let dataEntry2 = BarChartDataEntry(x: 3, y: Double(self.allUserList[user2Index].deletions ?? 0))
             userChartInfo2.append(dataEntry1)
             userChartInfo2.append(dataEntry2)
-            set2 = BarChartDataSet(entries: userChartInfo2, label: self.userInfo?.first_result[user2Index].github_id ?? "UnKnown")
+            set2 = BarChartDataSet(entries: userChartInfo2, label: self.allUserList[user2Index].github_id ?? "UnKnown")
         }
         set2.valueTextColor = .black
         set2.valueFont = font
         set2.colors = [.blue]
         dataSet.append(set2)
 
-
-
         let data = BarChartData(dataSets: dataSet)
-
         chartAddDel.data = data
-
         chartAddDelAttribute()
     }
 

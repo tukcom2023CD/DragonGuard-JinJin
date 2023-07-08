@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
             moveLoginController()
         }
         
-//        let rootView = TabBarViewController()
+//        let rootView = YourProfileController()
 //        window?.rootViewController = rootView
 //        window?.makeKeyAndVisible()
     }
@@ -34,7 +34,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     // MARK: go to LoginController
     func moveLoginController(){
         let rootView = LoginController()
-        let nc = UINavigationController(rootViewController: rootView)
         window?.rootViewController = rootView
         window?.makeKeyAndVisible()
     }
@@ -43,7 +42,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     func moveMainController(){
         let rootView = TabBarViewController()
 //        rootView.autoLoginCheck = true
-        let nc = UINavigationController(rootViewController: rootView)
         window?.rootViewController = rootView
         window?.makeKeyAndVisible()
     }

@@ -15,7 +15,8 @@ final class SearchViewController: UIViewController{
     private var searchBarTopConstraint: Constraint?
     private var resultList: [SearchResultModel] = []
     private let disposeBag = DisposeBag()
-    private var isInfiniteScroll = false // 무한 스크롤 1번만 로딩되게 확인하는 변수
+    private var isInfiniteScroll = true // 무한 스크롤 1번만 로딩되게 확인하는 변수
+    private var type: String?
     var beforePage: String?// 이전 페이지 확인하는 변수
 
     override func viewDidLoad() {
@@ -31,7 +32,7 @@ final class SearchViewController: UIViewController{
     // MARK: 뒤로가기 버튼
     private lazy var backBtn: UIButton = {
         let btn = UIButton()
-        btn.setTitle("<", for: .normal)
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
         btn.setTitleColor(.blue, for: .normal)
         btn.addTarget(self, action: #selector(clickedBackBtn), for: .touchUpInside)
         return btn
@@ -82,7 +83,7 @@ final class SearchViewController: UIViewController{
     // MARK: 고정된 뒤로가기 버튼
     private lazy var back2Btn: UIButton = {
         let btn = UIButton()
-        btn.setTitle("<", for: .normal)
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
         btn.isHidden = true
         btn.setTitleColor(.blue, for: .normal)
         btn.addTarget(self, action: #selector(clickedBackBtn), for: .touchUpInside)
@@ -211,7 +212,7 @@ final class SearchViewController: UIViewController{
 
             let resultUI = SearchResultUIVIew()
             resultUI.snp.makeConstraints { make in
-                make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.height/10)
+                make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.height/8)
             }
 
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
@@ -221,7 +222,7 @@ final class SearchViewController: UIViewController{
 
             resultUI.addGestureRecognizer(tapGesture)
             resultUI.inputInfo(title: result.name,
-                               create: result.createdAt,
+                               create: result.created_at,
                                language: result.language)
             stackView.addArrangedSubview(resultUI)
         }
@@ -231,26 +232,27 @@ final class SearchViewController: UIViewController{
     @objc
     private func handleTap(sender: UITapGestureRecognizer) {
 
-        /*
-         리스트 누르는 경우 코드 처리 해야 함
-
-         */
-        let comparePage = CompareChooseRepoViewController()
-
         if beforePage == "Main"{    // 레포 상세조회로 이동
-            let nextPage = RepoDetailController()
-            nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].name
-            nextPage.modalPresentationStyle = .fullScreen
-            self.present(nextPage,animated: true)
+            guard let type = self.type else{ return }
+            if type == "REPOSITORIES"{
+                let nextPage = RepoDetailController()
+                nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].name
+                nextPage.modalPresentationStyle = .fullScreen
+                self.present(nextPage,animated: true)
+            }
+            if type == "USERS"{
+                let nextPage = YourProfileController()
+                nextPage.userName = resultList[sender.view?.tag ?? -1].name
+                nextPage.modalPresentationStyle = .fullScreen
+                self.present(nextPage,animated: true)
+            }
         }
         else if beforePage == "Compare1"{
-//            comparePage.firstRepo = resultList[sender.view?.tag ?? -1].name
             NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 1, NotificationKey.repository: resultList[sender.view?.tag ?? -1].name])
             resultList = []
             self.dismiss(animated: true)
         }
         else if beforePage == "Compare2"{
-//            comparePage.repository2 = resultList[sender.view?.tag ?? -1].name
             NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 2, NotificationKey.repository: resultList[sender.view?.tag ?? -1].name])
             resultList = []
             self.dismiss(animated: true)
@@ -278,39 +280,8 @@ final class SearchViewController: UIViewController{
     // MARK: 뒤로가기 버튼 누르는 경우
     @objc
     private func clickedBackBtn(){
-
         self.dismiss(animated: true)
     }
-
-    // MARK: 테스트용 함수
-    private func testData(){
-//        for _ in 0...10{
-//            resultList.append(SearchResultModel(create: "2022", language: "swift", title: "hi"))
-//        }
-    }
-
-}
-
-extension UIScrollView {
-
-//    func updateContentSize(cellHeight: CGFloat) {
-//        let unionCalculatedTotalRect = recursiveUnionInDepthFor(view: self)
-//
-//        // 계산된 크기로 컨텐츠 사이즈 설정
-//        self.contentSize = CGSize(width: self.frame.width, height: unionCalculatedTotalRect.height)
-//    }
-//
-//    private func recursiveUnionInDepthFor(view: UIView) -> CGRect {
-//        var totalRect: CGRect = .zero
-//
-//        // 모든 자식 View의 컨트롤의 크기를 재귀적으로 호출하며 최종 영역의 크기를 설정
-//        for subView in view.subviews {
-//            totalRect = totalRect.union(recursiveUnionInDepthFor(view: subView))
-//        }
-//
-//        // 최종 계산 영역의 크기를 반환
-//        return totalRect.union(view.frame)
-//    }
 
 }
 
@@ -337,9 +308,6 @@ extension SearchViewController: UIScrollViewDelegate {
                 back2Btn.isHidden = false
                 searchBarTopConstraint.update(offset: scrollView.contentOffset.y - self.backgroundUIView.frame.height)
             }
-
-
-
         }
         else {
             topConstraint.update(offset: 0)
@@ -349,7 +317,7 @@ extension SearchViewController: UIScrollViewDelegate {
 
 
         let position = scrollView.contentOffset.y
-
+        
         if position > (contentView.frame.height - scrollView.frame.size.height){
             if self.isInfiniteScroll{
                 SearchPageViewModel.viewModel.updateData()
@@ -358,6 +326,7 @@ extension SearchViewController: UIScrollViewDelegate {
                             self.resultList.append(data)
                         }
                         self.inputDataIntoList()
+                        self.isInfiniteScroll = true
                     })
                     .disposed(by: disposeBag)
                 self.isInfiniteScroll = false
@@ -368,25 +337,10 @@ extension SearchViewController: UIScrollViewDelegate {
 }
 
 extension SearchViewController: SendSearchResultList{
-    func sendList(list: [SearchResultModel]) {
-
+    func sendList(list: [SearchResultModel], type: String) {
+        self.type = type
         resultList = []
         self.resultList = list
         inputDataIntoList()
-    }
-}
-
-
-import SwiftUI
-struct VCPreViewSearchViewController:PreviewProvider {
-    static var previews: some View {
-        SearchViewController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewSearchViewController2:PreviewProvider {
-    static var previews: some View {
-        SearchViewController().toPreview().previewDevice("iPhone 11")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
     }
 }

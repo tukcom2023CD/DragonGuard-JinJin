@@ -26,6 +26,7 @@ final class ContributorsInfoUIView: UIView{
         label.font = .systemFont(ofSize: 20)
         label.textColor = .black
         label.textAlignment = .center
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -35,6 +36,7 @@ final class ContributorsInfoUIView: UIView{
         label.font = .systemFont(ofSize: 25)
         label.textColor = .black
         label.textAlignment = .center
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -44,6 +46,7 @@ final class ContributorsInfoUIView: UIView{
         stack.axis = .vertical
         stack.distribution = .fillEqually
         stack.spacing = 5
+        stack.backgroundColor = .white
         return stack
     }()
     
@@ -54,6 +57,7 @@ final class ContributorsInfoUIView: UIView{
         label.font = .systemFont(ofSize: 20)
         label.textColor = .black
         label.textAlignment = .center
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -63,6 +67,7 @@ final class ContributorsInfoUIView: UIView{
         label.font = .systemFont(ofSize: 25)
         label.textColor = .black
         label.textAlignment = .center
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -71,6 +76,7 @@ final class ContributorsInfoUIView: UIView{
         stack.axis = .vertical
         stack.distribution = .fillEqually
         stack.spacing = 5
+        stack.backgroundColor = .white
         return stack
     }()
     
@@ -81,6 +87,7 @@ final class ContributorsInfoUIView: UIView{
         label.font = .systemFont(ofSize: 20)
         label.textColor = .black
         label.textAlignment = .center
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -90,6 +97,7 @@ final class ContributorsInfoUIView: UIView{
         label.font = .systemFont(ofSize: 25)
         label.textColor = .black
         label.textAlignment = .center
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -98,6 +106,7 @@ final class ContributorsInfoUIView: UIView{
         stack.axis = .vertical
         stack.distribution = .fillEqually
         stack.spacing = 5
+        stack.backgroundColor = .white
         return stack
     }()
     
@@ -107,6 +116,7 @@ final class ContributorsInfoUIView: UIView{
         stack.axis = .horizontal
         stack.distribution = .fillEqually
         stack.spacing = 10
+        stack.backgroundColor = .white
         return stack
     }()
     

@@ -16,14 +16,13 @@ final class ChooseUserViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("choose User \(userList)")
         addUI()
     }
     
     // MARK:
     private lazy var tableView: UITableView = {
         let table = UITableView()
-        
+        table.backgroundColor = .white
         return table
     }()
     
@@ -49,7 +48,7 @@ extension ChooseUserViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ChooseUserTableViewCell.identifier, for: indexPath) as? ChooseUserTableViewCell else { return UITableViewCell() }
-            
+        cell.backgroundColor = .white
         cell.inputData(text: userList?[indexPath.row].github_id ?? "")
         
         return cell

@@ -13,19 +13,17 @@ import Charts
 import Lottie
 
 final class RepoDetailController: UIViewController{
-    private var userListCount: Int = 0
-    private var userCommit: [Int] = []  // 사용자 커밋 횟수
-    private var userName: [String] = [] // 사용자 깃허브 아이디
+    private var userInfo: DetailRepoModel?
     private var dataColor:[[UIColor]] = []  // 랜덤 색상 설정
     var selectedTitle: String?
     private let viewModel = RepoDetailViewModel()
     private let disposeBag = DisposeBag()
-    private var sparkLineList: [Int] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        addBaseUI()
         addUIIndicator()
         getData()
         
@@ -43,13 +41,14 @@ final class RepoDetailController: UIViewController{
     // MARK: 스크롤 뷰
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()
+        view.backgroundColor = .white
         return view
     }()
     
     // MARK: contentView
     private lazy var contentView: UIView = {
         let view = UIView()
-        view.backgroundColor = .cyan
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -70,10 +69,10 @@ final class RepoDetailController: UIViewController{
     }()
     
     // MARK: Repository 그래프 기록
-    private lazy var sparkLineView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        return view
+    private lazy var sparkLineView: LineChartView = {
+        let chart = LineChartView()
+        chart.backgroundColor = .white
+        return chart
     }()
     
     // MARK: Repository title
@@ -81,6 +80,7 @@ final class RepoDetailController: UIViewController{
         let label = UILabel()
         label.text = selectedTitle ?? "None"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
+        label.backgroundColor = .clear
         label.textColor = .black
         return label
     }()
@@ -114,7 +114,7 @@ final class RepoDetailController: UIViewController{
     
     // MARK: Add UI Indicator
     private func addUIIndicator(){
-        self.view.addSubview(indicatorView)
+        view.addSubview(indicatorView)
         setIndicactorAutoLayout()
         indicatorView.play()
     }
@@ -122,7 +122,19 @@ final class RepoDetailController: UIViewController{
     // MARK: Indicator View AutoLayout
     private func setIndicactorAutoLayout(){
         indicatorView.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(backBtn.snp.bottom)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+    
+    // MARK:
+    private func addBaseUI(){
+        view.addSubview(backBtn)
+        
+        // back Button
+        backBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
         }
     }
     
@@ -132,7 +144,6 @@ final class RepoDetailController: UIViewController{
         
         scrollView.addSubview(contentView)
         
-        contentView.addSubview(backBtn)
         contentView.addSubview(blankView)
         contentView.addSubview(customView)
         contentView.addSubview(sparkLineView)
@@ -152,7 +163,8 @@ final class RepoDetailController: UIViewController{
     // MARK: 로딩이 끝난 후 필요한 UI AutoLayout
     private func setDeatilUIAutoLayout(){
         scrollView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            make.top.equalTo(backBtn.snp.bottom)
+            make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             make.bottom.equalToSuperview()
         }
         
@@ -165,14 +177,10 @@ final class RepoDetailController: UIViewController{
             make.width.equalTo(scrollView.snp.width)
         }
             
-        // back Button
-        backBtn.snp.makeConstraints { make in
-            make.top.equalTo(contentView.snp.top).offset(10)
-            make.leading.equalTo(contentView.snp.leading).offset(10)
-        }
+     
         
         sparkLineView.snp.makeConstraints { make in
-            make.top.equalTo(backBtn.snp.bottom)
+            make.top.equalTo(contentView.snp.top)
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
             make.height.equalTo(100).priority(250)
@@ -204,7 +212,7 @@ final class RepoDetailController: UIViewController{
             make.top.equalTo(titleLabel.snp.bottom).offset(30)
             make.leading.equalTo(customView.snp.leading).offset(30)
             make.trailing.equalTo(customView.snp.trailing).offset(-30)
-            make.height.equalTo((Int(self.view.safeAreaLayoutGuide.layoutFrame.height)*userListCount/10)+30)
+            make.height.equalTo((Int(self.view.safeAreaLayoutGuide.layoutFrame.height)*(userInfo?.git_repo_members?.count ?? 0)/9))
         }
         
         // 유저 커밋 그래프
@@ -226,12 +234,12 @@ final class RepoDetailController: UIViewController{
     // MARK: 뒤로가기 버튼
     @objc
     private func clickedBackBtn(){
-        self.dismiss(animated: true)
+        self.dismiss(animated: false)
     }
     
     // MARK: 색상 랜덤 설정
     private func randomColor(){
-        for _ in 0..<userListCount{
+        for _ in 0..<(userInfo?.git_repo_members?.count ?? 0){
             let r: CGFloat = CGFloat.random(in: 0...1)
             let g: CGFloat = CGFloat.random(in: 0...1)
             let b: CGFloat = CGFloat.random(in: 0...1)
@@ -244,26 +252,14 @@ final class RepoDetailController: UIViewController{
             .subscribe(onNext: { data in
                 print("succeeess\n\(data)")
                 self.indicatorView.removeFromSuperview()
-                self.sparkLineList = data.sparkLine ?? []
+                self.userInfo = data
                 
-                self.userListCount = data.gitRepoMembers?.count ?? 0
-                self.randomColor()
-                data.gitRepoMembers?.forEach({ member in
-                    self.userName.append(member.githubId)
-                    self.userCommit.append(member.commits)
-                })
-                self.setchartOption()
                 self.addDetailUI()
+                self.randomColor()
+                self.setchartOption()
+                self.setSparkLineChart()
             })
             .disposed(by: disposeBag)
-    }
-    
-    // MARK: 테스트 데이터 넣기
-    private func testData(){
-        for i in 1...10{
-            self.userName.append("a")
-            self.userCommit.append(i)
-        }
     }
 }
 
@@ -278,12 +274,13 @@ extension RepoDetailController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.layer.shadowOpacity = 0.5
         cell.layer.shadowOffset = CGSize(width: -3, height: 3)
 
-        cell.inputData(name: self.userName[indexPath.row],
-                       commits: self.userCommit[indexPath.row])
+        cell.inputData(name: self.userInfo?.git_repo_members?[indexPath.row].github_id ?? "",
+                       commits: self.userInfo?.git_repo_members?[indexPath.row].commits ?? 0)
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return self.userListCount }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return userInfo?.git_repo_members?.count ?? 0 }
         
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = self.view.safeAreaLayoutGuide.layoutFrame.width*4/5
@@ -293,26 +290,34 @@ extension RepoDetailController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath.row)
         collectionView.deselectItem(at: indexPath, animated: true)
+        
+        let check = self.userInfo?.git_repo_members?[indexPath.row].is_service_member ?? false
+        if check{
+            let nextPage = YourProfileController()
+            nextPage.userName = self.userInfo?.git_repo_members?[indexPath.row].github_id ?? ""
+            nextPage.modalPresentationStyle = .fullScreen
+            present(nextPage, animated: false)
+        }
     }
 }
 
 // MARK: Chart 설정
 extension RepoDetailController: ChartViewDelegate {
     
-    // 차트 생성
+    /// 유저 정보 차트 생성
     private func setchartOption(){
-        
         var dataSet: [BarChartDataSet] = []
         
-        for i in 0..<self.userListCount{
+        for i in 0..<(userInfo?.git_repo_members?.count ?? 0){
             var contributorInfo = [ChartDataEntry]()
             
-            let dataEntry = BarChartDataEntry(x: Double(i), y: Double(userCommit[i]))
+            let dataEntry = BarChartDataEntry(x: Double(i),
+                                              y: Double(userInfo?.git_repo_members?[i].commits ?? 0))
             contributorInfo.append(dataEntry)
             
-            let set1 = BarChartDataSet(entries: contributorInfo, label: userName[i])
+            let set1 = BarChartDataSet(entries: contributorInfo,
+                                       label: userInfo?.git_repo_members?[i].github_id ?? "")
             
             set1.colors = dataColor[i]
             set1.valueTextColor = .black
@@ -326,7 +331,7 @@ extension RepoDetailController: ChartViewDelegate {
         customChart()
     }
     
-    // 차트 옵션 설정
+    /// Bar Chart 차트 옵션 설정
     private func customChart(){
         barChart.rightAxis.enabled = false
         barChart.animate(xAxisDuration: 2, yAxisDuration: 2)
@@ -335,10 +340,59 @@ extension RepoDetailController: ChartViewDelegate {
         barChart.xAxis.enabled = false
         barChart.leftAxis.labelFont = .systemFont(ofSize: 15)
         barChart.legend.textColor = .black
+        barChart.dragEnabled = false
+        barChart.dragDecelerationEnabled = false
         barChart.noDataText = "출력 데이터가 없습니다."
         barChart.noDataFont = .systemFont(ofSize: 30)
         barChart.noDataTextColor = .lightGray
+        barChart.pinchZoomEnabled = false
+        barChart.highlightFullBarEnabled = false
+        barChart.highlightPerTapEnabled = false
+        barChart.highlightPerDragEnabled = false
+    }
+    
+    // MARK: Spark Line Chart
+    private func setSparkLineChart(){
+        var lineChartEntry: [ChartDataEntry] = []
         
+        let valueList = userInfo?.spark_line?.map{ Double($0) }
+        for i in 0..<(userInfo?.spark_line?.count ?? 0) {
+            let value = ChartDataEntry(x: Double(i), y: valueList?[i] ?? 0)
+            lineChartEntry.append(value)
+        }
+        
+        let line = LineChartDataSet(entries: lineChartEntry, label: "")
+        line.colors = [.green]
+        line.circleRadius = 1
+        line.lineWidth = 3
+        line.mode = .linear
+        line.drawValuesEnabled = false
+        
+        let data = LineChartData(dataSet: line)
+        sparkLineView.data = data
+        setSparkLineOption()
+    }
+    
+    
+    /// Spark Chart 차트 옵션 설정
+    private func setSparkLineOption(){
+        sparkLineView.rightAxis.enabled = false
+        sparkLineView.animate(xAxisDuration: 2, yAxisDuration: 2)
+        sparkLineView.leftAxis.enabled = false
+        sparkLineView.doubleTapToZoomEnabled = false
+        sparkLineView.legend.enabled = false
+        sparkLineView.xAxis.enabled = false
+        sparkLineView.leftAxis.labelFont = .systemFont(ofSize: 15)
+        sparkLineView.dragEnabled = false
+        sparkLineView.dragDecelerationEnabled = false
+        sparkLineView.noDataText = "출력 데이터가 없습니다."
+        sparkLineView.noDataFont = .systemFont(ofSize: 30)
+        sparkLineView.noDataTextColor = .lightGray
+        sparkLineView.dragEnabled = false
+        sparkLineView.pinchZoomEnabled = false
+        sparkLineView.doubleTapToZoomEnabled = false
+        sparkLineView.highlightPerTapEnabled = false
+        sparkLineView.highlightPerDragEnabled = false
     }
     
 }

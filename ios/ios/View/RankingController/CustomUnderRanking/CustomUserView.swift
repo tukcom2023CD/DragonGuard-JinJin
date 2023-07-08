@@ -35,6 +35,7 @@ final class CustomUserView: UIView{
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.text = "abc"
+        label.textColor = .black
         return label
     }()
     
@@ -42,6 +43,8 @@ final class CustomUserView: UIView{
     private lazy var numLabel: UILabel = {
         let label = UILabel()
         label.text = "11"
+        label.textColor = .black
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -50,6 +53,7 @@ final class CustomUserView: UIView{
         let stack = UIStackView(arrangedSubviews: [nameLabel, numLabel])
         stack.axis = .vertical
         stack.spacing = 10
+        stack.backgroundColor = .clear
         return stack
     }()
     

@@ -12,7 +12,7 @@ struct SearchResultModel{
     let name: String
     let language: String
     let description: String
-    let createdAt: String
+    let created_at: String
 }
 
 struct SearchResultDecodingModel: Codable{
@@ -20,6 +20,6 @@ struct SearchResultDecodingModel: Codable{
     let name: String?
     let language: String?
     let description: String?
-    let createdAt: String?
+    let created_at: String?
     
 }

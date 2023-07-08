@@ -12,6 +12,7 @@ import SnapKit
 final class RepositoryListUIView: UIView{
     private var repoList: [String] = []
     private var userName: String?
+    var delegate: ClickedRepos?
     private var userProfile: String?
     private var heightSize: CGFloat?
     
@@ -28,6 +29,7 @@ final class RepositoryListUIView: UIView{
         let table = UITableView()
         table.separatorStyle = .none
         table.isScrollEnabled = false
+        table.backgroundColor = .white
         return table
     }()
     
@@ -62,15 +64,15 @@ extension RepositoryListUIView: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryListTableViewCell.identfier, for: indexPath) as? RepositoryListTableViewCell else { return UITableViewCell() }
-        
-        cell.inputData(title: self.userName, imgPath: self.userProfile, repoName: self.repoList[indexPath.section])
+        cell.backgroundColor = .white
+        cell.inputData(title: self.userName, imgPath: self.userProfile, repoName: self.repoList[indexPath.row])
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        print("?")
+        self.delegate?.clickedRepos(repoName: self.repoList[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -78,4 +80,8 @@ extension RepositoryListUIView: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return repoList.count }
+}
+
+protocol ClickedRepos{
+    func clickedRepos(repoName: String)
 }

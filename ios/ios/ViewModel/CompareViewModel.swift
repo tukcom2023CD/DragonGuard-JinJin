@@ -12,13 +12,6 @@ import RxCocoa
 final class CompareViewModel{
     static let viewModel = CompareViewModel()
     private init() {}
-//    var firstRepo = ""
-//    var secondRepo = ""
-//    var repositryInfo: BehaviorSubject<[String]> = BehaviorSubject(value: [])
-//    var repoUserInfo: BehaviorSubject<CompareUserModel> = BehaviorSubject(value: CompareUserModel(firstResult: [], secondResult: []))
-//    var repo1Info: BehaviorSubject<[FirstRepoModel]> = BehaviorSubject(value: [])
-//    var repo2Info: BehaviorSubject<[secondRepoModel]> = BehaviorSubject(value: [])
-    
     private let service = CompareService()
     private let disposeBag = DisposeBag()
     let checkChooseUser1: BehaviorSubject<Bool> = BehaviorSubject(value: false)

@@ -72,6 +72,7 @@ final class AllUserRankingController: UIViewController{
         let table = UITableView()
         table.isScrollEnabled = false
         table.separatorStyle = .none
+        table.backgroundColor = .white
         return table
     }()
     
@@ -120,6 +121,10 @@ final class AllUserRankingController: UIViewController{
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-10)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
         }
+        
+        let firstIndex = IndexPath(item: 0, section: 0)
+        self.selectionCollectionView.selectItem(at: firstIndex, animated: false, scrollPosition: .init())
+        self.collectionView(self.selectionCollectionView, didSelectItemAt: firstIndex)
     }
     
     // MARK: 로딩 후 뷰 생성
@@ -167,7 +172,6 @@ final class AllUserRankingController: UIViewController{
             let height = view.safeAreaLayoutGuide.layoutFrame.height/6
             
             if Int(height)*(userTierData.count-1)+10 > 0{
-                print("height \(Int(height)*(userTierData.count-1)+10)")
                 make.height.equalTo(Int(height)*(userTierData.count-1)+10)
             }
         }
@@ -213,7 +217,9 @@ final class AllUserRankingController: UIViewController{
 
         rankingViewModel.allRankingOfType(check: true)
             .subscribe(onNext:{ list in
-                print("loadAllOrganizationData\n\(list)")
+                self.topTierTypeOfRankingData = []
+                self.userTierTypeOfRankingData = []
+                
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -231,7 +237,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -244,7 +250,9 @@ final class AllUserRankingController: UIViewController{
         
         rankingViewModel.rankingOfType(type: "COMPANY", check: true)
             .subscribe(onNext:{ list in
-                print("loadCompanyData\n\(list)")
+                self.topTierTypeOfRankingData = []
+                self.userTierTypeOfRankingData = []
+                
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -262,7 +270,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -275,6 +283,9 @@ final class AllUserRankingController: UIViewController{
         rankingViewModel.rankingOfType(type: "UNIVERSITY", check: true)
             .subscribe(onNext:{ list in
                 print("loadUniversityData\n\(list)")
+                self.topTierTypeOfRankingData = []
+                self.userTierTypeOfRankingData = []
+                
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -292,7 +303,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -304,7 +315,8 @@ final class AllUserRankingController: UIViewController{
         
         rankingViewModel.rankingOfType(type: "HIGH_SCHOOL", check: true)
             .subscribe(onNext:{ list in
-                print("loadHighSchoolData\n\(list)")
+                self.topTierTypeOfRankingData = []
+                self.userTierTypeOfRankingData = []
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -322,7 +334,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -335,6 +347,9 @@ final class AllUserRankingController: UIViewController{
         rankingViewModel.rankingOfType(type: "ETC", check: true)
             .subscribe(onNext:{ list in
                 print("loadETCData\n\(list)")
+                self.topTierTypeOfRankingData = []
+                self.userTierTypeOfRankingData = []
+                
                 if list.count > 3{
                     for i in 0..<list.count{
                         if(i<3){
@@ -352,7 +367,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
-                self.topView.getData(list: self.userTierTypeOfRankingData)
+                self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -365,12 +380,12 @@ extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: AllUserTableviewCell.identifier, for: indexPath) as? AllUserTableviewCell else { return UITableViewCell()}
-        cell.inputData(rank: indexPath.row+4, userData: userTierData[indexPath.row])
+        cell.backgroundColor = .white
+        cell.inputData(rank: indexPath.row + 4, userData: userTierData[indexPath.row])
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return userTierData.count
     }
     
@@ -384,6 +399,7 @@ extension AllUserRankingController: UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SelectionCollectionViewCell.identfier, for: indexPath) as? SelectionCollectionViewCell else { return UICollectionViewCell() }
+        cell.backgroundColor = .white
         cell.inputData(text: selectionList[indexPath.row])
         return cell
     }
@@ -431,7 +447,6 @@ extension AllUserRankingController: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
         return CGSize(width: collectionView.frame.width/5, height: collectionView.frame.height)
     }
     

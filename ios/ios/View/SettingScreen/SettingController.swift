@@ -19,14 +19,12 @@ final class SettingController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-//        self.navigationController?.navigationBar.isHidden = false   // navigation bar 생성
-//        self.navigationItem.title = "설정"
-//        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
-//        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-        // UI view에 추가
+        /// UI view에 추가
         addUIToView()
         
-        // table View AutoLayout
+        clickedBackBtn()
+        
+        /// table View AutoLayout
         settingTableViewSetLayout()
         
     }
@@ -56,6 +54,8 @@ final class SettingController: UIViewController{
         let label = UILabel()
         label.text = "설정"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     
@@ -166,14 +166,6 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
         cell.layer.cornerRadius = 15    //셀 모서리 둥글게
         cell.layer.borderWidth = 1  // 셀 바깥 선
         
-//        // textColor 변경
-//        switch indexPath.row {
-//        case 4:
-//            color = UIColor.red
-//        default:
-//            color = UIColor.black
-//        }
-        
         if checkAdmin{
             cell.inputDataTableView(text: adminSettingData[indexPath.section],color: color)
         }
@@ -235,32 +227,4 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
     
     //Section 간격 설정
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return 1 }
-}
-
-
-
-
-
-/*
- SwiftUI preview 사용 코드      =>      Autolayout 및 UI 배치 확인용
- 
- preview 실행이 안되는 경우 단축키
- Command + Option + Enter : preview 그리는 캠버스 띄우기
- Command + Option + p : preview 재실행
- */
-
-import SwiftUI
-
-struct VCPreViewSetting:PreviewProvider {
-    static var previews: some View {
-        SettingController().toPreview().previewDevice("iPhone 14 pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-
-struct VCPreViewSetting2:PreviewProvider {
-    static var previews: some View {
-        SettingController().toPreview().previewDevice("iPhone 11")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
 }

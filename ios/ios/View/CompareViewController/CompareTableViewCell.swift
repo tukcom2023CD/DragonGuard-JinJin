@@ -23,7 +23,9 @@ final class CompareTableViewCell: UITableViewCell{
     // MARK: repo1 infomation
     private lazy var repo1Info: UILabel = {
         let label = UILabel()
-        
+        label.backgroundColor = .clear
+        label.adjustsFontSizeToFitWidth = true
+        label.textColor = .black
         return label
     }()
     
@@ -31,13 +33,18 @@ final class CompareTableViewCell: UITableViewCell{
     private lazy var titleInfo: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
+        label.adjustsFontSizeToFitWidth = true
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     
     // MARK: repo1 infomation
     private lazy var repo2Info: UILabel = {
         let label = UILabel()
-        
+        label.backgroundColor = .clear
+        label.adjustsFontSizeToFitWidth = true
+        label.textColor = .black
         return label
     }()
     
@@ -62,7 +69,7 @@ final class CompareTableViewCell: UITableViewCell{
         }
     }
     
-    func inputData(repo1: Double, title: String, repo2: Double){
+    func inputData(repo1: Int, title: String, repo2: Int){
         addUI()
         
         repo1Info.text = "\(repo1)"

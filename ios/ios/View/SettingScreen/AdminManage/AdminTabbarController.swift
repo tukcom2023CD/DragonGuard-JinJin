@@ -15,13 +15,9 @@ final class AdminTabbarController: UITabBarController{
         super.viewDidLoad()
         self.tabBar.tintColor = .black
         let firstView = AdminController()
-        firstView.navigationController?.title = "요청 리스트"
-        firstView.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
         firstView.tabBarItem.image = UIImage(systemName: "checklist.unchecked")
         
         let secondView = AcceptedOraganicationController()
-        secondView.navigationController?.title = "승인된 리스트"
-        secondView.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
         secondView.tabBarItem.image = UIImage(systemName: "checklist.checked")
         let viewController = [firstView, secondView]
         self.setViewControllers(viewController, animated: true)

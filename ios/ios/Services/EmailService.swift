@@ -30,74 +30,14 @@ final class EmailService{
                        method: .get,
                        headers: ["Authorization": "Bearer \(access ?? "")"])
             .responseDecodable(of: CheckEmailModel.self){ response in
-                
                 switch response.result{
                 case .success(let data):
-                    observer.onNext(data.validCode)
+                    observer.onNext(data.is_valid_code)
                 case .failure(let error):
                     print("checkValidNumber error! \(error)")
                 }
             }
         
-            return Disposables.create()
-        }
-    }
-    
-    // MARK: 인증번호 재전송 하는 함수
-    /// - Returns: 이메일 Id
-    func reSendCertificatedNumber() -> Observable<Int>{
-        let url = APIURL.apiUrl.sendEmailToAuth(ip: APIURL.ip)
-        let access = UserDefaults.standard.string(forKey: "Access")
-
-        
-        return Observable.create { observer in
-            AF.request(url,
-                       method: .post,
-                       headers: [
-                        "Content-Type" : "application/json",
-                        "Authorization" : "Bearer \(access ?? "")"
-                       ])
-            .responseDecodable(of: EmailResendDecodingModel.self) { response in
-                switch response.result{
-                case .success(let data):
-                    observer.onNext(data.id)
-                case .failure(let error):
-                    print("reSendCertificatedNumber error!\n \(error)")
-                }
-            }
-            
-            
-            return Disposables.create()
-        }
-    }
-    
-    // MARK: 인증번호 검사
-    /// - Parameters:
-    ///   - id: 이메일 Id
-    ///   - code: 인증 번호
-    /// - Returns: 유효한 인증번호 인지 표시
-    func checkCertificatedNumber(id: Int, code: Int) -> Observable<Bool>{
-        let url = APIURL.apiUrl.checkEmailValidCode(ip: APIURL.ip,
-                                                    id: id,
-                                                    code: code)
-        let access = UserDefaults.standard.string(forKey: "Access")
-
-        return Observable.create{ observer in
-            AF.request(url,
-                       method: .get,
-                       headers: [
-                        "Content-Type" : "application/json",
-                        "Authorization" : "Bearer \(access ?? "")"
-                       ])
-            .responseDecodable(of: CheckValidCodeDecodingModel.self) { response in
-                switch response.result{
-                case .success(let data):
-                    observer.onNext(data.validCode)
-                case .failure(let error):
-                    print("reSendCertificatedNumber error!\n \(error)")
-                }
-            }
-            
             return Disposables.create()
         }
     }

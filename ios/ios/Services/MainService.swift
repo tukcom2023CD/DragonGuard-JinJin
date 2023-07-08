@@ -13,7 +13,6 @@ import RxSwift
 final class MainService{
     let ip = APIURL.ip
     
-    
     func updateProfile() -> Observable<Bool> {
         let url = APIURL.apiUrl.updateMyDB(ip: ip)
         let access = UserDefaults.standard.string(forKey: "Access")
@@ -56,7 +55,12 @@ final class MainService{
                         print(response)
                         switch response.result{
                         case.success(let data):
-                            if !(data.profile_image?.isEmpty ?? true) && !(data.github_id?.isEmpty ?? true) && ((data.commits) != nil){
+                            if !(data.profile_image?.isEmpty ?? true) &&
+                                !(data.github_id?.isEmpty ?? true) &&
+                                ((data.commits) != nil) &&
+                                data.tier != nil &&
+                                data.token_amount != nil 
+                            {
                                 observer.onNext(data)
                                 timer.invalidate()
                             }

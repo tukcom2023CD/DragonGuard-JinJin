@@ -22,14 +22,14 @@ final class ContributorAutoCollectionViewCell: UICollectionViewCell{
     // MARK:
     private lazy var title: UILabel = {
         let label = UILabel()
-        
+        label.textColor = .black
         return label
     }()
     
     // MARK:
     private lazy var num: UILabel = {
         let label = UILabel()
-        
+        label.textColor = .black
         return label
     }()
     

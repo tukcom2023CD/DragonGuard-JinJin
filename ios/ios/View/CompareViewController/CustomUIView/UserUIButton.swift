@@ -13,6 +13,7 @@ final class UserUIButton: UIButton{
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        addUI()
     }
     
     required init?(coder: NSCoder) {
@@ -22,7 +23,7 @@ final class UserUIButton: UIButton{
     // MARK:
     private lazy var imgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.image = UIImage(named: "3")?.resize(newWidth: 50, newHeight: 50)
+        imgView.image = UIImage(systemName: "person.circle")?.resize(newWidth: 80, newHeight: 80)
         return imgView
     }()
     
@@ -30,7 +31,9 @@ final class UserUIButton: UIButton{
     private lazy var userName: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = .systemFont(ofSize: 20)
+        label.backgroundColor = .clear
+        label.text = "User"
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -52,9 +55,7 @@ final class UserUIButton: UIButton{
     }
     
     func inputData(imgPath: String, name: String){
-        addUI()
-//        imgView.image = img.resize(newWidth: 80, newHeight: 80)
-        imgView.load(img: imgView, url: URL(string: imgPath)!, size: 80)
+        imgView.load(img: imgView, url: URL(string: imgPath)!, width: 80, height: 80)
         userName.text = name
     }
     

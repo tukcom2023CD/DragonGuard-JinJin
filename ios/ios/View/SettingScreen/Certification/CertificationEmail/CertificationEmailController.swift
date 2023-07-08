@@ -138,47 +138,51 @@ final class CertificationEmailController: UIViewController{
     // MARK: 확인 버튼 누른 경우
     @objc
     private func clickedCheckBtn(){
-//        guard let codeString = numberTextField.text else {return}
-//        let certificatedNumber = Int(codeString) ?? 0
-//
-//        /// 인증번호 5자리가 넘은 경우
-//        if certificatedNumber > 10000{
-//            CertifiedOrganizationViewModel.viewModel.checkValidNumber(id: self.emailId ?? 0,
-//                                                                      code: certificatedNumber)
-//            .subscribe { valid in
-//                if valid{
-//                    self.timer?.invalidate()
-//                    self.timecount = 0
-//                    self.recordTime = 0
-//                    // 팝업창 띄움
-//                    let sheet = UIAlertController(title: "조직이 인증되었습니다.", message: "", preferredStyle: .alert)
-//                    // 팝업창 확인 버튼
-//                    sheet.addAction(UIAlertAction(title: "인증 마치기", style: .default,handler: { action in
-//                        guard let viewControllerStack = self.navigationController?.viewControllers else { return }
-//
-////                        for viewController in viewControllerStack {
-////                            if let mainView = viewController as? MainController {
-////                                self.navigationController?.popToViewController(mainView, animated: true)
-////                            }
-////                        }
-//
-//                    }))
-//                    // 화면에 표시
-//                    self.present(sheet,animated: true)
-//                }
-//                else{
-//                    self.showAlert(title: "틀렸습니다.",
-//                              message: "인증번호를 다시 입력하세요",
-//                              btnTitle: "확인")
-//                }
-//            }
-//            .disposed(by: self.disposeBag)
-//        }
-//        else{
-//            showAlert(title: "인증번호 자리 수가 맞지 않습니다.",
-//                      message: "다시 입력하세요",
-//                      btnTitle: "확인")
-//        }
+        guard let codeString = numberTextField.text else {return}
+        let certificatedNumber = Int(codeString) ?? 0
+
+        /// 인증번호 5자리가 넘은 경우
+        if certificatedNumber > 10000{
+            CertifiedOrganizationViewModel.viewModel.checkValidNumber(id: self.emailId ?? 0,
+                                                                      code: certificatedNumber)
+            .subscribe { valid in
+                if valid{
+                    self.timer?.invalidate()
+                    self.timecount = 0
+                    self.recordTime = 0
+                    // 팝업창 띄움
+                    let sheet = UIAlertController(title: "조직이 인증되었습니다.", message: "", preferredStyle: .alert)
+                    // 팝업창 확인 버튼
+                    
+                    sheet.addAction(UIAlertAction(title: "인증 마치기", style: .default,handler: { action in
+                        print("done")
+                        // 첫 번째 모달 창 닫기
+                        self.presentingViewController?.dismiss(animated: false, completion: nil)
+
+                        // 두 번째 모달 창 닫기
+                        self.presentingViewController?.presentingViewController?.dismiss(animated: false, completion: nil)
+
+                        // 세 번째 모달 창 닫기
+                        self.presentingViewController?.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+
+
+                    }))
+                    // 화면에 표시
+                    self.present(sheet,animated: true)
+                }
+                else{
+                    self.showAlert(title: "틀렸습니다.",
+                              message: "인증번호를 다시 입력하세요",
+                              btnTitle: "확인")
+                }
+            }
+            .disposed(by: self.disposeBag)
+        }
+        else{
+            showAlert(title: "인증번호 자리 수가 맞지 않습니다.",
+                      message: "다시 입력하세요",
+                      btnTitle: "확인")
+        }
         
     }
     
@@ -190,11 +194,11 @@ final class CertificationEmailController: UIViewController{
         self.recordTime = 0
         let _ = validNumberTimer()
         
-        CertifiedOrganizationViewModel.viewModel.reSendCertifiactedNumber()
-            .subscribe { num in
-                self.emailId = num
-            }
-            .disposed(by: self.disposeBag)
+//        CertifiedOrganizationViewModel.viewModel.reSendCertifiactedNumber()
+//            .subscribe { num in
+//                self.emailId = num
+//            }
+//            .disposed(by: self.disposeBag)
         
     }
     

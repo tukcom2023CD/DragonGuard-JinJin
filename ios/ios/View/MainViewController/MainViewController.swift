@@ -13,6 +13,7 @@ import RxSwift
 final class MainViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let viewModel = MainViewModel()
+    private var blockChainUrl: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +49,6 @@ final class MainViewController: UIViewController {
     // MARK: 사용자 프로필
     private lazy var profileImage: UIImageView = {
         let img = UIImageView()
-        img.image = UIImage(named: "pomi")
         img.backgroundColor = .white
         img.layer.shadowOffset = CGSize(width: 5, height: 5)
         img.layer.shadowOpacity = 0.7
@@ -64,7 +64,7 @@ final class MainViewController: UIViewController {
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .white
-        label.text = "HJ39"
+        label.text = "None"
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         return label
@@ -342,7 +342,6 @@ final class MainViewController: UIViewController {
         contributionView.snp.makeConstraints { make in
             make.top.equalTo(tokenView.snp.bottom).offset(50)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
-//            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/6)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
         
@@ -387,22 +386,60 @@ final class MainViewController: UIViewController {
             
             self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
             self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
+            self.nameLabel.text = data.github_id ?? ""
+            self.blockChainUrl = data.blockchain_url
+            switch data.tier{
+            case "BRONZE":
+                self.tierImage.image = UIImage(named: "bronze")
+            case "SILVER":
+                self.tierImage.image = UIImage(named: "silver")
+            case "GOLD":
+                self.tierImage.image = UIImage(named: "gold")
+            case "PLATINUM":
+                self.tierImage.image = UIImage(named: "platinum")
+            case "DIAMOND":
+                self.tierImage.image = UIImage(named: "diamond")
+            default:
+                print("error!\n")
+            }
+            let check = (data.is_last ?? false)
             
             if data.organization_rank == 1{
-                self.groupView.inputData(rank1: nil,
-                                         top: nil,
-                                         rank2: data.organization_rank ?? 1,
-                                         me: data.member_github_ids?[1] ?? "Unknown",
-                                         rank3: (data.organization_rank ?? 1)+1,
-                                         under: data.member_github_ids?[2] ?? "Unknown")
+                
+                if data.member_github_ids?.count != 1{
+                    self.groupView.inputData(rank1: nil,
+                                             top: nil,
+                                             rank2: data.organization_rank ?? 1,
+                                             me: data.member_github_ids?[0] ?? "Unknown",
+                                             rank3: (data.organization_rank ?? 1)+1,
+                                             under: data.member_github_ids?[1] ?? "Unknown")
+                }
+                else{
+                    self.groupView.inputData(rank1: nil,
+                                             top: nil,
+                                             rank2: data.organization_rank ?? 1,
+                                             me: data.member_github_ids?[0] ?? "Unknown",
+                                             rank3: nil,
+                                             under: nil)
+                }
             }
-            else if data.is_last ?? false{
-                self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
-                                         top: data.member_github_ids?[0] ?? "Unknown",
-                                         rank2: (data.organization_rank ?? 0),
-                                         me: data.member_github_ids?[1] ?? "Unknown",
-                                         rank3: nil,
-                                         under: nil)
+            else if check {
+                if data.member_github_ids?.count != 1{
+                    self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                             top: data.member_github_ids?[1] ?? "Unknown",
+                                             rank2: (data.organization_rank ?? 0),
+                                             me: data.member_github_ids?[2] ?? "Unknown",
+                                             rank3: nil,
+                                             under: nil)
+                }
+                else{
+                    self.groupView.inputData(rank1: nil,
+                                             top: nil,
+                                             rank2: (data.organization_rank ?? 0),
+                                             me: data.member_github_ids?[0] ?? "Unknown",
+                                             rank3: nil,
+                                             under: nil)
+                }
             }
             else if ((data.member_github_ids?.isEmpty) == nil){
                 self.groupView.inputData(rank1: nil,
@@ -413,6 +450,7 @@ final class MainViewController: UIViewController {
                                          under: nil)
             }
             else{
+                
                 self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
                                          top: data.member_github_ids?[0] ?? "Unknown",
                                          rank2: (data.organization_rank ?? 0),
@@ -423,56 +461,7 @@ final class MainViewController: UIViewController {
             
             self.groupLabel.text = data.organization ?? "None"
             
-            self.contributionView.inputData(commit: data.commits ?? 0,
-                                            issue: data.issues ?? 0,
-                                            pr: data.pull_requests ?? 0,
-                                            reviews: data.reviews ?? 0)
-        })
-        .disposed(by: self.disposeBag)
-    }
-    
-    func getAfterData(){
-        viewModel.getMyInformation().subscribe(onNext: { data in
-            let imgUrl = URL(string: data.profile_image ?? "")!
-            
-            self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
-            self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
-            
-            if data.organization_rank == 1{
-                self.groupView.inputData(rank1: nil,
-                                         top: nil,
-                                         rank2: data.organization_rank ?? 1,
-                                         me: data.member_github_ids?[1] ?? "Unknown",
-                                         rank3: (data.organization_rank ?? 1)+1,
-                                         under: data.member_github_ids?[2] ?? "Unknown")
-            }
-            else if data.is_last ?? false{
-                self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
-                                         top: data.member_github_ids?[0] ?? "Unknown",
-                                         rank2: (data.organization_rank ?? 0),
-                                         me: data.member_github_ids?[1] ?? "Unknown",
-                                         rank3: nil,
-                                         under: nil)
-            }
-            else if ((data.member_github_ids?.isEmpty) == nil){
-                self.groupView.inputData(rank1: nil,
-                                         top: nil,
-                                         rank2: nil,
-                                         me: nil,
-                                         rank3: nil,
-                                         under: nil)
-            }
-            else{
-                self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
-                                         top: data.member_github_ids?[0] ?? "Unknown",
-                                         rank2: (data.organization_rank ?? 0),
-                                         me: data.member_github_ids?[1] ?? "Unknown",
-                                         rank3: (data.organization_rank ?? 0)+1,
-                                         under: data.member_github_ids?[2] ?? "Unknown")
-            }
-            
-            self.groupLabel.text = data.organization ?? "None"
-            
+            self.contributionView.timer?.invalidate()
             self.contributionView.inputData(commit: data.commits ?? 0,
                                             issue: data.issues ?? 0,
                                             pr: data.pull_requests ?? 0,
@@ -495,6 +484,7 @@ final class MainViewController: UIViewController {
         tokenView.rx.tap.subscribe(onNext:{
             let nextPage = BlockChainListController()
             nextPage.modalPresentationStyle = .fullScreen
+            nextPage.blockchainUrl = self.blockChainUrl
             self.contributionView.stopTimer()
             self.present(nextPage ,animated: false)
         })

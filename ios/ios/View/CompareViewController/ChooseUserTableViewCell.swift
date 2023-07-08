@@ -23,8 +23,9 @@ final class ChooseUserTableViewCell: UITableViewCell{
     // MARK:
     private lazy var label: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 30)
+        label.font = .systemFont(ofSize: 15)
         label.textColor = .black
+        label.backgroundColor = .clear
         return label
     }()
     

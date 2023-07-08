@@ -33,6 +33,13 @@ final class BlockChainListController: UIViewController{
     }()
     
     // MARK:
+    private lazy var refreshBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(systemName: "arrow.clockwise")?.resize(newWidth: 20), for: .normal)
+        return btn
+    }()
+    
+    // MARK:
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = "*세부내역을 누르면 링크 연결됩니다."
@@ -56,12 +63,18 @@ final class BlockChainListController: UIViewController{
     // MARK:
     private func addUI(){
         view.addSubview(backBtn)
+        view.addSubview(refreshBtn)
         view.addSubview(descriptionLabel)
         view.addSubview(outsideView)
         
         backBtn.snp.makeConstraints { make in
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+        }
+        
+        refreshBtn.snp.makeConstraints { make in
+            make.top.equalTo(backBtn.snp.top)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-10)
         }
         
         descriptionLabel.snp.makeConstraints { make in
@@ -88,7 +101,6 @@ final class BlockChainListController: UIViewController{
             })
             .disposed(by: disposeBag)
         
-        
         clickedBackBtn()
     }
         
@@ -99,6 +111,18 @@ final class BlockChainListController: UIViewController{
             self.dismiss(animated: true)
         })
         .disposed(by: disposeBag)
+        
+        refreshBtn.rx.tap.subscribe(onNext:{
+            self.viewModel.update()
+                .subscribe(onNext:{ data in
+                    self.outsideView.delegate = self
+                    self.outsideView.inputData(list: data, totalLink: self.blockchainUrl)
+                    print("update \(data)")
+                })
+                .disposed(by: self.disposeBag)
+        })
+        .disposed(by: disposeBag)
+        
     }
 }
 

@@ -13,7 +13,7 @@ final class ContributorAutoUIView: UIView{
     private var titleList: [String] = ["Commit", "Issue", "Pull-Request", "Reviews"]
     private var numList: [Int] = []
     private var nowPage: Int = 0
-    private var timer: Timer?
+    var timer: Timer?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,9 +27,10 @@ final class ContributorAutoUIView: UIView{
     // MARK:
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        
+        cv.backgroundColor = .white
         return cv
     }()
     
@@ -97,7 +98,7 @@ extension ContributorAutoUIView: UICollectionViewDelegate, UICollectionViewDataS
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ContributorAutoCollectionViewCell.identifier, for: indexPath) as? ContributorAutoCollectionViewCell else { return UICollectionViewCell() }
         
         cell.inputData(title: titleList[indexPath.row], num: numList[indexPath.row])
-        
+        cell.backgroundColor = .white
         return cell
     }
     

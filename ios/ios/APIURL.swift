@@ -170,8 +170,8 @@ final class APIURL{
     }
     
     // MARK: 전체 조직 랭킹 조회
-    func allOrganizationRanking(ip: String) -> String{
-        let url = "http://\(ip)/api/organizations/ranking/all"
+    func allOrganizationRanking(ip: String, page: Int, size: Int) -> String{
+        let url = "http://\(ip)/api/organizations/ranking/all?page=\(page)&size=\(size)"
         return url
     }
     
@@ -217,5 +217,26 @@ final class APIURL{
         return url
     }
     
+    // MARK: 블록체인 업데이트
+    func updateBlockChain(ip: String) -> String{
+        let url = "http://\(ip)/api/blockchain/update"
+        return url
+    }
+    
+    // MARK: 다른 사람 프로필 조회
+    func getOtherPersonProfile(ip: String, githubId: String) -> String{
+        let url = "http://\(ip)/api/members/details?githubId=\(githubId)"
+        return url
+    }
+        
+    func getMyOragnizationRepo(ip: String) -> String{
+        let url = "http://\(ip)/api/members/me/details"
+        return url
+    }
+    
+    func getRepositoriesListInOrganization(ip: String, name: String) -> String{
+        let url = "http://\(ip)/api/members/git-organizations/git-repos?name=\(name)"
+        return url
+    }
 }
 

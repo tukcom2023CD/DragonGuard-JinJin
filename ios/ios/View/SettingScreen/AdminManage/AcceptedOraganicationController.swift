@@ -18,14 +18,21 @@ final class AcceptedOraganicationController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.navigationItem.title = "승인된 리스트"
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, .foregroundColor: UIColor.black]
+
         addUIToView()
+        clickedBackBtn()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         getData()
     }
+    
+    // MARK: 뒤로가기 버튼
+    private lazy var backBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
+        return btn
+    }()
     
     // MARK: 요청된 리스트 표현할 tableview
     private lazy var requestTableView: UITableView = {
@@ -37,7 +44,8 @@ final class AcceptedOraganicationController: UIViewController{
     
     // MARK: Add UI
     private func addUIToView(){
-        self.view.addSubview(requestTableView)
+        view.addSubview(backBtn)
+        view.addSubview(requestTableView)
         requestTableView.register(AdminTableViewCell.self, forCellReuseIdentifier: AdminTableViewCell.identifier)
         requestTableView.dataSource = self
         requestTableView.delegate = self
@@ -47,8 +55,13 @@ final class AcceptedOraganicationController: UIViewController{
     
     // MARK: set AutoLayout
     private func setAutoLayout(){
+        backBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(15)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+        }
+        
         requestTableView.snp.makeConstraints { make in
-            make.top.equalTo(self.view.safeAreaLayoutGuide)
+            make.top.equalTo(backBtn.snp.bottom)
             make.leading.equalTo(self.view.safeAreaLayoutGuide).offset(30)
             make.trailing.equalTo(self.view.safeAreaLayoutGuide).offset(-30)
             make.bottom.equalTo(self.view.safeAreaLayoutGuide)
@@ -63,6 +76,14 @@ final class AcceptedOraganicationController: UIViewController{
                 self.requestTableView.reloadData()
             })
             .disposed(by: self.disposeBag)
+    }
+    
+    // MARK:
+    private func clickedBackBtn(){
+        backBtn.rx.tap.subscribe(onNext: {
+            self.dismiss(animated: true)
+        })
+        .disposed(by: disposeBag)
     }
     
 }

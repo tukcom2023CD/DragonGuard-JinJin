@@ -14,6 +14,7 @@ final class OutsideView: UIView{
     private var dataList: [BlockChainListModel] = []
     var delegate: SendURL?
     
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -37,12 +38,15 @@ final class OutsideView: UIView{
     private lazy var tableView: UITableView = {
         let table = UITableView()
         table.separatorStyle = .none
+        table.backgroundColor = .white
         return table
     }()
     
     // MARK: UI 등록
     private func addUI(){
         self.addSubview(titleView)
+        titleView.delegate = self
+        
         self.addSubview(tableView)
         
         tableView.dataSource = self
@@ -66,6 +70,7 @@ final class OutsideView: UIView{
         self.dataList = list
         addUI()
         titleView.inputData(link: totalLink)
+        
     }
     
 }
@@ -73,7 +78,7 @@ final class OutsideView: UIView{
 extension OutsideView: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BlockChainListTableViewCell.identfider, for: indexPath) as? BlockChainListTableViewCell else {return UITableViewCell()}
-        
+        cell.backgroundColor = .white
         cell.inputData(time: dataList[indexPath.row].created_at ?? "",
                        type: dataList[indexPath.row].contribute_type ?? "",
                        count: "\(dataList[indexPath.row].amount ?? 0)GTR")
@@ -83,14 +88,17 @@ extension OutsideView: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        print("selectLink \(dataList[indexPath.row].transaction_hash_url)")
-        
         delegate?.sendURL(url: dataList[indexPath.row].transaction_hash_url ?? "")
         
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataList.count
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return dataList.count }
+    
+}
+
+extension OutsideView: SendingURL{
+    func sendingURL(stringURL: String) {
+        self.delegate?.sendURL(url: stringURL)
     }
 }
 

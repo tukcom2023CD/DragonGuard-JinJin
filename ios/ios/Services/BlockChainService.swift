@@ -35,4 +35,29 @@ final class BlockChainService{
         
     }
     
+    
+    func update() -> Observable<[BlockChainListModel]>{
+        let url = APIURL.apiUrl.updateBlockChain(ip: APIURL.ip)
+        let access = UserDefaults.standard.string(forKey: "Access")
+        
+        return Observable.create { observer in
+            AF.request(url,
+                       method: .post,
+                       headers: ["Content-type": "application/json",
+                                     "Authorization": "Bearer \(access ?? "")"])
+            .responseDecodable(of: [BlockChainListModel].self) { response in
+                switch response.result{
+                case .success(let data):
+                    observer.onNext(data)
+                case .failure(let error):
+                    print("BlockChainService update error!\n\(error)")
+                }
+
+            }
+            
+            return Disposables.create()
+        }
+        
+    }
+    
 }

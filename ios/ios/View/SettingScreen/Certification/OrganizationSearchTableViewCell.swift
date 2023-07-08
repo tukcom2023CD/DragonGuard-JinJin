@@ -19,7 +19,8 @@ final class OrganizationSearchTableViewCell: UITableViewCell {
         label.backgroundColor = UIColor(red: 255/255, green: 194/255, blue: 194/255, alpha: 0.5) /* #ffc2c2 */
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        
+        label.backgroundColor = .clear
+
         self.addSubview(label)
         
         label.snp.makeConstraints({ make in

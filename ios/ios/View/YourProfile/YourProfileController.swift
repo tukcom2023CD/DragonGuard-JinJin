@@ -14,6 +14,7 @@ final class YourProfileController: UIViewController{
     var userName: String?
     private var listCount: Int?
     private let disposeBag = DisposeBag()
+    private let viewModel = YourProfileViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,19 +39,21 @@ final class YourProfileController: UIViewController{
         label.text = self.userName ?? ""
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
         label.textColor = .black
+        label.backgroundColor = .clear
         return label
     }()
     
     // MARK:
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
+        scroll.backgroundColor = .white
         return scroll
     }()
     
     // MARK:
     private lazy var contentView: UIView = {
         let view = UIView()
-        
+        view.backgroundColor = .white
         return view
     }()
     
@@ -58,6 +61,8 @@ final class YourProfileController: UIViewController{
     private lazy var profileImageView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(named: "2")?.resize(newWidth: view.safeAreaLayoutGuide.layoutFrame.height/5, newHeight: view.safeAreaLayoutGuide.layoutFrame.height/5)
+        imgView.layer.cornerRadius = 20
+        imgView.clipsToBounds = true
         return imgView
     }()
     
@@ -67,12 +72,14 @@ final class YourProfileController: UIViewController{
         label.font = .systemFont(ofSize: 20)
         label.text = "조직 없음"
         label.textColor = .black
+        label.backgroundColor = .clear
         return label
     }()
     
     // MARK:
     private lazy var contributorView: ContributorsInfoUIView = {
         let view = ContributorsInfoUIView()
+        view.backgroundColor = .white
         return view
     }()
     
@@ -89,6 +96,8 @@ final class YourProfileController: UIViewController{
         let label = UILabel()
         label.font = .systemFont(ofSize: 23)
         label.text = "Repository"
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     
@@ -194,16 +203,28 @@ final class YourProfileController: UIViewController{
     
     // MARK:
     private func getData(){
-        self.userName = "JJ"
-        let rank = 2
-        let commit = 2
-        let issue = 2
-        let repo = ["aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa","aaaa"]
-        listCount = repo.count
+        guard let userName = userName else { return }
+        viewModel.getData(githubId: userName)
+            .subscribe(onNext:{ data in
+                self.listCount = data.git_repos?.count
+                self.addUI()
+                self.profileImageView.load(img: self.profileImageView,
+                                           url: URL(string: data.profile_image ?? "")!,
+                                           width: self.view.safeAreaLayoutGuide.layoutFrame.height/5,
+                                           height: self.view.safeAreaLayoutGuide.layoutFrame.height/5)
+                self.organizationLabel.text = data.organization ?? "None"
+                
+                self.contributorView.inputData(ranking: data.rank ?? 0,
+                                               commit: data.commits ?? 0,
+                                               issue: data.issues ?? 0)
+                self.repoListView.delegate = self
+                self.repoListView.inputData(img: data.profile_image ?? "",
+                                            userName: self.userName ?? "none",
+                                            repoName: data.git_repos ?? [],
+                                            height: self.view.safeAreaLayoutGuide.layoutFrame.height)
+            })
+            .disposed(by: disposeBag)
         
-        addUI()
-        contributorView.inputData(ranking: rank, commit: commit, issue: issue)
-        repoListView.inputData(img: "", userName: self.userName ?? "a", repoName: repo, height: view.safeAreaLayoutGuide.layoutFrame.height)
         
     }
     
@@ -214,4 +235,14 @@ final class YourProfileController: UIViewController{
         })
         .disposed(by: disposeBag)
     }
+}
+
+extension YourProfileController: ClickedRepos{
+    func clickedRepos(repoName: String) {
+        let nextPage = RepoDetailController()
+        nextPage.modalPresentationStyle = .fullScreen
+        nextPage.selectedTitle = repoName
+        self.present(nextPage,animated: false)
+    }
+    
 }

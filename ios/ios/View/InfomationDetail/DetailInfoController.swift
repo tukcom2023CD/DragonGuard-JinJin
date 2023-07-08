@@ -13,6 +13,7 @@ import UIKit
 final class DetailInfoController: UIViewController{
     private var dataList: DetailInfoModel?
     private let disposeBag = DisposeBag()
+    private let viewModel = DetailInfoViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +37,7 @@ final class DetailInfoController: UIViewController{
     private lazy var tableView: UITableView = {
         let table = UITableView()
         table.separatorStyle = .none
+        table.backgroundColor = .white
         return table
     }()
     
@@ -51,7 +53,6 @@ final class DetailInfoController: UIViewController{
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(DetailInfoTableViewCell.self, forCellReuseIdentifier: DetailInfoTableViewCell.identifier)
-            
         
         settingBtn.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
@@ -78,15 +79,12 @@ final class DetailInfoController: UIViewController{
     }
     
     func getData() {
-        
-        for i in 1...10{
-            self.dataList = DetailInfoModel(gitOrganizations: [Organ_InfoModel(imgPath: "s", title: "a\(i)"),
-                                                                    Organ_InfoModel(imgPath: "s", title: "aa\(i+1)"),
-                                                                    Organ_InfoModel(imgPath: "s", title: "aaa\(i+2)"),
-                                                                    Organ_InfoModel(imgPath: "s", title: "aaaa\(i+3)")],
-                                                 gitRepos: ["aa\\b\(i)","aa\\bb\(i+1)","aa\\bbb\(i+2)","aa\\bbbb\(i+3)"],
-                                                 memberProfileImage: "ss")
-        }
+        viewModel.service.getData()
+            .subscribe(onNext: { data in
+                self.dataList = data
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
         
         addUI()
     }
@@ -97,12 +95,14 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailInfoTableViewCell.identifier, for: indexPath) as? DetailInfoTableViewCell else {return UITableViewCell() }
-        
+        cell.backgroundColor = .clear
         if indexPath.section == 0{
-            cell.inputData_Organizaion(data: dataList?.gitOrganizations?[indexPath.row])
+            cell.inputData_Organizaion(data: dataList?.git_organizations?[indexPath.row])
         }
         else if indexPath.section == 1{
-            cell.inputData_Repository(title: dataList?.gitRepos?[indexPath.row] ?? "", imgPath: dataList?.memberProfileImage ?? "" )
+            cell.inputData_Repository(title: dataList?.git_repos?[indexPath.row] ?? "",
+                                      imgPath: dataList?.member_profile_image ?? "",
+                                      myId: "")
         }
         return cell
     }
@@ -110,10 +110,10 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
-            return self.dataList?.gitOrganizations?.count ?? 0
+            return self.dataList?.git_organizations?.count ?? 0
         }
         else{
-            return self.dataList?.gitRepos?.count ?? 0
+            return self.dataList?.git_repos?.count ?? 0
         }
     }
     
@@ -123,26 +123,35 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
         /// Organization
         if indexPath.section == 0{
             let nextPage = OrganizationDetailController()
+            nextPage.name = dataList?.git_organizations?[indexPath.row].name
             nextPage.modalPresentationStyle = .fullScreen
             self.present(nextPage, animated: true)
         }
         else{   /// Repository
             let nextPage = RepoDetailController()
             nextPage.modalPresentationStyle = .fullScreen
-            nextPage.selectedTitle = dataList?.gitRepos?[indexPath.row] ?? ""
+            nextPage.selectedTitle = dataList?.git_repos?[indexPath.row] ?? ""
             self.present(nextPage,animated: true)
         }
         
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.safeAreaLayoutGuide.layoutFrame.height/8
+        return view.safeAreaLayoutGuide.layoutFrame.height/6
     }
     
     func numberOfSections(in tableView: UITableView) -> Int { return 2 }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .white
         let header = ["Organization", "Repository"]
-        return header[section]
+        let label = UILabel(frame: CGRect(x: 15, y: 5, width: tableView.bounds.size.width, height: 20))
+        label.text = header[section]
+        label.textColor = .gray
+        headerView.addSubview(label)
+
+        return headerView
     }
+
 }

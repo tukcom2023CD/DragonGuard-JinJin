@@ -24,7 +24,7 @@ final class CompareService{
         print("beforeSendingInfo\n\(url)")
         print("body \(body)")
         return Observable.create(){ observer in
-            Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { timer in
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
                 AF.request(url,
                            method: .post,
                            parameters: body,
@@ -36,7 +36,6 @@ final class CompareService{
 
                     switch res.result{
                     case .success(let data):
-                        print(data)
                         if !data.first_result.isEmpty && !data.second_result.isEmpty{
                             observer.onNext(data)
                             timer.invalidate()
@@ -65,6 +64,7 @@ final class CompareService{
         print("getCompareInfo\n\(url)")
         print("body \(body)")
         return Observable.create() { observer in
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
                 AF.request(url,
                            method: .post,
                            parameters: body,
@@ -75,13 +75,15 @@ final class CompareService{
                 .responseDecodable(of: CompareRepoModel.self) { res in
                     switch res.result{
                     case .success(let data):
-                        print(data)
-                        observer.onNext(data)
+                        if !data.first_repo.profile_urls.isEmpty && !data.second_repo.profile_urls.isEmpty{
+                            observer.onNext(data)
+                            timer.invalidate()
+                        }
                     case .failure(let error):
                         print("getCompareInfo error!\n\(error)")
                     }
                 }
-
+            })
             return Disposables.create()
         }
         

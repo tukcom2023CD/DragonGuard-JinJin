@@ -33,8 +33,9 @@ final class CustomUIView: UIView{
     // MARK: 레포 제목
     private lazy var repoLabel: UILabel = {
         let label = UILabel()
-        label.sizeToFit()
-        label.text = "aa"
+        label.adjustsFontSizeToFitWidth = true
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
    
@@ -52,9 +53,9 @@ final class CustomUIView: UIView{
         self.addSubview(repoPieChart)
         
         contributorView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(30)
-            make.trailing.equalToSuperview().offset(-30)
-            make.top.equalToSuperview().offset(50)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.top.equalToSuperview()
         }
         
         repoLabel.snp.makeConstraints { make in
@@ -70,10 +71,16 @@ final class CustomUIView: UIView{
     }
     
     // MARK: Repo1 차트 설정
-    func inputData(repo1: [Double?], values: [String]?, repoName: String, imgList: [String]){
+    func inputData(repo1: [Int], values: [String]?, repoName: String, imgList: [String]){
         addUI()
+        let repo1 = repo1.map{ Double($0)}
+        
         setRepoPieChartOptions(repo1: repo1, values: values)
         repoLabel.text = repoName
+        contributorView.inputData(imgList: imgList)
+    }
+    
+    func sendingImgData(imgList: [String]){
         contributorView.inputData(imgList: imgList)
     }
     
@@ -96,6 +103,7 @@ extension CustomUIView : ChartViewDelegate {
         let pieChartDataSet = PieChartDataSet(entries: dataEntries, label: " ")
         pieChartDataSet.colors = colorsOfCharts(numbersOfColor: repo1.count)
         pieChartDataSet.valueFont = font
+        pieChartDataSet.label = ""
         
         let pieChartData = PieChartData(dataSet: pieChartDataSet)
         let format = NumberFormatter()
@@ -106,18 +114,20 @@ extension CustomUIView : ChartViewDelegate {
         repoPieChart.rotationEnabled = false
         repoPieChart.legend.textColor = .black
         repoPieChart.legend.font = font
+        repoPieChart.drawEntryLabelsEnabled = false
+        
     }
     
     // MARK: 랜덤 색상 설정
     private func colorsOfCharts(numbersOfColor: Int) -> [UIColor] {
-      var colors: [UIColor] = []
-      for _ in 0..<numbersOfColor {
-        let red = Double(arc4random_uniform(256))
-        let green = Double(arc4random_uniform(256))
-        let blue = Double(arc4random_uniform(256))
-        let color = UIColor(red: CGFloat(red/255), green: CGFloat(green/255), blue: CGFloat(blue/255), alpha: 1)
-        colors.append(color)
-      }
+        var colors: [UIColor] = []
+        for _ in 0..<numbersOfColor {
+            let red = Double(arc4random_uniform(256))
+            let green = Double(arc4random_uniform(256))
+            let blue = Double(arc4random_uniform(256))
+            let color = UIColor(red: CGFloat(red/255), green: CGFloat(green/255), blue: CGFloat(blue/255), alpha: 1)
+            colors.append(color)
+        }
         return colors
     }
 }

@@ -44,6 +44,7 @@ final class CompareCollectionViewCell: UICollectionViewCell{
     // MARK:
     private lazy var shortView: UIView = {
         let view = UIView()
+        view.backgroundColor = .clear
         return view
     }()
     
