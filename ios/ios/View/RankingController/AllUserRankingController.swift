@@ -121,6 +121,10 @@ final class AllUserRankingController: UIViewController{
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-10)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
         }
+        
+        let firstIndex = IndexPath(item: 0, section: 0)
+        self.selectionCollectionView.selectItem(at: firstIndex, animated: false, scrollPosition: .init())
+        self.collectionView(self.selectionCollectionView, didSelectItemAt: firstIndex)
     }
     
     // MARK: 로딩 후 뷰 생성

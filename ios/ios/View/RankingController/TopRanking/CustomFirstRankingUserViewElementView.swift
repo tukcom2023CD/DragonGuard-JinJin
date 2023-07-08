@@ -42,6 +42,7 @@ final class CustomFirstRankingUserViewElementView: UIView{
         let label = UILabel()
         label.textAlignment = .center
         label.backgroundColor = .white
+        label.textColor = .black
         return label
     }()
     
@@ -50,6 +51,7 @@ final class CustomFirstRankingUserViewElementView: UIView{
         let label = UILabel()
         label.textAlignment = .center
         label.backgroundColor = .white
+        label.textColor = .black
         return label
     }()
     
