@@ -66,7 +66,7 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
 
         drawInfo()
         CoroutineScope(Dispatchers.IO).launch{
-            if(!repeat && this@MainFragment.isAdded && !this@MainFragment.isDetached) {
+            if(!repeat && this@MainFragment.isAdded && !this@MainFragment.isDetached && this@MainFragment.isVisible && !this@MainFragment.isRemoving) {
                 while(true){
                     Thread.sleep(3000)
                     handler.sendEmptyMessage(0)
