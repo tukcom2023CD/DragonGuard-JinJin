@@ -217,6 +217,12 @@ final class APIURL{
         return url
     }
     
+    // MARK: 블록체인 업데이트
+    func updateBlockChain(ip: String) -> String{
+        let url = "http://\(ip)/api/blockchain/update"
+        return url
+    }
+    
     // MARK: 다른 사람 프로필 조회
     func getOtherPersonProfile(ip: String, githubId: String) -> String{
         let url = "http://\(ip)/api/members/details?githubId=\(githubId)"
