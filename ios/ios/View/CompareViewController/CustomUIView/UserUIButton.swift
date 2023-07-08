@@ -23,7 +23,7 @@ final class UserUIButton: UIButton{
     // MARK:
     private lazy var imgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.image = UIImage(named: "3")?.resize(newWidth: 80, newHeight: 80)
+        imgView.image = UIImage(systemName: "person.circle")?.resize(newWidth: 80, newHeight: 80)
         return imgView
     }()
     
@@ -32,6 +32,7 @@ final class UserUIButton: UIButton{
         let label = UILabel()
         label.textColor = .black
         label.font = .systemFont(ofSize: 20)
+        label.text = "User"
         return label
     }()
     

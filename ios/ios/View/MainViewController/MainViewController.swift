@@ -49,7 +49,6 @@ final class MainViewController: UIViewController {
     // MARK: 사용자 프로필
     private lazy var profileImage: UIImageView = {
         let img = UIImageView()
-        img.image = UIImage(named: "pomi")
         img.backgroundColor = .white
         img.layer.shadowOffset = CGSize(width: 5, height: 5)
         img.layer.shadowOpacity = 0.7

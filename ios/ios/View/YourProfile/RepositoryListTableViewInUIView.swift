@@ -30,7 +30,8 @@ final class RepositoryListTableViewInUIView: UIView{
     // MARK: Repository 제목
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 23)
+//        label.font = .systemFont(ofSize: 23)
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -46,7 +47,8 @@ final class RepositoryListTableViewInUIView: UIView{
     // MARK: 유저 이름 Reposiotry만 할당
     private lazy var userNameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20)
+//        label.font = .systemFont(ofSize: 20)
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     

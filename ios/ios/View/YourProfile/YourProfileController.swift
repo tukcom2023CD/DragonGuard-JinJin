@@ -211,6 +211,7 @@ final class YourProfileController: UIViewController{
                 self.contributorView.inputData(ranking: data.rank ?? 0,
                                                commit: data.commits ?? 0,
                                                issue: data.issues ?? 0)
+                self.repoListView.delegate = self
                 self.repoListView.inputData(img: data.profile_image ?? "",
                                             userName: self.userName ?? "none",
                                             repoName: data.git_repos ?? [],
@@ -228,4 +229,14 @@ final class YourProfileController: UIViewController{
         })
         .disposed(by: disposeBag)
     }
+}
+
+extension YourProfileController: ClickedRepos{
+    func clickedRepos(repoName: String) {
+        let nextPage = RepoDetailController()
+        nextPage.modalPresentationStyle = .fullScreen
+        nextPage.selectedTitle = repoName
+        self.present(nextPage,animated: false)
+    }
+    
 }

@@ -12,6 +12,7 @@ import SnapKit
 final class RepositoryListUIView: UIView{
     private var repoList: [String] = []
     private var userName: String?
+    var delegate: ClickedRepos?
     private var userProfile: String?
     private var heightSize: CGFloat?
     
@@ -70,6 +71,7 @@ extension RepositoryListUIView: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        self.delegate?.clickedRepos(repoName: self.repoList[indexPath.row])
         print("?")
     }
     
@@ -78,4 +80,8 @@ extension RepositoryListUIView: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return repoList.count }
+}
+
+protocol ClickedRepos{
+    func clickedRepos(repoName: String)
 }

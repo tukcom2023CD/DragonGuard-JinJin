@@ -44,7 +44,7 @@ final class SearchAndFilterController: UIViewController{
     // MARK: 뒤로가기 버튼
     private lazy var backBtn: UIButton = {
         let btn = UIButton()
-        btn.setTitle("<", for: .normal)
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
         btn.setTitleColor(.blue, for: .normal)
         btn.addTarget(self, action: #selector(clickedBackBtn), for: .touchUpInside)
         return btn
