@@ -29,7 +29,7 @@ class FaqActivity : AppCompatActivity() {
         FaqModel("Q. 랭킹/티어를 올리고 싶어요!", "commit, issue, pr, code review등등 github활동을 많이많이 해보아요~~"),
         FaqModel("Q. 토큰은 어디에 쓰나요?", "현재 토큰은 다른 사람의 포인트를 탈취함을 방지하기 위해 쓰이고 있어요! 금전적인 가치를 지니고 있지는 않답니다."),
         FaqModel("Q. 후원하고 싶어요!", "감사하지만 마음만 받을게요!"),
-        FaqModel("Q. 깃허브에 보이는 활동량보다 토큰이 많이 적어요!", "2023년 1월 1일부터 한 활동만 부여해 드려서 다르거나 적을 수 있어요!")
+        FaqModel("Q. 기여도 부여의 기준이되는 기간이 궁금해요!", "개인 기여도와 토큰 부여는 가입한 년도의 1월1일을 기준으로 그 이후 기여도부터 체크해요!  레포지토리의 상세조회/비교의 경우 깃허브의 Repotisory > Insights > Contributors 의 기간을 따릅니다!")
 
     )
     override fun onCreate(savedInstanceState: Bundle?) {
