@@ -25,4 +25,16 @@ final class BlockchainViewModel{
         
     }
     
+    func update() -> Observable<[BlockChainListModel]>{
+        
+        return Observable.create { observer in
+            self.service.update()
+                .subscribe(onNext: { list in
+                    observer.onNext(list)
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+        
+    }
 }

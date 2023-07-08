@@ -13,7 +13,6 @@ import RxSwift
 final class MainService{
     let ip = APIURL.ip
     
-    
     func updateProfile() -> Observable<Bool> {
         let url = APIURL.apiUrl.updateMyDB(ip: ip)
         let access = UserDefaults.standard.string(forKey: "Access")
