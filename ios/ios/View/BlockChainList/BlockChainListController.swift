@@ -115,7 +115,6 @@ final class BlockChainListController: UIViewController{
         refreshBtn.rx.tap.subscribe(onNext:{
             self.viewModel.update()
                 .subscribe(onNext:{ data in
-//                    self.outsideView.removeFromSuperview()
                     self.outsideView.delegate = self
                     self.outsideView.inputData(list: data, totalLink: self.blockchainUrl)
                     print("update \(data)")
