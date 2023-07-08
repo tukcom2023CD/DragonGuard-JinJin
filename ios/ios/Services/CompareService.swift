@@ -24,7 +24,7 @@ final class CompareService{
         print("beforeSendingInfo\n\(url)")
         print("body \(body)")
         return Observable.create(){ observer in
-            Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { timer in
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
                 AF.request(url,
                            method: .post,
                            parameters: body,
@@ -64,7 +64,7 @@ final class CompareService{
         print("getCompareInfo\n\(url)")
         print("body \(body)")
         return Observable.create() { observer in
-            Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { timer in
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
                 AF.request(url,
                            method: .post,
                            parameters: body,

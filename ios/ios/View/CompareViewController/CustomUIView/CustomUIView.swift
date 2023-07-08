@@ -52,7 +52,7 @@ final class CustomUIView: UIView{
         self.addSubview(repoPieChart)
         
         contributorView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(30)
+            make.leading.equalToSuperview()
             make.trailing.equalToSuperview().offset(-30)
             make.top.equalToSuperview().offset(50)
         }
@@ -102,6 +102,7 @@ extension CustomUIView : ChartViewDelegate {
         let pieChartDataSet = PieChartDataSet(entries: dataEntries, label: " ")
         pieChartDataSet.colors = colorsOfCharts(numbersOfColor: repo1.count)
         pieChartDataSet.valueFont = font
+        pieChartDataSet.label = ""
         
         let pieChartData = PieChartData(dataSet: pieChartDataSet)
         let format = NumberFormatter()
@@ -112,6 +113,8 @@ extension CustomUIView : ChartViewDelegate {
         repoPieChart.rotationEnabled = false
         repoPieChart.legend.textColor = .black
         repoPieChart.legend.font = font
+        repoPieChart.drawEntryLabelsEnabled = false
+        
     }
     
     // MARK: 랜덤 색상 설정
