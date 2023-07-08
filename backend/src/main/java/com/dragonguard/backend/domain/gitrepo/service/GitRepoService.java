@@ -281,7 +281,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         kafkaSparkLineProducer.send(new SparkLineKafka(githubToken, id));
     }
 
-    private void requestKafkaGitRepoInfo(String githubToken, String name) {
+    private void requestKafkaGitRepoInfo(final String githubToken, final String name) {
         kafkaGitRepoInfoProducer.send(new GitRepoRequest(githubToken, name, LocalDate.now().getYear()));
     }
 
@@ -300,8 +300,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 getGitRepoMemberResponsesWithCache(gitRepo, githubToken));
     }
 
-    @Cacheable(value = "gitRepoMembers", key = "{#gitRepo.id, #gitRepo.name}", cacheManager = "cacheManager", unless = "result.isEmpty() || result[0].profileUrl == null || result[0].additions == null || result[0].commits == null || result[0].deletions == null")
-    public List<GitRepoMemberResponse> getGitRepoMemberResponsesWithCache(final GitRepo gitRepo, final String githubToken) {
+    private List<GitRepoMemberResponse> getGitRepoMemberResponsesWithCache(final GitRepo gitRepo, final String githubToken) {
         Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         if (!gitRepoMembers.isEmpty()) {
             requestKafkaGitRepoInfo(githubToken, gitRepo.getName());

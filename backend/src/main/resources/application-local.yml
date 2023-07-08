@@ -35,7 +35,6 @@ spring:
   cache:
     type: redis
     redis:
-      time-to-live: 3600 # 1시간
       cache-null-values: true
 
   redis:
