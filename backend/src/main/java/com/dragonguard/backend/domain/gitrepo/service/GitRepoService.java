@@ -195,10 +195,19 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
 
     private StatisticsResponse getStatistics(final GitRepo gitRepo) {
         Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
+        if (isContributionEmpty(gitRepoMembers)) {
+            requestKafkaGitRepoInfo(authService.getLoginUser().getGithubToken(), gitRepo.getName());
+            return getStatisticsResponse(List.of(), List.of(), List.of());
+        }
         return getStatisticsResponse(
                 getContributionList(gitRepoMembers, gitRepoMember -> gitRepoMember.getGitRepoContribution().getCommits()),
                 getContributionList(gitRepoMembers, gitRepoMember -> gitRepoMember.getGitRepoContribution().getAdditions()),
                 getContributionList(gitRepoMembers, gitRepoMember -> gitRepoMember.getGitRepoContribution().getDeletions()));
+    }
+
+    private boolean isContributionEmpty(Set<GitRepoMember> gitRepoMembers) {
+        return gitRepoMembers.stream().anyMatch(grm -> grm.getGitRepoContribution() == null
+                || grm.getGitRepoContribution().getCommits() == null);
     }
 
     private List<Integer> getContributionList(final Set<GitRepoMember> gitRepoMembers, final Function<GitRepoMember, Integer> function) {
