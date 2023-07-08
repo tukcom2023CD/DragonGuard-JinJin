@@ -36,7 +36,8 @@
             
             <ImageView
                 android:id="@+id/each_profile"
-                android:layout_margin="5dp"
+                android:layout_marginVertical="5dp"
+                android:layout_marginHorizontal="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.3"
