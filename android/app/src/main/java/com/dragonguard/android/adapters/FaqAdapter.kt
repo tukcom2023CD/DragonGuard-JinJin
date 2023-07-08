@@ -20,14 +20,12 @@ class FaqAdapter(private val faqList: ArrayList<FaqModel>) : RecyclerView.Adapte
         fun bind(position: Int){
             binding.faqTitle.text = faqList[position].title
             binding.faqAnswer.text = faqList[position].content
-            binding.ctParent.setOnClickListener {
+            binding.faqTitle.setOnClickListener {
                 if(faqList[position].expandable) {
                     binding.ctChild.visibility = View.GONE
-                    binding.faqDropdown.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24)
                     faqList[position].expandable = false
                 } else {
                     binding.ctChild.visibility = View.VISIBLE
-                    binding.faqDropdown.setImageResource(R.drawable.baseline_arrow_right_24)
                     faqList[position].expandable = true
                 }
             }

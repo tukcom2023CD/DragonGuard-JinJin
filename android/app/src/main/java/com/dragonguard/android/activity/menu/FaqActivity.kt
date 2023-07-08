@@ -21,14 +21,16 @@ import com.dragonguard.android.adapters.VerticalItemDecorator
 class FaqActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFaqBinding
     private val faqList = arrayListOf(
-        FaqModel("로딩이 너무 느려요!", "서버에서 열심히 계산중이예요~~"),
-        FaqModel("학교별 랭킹이 보이지 않아요!", "조직 인증을 통해 소속 학교를 인증해야 해요"),
-        FaqModel("조직 인증은 어디서 하나요?", "설정 → 학교 인증에서 가능합니다!"),
-        FaqModel("정보가 업데이트 되지 않았어요!", "일정 주기마다 업데이트 중이니 조금만 기다려주세요!!"),
-        FaqModel("저희 대학교가 대학교 리스트에 없어요!", "메일 주시면 추가해 드리겠습니다. 죄송합니다!"),
-        FaqModel("랭킹/티어를 올리고 싶어요!", "commit, issue, pr, code review등등 github활동을 많이많이 해보아요~~"),
-        FaqModel("토큰은 어디에 쓰나요?", "현재 토큰은 다른 사람의 포인트를 탈취함을 방지하기 위해 쓰이고 있어요! 금전적인 가치를 지니고 있지는 않답니다."),
-        FaqModel("후원하고 싶어요!", "감사하지만 마음만 받을게요!")
+        FaqModel("Q. 로딩이 너무 느려요!", "서버에서 열심히 계산중이예요~~"),
+        FaqModel("Q. 학교별 랭킹이 보이지 않아요!", "조직 인증을 통해 소속 학교를 인증해야 해요"),
+        FaqModel("Q. 조직 인증은 어디서 하나요?", "설정 → 학교 인증에서 가능합니다!"),
+        FaqModel("Q. 정보가 업데이트 되지 않았어요!", "일정 주기마다 업데이트 중이니 조금만 기다려주세요!!"),
+        FaqModel("Q. 저희 대학교가 대학교 리스트에 없어요!", "메일 주시면 추가해 드리겠습니다. 죄송합니다!"),
+        FaqModel("Q. 랭킹/티어를 올리고 싶어요!", "commit, issue, pr, code review등등 github활동을 많이많이 해보아요~~"),
+        FaqModel("Q. 토큰은 어디에 쓰나요?", "현재 토큰은 다른 사람의 포인트를 탈취함을 방지하기 위해 쓰이고 있어요! 금전적인 가치를 지니고 있지는 않답니다."),
+        FaqModel("Q. 후원하고 싶어요!", "감사하지만 마음만 받을게요!"),
+        FaqModel("Q. 깃허브에 보이는 활동량보다 토큰이 많이 적어요!", "2023년 1월 1일부터 한 활동만 부여해 드려서 다르거나 적을 수 있어요!")
+
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
