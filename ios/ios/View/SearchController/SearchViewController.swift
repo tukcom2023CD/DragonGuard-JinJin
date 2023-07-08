@@ -16,6 +16,7 @@ final class SearchViewController: UIViewController{
     private var resultList: [SearchResultModel] = []
     private let disposeBag = DisposeBag()
     private var isInfiniteScroll = true // 무한 스크롤 1번만 로딩되게 확인하는 변수
+    private var type: String?
     var beforePage: String?// 이전 페이지 확인하는 변수
 
     override func viewDidLoad() {
@@ -232,10 +233,19 @@ final class SearchViewController: UIViewController{
     private func handleTap(sender: UITapGestureRecognizer) {
 
         if beforePage == "Main"{    // 레포 상세조회로 이동
-            let nextPage = RepoDetailController()
-            nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].name
-            nextPage.modalPresentationStyle = .fullScreen
-            self.present(nextPage,animated: true)
+            guard let type = self.type else{ return }
+            if type == "REPOSITORIES"{
+                let nextPage = RepoDetailController()
+                nextPage.selectedTitle = resultList[sender.view?.tag ?? -1].name
+                nextPage.modalPresentationStyle = .fullScreen
+                self.present(nextPage,animated: true)
+            }
+            if type == "USERS"{
+                let nextPage = YourProfileController()
+                nextPage.userName = resultList[sender.view?.tag ?? -1].name
+                nextPage.modalPresentationStyle = .fullScreen
+                self.present(nextPage,animated: true)
+            }
         }
         else if beforePage == "Compare1"{
             NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 1, NotificationKey.repository: resultList[sender.view?.tag ?? -1].name])
@@ -327,8 +337,8 @@ extension SearchViewController: UIScrollViewDelegate {
 }
 
 extension SearchViewController: SendSearchResultList{
-    func sendList(list: [SearchResultModel]) {
-
+    func sendList(list: [SearchResultModel], type: String) {
+        self.type = type
         resultList = []
         self.resultList = list
         inputDataIntoList()

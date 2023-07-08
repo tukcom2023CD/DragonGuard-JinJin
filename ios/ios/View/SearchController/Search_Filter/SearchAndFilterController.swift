@@ -581,7 +581,7 @@ extension SearchAndFilterController: UITextFieldDelegate{
         SearchPageViewModel.viewModel.getSearchData(searchWord: AfterTrim, type: self.type, filtering: filtering)
             .subscribe(onNext: { list in
                 if !list.isEmpty{
-                    self.delegate?.sendList(list: list)
+                    self.delegate?.sendList(list: list, type: self.type)
                     self.dismiss(animated: true)
                 }
             })
@@ -709,20 +709,5 @@ final class UICollectionviewCustomCell: UICollectionViewCell{
 }
 
 protocol SendSearchResultList{
-    func sendList(list: [SearchResultModel])
-}
-
-
-import SwiftUI
-struct VCPreViewSearchAndFilterController:PreviewProvider {
-    static var previews: some View {
-        SearchAndFilterController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewSearchAndFilterController2:PreviewProvider {
-    static var previews: some View {
-        SearchAndFilterController().toPreview().previewDevice("iPhone 11")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
+    func sendList(list: [SearchResultModel], type: String)
 }
