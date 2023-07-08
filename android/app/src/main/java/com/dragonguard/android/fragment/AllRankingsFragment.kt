@@ -123,12 +123,14 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                     usersRanking.removeFirst()
                     usersRanking.removeFirst()
                     usersRanking.removeFirst()
-
-                    rankingsAdapter = RankingsAdapter(usersRanking)
-                    binding.eachRankings.adapter = rankingsAdapter
-                    binding.eachRankings.layoutManager = LinearLayoutManager(requireContext())
+                    if(this@AllRankingsFragment.isAdded && !this@AllRankingsFragment.isDetached && this@AllRankingsFragment.isVisible && !this@AllRankingsFragment.isRemoving) {
+                        rankingsAdapter = RankingsAdapter(usersRanking)
+                        binding.eachRankings.adapter = rankingsAdapter
+                        binding.eachRankings.layoutManager = LinearLayoutManager(requireContext())
 //            totalUserRankingAdapter.notifyDataSetChanged()
-                    binding.eachRankings.visibility = View.VISIBLE
+                        binding.eachRankings.visibility = View.VISIBLE
+                    }
+
                 }
             }
         }
