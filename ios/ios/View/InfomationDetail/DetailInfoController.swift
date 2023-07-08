@@ -37,6 +37,7 @@ final class DetailInfoController: UIViewController{
     private lazy var tableView: UITableView = {
         let table = UITableView()
         table.separatorStyle = .none
+        table.backgroundColor = .white
         return table
     }()
     
@@ -94,7 +95,7 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailInfoTableViewCell.identifier, for: indexPath) as? DetailInfoTableViewCell else {return UITableViewCell() }
-        
+        cell.backgroundColor = .clear
         if indexPath.section == 0{
             cell.inputData_Organizaion(data: dataList?.git_organizations?[indexPath.row])
         }

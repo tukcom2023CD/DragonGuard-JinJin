@@ -31,7 +31,6 @@ final class CustomTopView: UIView{
     // MARK: 2등
     private lazy var secondRankView: CustomETCRankingUserViewElementView = {
         let view = CustomETCRankingUserViewElementView()
-        
         view.backgroundColor = .white
         return view
     }()
@@ -39,7 +38,6 @@ final class CustomTopView: UIView{
     // MARK: 3등
     private lazy var thirdRankView: CustomETCRankingUserViewElementView = {
         let view = CustomETCRankingUserViewElementView()
-        
         view.backgroundColor = .white
         return view
     }()
@@ -49,6 +47,7 @@ final class CustomTopView: UIView{
         let stack = UIStackView(arrangedSubviews: [secondRankView, firstRankView, thirdRankView])
         stack.axis = .horizontal
         stack.distribution = .fillEqually
+        stack.backgroundColor = .white
         return stack
     }()
     

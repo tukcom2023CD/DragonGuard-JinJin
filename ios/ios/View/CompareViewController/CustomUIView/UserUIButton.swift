@@ -32,6 +32,7 @@ final class UserUIButton: UIButton{
         let label = UILabel()
         label.textColor = .black
         label.font = .systemFont(ofSize: 20)
+        label.backgroundColor = .clear
         label.text = "User"
         return label
     }()

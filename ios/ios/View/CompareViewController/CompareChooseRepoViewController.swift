@@ -28,6 +28,8 @@ final class CompareChooseRepoViewController: UIViewController{
         let label = UILabel()
         label.text = "Repository 비교하기"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
+        label.textColor = .black
+        label.backgroundColor = .clear
         return label
     }()
     
@@ -35,7 +37,6 @@ final class CompareChooseRepoViewController: UIViewController{
     private lazy var repository1Btn: UIButton = {
         let btn = UIButton()
         btn.setTitle("Choose Repository1", for: .normal)
-//        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.titleLabel?.adjustsFontSizeToFitWidth = true
         btn.setTitleColor(.black, for: .normal)
         btn.backgroundColor = .white
@@ -49,7 +50,6 @@ final class CompareChooseRepoViewController: UIViewController{
     private lazy var repository2Btn: UIButton = {
         let btn = UIButton()
         btn.setTitle("Choose Repository2", for: .normal)
-//        btn.titleLabel?.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         btn.titleLabel?.adjustsFontSizeToFitWidth = true
         btn.backgroundColor = .white
         btn.setTitleColor(.black, for: .normal)
@@ -65,6 +65,7 @@ final class CompareChooseRepoViewController: UIViewController{
         stack.axis = .vertical
         stack.distribution = .fillEqually
         stack.spacing = 20
+        stack.backgroundColor = .clear
         return stack
     }()
     
@@ -78,7 +79,6 @@ final class CompareChooseRepoViewController: UIViewController{
         btn.layer.cornerRadius = 20
         btn.layer.shadowOffset = CGSize(width: 3, height: 3)
         btn.layer.shadowOpacity = 0.5
-        
         return btn
     }()
     

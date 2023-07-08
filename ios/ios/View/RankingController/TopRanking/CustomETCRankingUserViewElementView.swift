@@ -29,6 +29,7 @@ final class CustomETCRankingUserViewElementView: UIView{
     // MARK:
     private lazy var userView: UserProfileImgView = {
         let view = UserProfileImgView()
+        view.backgroundColor = .clear
         view.layer.borderColor = .init(red: 255/255, green: 200/255, blue: 10/255, alpha: 1)
         view.layer.borderWidth = 1
         view.layer.cornerRadius = 20
@@ -39,6 +40,8 @@ final class CustomETCRankingUserViewElementView: UIView{
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     
@@ -46,6 +49,8 @@ final class CustomETCRankingUserViewElementView: UIView{
     private lazy var numLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.textColor = .black
+        label.backgroundColor = .clear
         return label
     }()
     

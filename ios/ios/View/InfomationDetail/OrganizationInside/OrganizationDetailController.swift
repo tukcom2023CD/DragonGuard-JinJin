@@ -37,6 +37,8 @@ final class OrganizationDetailController: UIViewController{
         let label = UILabel()
         label.text = "Repository"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     
@@ -44,6 +46,7 @@ final class OrganizationDetailController: UIViewController{
     private lazy var tableView: UITableView = {
         let table = UITableView()
         table.separatorStyle = .none
+        table.backgroundColor = .white
         return table
     }()
     
@@ -107,7 +110,7 @@ extension OrganizationDetailController: UITableViewDelegate, UITableViewDataSour
         guard let cell = tableView.dequeueReusableCell(withIdentifier: OrganizationDetailTableViewCell.identifier, for: indexPath) as? OrganizationDetailTableViewCell else {return UITableViewCell()}
         let organizationTitle = (data?.git_repos?[indexPath.row] ?? "").split(separator: "/")[0]
         let title = (data?.git_repos?[indexPath.row] ?? "").split(separator: "/")[1]
-        
+        cell.backgroundColor = .white
         cell.inputData(title: "\(title)",
                        imgPath: data?.profile_image ?? "",
                        organizationTitle: "\(organizationTitle)")

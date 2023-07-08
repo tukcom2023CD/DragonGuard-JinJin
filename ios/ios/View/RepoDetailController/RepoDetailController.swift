@@ -41,13 +41,14 @@ final class RepoDetailController: UIViewController{
     // MARK: 스크롤 뷰
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()
+        view.backgroundColor = .white
         return view
     }()
     
     // MARK: contentView
     private lazy var contentView: UIView = {
         let view = UIView()
-        view.backgroundColor = .cyan
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -79,6 +80,7 @@ final class RepoDetailController: UIViewController{
         let label = UILabel()
         label.text = selectedTitle ?? "None"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
+        label.backgroundColor = .clear
         label.textColor = .black
         return label
     }()

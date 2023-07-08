@@ -25,6 +25,7 @@ final class ChooseUserTableViewCell: UITableViewCell{
         let label = UILabel()
         label.font = .systemFont(ofSize: 15)
         label.textColor = .black
+        label.backgroundColor = .clear
         return label
     }()
     

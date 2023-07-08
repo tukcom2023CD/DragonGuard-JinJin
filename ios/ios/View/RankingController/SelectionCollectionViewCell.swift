@@ -39,13 +39,14 @@ final class SelectionCollectionViewCell: UICollectionViewCell{
         let label = UILabel()
         label.font = .systemFont(ofSize: 15)
         label.textColor = .black
-        
+        label.backgroundColor = .white
         return label
     }()
     
     // MARK:
     private lazy var shortView: UIView = {
         let view = UIView()
+        view.backgroundColor = .white
         return view
     }()
     

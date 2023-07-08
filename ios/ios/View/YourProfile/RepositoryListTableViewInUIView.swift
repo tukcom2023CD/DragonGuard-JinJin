@@ -32,6 +32,8 @@ final class RepositoryListTableViewInUIView: UIView{
         let label = UILabel()
 //        label.font = .systemFont(ofSize: 23)
         label.adjustsFontSizeToFitWidth = true
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     
@@ -49,6 +51,8 @@ final class RepositoryListTableViewInUIView: UIView{
         let label = UILabel()
 //        label.font = .systemFont(ofSize: 20)
         label.adjustsFontSizeToFitWidth = true
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     

@@ -39,19 +39,21 @@ final class YourProfileController: UIViewController{
         label.text = self.userName ?? ""
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
         label.textColor = .black
+        label.backgroundColor = .clear
         return label
     }()
     
     // MARK:
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
+        scroll.backgroundColor = .white
         return scroll
     }()
     
     // MARK:
     private lazy var contentView: UIView = {
         let view = UIView()
-        
+        view.backgroundColor = .white
         return view
     }()
     
@@ -70,12 +72,14 @@ final class YourProfileController: UIViewController{
         label.font = .systemFont(ofSize: 20)
         label.text = "조직 없음"
         label.textColor = .black
+        label.backgroundColor = .clear
         return label
     }()
     
     // MARK:
     private lazy var contributorView: ContributorsInfoUIView = {
         let view = ContributorsInfoUIView()
+        view.backgroundColor = .white
         return view
     }()
     
@@ -92,6 +96,8 @@ final class YourProfileController: UIViewController{
         let label = UILabel()
         label.font = .systemFont(ofSize: 23)
         label.text = "Repository"
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     

@@ -35,6 +35,8 @@ final class CustomUIView: UIView{
         let label = UILabel()
         label.sizeToFit()
         label.text = "aa"
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
    
@@ -52,9 +54,9 @@ final class CustomUIView: UIView{
         self.addSubview(repoPieChart)
         
         contributorView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-30)
-            make.top.equalToSuperview().offset(50)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.top.equalToSuperview()
         }
         
         repoLabel.snp.makeConstraints { make in

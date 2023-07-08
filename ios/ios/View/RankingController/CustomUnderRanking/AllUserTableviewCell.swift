@@ -25,6 +25,8 @@ final class AllUserTableviewCell: UITableViewCell{
     private lazy var rankingLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
+        label.textColor = .black
+        label.backgroundColor = .clear
         return label
     }()
     

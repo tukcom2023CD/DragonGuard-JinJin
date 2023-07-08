@@ -31,7 +31,7 @@ final class CustomFirstRankingUserViewElementView: UIView{
     // MARK:
     private lazy var userView: UserProfileImgView = {
         let view = UserProfileImgView()
-        
+        view.backgroundColor = .clear
         view.layer.borderWidth = 1
         view.layer.cornerRadius = 20
         return view
@@ -41,6 +41,7 @@ final class CustomFirstRankingUserViewElementView: UIView{
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.backgroundColor = .white
         return label
     }()
     
@@ -48,6 +49,7 @@ final class CustomFirstRankingUserViewElementView: UIView{
     private lazy var numLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.backgroundColor = .white
         return label
     }()
     

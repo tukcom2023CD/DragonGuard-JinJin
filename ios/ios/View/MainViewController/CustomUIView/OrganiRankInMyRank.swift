@@ -43,6 +43,7 @@ final class OrganiRankInMyRank: UIView {
         stack.axis = .horizontal
         stack.spacing = 20
         stack.distribution = .fillEqually
+        stack.backgroundColor = .white
         return stack
     }()
     
@@ -70,6 +71,7 @@ final class OrganiRankInMyRank: UIView {
         stack.axis = .horizontal
         stack.spacing = 20
         stack.distribution = .fillEqually
+        stack.backgroundColor = .white
         return stack
     }()
         
@@ -97,6 +99,7 @@ final class OrganiRankInMyRank: UIView {
         stack.axis = .horizontal
         stack.spacing = 20
         stack.distribution = .fillEqually
+        stack.backgroundColor = .white
         return stack
     }()
     
@@ -106,6 +109,7 @@ final class OrganiRankInMyRank: UIView {
         stack.axis = .vertical
         stack.spacing = 10
         stack.distribution = .fillEqually
+        stack.backgroundColor = .white
         return stack
     }()
     

@@ -24,11 +24,6 @@ final class LoginController: UIViewController{
         addUItoView()
         checkClearAuths()
         
-        if autoLoginCheck ?? false{
-            print("?")
-            //            self.navigationController?.pushViewController(MainController(), animated: true)
-        }
-        
     }
     
     /*

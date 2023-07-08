@@ -72,6 +72,7 @@ final class AllUserRankingController: UIViewController{
         let table = UITableView()
         table.isScrollEnabled = false
         table.separatorStyle = .none
+        table.backgroundColor = .white
         return table
     }()
     
@@ -375,6 +376,7 @@ extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: AllUserTableviewCell.identifier, for: indexPath) as? AllUserTableviewCell else { return UITableViewCell()}
+        cell.backgroundColor = .white
         cell.inputData(rank: indexPath.row + 4, userData: userTierData[indexPath.row])
         return cell
     }
@@ -393,6 +395,7 @@ extension AllUserRankingController: UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SelectionCollectionViewCell.identfier, for: indexPath) as? SelectionCollectionViewCell else { return UICollectionViewCell() }
+        cell.backgroundColor = .white
         cell.inputData(text: selectionList[indexPath.row])
         return cell
     }

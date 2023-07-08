@@ -29,6 +29,7 @@ final class TitleView: UIView{
         let label = UILabel()
         label.text = "블록체인 부여 내역"
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 30)
+        label.textColor = .black
         return label
     }()
     

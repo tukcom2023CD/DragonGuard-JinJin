@@ -59,6 +59,7 @@ final class CompareRepoUserController: UIViewController{
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.isScrollEnabled = true
+        cv.backgroundColor = .clear
         return cv
     }()
     
@@ -70,27 +71,28 @@ final class CompareRepoUserController: UIViewController{
     // MARK: 스크롤 뷰
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
+        scroll.backgroundColor = .white
         return scroll
     }()
     
     // MARK: contentView
     private lazy var contentView: UIView = {
         let view = UIView()
-        
+        view.backgroundColor = .white
         return view
     }()
     
     // MARK: 첫 번째 레포 정보
     private lazy var leftView: CustomUIView = {
         let view = CustomUIView()
-        
+        view.backgroundColor = .white
         return view
     }()
     
     // MARK: 두 번째 레포 정보
     private lazy var rightView: CustomUIView = {
         let view = CustomUIView()
-        
+        view.backgroundColor = .white
         return view
     }()
     
@@ -110,6 +112,7 @@ final class CompareRepoUserController: UIViewController{
         table.layer.cornerRadius = 20
         table.layer.shadowOpacity = 0.5
         table.clipsToBounds = true
+        table.backgroundColor = .white
         return table
     }()
     
@@ -120,13 +123,14 @@ final class CompareRepoUserController: UIViewController{
     // MARK: 스크롤 뷰
     private lazy var scrollView_User: UIScrollView = {
         let scroll = UIScrollView()
+        scroll.backgroundColor = .white
         return scroll
     }()
     
     // MARK: contentView
     private lazy var contentView_User: UIView = {
         let view = UIView()
-        
+        view.backgroundColor = .white
         return view
     }()
     
@@ -171,7 +175,6 @@ final class CompareRepoUserController: UIViewController{
     // MARK: Commit chart
     private lazy var chartCommit: BarChartView = {
         let chart1 = BarChartView()
-        
         chart1.backgroundColor = .white
         return chart1
     }()
@@ -179,7 +182,6 @@ final class CompareRepoUserController: UIViewController{
     // MARK: Addition Deletion Chart
     private lazy var chartAddDel: BarChartView = {
         let chart1 = BarChartView()
-        
         chart1.backgroundColor = .white
         return chart1
     }()
@@ -481,7 +483,7 @@ extension CompareRepoUserController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CompareTableViewCell.identfier, for: indexPath) as? CompareTableViewCell else { return UITableViewCell() }
-        
+        cell.backgroundColor = .white
         switch indexPath.section{
         case 0:
             cell.inputData(repo1: self.repoInfo?.first_repo.git_repo.forks_count ?? 0,
@@ -539,6 +541,7 @@ extension CompareRepoUserController: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompareCollectionViewCell.identfier, for: indexPath) as? CompareCollectionViewCell else { return UICollectionViewCell() }
         cell.inputData(text: selectionTitleList[indexPath.row])
+        cell.backgroundColor = .white
         return cell
     }
     

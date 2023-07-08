@@ -38,6 +38,7 @@ final class OutsideView: UIView{
     private lazy var tableView: UITableView = {
         let table = UITableView()
         table.separatorStyle = .none
+        table.backgroundColor = .white
         return table
     }()
     
@@ -77,7 +78,7 @@ final class OutsideView: UIView{
 extension OutsideView: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: BlockChainListTableViewCell.identfider, for: indexPath) as? BlockChainListTableViewCell else {return UITableViewCell()}
-        
+        cell.backgroundColor = .white
         cell.inputData(time: dataList[indexPath.row].created_at ?? "",
                        type: dataList[indexPath.row].contribute_type ?? "",
                        count: "\(dataList[indexPath.row].amount ?? 0)GTR")

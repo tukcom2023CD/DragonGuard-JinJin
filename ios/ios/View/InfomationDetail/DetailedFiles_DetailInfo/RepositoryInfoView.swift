@@ -31,6 +31,8 @@ final class RepositoryInfoView: UIView{
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     
@@ -47,6 +49,8 @@ final class RepositoryInfoView: UIView{
     private lazy var userNameLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true
+        label.backgroundColor = .clear
+        label.textColor = .black
         return label
     }()
     

@@ -144,7 +144,6 @@
 		3BFF623329CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */; };
 		A30BA46D298415B8008B594E /* SearchPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30BA46C298415B8008B594E /* SearchPageViewModel.swift */; };
 		A30BA47029841C97008B594E /* SearchPageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30BA46F29841C97008B594E /* SearchPageService.swift */; };
-		A3342B9C2A43CAA1002C85A7 /* TokenUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3342B9B2A43CAA1002C85A7 /* TokenUIButton.swift */; };
 		A35F1FB029DECEFB00A4ABD0 /* FAQTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35F1FAF29DECEFB00A4ABD0 /* FAQTableViewCell.swift */; };
 		A37AA6FA29D35522002812F6 /* TierTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37AA6F929D35522002812F6 /* TierTableViewCell.swift */; };
 		A3AEEB602975286C00004722 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB5F2975286C00004722 /* RxCocoa */; };
@@ -303,7 +302,6 @@
 		3BFF623229CAF9E4003B2E4A /* CertifiedOrganizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertifiedOrganizationViewModel.swift; sourceTree = "<group>"; };
 		A30BA46C298415B8008B594E /* SearchPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageViewModel.swift; sourceTree = "<group>"; };
 		A30BA46F29841C97008B594E /* SearchPageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageService.swift; sourceTree = "<group>"; };
-		A3342B9B2A43CAA1002C85A7 /* TokenUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenUIButton.swift; sourceTree = "<group>"; };
 		A35F1FAF29DECEFB00A4ABD0 /* FAQTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQTableViewCell.swift; sourceTree = "<group>"; };
 		A37AA6F929D35522002812F6 /* TierTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierTableViewCell.swift; sourceTree = "<group>"; };
 		A3E9514E2A42C2B300E8E67F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -753,7 +751,6 @@
 		A3342B9A2A439B32002C85A7 /* CustomUIView */ = {
 			isa = PBXGroup;
 			children = (
-				A3342B9B2A43CAA1002C85A7 /* TokenUIButton.swift */,
 				3B2E0DDF2A43EF2700E6A7AD /* ContributorAutoUIView.swift */,
 				3B2E0DE12A43F12100E6A7AD /* ContributorAutoCollectionViewCell.swift */,
 				3B2E0DE32A43F6C200E6A7AD /* OrganiRankInMyRank.swift */,
@@ -1027,7 +1024,6 @@
 				3BE649FC2A3DC23C005D9F9E /* OrganizationDetailController.swift in Sources */,
 				3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */,
 				3BE64A142A3E2A53005D9F9E /* TabBarViewController.swift in Sources */,
-				A3342B9C2A43CAA1002C85A7 /* TokenUIButton.swift in Sources */,
 				3B3D2E0B29D5CC50001A702C /* OraganizationTypeTableViewAndCell.swift in Sources */,
 				3BE649E62A3D7553005D9F9E /* CustomETCRankingUserViewElementView.swift in Sources */,
 				3B54FF592A42EAD0004B21B1 /* Contributor'sInfoUIView.swift in Sources */,
