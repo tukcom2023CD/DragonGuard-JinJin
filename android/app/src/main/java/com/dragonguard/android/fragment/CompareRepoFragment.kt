@@ -118,6 +118,8 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
                 count++
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({repoContributors()}, 2000)
+            } else {
+
             }
         }
     }
