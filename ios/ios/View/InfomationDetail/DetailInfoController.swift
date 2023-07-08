@@ -142,8 +142,16 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
     
     func numberOfSections(in tableView: UITableView) -> Int { return 2 }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .white
         let header = ["Organization", "Repository"]
-        return header[section]
+        let label = UILabel(frame: CGRect(x: 15, y: 5, width: tableView.bounds.size.width, height: 20))
+        label.text = header[section]
+        label.textColor = .gray
+        headerView.addSubview(label)
+
+        return headerView
     }
+
 }
