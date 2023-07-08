@@ -33,8 +33,7 @@ final class CustomUIView: UIView{
     // MARK: 레포 제목
     private lazy var repoLabel: UILabel = {
         let label = UILabel()
-        label.sizeToFit()
-        label.text = "aa"
+        label.adjustsFontSizeToFitWidth = true
         label.backgroundColor = .clear
         label.textColor = .black
         return label
