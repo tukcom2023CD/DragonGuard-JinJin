@@ -35,14 +35,6 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ranking.TotalOrgRankingActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ranking.OrganizationRankingsActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.menu.AuthEmailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -80,31 +72,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ranking.TotalUsersRankingActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ranking.TypeOrgRankingActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ranking.MyOrganizationListActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ranking.MyRepoRankingActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ranking.TotalRepoRankingActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.menu.MenuActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ranking.RankingsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
