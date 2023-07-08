@@ -143,6 +143,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
+                    android:layout_marginStart="5dp"
                     android:background="@drawable/round_pink"
                     android:fontFamily="@font/ibm_semibold"
                     android:text="조직 없음"

@@ -102,9 +102,6 @@ class UniversityFragment(private val token: String): Fragment() {
     }
 
     private fun initOrgRecycler() {
-        binding.firstProfile.clipToOutline = true
-        binding.secondProfile.clipToOutline = true
-        binding.thirdProfile.clipToOutline = true
         Log.d("결과", "$type 조직들 : $totalOrgRankings")
         if(page == 0) {
             when( totalOrgRankings.size) {
