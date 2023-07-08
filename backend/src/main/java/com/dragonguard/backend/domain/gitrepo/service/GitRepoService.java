@@ -4,6 +4,8 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoSparkLineResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributionMap;
+import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoLanguageMap;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.ClosedIssueKafkaResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.SparkLineKafka;
@@ -12,8 +14,6 @@ import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.*;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributionMap;
-import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoLanguageMap;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
@@ -318,7 +318,11 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
         return requestToGithub(new GitRepoInfoRequest(githubToken, gitRepo.getName(), LocalDate.now().getYear()), gitRepo);
     }
 
-    @Cacheable(value = "twoGitRepos", key = "{#request.firstRepo, #request.secondRepo}", cacheManager = "cacheManager", unless = "#result.firstRepo.getProfileUrls().?[#this == null].size() > 0 || #result.secondRepo.getProfileUrls().?[#this == null].size() > 0")
+    @Cacheable(value = "twoGitRepos", key = "{#request.firstRepo, #request.secondRepo}", cacheManager = "cacheManager",
+            unless = "#result.firstRepo.getProfileUrls().?[#this == null].size() > 0 " +
+                    "|| #result.secondRepo.getProfileUrls().?[#this == null].size() > 0" +
+                    "|| #result.firstRepo.statistics.additionStats.max == 0" +
+                    "|| #result.secondRepo.statistics.additionStats.max == 0")
     public TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request) {
         String githubToken = authService.getLoginUser().getGithubToken();
         String firstRepo = request.getFirstRepo();
