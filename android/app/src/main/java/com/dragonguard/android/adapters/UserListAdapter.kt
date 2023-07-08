@@ -35,8 +35,7 @@ class UserListAdapter(private val users: ArrayList<GitRepoMember>, private val u
                         users[position].github_id?.let{
                             userFragment.user1 = it
                         }
-                        if(userFragment.user1 != "null" && userFragment.user2 != "null" && userFragment.user1.isNotBlank() && userFragment.user2.isNotBlank()
-                            && userFragment.user1 != userFragment.user2) {
+                        if(userFragment.user1 != "null" && userFragment.user2 != "null" && userFragment.user1.isNotBlank() && userFragment.user2.isNotBlank()) {
                             userFragment.initGraph()
                         }
                     }
@@ -45,8 +44,7 @@ class UserListAdapter(private val users: ArrayList<GitRepoMember>, private val u
                             .into(fragmentBinding.user2Profile)
                         fragmentBinding.user2GithubId.text = users[position].github_id
                         userFragment.user2 = users[position].github_id.toString()
-                        if(userFragment.user1 != "null" && userFragment.user2 != "null" && userFragment.user1.isNotBlank() && userFragment.user2.isNotBlank()
-                            && userFragment.user1 != userFragment.user2) {
+                        if(userFragment.user1 != "null" && userFragment.user2 != "null" && userFragment.user1.isNotBlank() && userFragment.user2.isNotBlank()) {
                             userFragment.initGraph()
                         }
                     }

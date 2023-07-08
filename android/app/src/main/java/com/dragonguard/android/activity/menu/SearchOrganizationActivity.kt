@@ -51,12 +51,16 @@ class SearchOrganizationActivity : AppCompatActivity() {
                     binding.orgGroup.check(R.id.org_type0)
                     type = "UNIVERSITY"
                 }
-                "회사" -> {
+                "고등학교" -> {
                     binding.orgGroup.check(R.id.org_type1)
+                    type = "HIGH_SCHOOL"
+                }
+                "회사" -> {
+                    binding.orgGroup.check(R.id.org_type2)
                     type = "COMPANY"
                 }
                 "etc" -> {
-                    binding.orgGroup.check(R.id.org_type2)
+                    binding.orgGroup.check(R.id.org_type3)
                     type = "ETC"
                 }
 
@@ -67,7 +71,7 @@ class SearchOrganizationActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
         supportActionBar?.title = "   조직 검색 및 인증"
 
         binding.orgGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -75,10 +79,13 @@ class SearchOrganizationActivity : AppCompatActivity() {
                 R.id.org_type0 -> {
                     type = "UNIVERSITY"
                 }
-                R.id.org_type1 -> {
-                    type = "COMPANY"
+                R.id.org_type0 -> {
+                    type = "HIGH_SCHOOL"
                 }
                 R.id.org_type2 -> {
+                    type = "COMPANY"
+                }
+                R.id.org_type3 -> {
                     type = "ETC"
                 }
 

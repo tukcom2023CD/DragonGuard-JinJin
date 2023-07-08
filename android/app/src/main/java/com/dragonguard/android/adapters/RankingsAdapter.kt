@@ -18,6 +18,7 @@ class RankingsAdapter(private val rankings: List<*>): RecyclerView.Adapter<Ranki
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(data1: Any?){
+            binding.eachProfile.clipToOutline = true
             when(data1) {
                 is TotalUsersRankingsModel -> {
                     binding.eachRanking.text = data1.ranking.toString()
@@ -27,22 +28,22 @@ class RankingsAdapter(private val rankings: List<*>): RecyclerView.Adapter<Ranki
                     binding.rankingContribute.text = data1.tokens.toString()
                     when(data1.tier) {
                         "BRONZE" -> {
-                            binding.rankingItem.setBackgroundResource(R.drawable.shadow_bronze)
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_bronze)
                         }
                         "SILVER" -> {
-                            binding.rankingItem.setBackgroundResource(R.drawable.shadow_silver)
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_silver)
                         }
                         "GOLD" -> {
-                            binding.rankingItem.setBackgroundResource(R.drawable.shadow_gold)
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_gold)
                         }
                         "PLATINUM" -> {
-                            binding.rankingItem.setBackgroundResource(R.drawable.shadow_platinum)
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_platinum)
                         }
                         "DIAMOND" -> {
-                            binding.rankingItem.setBackgroundResource(R.drawable.shadow_diamond)
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_diamond)
                         }
                         else -> {
-                            binding.rankingItem.setBackgroundResource(R.drawable.shadow)
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow)
                         }
                     }
                     binding.rankingItem.setOnClickListener {

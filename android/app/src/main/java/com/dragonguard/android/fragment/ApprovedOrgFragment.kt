@@ -48,8 +48,9 @@ class ApprovedOrgFragment(private val token: String) : Fragment() {
 
     private fun requestList() {
         val coroutine = CoroutineScope(Dispatchers.Main)
+        Log.d("요청", "승인된 요청")
         coroutine.launch {
-            if (!this@ApprovedOrgFragment.isRemoving && count < 5) {
+            if (!this@ApprovedOrgFragment.isRemoving && count < 3) {
                 val resultDeferred = coroutine.async(Dispatchers.IO) {
                     viewmodel.statusOrgList(RequestStatus.ACCEPTED.status, page, token)
                 }
@@ -78,6 +79,7 @@ class ApprovedOrgFragment(private val token: String) : Fragment() {
             adapter.notifyDataSetChanged()
             binding.acceptedOrgList.visibility = View.VISIBLE
         }
+        Log.d("list", "결과 : $orgList")
         page++
         binding.acceptedOrgList.adapter?.notifyDataSetChanged()
         initScrollListener()

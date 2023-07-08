@@ -94,11 +94,21 @@ class MainActivity : AppCompatActivity() {
             if(!this@MainActivity.isFinishing) {
                 loginOut = logout
                 if (loginOut) {
+                    binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(1).itemId
                     prefs.setWalletAddress("")
                     loginOut = true
                     prefs.setJwtToken("")
                     prefs.setRefreshToken("")
                     prefs.setPostAddress(false)
+                    val transaction = supportFragmentManager.beginTransaction()
+                    supportFragmentManager.fragments.forEach {
+                        transaction.remove(it)
+                    }
+                    transaction.commit()
+                    mainFrag = null
+                    compareFrag = null
+                    profileFrag = null
+                    rankingFrag = null
                     val intent = Intent(applicationContext, LoginActivity::class.java)
                     intent.putExtra("wallet_address", prefs.getWalletAddress(""))
                     intent.putExtra("token", prefs.getJwtToken(""))
@@ -118,7 +128,7 @@ class MainActivity : AppCompatActivity() {
 
         prefs = IdPreference(applicationContext)
         this.onBackPressedDispatcher.addCallback(this, callback)
-        binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(2).itemId
+        binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(1).itemId
         if (loginOut) {
             prefs.setWalletAddress("")
         }
@@ -182,9 +192,9 @@ class MainActivity : AppCompatActivity() {
                             .commit()
                     }
                 }
-                R.id.bottom_questions -> {
+//                R.id.bottom_questions -> {
 //                    logOut()
-                }
+//                }
             }
             true
         }
@@ -310,23 +320,13 @@ class MainActivity : AppCompatActivity() {
     }
     private fun refreshMain() {
         if(realCount >= 1) {
-            if(mainFrag != null) {
-                Log.d("added", "added: $added    refreshMain")
-                if(!added) {
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.add(binding.contentFrame.id, mainFrag!!)
-                        .commit()
-                    added = true
-                } else {
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(binding.contentFrame.id, mainFrag!!)
-                        .commit()
-                    added = true
-                }
-                return
-            }
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(binding.contentFrame.id, mainFrag!!)
+                .commit()
+            added = true
+            return
         }
-        if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(2).itemId && state ) {
+        if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(1).itemId && state ) {
             Log.d("added", "added: $added    refreshMain")
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(binding.contentFrame.id, mainFrag!!)
@@ -393,6 +393,8 @@ class MainActivity : AppCompatActivity() {
             realModel.id = userInfo.id
             realModel.auth_step = userInfo.auth_step
             realModel.member_github_ids = userInfo.member_github_ids
+            realModel.is_last = userInfo.is_last
+            realModel.name = userInfo.name
 
             Log.d("token", "token: $token")
             Log.d("userInfo", "realModel:$realModel")
@@ -402,6 +404,7 @@ class MainActivity : AppCompatActivity() {
                 binding.mainLoading.pauseAnimation()
                 binding.mainLoading.visibility = View.GONE
                 binding.mainNav.visibility = View.VISIBLE
+                Log.d("메인", "메인화면 초기화")
                 refreshMain()
 //                if(realModel.tier != "SPROUT") {
 //                    finish = true
@@ -502,6 +505,10 @@ class MainActivity : AppCompatActivity() {
                 finishAffinity()
             }
         }
+    }
+
+    fun getNavSize(): Int {
+        return binding.mainNav.height
     }
 
 }

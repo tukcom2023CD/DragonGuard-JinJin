@@ -61,11 +61,11 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
     //activity 구성 이후 화면을 초기화하는 함수
     private fun updateUI() {
         binding.user1Frame.setOnClickListener {
-            val bottomSheetFragment = UserSheetfragment(this, allContiributors, 1, binding)
+            val bottomSheetFragment = UserSheetfragment(this, contributors1, contributors2,1, repo1, repo2, binding)
             bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
         }
         binding.user2Frame.setOnClickListener {
-            val bottomSheetFragment = UserSheetfragment(this, allContiributors, 2, binding)
+            val bottomSheetFragment = UserSheetfragment(this, contributors1, contributors2,2, repo1, repo2, binding)
             bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
         }
         binding.user1Profile.clipToOutline = true
@@ -147,12 +147,12 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
         binding.userCompareLottie.visibility = View.VISIBLE
 //        Toast.makeText(requireContext(), "initGraph()", Toast.LENGTH_SHORT).show()
         var user1Cont = contributors1.find { it.github_id == user1 }
-        var user2Cont = contributors1.find { it.github_id == user2 }
+        var user2Cont = contributors2.find { it.github_id == user2 }
         if(user1Cont == null) {
             user1Cont = contributors2.find { it.github_id == user1 }
         }
         if(user2Cont == null) {
-            user2Cont = contributors2.find { it.github_id == user2 }
+            user2Cont = contributors1.find { it.github_id == user2 }
         }
         user1Cont!!
         user2Cont!!

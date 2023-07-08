@@ -33,11 +33,11 @@ class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgM
             binding.requestOrgName.text = data1.name
             binding.requestOrgType.text = data1.type
             binding.approveOrgBtn.setOnClickListener {
-                decideApproval(data1, RequestStatus.ACCEPTED, current)
+                approveApproval(data1, RequestStatus.ACCEPTED, current)
                 notifyDataSetChanged()
             }
             binding.rejectOrgBtn.setOnClickListener {
-                decideApproval(data1, RequestStatus.DENIED, current)
+                rejectApproval(data1, RequestStatus.DENIED, current)
                 notifyDataSetChanged()
             }
         }
@@ -53,7 +53,7 @@ class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgM
         return position
     }
 
-    private fun decideApproval(data1: ApproveRequestOrgModelItem, status: RequestStatus, currentPosition: Int) {
+    private fun approveApproval(data1: ApproveRequestOrgModelItem, status: RequestStatus, currentPosition: Int) {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             if (count < 5) {
@@ -64,6 +64,21 @@ class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgM
                 datas.removeAt(currentPosition)
                 notifyItemRemoved(currentPosition)
                 viewmodel.onApproveOrgListener.value = true
+                count = 0
+            }
+        }
+    }
+    private fun rejectApproval(data1: ApproveRequestOrgModelItem, status: RequestStatus, currentPosition: Int) {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            if (count < 5) {
+                val resultDeferred = coroutine.async(Dispatchers.IO) {
+                    viewmodel.approveOrgRequest(data1.id, status.status, token)
+                }
+                val result = resultDeferred.await()
+                datas.removeAt(currentPosition)
+                notifyItemRemoved(currentPosition)
+                viewmodel.onRejectOrgListener.value = true
                 count = 0
             }
         }

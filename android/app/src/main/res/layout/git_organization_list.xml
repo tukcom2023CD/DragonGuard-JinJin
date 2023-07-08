@@ -23,14 +23,15 @@
             android:id="@+id/git_organization_profile"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:lines="1"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
             android:textAppearance="@style/textAppearance"
             android:autoSizeTextType="uniform"
             android:autoSizeMaxTextSize="20sp"
-            android:autoSizeMinTextSize="17sp"
+            android:autoSizeMinTextSize="18sp"
+            android:maxLines="2"
             android:gravity="start|center_vertical"
+            android:layout_gravity="center_vertical"
             android:id="@+id/git_organization_name"/>
 
     </LinearLayout>

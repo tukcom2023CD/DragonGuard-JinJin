@@ -3,24 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="5dp">
 
     <LinearLayout
         android:id="@+id/ct_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10sp"
-        android:background="@drawable/round_title"
+        android:background="#D9E9FD"
         android:orientation="horizontal"
-        android:padding="5sp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/faq_dropdown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_baseline_arrow_drop_down_24" />
 
         <TextView
             android:id="@+id/faq_title"
@@ -28,7 +21,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/ibm_semibold"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,22 +32,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="3sp"
+        android:gravity="top"
         android:orientation="vertical"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/ct_parent"
-        tools:visibility="visible">
+        app:layout_constraintTop_toBottomOf="@+id/ct_parent">
 
         <TextView
             android:id="@+id/faq_answer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10sp"
-            android:background="@drawable/round_pink"
             android:fontFamily="@font/ibm_semibold"
-            android:textColor="@color/black"
             android:paddingHorizontal="5sp"
-            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textSize="17sp"
             app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginHorizontal="10sp"
+            android:background="#F2F4F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="10dp"
+            android:layout_marginBottom="5dp"/>
 
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

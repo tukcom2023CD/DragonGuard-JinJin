@@ -32,6 +32,7 @@ class RegistOrgActivity : AppCompatActivity() {
         val arr1 : MutableList<String> = mutableListOf("선택하세요")
         arr1.apply {
             add("대학교")
+            add("고등학교")
             add("회사")
             add("etc")
         }
@@ -44,7 +45,7 @@ class RegistOrgActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
         supportActionBar?.title = "   조직 등록"
 
         binding.regitstOrgBtn.setOnClickListener {
@@ -56,6 +57,9 @@ class RegistOrgActivity : AppCompatActivity() {
                     }
                     "회사" -> {
                         orgType = "COMPANY"
+                    }
+                    "고등학교" -> {
+                        orgType = "HIGH_SCHOOL"
                     }
                     "etc" -> {
                         orgType = "ETC"
