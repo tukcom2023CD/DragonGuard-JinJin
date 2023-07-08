@@ -72,7 +72,7 @@ final class AllUserRankingController: UIViewController{
         let table = UITableView()
         table.isScrollEnabled = false
         table.separatorStyle = .none
-        table.backgroundColor = .white
+        table.backgroundColor = .clear
         return table
     }()
     
@@ -171,8 +171,8 @@ final class AllUserRankingController: UIViewController{
             make.bottom.equalTo(contentView.snp.bottom)
             let height = view.safeAreaLayoutGuide.layoutFrame.height/6
             
-            if Int(height)*(userTierData.count-1)+10 > 0{
-                make.height.equalTo(Int(height)*(userTierData.count-1)+10)
+            if Int(height)*(userTierData.count)+10 > 0{
+                make.height.equalTo(Int(height)*(userTierData.count)+10)
             }
         }
         
@@ -380,7 +380,7 @@ extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: AllUserTableviewCell.identifier, for: indexPath) as? AllUserTableviewCell else { return UITableViewCell()}
-        cell.backgroundColor = .white
+        cell.backgroundColor = .clear
         cell.inputData(rank: indexPath.row + 4, userData: userTierData[indexPath.row])
         return cell
     }
