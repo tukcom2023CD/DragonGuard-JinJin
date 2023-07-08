@@ -42,7 +42,6 @@ class FaqActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
         supportActionBar?.title = "  자주 묻는 질문들!!"
         binding.faqLists.adapter = FaqAdapter(faqList)
-        binding.faqLists.addItemDecoration(VerticalItemDecorator(20))
         binding.faqLists.addItemDecoration(HorizontalItemDecorator(10))
         binding.faqLists.layoutManager = LinearLayoutManager(this)
 

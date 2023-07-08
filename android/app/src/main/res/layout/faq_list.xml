@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginStart="5dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="5dp">
 
     <LinearLayout
         android:id="@+id/ct_parent"
@@ -32,9 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="3sp"
+        android:gravity="top"
         android:orientation="vertical"
         android:visibility="gone"
-        android:gravity="top"
         app:layout_constraintTop_toBottomOf="@+id/ct_parent">
 
         <TextView
@@ -43,15 +43,19 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10sp"
             android:fontFamily="@font/ibm_semibold"
-            android:textColor="@color/black"
             android:paddingHorizontal="5sp"
+            android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintTop_toTopOf="parent" />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_marginHorizontal="10sp"
-            android:background="#F2F4F6"/>
+            android:background="#F2F4F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="10dp" />
+
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
