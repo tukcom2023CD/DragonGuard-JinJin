@@ -78,11 +78,7 @@ public class AuthService {
 
     public UUID getLoginUserId() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserPrinciple) {
-            return UUID.fromString(((UserPrinciple) principal)
-                    .getName());
-        }
-        return null;
+        return UUID.fromString(((UserPrinciple) principal).getName());
     }
 
     public Member getLoginUser() {
