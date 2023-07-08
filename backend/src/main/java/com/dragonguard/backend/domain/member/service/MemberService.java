@@ -44,7 +44,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private final KafkaProducer<KafkaContributionRequest> kafkaContributionClientProducer;
 
     public Tier getTier() {
-        Member member = getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
         member.updateTier();
         return member.getTier();
     }
@@ -66,12 +66,12 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public void updateContributions() {
-        Member member = getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
         sendGitRepoAndContributionRequestToKafka(member.getGithubId());
     }
 
     public MemberResponse getMember() {
-        Member member = getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
         return getMemberResponseWithValidateOrganization(member);
     }
 
@@ -99,7 +99,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public void updateWalletAddress(final WalletRequest walletRequest) {
-        Member member = getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
         member.updateWalletAddress(walletRequest.getWalletAddress());
     }
 
@@ -122,12 +122,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public Member getLoginUserWithPersistence() {
-        return loadEntity(authService.getLoginUserId());
-    }
-
     public MemberGitReposAndGitOrganizationsResponse findMemberDetails() {
-        Member member = getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
         String githubId = member.getGithubId();
         sendRepositoryRequestToKafka(githubId);
 
@@ -135,7 +131,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public void updateBlockchain() {
-        transactionAndUpdateTier(getLoginUserWithPersistence());
+        transactionAndUpdateTier(authService.getLoginUser());
     }
 
     private void transactionAndUpdateTier(final Member member) {
@@ -166,10 +162,10 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberGitOrganizationRepoResponse getMemberGitOrganizationRepo(final String gitOrganizationName) {
-        sendRepositoryRequestToKafka(getLoginUserWithPersistence().getGithubId());
+        sendRepositoryRequestToKafka(authService.getLoginUser().getGithubId());
         return new MemberGitOrganizationRepoResponse(
                 gitOrganizationService.findByName(gitOrganizationName).getProfileImage(),
-                memberClientService.requestGitOrganizationResponse(getLoginUserWithPersistence().getGithubToken(), gitOrganizationName));
+                memberClientService.requestGitOrganizationResponse(authService.getLoginUser().getGithubToken(), gitOrganizationName));
     }
 
     public MemberDetailsResponse getMemberDetails(final String githubId) {
@@ -184,7 +180,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberResponse updateContributionsAndGetProfile() {
-        Member member = getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
 
         memberClientService.addMemberGitRepoAndGitOrganization(member);
 

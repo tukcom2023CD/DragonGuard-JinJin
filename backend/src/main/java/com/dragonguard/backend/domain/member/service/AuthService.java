@@ -4,6 +4,7 @@ import com.dragonguard.backend.config.security.jwt.JwtToken;
 import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
 import com.dragonguard.backend.config.security.jwt.JwtValidator;
 import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
@@ -82,5 +83,10 @@ public class AuthService {
                     .getName());
         }
         return null;
+    }
+
+    public Member getLoginUser() {
+        return memberRepository.findById(getLoginUserId())
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

@@ -25,5 +25,6 @@ public abstract class LoginTest {
         Member member = MemberFixture.OHKSJ77.toEntity();
         loginUser = memberRepository.save(member);
         when(authService.getLoginUserId()).thenReturn(loginUser.getId());
+        when(authService.getLoginUser()).thenReturn(loginUser);
     }
 }

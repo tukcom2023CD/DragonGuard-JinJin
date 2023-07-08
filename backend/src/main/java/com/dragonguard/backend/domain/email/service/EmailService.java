@@ -8,7 +8,7 @@ import com.dragonguard.backend.domain.email.exception.EmailException;
 import com.dragonguard.backend.domain.email.mapper.EmailMapper;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
@@ -33,7 +33,7 @@ import java.util.Random;
 public class EmailService implements EntityLoader<Email, Long> {
     private final EmailRepository emailRepository;
     private final JavaMailSender javaMailSender;
-    private final MemberService memberService;
+    private final AuthService authService;
     private final EmailMapper emailMapper;
     private final KafkaProducer<KafkaEmail> kafkaEmailProducer;
     private static final String EMAIL_SUBJECT = "GitRank 조직 인증";
@@ -41,7 +41,7 @@ public class EmailService implements EntityLoader<Email, Long> {
     private static final int MAX = 99999;
 
     public IdResponse<Long> sendAndSaveEmail() {
-        Member member = memberService.getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
         String memberEmail = member.getEmailAddress();
 
         validateMemberEmail(memberEmail);
@@ -67,7 +67,7 @@ public class EmailService implements EntityLoader<Email, Long> {
         if (!loadEntity(id).getCode().equals(emailRequest.getCode())) return new CheckCodeResponse(false);
         deleteCode(id);
 
-        memberService.getLoginUserWithPersistence().finishAuth();
+        authService.getLoginUser().finishAuth();
         return new CheckCodeResponse(true);
     }
 

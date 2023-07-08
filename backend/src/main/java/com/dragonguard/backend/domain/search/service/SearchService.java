@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.search.service;
 
-import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.domain.result.dto.response.GitRepoResultResponse;
 import com.dragonguard.backend.domain.result.dto.response.UserResultResponse;
 import com.dragonguard.backend.domain.result.entity.Result;
@@ -40,7 +40,7 @@ public class SearchService implements EntityLoader<Search, Long> {
     private final SearchMapper searchMapper;
     private final ResultMapper resultMapper;
     private final ResultRepository resultRepository;
-    private final MemberService memberService;
+    private final AuthService authService;
     private final GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     private final GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
 
@@ -61,7 +61,7 @@ public class SearchService implements EntityLoader<Search, Long> {
     private Search getSearch(SearchRequest searchRequest) {
         Search search = findOrSaveSearch(searchRequest);
         deleteAllLastResults(search);
-        searchRequest.setGithubToken(memberService.getLoginUserWithPersistence().getGithubToken());
+        searchRequest.setGithubToken(authService.getLoginUser().getGithubToken());
         return search;
     }
 

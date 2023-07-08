@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.organization.service;
 
 import com.dragonguard.backend.domain.email.service.EmailService;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
@@ -10,16 +10,14 @@ import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.mapper.OrganizationMapper;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
-import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +31,7 @@ import java.util.stream.Collectors;
 public class OrganizationService implements EntityLoader<Organization, Long> {
     private final OrganizationRepository organizationRepository;
     private final OrganizationMapper organizationMapper;
-    private final MemberService memberService;
+    private final AuthService authService;
     private final EmailService emailService;
 
     public IdResponse<Long> saveOrganization(final OrganizationRequest organizationRequest) {
@@ -59,7 +57,7 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
 
     private void findAndAddMember(final AddMemberRequest addMemberRequest) {
         Organization organization = loadEntity(addMemberRequest.getOrganizationId());
-        Member member = memberService.getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
         organization.addMember(member, addMemberRequest.getEmail().strip());
     }
 
