@@ -25,7 +25,7 @@ class RankingFragment(private val token: String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.fragmentContent.adapter = FragmentAdapter(this, token = token)
-        val tabs = arrayOf("전체", "회사", "대학교", "고등학교", "ETC")
+        val tabs = arrayOf("사용자 전체", "조직 전체" ,"회사", "대학교", "고등학교", "ETC")
         TabLayoutMediator(binding.rankingTab, binding.fragmentContent) { tab, position ->
             tab.text = tabs[position]
         }.attach()

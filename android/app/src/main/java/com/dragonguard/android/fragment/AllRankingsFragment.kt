@@ -46,7 +46,7 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
         super.onViewCreated(view, savedInstanceState)
         Log.d("type", "랭킹 type: $rankingType")
         when(rankingType) {
-            "전체" -> {
+            "사용자 전체" -> {
                 getTotalUsersRanking(page, size)
             }
         }
