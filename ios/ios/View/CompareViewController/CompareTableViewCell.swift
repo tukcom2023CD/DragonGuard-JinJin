@@ -32,7 +32,8 @@ final class CompareTableViewCell: UITableViewCell{
     // MARK: repo1 infomation
     private lazy var titleInfo: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
+    
         label.adjustsFontSizeToFitWidth = true
         label.backgroundColor = .clear
         label.textColor = .black

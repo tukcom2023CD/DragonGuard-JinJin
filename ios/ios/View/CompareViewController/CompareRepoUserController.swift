@@ -271,7 +271,7 @@ final class CompareRepoUserController: UIViewController{
             make.top.equalTo(leftView.snp.top).offset(10)
             make.leading.equalTo(leftView.snp.trailing)
             make.width.equalTo(2)
-            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*3/5)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*2/3)
         }
         
         rightView.snp.makeConstraints { make in

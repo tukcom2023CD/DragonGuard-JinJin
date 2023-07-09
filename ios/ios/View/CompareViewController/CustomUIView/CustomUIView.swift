@@ -34,6 +34,8 @@ final class CustomUIView: UIView{
     private lazy var repoLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
+        label.numberOfLines = 2
         label.backgroundColor = .clear
         label.textColor = .black
         return label
@@ -55,11 +57,13 @@ final class CustomUIView: UIView{
         contributorView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
+//            make.height.equalTo(120)
             make.top.equalToSuperview()
         }
         
         repoLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(contributorView.snp.centerX)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
             make.top.equalTo(contributorView.snp.bottom).offset(10)
         }
         
