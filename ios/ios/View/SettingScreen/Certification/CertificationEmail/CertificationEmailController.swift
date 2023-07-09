@@ -144,7 +144,8 @@ final class CertificationEmailController: UIViewController{
         /// 인증번호 5자리가 넘은 경우
         if certificatedNumber > 10000{
             CertifiedOrganizationViewModel.viewModel.checkValidNumber(id: self.emailId ?? 0,
-                                                                      code: certificatedNumber)
+                                                                      code: certificatedNumber,
+                                                                      organization_id: self.organizationId ?? 0)
             .subscribe { valid in
                 if valid{
                     self.timer?.invalidate()
@@ -263,21 +264,3 @@ final class CertificationEmailController: UIViewController{
     }
     
 }
-
-
-import SwiftUI
-
-
-struct VCPreViewCertificationEmailController1:PreviewProvider {
-    static var previews: some View {
-        CertificationEmailController().toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewCertificationEmailController:PreviewProvider {
-    static var previews: some View {
-        CertificationEmailController().toPreview().previewDevice("iPad (10th generation)")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-

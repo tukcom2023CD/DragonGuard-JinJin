@@ -175,9 +175,8 @@ final class AllUserRankingController: UIViewController{
             make.top.equalTo(topView.snp.bottom).offset(5)
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
-//            make.bottom.equalTo(contentView.snp.bottom)
             let height = view.safeAreaLayoutGuide.layoutFrame.height/6
-            print("height \(height)")
+            
             if Int(height)*(userTierData.count)+10 > 0{
                 make.height.equalTo(Int(height)*(userTierData.count)+10)
             }
@@ -226,7 +225,7 @@ final class AllUserRankingController: UIViewController{
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
             let height = view.safeAreaLayoutGuide.layoutFrame.height/6
-            print("heigh111t \(height)")
+            
             if Int(height)*(userTierTypeOfRankingData.count)+10 > 0{
                 make.height.equalTo(Int(height)*(userTierTypeOfRankingData.count)+10)
             }

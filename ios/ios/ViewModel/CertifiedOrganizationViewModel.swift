@@ -69,10 +69,10 @@ final class CertifiedOrganizationViewModel{
     ///   - id: 조직 아디이
     ///   - code: 이메일 인증 번호
     /// - Returns: True, False
-    func checkValidNumber(id: Int, code: Int) -> Observable<Bool>{
+    func checkValidNumber(id: Int, code: Int, organization_id: Int) -> Observable<Bool>{
         
         return Observable.create { observer in
-            self.emailService.checkValidNumber(id: id, code: code)
+            self.emailService.checkValidNumber(id: id, code: code, organization_id: organization_id)
                 .subscribe { checkValid in
                     print("checkValidNumber \(checkValid)")
                     observer.onNext(checkValid)
@@ -102,22 +102,22 @@ final class CertifiedOrganizationViewModel{
         }
     }
     
-    // MARK: 인증번호 검증
-    /// - Parameters:
-    ///   - id: 이메일 Id
-    ///   - code: 인증 번호
-    /// - Returns: 인증번호가 유효한지, 유효한 경우 true / 유효하지 않는 경우 false
-    func checkCertificatedNumber(id: Int, code: Int) -> Observable<Bool> {
-        return Observable.create { observer in
-            self.emailService.checkValidNumber(id: id, code: code)
-                .subscribe { valid in
-                    observer.onNext(valid)
-                }
-                .disposed(by: self.disposeBag)
-            
-            return Disposables.create()
-        }
-    }
+//    // MARK: 인증번호 검증
+//    /// - Parameters:
+//    ///   - id: 이메일 Id
+//    ///   - code: 인증 번호
+//    /// - Returns: 인증번호가 유효한지, 유효한 경우 true / 유효하지 않는 경우 false
+//    func checkCertificatedNumber(id: Int, code: Int, organization_id: Int) -> Observable<Bool> {
+//        return Observable.create { observer in
+//            self.emailService.checkValidNumber(id: id, code: code, organization_id: organization_id)
+//                .subscribe { valid in
+//                    observer.onNext(valid)
+//                }
+//                .disposed(by: self.disposeBag)
+//
+//            return Disposables.create()
+//        }
+//    }
     
     // MARK: 이메일 형식 확인하는 함수
     /// - Parameter userEmail: 유저가 입력한 이메일

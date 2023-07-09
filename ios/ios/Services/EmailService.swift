@@ -14,15 +14,16 @@ final class EmailService{
             
     // MARK: 이메일 인증번호 유효한지 확인하는 함수
     /// - Parameters:
-    ///   - id: 조직 아이디
+    ///   - id: 이메일 아이디
     ///   - code: 인증 번호
     /// - Returns: true, false
-    func checkValidNumber(id: Int, code: Int) -> Observable<Bool>{
+    func checkValidNumber(id: Int, code: Int, organization_id: Int) -> Observable<Bool>{
         let url = APIURL.apiUrl.checkEmailValidCode(ip: APIURL.ip,
                                                     id: id,
-                                                    code: code)
+                                                    code: code,
+                                                    organization_id: organization_id)
         let access = UserDefaults.standard.string(forKey: "Access")
-
+        print(url)
         
         return Observable.create { observer in
             

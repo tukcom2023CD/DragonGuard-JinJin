@@ -158,8 +158,8 @@ final class APIURL{
     }
     
     // MARK: 유효한 인증 번호인지 확인
-    func checkEmailValidCode(ip: String, id: Int, code: Int) -> String{
-        let url = "http://\(ip)/api/email/check?id=\(id)&code=\(code)"
+    func checkEmailValidCode(ip: String, id: Int, code: Int, organization_id: Int) -> String{
+        let url = "http://\(ip)/api/email/check?id=\(id)&code=\(code)&organizationId=\(organization_id)"
         return url
     }
     
