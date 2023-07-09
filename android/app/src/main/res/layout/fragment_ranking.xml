@@ -15,22 +15,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/ranking_tab"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:scrollbars="none">
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/ranking_tab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shadow_rect"
-                app:tabTextAppearance="@style/tabTexts"
-                app:tabIconTint="@drawable/menu_selector"
-                app:tabIndicatorColor="@android:color/transparent"
-                app:tabSelectedTextColor="@color/black" />
-        </HorizontalScrollView>
+            android:background="@drawable/shadow_rect"
+            app:tabGravity="start"
+            app:tabMode="scrollable"
+            app:tabIconTint="@drawable/menu_selector"
+            app:tabIndicatorColor="@android:color/transparent"
+            app:tabSelectedTextColor="@color/black" />
 
 
         <androidx.viewpager2.widget.ViewPager2

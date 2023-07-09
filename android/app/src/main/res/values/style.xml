@@ -24,11 +24,10 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="tabTexts" parent="Theme.Material3.Light.NoActionBar">
-        <item name="android:textColor">@color/black</item>
+    <style name="tabTexts" parent="TextAppearance.Design.Tab">
         <item name="android:fontFamily">@font/ibm_semibold</item>
-        <item name="android:singleLine">true</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">15sp</item>
     </style>
 </resources>
