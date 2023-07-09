@@ -124,7 +124,7 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                     usersRanking.removeFirst()
                     usersRanking.removeFirst()
                     if(this@AllRankingsFragment.isAdded && !this@AllRankingsFragment.isDetached && this@AllRankingsFragment.isVisible && !this@AllRankingsFragment.isRemoving) {
-                        rankingsAdapter = RankingsAdapter(usersRanking)
+                        rankingsAdapter = RankingsAdapter(usersRanking, requireActivity(), token)
                         binding.eachRankings.adapter = rankingsAdapter
                         binding.eachRankings.layoutManager = LinearLayoutManager(requireContext())
 //            totalUserRankingAdapter.notifyDataSetChanged()

@@ -1,15 +1,20 @@
 package com.dragonguard.android.adapters
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.basic.MainActivity
+import com.dragonguard.android.activity.compare.CompareSearchActivity
+import com.dragonguard.android.activity.profile.UserProfileActivity
 import com.dragonguard.android.databinding.RankingListBinding
 import com.dragonguard.android.model.rankings.*
 
-class RankingsAdapter(private val rankings: List<*>): RecyclerView.Adapter<RankingsAdapter.ViewHolder>()  {
+class RankingsAdapter(private val rankings: List<*>, private val context: Context, private val token: String): RecyclerView.Adapter<RankingsAdapter.ViewHolder>()  {
     private lateinit var binding: RankingListBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RankingsAdapter.ViewHolder {
         binding = RankingListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -47,7 +52,11 @@ class RankingsAdapter(private val rankings: List<*>): RecyclerView.Adapter<Ranki
                         }
                     }
                     binding.rankingItem.setOnClickListener {
-
+                        val mContext = context as MainActivity
+                        val intent = Intent(context, UserProfileActivity::class.java)
+                        intent.putExtra("userName", data1.github_id)
+                        intent.putExtra("token", token)
+                        context.startActivity(intent)
                     }
                 }
                 is OrgInternalRankingsModel -> {

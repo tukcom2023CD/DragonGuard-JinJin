@@ -123,7 +123,7 @@ class TotalOrganizationFragment(private val token: String) : Fragment() {
                     totalOrgRankings.removeFirst()
                     totalOrgRankings.removeFirst()
 
-                    rankingsAdapter = RankingsAdapter(totalOrgRankings)
+                    rankingsAdapter = RankingsAdapter(totalOrgRankings, requireActivity(), token)
                     binding.eachRankings.adapter = rankingsAdapter
                     binding.eachRankings.layoutManager = LinearLayoutManager(requireContext())
 //            totalUserRankingAdapter.notifyDataSetChanged()
