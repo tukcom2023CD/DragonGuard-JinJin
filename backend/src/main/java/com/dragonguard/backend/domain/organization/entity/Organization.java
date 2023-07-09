@@ -37,6 +37,7 @@ public class Organization implements Auditable {
     @Column(nullable = false)
     private String emailEndpoint;
 
+    @Where(clause = "auth_step = 'ALL'")
     @OneToMany(mappedBy = "organization")
     private Set<Member> members = new HashSet<>();
 

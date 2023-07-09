@@ -59,6 +59,7 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
         Organization organization = loadEntity(addMemberRequest.getOrganizationId());
         Member member = authService.getLoginUser();
         organization.addMember(member, addMemberRequest.getEmail().strip());
+        member.undoFinishingAuth();
     }
 
     @Transactional(readOnly = true)
