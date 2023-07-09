@@ -101,7 +101,7 @@ extension AcceptedOraganicationController: UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         // 팝업창 띄움
-        let sheet = UIAlertController(title: "승인", message: "\(self.requestList[indexPath.section].name ?? "")을 승인하시겠습니까?", preferredStyle: .alert)
+        let sheet = UIAlertController(title: "취소", message: "\(self.requestList[indexPath.section].name ?? "")을 취소하시겠습니까?", preferredStyle: .alert)
         // 팝업창 확인 버튼
         let success = UIAlertAction(title: "확인", style: .default){ action in
             AdminViewModel.admin.updateOrganizationList(id: self.requestList[indexPath.section].id ?? 0,
