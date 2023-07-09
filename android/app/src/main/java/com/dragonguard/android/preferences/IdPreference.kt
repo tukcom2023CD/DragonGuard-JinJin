@@ -46,4 +46,11 @@ class IdPreference (context: Context) {
         return prefs.getBoolean("post", defValue)!!
     }
 
+    fun setRepeat(value: Boolean) {
+        prefs.edit().putBoolean("repeat", value).apply()
+    }
+
+    fun getRepeat(defValue: Boolean):Boolean {
+        return prefs.getBoolean("repeat", defValue)!!
+    }
 }

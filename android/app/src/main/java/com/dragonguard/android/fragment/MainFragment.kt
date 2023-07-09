@@ -23,6 +23,7 @@ import com.dragonguard.android.activity.search.SearchActivity
 import com.dragonguard.android.databinding.FragmentMainBinding
 import com.dragonguard.android.model.UserInfoModel
 import com.dragonguard.android.adapters.UserActivityAdapter
+import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,9 @@ import kotlinx.coroutines.launch
 
 
 class MainFragment(private val token: String, private var info: UserInfoModel) : Fragment() {
+    companion object {
+        lateinit var prefs: IdPreference
+    }
     private lateinit var binding: FragmentMainBinding
     private var viewmodel = Viewmodel()
     private var repeat = false
@@ -57,6 +61,7 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 //        binding.toolbar.inflateMenu(R.menu.refresh)
+        prefs = IdPreference(requireContext())
         binding.githubProfile.clipToOutline = true
         binding.tokenFrame.setOnClickListener {
             val intent = Intent(requireActivity(), TokenHistoryActivity::class.java)
@@ -66,7 +71,9 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
 
         drawInfo()
         CoroutineScope(Dispatchers.IO).launch{
-            if(!repeat && this@MainFragment.isAdded && !this@MainFragment.isDetached && this@MainFragment.isVisible && !this@MainFragment.isRemoving) {
+            if(!repeat && this@MainFragment.isAdded && !this@MainFragment.isDetached && this@MainFragment.isVisible && !this@MainFragment.isRemoving
+                && !prefs.getRepeat(false)) {
+                prefs.setRepeat(true)
                 while(true){
                     Thread.sleep(3000)
                     handler.sendEmptyMessage(0)
@@ -233,6 +240,10 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
 //        }
 //        return super.onOptionsItemSelected(item)
 //    }
+    override fun onDestroy() {
+        prefs.setRepeat(false)
+        super.onDestroy()
+    }
 
     private fun setPage(){
         binding.userUtil.setCurrentItem((binding.userUtil.currentItem+1)%4,false)

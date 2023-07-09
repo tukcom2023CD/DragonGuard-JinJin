@@ -335,10 +335,11 @@ class ApiRepository {
         }
     }
 
-    fun emailAuthResult(id: Long, code: String, token: String): Boolean {
+    fun emailAuthResult(id: Long, code: String, orgId: Long, token: String): Boolean {
         val queryMap = mutableMapOf<String, String>()
         queryMap.put("id", id.toString())
         queryMap.put("code", code)
+        queryMap.put("organizationId", orgId.toString())
         val emailAuth = api.getEmailAuthResult(queryMap, "Bearer $token")
         return try {
             val result = emailAuth.execute()

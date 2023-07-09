@@ -154,8 +154,8 @@ class Viewmodel: ViewModel() {
         return repository.sendEmailAuth(token)
     }
 
-    fun emailAuthResult(id: Long, code: String, token: String): Boolean {
-        return repository.emailAuthResult(id, code, token)
+    fun emailAuthResult(id: Long, code: String, orgId: Long, token: String): Boolean {
+        return repository.emailAuthResult(id, code, orgId, token)
     }
 
     fun deleteLateEmailCode(id: Long, token: String): Boolean {

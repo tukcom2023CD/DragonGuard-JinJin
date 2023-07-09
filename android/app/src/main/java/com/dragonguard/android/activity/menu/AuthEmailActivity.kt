@@ -90,7 +90,7 @@ class AuthEmailActivity : AppCompatActivity() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             val resultDeferred = coroutine.async(Dispatchers.IO) {
-                viewmodel.emailAuthResult(emailAuthId, binding.emailCode.text.toString(), token)
+                viewmodel.emailAuthResult(emailAuthId, binding.emailCode.text.toString(), orgId ,token)
             }
             val result = resultDeferred.await()
             if(result) {
