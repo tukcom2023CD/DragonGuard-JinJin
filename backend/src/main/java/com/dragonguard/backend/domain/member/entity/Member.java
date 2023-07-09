@@ -195,6 +195,9 @@ public class Member implements Auditable {
     }
 
     public void updateOrganization(Organization organization, String emailAddress) {
+        if (this.organization != null) {
+            this.organization.getMembers().remove(this);
+        }
         this.organization = organization;
         this.emailAddress = emailAddress;
     }
@@ -318,5 +321,9 @@ public class Member implements Auditable {
 
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public void deleteOrganization() {
+        this.organization = null;
     }
 }
