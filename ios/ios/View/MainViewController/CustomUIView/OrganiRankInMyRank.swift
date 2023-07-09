@@ -123,21 +123,38 @@ final class OrganiRankInMyRank: UIView {
     
     func inputData(rank1: Int?, top: String?, rank2: Int?, me: String?, rank3: Int?, under: String?){
         addUI()
+        var check1 = false
+        var check2 = false
+        var check3 = false
         
         if let rank1 = rank1, let top = top{
             groupLabel1.text = "\(rank1)"
             gNumLabel1.text = top
+            check1 = true
         }
         
         if let rank2 = rank2, let me = me{
             groupLabel2.text = "\(rank2)"
             gNumLabel2.text = me
+            check2 = true
         }
         
         if let rank3 = rank3, let under = under{
             groupLabel3.text = "\(rank3)"
             gNumLabel3.text = under
+            check3 = true
         }
+        
+        if !check1 && !check2 && !check3{
+            groupLabel1.text = ""
+            gNumLabel1.text = ""
+            groupLabel2.text = ""
+            gNumLabel2.text = ""
+            groupLabel3.text = ""
+            gNumLabel3.text = ""
+        }
+        
+        
     }
 
 }

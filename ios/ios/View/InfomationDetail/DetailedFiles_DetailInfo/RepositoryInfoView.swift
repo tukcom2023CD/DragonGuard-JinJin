@@ -30,7 +30,9 @@ final class RepositoryInfoView: UIView{
     // MARK: Repository 제목
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
+//        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
         label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         label.backgroundColor = .clear
         label.textColor = .black
         return label
@@ -48,7 +50,9 @@ final class RepositoryInfoView: UIView{
     // MARK: 유저 이름 Reposiotry만 할당
     private lazy var userNameLabel: UILabel = {
         let label = UILabel()
+//        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
         label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         label.backgroundColor = .clear
         label.textColor = .black
         return label

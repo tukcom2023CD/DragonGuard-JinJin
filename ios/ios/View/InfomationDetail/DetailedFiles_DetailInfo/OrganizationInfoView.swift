@@ -30,7 +30,9 @@ final class OrganizationInfoView: UIView{
     // MARK: Organization or Repository 제목
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
+//        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
         label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         label.backgroundColor = .clear
         label.textColor = .black
         return label

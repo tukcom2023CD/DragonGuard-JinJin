@@ -125,7 +125,7 @@ final class AddOrganizationController: UIViewController{
         let field = UITextField()
         field.textColor = .black
         field.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
-        field.attributedPlaceholder =  NSAttributedString(string: "이메일을 입력하세요",
+        field.attributedPlaceholder =  NSAttributedString(string: "@ 뒤부터 적어주세요",
                                                               attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         return field
     }()

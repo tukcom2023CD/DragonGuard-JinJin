@@ -128,7 +128,7 @@ final class TokenStandards : UIViewController {
     private lazy var tierTableView: UITableView = {
        let tier = UITableView()
         tier.backgroundColor = .white
-        tier.isScrollEnabled = false
+        tier.isScrollEnabled = true
         return tier
     }()
     
