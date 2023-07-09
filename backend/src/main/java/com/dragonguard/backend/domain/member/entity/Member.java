@@ -77,6 +77,7 @@ public class Member implements Auditable {
     private List<GitRepoMember> gitRepoMembers = new ArrayList<>();
 
     @JoinColumn
+    @Where(clause = "organization_status = 'ACCEPTED'")
     @ManyToOne(fetch = FetchType.LAZY)
     private Organization organization;
 
