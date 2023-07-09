@@ -463,7 +463,13 @@ extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return userTierData.count
+        if tableView == typeTableView{
+            return userTierTypeOfRankingData.count
+        }
+        else{
+            return userTierData.count
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

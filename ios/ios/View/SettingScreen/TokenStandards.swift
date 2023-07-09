@@ -10,14 +10,13 @@ import UIKit
 import RxSwift
 
 final class TokenStandards : UIViewController {
-    private let tierArray = ["Bronze", "Silver", "Gold", "Diamond"]
-    private let imageArray = [UIImage(named: "bronze"), UIImage(named: "silver"), UIImage(named: "gold"), UIImage(named: "diamond")]
+    private let tierArray = ["Bronze", "Silver", "Gold", "Platinum", "Diamond"]
+    private let imageArray = [UIImage(named: "bronze"), UIImage(named: "silver"), UIImage(named: "gold"), UIImage(named: "platinum"), UIImage(named: "diamond")]
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.navigationItem.title = "토큰 부여 기준"
         
         addUIToView()
     }
