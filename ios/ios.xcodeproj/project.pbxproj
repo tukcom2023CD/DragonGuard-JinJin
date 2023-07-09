@@ -29,6 +29,7 @@
 		3B1DB8812963428B00308F43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DB8802963428B00308F43 /* Assets.xcassets */; };
 		3B1DB8842963428B00308F43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DB8822963428B00308F43 /* LaunchScreen.storyboard */; };
 		3B29804529AC85A800967B6E /* CompareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B29804429AC85A800967B6E /* CompareViewModel.swift */; };
+		3B2C1B2C2A5AE4610037899C /* TypeRankingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2C1B2B2A5AE4610037899C /* TypeRankingTableViewCell.swift */; };
 		3B2E0DBD2A43743900E6A7AD /* CompareChooseRepoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DBC2A43743900E6A7AD /* CompareChooseRepoViewController.swift */; };
 		3B2E0DBF2A43745100E6A7AD /* CompareCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DBE2A43745100E6A7AD /* CompareCollectionViewCell.swift */; };
 		3B2E0DC12A43746A00E6A7AD /* CompareRepoUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DC02A43746A00E6A7AD /* CompareRepoUserController.swift */; };
@@ -194,6 +195,7 @@
 		3B1DB8832963428B00308F43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3B1DB8852963428B00308F43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B29804429AC85A800967B6E /* CompareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareViewModel.swift; sourceTree = "<group>"; };
+		3B2C1B2B2A5AE4610037899C /* TypeRankingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeRankingTableViewCell.swift; sourceTree = "<group>"; };
 		3B2E0DBC2A43743900E6A7AD /* CompareChooseRepoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareChooseRepoViewController.swift; sourceTree = "<group>"; };
 		3B2E0DBE2A43745100E6A7AD /* CompareCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareCollectionViewCell.swift; sourceTree = "<group>"; };
 		3B2E0DC02A43746A00E6A7AD /* CompareRepoUserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoUserController.swift; sourceTree = "<group>"; };
@@ -620,6 +622,7 @@
 			isa = PBXGroup;
 			children = (
 				3BE649DA2A3CBC9E005D9F9E /* AllUserTableviewCell.swift */,
+				3B2C1B2B2A5AE4610037899C /* TypeRankingTableViewCell.swift */,
 				3BE649DD2A3CBD40005D9F9E /* CustomUserView.swift */,
 			);
 			path = CustomUnderRanking;
@@ -1030,6 +1033,7 @@
 				3B2E0DE42A43F6C200E6A7AD /* OrganiRankInMyRank.swift in Sources */,
 				3BE649DE2A3CBD40005D9F9E /* CustomUserView.swift in Sources */,
 				3B3D2E0929D5C0B8001A702C /* OrganizationCertificationController.swift in Sources */,
+				3B2C1B2C2A5AE4610037899C /* TypeRankingTableViewCell.swift in Sources */,
 				3B9597A229D98193008E9335 /* CertificationEmailController.swift in Sources */,
 				3BE649D62A3CB7EE005D9F9E /* AllUserRankingController.swift in Sources */,
 				3B00229D2987998B003FA5CC /* SettingController.swift in Sources */,

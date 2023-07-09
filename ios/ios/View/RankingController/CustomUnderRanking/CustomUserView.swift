@@ -96,4 +96,23 @@ final class CustomUserView: UIView{
         numLabel.text = "\(data.tokens ?? 0)"
     }
     
+    func inputData(data: TypeRankingModel){
+        addUI_SetAutoLayout()
+        
+        switch data.organization_type{
+        case "COMPANY":
+            userImage.image = UIImage(named: "comapny")?.resize(newWidth: 60)
+        case "UNIVERSITY":
+            userImage.image = UIImage(named: "university")?.resize(newWidth: 60)
+        case "HIGH_SCHOOL":
+            userImage.image = UIImage(named: "highschool")?.resize(newWidth: 60)
+        case "ETC":
+            userImage.image = UIImage(named: "etc")?.resize(newWidth: 60)
+        default:
+            print("wrong error!\n")
+        }
+        nameLabel.text = data.name
+        numLabel.text = "\(data.token_sum ?? 0)"
+    }
+    
 }

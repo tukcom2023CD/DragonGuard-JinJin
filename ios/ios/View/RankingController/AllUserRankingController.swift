@@ -24,9 +24,7 @@ final class AllUserRankingController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-//        addUIIndicator()
         collectionViewAdd()
-        
     }
     
     /*
@@ -75,6 +73,16 @@ final class AllUserRankingController: UIViewController{
         table.backgroundColor = .white
         return table
     }()
+    
+    // MARK: 4등 부터 나타낼 tableview
+    private lazy var typeTableView: UITableView = {
+        let table = UITableView()
+        table.isScrollEnabled = false
+        table.separatorStyle = .none
+        table.backgroundColor = .white
+        return table
+    }()
+    
     
     // MARK: 로딩 UI
     private lazy var indicatorView: LottieAnimationView = {
@@ -163,20 +171,69 @@ final class AllUserRankingController: UIViewController{
             make.trailing.equalTo(contentView.snp.trailing)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/3)
         }
-        
         tableView.snp.makeConstraints { make in
             make.top.equalTo(topView.snp.bottom).offset(5)
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
-            make.bottom.equalTo(contentView.snp.bottom)
+//            make.bottom.equalTo(contentView.snp.bottom)
             let height = view.safeAreaLayoutGuide.layoutFrame.height/6
-            
+            print("height \(height)")
             if Int(height)*(userTierData.count)+10 > 0{
                 make.height.equalTo(Int(height)*(userTierData.count)+10)
             }
         }
-        
     }
+    
+    // MARK: 로딩 후 뷰 생성
+    private func addUI_AutoLayout_About_Type(){
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(topView)
+        contentView.addSubview(typeTableView)
+        
+        typeTableView.delegate = self
+        typeTableView.dataSource = self
+        typeTableView.register(TypeRankingTableViewCell.self, forCellReuseIdentifier: TypeRankingTableViewCell.identifier)
+        setAutoLayout_Type()
+    }
+    
+    // MARK: AutoLayout After loading
+    private func setAutoLayout_Type(){
+ 
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(selectionCollectionView.snp.bottom)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.top.equalTo(scrollView.snp.top)
+            make.leading.equalTo(scrollView.snp.leading)
+            make.trailing.equalTo(scrollView.snp.trailing)
+            make.bottom.equalTo(scrollView.snp.bottom)
+            make.width.equalTo(scrollView.snp.width)
+        }
+        
+        topView.snp.makeConstraints { make in
+            make.top.equalTo(contentView.snp.top)
+            make.leading.equalTo(contentView.snp.leading)
+            make.trailing.equalTo(contentView.snp.trailing)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/3)
+        }
+        
+        typeTableView.snp.makeConstraints { make in
+            make.top.equalTo(topView.snp.bottom).offset(5)
+            make.leading.equalTo(contentView.snp.leading)
+            make.trailing.equalTo(contentView.snp.trailing)
+            let height = view.safeAreaLayoutGuide.layoutFrame.height/6
+            print("heigh111t \(height)")
+            if Int(height)*(userTierTypeOfRankingData.count)+10 > 0{
+                make.height.equalTo(Int(height)*(userTierTypeOfRankingData.count)+10)
+            }
+        }
+    }
+    
+    
     
     /*
      Get Data
@@ -185,6 +242,11 @@ final class AllUserRankingController: UIViewController{
     // MARK: 전체 사용자 랭킹 데이터 가져옴
     private func loadAllRankingData(){
         scrollView.removeFromSuperview()
+        tableView.removeFromSuperview()
+        typeTableView.removeFromSuperview()
+        self.userTierData = []
+        self.topTierData = []
+        
         rankingViewModel.getAllRanking(check: true)
             .subscribe(onNext:{ list in
                 if list.count > 3{
@@ -205,7 +267,6 @@ final class AllUserRankingController: UIViewController{
                 
                 self.addUI_AutoLayout_About_Ranking()
                 self.topView.getData(list: self.topTierData)
-                self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
         
@@ -214,7 +275,9 @@ final class AllUserRankingController: UIViewController{
     // MARK: 전체 조직 랭킹 데이터 가져옴
     private func loadAllOrganizationData(){
         scrollView.removeFromSuperview()
-
+        tableView.removeFromSuperview()
+        typeTableView.removeFromSuperview()
+        
         rankingViewModel.allRankingOfType(check: true)
             .subscribe(onNext:{ list in
                 self.topTierTypeOfRankingData = []
@@ -236,9 +299,8 @@ final class AllUserRankingController: UIViewController{
                     }
                 }
                 
-                self.addUI_AutoLayout_About_Ranking()
+                self.addUI_AutoLayout_About_Type()
                 self.topView.getData(typeList: self.topTierTypeOfRankingData)
-                self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
     }
@@ -247,6 +309,8 @@ final class AllUserRankingController: UIViewController{
     private func loadCompanyData(){
         
         scrollView.removeFromSuperview()
+        tableView.removeFromSuperview()
+        typeTableView.removeFromSuperview()
         
         rankingViewModel.rankingOfType(type: "COMPANY", check: true)
             .subscribe(onNext:{ list in
@@ -269,9 +333,8 @@ final class AllUserRankingController: UIViewController{
                     }
                 }
                 
-                self.addUI_AutoLayout_About_Ranking()
+                self.addUI_AutoLayout_About_Type()
                 self.topView.getData(typeList: self.topTierTypeOfRankingData)
-                self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
     }
@@ -279,6 +342,8 @@ final class AllUserRankingController: UIViewController{
     // MARK: 대학교 데이터 가져옴
     private func loadUniversityData(){
         scrollView.removeFromSuperview()
+        tableView.removeFromSuperview()
+        typeTableView.removeFromSuperview()
         
         rankingViewModel.rankingOfType(type: "UNIVERSITY", check: true)
             .subscribe(onNext:{ list in
@@ -302,9 +367,9 @@ final class AllUserRankingController: UIViewController{
                     }
                 }
                 
-                self.addUI_AutoLayout_About_Ranking()
+                self.addUI_AutoLayout_About_Type()
                 self.topView.getData(typeList: self.topTierTypeOfRankingData)
-                self.tableView.reloadData()
+                
             })
             .disposed(by: disposeBag)
     }
@@ -312,6 +377,8 @@ final class AllUserRankingController: UIViewController{
     // MARK: 고등학교 데이터 가져옴
     private func loadHighSchoolData(){
         scrollView.removeFromSuperview()
+        tableView.removeFromSuperview()
+        typeTableView.removeFromSuperview()
         
         rankingViewModel.rankingOfType(type: "HIGH_SCHOOL", check: true)
             .subscribe(onNext:{ list in
@@ -333,9 +400,9 @@ final class AllUserRankingController: UIViewController{
                     }
                 }
                 
-                self.addUI_AutoLayout_About_Ranking()
+                self.addUI_AutoLayout_About_Type()
                 self.topView.getData(typeList: self.topTierTypeOfRankingData)
-                self.tableView.reloadData()
+                
             })
             .disposed(by: disposeBag)
     }
@@ -343,6 +410,8 @@ final class AllUserRankingController: UIViewController{
     // MARK: ETC 데이터 가져옴
     private func loadETCData(){
         scrollView.removeFromSuperview()
+        tableView.removeFromSuperview()
+        typeTableView.removeFromSuperview()
         
         rankingViewModel.rankingOfType(type: "ETC", check: true)
             .subscribe(onNext:{ list in
@@ -366,9 +435,9 @@ final class AllUserRankingController: UIViewController{
                     }
                 }
                 
-                self.addUI_AutoLayout_About_Ranking()
+                self.addUI_AutoLayout_About_Type()
                 self.topView.getData(typeList: self.topTierTypeOfRankingData)
-                self.tableView.reloadData()
+
             })
             .disposed(by: disposeBag)
     }
@@ -379,10 +448,18 @@ final class AllUserRankingController: UIViewController{
 extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: AllUserTableviewCell.identifier, for: indexPath) as? AllUserTableviewCell else { return UITableViewCell()}
-        cell.backgroundColor = .white
-        cell.inputData(rank: indexPath.row + 4, userData: userTierData[indexPath.row])
-        return cell
+        if tableView == typeTableView{
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TypeRankingTableViewCell.identifier, for: indexPath) as? TypeRankingTableViewCell else { return UITableViewCell()}
+            cell.backgroundColor = .white
+            cell.inputData(rank: indexPath.row + 4, data: userTierTypeOfRankingData[indexPath.row])
+            return cell
+        }
+        else{
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: AllUserTableviewCell.identifier, for: indexPath) as? AllUserTableviewCell else { return UITableViewCell()}
+            cell.backgroundColor = .white
+            cell.inputData(rank: indexPath.row + 4, userData: userTierData[indexPath.row])
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
