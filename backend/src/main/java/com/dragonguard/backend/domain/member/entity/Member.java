@@ -320,7 +320,7 @@ public class Member implements Auditable {
         this.profileImage = profileImage;
     }
 
-    public void undoAuthStepAll() {
+    public void undoFinishingAuth() {
         this.authStep = AuthStep.GITHUB_AND_KLIP;
     }
 }

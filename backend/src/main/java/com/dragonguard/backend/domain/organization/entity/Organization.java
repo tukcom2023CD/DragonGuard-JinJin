@@ -73,8 +73,8 @@ public class Organization implements Auditable {
             this.members.forEach(Member::finishAuth);
             return;
         }
-        this.organizationStatus = OrganizationStatus.DENIED;
-        this.members.forEach(Member::undoAuthStepAll);
+        this.members.forEach(Member::undoFinishingAuth);
+        delete();
     }
 
     private boolean validateEmailEndpoint(String emailEndpoint) {
