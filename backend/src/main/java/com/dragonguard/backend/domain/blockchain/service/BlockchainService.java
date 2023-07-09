@@ -75,7 +75,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         return getBlockchainResponses(memberId);
     }
 
-    private List<BlockchainResponse> getBlockchainResponses(UUID memberId) {
+    private List<BlockchainResponse> getBlockchainResponses(final UUID memberId) {
         return blockchainMapper.toBlockchainResponseList(blockchainRepository.findByMemberId(memberId));
     }
 
@@ -153,7 +153,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         return contribution - blockchain.getSumOfAmount();
     }
 
-    public Blockchain getBlockchainOfType(Member member, ContributeType contributeType) {
+    public Blockchain getBlockchainOfType(final Member member, final ContributeType contributeType) {
         if (!blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
             blockchainRepository.save(blockchainMapper.toEntity(member, contributeType));
         }
@@ -161,7 +161,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private void sendRequestToKafka(UUID memberId, Long amount, ContributeType contributeType) {
+    private void sendRequestToKafka(final UUID memberId, final Long amount, final ContributeType contributeType) {
         blockchainKafkaProducer.send(new BlockchainKafkaRequest(memberId, amount, contributeType));
     }
 }

@@ -85,7 +85,7 @@ public class EmailService implements EntityLoader<Email, Long> {
         kafkaEmailProducer.send(new KafkaEmail(memberEmail, randomCode));
     }
 
-    public void sendEmail(String memberEmail, final int random) {
+    public void sendEmail(final String memberEmail, final int random) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");

@@ -205,7 +205,7 @@ public class GitRepoService implements EntityLoader<GitRepo, Long> {
                 getContributionList(gitRepoMembers, gitRepoMember -> gitRepoMember.getGitRepoContribution().getDeletions()));
     }
 
-    private boolean isContributionEmpty(Set<GitRepoMember> gitRepoMembers) {
+    private boolean isContributionEmpty(final Set<GitRepoMember> gitRepoMembers) {
         return gitRepoMembers.stream().anyMatch(grm -> grm.getGitRepoContribution() == null
                 || grm.getGitRepoContribution().getCommits() == null);
     }

@@ -134,7 +134,7 @@ public class MemberClientService {
                 .collect(Collectors.toSet());
     }
 
-    public List<String> requestGitOrganizationResponse(String githubToken, String gitOrganizationName) {
+    public List<String> requestGitOrganizationResponse(final String githubToken, final String gitOrganizationName) {
         OrganizationRepoResponse[] clientResponse = memberOrganizationRepoClient.requestToGithub(new MemberClientRequest(gitOrganizationName, githubToken, LocalDate.now().getYear()));
 
         return Arrays.stream(clientResponse)

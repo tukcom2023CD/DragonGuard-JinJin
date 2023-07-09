@@ -28,7 +28,7 @@ public class SmartContractService {
     private static final String SET_METHOD = "set";
     private static final String BALANCE_OF_METHOD = "balanceOf";
 
-    public String transfer(long contribution, ContributeType contributeType, String walletAddress) {
+    public String transfer(final long contribution, final ContributeType contributeType, final String walletAddress) {
         try {
             return contract.send(sendOptions, SET_METHOD, walletAddress, BigInteger.valueOf(contribution), contributeType).getTransactionHash();
         } catch (Exception e) {
@@ -37,7 +37,7 @@ public class SmartContractService {
         }
     }
 
-    public BigInteger balanceOf(String address) {
+    public BigInteger balanceOf(final String address) {
         try {
             List<Type> info = contract.call(BALANCE_OF_METHOD, address);
 
@@ -48,7 +48,7 @@ public class SmartContractService {
         }
     }
 
-    private String objectToString(Object value) throws JsonProcessingException {
+    private String objectToString(final Object value) throws JsonProcessingException {
         ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
         return ow.writeValueAsString(value);
     }

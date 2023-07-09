@@ -45,20 +45,20 @@ public class SearchService implements EntityLoader<Search, Long> {
     private final GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
 
     @Cacheable(value = "userResults", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
-    public List<UserResultResponse> getUserSearchResultByClient(String name, Integer page, List<String> filters) {
+    public List<UserResultResponse> getUserSearchResultByClient(final String name, final Integer page, final List<String> filters) {
         SearchRequest searchRequest = new SearchRequest(name, SearchType.USERS, page, filters);
         Search search = getSearch(searchRequest);
         return searchUser(searchRequest, search);
     }
 
     @Cacheable(value = "repoResults", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
-    public List<GitRepoResultResponse> getGitRepoSearchResultByClient(String name, Integer page, List<String> filters) {
+    public List<GitRepoResultResponse> getGitRepoSearchResultByClient(final String name, final Integer page, final List<String> filters) {
         SearchRequest searchRequest = new SearchRequest(name, SearchType.REPOSITORIES, page, filters);
         Search search = getSearch(searchRequest);
         return searchRepo(searchRequest, search);
     }
 
-    private Search getSearch(SearchRequest searchRequest) {
+    private Search getSearch(final SearchRequest searchRequest) {
         Search search = findOrSaveSearch(searchRequest);
         deleteAllLastResults(search);
         searchRequest.setGithubToken(authService.getLoginUser().getGithubToken());
@@ -101,15 +101,15 @@ public class SearchService implements EntityLoader<Search, Long> {
         });
     }
 
-    private Search getSameSearch(List<Search> searches, List<String> filters) {
+    private Search getSameSearch(final List<Search> searches, final List<String> filters) {
         return searches.stream().filter(search -> isContainsSameFilters(filters, search)).findFirst().orElse(null);
     }
 
-    public boolean isContainsSameFilters(List<String> filters, Search search) {
+    public boolean isContainsSameFilters(final List<String> filters, final Search search) {
         return new HashSet<>(search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList())).containsAll(filters);
     }
 
-    private Search findOrGetSearchWithSearchAttributes(SearchRequest searchRequest) {
+    private Search findOrGetSearchWithSearchAttributes(final SearchRequest searchRequest) {
         return searchRepository
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
                 .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
@@ -119,7 +119,7 @@ public class SearchService implements EntityLoader<Search, Long> {
                 });
     }
 
-    private boolean isValidSearchRequest(SearchRequest searchRequest) {
+    private boolean isValidSearchRequest(final SearchRequest searchRequest) {
         return searchRequest.getFilters() == null || searchRequest.getFilters().isEmpty();
     }
 
