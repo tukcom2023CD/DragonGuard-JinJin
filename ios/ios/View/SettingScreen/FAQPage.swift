@@ -37,15 +37,13 @@ class FAQPage: UIViewController {
                                   sectionData: "감사하지만 마음만 받을게요!"),
                          CellData(opened: false,
                                   title: "Q. 기여도 부여의 기준이되는 기간이 궁금해요!",
-                                  sectionData: "개인 기여도와 토큰 부여는 가입한 년도의 1월1일을 기준으로 그 이후 기여도부터 체크해요! \n레포지토리의 상세조회/비교의 경우 깃허브의 Repotisory > Insights > Contributors 의 기간을 따릅니다!")]
+                                  sectionData: "개인 기여도와 토큰 부여는 가입한 년도의 \n1월1일을 기준으로 그 이후 기여도부터 체크해요! \n레포지토리의 상세조회/비교의 경우 깃허브의 \nRepotisory > Insights > Contributors 의 \n기간을 따릅니다!")]
     
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.navigationItem.title = "FAQ"
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         addUIToView()
     }
     

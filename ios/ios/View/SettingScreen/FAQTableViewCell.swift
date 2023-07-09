@@ -15,7 +15,8 @@ final class FAQTableViewCell: UITableViewCell{
        let label = UILabel()
         label.textColor = .black
         label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 15)
-        label.numberOfLines = 3
+        label.numberOfLines = 5
+        
         self.addSubview(label)
         label.snp.makeConstraints { make in
             make.centerY.equalTo(self.snp.centerY)
