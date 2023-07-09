@@ -321,6 +321,7 @@ public class Member implements Auditable {
     }
 
     public void undoFinishingAuth() {
+        this.organization = null;
         this.authStep = AuthStep.GITHUB_AND_KLIP;
     }
 }
