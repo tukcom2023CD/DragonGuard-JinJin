@@ -95,26 +95,26 @@ final class ContributorUIView: UIView{
     }
     
     // MARK: input Data
-    func inputData(imgList: [String]){
+    func inputData(imgList: [String?]){
         addUI()
         
         if imgList.count == 1{
-            imgView1.load(img: imgView1, url: URL(string: imgList[0])!, width: 30, height: 30)
+            imgView1.load(img: imgView1, url: URL(string: imgList[0] ?? "")!, width: 30, height: 30)
         }
         else if imgList.count == 2{
-            imgView1.load(img: imgView1, url: URL(string: imgList[0])!, width: 30, height: 30)
-            imgView2.load(img: imgView2, url: URL(string: imgList[1])!, width: 30, height: 30)
+            imgView1.load(img: imgView1, url: URL(string: imgList[0] ?? "")!, width: 30, height: 30)
+            imgView2.load(img: imgView2, url: URL(string: imgList[1] ?? "")!, width: 30, height: 30)
         }
         else if imgList.count == 3{
-            imgView1.load(img: imgView1, url: URL(string: imgList[0])!, width: 30, height: 30)
-            imgView2.load(img: imgView2, url: URL(string: imgList[1])!, width: 30, height: 30)
-            imgView3.load(img: imgView3, url: URL(string: imgList[2])!, width: 30, height: 30)
+            imgView1.load(img: imgView1, url: URL(string: imgList[0] ?? "")!, width: 30, height: 30)
+            imgView2.load(img: imgView2, url: URL(string: imgList[1] ?? "")!, width: 30, height: 30)
+            imgView3.load(img: imgView3, url: URL(string: imgList[2] ?? "")!, width: 30, height: 30)
         }
         else if imgList.count >= 4{
-            imgView1.load(img: imgView1, url: URL(string: imgList[0])!, width: 30, height: 30)
-            imgView2.load(img: imgView2, url: URL(string: imgList[1])!, width: 30, height: 30)
-            imgView3.load(img: imgView3, url: URL(string: imgList[2])!, width: 30, height: 30)
-            imgView4.load(img: imgView4, url: URL(string: imgList[3])!, width: 30, height: 30)
+            imgView1.load(img: imgView1, url: URL(string: imgList[0] ?? "")!, width: 30, height: 30)
+            imgView2.load(img: imgView2, url: URL(string: imgList[1] ?? "")!, width: 30, height: 30)
+            imgView3.load(img: imgView3, url: URL(string: imgList[2] ?? "")!, width: 30, height: 30)
+            imgView4.load(img: imgView4, url: URL(string: imgList[3] ?? "")!, width: 30, height: 30)
         }
         
         

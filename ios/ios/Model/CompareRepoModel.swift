@@ -17,7 +17,7 @@ struct FirstRepo: Codable{
     var statistics: Statistics
     var languages: Languages
     var languages_stats: StatisticsStats
-    var profile_urls: [String]
+    var profile_urls: [String?]
 }
 
 struct SecondRepo: Codable{
@@ -25,7 +25,7 @@ struct SecondRepo: Codable{
     var statistics: Statistics
     var languages: Languages
     var languages_stats: StatisticsStats
-    var profile_urls: [String]
+    var profile_urls: [String?]
 }
 
 struct GitRepo: Codable{

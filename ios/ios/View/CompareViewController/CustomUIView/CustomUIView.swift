@@ -71,7 +71,7 @@ final class CustomUIView: UIView{
     }
     
     // MARK: Repo1 차트 설정
-    func inputData(repo1: [Int], values: [String]?, repoName: String, imgList: [String]){
+    func inputData(repo1: [Int], values: [String]?, repoName: String, imgList: [String?]){
         addUI()
         let repo1 = repo1.map{ Double($0)}
         
@@ -80,7 +80,7 @@ final class CustomUIView: UIView{
         contributorView.inputData(imgList: imgList)
     }
     
-    func sendingImgData(imgList: [String]){
+    func sendingImgData(imgList: [String?]){
         contributorView.inputData(imgList: imgList)
     }
     

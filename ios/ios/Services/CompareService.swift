@@ -71,8 +71,9 @@ final class CompareService{
                            encoding: JSONEncoding.default,
                            headers: ["Content-type": "application/json",
                                      "Authorization": "Bearer \(access ?? "")"])
-                .validate(statusCode: 200..<201)
+                .validate(statusCode: 200..<205)
                 .responseDecodable(of: CompareRepoModel.self) { res in
+                    print(res)
                     switch res.result{
                     case .success(let data):
                         if !data.first_repo.profile_urls.isEmpty && !data.second_repo.profile_urls.isEmpty{
