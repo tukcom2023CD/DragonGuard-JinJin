@@ -35,19 +35,16 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
     private final EmailService emailService;
 
     public IdResponse<Long> saveOrganization(final OrganizationRequest organizationRequest) {
-        Organization organization = getOrSaveOrganization(organizationRequest);
-        return new IdResponse<>(organization.getId());
+        Long id = getOrSaveOrganization(organizationRequest);
+        return new IdResponse<>(id);
     }
 
-    private Organization getOrSaveOrganization(final OrganizationRequest organizationRequest) {
+    private Long getOrSaveOrganization(final OrganizationRequest organizationRequest) {
         return organizationRepository.findByNameAndOrganizationTypeAndEmailEndpoint(
                         organizationRequest.getName(),
                         organizationRequest.getOrganizationType(),
                         organizationRequest.getEmailEndpoint())
-                .orElseGet(() -> {
-                    Organization organization = organizationRepository.save(organizationMapper.toEntity(organizationRequest));
-                    return loadEntity(organization.getId());
-                });
+                .orElseGet(() -> organizationRepository.save(organizationMapper.toEntity(organizationRequest))).getId();
     }
 
     public IdResponse<Long> addMemberAndSendEmail(final AddMemberRequest addMemberRequest) {
@@ -59,7 +56,7 @@ public class OrganizationService implements EntityLoader<Organization, Long> {
         Organization organization = loadEntity(addMemberRequest.getOrganizationId());
         Member member = authService.getLoginUser();
         organization.addMember(member, addMemberRequest.getEmail().strip());
-        member.undoFinishingAuth();
+        member.undoFinishingAuthAndDeleteOrganization();
     }
 
     @Transactional(readOnly = true)

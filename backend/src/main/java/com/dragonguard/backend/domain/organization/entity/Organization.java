@@ -5,7 +5,6 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import lombok.*;
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Where;
 import org.springframework.util.StringUtils;
 
@@ -44,9 +43,6 @@ public class Organization implements Auditable {
     @Enumerated(EnumType.STRING)
     private OrganizationStatus organizationStatus = OrganizationStatus.REQUESTED;
 
-    @Formula("(SELECT COALESCE(sum(h.amount), 0) FROM history h LEFT JOIN blockchain b on h.blockchain_id = b.id LEFT JOIN member m ON m.id = b.member_id WHERE m.organization_id = id)")
-    private Long sumOfMemberTokens;
-
     @Setter
     @Embedded
     @Column(nullable = false)
@@ -61,6 +57,10 @@ public class Organization implements Auditable {
         }
     }
 
+    public Long getSumOfMemberTokens() {
+        return this.members.stream().mapToLong(Member::getSumOfTokens).sum();
+    }
+
     public void addMember(Member member, String emailAddress) {
         if (emailAddress.endsWith(emailEndpoint)) {
             this.members.add(member);
@@ -71,10 +71,10 @@ public class Organization implements Auditable {
     public void updateStatus(OrganizationStatus organizationStatus) {
         if (organizationStatus.equals(OrganizationStatus.ACCEPTED)) {
             this.organizationStatus = OrganizationStatus.ACCEPTED;
-            this.members.forEach(Member::finishAuth);
+            this.members.forEach(m -> m.finishAuth(this));
             return;
         }
-        this.members.forEach(Member::undoFinishingAuth);
+        this.members.forEach(Member::undoFinishingAuthAndDeleteOrganization);
         delete();
     }
 

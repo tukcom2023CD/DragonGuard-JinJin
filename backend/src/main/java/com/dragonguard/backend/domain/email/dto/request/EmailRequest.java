@@ -23,4 +23,7 @@ public class EmailRequest {
 
     @Range(min = 10000, max = 99999)
     private Integer code;
+
+    @NotNull
+    private Long organizationId;
 }

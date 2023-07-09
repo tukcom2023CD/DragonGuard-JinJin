@@ -82,7 +82,9 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .on(member.organization.id.eq(organization.id))
                 .where(member.sumOfTokens.gt(
                         JPAExpressions
-                                .select(member.sumOfTokens).from(member).where(member.id.eq(memberId))))
+                                .select(member.sumOfTokens).from(member).where(member.id.eq(memberId)))
+                        .and(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED)
+                                .and(member.authStep.eq(AuthStep.ALL))))
                 .distinct()
                 .fetch().size() + 1, githubId);
     }
@@ -95,6 +97,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .leftJoin(organization.members, member)
                 .on(member.organization.id.eq(organization.id))
                 .orderBy(member.sumOfTokens.desc())
+                .where(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED)
+                        .and(member.authStep.eq(AuthStep.ALL)))
                 .distinct()
                 .offset(offset)
                 .limit(3)

@@ -26,7 +26,7 @@ public class OrganizationController {
     private final OrganizationService organizationService;
 
     @PostMapping
-    public ResponseEntity<IdResponse<Long>> postOrganization(@RequestBody @Valid OrganizationRequest organizationRequest) {
+    public ResponseEntity<IdResponse<Long>> saveOrganization(@RequestBody @Valid OrganizationRequest organizationRequest) {
         return ResponseEntity.ok(organizationService.saveOrganization(organizationRequest));
     }
 

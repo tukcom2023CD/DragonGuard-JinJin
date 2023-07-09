@@ -78,8 +78,8 @@ class EmailServiceTest extends LoginTest {
         Long given = emailRepository.save(Email.builder().code(code).memberId(loginUser.getId()).build()).getId();
 
         //when
-        CheckCodeResponse falseResult = emailService.isCodeMatching(new EmailRequest(given, code + 1));
-        CheckCodeResponse trueResult = emailService.isCodeMatching(new EmailRequest(given, code));
+        CheckCodeResponse falseResult = emailService.isCodeMatching(new EmailRequest(given, code + 1, 1L));
+        CheckCodeResponse trueResult = emailService.isCodeMatching(new EmailRequest(given, code, 1L));
 
         //then
         assertThat(falseResult.getIsValidCode()).isFalse();

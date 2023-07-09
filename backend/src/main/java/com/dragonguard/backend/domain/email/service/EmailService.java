@@ -9,6 +9,8 @@ import com.dragonguard.backend.domain.email.mapper.EmailMapper;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.AuthService;
+import com.dragonguard.backend.domain.organization.entity.Organization;
+import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.global.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
@@ -36,6 +38,7 @@ public class EmailService implements EntityLoader<Email, Long> {
     private final AuthService authService;
     private final EmailMapper emailMapper;
     private final KafkaProducer<KafkaEmail> kafkaEmailProducer;
+    private final OrganizationRepository organizationRepository;
     private static final String EMAIL_SUBJECT = "GitRank 조직 인증";
     private static final int MIN = 10000;
     private static final int MAX = 99999;
@@ -64,11 +67,21 @@ public class EmailService implements EntityLoader<Email, Long> {
     public CheckCodeResponse isCodeMatching(final EmailRequest emailRequest) {
         Long id = emailRequest.getId();
 
-        if (!loadEntity(id).getCode().equals(emailRequest.getCode())) return new CheckCodeResponse(false);
+        if (isValidCode(emailRequest)) return new CheckCodeResponse(false);
         deleteCode(id);
 
-        authService.getLoginUser().finishAuth();
+        Member member = authService.getLoginUser();
+        member.finishAuth(findOrganizationById(emailRequest.getOrganizationId()));
         return new CheckCodeResponse(true);
+    }
+
+    private Organization findOrganizationById(Long id) {
+        return organizationRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private boolean isValidCode(final EmailRequest emailRequest) {
+        return !loadEntity(emailRequest.getId()).getCode().equals(emailRequest.getCode());
     }
 
     @Override

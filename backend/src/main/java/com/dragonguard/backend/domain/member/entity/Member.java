@@ -207,8 +207,9 @@ public class Member implements Auditable {
         this.gitRepoMembers.add(gitRepoMember);
     }
 
-    public void finishAuth() {
+    public void finishAuth(Organization organization) {
         this.authStep = AuthStep.ALL;
+        this.organization = organization;
     }
 
     public int getCommitSumWithRelation() {
@@ -320,7 +321,7 @@ public class Member implements Auditable {
         this.profileImage = profileImage;
     }
 
-    public void undoFinishingAuth() {
+    public void undoFinishingAuthAndDeleteOrganization() {
         this.organization = null;
         this.authStep = AuthStep.GITHUB_AND_KLIP;
     }
