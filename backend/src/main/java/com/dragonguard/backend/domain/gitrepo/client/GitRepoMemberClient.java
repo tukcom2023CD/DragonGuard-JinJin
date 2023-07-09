@@ -49,8 +49,8 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Lis
                 .collectList()
                 .flatMap(response -> {
                     if (response == null || response.isEmpty() || response.stream()
-                            .filter(g -> g.getTotal() != null || g.getWeeks() == null || g.getWeeks().isEmpty()
-                                    || g.getAuthor() == null || g.getAuthor().getLogin() == null).findAny().isEmpty()) {
+                            .anyMatch(g -> g.getTotal() == null || g.getWeeks() == null || g.getWeeks().isEmpty()
+                                    || g.getAuthor() == null || g.getAuthor().getLogin() == null || g.getAuthor().getAvatarUrl() == null)) {
                         return Mono.error(WebClientException::new);
                     }
                     return Mono.just(response);
