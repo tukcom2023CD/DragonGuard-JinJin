@@ -56,6 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:textColor="@color/black"
                     android:fontFamily="@font/ibm_semibold"
                     android:textSize="12sp"/>
 
@@ -64,6 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:textColor="@color/black"
                     android:fontFamily="@font/ibm_semibold"
                     android:textSize="12sp"/>
 
