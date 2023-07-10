@@ -60,7 +60,7 @@ class BlockchainServiceTest extends LoginTest {
                 BlockchainFixture.TWO_ISSUES.toEntity(loginUser));
         given.forEach(blockchainRepository::save);
 
-        List<BlockchainResponse> expected = given.stream().map(blockchainMapper::toResponse).collect(Collectors.toList());
+        List<BlockchainResponse> expected = given.stream().map(Blockchain::getHistories).flatMap(List::stream).map(blockchainMapper::toResponse).collect(Collectors.toList());
 
         //when
         List<BlockchainResponse> blockchains = blockchainService.getBlockchainList();

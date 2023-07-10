@@ -305,4 +305,25 @@ class MemberControllerTest extends RestDocumentTest {
         perform.andDo(print())
                 .andDo(document("update and get member by jwt", getDocumentRequest(), getDocumentResponse()));
     }
+
+    @Test
+    @DisplayName("멤버가 기존 유저인지 판단하는 API가 동작하는가")
+    void verifyMember() throws Exception {
+        // given
+        MemberLoginVerifyResponse expected = new MemberLoginVerifyResponse(Boolean.TRUE);
+        given(memberService.verifyMember()).willReturn(expected);
+
+        // when
+        ResultActions perform =
+                mockMvc.perform(
+                        get("/members/verify")
+                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        // docs
+        perform.andDo(print())
+                .andDo(document("verify member", getDocumentRequest(), getDocumentResponse()));
+    }
 }

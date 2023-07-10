@@ -18,6 +18,6 @@ public enum BlockchainFixture {
 
 
     public Blockchain toEntity(Member member) {
-        return new Blockchain(contributeType, amount, member, transactionHash);
+        return new Blockchain(contributeType, member);
     }
 }

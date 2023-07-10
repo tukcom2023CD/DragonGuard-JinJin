@@ -85,4 +85,9 @@ public class MemberController {
     public ResponseEntity<MemberGitOrganizationRepoResponse> getMemberGitOrganizationRepo(@RequestParam String name) {
         return ResponseEntity.ok(memberService.getMemberGitOrganizationRepo(name));
     }
+
+    @GetMapping("/verify")
+    public ResponseEntity<MemberLoginVerifyResponse> getMemberLoginVerify() {
+        return ResponseEntity.ok(memberService.verifyMember());
+    }
 }

@@ -122,7 +122,7 @@ class OrganizationServiceTest extends LoginTest {
         //then
         Optional<Email> emailResult = emailRepository.findById(result.getId());
         Optional<Organization> orgResult = organizationRepository.findById(org.getId());
-        memberService.getLoginUserWithPersistence().finishAuth();
+        authService.getLoginUser().finishAuth(org);
 
         assertThat(emailResult).isNotEmpty();
         assertThat(emailResult.orElse(null).getMemberId()).isEqualTo(loginUser.getId());
@@ -138,8 +138,8 @@ class OrganizationServiceTest extends LoginTest {
         //when
         org.addMember(loginUser, "tukorea.ac.kr");
 
-        Member member = memberService.getLoginUserWithPersistence();
-        member.finishAuth();
+        Member member = authService.getLoginUser();
+        member.finishAuth(org);
 
         //then
         assertThat(org.getMembers()).contains(loginUser);
@@ -185,7 +185,7 @@ class OrganizationServiceTest extends LoginTest {
 
             members.forEach(member -> {
                 org.addMember(member, member.getName() + "@" + org.getEmailEndpoint());
-                member.finishAuth();
+                member.finishAuth(org);
             });
         }
 

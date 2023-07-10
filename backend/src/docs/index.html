@@ -447,12 +447,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#_member_멤버">Member 멤버</a>
 <ul class="sectlevel2">
-<li><a href="#_멤버_생성">멤버 생성</a>
-<ul class="sectlevel3">
-<li><a href="#_멤버_생성_http_request">HTTP request</a></li>
-<li><a href="#_멤버_생성_http_response">HTTP response</a></li>
-</ul>
-</li>
 <li><a href="#_멤버_티어_조회">멤버 티어 조회</a>
 <ul class="sectlevel3">
 <li><a href="#_멤버_티어_조회_http_request">HTTP request</a></li>
@@ -517,6 +511,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel3">
 <li><a href="#_멤버_프로필_정보_업데이트_http_request">HTTP request</a></li>
 <li><a href="#_멤버_프로필_정보_업데이트_http_response">HTTP response</a></li>
+</ul>
+</li>
+<li><a href="#_이미_로그인했던_멤버인지_확인">이미 로그인했던 멤버인지 확인</a>
+<ul class="sectlevel3">
+<li><a href="#_이미_로그인했던_멤버인지_확인_http_request">HTTP request</a></li>
+<li><a href="#_이미_로그인했던_멤버인지_확인_http_response">HTTP response</a></li>
 </ul>
 </li>
 </ul>
@@ -707,39 +707,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_member_멤버"><a class="link" href="#_member_멤버">Member 멤버</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_멤버_생성"><a class="link" href="#_멤버_생성">멤버 생성</a></h3>
-<div class="sect3">
-<h4 id="_멤버_생성_http_request"><a class="link" href="#_멤버_생성_http_request">HTTP request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /members HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
-Content-Length: 29
-Host: localhost:8080
-
-{
-  "github_id" : "ohksj77"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_멤버_생성_http_response"><a class="link" href="#_멤버_생성_http_response">HTTP response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 201 Created
-Content-Type: application/json;charset=UTF-8
-Content-Length: 51
-
-{
-  "id" : "61b93ca4-06e7-44c5-9e3b-7b32298da864"
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
 <h3 id="_멤버_티어_조회"><a class="link" href="#_멤버_티어_조회">멤버 티어 조회</a></h3>
 <div class="sect3">
 <h4 id="_멤버_티어_조회_http_request"><a class="link" href="#_멤버_티어_조회_http_request">HTTP request</a></h4>
@@ -809,35 +776,35 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 1001
 
 [ {
-  "id" : "a5d2c6fc-c620-4d08-9e02-d20bd75cd80a",
+  "id" : "62c9da7e-1956-431a-9a1b-a2e2396d52fe",
   "name" : "Kim",
   "github_id" : "ohksj77",
   "tokens" : 10000,
   "tier" : "MASTER",
   "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "3ad05e03-a970-496a-a77f-9c08d396b8c0",
+  "id" : "e1ffcfd7-6f5b-4a58-8ef0-c0863d3a2a1e",
   "name" : "Seung",
   "github_id" : "ohksj",
   "tokens" : 5000,
   "tier" : "RUBY",
   "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "2d447564-628d-4ee6-b478-14cb568b7f17",
+  "id" : "7bdf8219-8bdb-403a-9d3b-ad71ace7809c",
   "name" : "Jin",
   "github_id" : "ohksj777",
   "tokens" : 3000,
   "tier" : "DIAMOND",
   "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "499cb095-ddcc-4f03-b5f3-4247710cae72",
+  "id" : "3d2f6a14-3d12-4622-9cf4-1029fde25eba",
   "name" : "Lee",
   "github_id" : "ohksjj",
   "tokens" : 1000,
   "tier" : "PLATINUM",
   "profile_image" : "http://github123123412412412profileUrl"
 }, {
-  "id" : "62944b78-1597-4055-a02d-75fdf4541fe1",
+  "id" : "abf17e18-e0a9-48c7-a136-be9b5aef4e61",
   "name" : "Da",
   "github_id" : "ohksjksj",
   "tokens" : 500,
@@ -896,28 +863,28 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 805
 
 [ {
-  "id" : "8532a2c6-6b63-4604-90c0-894e4fb8bac0",
+  "id" : "30ab8c71-a72d-4d53-bb67-64590ac5a693",
   "name" : "정해진",
   "github_id" : "HJ39",
   "tokens" : 20,
   "tier" : "SPROUT",
   "profile_image" : "http://githubUserProfileImageUrl"
 }, {
-  "id" : "503de062-ccfd-452c-b6da-10c48379bb6e",
+  "id" : "16549670-6d12-4270-b2f6-fd3196a9cf1f",
   "name" : "넓은관용",
   "github_id" : "Sammuelwoojae",
   "tokens" : 20,
   "tier" : "SPROUT",
   "profile_image" : "http://githubUserProfileImageUrl"
 }, {
-  "id" : "3ffa969a-cf2e-40fd-be4b-29712fe806c2",
+  "id" : "81fc6cca-cb72-4009-a41c-2d4f2d1b4bd6",
   "name" : "회사승진",
   "github_id" : "ohksj77",
   "tokens" : 20,
   "tier" : "SPROUT",
   "profile_image" : "http://githubUserProfileImageUrl"
 }, {
-  "id" : "cf71cb15-2478-424f-814a-cb494661aa88",
+  "id" : "cf7f626a-d28b-44ac-9bd5-07650a30c8e5",
   "name" : "영어수학",
   "github_id" : "posite",
   "tokens" : 20,
@@ -949,7 +916,7 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 495
 
 {
-  "id" : "c7a37b88-4571-4db6-bf55-961fa0e0c037",
+  "id" : "24f8f762-e914-4950-a4aa-b47e37f7a27d",
   "name" : "김승진",
   "github_id" : "ohksj77",
   "commits" : 100,
@@ -1109,7 +1076,7 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 495
 
 {
-  "id" : "9caf579c-3f02-49a9-914d-df4243fd0d90",
+  "id" : "d26c17f4-7e68-4b41-b485-3663f9688f15",
   "name" : "김승진",
   "github_id" : "ohksj77",
   "commits" : 100,
@@ -1126,6 +1093,33 @@ Content-Length: 495
   "organization_rank" : 1,
   "is_last" : true,
   "member_github_ids" : [ "ohksj", "ksj77" ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_이미_로그인했던_멤버인지_확인"><a class="link" href="#_이미_로그인했던_멤버인지_확인">이미 로그인했던 멤버인지 확인</a></h3>
+<div class="sect3">
+<h4 id="_이미_로그인했던_멤버인지_확인_http_request"><a class="link" href="#_이미_로그인했던_멤버인지_확인_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /members/verify HTTP/1.1
+Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_이미_로그인했던_멤버인지_확인_http_response"><a class="link" href="#_이미_로그인했던_멤버인지_확인_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 28
+
+{
+  "is_login_user" : true
 }</code></pre>
 </div>
 </div>
@@ -1206,31 +1200,31 @@ Content-Length: 851
   "name" : "tukcom2023CD/DragonGuard-JinJin",
   "language" : "java",
   "description" : "블록체인기반깃랭크시스템",
-  "created_at" : "2023-07-02T02:50:04.621159"
+  "created_at" : "2023-07-10T14:08:07.442879"
 }, {
   "id" : 2,
   "name" : "tukcom2023CD/DragonGuard",
   "language" : "swift",
   "description" : "블록체인기반깃랭크시스템",
-  "created_at" : "2023-07-02T02:50:04.621182"
+  "created_at" : "2023-07-10T14:08:07.442934"
 }, {
   "id" : 3,
   "name" : "tukcom2023CD/JinJin",
   "language" : "java",
   "description" : "진진시스템",
-  "created_at" : "2023-07-02T02:50:04.621186"
+  "created_at" : "2023-07-10T14:08:07.442942"
 }, {
   "id" : 4,
   "name" : "tukcom2023CD/Dragon",
   "language" : "java",
   "description" : "드래곤시스템",
-  "created_at" : "2023-07-02T02:50:04.621189"
+  "created_at" : "2023-07-10T14:08:07.442946"
 }, {
   "id" : 5,
   "name" : "tukcom2023CD/Dragon-Jin",
   "language" : "java",
   "description" : "드래곤진",
-  "created_at" : "2023-07-02T02:50:04.621192"
+  "created_at" : "2023-07-10T14:08:07.442950"
 } ]</code></pre>
 </div>
 </div>
@@ -1501,8 +1495,8 @@ Content-Length: 2107
       }
     },
     "languages" : {
-      "kotlin" : 9999,
       "swift" : 9998,
+      "kotlin" : 9999,
       "java" : 10000
     },
     "languages_stats" : {
@@ -1548,8 +1542,8 @@ Content-Length: 2107
       }
     },
     "languages" : {
-      "kotlin" : 9999,
       "swift" : 9998,
+      "kotlin" : 9999,
       "java" : 10000
     },
     "languages_stats" : {
@@ -1676,16 +1670,16 @@ Content-Length: 471
   "contribute_type" : "COMMIT",
   "amount" : 10,
   "github_id" : "ohksj77",
-  "member_id" : "42cc71a6-2c48-43bc-ad8e-8864a7e054a1",
-  "created_at" : "2023-07-02T02:49:51.111431",
+  "member_id" : "a7c9d7ac-7657-4f9a-8847-0c4100c1b67a",
+  "created_at" : "2023-07-10T14:08:07.800858",
   "transaction_hash_url" : "123123123"
 }, {
   "id" : 2,
   "contribute_type" : "COMMIT",
   "amount" : 5,
   "github_id" : "ohksj77",
-  "member_id" : "805a5a1b-1403-4321-bcbf-678f3743fd4c",
-  "created_at" : "2023-07-02T02:49:51.111463",
+  "member_id" : "223c909a-4446-4456-ae71-71bdbf1815f3",
+  "created_at" : "2023-07-10T14:08:07.800885",
   "transaction_hash_url" : "321321321"
 } ]</code></pre>
 </div>
@@ -1718,16 +1712,16 @@ Content-Length: 471
   "contribute_type" : "COMMIT",
   "amount" : 10,
   "github_id" : "ohksj77",
-  "member_id" : "5d924acf-f814-40ba-9d16-91b39afb0fcc",
-  "created_at" : "2023-07-02T02:49:51.117544",
+  "member_id" : "253cfee9-9c7d-42dd-a697-70f9ce10b05b",
+  "created_at" : "2023-07-10T14:08:07.808286",
   "transaction_hash_url" : "123123123"
 }, {
   "id" : 2,
   "contribute_type" : "COMMIT",
   "amount" : 5,
   "github_id" : "ohksj77",
-  "member_id" : "755b19c4-bb60-44c2-a127-20da5c054042",
-  "created_at" : "2023-07-02T02:49:51.117558",
+  "member_id" : "efc67432-529a-4726-b443-8ce7e352811a",
+  "created_at" : "2023-07-10T14:08:07.808316",
   "transaction_hash_url" : "321321321"
 } ]</code></pre>
 </div>
@@ -1809,7 +1803,7 @@ Content-Length: 14
 <h4 id="_메일_코드_확인_http_request"><a class="link" href="#_메일_코드_확인_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /email/check?id=1&amp;code=12345 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /email/check?id=1&amp;code=12345&amp;organizationId=3 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer apfawfawfa.awfsfawef2.r4svfv32
 Host: localhost:8080</code></pre>
@@ -2237,7 +2231,7 @@ Content-Length: 138
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-07-02 03:00:18 +0900
+Last updated 2023-07-08 23:00:46 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

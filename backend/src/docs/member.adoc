@@ -6,9 +6,6 @@
 
 
 == Member 멤버
-=== 멤버 생성
-operation::create member[snippets='http-request,http-response']
-
 === 멤버 티어 조회
 operation::get member tier[snippets='http-request,http-response']
 
@@ -41,3 +38,6 @@ operation::get other member details[snippets='http-request,http-response']
 
 === 멤버 프로필 정보 업데이트
 operation::update and get member by jwt[snippets='http-request,http-response']
+
+=== 이미 로그인했던 멤버인지 확인
+operation::verify member[snippets='http-request,http-response']

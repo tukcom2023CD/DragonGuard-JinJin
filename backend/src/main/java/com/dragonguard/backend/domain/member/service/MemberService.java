@@ -187,4 +187,12 @@ public class MemberService implements EntityLoader<Member, UUID> {
         if (member.isWalletAddressExists()) updateContributionAndTransaction(member);
         return getMemberResponseWithValidateOrganization(member);
     }
+
+    public MemberLoginVerifyResponse verifyMember() {
+        AuthStep authStep = authService.getLoginUser().getAuthStep();
+        if (authStep.equals(AuthStep.GITHUB_ONLY)) {
+            return new MemberLoginVerifyResponse(Boolean.FALSE);
+        }
+        return new MemberLoginVerifyResponse(Boolean.TRUE);
+    }
 }

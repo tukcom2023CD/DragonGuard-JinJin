@@ -52,7 +52,7 @@ class EmailControllerTest extends RestDocumentTest {
 
         ResultActions perform =
                 mockMvc.perform(
-                        get("/email/check?id=1&code=12345")
+                        get("/email/check?id=1&code=12345&organizationId=3")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 

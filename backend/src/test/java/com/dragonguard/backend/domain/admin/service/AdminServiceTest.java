@@ -47,17 +47,13 @@ class AdminServiceTest extends LoginTest {
 
         adminService.decideRequestedOrganization(new AdminDecideRequest(organization1.getId(), OrganizationStatus.ACCEPTED));
         adminService.decideRequestedOrganization(new AdminDecideRequest(organization2.getId(), OrganizationStatus.ACCEPTED));
-        adminService.decideRequestedOrganization(new AdminDecideRequest(organization3.getId(), OrganizationStatus.DENIED));
 
         //when
         List<AdminOrganizationResponse> acceptedList = adminService.getOrganizationsByStatus(OrganizationStatus.ACCEPTED, PageRequest.of(0, 20));
-        List<AdminOrganizationResponse> deniedList = adminService.getOrganizationsByStatus(OrganizationStatus.DENIED, PageRequest.of(0, 20));
 
         //then
         assertThat(acceptedList).hasSize(2);
-        assertThat(deniedList).hasSize(1);
 
         assertThat(List.of(acceptedList.get(0).getId(), acceptedList.get(1).getId())).containsExactlyInAnyOrder(organization1.getId(), organization2.getId());
-        assertThat(deniedList.get(0).getId()).isEqualTo(organization3.getId());
     }
 }

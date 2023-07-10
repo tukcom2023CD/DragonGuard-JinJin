@@ -4,6 +4,8 @@ import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
 import com.dragonguard.backend.domain.blockchain.service.SmartContractService;
+import com.dragonguard.backend.domain.codereview.entity.CodeReview;
+import com.dragonguard.backend.domain.codereview.repository.CodeReviewRepository;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.commit.repository.CommitRepository;
 import com.dragonguard.backend.domain.issue.entity.Issue;
@@ -12,8 +14,8 @@ import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.MemberGitReposAndGitOrganizationsResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberRankResponse;
 import com.dragonguard.backend.domain.member.dto.response.MemberResponse;
+import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.entity.Organization;
@@ -22,7 +24,6 @@ import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.repository.PullRequestRepository;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
-import com.dragonguard.backend.support.fixture.member.dto.MemberRequestFixture;
 import com.dragonguard.backend.support.fixture.member.entity.MemberFixture;
 import com.dragonguard.backend.support.fixture.organization.entity.OrganizationFixture;
 import org.junit.jupiter.api.DisplayName;
@@ -52,6 +53,7 @@ class MemberServiceTest extends LoginTest {
     @Autowired private PullRequestRepository pullRequestRepository;
     @Autowired private BlockchainRepository blockchainRepository;
     @Autowired private OrganizationRepository organizationRepository;
+    @Autowired private CodeReviewRepository codeReviewRepository;
     @Autowired private EntityManager em;
     @MockBean private SmartContractService smartContractService;
 
@@ -61,7 +63,7 @@ class MemberServiceTest extends LoginTest {
         //given
 
         //when
-        UUID userId = memberService.saveMember(MemberRequestFixture.HJ39.toMemberRequest(), Role.ROLE_USER).getId();
+        UUID userId = memberService.findMemberOrSave("HJ39", AuthStep.NONE, "http:/githubProfileUrl").getId();
 
         UUID adminResult = memberRepository.findById(loginUser.getId()).orElseThrow().getId();
         UUID userResult = memberRepository.findById(userId).orElseThrow().getId();
@@ -107,9 +109,9 @@ class MemberServiceTest extends LoginTest {
         commitRepository.save(Commit.builder().year(year).member(loginUser).amount(200).build());
         issueRepository.save(Issue.builder().year(year).member(loginUser).amount(200).build());
         pullRequestRepository.save(PullRequest.builder().year(year).member(loginUser).amount(200).build());
+        codeReviewRepository.save(CodeReview.builder().year(year).member(loginUser).amount(200).build());
 
-        loginUser = memberService.getLoginUserWithPersistence();
-        loginUser.updateSumOfReviews(200);
+        loginUser = authService.getLoginUser();
 
         //when
         memberService.updateBlockchain();
@@ -124,9 +126,11 @@ class MemberServiceTest extends LoginTest {
     @DisplayName("티어 조회가 수행되는가")
     void getTier() {
         //given
-        loginUser = memberService.getLoginUserWithPersistence();
+        loginUser = authService.getLoginUser();
         int contributionNum = 20000;
-        blockchainRepository.save(Blockchain.builder().member(loginUser).contributeType(ContributeType.COMMIT).amount(BigInteger.valueOf(20000L)).build());
+        Blockchain blockchain = blockchainRepository.save(Blockchain.builder().member(loginUser).contributeType(ContributeType.COMMIT).build());
+        blockchain.addHistory(BigInteger.valueOf(20000L), "woiufheawoiuerhg");
+
         loginUser.updateTier();
 
         //when
@@ -141,7 +145,7 @@ class MemberServiceTest extends LoginTest {
     void getMemberRankingByOrganization() {
         //given
         Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
-        Member member1 = memberService.getLoginUserWithPersistence();
+        Member member1 = authService.getLoginUser();
         Member member2 = memberRepository.save(MemberFixture.POSITE.toEntity());
         Member member3 = memberRepository.save(MemberFixture.SAMMUELWOOJAE.toEntity());
         Member member4 = memberRepository.save(MemberFixture.HJ39.toEntity());
@@ -163,7 +167,7 @@ class MemberServiceTest extends LoginTest {
     @DisplayName("지갑 주소 갱신이 수행되는가")
     void updateWalletAddress() {
         //given
-        Member member = memberService.getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
         String before = member.getWalletAddress();
 
         //when
@@ -185,7 +189,7 @@ class MemberServiceTest extends LoginTest {
     void getMember() {
         //given
         Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
-        Member member = memberService.getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
         org.addMember(member, "ohksj77@tukorea.ac.kr");
 
         //when
@@ -199,10 +203,10 @@ class MemberServiceTest extends LoginTest {
     @DisplayName("멤버 레포와 깃 org 조회가 수행되는가")
     void findMemberDetailByGithubId() {
         //given
-        Member member = memberService.getLoginUserWithPersistence();
+        Member member = authService.getLoginUser();
         Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
         org.addMember(member, "ohksj77@tukorea.ac.kr");
-        member.finishAuth();
+        member.finishAuth(org);
 
         //when
         MemberGitReposAndGitOrganizationsResponse result = memberService.findMemberDetails();
