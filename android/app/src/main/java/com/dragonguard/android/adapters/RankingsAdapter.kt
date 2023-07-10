@@ -11,6 +11,7 @@ import com.dragonguard.android.R
 import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.activity.compare.CompareSearchActivity
 import com.dragonguard.android.activity.profile.UserProfileActivity
+import com.dragonguard.android.activity.ranking.MyOrganizationInternalActivity
 import com.dragonguard.android.databinding.RankingListBinding
 import com.dragonguard.android.model.rankings.*
 
@@ -66,6 +67,13 @@ class RankingsAdapter(private val rankings: List<*>, private val context: Contex
                         .into(binding.eachProfile)
                     binding.rankingGithubId.text = data1.githubId
                     binding.rankingContribute.text = data1.tokens.toString()
+                    binding.rankingItem.setOnClickListener {
+                        val mContext = context as MainActivity
+                        val intent = Intent(context, MyOrganizationInternalActivity::class.java)
+                        intent.putExtra("organization", data1.name)
+                        intent.putExtra("token", token)
+                        context.startActivity(intent)
+                    }
                 }
                 is TotalOrganizationModel -> {
                     binding.profileLink.visibility = View.GONE

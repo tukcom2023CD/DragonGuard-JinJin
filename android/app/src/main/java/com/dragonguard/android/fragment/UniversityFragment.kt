@@ -1,5 +1,6 @@
 package com.dragonguard.android.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dragonguard.android.R
+import com.dragonguard.android.activity.profile.UserProfileActivity
+import com.dragonguard.android.activity.ranking.MyOrganizationInternalActivity
 import com.dragonguard.android.adapters.RankingsAdapter
 import com.dragonguard.android.databinding.FragmentAllRankingsBinding
 import com.dragonguard.android.model.rankings.OrganizationRankingModel
@@ -153,18 +156,36 @@ class UniversityFragment(private val token: String): Fragment() {
                 binding.firstContribute.text = model.token_sum.toString()
                 binding.firstRanker.visibility = View.VISIBLE
                 binding.firstProfile.setImageResource(R.drawable.university)
+                binding.secondFrame.setOnClickListener {
+                    val intent = Intent(context, MyOrganizationInternalActivity::class.java)
+                    intent.putExtra("organization", model.name)
+                    intent.putExtra("token", token)
+                    startActivity(intent)
+                }
             }
             2 -> {
                 binding.secondId.text = model.name
                 binding.secondContribute.text = model.token_sum.toString()
                 binding.secondRanker.visibility = View.VISIBLE
                 binding.secondProfile.setImageResource(R.drawable.university)
+                binding.secondFrame.setOnClickListener {
+                    val intent = Intent(context, MyOrganizationInternalActivity::class.java)
+                    intent.putExtra("organization", model.name)
+                    intent.putExtra("token", token)
+                    startActivity(intent)
+                }
             }
             3 -> {
                 binding.thirdId.text = model.name
                 binding.thirdContribute.text = model.token_sum.toString()
                 binding.thirdRanker.visibility = View.VISIBLE
                 binding.thirdProfile.setImageResource(R.drawable.university)
+                binding.thirdFrame.setOnClickListener {
+                    val intent = Intent(context, MyOrganizationInternalActivity::class.java)
+                    intent.putExtra("organization", model.name)
+                    intent.putExtra("token", token)
+                    startActivity(intent)
+                }
             }
         }
     }
