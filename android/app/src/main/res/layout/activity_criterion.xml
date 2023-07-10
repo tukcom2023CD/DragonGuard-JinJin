@@ -137,7 +137,7 @@
                             android:layout_weight="3"
                             android:fontFamily="@font/ibm_semibold"
                             android:gravity="center_vertical"
-                            android:text="Bronze \n기여도: 1 ~ 49"
+                            android:text="Bronze \n기여도: 50 ~ 199"
                             android:textColor="@color/black"
                             android:textSize="20sp" />
 
@@ -167,7 +167,7 @@
                             android:layout_weight="3"
                             android:fontFamily="@font/ibm_semibold"
                             android:gravity="center_vertical"
-                            android:text="Silver \n기여도: 50 ~ 199"
+                            android:text="Silver \n기여도: 200 ~ 499"
                             android:textColor="@color/black"
                             android:textSize="20sp" />
 
@@ -197,7 +197,7 @@
                             android:layout_weight="3"
                             android:fontFamily="@font/ibm_semibold"
                             android:gravity="center_vertical"
-                            android:text="Gold  \n기여도: 200 ~ 499"
+                            android:text="Gold  \n기여도: 500 ~ 999"
                             android:textColor="@color/black"
                             android:textSize="20sp" />
 
@@ -227,7 +227,7 @@
                             android:layout_weight="3"
                             android:fontFamily="@font/ibm_semibold"
                             android:gravity="center_vertical"
-                            android:text="Platinum  \n기여도: 500 ~ 1000"
+                            android:text="Platinum  \n기여도: 1000 ~ 2999"
                             android:textColor="@color/black"
                             android:textSize="20sp" />
 
@@ -256,7 +256,7 @@
                             android:layout_weight="3"
                             android:fontFamily="@font/ibm_semibold"
                             android:gravity="center_vertical"
-                            android:text="Diamond  \n기여도: 1000~"
+                            android:text="Diamond  \n기여도: 3000~"
                             android:textColor="@color/black"
                             android:textSize="20sp" />
 
