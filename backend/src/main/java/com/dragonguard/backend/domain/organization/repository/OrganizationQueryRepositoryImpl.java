@@ -103,7 +103,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .offset(offset)
                 .limit(3)
                 .fetch().stream().map(t -> t.get(member.githubId)).collect(Collectors.toList());
-        return new RelatedRankWithMemberResponse(rank, relatedRank.get(relatedRank.size() - 1).equals(githubId), relatedRank);
+        return new RelatedRankWithMemberResponse(rank, relatedRank.isEmpty() || relatedRank.get(relatedRank.size() - 1).equals(githubId), relatedRank);
     }
 
     @Override
