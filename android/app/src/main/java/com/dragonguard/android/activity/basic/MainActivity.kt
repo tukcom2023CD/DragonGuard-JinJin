@@ -105,6 +105,7 @@ class MainActivity : AppCompatActivity() {
                         transaction.remove(it)
                     }
                     transaction.commit()
+                    mainFrag?.clearView()
                     mainFrag = null
                     compareFrag = null
                     profileFrag = null
@@ -244,7 +245,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun searchUser() {
 //        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
-        if (token.isNotBlank() && count<8) {
+        if (token.isNotBlank() && count<8 && !loginOut && state) {
             count++
             val coroutine = CoroutineScope(Dispatchers.Main)
             coroutine.launch {
@@ -337,7 +338,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkUserInfo(userInfo: UserInfoModel) {
-        if (userInfo.github_id == null) {
+        if (userInfo.github_id == null && !loginOut) {
             if (prefs.getRefreshToken("").isBlank()) {
                 if (!this@MainActivity.isFinishing && state) {
                     Log.d("not login", "login activity로 이동")

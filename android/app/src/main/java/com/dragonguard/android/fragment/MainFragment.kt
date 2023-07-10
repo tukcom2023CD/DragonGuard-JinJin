@@ -240,6 +240,14 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
 //        }
 //        return super.onOptionsItemSelected(item)
 //    }
+    fun clearView() {
+        binding.githubProfile.setImageResource(0)
+        binding.userId.text = ""
+        binding.tierImg.setImageResource(0)
+        binding.tokenAmount.text = ""
+        binding.userUtil.adapter = null
+
+    }
     override fun onDestroy() {
         prefs.setRepeat(false)
         super.onDestroy()
