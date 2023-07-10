@@ -48,14 +48,19 @@ class LoginActivity : AppCompatActivity() {
         this.onBackPressedDispatcher.addCallback(this, callback)
 
         val intent = intent
-        val token = intent.getStringExtra("token")
+        var token = intent.getStringExtra("token")
+        token = prefs.getJwtToken("")
+        Log.d("토큰", "로그인 화면 token: $token")
         val logout = intent.getBooleanExtra("logout", false)
         if (!token.isNullOrEmpty()) {
 //            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
             binding.githubAuth.isEnabled = false
             binding.githubAuth.setTextColor(Color.BLACK)
+            checkState(token)
         } else {
             binding.githubAuth.isEnabled = true
+            binding.walletAuth.isEnabled = false
+            binding.walletFinish.isEnabled = false
         }
         if (logout) {
             prefs.setKey("")
@@ -145,6 +150,7 @@ class LoginActivity : AppCompatActivity() {
                                 binding.loginGithub.visibility = View.GONE
                                 binding.loginMain.visibility = View.VISIBLE
                                 binding.githubAuth.isEnabled = false
+                                checkState(prefs.getJwtToken(""))
                             }
                         }
                     }
@@ -230,6 +236,28 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkState(token: String) {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            if (!this@LoginActivity.isFinishing) {
+                val resultDeffered = coroutine.async(Dispatchers.IO) {
+                    viewmodel.checkLoginState(token)
+                }
+                val result = resultDeffered.await()
+                Log.d("로그인 상태", "로그인 상태 결과 : $result")
+                if(result) {
+                    val intentF = Intent(applicationContext, MainActivity::class.java)
+                    setResult(1, intentF)
+                    finish()
+                } else {
+                    binding.githubAuth.isEnabled = false
+                    binding.walletAuth.isEnabled = true
+                    binding.walletFinish.isEnabled = true
+                }
+            }
+
+        }
+    }
     private fun walletAuthRequest() {
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
@@ -269,6 +297,38 @@ class LoginActivity : AppCompatActivity() {
             if (System.currentTimeMillis() <= backPressed + 2500) {
                 finishAffinity()
             }
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        val token = prefs.getJwtToken("")
+        Log.d("토큰", "redirect 화면 token: $token")
+        if (!token.isNullOrEmpty()) {
+//            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
+            binding.githubAuth.isEnabled = false
+            binding.githubAuth.setTextColor(Color.BLACK)
+            checkState(token)
+        } else {
+            binding.githubAuth.isEnabled = true
+            binding.walletAuth.isEnabled = false
+            binding.walletFinish.isEnabled = false
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val token = prefs.getJwtToken("")
+        Log.d("토큰", "redirect 화면 token: $token")
+        if (!token.isNullOrEmpty()) {
+//            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
+            binding.githubAuth.isEnabled = false
+            binding.githubAuth.setTextColor(Color.BLACK)
+            checkState(token)
+        } else {
+            binding.githubAuth.isEnabled = true
+            binding.walletAuth.isEnabled = false
+            binding.walletFinish.isEnabled = false
         }
     }
     //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료

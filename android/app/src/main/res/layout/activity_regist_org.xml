@@ -146,7 +146,7 @@
                     android:hint="\@ 뒷부분만 작성해주세요"
                     android:imeOptions="actionSearch"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:importantForAutofill="no" />
 
             </LinearLayout>

@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
             } else if (it.resultCode == 1) {
-
+                multipleSearchUser()
             }
         }
 
@@ -105,7 +105,9 @@ class MainActivity : AppCompatActivity() {
                         transaction.remove(it)
                     }
                     transaction.commit()
-                    mainFrag?.clearView()
+                    mainFrag?.let{
+                        it.clearView()
+                    }
                     mainFrag = null
                     compareFrag = null
                     profileFrag = null

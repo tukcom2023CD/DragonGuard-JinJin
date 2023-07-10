@@ -141,4 +141,7 @@ interface GitRankAPI {
 
     @GET("members/details")
     fun getOthersProfile(@Query("githubId") query: String, @Header("Authorization")access: String): Call<UserProfileModel>
+
+    @GET("members/verify")
+    fun getLoginAuthState(@Header("Authorization")access: String): Call<AuthStateModel>
 }

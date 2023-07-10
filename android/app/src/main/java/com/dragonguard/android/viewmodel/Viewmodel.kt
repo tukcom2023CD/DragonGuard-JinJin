@@ -220,4 +220,8 @@ class Viewmodel: ViewModel() {
         Log.d("token", "Bearer : $token")
         return repository.manualUserInfo(token)
     }
+
+    fun checkLoginState(token: String): Boolean {
+        return repository.getLoginState(token)
+    }
 }
