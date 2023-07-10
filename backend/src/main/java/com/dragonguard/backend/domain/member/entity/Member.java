@@ -178,8 +178,10 @@ public class Member implements Auditable {
     }
 
     public void updateWalletAddress(String walletAddress) {
-        this.walletAddress = walletAddress;
-        this.authStep = AuthStep.GITHUB_AND_KLIP;
+        if (!authStep.equals(AuthStep.ALL)) {
+            this.authStep = AuthStep.GITHUB_AND_KLIP;
+            this.walletAddress = walletAddress;
+        }
     }
 
     public List<SimpleGrantedAuthority> getRole() {
