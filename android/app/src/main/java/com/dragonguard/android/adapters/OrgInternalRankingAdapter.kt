@@ -1,10 +1,12 @@
 package com.dragonguard.android.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.dragonguard.android.activity.profile.UserProfileActivity
 import com.dragonguard.android.databinding.TotalUsersRankingListBinding
 import com.dragonguard.android.model.rankings.OrgInternalRankingsModel
 
@@ -33,11 +35,11 @@ class OrgInternalRankingAdapter (private val datas : ArrayList<OrgInternalRankin
                     binding.rankerContribution.text = data1.tokens.toString()
                 }
 
-                binding.rankerId.setOnClickListener {
-//                    Intent(context, UserDetailActivity::class.java).apply{
-//                        putExtra("githubId", data1.githubId)
-//                        putExtra("token", token)
-//                    }.run{context.startActivity(this)}
+                binding.rankingFrame.setOnClickListener {
+                    Intent(context, UserProfileActivity::class.java).apply{
+                        putExtra("userName", data1.githubId)
+                        putExtra("token", token)
+                    }.run{context.startActivity(this)}
                 }
             }
         }

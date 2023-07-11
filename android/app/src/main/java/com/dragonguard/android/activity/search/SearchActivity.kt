@@ -1,6 +1,7 @@
 package com.dragonguard.android.activity.search
 
 import android.content.Intent
+import android.content.Intent.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -429,7 +430,10 @@ class SearchActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(FLAG_ACTIVITY_SINGLE_TOP)
+                intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
             }
 
         }
