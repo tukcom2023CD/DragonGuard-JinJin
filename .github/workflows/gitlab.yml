@@ -1,20 +1,16 @@
-name: GitLab Sync
- 
+name: GitRank GitLab Sync Github Actions
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
- 
+    branches: [ "master" ]
 jobs:
   push-to-gitlab:
     runs-on: ubuntu-latest
- 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      
       - name: Set remote repository
         env:
           gitlab_url: ${{ secrets.TARGET_URL }}
