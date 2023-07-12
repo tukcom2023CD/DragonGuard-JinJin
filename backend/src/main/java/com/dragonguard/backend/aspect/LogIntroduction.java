@@ -1,4 +1,4 @@
-package com.dragonguard.backend.global.aspect;
+package com.dragonguard.backend.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
