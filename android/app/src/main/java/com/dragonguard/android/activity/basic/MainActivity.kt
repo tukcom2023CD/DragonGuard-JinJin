@@ -117,6 +117,8 @@ class MainActivity : AppCompatActivity() {
                     intent.putExtra("token", prefs.getJwtToken(""))
                     intent.putExtra("logout", true)
                     activityResultLauncher.launch(intent)
+                } else {
+                    postCommits()
                 }
             }
 
@@ -226,7 +228,7 @@ class MainActivity : AppCompatActivity() {
         count = 0
         state = true
         finish = false
-        postCommits()
+        loginOut = false
     }
 
     override fun onPause() {
@@ -246,6 +248,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun searchUser() {
 //        Toast.makeText(application, "id = $id", Toast.LENGTH_SHORT).show()
+        Log.d("search user","logout: $loginOut, state: $state")
         if (token.isNotBlank() && count<8 && !loginOut && state) {
             count++
             val coroutine = CoroutineScope(Dispatchers.Main)
@@ -486,6 +489,7 @@ class MainActivity : AppCompatActivity() {
                     viewmodel.postCommits(prefs.getJwtToken(""))
                 }
                 val refreshResult = refreshDeffered.await()
+                Log.d("post", "post token : $token")
                 multipleSearchUser()
             }
         }
