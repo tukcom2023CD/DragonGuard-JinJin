@@ -157,7 +157,6 @@ class MainActivity : AppCompatActivity() {
             if (NetworkCheck.checkNetworkState(this)) {
                 binding.mainLoading.resumeAnimation()
                 binding.mainLoading.visibility = View.VISIBLE
-                postCommits()
                 refreshCommits()
             }
         }
@@ -227,7 +226,7 @@ class MainActivity : AppCompatActivity() {
         count = 0
         state = true
         finish = false
-        Handler(Looper.getMainLooper()).postDelayed({multipleSearchUser()}, 2000)
+        postCommits()
     }
 
     override fun onPause() {
