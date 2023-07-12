@@ -1,0 +1,28 @@
+name: GitLab Sync
+ 
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+ 
+jobs:
+  push-to-gitlab:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Set remote repository
+        env:
+          gitlab_url: ${{ secrets.TARGET_URL }}
+          gitlab_username: ${{ secrets.TARGET_USERNAME }}
+          gitlab_token: ${{ secrets.TARGET_TOKEN }}
+        run: |
+          git remote add gitlab https://${gitlab_username}:${gitlab_token}@${gitlab_url#https://};
+      - name: Force push everthing
+        run: |
+          git push -f --all gitlab;
+          git push -f --tags gitlab;
