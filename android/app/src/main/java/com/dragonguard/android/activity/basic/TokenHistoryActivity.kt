@@ -62,10 +62,10 @@ class TokenHistoryActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({binding.tokenContributeList.visibility = View.VISIBLE}, 500)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.refresh, binding.toolbar.menu)
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.refresh, binding.toolbar.menu)
+//        return true
+//    }
     
 
     //    뒤로가기, 홈으로 화면전환 기능
@@ -78,25 +78,12 @@ class TokenHistoryActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            R.id.refresh_button -> {
-                if(refresh) {
-                    refresh = false
-                    val coroutine = CoroutineScope(Dispatchers.Main)
-                    coroutine.launch {
-                        if(!this@TokenHistoryActivity.isFinishing) {
-                            val resultRepoDeferred = coroutine.async(Dispatchers.IO) {
-                                viewmodel.updateToken(token)
-                            }
-                            val resultRepo = resultRepoDeferred.await()
-                            resultRepo?.let { it->
-                                binding.tokenContributeList.visibility = View.INVISIBLE
-                                item.isVisible = false
-                                initRecycler(it)
-                            }
-                        }
-                    }
-                }
-            }
+//            R.id.refresh_button -> {
+//                if(refresh) {
+//                    refresh = false
+//                    callTokenHistory()
+//                }
+//            }
         }
         return super.onOptionsItemSelected(item)
     }
