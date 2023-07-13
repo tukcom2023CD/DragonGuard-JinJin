@@ -33,17 +33,13 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private final SmartContractService smartContractService;
     private final BlockchainMapper blockchainMapper;
     private final AuthService authService;
-    private final MemberRepository memberRepository;
-    private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
     @Value("#{'${admin}'.split(',')}")
     private List<String> admins;
 
     public void setTransaction(final Member member, final long contribution, final ContributeType contributeType) {
         if (contribution <= 0) return;
 
-        if (!blockchainRepository.existsByMemberAndContributeType(member, contributeType)) return;
-        Blockchain blockchain = blockchainRepository.findByMemberAndContributeType(member, contributeType)
-                .orElseThrow(EntityNotFoundException::new);
+        Blockchain blockchain = saveIfNone(member, contributeType);
 
         if (!blockchain.isNewHistory(contribution)) return;
 
@@ -59,6 +55,14 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
             blockchain.addHistory(BigInteger.valueOf(contribution), transactionHash);
         }
+    }
+
+    private Blockchain saveIfNone(Member member, ContributeType contributeType) {
+        if (!blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
+            return blockchainMapper.toEntity(member, contributeType);
+        }
+        return blockchainRepository.findByMemberAndContributeType(member, contributeType)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     private BigInteger balanceOfTransaction(final String walletAddress) {
@@ -89,79 +93,11 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         return contribution == amount.longValue();
     }
 
-    public List<BlockchainResponse> updateAndGetBlockchainInfo() {
-        UUID memberId = authService.getLoginUserId();
-        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
-        if (!member.isWalletAddressExists()) return List.of();
-
-        long blockchainSum = blockchainRepository.findByMemberId(memberId).stream().mapToLong(Blockchain::getSumOfAmount).sum();
-
-        if (member.getContributionSum().longValue() == blockchainSum) return getBlockchainResponses(memberId);
-
-        sendSmartContractTransaction(member);
-        member.updateTier();
-
-        return getBlockchainResponses(member.getId());
-    }
-
-    public void sendSmartContractTransaction(final Member member) {
-        long blockchainSum = blockchainRepository.findByMemberId(member.getId()).stream().mapToLong(Blockchain::getSumOfAmount).sum();
-        long contributionSum = member.getContributionSum().longValue();
-        if (blockchainSum == contributionSum) return;
-        if (blockchainSum > contributionSum) {
-            member.deleteContributions();
-            return;
-        }
-
-        int commitSum = member.getCommitSumWithRelation();
-        int issueSum = member.getIssueSumWithRelation();
-        int pullRequestSum = member.getPullRequestSumWithRelation();
-        int codeReviewSum = member.getCodeReviewSumWithRelation();
-
-        applyTransactions(member, commitSum, issueSum, pullRequestSum, codeReviewSum);
-    }
-
-    private void applyTransactions(
-            final Member member,
-            final int commitSum,
-            final int issueSum,
-            final int pullRequestSum,
-            final int codeReviewSum) {
-
-        Blockchain commit = getBlockchainOfType(member, ContributeType.COMMIT);
-        Blockchain issue = getBlockchainOfType(member, ContributeType.ISSUE);
-        Blockchain pullRequest = getBlockchainOfType(member, ContributeType.PULL_REQUEST);
-        Blockchain codeReview = getBlockchainOfType(member, ContributeType.CODE_REVIEW);
-
-        long newCommit = getNewContribution(commitSum, commit);
-        long newIssue = getNewContribution(issueSum, issue);
-        long newPullRequest = getNewContribution(pullRequestSum, pullRequest);
-        long newCodeReview = getNewContribution(codeReviewSum, codeReview);
-
-        UUID memberId = member.getId();
-
-        if (commit.isNewHistory(commitSum)) sendRequestToKafka(memberId, newCommit, ContributeType.COMMIT);
-
-        if (issue.isNewHistory(issueSum)) sendRequestToKafka(memberId, newIssue, ContributeType.ISSUE);
-
-        if (pullRequest.isNewHistory(pullRequestSum)) sendRequestToKafka(memberId, newPullRequest, ContributeType.PULL_REQUEST);
-
-        if (codeReview.isNewHistory(codeReviewSum)) sendRequestToKafka(memberId, newCodeReview, ContributeType.CODE_REVIEW);
-    }
-
-    private long getNewContribution(final int contribution, final Blockchain blockchain) {
-        return contribution - blockchain.getSumOfAmount();
-    }
-
     public Blockchain getBlockchainOfType(final Member member, final ContributeType contributeType) {
         if (!blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
             blockchainRepository.save(blockchainMapper.toEntity(member, contributeType));
         }
         return blockchainRepository.findByMemberAndContributeType(member, contributeType)
                 .orElseThrow(EntityNotFoundException::new);
-    }
-
-    private void sendRequestToKafka(final UUID memberId, final Long amount, final ContributeType contributeType) {
-        blockchainKafkaProducer.send(new BlockchainKafkaRequest(memberId, amount, contributeType));
     }
 }

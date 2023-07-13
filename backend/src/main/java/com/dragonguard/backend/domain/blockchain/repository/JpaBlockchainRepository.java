@@ -17,6 +17,8 @@ import java.util.Optional;
  */
 
 public interface JpaBlockchainRepository extends JpaRepository<Blockchain, Long>, BlockchainRepository {
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1000")})
     boolean existsByMemberAndContributeType(Member member, ContributeType contributeType);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

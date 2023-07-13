@@ -7,6 +7,3 @@
 == Blockchain
 === 블록체인 부여 기록 리스트 조회
 operation::get blockchain list[snippets='http-request,http-response']
-
-=== 블록체인 내역 수동 업데이트 및 조회
-operation::get blockchain list with update[snippets='http-request,http-response']

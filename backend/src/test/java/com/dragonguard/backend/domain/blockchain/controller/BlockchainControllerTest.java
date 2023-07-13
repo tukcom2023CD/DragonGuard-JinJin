@@ -21,7 +21,6 @@ import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentR
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,26 +52,5 @@ class BlockchainControllerTest extends RestDocumentTest {
 
         perform.andDo(print())
                 .andDo(document("get blockchain list", getDocumentRequest(), getDocumentResponse()));
-    }
-
-    @Test
-    @DisplayName("블록체인 부여 기록 수동 업데이트 후 조회가 수행되는가")
-    void updateAndGetBlockchainInfo() throws Exception {
-        List<BlockchainResponse> expected = List.of(
-                new BlockchainResponse(1L, ContributeType.COMMIT.toString(), 10L, "ohksj77", UUID.randomUUID(), LocalDateTime.now().toString(), "123123123"),
-                new BlockchainResponse(2L, ContributeType.COMMIT.toString(), 5L, "ohksj77", UUID.randomUUID(), LocalDateTime.now().toString(), "321321321"));
-        given(blockchainService.updateAndGetBlockchainInfo()).willReturn(expected);
-
-        ResultActions perform =
-                mockMvc.perform(
-                        post("/blockchain/update")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
-
-        perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
-
-        perform.andDo(print())
-                .andDo(document("get blockchain list with update", getDocumentRequest(), getDocumentResponse()));
     }
 }

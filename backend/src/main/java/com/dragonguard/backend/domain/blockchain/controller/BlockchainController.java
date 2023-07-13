@@ -27,8 +27,8 @@ public class BlockchainController {
         return ResponseEntity.ok(blockchainService.getBlockchainList());
     }
 
-    @PostMapping("/update")
+    @PostMapping("/update") // todo 클라이언트 수정 후 삭제
     public ResponseEntity<List<BlockchainResponse>> updateAndGetBlockchainInfo() {
-        return ResponseEntity.ok(blockchainService.updateAndGetBlockchainInfo());
+        return ResponseEntity.ok().build();
     }
 }
