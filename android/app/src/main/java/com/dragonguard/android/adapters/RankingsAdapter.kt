@@ -2,6 +2,7 @@ package com.dragonguard.android.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.basic.MainActivity
-import com.dragonguard.android.activity.compare.CompareSearchActivity
 import com.dragonguard.android.activity.profile.UserProfileActivity
 import com.dragonguard.android.activity.ranking.MyOrganizationInternalActivity
 import com.dragonguard.android.databinding.RankingListBinding
@@ -64,20 +64,52 @@ class RankingsAdapter(private val rankings: List<*>, private val context: Contex
                     }
                 }
                 is OrgInternalRankingsModel -> {
-                    binding.profileLink.visibility = View.GONE
+                    Log.d("image", "profile_img : ${data1.profile_image}")
+                    if(data1.profile_image.isNullOrBlank()) {
+                        binding.profileLink.visibility = View.GONE
+                    } else {
+                        binding.profileLink.visibility = View.VISIBLE
+                    }
+
                     binding.eachRanking.text = data1.ranking.toString()
-                    Glide.with(binding.eachProfile).load(data1.profileImage)
+                    Glide.with(binding.eachProfile).load(data1.profile_image)
                         .skipMemoryCache(true)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.eachProfile)
-                    binding.rankingGithubId.text = data1.githubId
+                    binding.rankingGithubId.text = data1.github_id
                     binding.rankingContribute.text = data1.tokens.toString()
                     binding.rankingItem.setOnClickListener {
-                        val mContext = context as MainActivity
-                        val intent = Intent(context, MyOrganizationInternalActivity::class.java)
-                        intent.putExtra("organization", data1.name)
-                        intent.putExtra("token", token)
-                        context.startActivity(intent)
+                        if(data1.profile_image.isNullOrBlank()) {
+                            val intent = Intent(context, MyOrganizationInternalActivity::class.java)
+                            intent.putExtra("organization", data1.name)
+                            intent.putExtra("token", token)
+                            context.startActivity(intent)
+                        } else {
+                            val intent = Intent(context, UserProfileActivity::class.java)
+                            intent.putExtra("userName", data1.github_id)
+                            intent.putExtra("token", token)
+                            context.startActivity(intent)
+                        }
+                    }
+                    when(data1.tier) {
+                        "BRONZE" -> {
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_bronze)
+                        }
+                        "SILVER" -> {
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_silver)
+                        }
+                        "GOLD" -> {
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_gold)
+                        }
+                        "PLATINUM" -> {
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_platinum)
+                        }
+                        "DIAMOND" -> {
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_diamond)
+                        }
+                        else -> {
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow)
+                        }
                     }
                 }
                 is TotalOrganizationModel -> {

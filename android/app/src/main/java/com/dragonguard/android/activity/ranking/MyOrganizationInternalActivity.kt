@@ -18,6 +18,7 @@ import com.dragonguard.android.databinding.ActivityOrganizationInternalRankingBi
 import com.dragonguard.android.model.rankings.OrgInternalRankingModel
 import com.dragonguard.android.model.rankings.OrgInternalRankingsModel
 import com.dragonguard.android.adapters.OrgInternalRankingAdapter
+import com.dragonguard.android.adapters.RankingsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +39,7 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
     private var changed = true
     private var ranking = 0
     private var orgInternalRankings = ArrayList<OrgInternalRankingsModel>()
-    private lateinit var organizationInternalRankingAdapter: OrgInternalRankingAdapter
+    private lateinit var organizationInternalRankingAdapter: RankingsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding =
@@ -149,7 +150,7 @@ class MyOrganizationInternalActivity : AppCompatActivity() {
         binding.orgInternalRanking.setItemViewCacheSize(orgInternalRankings.size)
         if (page == 0) {
             organizationInternalRankingAdapter =
-                OrgInternalRankingAdapter(orgInternalRankings, this, token)
+                RankingsAdapter(orgInternalRankings, this, token)
             binding.orgInternalRanking.adapter = organizationInternalRankingAdapter
             binding.orgInternalRanking.layoutManager = LinearLayoutManager(this)
             binding.orgInternalRanking.visibility = View.VISIBLE

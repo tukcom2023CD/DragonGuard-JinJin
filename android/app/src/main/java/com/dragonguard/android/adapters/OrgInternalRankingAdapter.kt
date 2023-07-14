@@ -27,7 +27,7 @@ class OrgInternalRankingAdapter (private val datas : ArrayList<OrgInternalRankin
         fun bind(data1: OrgInternalRankingsModel) {
             if(binding.totalUsersRanking.text.isNullOrEmpty() && binding.rankerId.text.isNullOrEmpty() && binding.rankerContribution.text.isNullOrEmpty()) {
                 binding.totalUsersRanking.text = data1.ranking.toString()
-                binding.rankerId.text = data1.githubId
+                binding.rankerId.text = data1.github_id
 //                Toast.makeText(context, "${data.tokens}", Toast.LENGTH_SHORT).show()
                 if(data1.tokens == null) {
                     binding.rankerContribution.text = "NONE"
@@ -37,7 +37,7 @@ class OrgInternalRankingAdapter (private val datas : ArrayList<OrgInternalRankin
 
                 binding.rankingFrame.setOnClickListener {
                     Intent(context, UserProfileActivity::class.java).apply{
-                        putExtra("userName", data1.githubId)
+                        putExtra("userName", data1.github_id)
                         putExtra("token", token)
                     }.run{context.startActivity(this)}
                 }
