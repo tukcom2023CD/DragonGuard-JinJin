@@ -29,6 +29,7 @@ final class UserProfileImgView: UIView{
         imgview.image = UIImage(named: "pomi")?.resize(newWidth: 60)
         imgview.layer.cornerRadius = 20
         imgview.clipsToBounds = true
+        imgview.isUserInteractionEnabled = true
         return imgview
     }()
     

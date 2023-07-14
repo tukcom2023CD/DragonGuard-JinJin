@@ -139,15 +139,18 @@ final class AllUserRankingController: UIViewController{
     private func addUI_AutoLayout_About_Ranking(){
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(topView)
         contentView.addSubview(tableView)
+        contentView.addSubview(topView)
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(AllUserTableviewCell.self, forCellReuseIdentifier: AllUserTableviewCell.identifier)
         setAutoLayout()
     }
-    
+//    @objc
+//    private func handleTapped(sender: UITapGestureRecognizer) {
+//            print("asdfjlksdafjaisf")
+//    }
     // MARK: AutoLayout After loading
     private func setAutoLayout(){
  
@@ -171,10 +174,13 @@ final class AllUserRankingController: UIViewController{
             make.trailing.equalTo(contentView.snp.trailing)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/3)
         }
+        
         tableView.snp.makeConstraints { make in
             make.top.equalTo(topView.snp.bottom).offset(5)
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
+            make.bottom.equalTo(contentView.snp.bottom)
+            
             let height = view.safeAreaLayoutGuide.layoutFrame.height/6
             
             if Int(height)*(userTierData.count)+10 > 0{
@@ -265,6 +271,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Ranking()
+                self.topView.delegate = self
                 self.topView.getData(list: self.topTierData)
             })
             .disposed(by: disposeBag)
@@ -450,6 +457,7 @@ extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
         if tableView == typeTableView{
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TypeRankingTableViewCell.identifier, for: indexPath) as? TypeRankingTableViewCell else { return UITableViewCell()}
             cell.backgroundColor = .white
+            
             cell.inputData(rank: indexPath.row + 4, data: userTierTypeOfRankingData[indexPath.row])
             return cell
         }
@@ -459,6 +467,20 @@ extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
             cell.inputData(rank: indexPath.row + 4, userData: userTierData[indexPath.row])
             return cell
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if tableView == typeTableView{
+            
+        }
+        else{
+            let nextPage = YourProfileController()
+            nextPage.userName = userTierData[indexPath.row].github_id
+            nextPage.modalPresentationStyle = .fullScreen
+            present(nextPage, animated: false)
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -483,6 +505,7 @@ extension AllUserRankingController: UICollectionViewDataSource, UICollectionView
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SelectionCollectionViewCell.identfier, for: indexPath) as? SelectionCollectionViewCell else { return UICollectionViewCell() }
         cell.backgroundColor = .white
         cell.inputData(text: selectionList[indexPath.row])
+        
         return cell
     }
     
@@ -533,4 +556,19 @@ extension AllUserRankingController: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return selectionList.count }
+}
+
+extension AllUserRankingController: SendUserName{
+    func sendUserName(name: String, type: String) {
+        if type == "user"{
+            let nextPage = YourProfileController()
+            nextPage.userName = name
+            nextPage.modalPresentationStyle = .fullScreen
+            present(nextPage, animated: false)
+        }
+        else if type == "Organization"{
+            print("zzz")
+        }
+    }
+    
 }

@@ -75,7 +75,7 @@ final class CustomUserView: UIView{
         
         
         stackView.snp.makeConstraints { make in
-            make.leading.equalTo(userImage.snp.trailing).offset(20)
+            make.leading.equalTo(userImage.snp.trailing).offset(10)
             make.trailing.equalToSuperview().offset(-20)
             make.centerY.equalTo(userImage.snp.centerY)
             make.width.equalTo(200)

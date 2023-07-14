@@ -51,7 +51,7 @@ final class AllUserTableviewCell: UITableViewCell{
         }
         
         customUIView.snp.makeConstraints { make in
-            make.leading.equalTo(rankingLabel.snp.trailing).offset(20)
+            make.leading.equalTo(rankingLabel.snp.trailing)
             make.centerY.equalToSuperview()
             make.top.equalToSuperview().offset(10)
             make.bottom.equalToSuperview().offset(-10)
@@ -70,11 +70,15 @@ final class AllUserTableviewCell: UITableViewCell{
         case "BRONZE":
             customUIView.layer.borderColor = CGColor(red: 101/255, green: 4/255, blue: 4/255, alpha: 1.0) /* #650404 */
         case "SILVER":
-            customUIView.layer.borderColor = CGColor(red: 46/255, green: 198/255, blue: 189/255, alpha: 1.0) /* #2ec6bd */
+            customUIView.layer.borderColor = CGColor(red: 192/255, green: 192/255, blue: 192/255, alpha: 1.0) /* #c0c0c0 */
         case "GOLD":
             customUIView.layer.borderColor = CGColor(red: 245/255, green: 238/255, blue: 176/255, alpha: 1.0) /* #f5eeb0 */
+        case "PLATINUM":
+            customUIView.layer.borderColor = CGColor(red: 46/255, green: 198/255, blue: 189/255, alpha: 1.0) /* #2ec6bd */
+        case "DIAMOND":
+            customUIView.layer.borderColor = CGColor(red: 0/255, green: 219/255, blue: 249/255, alpha: 1.0) /* #00dbf9 */
         default:
-            customUIView.layer.borderColor = CGColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1.0)
+            customUIView.layer.borderColor = CGColor(red: 255/255, green: 25/255, blue: 255/255, alpha: 1.0)
         }
     }
     

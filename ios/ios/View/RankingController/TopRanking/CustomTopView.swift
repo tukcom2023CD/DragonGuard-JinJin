@@ -7,10 +7,13 @@
 
 import Foundation
 import UIKit
+import RxSwift
 import SnapKit
 
 // MARK: 상위 1,2,3등 정보 보여주는 View
 final class CustomTopView: UIView{
+    private let disposeBag = DisposeBag()
+    var delegate: SendUserName?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -44,7 +47,7 @@ final class CustomTopView: UIView{
     
     // MARK: 스택 뷰
     private lazy var stackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [secondRankView, firstRankView, thirdRankView])
+        let stack = UIStackView()
         stack.axis = .horizontal
         stack.distribution = .fillEqually
         stack.backgroundColor = .white
@@ -53,7 +56,11 @@ final class CustomTopView: UIView{
     
     // MARK:
     private func addUI(){
-        self.addSubview(stackView)
+        addSubview(stackView)
+        
+        stackView.addArrangedSubview(secondRankView)
+        stackView.addArrangedSubview(firstRankView)
+        stackView.addArrangedSubview(thirdRankView)
         
         stackView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -64,12 +71,12 @@ final class CustomTopView: UIView{
         }
     }
     
-    
     func getData(list: [AllUserRankingModel]){
         stackView.removeFromSuperview()
         addUI()
         print("getData1")
         print(list)
+        
         switch list.count{
         case 0:
             print("CustomTopView None")
@@ -78,19 +85,58 @@ final class CustomTopView: UIView{
             thirdRankView.isHidden = true
         case 1:
             firstRankView.getData(data: list[0])
+            
+            firstRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: list[0].github_id ?? "", type: "user")
+                })
+                .disposed(by: disposeBag)
+            
             firstRankView.isHidden = false
             secondRankView.isHidden = true
             thirdRankView.isHidden = true
         case 2:
             firstRankView.getData(data: list[0])
             secondRankView.getData(data: list[1], rank: 2)
+            
+            firstRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: list[0].github_id ?? "", type: "user")
+                })
+                .disposed(by: disposeBag)
+            
+            secondRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: list[1].github_id ?? "", type: "user")
+                })
+                .disposed(by: disposeBag)
+            
             firstRankView.isHidden = false
             secondRankView.isHidden = false
             thirdRankView.isHidden = true
         case 3:
             firstRankView.getData(data: list[0])
             secondRankView.getData(data: list[1], rank: 2)
-            thirdRankView.getData(data: list[2] ,rank: 3)
+            thirdRankView.getData(data: list[2], rank: 3)
+            
+            firstRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: list[0].github_id ?? "", type: "user")
+                })
+                .disposed(by: disposeBag)
+            
+            secondRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: list[1].github_id ?? "", type: "user")
+                })
+                .disposed(by: disposeBag)
+            
+            thirdRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: list[2].github_id ?? "", type: "user")
+                })
+                .disposed(by: disposeBag)
+            
             firstRankView.isHidden = false
             secondRankView.isHidden = false
             thirdRankView.isHidden = false
@@ -98,9 +144,6 @@ final class CustomTopView: UIView{
             print("CustomTopView Error\n")
         }
         
-        firstRankView.layoutIfNeeded()
-        secondRankView.layoutIfNeeded()
-        thirdRankView.layoutIfNeeded()
     }
     
     /*
@@ -121,12 +164,32 @@ final class CustomTopView: UIView{
             thirdRankView.isHidden = true
         case 1:
             firstRankView.getData(data: typeList[0])
+            
+            firstRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: typeList[0].name ?? "", type: "Organization")
+                })
+                .disposed(by: disposeBag)
+            
             firstRankView.isHidden = false
             secondRankView.isHidden = true
             thirdRankView.isHidden = true
         case 2:
             firstRankView.getData(data: typeList[0])
             secondRankView.getData(data: typeList[1], rank: 2)
+            
+            firstRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: typeList[0].name ?? "", type: "Organization")
+                })
+                .disposed(by: disposeBag)
+            
+            secondRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: typeList[1].name ?? "", type: "Organization")
+                })
+                .disposed(by: disposeBag)
+            
             firstRankView.isHidden = false
             secondRankView.isHidden = false
             thirdRankView.isHidden = true
@@ -134,6 +197,25 @@ final class CustomTopView: UIView{
             firstRankView.getData(data: typeList[0])
             secondRankView.getData(data: typeList[1], rank: 2)
             thirdRankView.getData(data: typeList[2] ,rank: 3)
+            
+            firstRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: typeList[0].name ?? "", type: "Organization")
+                })
+                .disposed(by: disposeBag)
+            
+            secondRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: typeList[1].name ?? "", type: "Organization")
+                })
+                .disposed(by: disposeBag)
+            
+            thirdRankView.rx.tap
+                .subscribe(onNext: {
+                    self.delegate?.sendUserName(name: typeList[2].name ?? "", type: "Organization")
+                })
+                .disposed(by: disposeBag)
+            
             firstRankView.isHidden = false
             secondRankView.isHidden = false
             thirdRankView.isHidden = false
@@ -141,14 +223,12 @@ final class CustomTopView: UIView{
             print("CustomTopView Error\n")
             
         }
-        
-        firstRankView.layoutIfNeeded()
-        secondRankView.layoutIfNeeded()
-        thirdRankView.layoutIfNeeded()
     }
     
     
 }
 
 
-
+protocol SendUserName{
+    func sendUserName(name: String, type: String)
+}

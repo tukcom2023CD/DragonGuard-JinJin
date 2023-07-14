@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 // MARK: 2,3 등 보여주는 뷰
-final class CustomETCRankingUserViewElementView: UIView{
+final class CustomETCRankingUserViewElementView: UIButton{
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,7 +37,7 @@ final class CustomETCRankingUserViewElementView: UIView{
     }()
     
     // MARK:
-    private lazy var titleLabel: UILabel = {
+    private lazy var title: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.backgroundColor = .clear
@@ -58,7 +58,7 @@ final class CustomETCRankingUserViewElementView: UIView{
     private func addUI(){
         self.addSubview(rankingImgView)
         self.addSubview(userView)
-        self.addSubview(titleLabel)
+        self.addSubview(title)
         self.addSubview(numLabel)
         
         rankingImgView.snp.makeConstraints { make in
@@ -68,10 +68,10 @@ final class CustomETCRankingUserViewElementView: UIView{
         
         userView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(titleLabel.snp.top).offset(-5)
+            make.bottom.equalTo(title.snp.top).offset(-5)
         }
         
-        titleLabel.snp.makeConstraints { make in
+        title.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
             make.bottom.equalTo(numLabel.snp.top).offset(-5)
@@ -88,7 +88,7 @@ final class CustomETCRankingUserViewElementView: UIView{
     // MARK: 2,3 등 데이터 삽입
     func getData(data: AllUserRankingModel, rank: Int){
         addUI()
-        titleLabel.text = data.github_id ?? ""
+        title.text = data.github_id ?? ""
         numLabel.text = "\(data.tokens ?? 0)"
         
         if rank == 2{
@@ -122,7 +122,7 @@ final class CustomETCRankingUserViewElementView: UIView{
     // MARK: 2,3 등 organization 데이터 삽입
     func getData(data: TypeRankingModel, rank: Int){
         addUI()
-        titleLabel.text = data.name ?? ""
+        title.text = data.name ?? ""
         numLabel.text = "\(data.token_sum ?? 0)"
         
         if rank == 2{

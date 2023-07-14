@@ -11,7 +11,7 @@ import SnapKit
 import RxSwift
 
 // MARK: 1등 보여주는 뷰
-final class CustomFirstRankingUserViewElementView: UIView{
+final class CustomFirstRankingUserViewElementView: UIButton{
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,7 +38,7 @@ final class CustomFirstRankingUserViewElementView: UIView{
     }()
     
     // MARK:
-    private lazy var titleLabel: UILabel = {
+    private lazy var title: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.backgroundColor = .white
@@ -59,8 +59,13 @@ final class CustomFirstRankingUserViewElementView: UIView{
     private func addUI(){
         self.addSubview(rankingImgView)
         self.addSubview(userView)
-        self.addSubview(titleLabel)
+        self.addSubview(title)
         self.addSubview(numLabel)
+        
+        rankingImgView.isUserInteractionEnabled = false
+        title.isUserInteractionEnabled = false
+        userView.isUserInteractionEnabled = false
+        numLabel.isUserInteractionEnabled = false
         
         rankingImgView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -72,14 +77,14 @@ final class CustomFirstRankingUserViewElementView: UIView{
             make.centerX.equalToSuperview()
         }
         
-        titleLabel.snp.makeConstraints { make in
+        title.snp.makeConstraints { make in
             make.top.equalTo(userView.snp.bottom).offset(5)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
         }
         
         numLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom)
+            make.top.equalTo(title.snp.bottom)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
         }
@@ -89,7 +94,7 @@ final class CustomFirstRankingUserViewElementView: UIView{
     // MARK: 1등 데이터 삽입
     func getData(data: AllUserRankingModel){
         addUI()
-        titleLabel.text = data.github_id ?? ""
+        title.text = data.github_id ?? ""
         numLabel.text = "\(data.tokens ?? 0)"
         userView.userLink = data.profile_image
         
@@ -120,7 +125,7 @@ final class CustomFirstRankingUserViewElementView: UIView{
     // MARK: 1 등 organization 데이터 삽입
     func getData(data: TypeRankingModel){
         addUI()
-        titleLabel.text = data.name ?? ""
+        title.text = data.name ?? ""
         numLabel.text = "\(data.token_sum ?? 0)"
         
         // 티어 색상마다 색깔 다르게
