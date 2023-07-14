@@ -12,7 +12,7 @@ import SnapKit
 
 // MARK: 상위 1,2,3등 정보 보여주는 View
 final class CustomTopView: UIView{
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     var delegate: SendUserName?
     
     override init(frame: CGRect) {
@@ -74,6 +74,8 @@ final class CustomTopView: UIView{
     func getData(list: [AllUserRankingModel]){
         stackView.removeFromSuperview()
         addUI()
+        disposeBag = DisposeBag()
+
         print("getData1")
         print(list)
         
@@ -134,6 +136,7 @@ final class CustomTopView: UIView{
             thirdRankView.rx.tap
                 .subscribe(onNext: {
                     self.delegate?.sendUserName(name: list[2].github_id ?? "", type: "user")
+                    
                 })
                 .disposed(by: disposeBag)
             
@@ -153,6 +156,8 @@ final class CustomTopView: UIView{
     func getData(typeList: [TypeRankingModel]){
         stackView.removeFromSuperview()
         addUI()
+        disposeBag = DisposeBag()
+
         print("getData2")
         print(typeList)
         
@@ -225,7 +230,8 @@ final class CustomTopView: UIView{
         }
     }
     
-    
+   
+
 }
 
 

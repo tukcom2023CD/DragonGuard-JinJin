@@ -97,7 +97,7 @@ final class MainViewController: UIViewController {
         view.layer.cornerRadius = 20
         view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
         view.clipsToBounds = true
-        view.layer.masksToBounds = true
+//        view.layer.masksToBounds = true
         return view
     }()
     

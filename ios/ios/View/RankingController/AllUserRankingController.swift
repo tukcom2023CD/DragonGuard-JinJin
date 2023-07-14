@@ -230,6 +230,7 @@ final class AllUserRankingController: UIViewController{
             make.top.equalTo(topView.snp.bottom).offset(5)
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
+            make.bottom.equalTo(contentView.snp.bottom)
             let height = view.safeAreaLayoutGuide.layoutFrame.height/6
             
             if Int(height)*(userTierTypeOfRankingData.count)+10 > 0{
@@ -306,6 +307,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Type()
+                self.topView.delegate = self
                 self.topView.getData(typeList: self.topTierTypeOfRankingData)
             })
             .disposed(by: disposeBag)
@@ -340,6 +342,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Type()
+                self.topView.delegate = self
                 self.topView.getData(typeList: self.topTierTypeOfRankingData)
             })
             .disposed(by: disposeBag)
@@ -374,6 +377,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Type()
+                self.topView.delegate = self
                 self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 
             })
@@ -407,6 +411,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Type()
+                self.topView.delegate = self
                 self.topView.getData(typeList: self.topTierTypeOfRankingData)
                 
             })
@@ -442,6 +447,7 @@ final class AllUserRankingController: UIViewController{
                 }
                 
                 self.addUI_AutoLayout_About_Type()
+                self.topView.delegate = self
                 self.topView.getData(typeList: self.topTierTypeOfRankingData)
 
             })
@@ -472,9 +478,12 @@ extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if tableView == typeTableView{
-            
+            let nextPage = OrganizationListController()
+            nextPage.organizationName = userTierTypeOfRankingData[indexPath.row].name
+            nextPage.modalPresentationStyle = .fullScreen
+            present(nextPage, animated: false)
         }
-        else{
+        else if tableView == tableView{
             let nextPage = YourProfileController()
             nextPage.userName = userTierData[indexPath.row].github_id
             nextPage.modalPresentationStyle = .fullScreen
@@ -560,6 +569,8 @@ extension AllUserRankingController: UICollectionViewDataSource, UICollectionView
 
 extension AllUserRankingController: SendUserName{
     func sendUserName(name: String, type: String) {
+        print(name)
+        print("type :\(type)")
         if type == "user"{
             let nextPage = YourProfileController()
             nextPage.userName = name
@@ -568,6 +579,12 @@ extension AllUserRankingController: SendUserName{
         }
         else if type == "Organization"{
             print("zzz")
+            
+            let nextPage = OrganizationListController()
+            nextPage.organizationName = name
+            nextPage.modalPresentationStyle = .fullScreen
+            self.present(nextPage, animated: true)
+            
         }
     }
     
