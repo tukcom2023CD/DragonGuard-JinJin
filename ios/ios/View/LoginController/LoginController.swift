@@ -135,19 +135,12 @@ final class LoginController: UIViewController{
                 if first && second{
                     
                     let rootView = TabBarViewController()
-                    
-                    //                    for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
-                    //                       print("\(key): \(value)")
-                    //                     }
-                    
                     self.klipLoginBtn.isEnabled = false
                     self.goGithubBtn.isEnabled = true
                     self.klipLoginBtn.layer.opacity = 1
                     self.goGithubBtn.layer.opacity = 1
                     rootView.modalPresentationStyle = .fullScreen
                     self.present(rootView, animated: true)
-                    //                    self.navigationController?.pushViewController(rootView, animated: true)
-                    
                 }
                 else if first{
                     self.goGithubBtn.layer.opacity = 0.4
@@ -244,7 +237,6 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                 
                 if accessTokenCheck && refreshTokenCheck{
                     self.dismiss(animated: true)
-                    //                        self.navigationController?.popViewController(animated: true)
                     LoginViewModel.loginService.githubAuthSubject.onNext(true)
                 }
                 

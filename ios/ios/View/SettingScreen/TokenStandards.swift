@@ -42,7 +42,7 @@ final class TokenStandards : UIViewController {
     
     // MARK: 토큰 부여 기준을 담는 StackView
     private lazy var standards: UIStackView = {
-       let standards = UIStackView(arrangedSubviews: [commitLabel, issueLabel, prLabel])
+       let standards = UIStackView(arrangedSubviews: [commitLabel, issueLabel, prLabel, codeReviewLabel])
         standards.axis = .horizontal
         standards.distribution = .fillEqually
         return standards
@@ -78,9 +78,19 @@ final class TokenStandards : UIViewController {
         return label
     }()
     
+    // MARK: 토큰 부여 기준) PR의 경우
+    private lazy var codeReviewLabel: UILabel = {
+       let label = UILabel()
+        label.text = "Code Review"
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 14)
+        label.textAlignment = .center
+        return label
+    }()
+    
     // MARK: GTR 당 숫자를 담는 StackView
     private lazy var numbers: UIStackView = {
-       let numbers = UIStackView(arrangedSubviews: [commitNum, issueNum, prNum])
+       let numbers = UIStackView(arrangedSubviews: [commitNum, issueNum, prNum, codeReviewNum])
         numbers.axis = .horizontal
         numbers.distribution = .fillEqually
         return numbers
@@ -108,6 +118,16 @@ final class TokenStandards : UIViewController {
     
     // MARK: 1 GTR에 해당하는 PR 수
     private lazy var prNum: UILabel = {
+       let label = UILabel()
+        label.text = "1"
+        label.textColor = .black
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 14)
+        label.textAlignment = .center
+        return label
+    }()
+    
+    // MARK: 1 GTR에 해당하는 code review 수
+    private lazy var codeReviewNum: UILabel = {
        let label = UILabel()
         label.text = "1"
         label.textColor = .black

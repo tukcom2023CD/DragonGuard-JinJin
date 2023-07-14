@@ -28,7 +28,7 @@ extension UIImageView {
                 if let image = UIImage(data: data) {
                     DispatchQueue.main.async {
                         if let size = size{
-                            img.image = image.resize(newWidth: size)
+                            img.image = image.resize(newWidth: size, newHeight: size)
                         }
                         else{
                             img.image = image
