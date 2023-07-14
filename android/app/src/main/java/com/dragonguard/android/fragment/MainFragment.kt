@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.activity.basic.TokenHistoryActivity
@@ -91,7 +92,10 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
             binding.userId.text = info.github_id
         }
         if(!requireActivity().isFinishing) {
-            Glide.with(binding.githubProfile).load(info.profile_image)
+            Log.d("profile", "profile image ${info.profile_image}")
+            Glide.with(this).load(info.profile_image)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(binding.githubProfile)
         }
 

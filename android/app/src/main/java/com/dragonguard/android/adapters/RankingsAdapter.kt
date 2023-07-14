@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.activity.compare.CompareSearchActivity
@@ -29,6 +30,8 @@ class RankingsAdapter(private val rankings: List<*>, private val context: Contex
                 is TotalUsersRankingsModel -> {
                     binding.eachRanking.text = data1.ranking.toString()
                     Glide.with(binding.eachProfile).load(data1.profile_image)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.eachProfile)
                     binding.rankingGithubId.text = data1.github_id
                     binding.rankingContribute.text = data1.tokens.toString()
@@ -64,6 +67,8 @@ class RankingsAdapter(private val rankings: List<*>, private val context: Contex
                     binding.profileLink.visibility = View.GONE
                     binding.eachRanking.text = data1.ranking.toString()
                     Glide.with(binding.eachProfile).load(data1.profileImage)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.eachProfile)
                     binding.rankingGithubId.text = data1.githubId
                     binding.rankingContribute.text = data1.tokens.toString()

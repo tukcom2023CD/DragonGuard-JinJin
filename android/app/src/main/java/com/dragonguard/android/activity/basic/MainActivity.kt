@@ -58,6 +58,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
             } else if (it.resultCode == 1) {
+                val tokenIntent = it.data
+                val realToken = tokenIntent!!.getStringExtra("token")
+                token = realToken!!
+                prefs.setJwtToken(realToken)
                 multipleSearchUser()
             }
         }
@@ -220,12 +224,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        count = 0
         state = true
     }
 
     override fun onRestart() {
         super.onRestart()
-        count = 0
         state = true
         finish = false
         loginOut = false

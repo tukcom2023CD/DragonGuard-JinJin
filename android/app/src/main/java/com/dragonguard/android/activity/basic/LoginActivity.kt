@@ -247,6 +247,7 @@ class LoginActivity : AppCompatActivity() {
                 Log.d("로그인 상태", "로그인 상태 결과 : $result")
                 if(result) {
                     val intentF = Intent(applicationContext, MainActivity::class.java)
+                    intentF.putExtra("token", token)
                     setResult(1, intentF)
                     finish()
                 } else {

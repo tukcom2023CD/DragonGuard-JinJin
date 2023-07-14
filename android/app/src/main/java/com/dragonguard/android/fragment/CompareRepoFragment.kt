@@ -18,6 +18,7 @@ import androidx.core.view.setMargins
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dragonguard.android.R
 import com.dragonguard.android.databinding.FragmentCompareRepoBinding
 import com.dragonguard.android.model.compare.CompareRepoMembersResponseModel
@@ -421,41 +422,57 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
             when(order) {
                 1 -> {
                     Glide.with(binding.repo1User1).load(url)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.repo1User1)
                     binding.compareRepoFrame.visibility = View.VISIBLE
                 }
                 2 -> {
                     Glide.with(binding.repo1User2).load(url)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.repo1User2)
                     binding.compareRepoFrame.visibility = View.VISIBLE
                 }
                 3 -> {
                     Glide.with(binding.repo1User3).load(url)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.repo1User3)
                     binding.compareRepoFrame.visibility = View.VISIBLE
                 }
                 4 -> {
                     Glide.with(binding.repo1User4).load(url)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.repo1User4)
                     binding.compareRepoFrame.visibility = View.VISIBLE
                 }
                 5 -> {
                     Glide.with(binding.repo2User1).load(url)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.repo2User1)
                     binding.compareRepoFrame.visibility = View.VISIBLE
                 }
                 6 -> {
                     Glide.with(binding.repo2User2).load(url)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.repo2User2)
                     binding.compareRepoFrame.visibility = View.VISIBLE
                 }
                 7 -> {
                     Glide.with(binding.repo2User3).load(url)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.repo2User3)
                     binding.compareRepoFrame.visibility = View.VISIBLE
                 }
                 8 -> {
                     Glide.with(binding.repo2User4).load(url)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.repo2User4)
                     binding.compareRepoFrame.visibility = View.VISIBLE
                 }

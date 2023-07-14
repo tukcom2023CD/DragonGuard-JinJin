@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dragonguard.android.activity.profile.UserProfileActivity
 import com.dragonguard.android.databinding.ContributorsListBinding
 import com.dragonguard.android.model.contributors.GitRepoMember
@@ -34,6 +35,8 @@ class ContributorsAdapter (private val datas : ArrayList<GitRepoMember>, private
             val blue = (Math.random()*255).toInt()
 //            binding.contributorColor.imageTintList = ColorStateList.valueOf(Color.rgb(red,green,blue))
             Glide.with(binding.contributorProfile).load(data1.profile_url)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(binding.contributorProfile)
             colors.add(Color.rgb(red,green,blue))
             binding.contributorProfile.clipToOutline = true

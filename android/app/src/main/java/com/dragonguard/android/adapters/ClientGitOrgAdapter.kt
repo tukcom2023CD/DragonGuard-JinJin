@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dragonguard.android.activity.profile.ClientReposActivity
 import com.dragonguard.android.activity.search.RepoContributorsActivity
 import com.dragonguard.android.databinding.GitOrganizationListBinding
@@ -27,6 +28,8 @@ class ClientGitOrgAdapter (private val datas : List<GitOrganization>, private va
         //클릭리스너 구현
         fun bind(data: GitOrganization) {
             Glide.with(binding.gitOrganizationProfile).load(data.profile_image)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(binding.gitOrganizationProfile)
 
             binding.gitOrganizationName.text = data.name

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.profile.UserProfileActivity
 import com.dragonguard.android.databinding.FragmentAllRankingsBinding
@@ -172,6 +173,8 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 }
                 binding.firstId.text = model.github_id
                 Glide.with(binding.firstProfile).load(model.profile_image)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(binding.firstProfile)
                 binding.firstContribute.text = model.tokens.toString()
                 binding.firstFrame.setOnClickListener {
@@ -207,6 +210,8 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 }
                 binding.secondId.text = model.github_id
                 Glide.with(binding.secondProfile).load(model.profile_image)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(binding.secondProfile)
                 binding.secondContribute.text = model.tokens.toString()
                 binding.secondFrame.setOnClickListener {
@@ -242,6 +247,8 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 }
                 binding.thirdId.text = model.github_id
                 Glide.with(binding.thirdProfile).load(model.profile_image)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(binding.thirdProfile)
                 binding.thirdContribute.text = model.tokens.toString()
                 binding.thirdFrame.setOnClickListener {

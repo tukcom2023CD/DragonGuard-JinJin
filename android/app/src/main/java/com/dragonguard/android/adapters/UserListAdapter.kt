@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dragonguard.android.databinding.FragmentCompareUserBinding
 import com.dragonguard.android.databinding.LanguageListBinding
 import com.dragonguard.android.fragment.CompareUserFragment
@@ -30,6 +31,8 @@ class UserListAdapter(private val users: ArrayList<GitRepoMember>, private val u
                 when(type) {
                     1 -> {
                         Glide.with(fragmentBinding.user1Profile).load(users[position].profile_url)
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .into(fragmentBinding.user1Profile)
                         fragmentBinding.user1GithubId.text = users[position].github_id
                         users[position].github_id?.let{
@@ -41,6 +44,8 @@ class UserListAdapter(private val users: ArrayList<GitRepoMember>, private val u
                     }
                     2 -> {
                         Glide.with(fragmentBinding.user2Profile).load(users[position].profile_url)
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .into(fragmentBinding.user2Profile)
                         fragmentBinding.user2GithubId.text = users[position].github_id
                         userFragment.user2 = users[position].github_id.toString()

@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dragonguard.android.R
 import com.dragonguard.android.adapters.OthersReposAdapter
 import com.dragonguard.android.databinding.ActivityUserProfileBinding
@@ -58,6 +59,8 @@ class UserProfileActivity : AppCompatActivity() {
                 Log.d("result", "result = $result")
                 result?.let {
                     Glide.with(binding.profileImg).load(it.profile_image)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(binding.profileImg)
                     binding.userRank.text = it.rank.toString()
                     binding.userCommit.text = it.commits.toString()
