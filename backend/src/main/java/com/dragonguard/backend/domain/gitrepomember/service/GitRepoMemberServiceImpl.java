@@ -75,15 +75,15 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
                 .collect(Collectors.toList());
     }
 
-    private GitRepoMember getGitRepoMember(final GitRepoMemberResponse gitRepoMemberResponse, final Member member, final GitRepo gitRepo) {
+    private GitRepoMember getGitRepoMember(final GitRepoMemberResponse response, final Member member, final GitRepo gitRepo) {
         GitRepoMember gitRepoMember = gitRepoMemberRepository.findByGitRepoAndMember(gitRepo, member)
                 .orElseGet(() -> gitRepoMemberMapper.toEntity(member, gitRepo));
 
-        gitRepoMember.updateGitRepoContribution(
-                gitRepoMemberResponse.getCommits(),
-                gitRepoMemberResponse.getAdditions(),
-                gitRepoMemberResponse.getDeletions());
-        gitRepoMember.getMember().updateProfileImage(gitRepoMemberResponse.getProfileUrl());
+        gitRepoMember.updateProfileImageAndContribution(
+                response.getProfileUrl(),
+                response.getCommits(),
+                response.getAdditions(),
+                response.getDeletions());
 
         return gitRepoMember;
     }
