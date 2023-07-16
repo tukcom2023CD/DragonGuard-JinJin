@@ -83,6 +83,7 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
                 gitRepoMemberResponse.getCommits(),
                 gitRepoMemberResponse.getAdditions(),
                 gitRepoMemberResponse.getDeletions());
+        gitRepoMember.getMember().updateProfileImage(gitRepoMemberResponse.getProfileUrl());
 
         return gitRepoMember;
     }

@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.gitrepo.service;
 
+import com.dragonguard.backend.domain.gitrepo.dto.client.Author;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.Week;
 import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributionMap;
@@ -16,6 +17,7 @@ import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -62,7 +64,9 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
             return List.of();
         }
         Set<GitRepoMemberClientResponse> contributions = new HashSet<>(responses.get());
-        if (contributions.isEmpty()) return List.of();
+        if (contributions.isEmpty() || contributions.stream().anyMatch(c -> !StringUtils.hasText(c.getAuthor().getAvatarUrl()))) {
+            return List.of();
+        }
 
         List<GitRepoMemberResponse> result = getResponseList(
                 contributions,
@@ -81,11 +85,11 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
         return contributions.stream()
                 .filter(c -> c.getWeeks() != null && !c.getWeeks().isEmpty() && c.getTotal() != null && c.getAuthor() != null)
                 .map(clientResponse -> {
-                    String githubId = clientResponse.getAuthor().getLogin();
-                    String profileUrl = clientResponse.getAuthor().getAvatarUrl();
+                    Author author = clientResponse.getAuthor();
+                    String githubId = author.getLogin();
                     return new GitRepoMemberResponse(
                             githubId,
-                            profileUrl,
+                            author.getAvatarUrl(),
                             clientResponse.getTotal(),
                             additions.getContributionByKey(clientResponse),
                             deletions.getContributionByKey(clientResponse),
@@ -123,7 +127,8 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
     }
 
     private boolean isGitRepoMemberValid(final Set<GitRepoMember> gitRepoMembers) {
-        return !gitRepoMembers.isEmpty() && gitRepoMembers.stream().noneMatch(grm -> Objects.isNull(grm.getGitRepoContribution()));
+        return !gitRepoMembers.isEmpty() && gitRepoMembers.stream().noneMatch(grm ->
+                Objects.isNull(grm.getGitRepoContribution()) || StringUtils.hasText(grm.getMember().getProfileImage()));
     }
 
     public GitRepoResponse findGitRepoInfos(final String name) {
