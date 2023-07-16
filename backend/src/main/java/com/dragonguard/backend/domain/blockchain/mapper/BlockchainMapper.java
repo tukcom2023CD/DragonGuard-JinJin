@@ -5,6 +5,7 @@ import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.entity.History;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.mapper.EntityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
  */
 
 @Mapper(componentModel = "spring", imports = {ContributeType.class})
-public interface BlockchainMapper {
+public interface BlockchainMapper extends EntityMapper {
     Blockchain toEntity(final Member member, final ContributeType contributeType);
     @Mapping(target = "amount", expression = "java(history.getAmount().longValue())")
     @Mapping(target = "memberId", source = "history.blockchain.member.id")

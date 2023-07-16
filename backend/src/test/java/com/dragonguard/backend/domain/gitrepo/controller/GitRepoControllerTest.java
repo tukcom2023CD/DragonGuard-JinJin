@@ -3,11 +3,9 @@ package com.dragonguard.backend.domain.gitrepo.controller;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.*;
-import com.dragonguard.backend.domain.gitrepo.service.GitRepoService;
-import com.dragonguard.backend.domain.gitrepomember.dto.request.GitRepoMemberCompareRequest;
-import com.dragonguard.backend.domain.gitrepomember.dto.response.GitRepoMemberResponse;
-import com.dragonguard.backend.domain.gitrepomember.dto.response.TwoGitRepoMemberResponse;
+import com.dragonguard.backend.domain.gitrepo.service.GitRepoMemberFacade;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GitRepoController.class)
 class GitRepoControllerTest extends RestDocumentTest {
 
-    @MockBean private GitRepoService gitRepoService;
+    @MockBean private GitRepoMemberFacade gitRepoMemberFacade;
 
     @Test
     @DisplayName("레포 멤버 조회가 수행되는가 (수동 업데이트)")
@@ -45,7 +43,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                 new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
                 new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true));
         GitRepoResponse expected = new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
-        given(gitRepoService.findGitRepoInfos(any())).willReturn(expected);
+        given(gitRepoMemberFacade.findGitRepoInfos(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -68,7 +66,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                 new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
                 new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true));
         GitRepoResponse expected = new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
-        given(gitRepoService.findGitRepoInfosAndUpdate(any())).willReturn(expected);
+        given(gitRepoMemberFacade.findGitRepoInfosAndUpdate(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -95,7 +93,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                         new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
                         new GitRepoMemberResponse("posite","http://somethingProfileUrl", 99, 1001, 500, true),
                         new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true)));
-        given(gitRepoService.findMembersByGitRepoForCompare(any())).willReturn(expected);
+        given(gitRepoMemberFacade.findMembersByGitRepoForCompare(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -125,7 +123,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                         new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
                         new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
                         new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true)));
-        given(gitRepoService.findMembersByGitRepoForCompareAndUpdate(any())).willReturn(expected);
+        given(gitRepoMemberFacade.findMembersByGitRepoForCompareAndUpdate(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -160,7 +158,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
                         new SummaryResponse(new IntSummaryStatistics(4, 9998, 10000, 29997)),
                         List.of("http://profileImage", "http://profileImage")));
-        given(gitRepoService.findTwoGitRepos(any())).willReturn(expected);
+        given(gitRepoMemberFacade.findTwoGitRepos(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -195,7 +193,7 @@ class GitRepoControllerTest extends RestDocumentTest {
                         Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
                         new SummaryResponse(new IntSummaryStatistics(4, 9998, 10000, 29997)),
                         List.of("http://profileImage", "http://profileImage")));
-        given(gitRepoService.findTwoGitReposAndUpdate(any())).willReturn(expected);
+        given(gitRepoMemberFacade.findTwoGitReposAndUpdate(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -218,7 +216,7 @@ class GitRepoControllerTest extends RestDocumentTest {
         GitRepoMemberCompareResponse expected = new GitRepoMemberCompareResponse(
                 new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
                 new GitRepoMemberResponse("ohksj", "http://somethingProfileUrl", 101, 1001, 501, true));
-        given(gitRepoService.findTwoGitRepoMember(any())).willReturn(expected);
+        given(gitRepoMemberFacade.findTwoGitRepoMember(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(

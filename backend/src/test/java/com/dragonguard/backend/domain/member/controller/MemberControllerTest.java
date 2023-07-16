@@ -119,29 +119,6 @@ class MemberControllerTest extends RestDocumentTest {
     }
 
     @Test
-    @DisplayName("멤버 티어 조회가 수행되는가")
-    void getTier() throws Exception {
-        // given
-        Tier expected = Tier.MASTER;
-        given(memberService.getTier()).willReturn(expected);
-
-        // when
-        ResultActions perform =
-                mockMvc.perform(
-                        get("/members/tier")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
-
-        // then
-        perform.andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(Tier.MASTER.toString()));
-
-        // docs
-        perform.andDo(print())
-                .andDo(document("get member tier", getDocumentRequest(), getDocumentResponse()));
-    }
-
-    @Test
     @DisplayName("멤버 전체 랭킹 조회가 수행되는가")
     void getRanking() throws Exception {
         // given

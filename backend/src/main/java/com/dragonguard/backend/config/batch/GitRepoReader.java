@@ -26,7 +26,7 @@ public class GitRepoReader implements ItemReader<GitRepo> {
     }
 
     @Override
-    public GitRepo read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+    public synchronized GitRepo read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
         if (nextIndex < list.size()) {
             return list.get(nextIndex++);
         }

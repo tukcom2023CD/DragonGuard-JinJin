@@ -314,11 +314,6 @@ public class Member implements Auditable {
         this.profileImage = profileImage;
     }
 
-    public Integer getContributionSum() {
-        if (this.commit == null || this.issue == null || this.pullRequest == null || this.codeReview == null) return -1;
-        return getCommitSumWithRelation() + getPullRequestSumWithRelation() + getIssueSumWithRelation() + getCodeReviewSumWithRelation();
-    }
-
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }

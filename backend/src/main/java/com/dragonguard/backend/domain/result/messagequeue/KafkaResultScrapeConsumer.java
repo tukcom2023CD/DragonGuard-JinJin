@@ -1,12 +1,12 @@
 package com.dragonguard.backend.domain.result.messagequeue;
 
-import com.dragonguard.backend.domain.result.dto.kafka.ResultDetailsResponse;
-import com.dragonguard.backend.domain.result.dto.kafka.ResultKafkaResponse;
-import com.dragonguard.backend.domain.result.dto.kafka.ScrapeResult;
-import com.dragonguard.backend.domain.result.dto.kafka.SearchKafkaResponse;
-import com.dragonguard.backend.domain.result.service.ResultService;
+import com.dragonguard.backend.domain.search.dto.kafka.ResultDetailsResponse;
+import com.dragonguard.backend.domain.search.dto.kafka.ResultKafkaResponse;
+import com.dragonguard.backend.domain.search.dto.kafka.ScrapeResult;
+import com.dragonguard.backend.domain.search.dto.kafka.SearchKafkaResponse;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.entity.SearchType;
+import com.dragonguard.backend.domain.search.service.SearchResultFacade;
 import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,8 +27,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class KafkaResultScrapeConsumer implements KafkaConsumer<ResultKafkaResponse> {
-
-    private final ResultService resultService;
+    private final SearchResultFacade resultService;
     private final ObjectMapper objectMapper;
 
     @Override

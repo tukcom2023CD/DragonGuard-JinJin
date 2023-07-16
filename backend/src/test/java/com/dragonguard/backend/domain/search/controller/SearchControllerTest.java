@@ -1,8 +1,8 @@
 package com.dragonguard.backend.domain.search.controller;
 
-import com.dragonguard.backend.domain.result.dto.response.GitRepoResultResponse;
-import com.dragonguard.backend.domain.result.dto.response.UserResultResponse;
-import com.dragonguard.backend.domain.search.service.SearchService;
+import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponse;
+import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponse;
+import com.dragonguard.backend.domain.search.service.SearchResultFacade;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,21 +29,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(SearchController.class)
 class SearchControllerTest extends RestDocumentTest {
     @MockBean
-    private SearchService searchService;
+    private SearchResultFacade searchService;
 
     @Test
     @DisplayName("검색 결과 조회")
     void getSearchResult() throws Exception {
         // given
-        List<UserResultResponse> expected = Arrays.asList(
-                new UserResultResponse(1L, "ohksj77"),
-                new UserResultResponse(2L, "HJ39"),
-                new UserResultResponse(3L, "posite"),
-                new UserResultResponse(4L, "Sammuelwoojae"),
-                new UserResultResponse(5L, "And"),
-                new UserResultResponse(6L, "DragonGuard-JinJin"));
+        List<UserResultSearchResponse> expected = Arrays.asList(
+                new UserResultSearchResponse(1L, "ohksj77"),
+                new UserResultSearchResponse(2L, "HJ39"),
+                new UserResultSearchResponse(3L, "posite"),
+                new UserResultSearchResponse(4L, "Sammuelwoojae"),
+                new UserResultSearchResponse(5L, "And"),
+                new UserResultSearchResponse(6L, "DragonGuard-JinJin"));
 
-        given(searchService.getUserSearchResultByClient(any(), any(), any())).willReturn(expected);
+        given(searchService.getUserSearchResultByClient(any(), any())).willReturn(expected);
 
         // when
         ResultActions perform =

@@ -5,12 +5,12 @@ import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.commit.entity.Commit;
-import com.dragonguard.backend.domain.commit.mapper.CommitMapper;
 import com.dragonguard.backend.domain.commit.repository.CommitRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
+import com.dragonguard.backend.global.service.ContributionService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
@@ -21,13 +21,14 @@ import lombok.RequiredArgsConstructor;
 
 @TransactionService
 @RequiredArgsConstructor
-public class CommitService implements EntityLoader<Commit, Long> {
+public class CommitService implements ContributionService<Commit, Long> {
     private final CommitRepository commitRepository;
-    private final CommitMapper commitMapper;
+    private final ContributionEntityMapper<Commit> commitMapper;
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
     private final BlockchainService blockchainService;
 
-    public void saveCommits(final Member member, final Integer commitNum, final Integer year) {
+    @Override
+    public void saveContribution(final Member member, final Integer commitNum, final Integer year) {
         Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.COMMIT);
 
         if (commitRepository.existsByMemberAndYear(member, year)) {
@@ -35,7 +36,7 @@ public class CommitService implements EntityLoader<Commit, Long> {
             sendTransaction(member, commitNum - blockchain.getSumOfAmount(), blockchain);
             return;
         }
-        commitRepository.save(commitMapper.toEntity(commitNum, year, member));
+        commitRepository.save(commitMapper.toEntity(member, commitNum, year));
         sendTransaction(member, commitNum.longValue(), blockchain);
     }
 

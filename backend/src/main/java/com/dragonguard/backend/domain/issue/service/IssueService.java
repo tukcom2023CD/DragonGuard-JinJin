@@ -5,12 +5,12 @@ import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.issue.entity.Issue;
-import com.dragonguard.backend.domain.issue.mapper.IssueMapper;
 import com.dragonguard.backend.domain.issue.repository.IssueRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
+import com.dragonguard.backend.global.service.ContributionService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
@@ -21,13 +21,14 @@ import lombok.RequiredArgsConstructor;
 
 @TransactionService
 @RequiredArgsConstructor
-public class IssueService implements EntityLoader<Issue, Long> {
+public class IssueService implements ContributionService<Issue, Long> {
     private final IssueRepository issueRepository;
-    private final IssueMapper issueMapper;
+    private final ContributionEntityMapper<Issue> issueMapper;
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
     private final BlockchainService blockchainService;
 
-    public void saveIssues(final Member member, final Integer issueNum, final Integer year) {
+    @Override
+    public void saveContribution(final Member member, final Integer issueNum, final Integer year) {
         Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.ISSUE);
 
         if (issueRepository.existsByMemberAndYear(member, year)) {

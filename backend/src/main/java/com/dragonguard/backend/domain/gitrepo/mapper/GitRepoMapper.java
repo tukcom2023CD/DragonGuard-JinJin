@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.gitrepo.mapper;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
+import com.dragonguard.backend.global.mapper.EntityMapper;
 import org.mapstruct.Mapper;
 
 /**
@@ -9,6 +10,6 @@ import org.mapstruct.Mapper;
  */
 
 @Mapper(componentModel = "spring")
-public interface GitRepoMapper {
+public interface GitRepoMapper extends EntityMapper {
     GitRepo toEntity(final String name);
 }

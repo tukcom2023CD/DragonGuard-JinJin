@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.codereview.mapper;
 
 import com.dragonguard.backend.domain.codereview.entity.CodeReview;
-import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
 import org.mapstruct.Mapper;
 
 import java.time.LocalDate;
@@ -12,6 +12,4 @@ import java.time.LocalDate;
  */
 
 @Mapper(componentModel = "spring", imports = {LocalDate.class})
-public interface CodeReviewMapper {
-    CodeReview toEntity(final Integer amount, final Integer year, final Member member);
-}
+public interface CodeReviewMapper extends ContributionEntityMapper<CodeReview> {}

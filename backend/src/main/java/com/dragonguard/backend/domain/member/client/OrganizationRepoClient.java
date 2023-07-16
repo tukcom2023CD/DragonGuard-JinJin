@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.member.client;
 
 import com.dragonguard.backend.domain.member.dto.client.MemberClientRequest;
 import com.dragonguard.backend.domain.member.dto.client.OrganizationRepoResponse;
-import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

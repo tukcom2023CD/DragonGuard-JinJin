@@ -133,8 +133,11 @@ class MemberServiceTest extends LoginTest {
 
         loginUser.updateTier();
 
+        em.flush();
+        em.clear();
+
         //when
-        Tier tier = memberService.getTier();
+        Tier tier = authService.getLoginUser().getTier();
 
         //then
         assertThat(tier).isEqualTo(loginUser.checkTier(contributionNum));

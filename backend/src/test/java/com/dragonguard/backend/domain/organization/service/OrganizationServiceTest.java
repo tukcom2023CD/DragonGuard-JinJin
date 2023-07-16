@@ -2,10 +2,9 @@ package com.dragonguard.backend.domain.organization.service;
 
 import com.dragonguard.backend.domain.email.entity.Email;
 import com.dragonguard.backend.domain.email.repository.EmailRepository;
-import com.dragonguard.backend.domain.email.service.EmailService;
+import com.dragonguard.backend.domain.email.service.EmailServiceImpl;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
-import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
@@ -13,7 +12,7 @@ import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
-import com.dragonguard.backend.global.IdResponse;
+import com.dragonguard.backend.global.dto.IdResponse;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
 import com.dragonguard.backend.support.fixture.member.entity.MemberFixture;
@@ -37,12 +36,12 @@ import static org.mockito.Mockito.when;
 @DatabaseTest
 @DisplayName("Organization 서비스의")
 class OrganizationServiceTest extends LoginTest {
-    @Autowired private OrganizationService organizationService;
+    @Autowired private OrganizationEmailFacade organizationEmailFacade;
+    @Autowired private OrganizationServiceImpl organizationService;
     @Autowired private OrganizationRepository organizationRepository;
     @Autowired private EmailRepository emailRepository;
-    @Autowired private MemberService memberService;
     @Autowired private MemberRepository memberRepository;
-    @MockBean private EmailService emailService;
+    @MockBean private EmailServiceImpl emailServiceImpl;
 
 
     @Nested
@@ -54,7 +53,7 @@ class OrganizationServiceTest extends LoginTest {
             //given
 
             //when
-            IdResponse<Long> result = organizationService.saveOrganization(new OrganizationRequest("한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"));
+            IdResponse<Long> result = organizationEmailFacade.saveOrganization(new OrganizationRequest("한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"));
 
             //then
             Optional<Organization> oTuk = organizationRepository.findById(result.getId());
@@ -68,7 +67,7 @@ class OrganizationServiceTest extends LoginTest {
             Organization google = organizationRepository.save(OrganizationFixture.GOOGLE.toEntity());
 
             //when
-            IdResponse<Long> result = organizationService.saveOrganization(new OrganizationRequest("Google", OrganizationType.COMPANY, "gmail.com"));
+            IdResponse<Long> result = organizationEmailFacade.saveOrganization(new OrganizationRequest("Google", OrganizationType.COMPANY, "gmail.com"));
 
             //then
             Optional<Organization> oGoogle = organizationRepository.findById(google.getId());
@@ -114,10 +113,10 @@ class OrganizationServiceTest extends LoginTest {
         Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
         Email email = Email.builder().memberId(loginUser.getId()).code(11111).build();
         Email savedEmail = emailRepository.save(email);
-        when(emailService.sendAndSaveEmail()).thenReturn(new IdResponse<>(savedEmail.getId()));
+        when(emailServiceImpl.sendAndSaveEmail()).thenReturn(new IdResponse<>(savedEmail.getId()));
 
         //when
-        IdResponse<Long> result = organizationService.addMemberAndSendEmail(new AddMemberRequest(org.getId(), "tukorea.ac.kr"));
+        IdResponse<Long> result = organizationEmailFacade.addMemberAndSendEmail(new AddMemberRequest(org.getId(), "tukorea.ac.kr"));
 
         //then
         Optional<Email> emailResult = emailRepository.findById(result.getId());
@@ -195,8 +194,8 @@ class OrganizationServiceTest extends LoginTest {
             //given
 
             //when
-            List<OrganizationResponse> companyResult = organizationService.findByType(OrganizationType.COMPANY, PageRequest.of(0, 20));
-            List<OrganizationResponse> universityResult = organizationService.findByType(OrganizationType.UNIVERSITY, PageRequest.of(0, 20));
+            List<OrganizationResponse> companyResult = organizationEmailFacade.findByType(OrganizationType.COMPANY, PageRequest.of(0, 20));
+            List<OrganizationResponse> universityResult = organizationEmailFacade.findByType(OrganizationType.UNIVERSITY, PageRequest.of(0, 20));
 
             //then
             assertThat(companyResult).hasSize(1);
@@ -209,7 +208,7 @@ class OrganizationServiceTest extends LoginTest {
             //given
 
             //when
-            List<OrganizationResponse> result = organizationService.getOrganizationRank(PageRequest.of(0, 20));
+            List<OrganizationResponse> result = organizationEmailFacade.getOrganizationRank(PageRequest.of(0, 20));
 
             //then
             assertThat(result).hasSize(1);
@@ -221,7 +220,7 @@ class OrganizationServiceTest extends LoginTest {
             //given
 
             //when
-            List<OrganizationResponse> result = organizationService.getOrganizationRankByType(OrganizationType.UNIVERSITY, PageRequest.of(0, 20));
+            List<OrganizationResponse> result = organizationEmailFacade.getOrganizationRankByType(OrganizationType.UNIVERSITY, PageRequest.of(0, 20));
 
             //then
             assertThat(result).hasSize(1);
@@ -233,7 +232,7 @@ class OrganizationServiceTest extends LoginTest {
             //given
 
             //when
-            List<OrganizationResponse> result = organizationService.searchOrganization(OrganizationType.UNIVERSITY, "한국공학대학교", PageRequest.of(0, 20));
+            List<OrganizationResponse> result = organizationEmailFacade.searchOrganization(OrganizationType.UNIVERSITY, "한국공학대학교", PageRequest.of(0, 20));
 
             //then
             assertThat(result).hasSize(1);
@@ -246,7 +245,7 @@ class OrganizationServiceTest extends LoginTest {
             //given
 
             //when
-            IdResponse<Long> result = organizationService.findByName(OrganizationFixture.TUKOREA.getName());
+            IdResponse<Long> result = organizationEmailFacade.findByName(OrganizationFixture.TUKOREA.getName());
 
             //then
             Optional<Organization> org = organizationRepository.findById(result.getId());

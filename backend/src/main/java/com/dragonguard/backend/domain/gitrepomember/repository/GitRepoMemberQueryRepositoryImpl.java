@@ -34,12 +34,12 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
     }
 
     @Override
-    public Optional<GitRepoMember> findByNameAndMemberGithubId(String name, String githubId) {
+    public Optional<GitRepoMember> findByGitRepoAndMemberGithubId(GitRepo gitRepo, String githubId) {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(gitRepoMember)
                 .leftJoin(gitRepoMember.member, member)
                 .fetchJoin()
-                .where(gitRepoMember.gitRepo.name.eq(name).and(gitRepoMember.member.githubId.eq(githubId)))
+                .where(gitRepoMember.gitRepo.id.eq(gitRepo.getId()).and(gitRepoMember.member.githubId.eq(githubId)))
                 .fetchFirst());
     }
 }

@@ -1,9 +1,8 @@
 package com.dragonguard.backend.domain.pullrequest.mapper;
 
-import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
+import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 /**
  * @author 김승진
@@ -11,7 +10,4 @@ import org.mapstruct.Mapping;
  */
 
 @Mapper(componentModel = "spring")
-public interface PullRequestMapper {
-    @Mapping(target = "amount", source = "pullRequestNum")
-    PullRequest toEntity(final Member member, final Integer pullRequestNum, final Integer year);
-}
+public interface PullRequestMapper extends ContributionEntityMapper<PullRequest> {}

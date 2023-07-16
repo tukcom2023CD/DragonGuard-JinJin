@@ -2,18 +2,14 @@ package com.dragonguard.backend.domain.search.client;
 
 import com.dragonguard.backend.domain.search.dto.client.SearchUserResponse;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
-import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriBuilder;
 
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.function.Function;
 
 /**
  * @author 김승진
@@ -28,7 +24,13 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
     @Override
     public SearchUserResponse requestToGithub(SearchRequest request) {
         return webClient.get()
-                .uri(getUriBuilder(request))
+                .uri(uriBuilder -> uriBuilder
+                        .path("search")
+                        .path("/" + request.getType().toString().toLowerCase())
+                        .queryParam("q", request.getName())
+                        .queryParam("per_page", 10)
+                        .queryParam("page", request.getPage())
+                        .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
@@ -36,28 +38,5 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
                 .bodyToMono(SearchUserResponse.class)
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
-    }
-
-    private Function<UriBuilder, URI> getUriBuilder(SearchRequest request) {
-        List<String> filters = request.getFilters();
-
-        if (filters == null || filters.isEmpty()) {
-            return uriBuilder -> uriBuilder
-                    .path("search")
-                    .path("/" + request.getType().toString().toLowerCase())
-                    .queryParam("q", request.getName())
-                    .queryParam("per_page", 10)
-                    .queryParam("page", request.getPage())
-                    .build();
-        }
-        String query = String.join(" ", filters);
-
-        return uriBuilder -> uriBuilder
-                .path("search")
-                .path("/" + request.getType().toString().toLowerCase())
-                .queryParam("q", request.getName().concat(" " + query))
-                .queryParam("per_page", 10)
-                .queryParam("page", request.getPage())
-                .build();
     }
 }

@@ -1,8 +1,8 @@
 package com.dragonguard.backend.domain.search.controller;
 
-import com.dragonguard.backend.domain.result.dto.response.GitRepoResultResponse;
-import com.dragonguard.backend.domain.result.dto.response.UserResultResponse;
-import com.dragonguard.backend.domain.search.service.SearchService;
+import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponse;
+import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponse;
+import com.dragonguard.backend.domain.search.service.SearchResultFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,15 +21,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/search")
 public class SearchController {
-    private final SearchService searchService;
+    private final SearchResultFacade searchService;
 
+    /**
+     * 깃허브 유저를 이름으로 검색하는 api
+     */
     @GetMapping(params = "type=USERS")
-    public ResponseEntity<List<UserResultResponse>> getUsersSearchResult(
-            @RequestParam(value = "filters", required = false) List<String> filters,
+    public ResponseEntity<List<UserResultSearchResponse>> getUsersSearchResult(
             @RequestParam String name, @RequestParam Integer page) {
-        return ResponseEntity.ok(searchService.getUserSearchResultByClient(name, page, filters));
+        return ResponseEntity.ok(searchService.getUserSearchResultByClient(name, page));
     }
 
+    /**
+     * 깃허브 repository를 이름으로 검색하는 api
+     */
     @GetMapping(params = "type=REPOSITORIES")
     public ResponseEntity<List<GitRepoResultResponse>> getReposSearchResult(
             @RequestParam(value = "filters", required = false) List<String> filters,

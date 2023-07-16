@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.gitorganization.mapper;
 
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.mapper.EntityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -11,7 +12,7 @@ import org.mapstruct.Mapping;
  */
 
 @Mapper(componentModel = "spring")
-public interface GitOrganizationMapper {
+public interface GitOrganizationMapper extends EntityMapper {
     @Mapping(target = "name", source = "name")
     @Mapping(target = "member", source = "member")
     @Mapping(target = "profileImage", source = "profileImage")

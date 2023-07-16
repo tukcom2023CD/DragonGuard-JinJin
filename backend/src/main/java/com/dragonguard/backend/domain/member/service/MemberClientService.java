@@ -13,7 +13,7 @@ import com.dragonguard.backend.domain.issue.service.IssueService;
 import com.dragonguard.backend.domain.member.dto.client.*;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
-import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
@@ -41,13 +41,13 @@ public class MemberClientService {
     private final GithubClient<MemberClientRequest, MemberOrganizationResponse[]> memberOrganizationClient;
     private final GithubClient<MemberClientRequest, OrganizationRepoResponse[]> memberOrganizationRepoClient;
     private final GitOrganizationService gitOrganizationService;
-    private final GitRepoRepository gitRepoRepository;
     private final GitRepoMapper gitRepoMapper;
     private final CommitService commitService;
     private final IssueService issueService;
     private final PullRequestService pullRequestService;
     private final CodeReviewService codeReviewService;
-    private final GitRepoMemberRepository gitRepoMemberRepository;
+    private final GitRepoRepository gitRepoRepository; // todo 순환참조 해결 후 repository 대신 service 주입받기
+    private final GitRepoMemberRepository gitRepoMemberRepository; // todo 순환참조 해결 후 repository 대신 service 주입받기
     private final GitRepoMemberMapper gitRepoMemberMapper;
 
     public void addMemberContribution(final Member member) {
@@ -64,22 +64,22 @@ public class MemberClientService {
 
     private void requestCodeReviewClientAndSave(final Member member, final MemberClientRequest request) {
         int codeReviewNum = memberCodeReviewClient.requestToGithub(request).getTotalCount();
-        codeReviewService.saveCodeReviews(member, codeReviewNum, request.getYear());
+        codeReviewService.saveContribution(member, codeReviewNum, request.getYear());
     }
 
     private void requestPullRequestClientAndSave(final Member member, final MemberClientRequest request) {
         int pullRequestNum = memberPullRequestClient.requestToGithub(request).getTotalCount();
-        pullRequestService.savePullRequests(member, pullRequestNum, request.getYear());
+        pullRequestService.saveContribution(member, pullRequestNum, request.getYear());
     }
 
     private void requestIssueClientAndSave(final Member member, final MemberClientRequest request) {
         int issueNum = memberIssueClient.requestToGithub(request).getTotalCount();
-        issueService.saveIssues(member, issueNum, request.getYear());
+        issueService.saveContribution(member, issueNum, request.getYear());
     }
 
     private void requestCommitClientAndSave(final Member member, final MemberClientRequest request) {
         int commitNum = memberCommitClient.requestToGithub(request).getTotalCount();
-        commitService.saveCommits(member, commitNum, request.getYear());
+        commitService.saveContribution(member, commitNum, request.getYear());
     }
 
     public void addMemberGitRepoAndGitOrganization(final Member member) {
@@ -109,16 +109,17 @@ public class MemberClientService {
         Set<GitRepo> gitRepos = findIfGitRepoNotExists(gitRepoNames);
         saveAllGitRepos(gitRepos);
 
-        Set<GitRepoMember> list = findIfGitRepoMemberNotExists(member, gitRepos);
-        saveAllGitRepoMembers(list);
+        Set<GitRepoMember> gitRepoMembers = findIfGitRepoMemberNotExists(member, gitRepos);
+        saveAllGitRepoMembers(gitRepoMembers);
     }
 
-    private void saveAllGitRepoMembers(final Set<GitRepoMember> list) {
-        gitRepoMemberRepository.saveAll(list);
+    private void saveAllGitRepoMembers(final Set<GitRepoMember> gitRepoMembers) {
+        gitRepoMemberRepository.saveAll(gitRepoMembers);
     }
 
     private Set<GitRepoMember> findIfGitRepoMemberNotExists(final Member member, final Set<GitRepo> gitRepos) {
         return gitRepos.stream()
+                .filter(gitRepo -> !gitRepoMemberRepository.existsByGitRepoAndMember(gitRepo, member))
                 .map(gr -> gitRepoMemberMapper.toEntity(member, gr))
                 .collect(Collectors.toSet());
     }

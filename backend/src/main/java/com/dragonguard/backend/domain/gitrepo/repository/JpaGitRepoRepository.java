@@ -1,7 +1,11 @@
 package com.dragonguard.backend.domain.gitrepo.repository;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.repository.query.Param;
 
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
@@ -28,4 +32,6 @@ public interface JpaGitRepoRepository extends JpaRepository<GitRepo, Long>, GitR
 
     @Query("SELECT gr FROM GitRepo gr LEFT JOIN FETCH gr.gitRepoMembers grm LEFT JOIN FETCH grm.member")
     List<GitRepo> findAll();
+    @Query("SELECT gr FROM GitRepo gr LEFT JOIN FETCH gr.gitRepoMembers grm LEFT JOIN FETCH grm.member WHERE gr.id = :id")
+    Optional<GitRepo> findByIdWithGitRepoMember(@Param("id") Long id);
 }

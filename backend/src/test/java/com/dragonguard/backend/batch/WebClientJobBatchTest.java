@@ -27,6 +27,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.EntityManager;
+
 @Slf4j
 @ExtendWith(SpringExtension.class)
 @TypeExcludeFilters(DataJpaTypeExcludeFilter.class)
@@ -46,17 +48,21 @@ public class WebClientJobBatchTest extends GitRepoBatchTest {
     @Autowired private JobLauncherTestUtils jobLauncherTestUtils;
     @Autowired private GitRepoMemberRepository gitRepoMemberRepository;
     @Autowired private GitRepoRepository gitRepoRepository;
+    @Autowired private EntityManager em;
 
     @Test
     @DisplayName("깃허브 Rest API를 호출하여 GitRepo의 GitRepoMember를 업데이트하는 작업을 수행하는가")
     public void runBatch() throws Exception {
         gitRepoRepository.saveAll(gitRepos);
+        em.clear();
 
         log.info("BEFORE SIZE: {}", gitRepoMemberRepository.findAll().size());
 
         jobLauncherTestUtils.launchJob();
 
-        Thread.sleep(10000);
+        Thread.sleep(5000);
+
+        em.clear();
 
         log.info("AFTER SIZE: {}", gitRepoMemberRepository.findAll().size());
     }

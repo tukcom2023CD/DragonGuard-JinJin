@@ -8,7 +8,10 @@ import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author 김승진
@@ -31,7 +34,7 @@ public class GitRepo implements Auditable {
 
     private Integer closedIssueNum;
 
-    @OneToMany(mappedBy = "gitRepo")
+    @OneToMany(mappedBy = "gitRepo", cascade = CascadeType.PERSIST)
     private Set<GitRepoMember> gitRepoMembers = new HashSet<>();
 
     @ElementCollection

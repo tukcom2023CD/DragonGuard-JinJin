@@ -1,6 +1,6 @@
 package com.dragonguard.backend.support.kafka.consumer;
 
-import com.dragonguard.backend.domain.result.dto.kafka.ResultKafkaResponse;
+import com.dragonguard.backend.domain.search.dto.kafka.ResultKafkaResponse;
 import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;

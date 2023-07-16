@@ -1,17 +1,17 @@
 package com.dragonguard.backend.config.batch;
 
-import com.dragonguard.backend.domain.gitrepo.dto.batch.GitRepoBatchRequest;
-import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
-import com.dragonguard.backend.domain.gitrepomember.dto.response.Week;
+import com.dragonguard.backend.config.batch.dto.GitRepoBatchRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.client.Week;
+import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
-import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
-import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +39,11 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
     private final WebClient webClient;
     private final GitRepoMemberMapper gitRepoMemberMapper;
     private final MemberMapper memberMapper;
-    private final GitRepoMemberRepository gitRepoMemberRepository;
+    private final GitRepoRepository gitRepoRepository;
     private final MemberRepository memberRepository;
 
     @Override
-    public Mono<List<GitRepoMember>> requestToGithub(GitRepoBatchRequest request) {
+    public Mono<List<GitRepoMember>> requestToGithub(final GitRepoBatchRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
@@ -89,8 +89,9 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                                     }
 
                                     try {
-                                        Member member = memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.NONE));
-                                        return gitRepoMemberMapper.toEntity(member, request.getGitRepo());
+                                        return gitRepoMemberMapper.toEntity(
+                                                memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseGet(() -> memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.NONE)),
+                                                gitRepoRepository.findByIdWithGitRepoMember(request.getGitRepo().getId()).orElseThrow(EntityNotFoundException::new));
                                     } catch (DataIntegrityViolationException | ConstraintViolationException e) {
                                         return null;
                                     }
@@ -109,6 +110,6 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                                     }).orElse(null);
                         });
                     }).filter(Objects::nonNull).collect(Collectors.toList());
-                }).filter(Objects::nonNull).map(gitRepoMemberRepository::saveAll);
+                }).filter(Objects::nonNull);
     }
 }

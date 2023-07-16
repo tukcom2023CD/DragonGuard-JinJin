@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.gitrepo.messagequeue;
 
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.SparkLineKafka;
-import com.dragonguard.backend.domain.gitrepo.service.GitRepoService;
+import com.dragonguard.backend.domain.gitrepo.service.GitRepoServiceImpl;
 import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,14 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class KafkaSparkLineConsumer implements KafkaConsumer<SparkLineKafka> {
     private final ObjectMapper objectMapper;
-    private final GitRepoService gitRepoService;
+    private final GitRepoServiceImpl gitRepoServiceImpl;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.spark-line", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         SparkLineKafka sparkLine = readValue(message);
-        gitRepoService.updateSparkLine(sparkLine.getId(), sparkLine.getGithubToken());
+        gitRepoServiceImpl.updateSparkLine(sparkLine.getId(), sparkLine.getGithubToken());
     }
 
     @Override

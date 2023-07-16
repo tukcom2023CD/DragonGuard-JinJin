@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.email.mapper;
 
 import com.dragonguard.backend.domain.email.entity.Email;
+import com.dragonguard.backend.global.mapper.EntityMapper;
 import org.mapstruct.Mapper;
 
 import java.util.UUID;
@@ -11,6 +12,6 @@ import java.util.UUID;
  */
 
 @Mapper(componentModel = "spring")
-public interface EmailMapper {
+public interface EmailMapper extends EntityMapper {
     Email toEntity(final Integer code, final UUID memberId);
 }

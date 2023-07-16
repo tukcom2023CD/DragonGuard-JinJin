@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.gitrepo.dto.collection;
 
-import com.dragonguard.backend.domain.gitrepomember.dto.client.GitRepoMemberClientResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;

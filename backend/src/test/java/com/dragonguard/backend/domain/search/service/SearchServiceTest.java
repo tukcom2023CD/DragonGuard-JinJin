@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.search.service;
 
-import com.dragonguard.backend.domain.result.dto.client.GitRepoClientResponse;
+import com.dragonguard.backend.domain.search.dto.client.GitRepoSearchClientResponse;
 import com.dragonguard.backend.domain.search.dto.client.SearchRepoResponse;
 import com.dragonguard.backend.domain.search.dto.client.SearchUserResponse;
 import com.dragonguard.backend.domain.search.dto.client.UserClientResponse;
@@ -9,7 +9,7 @@ import com.dragonguard.backend.domain.search.entity.Filter;
 import com.dragonguard.backend.domain.search.entity.Search;
 import com.dragonguard.backend.domain.search.entity.SearchType;
 import com.dragonguard.backend.domain.search.repository.SearchRepository;
-import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 @DatabaseTest
 @DisplayName("Search 서비스의")
 class SearchServiceTest extends LoginTest {
-    @Autowired private SearchService searchService;
+    @Autowired private SearchServiceImpl searchService;
     @Autowired private SearchRepository searchRepository;
     @MockBean private GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     @MockBean private GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
@@ -41,7 +41,7 @@ class SearchServiceTest extends LoginTest {
         void getGitRepoSearchResultByClient() {
             //given
             String repoName = "tukcom2023CD/DragonGuard-JinJin";
-            when(githubRepoClient.requestToGithub(any())).thenReturn(new SearchRepoResponse(new GitRepoClientResponse[]{new GitRepoClientResponse(repoName, "java", "good repo", LocalDateTime.now().toString())}));
+            when(githubRepoClient.requestToGithub(any())).thenReturn(new SearchRepoResponse(new GitRepoSearchClientResponse[]{new GitRepoSearchClientResponse(repoName, "java", "good repo", LocalDateTime.now().toString())}));
 
             //when
 //            List<GitRepoResultResponse> result = searchService.getGitRepoSearchResultByClient(repoName, 1, List.of("language:java"));

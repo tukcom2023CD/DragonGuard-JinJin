@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.gitrepo.client;
 
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
-import com.dragonguard.backend.global.GithubClient;
+import com.dragonguard.backend.global.client.GithubClient;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.errors.WakeupException;
 import org.springframework.http.MediaType;

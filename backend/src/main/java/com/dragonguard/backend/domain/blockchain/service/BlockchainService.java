@@ -1,16 +1,13 @@
 package com.dragonguard.backend.domain.blockchain.service;
 
-import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaRequest;
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.mapper.BlockchainMapper;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +46,10 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
         if (hasSameAmount(contribution, amount)) {
             blockchain.addHistory(amount, transactionHash);
-            return;
+            return; // 일반 유저는 모두 여기서 return 됩니다.
         }
 
-        if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
+        if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) { // 배포한 사람의 경우 맨 처음 토큰 개수가 다르게 부여되는 현상 때문에 작성한 코드
             blockchain.addHistory(BigInteger.valueOf(contribution), transactionHash);
         }
     }

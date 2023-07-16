@@ -27,7 +27,7 @@ class CommitServiceTest extends LoginTest {
         //given
 
         //when
-        commitService.saveCommits(memberRepository.findById(loginUser.getId()).orElse(null), 100, LocalDateTime.now().getYear());
+        commitService.saveContribution(memberRepository.findById(loginUser.getId()).orElse(null), 100, LocalDateTime.now().getYear());
         List<Commit> commits = commitRepository.findAllByMember(loginUser);
 
         //then

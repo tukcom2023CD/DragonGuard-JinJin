@@ -1,9 +1,8 @@
 package com.dragonguard.backend.domain.issue.mapper;
 
 import com.dragonguard.backend.domain.issue.entity.Issue;
-import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 /**
  * @author 김승진
@@ -11,7 +10,4 @@ import org.mapstruct.Mapping;
  */
 
 @Mapper(componentModel = "spring")
-public interface IssueMapper {
-    @Mapping(target = "amount", source = "issueNum")
-    Issue toEntity(final Member member, final Integer issueNum, final Integer year);
-}
+public interface IssueMapper extends ContributionEntityMapper<Issue> {}

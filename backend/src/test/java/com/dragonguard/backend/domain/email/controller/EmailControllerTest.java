@@ -1,8 +1,8 @@
 package com.dragonguard.backend.domain.email.controller;
 
 import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
-import com.dragonguard.backend.domain.email.service.EmailService;
-import com.dragonguard.backend.global.IdResponse;
+import com.dragonguard.backend.domain.organization.service.OrganizationEmailFacade;
+import com.dragonguard.backend.global.dto.IdResponse;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,13 +24,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(EmailController.class)
 class EmailControllerTest extends RestDocumentTest {
     @MockBean
-    private EmailService emailService;
+    private OrganizationEmailFacade organizationEmailFacade;
 
     @Test
     @DisplayName("이메일 전송이 수행되는가")
     void sendEmail() throws Exception {
         IdResponse<Long> expected = new IdResponse<>(1L);
-        given(emailService.sendAndSaveEmail()).willReturn(expected);
+        given(organizationEmailFacade.sendAndSaveEmail()).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -48,7 +48,7 @@ class EmailControllerTest extends RestDocumentTest {
     @DisplayName("메일 코드 확인이 수행되는가")
     void checkCode() throws Exception {
         CheckCodeResponse expected = new CheckCodeResponse(true);
-        given(emailService.isCodeMatching(any())).willReturn(expected);
+        given(organizationEmailFacade.isCodeMatching(any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -66,7 +66,7 @@ class EmailControllerTest extends RestDocumentTest {
     @DisplayName("이메일 코드 삭제가 수행되는가")
     void deleteCode() throws Exception {
         IdResponse<Long> expected = new IdResponse<>(1L);
-        given(emailService.sendAndSaveEmail()).willReturn(expected);
+        given(organizationEmailFacade.sendAndSaveEmail()).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(

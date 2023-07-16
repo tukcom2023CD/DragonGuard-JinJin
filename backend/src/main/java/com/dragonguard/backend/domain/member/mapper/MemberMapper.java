@@ -11,6 +11,7 @@ import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.organization.dto.response.RelatedRankWithMemberResponse;
+import com.dragonguard.backend.global.mapper.EntityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
  */
 
 @Mapper(componentModel = "spring", imports = {GitRepo.class, GitRepoMember.class, Collectors.class})
-public interface MemberMapper {
+public interface MemberMapper extends EntityMapper {
     @Mapping(target = "githubId", source = "githubId")
     @Mapping(target = "profileImage", source = "profileUrl")
     @Mapping(target = "authStep", source = "authStep")

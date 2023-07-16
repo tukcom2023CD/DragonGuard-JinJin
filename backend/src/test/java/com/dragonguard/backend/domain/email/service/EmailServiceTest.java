@@ -8,6 +8,7 @@ import com.dragonguard.backend.domain.email.repository.EmailRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
+import com.dragonguard.backend.domain.organization.service.OrganizationEmailFacade;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
@@ -30,7 +31,8 @@ import static org.mockito.Mockito.doNothing;
 @DisplayName("email 서비스의")
 class EmailServiceTest extends LoginTest {
 
-    @Autowired private EmailService emailService;
+    @Autowired private OrganizationEmailFacade organizationEmailFacade;
+    @Autowired private EmailServiceImpl emailServiceImpl;
     @Autowired private EmailRepository emailRepository;
     @Autowired private EntityManager em;
     @Autowired private OrganizationRepository organizationRepository;
@@ -47,7 +49,7 @@ class EmailServiceTest extends LoginTest {
         doNothing().when(kafkaEmailProducer).send(any());
 
         //when
-        Long emailId = emailService.sendAndSaveEmail().getId();
+        Long emailId = organizationEmailFacade.sendAndSaveEmail().getId();
 
         //then
         assertThat(emailRepository.findById(emailId)).isNotEmpty();
@@ -60,7 +62,7 @@ class EmailServiceTest extends LoginTest {
         Long given = emailRepository.save(Email.builder().code(11111).memberId(loginUser.getId()).build()).getId();
 
         //when
-        emailService.deleteCode(given);
+        organizationEmailFacade.deleteCode(given);
 
         em.clear();
 
@@ -78,8 +80,8 @@ class EmailServiceTest extends LoginTest {
         Long given = emailRepository.save(Email.builder().code(code).memberId(loginUser.getId()).build()).getId();
 
         //when
-        CheckCodeResponse falseResult = emailService.isCodeMatching(new EmailRequest(given, code + 1, 1L));
-        CheckCodeResponse trueResult = emailService.isCodeMatching(new EmailRequest(given, code, 1L));
+        CheckCodeResponse falseResult = organizationEmailFacade.isCodeMatching(new EmailRequest(given, code + 1, 1L));
+        CheckCodeResponse trueResult = organizationEmailFacade.isCodeMatching(new EmailRequest(given, code, 1L));
 
         //then
         assertThat(falseResult.getIsValidCode()).isFalse();
@@ -93,7 +95,7 @@ class EmailServiceTest extends LoginTest {
         Email given = emailRepository.save(Email.builder().code(11111).memberId(loginUser.getId()).build());
 
         //when
-        Email result = emailService.loadEntity(given.getId());
+        Email result = emailServiceImpl.loadEntity(given.getId());
 
         //then
         assertThat(given).isEqualTo(result);
