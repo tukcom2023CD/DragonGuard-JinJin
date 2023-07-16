@@ -60,5 +60,3 @@ management:
     web:
       exposure:
         include: prometheus
-
-kafka-timeout: 15000

@@ -129,7 +129,7 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
         }
         GitRepo gitRepo = gitRepoRepository.save(gitRepoMapper.toEntity(repoName));
         requestKafkaIssue(new GitRepoNameRequest(repoName));
-        return gitRepo;
+        return loadEntity(gitRepo.getId());
     }
 
     private StatisticsResponse getStatistics(final GitRepo gitRepo) {
