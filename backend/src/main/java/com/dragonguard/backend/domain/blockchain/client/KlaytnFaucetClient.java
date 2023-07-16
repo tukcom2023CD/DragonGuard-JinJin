@@ -17,6 +17,11 @@ import reactor.netty.http.client.HttpClient;
 import javax.net.ssl.SSLException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author 김승진
+ * @description 24시간 마다 klaytn faucet 발급 api를 요청하는 클라이언트 클래스
+ */
+
 @Component
 @RequiredArgsConstructor
 public class KlaytnFaucetClient {

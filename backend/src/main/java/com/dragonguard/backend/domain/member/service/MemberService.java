@@ -204,6 +204,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Boolean isServiceMember(final String githubId) {
-        return getMemberByGithubId(githubId).isServiceMember();
+        return findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE).isServiceMember();
     }
 }
