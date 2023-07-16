@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
     private var rankingFrag: RankingFragment? = null
     private var compareFrag: CompareSearchFragment? = null
     private var profileFrag: ClientProfileFragment? = null
+    private var imgRefresh = true
     private var added = false
     private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
     private var finish = false
@@ -409,11 +410,12 @@ class MainActivity : AppCompatActivity() {
             Log.d("userInfo", "realModel:$realModel")
             if(realModel.commits != null && realModel.github_id != null && realModel.profile_image != null && realModel.auth_step != null) {
                 Log.d("userInfo", "id:${userInfo.github_id}")
-                mainFrag = MainFragment(token, realModel)
+                mainFrag = MainFragment(token, realModel, imgRefresh)
                 binding.mainLoading.pauseAnimation()
                 binding.mainLoading.visibility = View.GONE
                 binding.mainNav.visibility = View.VISIBLE
                 Log.d("메인", "메인화면 초기화")
+                imgRefresh = false
                 refreshMain()
 //                if(realModel.tier != "SPROUT") {
 //                    finish = true

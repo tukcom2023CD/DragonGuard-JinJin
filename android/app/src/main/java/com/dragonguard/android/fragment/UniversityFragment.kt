@@ -156,7 +156,7 @@ class UniversityFragment(private val token: String): Fragment() {
                 binding.firstContribute.text = model.token_sum.toString()
                 binding.firstRanker.visibility = View.VISIBLE
                 binding.firstProfile.setImageResource(R.drawable.university)
-                binding.secondFrame.setOnClickListener {
+                binding.firstFrame.setOnClickListener {
                     val intent = Intent(context, MyOrganizationInternalActivity::class.java)
                     intent.putExtra("organization", model.name)
                     intent.putExtra("token", token)

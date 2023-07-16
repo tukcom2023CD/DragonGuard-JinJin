@@ -3,6 +3,7 @@ package com.dragonguard.android.fragment
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,7 +17,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.signature.ObjectKey
 import com.dragonguard.android.R
 import com.dragonguard.android.activity.basic.MainActivity
 import com.dragonguard.android.activity.basic.TokenHistoryActivity
@@ -32,20 +38,27 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
-class MainFragment(private val token: String, private var info: UserInfoModel) : Fragment() {
+class MainFragment(
+    private val token: String,
+    private var info: UserInfoModel,
+    private val refresh: Boolean
+) :
+    Fragment() {
     companion object {
         lateinit var prefs: IdPreference
     }
+
     private lateinit var binding: FragmentMainBinding
     private var viewmodel = Viewmodel()
     private var repeat = false
-    private var refresh = true
-//    private var menuItem: MenuItem? = null
-    val handler= Handler(Looper.getMainLooper()){
+
+    //    private var menuItem: MenuItem? = null
+    val handler = Handler(Looper.getMainLooper()) {
         setPage()
         repeat = true
         true
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,11 +84,12 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
         }
 
         drawInfo()
-        CoroutineScope(Dispatchers.IO).launch{
-            if(!repeat && this@MainFragment.isAdded && !this@MainFragment.isDetached && this@MainFragment.isVisible && !this@MainFragment.isRemoving
-                && !prefs.getRepeat(false)) {
+        CoroutineScope(Dispatchers.IO).launch {
+            if (!repeat && this@MainFragment.isAdded && !this@MainFragment.isDetached && this@MainFragment.isVisible && !this@MainFragment.isRemoving
+                && !prefs.getRepeat(false)
+            ) {
                 prefs.setRepeat(true)
-                while(true){
+                while (true) {
                     Thread.sleep(3000)
                     handler.sendEmptyMessage(0)
                 }
@@ -91,43 +105,61 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
         if (info.github_id!!.isNotBlank()) {
             binding.userId.text = info.github_id
         }
-        if(!requireActivity().isFinishing) {
+        if (!requireActivity().isFinishing) {
             Log.d("profile", "profile image ${info.profile_image}")
-            Glide.with(this).load(info.profile_image)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(binding.githubProfile)
+            if (refresh) {
+                val coroutine = CoroutineScope(Dispatchers.Main)
+                coroutine.launch {
+                    val deferred = coroutine.async(Dispatchers.IO) {
+                        Glide.get(requireContext()).clearDiskCache()
+                    }
+                    val result = deferred.await()
+                    Glide.with(this@MainFragment).load(info.profile_image)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .signature(
+                            ObjectKey(
+                                System.currentTimeMillis().toString()
+                            )
+                        )
+                        .into(binding.githubProfile)
+                }
+            } else {
+                Glide.with(this).load(info.profile_image)
+                    .into(binding.githubProfile)
+
+            }
         }
 
-        when(info.tier) {
-            "BRONZE" ->{
+        when (info.tier) {
+            "BRONZE" -> {
                 binding.tierImg.setBackgroundResource(R.drawable.bronze)
             }
-            "SILVER" ->{
+            "SILVER" -> {
                 binding.tierImg.setBackgroundResource(R.drawable.silver)
             }
-            "GOLD" ->{
+            "GOLD" -> {
                 binding.tierImg.setBackgroundResource(R.drawable.gold)
             }
-            "PLATINUM" ->{
+            "PLATINUM" -> {
                 binding.tierImg.setBackgroundResource(R.drawable.platinum)
             }
-            "DIAMOND" ->{
+            "DIAMOND" -> {
                 binding.tierImg.setBackgroundResource(R.drawable.diamond)
             }
         }
         viewmodel.onSearchClickListener.observe(requireActivity(), Observer {
-            if(viewmodel.onSearchClickListener.value == true) {
+            if (viewmodel.onSearchClickListener.value == true) {
                 val intent = Intent(requireActivity(), SearchActivity::class.java)
                 intent.putExtra("token", token)
                 startActivity(intent)
             }
-        } )
+        })
         if (info.token_amount != null) {
             binding.tokenAmount.text = info.token_amount.toString()
         }
         val typeList = listOf("commits", "issues", "pullRequests", "review")
-        if(info.organization != null) {
+        if (info.organization != null) {
             binding.userOrgName.text = info.organization
         }
         val userActivity = HashMap<String, Int>()
@@ -141,12 +173,12 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
         binding.userUtil.adapter = UserActivityAdapter(userActivity, typeList, requireContext())
         binding.userUtil.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
-        if(info.organization == null) {
+        if (info.organization == null) {
             binding.mainOrgFrame.visibility = View.GONE
         } else {
-            when(info.organization_rank) {
+            when (info.organization_rank) {
                 1 -> {
-                    when(info.member_github_ids?.size){
+                    when (info.member_github_ids?.size) {
                         1 -> {
                             binding.user2Githubid.text = info.member_github_ids!![0]
                             binding.user2Githubid.setTextAppearance(R.style.mainRanking)
@@ -174,7 +206,7 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
                     }
                 }
                 else -> {
-                    when(info.member_github_ids?.size){
+                    when (info.member_github_ids?.size) {
                         2 -> {
                             binding.user1Githubid.text = info.member_github_ids!![0]
                             binding.user1Ranking.text = info.organization_rank!!.minus(1).toString()
@@ -185,10 +217,11 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
                             binding.user2Ranking.setTextAppearance(R.style.mainRanking)
                         }
                         3 -> {
-                            when(info.is_last) {
+                            when (info.is_last) {
                                 true -> {
                                     binding.user1Githubid.text = info.member_github_ids!![1]
-                                    binding.user1Ranking.text = info.organization_rank!!.minus(1).toString()
+                                    binding.user1Ranking.text =
+                                        info.organization_rank!!.minus(1).toString()
 
                                     binding.user2Githubid.text = info.member_github_ids!![2]
                                     binding.user2Githubid.setTextAppearance(R.style.mainRanking)
@@ -197,7 +230,8 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
                                 }
                                 false -> {
                                     binding.user1Githubid.text = info.member_github_ids!![0]
-                                    binding.user1Ranking.text = info.organization_rank!!.minus(1).toString()
+                                    binding.user1Ranking.text =
+                                        info.organization_rank!!.minus(1).toString()
 
                                     binding.user2Githubid.text = info.member_github_ids!![1]
                                     binding.user2Githubid.setTextAppearance(R.style.mainRanking)
@@ -205,7 +239,8 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
                                     binding.user2Ranking.setTextAppearance(R.style.mainRanking)
 
                                     binding.user3Githubid.text = info.member_github_ids!![2]
-                                    binding.user3Ranking.text = info.organization_rank!!.plus(1).toString()
+                                    binding.user3Ranking.text =
+                                        info.organization_rank!!.plus(1).toString()
                                 }
                             }
                         }
@@ -222,7 +257,7 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
 //        super.onCreateOptionsMenu(menu, inflater)
 //    }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        when (item.itemId) {
 //            R.id.refresh_button -> {
 //                if(refresh) {
@@ -245,7 +280,7 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
 //        return super.onOptionsItemSelected(item)
 //    }
     fun clearView() {
-        if(this@MainFragment.isAdded && !this@MainFragment.isDetached && this@MainFragment.isVisible && !this@MainFragment.isRemoving) {
+        if (this@MainFragment.isAdded && !this@MainFragment.isDetached && this@MainFragment.isVisible && !this@MainFragment.isRemoving) {
             binding.githubProfile.setImageResource(0)
             binding.userId.text = ""
             binding.tierImg.setImageResource(0)
@@ -254,13 +289,14 @@ class MainFragment(private val token: String, private var info: UserInfoModel) :
         }
 
     }
+
     override fun onDestroy() {
         prefs.setRepeat(false)
         super.onDestroy()
     }
 
-    private fun setPage(){
-        binding.userUtil.setCurrentItem((binding.userUtil.currentItem+1)%4,false)
+    private fun setPage() {
+        binding.userUtil.setCurrentItem((binding.userUtil.currentItem + 1) % 4, false)
     }
 
 }
