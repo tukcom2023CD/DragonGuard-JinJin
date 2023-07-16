@@ -17,8 +17,8 @@ jobs:
           gitlab_username: ${{ secrets.TARGET_USERNAME }}
           gitlab_token: ${{ secrets.TARGET_TOKEN }}
         run: |
-          git remote add gitlab https://${gitlab_username}:${gitlab_token}@${gitlab_url#https://};
+#          git remote add gitlab https://${gitlab_username}:${gitlab_token}@${gitlab_url#https://};
       - name: Force push everthing
         run: |
-          git push -f --all gitlab;
-          git push -f --tags gitlab;
+#          git push -f --all gitlab;
+#          git push -f --tags gitlab;
