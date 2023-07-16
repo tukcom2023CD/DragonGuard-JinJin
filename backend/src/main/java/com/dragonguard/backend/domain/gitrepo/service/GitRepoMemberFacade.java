@@ -13,7 +13,6 @@ import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberServiceImpl;
-import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -73,8 +72,6 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
                 gitRepoServiceImpl.getContributionMap(contributions, Week::getA),
                 gitRepoServiceImpl.getContributionMap(contributions, Week::getD));
 
-        if (result.isEmpty()) return List.of();
-
         gitRepoMemberServiceImpl.saveAll(result, gitRepo);
         return result;
     }
@@ -101,7 +98,6 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
 
     private List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final GitRepoInfoRequest gitRepoInfoRequest) {
         GitRepo gitRepo = gitRepoServiceImpl.findGitRepo(gitRepoInfoRequest.getName());
-
         return requestToGithub(gitRepoInfoRequest, gitRepo);
     }
 
@@ -174,9 +170,5 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
     @Override
     public boolean gitRepoExistsByName(final String name) {
         return gitRepoServiceImpl.gitRepoExistsByName(name);
-    }
-
-    public boolean gitRepoMemberExistsByName(final GitRepo gitRepo, final Member member) {
-        return gitRepoMemberServiceImpl.existsByGitRepoAndMember(gitRepo, member);
     }
 }

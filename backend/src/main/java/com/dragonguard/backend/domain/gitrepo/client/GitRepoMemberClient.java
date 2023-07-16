@@ -44,7 +44,6 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Lis
                 .retrieve()
                 .onStatus(HttpStatus.NO_CONTENT::equals, response -> Mono.error(WebClientException::new))
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(ClientBadRequestException::new))
-                .onStatus(HttpStatus::is5xxServerError, response -> Mono.empty())
                 .bodyToFlux(GitRepoMemberClientResponse.class)
                 .collectList()
                 .flatMap(response -> {

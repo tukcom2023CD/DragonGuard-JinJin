@@ -305,7 +305,7 @@ public class Member implements Auditable {
     }
 
     public boolean isServiceMember() {
-        return !this.authStep.equals(AuthStep.NONE);
+        return !this.authStep.equals(AuthStep.NONE) && !this.authStep.equals(AuthStep.GITHUB_ONLY);
     }
 
     public void updateAuthStepAndNameAndProfileImage(AuthStep authStep, String name, String profileImage) {

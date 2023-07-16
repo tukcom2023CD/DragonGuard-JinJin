@@ -203,8 +203,8 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
     @Override
     @Cacheable(value = "twoGitRepos", key = "{#request.firstRepo, #request.secondRepo}", cacheManager = "cacheManager",
             unless = "#result.firstRepo.getProfileUrls().?[#this == null].size() > 0 " +
-                    "|| #result.secondRepo.getProfileUrls().?[#this == null].size() > 0" +
-                    "|| #result.firstRepo.statistics.additionStats.max == 0" +
+                    "|| #result.secondRepo.getProfileUrls().?[#this == null].size() > 0 " +
+                    "|| #result.firstRepo.statistics.additionStats.max == 0 " +
                     "|| #result.secondRepo.statistics.additionStats.max == 0")
     public TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request) {
         String githubToken = authService.getLoginUser().getGithubToken();

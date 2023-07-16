@@ -57,8 +57,8 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
         String githubId = response.getGithubId();
         GitRepoMember gitRepoMember = gitRepoMemberRepository.findByGitRepoAndMemberGithubId(gitRepo, githubId)
                 .orElseGet(() -> gitRepoMemberRepository.save(
-                            gitRepoMemberMapper.toEntity(memberService.findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE), gitRepo)));
-        gitRepoMember.updateProfileImage(response.getProfileUrl(), response.getCommits(), response.getAdditions(), response.getDeletions());
+                            gitRepoMemberMapper.toEntity(memberService.findMemberOrSave(githubId, AuthStep.NONE, response.getProfileUrl()), gitRepo)));
+        gitRepoMember.updateProfileImageAndContribution(response.getProfileUrl(), response.getCommits(), response.getAdditions(), response.getDeletions());
         return gitRepoMember;
     }
 
@@ -77,7 +77,7 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
 
     private GitRepoMember getGitRepoMember(final GitRepoMemberResponse gitRepoMemberResponse, final Member member, final GitRepo gitRepo) {
         GitRepoMember gitRepoMember = gitRepoMemberRepository.findByGitRepoAndMember(gitRepo, member)
-                .orElse(gitRepoMemberMapper.toEntity(member, gitRepo));
+                .orElseGet(() -> gitRepoMemberMapper.toEntity(member, gitRepo));
 
         gitRepoMember.updateGitRepoContribution(
                 gitRepoMemberResponse.getCommits(),
@@ -107,10 +107,6 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
     @Override
     public void saveAllGitRepoMembers(final Set<GitRepoMember> gitRepoMembers) {
         gitRepoMemberRepository.saveAll(gitRepoMembers);
-    }
-
-    public boolean existsByGitRepoAndMember(final GitRepo gitRepo, final Member member) {
-        return gitRepoMemberRepository.existsByGitRepoAndMember(gitRepo, member);
     }
 
     public Boolean isServiceMember(final String githubId) {
