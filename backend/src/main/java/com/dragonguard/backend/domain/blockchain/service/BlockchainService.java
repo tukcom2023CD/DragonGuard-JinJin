@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +34,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private List<String> admins;
 
     public void setTransaction(final Member member, final long contribution, final ContributeType contributeType) {
-        if (contribution <= 0 || isBlockchainNotUpdatable(member)) return;
+        if (contribution <= 0) return;
 
         Blockchain blockchain = saveIfNone(member, contributeType);
 
@@ -54,11 +53,6 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
             blockchain.addHistory(BigInteger.valueOf(contribution), transactionHash);
         }
-    }
-
-    private boolean isBlockchainNotUpdatable(final Member member) {
-        return member.getBlockchains().stream().map(Blockchain::getHistories).flatMap(List::stream)
-                .anyMatch(b -> b.getBaseTime().getCreatedAt().isBefore(LocalDateTime.now().plusHours(9L).plusSeconds(20L)));
     }
 
     private Blockchain saveIfNone(final Member member, final ContributeType contributeType) {
