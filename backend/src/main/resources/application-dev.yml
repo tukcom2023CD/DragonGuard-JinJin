@@ -28,7 +28,7 @@ spring:
         format_sql: false
 
   flyway:
-    enabled: false
+    enabled: true
     encoding: UTF-8
     baseline-on-migrate: true
 
