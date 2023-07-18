@@ -2,6 +2,7 @@ package com.dragonguard.backend.config.batch;
 
 import com.dragonguard.backend.config.batch.dto.GitRepoBatchRequest;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
+import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
@@ -57,6 +58,7 @@ public class GitRepoClientJobConfig {
                 .retry(WebClientResponseException.class)
                 .retry(ClientBadRequestException.class)
                 .retryLimit(2)
+                .noRollback(WebClientRetryException.class)
                 .writer(writer())
                 .faultTolerant()
                 .build();

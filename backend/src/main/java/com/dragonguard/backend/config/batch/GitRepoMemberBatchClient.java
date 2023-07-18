@@ -3,6 +3,7 @@ package com.dragonguard.backend.config.batch;
 import com.dragonguard.backend.config.batch.dto.GitRepoBatchRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.Week;
+import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
@@ -69,7 +70,9 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                 })
                 .retryWhen(
                         Retry.fixedDelay(10, Duration.ofMillis(1500))
-                                .filter(WebClientException.class::isInstance))
+                                .filter(WebClientException.class::isInstance)
+                                .onRetryExhaustedThrow(((retryBackoffSpec, retrySignal) -> new WebClientRetryException())))
+                .onErrorReturn(WebClientRetryException.class, List.of())
                 .mapNotNull(result -> {
                     Set<GitRepoMember> gitRepoMembers = request.getGitRepo().getGitRepoMembers();
 

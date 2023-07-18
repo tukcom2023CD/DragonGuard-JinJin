@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private List<String> admins;
 
     public void setTransaction(final Member member, final long contribution, final ContributeType contributeType) {
-        if (contribution <= 0) return;
+        if (contribution <= 0 || isBlockchainNotUpdatable(member)) return;
 
         Blockchain blockchain = saveIfNone(member, contributeType);
 
@@ -49,12 +50,18 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
             return; // 일반 유저는 모두 여기서 return 됩니다.
         }
 
-        if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) { // 배포한 사람의 경우 맨 처음 토큰 개수가 다르게 부여되는 현상 때문에 작성한 코드
+        // 블록체인 스마트 컨트랙트를 배포한 사람의 경우 맨 처음 토큰 개수가 다르게 부여되는 현상 때문에 작성한 코드
+        if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
             blockchain.addHistory(BigInteger.valueOf(contribution), transactionHash);
         }
     }
 
-    private Blockchain saveIfNone(Member member, ContributeType contributeType) {
+    private boolean isBlockchainNotUpdatable(final Member member) {
+        return member.getBlockchains().stream().map(Blockchain::getHistories).flatMap(List::stream)
+                .anyMatch(b -> b.getBaseTime().getCreatedAt().isBefore(LocalDateTime.now().plusHours(9L).plusSeconds(20L)));
+    }
+
+    private Blockchain saveIfNone(final Member member, final ContributeType contributeType) {
         if (!blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
             return blockchainMapper.toEntity(member, contributeType);
         }

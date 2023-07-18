@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.member.service;
 
+import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -61,7 +63,14 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public void updateContributions() {
         Member member = authService.getLoginUser();
-        sendGitRepoAndContributionRequestToKafka(member.getGithubId());
+        if (isBlockchainUpdatable(member)) {
+            sendGitRepoAndContributionRequestToKafka(member.getGithubId());
+        }
+    }
+
+    private boolean isBlockchainUpdatable(Member member) {
+        return member.getBlockchains().stream().map(Blockchain::getHistories).flatMap(List::stream)
+                .noneMatch(b -> b.getBaseTime().getCreatedAt().isBefore(LocalDateTime.now().plusHours(9L).plusSeconds(20L)));
     }
 
     public MemberResponse getMember() {
