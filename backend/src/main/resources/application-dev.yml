@@ -26,11 +26,16 @@ spring:
     properties:
       hibernate:
         format_sql: false
+    defer-datasource-initialization: true
 
   flyway:
-    enabled: true
+    enabled: false
     encoding: UTF-8
     baseline-on-migrate: true
+
+  sql:
+    init:
+      mode: always
 
   cache:
     type: redis
