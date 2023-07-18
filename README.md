@@ -71,5 +71,5 @@
 
 |김관용|심영수|정호진|김승진|
 |:----:|:----:|:----:|:----:|
-|iOS, Blockchain|Android, Blockchain|iOS, Blockchain|Backend, DevOps, Scraping|
+|iOS, Blockchain|Android|iOS, Blockchain|Backend, DevOps, Scraping|
 |<a href="https://github.com/Sammuelwoojae">@Sammuelwoojae</a>|<a href="https://github.com/posite">@posite</a>|<a href="https://github.com/HJ39">@HJ39</a>|<a href="https://github.com/ohksj77">@ohksj77</a>|
