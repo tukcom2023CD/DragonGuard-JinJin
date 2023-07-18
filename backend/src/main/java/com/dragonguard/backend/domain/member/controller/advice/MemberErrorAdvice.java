@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.member.controller.advice;
 
-import com.dragonguard.backend.domain.member.exception.*;
+import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
 import com.dragonguard.backend.global.advice.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;

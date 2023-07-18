@@ -1,7 +1,10 @@
 package com.dragonguard.backend.domain.search.dto.request;
 
 import com.dragonguard.backend.domain.search.entity.SearchType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

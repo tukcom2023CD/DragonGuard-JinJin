@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.member.dto.response;
 
-import com.dragonguard.backend.domain.member.entity.Tier;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
+import com.dragonguard.backend.domain.member.entity.Tier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

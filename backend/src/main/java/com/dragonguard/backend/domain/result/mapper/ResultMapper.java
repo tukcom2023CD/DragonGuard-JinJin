@@ -1,10 +1,10 @@
 package com.dragonguard.backend.domain.result.mapper;
 
+import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.search.dto.client.GitRepoSearchClientResponse;
+import com.dragonguard.backend.domain.search.dto.client.UserClientResponse;
 import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponse;
 import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponse;
-import com.dragonguard.backend.domain.result.entity.Result;
-import com.dragonguard.backend.domain.search.dto.client.UserClientResponse;
 import com.dragonguard.backend.global.mapper.EntityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

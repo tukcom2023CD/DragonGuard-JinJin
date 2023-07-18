@@ -1,12 +1,9 @@
 package com.dragonguard.backend.domain.blockchain.dto.response;
 
-import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**

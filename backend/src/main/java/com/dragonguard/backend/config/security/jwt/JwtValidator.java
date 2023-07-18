@@ -1,7 +1,7 @@
 package com.dragonguard.backend.config.security.jwt;
 
-import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
+import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;

@@ -1,12 +1,12 @@
 package com.dragonguard.backend.domain.gitrepo.controller;
 
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoResponse;
+import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.service.GitRepoMemberFacade;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoMemberCompareRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoMemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,8 +1,8 @@
 package com.dragonguard.backend.domain.gitrepo.client;
 
+import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
-import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
 import com.dragonguard.backend.global.exception.WebClientException;
