@@ -11,6 +11,6 @@ public interface Auditable {
     BaseTime getBaseTime();
     void setBaseTime(BaseTime baseTime);
     default void delete() {
-        getBaseTime().setDeletedAt(LocalDateTime.now().plusHours(9L));
+        getBaseTime().setDeletedAt(LocalDateTime.now());
     }
 }

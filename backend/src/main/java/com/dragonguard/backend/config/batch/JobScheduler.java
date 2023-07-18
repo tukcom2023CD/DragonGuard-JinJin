@@ -30,7 +30,7 @@ public class JobScheduler {
     @Scheduled(cron = "0 50 1,3,5,7,9,11,13,15,17,19,21,23 * * *", zone = "Asia/Seoul")
     public void launchJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         Map<String, JobParameter> jobParametersMap = new HashMap<>();
-        jobParametersMap.put("now", new JobParameter(LocalDateTime.now().plusHours(9L).toString()));
+        jobParametersMap.put("now", new JobParameter(LocalDateTime.now().toString()));
         jobLauncher.run(clientJob, new JobParameters(jobParametersMap));
     }
 }
