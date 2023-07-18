@@ -4,7 +4,6 @@ import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -16,7 +15,6 @@ import java.util.UUID;
  * @description JWT 토큰을 발급하는 클래스
  */
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
@@ -45,9 +43,8 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException | UnsupportedJwtException | IllegalStateException e) {
-            log.info("JWT 오류");
+            return false;
         }
-        return false;
     }
 
     private void saveRefreshToken(String refreshToken, UserPrinciple userDetails) {

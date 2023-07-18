@@ -60,4 +60,9 @@ public class GlobalErrorAdvice {
     public ResponseEntity<Void> webClientException(WebClientException e) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorResponse> nullPointerException(NullPointerException e) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
