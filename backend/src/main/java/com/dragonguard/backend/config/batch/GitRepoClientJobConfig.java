@@ -60,7 +60,6 @@ public class GitRepoClientJobConfig {
                 .retryLimit(2)
                 .noRollback(WebClientRetryException.class)
                 .writer(writer())
-                .faultTolerant()
                 .build();
     }
 
