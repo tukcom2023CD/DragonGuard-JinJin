@@ -60,7 +60,9 @@ class MainActivity : AppCompatActivity() {
             } else if (it.resultCode == 1) {
                 val tokenIntent = it.data
                 val realToken = tokenIntent!!.getStringExtra("token")
+                val refreshToken = tokenIntent!!.getStringExtra("refresh")
                 token = realToken!!
+                prefs.setRefreshToken(refreshToken!!)
                 prefs.setJwtToken(realToken)
                 multipleSearchUser()
             }
