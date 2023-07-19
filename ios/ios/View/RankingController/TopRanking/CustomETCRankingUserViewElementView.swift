@@ -61,6 +61,11 @@ final class CustomETCRankingUserViewElementView: UIButton{
         self.addSubview(title)
         self.addSubview(numLabel)
         
+        rankingImgView.isUserInteractionEnabled = false
+        title.isUserInteractionEnabled = false
+        userView.isUserInteractionEnabled = false
+        numLabel.isUserInteractionEnabled = false
+        
         rankingImgView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(userView.snp.top).offset(-5)
@@ -86,11 +91,12 @@ final class CustomETCRankingUserViewElementView: UIButton{
     }
     
     // MARK: 2,3 등 데이터 삽입
-    func getData(data: AllUserRankingModel, rank: Int){
+    func getData(data: AllUserRankingModel?, rank: Int?){
         addUI()
-        title.text = data.github_id ?? ""
-        numLabel.text = "\(data.tokens ?? 0)"
+        title.text = data?.github_id ?? ""
+        numLabel.text = "\(data?.tokens ?? 0)"
         
+        guard let rank = rank else { return }
         if rank == 2{
             rankingImgView.image = UIImage(named: "secondRank")?.resize(newWidth: 60)
         }
@@ -98,7 +104,7 @@ final class CustomETCRankingUserViewElementView: UIButton{
             rankingImgView.image = UIImage(named: "thirdRank")?.resize(newWidth: 60)
         }
         
-        switch data.tier ?? ""{
+        switch data?.tier ?? ""{
         case "BRONZE":
             userView.layer.borderColor = CGColor(red: 101/255, green: 4/255, blue: 4/255, alpha: 1.0) /* #650404 */
         case "SILVER":
@@ -112,7 +118,10 @@ final class CustomETCRankingUserViewElementView: UIButton{
         default:
             userView.layer.borderColor = CGColor(red: 255/255, green: 25/255, blue: 255/255, alpha: 1.0)
         }
-        userView.updateData(img: data.profile_image ?? "")
+        
+        if let img = data?.profile_image{
+            userView.updateData(img: img)
+        }
     }
     
     /*

@@ -578,8 +578,6 @@ extension AllUserRankingController: SendUserName{
             present(nextPage, animated: false)
         }
         else if type == "Organization"{
-            print("zzz")
-            
             let nextPage = OrganizationListController()
             nextPage.organizationName = name
             nextPage.modalPresentationStyle = .fullScreen

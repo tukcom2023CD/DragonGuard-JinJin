@@ -47,7 +47,7 @@ final class CustomTopView: UIView{
     
     // MARK: 스택 뷰
     private lazy var stackView: UIStackView = {
-        let stack = UIStackView()
+        let stack = UIStackView(arrangedSubviews: [secondRankView,firstRankView,thirdRankView])
         stack.axis = .horizontal
         stack.distribution = .fillEqually
         stack.backgroundColor = .white
@@ -57,10 +57,6 @@ final class CustomTopView: UIView{
     // MARK:
     private func addUI(){
         addSubview(stackView)
-        
-        stackView.addArrangedSubview(secondRankView)
-        stackView.addArrangedSubview(firstRankView)
-        stackView.addArrangedSubview(thirdRankView)
         
         stackView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -100,6 +96,7 @@ final class CustomTopView: UIView{
         case 2:
             firstRankView.getData(data: list[0])
             secondRankView.getData(data: list[1], rank: 2)
+            thirdRankView.getData(data: nil, rank: 0)
             
             firstRankView.rx.tap
                 .subscribe(onNext: {
@@ -115,7 +112,9 @@ final class CustomTopView: UIView{
             
             firstRankView.isHidden = false
             secondRankView.isHidden = false
-            thirdRankView.isHidden = true
+            thirdRankView.isHidden = false
+            thirdRankView.layer.opacity = 0
+            
         case 3:
             firstRankView.getData(data: list[0])
             secondRankView.getData(data: list[1], rank: 2)
