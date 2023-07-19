@@ -40,4 +40,6 @@ struct AllMemberInfoModel{
     let additions: Int?
     let deletions: Int?
     let is_service_member: Bool?
+    let organization: String?
 }
+

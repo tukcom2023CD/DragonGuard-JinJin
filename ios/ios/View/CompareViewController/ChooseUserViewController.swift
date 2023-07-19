@@ -49,7 +49,11 @@ extension ChooseUserViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ChooseUserTableViewCell.identifier, for: indexPath) as? ChooseUserTableViewCell else { return UITableViewCell() }
         cell.backgroundColor = .white
-        cell.inputData(text: userList?[indexPath.row].github_id ?? "")
+        
+        if let githubId = userList?[indexPath.row].github_id, let organization = userList?[indexPath.row].organization {
+            
+            cell.inputData(text: "\(organization.split(separator: "/")[1])/\(githubId)")
+        }
         
         return cell
     }

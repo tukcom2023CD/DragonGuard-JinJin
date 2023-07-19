@@ -58,7 +58,7 @@ final class CompareRepoUserController: UIViewController{
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.isScrollEnabled = true
+        cv.isScrollEnabled = false
         cv.backgroundColor = .clear
         return cv
     }()
@@ -376,30 +376,33 @@ final class CompareRepoUserController: UIViewController{
     private func getData_User(){
         
         CompareViewModel.viewModel.getContributorInfo(firstRepoName: self.firstRepo ?? "", secondRepoName: self.secondRepo ?? "")
-            .subscribe(onNext:{ list in
-                self.getData_Repo()
+            .subscribe(onNext:{ [weak self] list in
+                self?.getData_Repo()
                 print("getData_User success\n")
                 
+                self?.allUserList = []
                 list.first_result.forEach { data in
-                    self.allUserList.append(AllMemberInfoModel(github_id: data.github_id ?? "Unknown",
+                    self?.allUserList.append(AllMemberInfoModel(github_id: data.github_id ?? "Unknown",
                                                                profile_url: data.profile_url ?? "",
                                                                commits: data.commits ?? 0,
                                                                additions: data.additions ?? 0,
                                                                deletions: data.deletions ?? 0,
-                                                               is_service_member: data.is_service_member ?? false))
+                                                               is_service_member: data.is_service_member ?? false,
+                                                                organization: self?.firstRepo))
                 }
                 
                 list.second_result.forEach { data in
-                    self.allUserList.append(AllMemberInfoModel(github_id: data.github_id ?? "Unknown",
+                    self?.allUserList.append(AllMemberInfoModel(github_id: data.github_id ?? "Unknown",
                                                                profile_url: data.profile_url ?? "",
                                                                commits: data.commits ?? 0,
                                                                additions: data.additions ?? 0,
                                                                deletions: data.deletions ?? 0,
-                                                               is_service_member: data.is_service_member ?? false))
+                                                               is_service_member: data.is_service_member ?? false,
+                                                                organization: self?.secondRepo))
                 }
-                self.checkUserData = true
-                self.selectionCollectionView.reloadData()
-                self.clickedChooseUserBtn()
+                self?.checkUserData = true
+                self?.selectionCollectionView.reloadData()
+                self?.clickedChooseUserBtn()
             })
             .disposed(by: disposeBag)
         
