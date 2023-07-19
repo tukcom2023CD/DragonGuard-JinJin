@@ -154,13 +154,13 @@ extension FAQPage: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if indexPath.section == 5 && indexPath.row == 1{
-            return (tableView.frame.height) / 10
+            return (tableView.frame.height) / 9
         }
         else if  indexPath.section == 6 && indexPath.row == 1{
             return (tableView.frame.height) / 9
         }
         else if indexPath.section == 8 && indexPath.row == 1{
-            return (tableView.frame.height) / 9
+            return (tableView.frame.height) / 6
         }
         return tableView.frame.height / 15
         
