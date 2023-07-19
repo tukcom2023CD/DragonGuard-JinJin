@@ -38,6 +38,7 @@ final class CustomUIView: UIView{
         label.numberOfLines = 2
         label.backgroundColor = .clear
         label.textColor = .black
+        label.textAlignment = .center
         return label
     }()
    
@@ -57,7 +58,6 @@ final class CustomUIView: UIView{
         contributorView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
-//            make.height.equalTo(120)
             make.top.equalToSuperview()
         }
         
