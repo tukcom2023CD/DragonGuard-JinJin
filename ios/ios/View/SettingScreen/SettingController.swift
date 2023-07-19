@@ -87,7 +87,13 @@ final class SettingController: UIViewController{
         LoginViewModel.loginService.logOutDone()
             .subscribe(onNext: { check in
                 if check{
-                    self.navigationController?.popToRootViewController(animated: true)
+                    self.presentingViewController?.dismiss(animated: false, completion: nil)
+
+                    // 두 번째 모달 창 닫기
+                    self.presentingViewController?.presentingViewController?.dismiss(animated: false, completion: nil)
+
+                    // 세 번째 모달 창 닫기
+                    self.presentingViewController?.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
                 }
             })
             .disposed(by: self.disposeBag)
