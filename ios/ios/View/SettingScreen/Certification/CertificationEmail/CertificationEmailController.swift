@@ -27,6 +27,7 @@ final class CertificationEmailController: UIViewController{
         addUIToView()
         sendEmailForAddMember()
         timer = validNumberTimer()
+        clickedBackBtn()
     }
     
     // MARK: UI가 로드 된 후 레이아웃 설정 적용
@@ -44,6 +45,13 @@ final class CertificationEmailController: UIViewController{
     /*
      UI 코드 작성
      */
+    
+    // MARK: 뒤로가기 버튼
+    private lazy var backBtn: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "backBtn")?.resize(newWidth: 30), for: .normal)
+        return btn
+    }()
     
     // MARK: 인증번호 입력하라는 문구 라벨
     private lazy var label: UILabel = {
@@ -99,25 +107,31 @@ final class CertificationEmailController: UIViewController{
     
     // MARK: View에 UI 추가
     private func addUIToView(){
-        self.view.addSubview(label)
-        self.view.addSubview(numberTextField)
-        self.view.addSubview(checkBtn)
-        self.view.addSubview(reSend)
+        view.addSubview(backBtn)
+        view.addSubview(label)
+        view.addSubview(numberTextField)
+        view.addSubview(checkBtn)
+        view.addSubview(reSend)
         
         setAutoLayout()
     }
     
     // MARK: UI AutoLayout
     private func setAutoLayout(){
+        backBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(15)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+        }
+        
         label.snp.makeConstraints { make in
-            make.top.equalTo(UIScreen.main.bounds.height/4)
+            make.top.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/4)
             make.centerX.equalToSuperview()
         }
         
         numberTextField.snp.makeConstraints { make in
-            make.top.equalTo(label.snp.bottom).offset(UIScreen.main.bounds.height/10)
+            make.top.equalTo(label.snp.bottom).offset(view.safeAreaLayoutGuide.layoutFrame.height/10)
             make.centerX.equalToSuperview()
-            make.width.equalTo(UIScreen.main.bounds.width/2)
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/2)
         }
         
         checkBtn.snp.makeConstraints { make in
@@ -194,13 +208,6 @@ final class CertificationEmailController: UIViewController{
         self.timecount = 0
         self.recordTime = 0
         let _ = validNumberTimer()
-        
-//        CertifiedOrganizationViewModel.viewModel.reSendCertifiactedNumber()
-//            .subscribe { num in
-//                self.emailId = num
-//            }
-//            .disposed(by: self.disposeBag)
-        
     }
     
     // MARK: 멤버 추가하는 함수
@@ -211,6 +218,14 @@ final class CertificationEmailController: UIViewController{
             self.emailId = emailId
         }
         .disposed(by: self.disposeBag)
+    }
+    
+    // MARK:
+    private func clickedBackBtn(){
+        backBtn.rx.tap.subscribe(onNext: {
+            self.dismiss(animated: true)
+        })
+        .disposed(by: disposeBag)
     }
     
     // MARK: 인증번호 타이머

@@ -65,13 +65,11 @@ final class OrganizationCertificationController: UIViewController{
         return btn
     }()
     
-    // MARK: 조직 타입 Stack View
-    private lazy var typeStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [typeLabel, typeBtn])
-        stack.axis = .horizontal
-        stack.distribution = .equalSpacing
-        stack.backgroundColor = .clear
-        return stack
+    /// MARK:
+    private lazy var typeUIView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
     }()
     
     // MARK: 조직 이름 라벨
@@ -96,13 +94,11 @@ final class OrganizationCertificationController: UIViewController{
         return btn
     }()
     
-    // MARK: 조직 이름 Stack View
-    private lazy var nameStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [nameLabel, nameChooseBtn])
-        stack.axis = .horizontal
-        stack.distribution = .equalSpacing
-        stack.backgroundColor = .clear
-        return stack
+    /// MARK:
+    private lazy var nameUIView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
     }()
     
     // MARK: 사용자 이메일 라벨
@@ -127,19 +123,16 @@ final class OrganizationCertificationController: UIViewController{
         return textField
     }()
     
-    // MARK: 사용자 이메일 Stack View
-    private lazy var userEmailStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [userEmailLabel, emailTextField])
-        stack.axis = .horizontal
-        stack.spacing = 10
-        stack.distribution = .equalSpacing
-        stack.backgroundColor = .white
-        return stack
+    /// MARK:
+    private lazy var emailUIView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
     }()
-    
+
     // MARK: Horizontal StackView 3개 묶는 StackView
     private lazy var verticalStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [typeStackView, nameStackView, userEmailStackView])
+        let stack = UIStackView(arrangedSubviews: [typeUIView, nameUIView, emailUIView])
         stack.axis = .vertical
         stack.distribution = .fillEqually
         stack.backgroundColor = .white
@@ -166,7 +159,17 @@ final class OrganizationCertificationController: UIViewController{
     private func addUIToView(){
         self.view.addSubview(backBtn)
         self.view.addSubview(titleLabel)
-        self.view.addSubview(verticalStackView)
+        
+        typeUIView.addSubview(typeLabel)
+        typeUIView.addSubview(typeBtn)
+        
+        nameUIView.addSubview(nameLabel)
+        nameUIView.addSubview(nameChooseBtn)
+        
+        emailUIView.addSubview(userEmailLabel)
+        emailUIView.addSubview(emailTextField)
+        
+        view.addSubview(verticalStackView)
         self.view.addSubview(certifiedBtn)
         setAutoLayout()
         clickedBackBtn()
@@ -180,15 +183,48 @@ final class OrganizationCertificationController: UIViewController{
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
         }
         
-        self.titleLabel.snp.makeConstraints({ make in
+        titleLabel.snp.makeConstraints({ make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(UIScreen.main.bounds.height/20)
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(view.safeAreaLayoutGuide.layoutFrame.height/20)
         })
+        
+        userEmailLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
+        }
+        
+        emailTextField.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+//            make.leading.equalTo(userEmailLabel.snp.trailing)
+            make.trailing.equalToSuperview()
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/2)
+        }
+        
+        typeLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
+        }
+        
+        typeBtn.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview()
+        }
+        
+        nameLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
+        }
+        
+        nameChooseBtn.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview()
+        }
         
         self.verticalStackView.snp.makeConstraints({ make in
             make.top.equalTo(titleLabel.snp.top).offset(50)
-            make.centerX.equalToSuperview()
-            make.height.equalTo(UIScreen.main.bounds.height/4)
+            make.leading.equalToSuperview().offset(40)
+            make.trailing.equalToSuperview().offset(-40)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/4)
         })
         
         self.certifiedBtn.snp.makeConstraints({ make in

@@ -72,15 +72,12 @@ final class AddOrganizationController: UIViewController{
         return field
     }()
     
-    // MARK: 학교 UI들 묶는 StackView
-    private lazy var organizationStackView: UIStackView = {
-        let stackview = UIStackView(arrangedSubviews: [organizationName,organizationTextField])
-        stackview.axis = .horizontal
-        stackview.alignment = .fill
-        stackview.distribution = .equalSpacing
-        stackview.spacing = 8
+    /// MARK:
+    private lazy var organizationUIView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
         
-        return stackview
+        return view
     }()
     
     // MARK: 조직 타입 라벨
@@ -101,14 +98,12 @@ final class AddOrganizationController: UIViewController{
         return label
     }()
     
-    // MARK: 조직 UI들 묶는 StackView
-    private lazy var typeStackView: UIStackView = {
-        let stackview = UIStackView(arrangedSubviews: [organizationType,typeLabel])
-        stackview.axis = .horizontal
-        stackview.alignment = .fill
-        stackview.distribution = .equalSpacing
-        stackview.spacing = 8
-        return stackview
+    /// MARK:
+    private lazy var typeUIView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        
+        return view
     }()
     
     // MARK: 이메일 endpoint 라벨
@@ -126,29 +121,26 @@ final class AddOrganizationController: UIViewController{
         field.textColor = .black
         field.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         field.attributedPlaceholder =  NSAttributedString(string: "@ 뒤부터 적어주세요",
-                                                              attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+                                                          attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+        
         return field
     }()
     
-    // MARK: 이메일 UI 묶는 Stack View
-    private lazy var emailStackView: UIStackView = {
-        let stackview = UIStackView(arrangedSubviews: [emailName,emailTextField])
-        stackview.axis = .horizontal
-        stackview.alignment = .fill
-        stackview.distribution = .equalSpacing
-        stackview.spacing = 8
+    /// MARK:
+    private lazy var emailUIView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
         
-        return stackview
+        return view
     }()
     
     // MARK: 전체 stack view 묶는 vertical stack view
     private lazy var allStackView: UIStackView = {
-        let stackview = UIStackView(arrangedSubviews: [typeStackView, organizationStackView, emailStackView])
+        let stackview = UIStackView(arrangedSubviews: [typeUIView, organizationUIView, emailUIView])
         stackview.axis = .vertical
         stackview.alignment = .fill
         stackview.distribution = .equalSpacing
         stackview.spacing = 10
-        
         return stackview
     }()
     
@@ -205,6 +197,15 @@ final class AddOrganizationController: UIViewController{
         
         view.addSubview(certifiedLabel)
         
+        emailUIView.addSubview(emailName)
+        emailUIView.addSubview(emailTextField)
+        
+        typeUIView.addSubview(organizationType)
+        typeUIView.addSubview(typeLabel)
+        
+        organizationUIView.addSubview(organizationName)
+        organizationUIView.addSubview(organizationTextField)
+        
         view.addSubview(allStackView)
         
         view.addSubview(doneBtn)
@@ -215,14 +216,52 @@ final class AddOrganizationController: UIViewController{
     // MARK: UI AutoLayout 설정
     private func settingAutoLayout(){
         
+        backBtn.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(15)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+        }
+        
         self.certifiedLabel.snp.makeConstraints({ make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
+            make.top.equalTo(backBtn.snp.bottom).offset(10)
             make.centerX.equalToSuperview()
         })
         
+        emailName.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
+        }
+        
+        emailTextField.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/2)
+        }
+        
+        organizationType.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
+        }
+        
+        typeLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/2)
+        }
+        
+        organizationName.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
+        }
+        
+        organizationTextField.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/2)
+        }
+        
         self.allStackView.snp.makeConstraints({ make in
-//            make.center.equalToSuperview()
-            make.centerX.equalToSuperview()
+            make.leading.equalToSuperview().offset(40)
+            make.trailing.equalToSuperview().offset(-40)
             make.top.equalTo(certifiedLabel.snp.bottom).offset(10)
         })
         
