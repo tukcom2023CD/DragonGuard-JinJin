@@ -30,6 +30,7 @@ class SearchOrganizationAdapter(private val datas : OrganizationNamesModel, priv
                 val intentW = Intent(context, AuthOrgActivity::class.java)
                 intentW.putExtra("orgName", data.name)
                 intentW.putExtra("orgId", data.id)
+                intentW.putExtra("endPoint", data.email_endpoint)
                 authOrg.setResult(0, intentW)
                 authOrg.finish()
             }

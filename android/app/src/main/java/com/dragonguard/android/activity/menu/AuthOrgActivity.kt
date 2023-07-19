@@ -28,11 +28,13 @@ class AuthOrgActivity : AppCompatActivity() {
                 try {
                     val orgName = orgIntent!!.getStringExtra("orgName")
                     val orgId = orgIntent.getLongExtra("orgId", -1)
+                    val endPoint = orgIntent.getStringExtra("endPoint")
 //            Toast.makeText(applicationContext, requestKey, Toast.LENGTH_SHORT).show()
-                    if(orgName != null && orgId != -1L) {
+                    if(orgName != null && orgId != -1L && endPoint!=null) {
                         binding.orgNameEdit.setText(orgName)
                         binding.orgNameEdit.isEnabled = true
                         organizationId = orgId
+                        emailEndPoint = endPoint
                         Log.d("id", "orgId = $orgId")
                     }
                 } catch (e: Exception) {
@@ -48,6 +50,7 @@ class AuthOrgActivity : AppCompatActivity() {
     private val viewmodel = Viewmodel()
     private var token = ""
     private var organizationId: Long = 0
+    private var emailEndPoint = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth_org)
@@ -123,7 +126,13 @@ class AuthOrgActivity : AppCompatActivity() {
                     }
                 }
                 if(binding.orgEmailEdit.text.toString().contains("@")) {
-                    addOrgMember()
+                    val email = binding.orgEmailEdit.text.toString().split("@")
+                    if(email[1] != emailEndPoint) {
+                        Toast.makeText(this, "조직의 이메일 주소를 정확히 입력해 주세요!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        addOrgMember()
+                    }
+
                 }
             } else {
                 Toast.makeText(applicationContext, "miss!! name: ${binding.orgNameEdit.text}, email: ${binding.orgEmailEdit.text}, type: ${binding.orgTypeSpinner.selectedItem}", Toast.LENGTH_SHORT).show()
