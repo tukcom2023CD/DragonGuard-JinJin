@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
                 token = realToken!!
                 prefs.setRefreshToken(refreshToken!!)
                 prefs.setJwtToken(realToken)
+                Log.d("refreshToken", "refresh : ${prefs.getRefreshToken("")}")
                 multipleSearchUser()
             }
         }
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity() {
                     compareFrag = null
                     profileFrag = null
                     rankingFrag = null
+                    Log.d("로그인 필요", "로그인 필요")
                     val intent = Intent(applicationContext, LoginActivity::class.java)
                     intent.putExtra("wallet_address", prefs.getWalletAddress(""))
                     intent.putExtra("token", prefs.getJwtToken(""))
@@ -158,8 +160,12 @@ class MainActivity : AppCompatActivity() {
             prefs.setRefreshToken(refresh)
         }
         if (token.isBlank() || prefs.getWalletAddress("").isBlank()) {
+            Log.d("로그인 필요", "로그인 필요")
             val intent = Intent(applicationContext, LoginActivity::class.java)
             intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+            intent.putExtra("token", prefs.getJwtToken(""))
+            intent.putExtra("refresh", prefs.getRefreshToken(""))
+            intent.putExtra("key", prefs.getKey(""))
             intent.putExtra("logout", true)
             activityResultLauncher.launch(intent)
         } else {

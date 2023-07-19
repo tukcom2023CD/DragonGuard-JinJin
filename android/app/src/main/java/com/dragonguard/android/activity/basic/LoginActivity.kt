@@ -17,6 +17,7 @@ import com.dragonguard.android.R
 import com.dragonguard.android.connect.NetworkCheck
 import com.dragonguard.android.databinding.ActivityLoginBinding
 import com.dragonguard.android.model.klip.Bapp
+import com.dragonguard.android.model.klip.CallBack
 import com.dragonguard.android.model.klip.WalletAuthRequestModel
 import com.dragonguard.android.preferences.IdPreference
 import com.dragonguard.android.viewmodel.Viewmodel
@@ -34,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
     private var backPressed: Long = 0
     private lateinit var binding: ActivityLoginBinding
     private var viewmodel = Viewmodel()
-    private val body = WalletAuthRequestModel(Bapp("GitRank"), "auth")
+    private val body = WalletAuthRequestModel(Bapp("GitRank", CallBack()), "auth")
     private var walletAddress = ""
     private var key = ""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,9 +50,12 @@ class LoginActivity : AppCompatActivity() {
 
         val intent = intent
         var token = intent.getStringExtra("token")
-        token = prefs.getJwtToken("")
-        var refresh = prefs.getRefreshToken("")
-        Log.d("토큰", "로그인 화면 token: $token")
+        var refresh = intent.getStringExtra("refresh")
+        intent.getStringExtra("key")?.let {
+            key = it
+        }
+        Log.d("info", "로그인 화면 token: $token")
+        Log.d("info", "로그인 화면 refresh: $refresh")
         val logout = intent.getBooleanExtra("logout", false)
         if (!token.isNullOrEmpty() && !refresh.isNullOrEmpty()) {
 //            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
@@ -61,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
         } else {
             binding.githubAuth.isEnabled = true
             binding.walletAuth.isEnabled = false
-            binding.walletFinish.isEnabled = false
+//            binding.walletFinish.isEnabled = false
         }
         if (logout) {
             prefs.setKey("")
@@ -92,7 +96,6 @@ class LoginActivity : AppCompatActivity() {
 //        }
 
 
-        key = prefs.getKey("")
         binding.oauthWebView.apply {
             settings.javaScriptEnabled = true // 자바스크립트 허용
             settings.javaScriptCanOpenWindowsAutomatically = false
@@ -124,6 +127,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                     return false
                 }
+                Log.d("cookie", "url: ${request.url}")
                 binding.oauthWebView.loadUrl(request.url.toString())
                 return true
             }
@@ -215,26 +219,26 @@ class LoginActivity : AppCompatActivity() {
                 walletAuthRequest()
             }
         }
-        binding.walletFinish.setOnClickListener {
-            if (key.isNotBlank() && prefs.getRefreshToken("").isNotBlank() && prefs.getRefreshToken(
-                    ""
-                ).isNotBlank()
-            ) {
-                val intentF = Intent(applicationContext, MainActivity::class.java)
-                Log.d("info", "key : $key")
-                intentF.putExtra("key", key)
-                intentF.putExtra("access", prefs.getJwtToken(""))
-                intentF.putExtra("refresh", prefs.getRefreshToken(""))
-                setResult(0, intentF)
-                finish()
-            } else {
-                Toast.makeText(
-                    applicationContext,
-                    "Github 인증과 wallet 인증 후 완료를 눌러주세요!!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+//        binding.walletFinish.setOnClickListener {
+//            if (key.isNotBlank() && prefs.getRefreshToken("").isNotBlank() && prefs.getRefreshToken(
+//                    ""
+//                ).isNotBlank()
+//            ) {
+//                val intentF = Intent(applicationContext, MainActivity::class.java)
+//                Log.d("info", "set key : $key")
+//                intentF.putExtra("key", key)
+//                intentF.putExtra("access", prefs.getJwtToken(""))
+//                intentF.putExtra("refresh", prefs.getRefreshToken(""))
+//                setResult(0, intentF)
+//                finish()
+//            } else {
+//                Toast.makeText(
+//                    applicationContext,
+//                    "Github 인증과 wallet 인증 후 완료를 눌러주세요!!",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//        }
     }
 
     private fun checkState(token: String, refresh: String) {
@@ -245,6 +249,9 @@ class LoginActivity : AppCompatActivity() {
                     viewmodel.checkLoginState(token)
                 }
                 val result = resultDeffered.await()
+                Log.d("info", "로그인 화면 token: $token")
+                Log.d("info", "로그인 화면 refresh: $refresh")
+                Log.d("info", "check key : $key")
                 Log.d("로그인 상태", "로그인 상태 결과 : $result")
                 if(result) {
                     val intentF = Intent(applicationContext, MainActivity::class.java)
@@ -253,9 +260,19 @@ class LoginActivity : AppCompatActivity() {
                     setResult(1, intentF)
                     finish()
                 } else {
-                    binding.githubAuth.isEnabled = false
-                    binding.walletAuth.isEnabled = true
-                    binding.walletFinish.isEnabled = true
+                    if(key.isNotBlank()) {
+                        val intentF = Intent(applicationContext, MainActivity::class.java)
+                        Log.d("info", "key : $key")
+                        intentF.putExtra("key", key)
+                        intentF.putExtra("access", token)
+                        intentF.putExtra("refresh", refresh)
+                        setResult(0, intentF)
+                        finish()
+                    } else {
+                        binding.githubAuth.isEnabled = false
+                        binding.walletAuth.isEnabled = true
+//                        binding.walletFinish.isEnabled = true
+                    }
                 }
             }
 
@@ -275,7 +292,7 @@ class LoginActivity : AppCompatActivity() {
                 } else {
                     key = authResponse.request_key
                     prefs.setKey(authResponse.request_key)
-                    Log.d("key", "key : ${authResponse.request_key}")
+                    Log.d("info", "key : ${authResponse.request_key}")
                     val intent = Intent(
                         Intent.ACTION_VIEW,
                         Uri.parse("https://klipwallet.com/?target=/a2a?request_key=${authResponse.request_key}")
@@ -307,7 +324,8 @@ class LoginActivity : AppCompatActivity() {
         super.onRestart()
         val token = prefs.getJwtToken("")
         val refresh = prefs.getRefreshToken("")
-        Log.d("토큰", "redirect 화면 token: $token")
+        Log.d("info", "redirect 화면 token: $token")
+        Log.d("info", "redirect 화면 refresh: $refresh")
         if (!token.isNullOrEmpty()) {
 //            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
             binding.githubAuth.isEnabled = false
@@ -316,7 +334,7 @@ class LoginActivity : AppCompatActivity() {
         } else {
             binding.githubAuth.isEnabled = true
             binding.walletAuth.isEnabled = false
-            binding.walletFinish.isEnabled = false
+//            binding.walletFinish.isEnabled = false
         }
     }
 
@@ -324,7 +342,8 @@ class LoginActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         val token = prefs.getJwtToken("")
         val refresh = prefs.getRefreshToken("")
-        Log.d("토큰", "redirect 화면 token: $token")
+        Log.d("info", "redirect 화면 token: $token")
+        Log.d("info", "redirect 화면 refresh: $refresh")
         if (!token.isNullOrEmpty()) {
 //            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
             binding.githubAuth.isEnabled = false
@@ -333,7 +352,7 @@ class LoginActivity : AppCompatActivity() {
         } else {
             binding.githubAuth.isEnabled = true
             binding.walletAuth.isEnabled = false
-            binding.walletFinish.isEnabled = false
+//            binding.walletFinish.isEnabled = false
         }
     }
     //    뒤로가기 1번 누르면 종료 안내 메시지, 2번 누르면 종료

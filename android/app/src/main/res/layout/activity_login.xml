@@ -27,20 +27,20 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3.2"
+                android:layout_weight="3.6"
                 android:alpha="0.9"
                 android:background="@drawable/search_background" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.3"/>
+                android:layout_weight="0.2"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginHorizontal="10sp"
-                android:layout_weight="1"
+                android:layout_weight="0.7"
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -69,18 +69,18 @@
                     android:textColor="@color/white"
                     android:textSize="20sp" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/wallet_finish"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginVertical="2sp"
-                    android:layout_weight="0.1"
-                    android:background="@drawable/ripple_klip"
-                    android:fontFamily="@font/ibm_semibold"
-                    android:text="Wallet 인증 완료"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
+<!--                <androidx.appcompat.widget.AppCompatButton-->
+<!--                    android:id="@+id/wallet_finish"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_marginVertical="2sp"-->
+<!--                    android:layout_weight="0.1"-->
+<!--                    android:background="@drawable/ripple_klip"-->
+<!--                    android:fontFamily="@font/ibm_semibold"-->
+<!--                    android:text="Wallet 인증 완료"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="20sp" />-->
 
             </LinearLayout>
 
