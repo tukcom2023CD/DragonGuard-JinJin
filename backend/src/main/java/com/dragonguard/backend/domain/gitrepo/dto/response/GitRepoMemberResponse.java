@@ -1,11 +1,6 @@
 package com.dragonguard.backend.domain.gitrepo.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.Objects;
+import lombok.*;
 
 /**
  * @author 김승진
@@ -16,6 +11,7 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "githubId")
 public class GitRepoMemberResponse {
     private String githubId;
     private String profileUrl;
@@ -23,17 +19,4 @@ public class GitRepoMemberResponse {
     private Integer additions;
     private Integer deletions;
     private Boolean isServiceMember;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GitRepoMemberResponse that = (GitRepoMemberResponse) o;
-        return Objects.equals(githubId, that.githubId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(githubId);
-    }
 }

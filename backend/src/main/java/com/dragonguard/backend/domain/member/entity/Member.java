@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Entity
+@EqualsAndHashCode(of = "githubId")
 @Where(clause = "deleted_at is null")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -81,8 +82,8 @@ public class Member implements Auditable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Organization organization;
 
+    @JoinColumn
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "member_role")
     @ElementCollection(fetch = FetchType.EAGER)
     private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
 
@@ -143,11 +144,6 @@ public class Member implements Auditable {
     public void addCodeReview(CodeReview codeReview) {
         if (codeReview == null || (this.codeReview != null && this.codeReview.customEqualsWithAmount(codeReview))) return;
         this.codeReview = codeReview;
-    }
-
-    public void updateNameAndImage(String name, String profileImage) {
-        this.name = name;
-        this.profileImage = profileImage;
     }
 
     public void updateTier() {

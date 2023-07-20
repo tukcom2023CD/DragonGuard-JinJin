@@ -3,12 +3,10 @@ package com.dragonguard.backend.domain.gitrepo.service;
 import com.dragonguard.backend.domain.gitrepo.dto.client.*;
 import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributionMap;
 import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoLanguageMap;
-import com.dragonguard.backend.domain.gitrepo.dto.kafka.ClosedIssueKafkaResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.SparkLineKafka;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.SummaryResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
@@ -42,13 +40,13 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
     private final GitRepoRepository gitRepoRepository;
     private final AuthService authService;
     private final GitRepoMapper gitRepoMapper;
-    private final KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
     private final KafkaProducer<SparkLineKafka> kafkaSparkLineProducer;
     private final KafkaProducer<GitRepoRequest> kafkaGitRepoInfoProducer;
     private final GithubClient<GitRepoInfoRequest, List<GitRepoMemberClientResponse>> gitRepoMemberClient;
     private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
     private final GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> gitRepoSparkLineClient;
+    private final GithubClient<GitRepoClientRequest, GitRepoIssueResponse[]> gitRepoIssueClient;
 
     public List<Integer> updateAndGetSparkLine(final String name, final String githubToken, final GitRepo gitRepo) {
         List<Integer> savedSparkLine = gitRepo.getSparkLine();
@@ -76,21 +74,11 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
                 getOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
     }
 
-    public void updateClosedIssues(final ClosedIssueKafkaResponse closedIssueKafkaResponse) {
-        String name = closedIssueKafkaResponse.getName();
-        if (!gitRepoRepository.existsByName(name)) return;
-
-        gitRepoRepository.findByName(name)
-                .orElseThrow(EntityNotFoundException::new)
-                .updateClosedIssueNum(closedIssueKafkaResponse.getClosedIssue());
-    }
-
     private GitRepoCompareResponse getOneRepoResponse(final String repoName) {
         String githubToken = authService.getLoginUser().getGithubToken();
         GitRepoClientResponse repoResponse = requestClientGitRepo(repoName, githubToken);
 
-        repoResponse.setClosedIssuesCount(getEntityByName(repoName).getClosedIssueNum());
-        requestKafkaIssue(new GitRepoNameRequest(repoName));
+        repoResponse.setClosedIssuesCount(requestClientGitRepoIssue(repoName, githubToken));
 
         return getGitRepoResponse(repoName, repoResponse, requestClientGitRepoLanguage(repoName, githubToken));
     }
@@ -122,14 +110,15 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
         return new GitRepoLanguageMap(gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName)));
     }
 
+    private Integer requestClientGitRepoIssue(final String repoName, final String githubToken) {
+        return gitRepoIssueClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName)).length;
+    }
+
     public GitRepo findGitRepo(final String repoName) {
         if (gitRepoRepository.existsByName(repoName)) {
-            requestKafkaIssue(new GitRepoNameRequest(repoName));
             return gitRepoRepository.findByName(repoName).orElseThrow(EntityNotFoundException::new);
         }
-        GitRepo gitRepo = gitRepoRepository.save(gitRepoMapper.toEntity(repoName));
-        requestKafkaIssue(new GitRepoNameRequest(repoName));
-        return gitRepo;
+        return gitRepoRepository.save(gitRepoMapper.toEntity(repoName));
     }
 
     private StatisticsResponse getStatistics(final GitRepo gitRepo) {
@@ -180,10 +169,6 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
             return null;
         }
         return gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
-    }
-
-    public void requestKafkaIssue(final GitRepoNameRequest gitRepoNameRequest) {
-        kafkaIssueProducer.send(gitRepoNameRequest);
     }
 
     private void requestKafkaSparkLine(final String githubToken, final Long id) {

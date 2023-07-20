@@ -10,7 +10,6 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author 김승진
@@ -19,6 +18,7 @@ import java.util.Objects;
 
 @Getter
 @Entity
+@EqualsAndHashCode(of = "name")
 @Where(clause = "deleted_at is null")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,19 +46,6 @@ public class GitOrganization implements Auditable {
         this.name = name;
         this.profileImage = profileImage;
         addGitOrganizationMember(member);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GitOrganization that = (GitOrganization) o;
-        return Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
     }
 
     public void addGitOrganizationMember(Member member) {

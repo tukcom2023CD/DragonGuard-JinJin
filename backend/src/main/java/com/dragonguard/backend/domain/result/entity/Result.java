@@ -7,7 +7,6 @@ import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 /**
  * @author 김승진
@@ -16,6 +15,7 @@ import java.util.Objects;
 
 @Getter
 @Entity
+@EqualsAndHashCode(of = "name")
 @Where(clause = "deleted_at is null")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,18 +39,5 @@ public class Result implements Auditable {
     public Result(String name, Long searchId) {
         this.name = name;
         this.searchId = searchId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Result result = (Result) o;
-        return Objects.equals(name, result.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
     }
 }

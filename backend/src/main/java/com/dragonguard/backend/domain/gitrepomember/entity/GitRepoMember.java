@@ -9,7 +9,6 @@ import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 /**
  * @author 김승진
@@ -18,6 +17,7 @@ import java.util.Objects;
 
 @Getter
 @Entity
+@EqualsAndHashCode(of = {"gitRepo", "member"})
 @Where(clause = "deleted_at is null")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,19 +41,6 @@ public class GitRepoMember implements Auditable {
     @Embedded
     @Column(nullable = false)
     private BaseTime baseTime;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GitRepoMember that = (GitRepoMember) o;
-        return Objects.equals(gitRepo, that.gitRepo) && Objects.equals(member, that.member);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(gitRepo, member);
-    }
 
     @Builder
     public GitRepoMember(GitRepo gitRepo, Member member, GitRepoContribution gitRepoContribution) {

@@ -20,6 +20,7 @@ import java.util.Set;
 
 @Getter
 @Entity
+@EqualsAndHashCode(of = "name")
 @Where(clause = "deleted_at is null")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,13 +33,11 @@ public class GitRepo implements Auditable {
     @Column(unique = true, nullable = false)
     private String name;
 
-    private Integer closedIssueNum;
-
     @OneToMany(mappedBy = "gitRepo", cascade = CascadeType.PERSIST)
     private Set<GitRepoMember> gitRepoMembers = new HashSet<>();
 
+    @JoinColumn
     @ElementCollection
-    @CollectionTable(name = "spark_line", joinColumns = @JoinColumn(name = "git_repo_id"))
     private List<Integer> sparkLine = new ArrayList<>();
 
     @Setter
@@ -49,10 +48,6 @@ public class GitRepo implements Auditable {
     @Builder
     public GitRepo(String name) {
         this.name = name;
-    }
-
-    public void updateClosedIssueNum(Integer closedIssueNum) {
-        this.closedIssueNum = closedIssueNum;
     }
 
     public void organizeGitRepoMember(GitRepoMember gitRepoMember) {
