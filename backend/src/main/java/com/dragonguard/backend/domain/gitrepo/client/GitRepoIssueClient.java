@@ -13,17 +13,28 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 @RequiredArgsConstructor
-public class GitRepoIssueClient implements GithubClient<GitRepoClientRequest, GitRepoIssueResponse[]> {
+public class GitRepoIssueClient implements GithubClient<GitRepoClientRequest, Integer> {
     private final WebClient webClient;
 
     @Override
-    public GitRepoIssueResponse[] requestToGithub(GitRepoClientRequest request) {
+    public Integer requestToGithub(GitRepoClientRequest request) {
+        int page = 1;
+        int result = 0;
+        result += getClosedIssueNum(request, page++);
+        if (result == 100) {
+            return result + getClosedIssueNum(request, page);
+        }
+        return result;
+    }
+
+    private int getClosedIssueNum(GitRepoClientRequest request, int page) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
                                 .path("repos/")
                                 .path(request.getName())
-                                .path("/issues?state=closed")
+                                .path("/issues?state=closed&per_page=100&page=")
+                                .path(Integer.toString(page))
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
@@ -31,6 +42,6 @@ public class GitRepoIssueClient implements GithubClient<GitRepoClientRequest, Gi
                 .retrieve()
                 .bodyToMono(GitRepoIssueResponse[].class)
                 .blockOptional()
-                .orElseThrow(WebClientException::new);
+                .orElseThrow(WebClientException::new).length;
     }
 }
