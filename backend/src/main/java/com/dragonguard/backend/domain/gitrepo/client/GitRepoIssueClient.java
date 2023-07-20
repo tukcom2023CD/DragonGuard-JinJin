@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -19,16 +23,17 @@ public class GitRepoIssueClient implements GithubClient<GitRepoClientRequest, In
     @Override
     public Integer requestToGithub(GitRepoClientRequest request) {
         int page = 1;
-        int result = 0;
-        result += getClosedIssueNum(request, page++);
-        if (result == 100) {
-            return result + getClosedIssueNum(request, page);
+        List<String> results = new ArrayList<>(getClosedIssueNum(request, page++));
+        while (true) {
+            List<String> closedIssues = getClosedIssueNum(request, page++);
+            results.addAll(closedIssues);
+            if (closedIssues.isEmpty()) break;
         }
-        return result;
+        return results.stream().distinct().mapToInt(r -> 1).sum();
     }
 
-    private int getClosedIssueNum(GitRepoClientRequest request, int page) {
-        return webClient.get()
+    private List<String> getClosedIssueNum(GitRepoClientRequest request, int page) {
+        return Arrays.stream(webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
                                 .path("repos/")
@@ -42,6 +47,9 @@ public class GitRepoIssueClient implements GithubClient<GitRepoClientRequest, In
                 .retrieve()
                 .bodyToMono(GitRepoIssueResponse[].class)
                 .blockOptional()
-                .orElseThrow(WebClientException::new).length;
+                .orElseThrow(WebClientException::new))
+                .map(GitRepoIssueResponse::getUrl)
+                .distinct()
+                .collect(Collectors.toList());
     }
 }
