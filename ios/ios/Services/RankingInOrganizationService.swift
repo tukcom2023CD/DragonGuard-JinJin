@@ -60,7 +60,6 @@ final class RankingInOrganizationService{
                         "Authorization" : "Bearer \(access ?? "")"
                        ])
             .responseDecodable(of: [MemberInOrganizationDecodingModel].self) { response in
-                print(response)
                 switch response.result{
                 case .success(let data):
                     data.forEach { data in

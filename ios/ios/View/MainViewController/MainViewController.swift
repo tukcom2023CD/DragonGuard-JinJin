@@ -14,6 +14,7 @@ final class MainViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let viewModel = MainViewModel()
     private var blockChainUrl: String?
+    private var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,10 +28,14 @@ final class MainViewController: UIViewController {
         getData()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        print("stop called api")
+        timer?.invalidate()
+    }
     /*
      UI 작성
      */
-          
+    
     
     // MARK: 검색 버튼
     private lazy var searchBtn: UIButton = {
@@ -97,7 +102,7 @@ final class MainViewController: UIViewController {
         view.layer.cornerRadius = 20
         view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
         view.clipsToBounds = true
-//        view.layer.masksToBounds = true
+        //        view.layer.masksToBounds = true
         return view
     }()
     
@@ -251,7 +256,7 @@ final class MainViewController: UIViewController {
         emptyView1.addSubview(tokenLabel)
         tokenView.addSubview(tokenImage)
         tokenView.addSubview(tokenNumLabel)
-
+        
         
         view.addSubview(contributionView)
         view.addSubview(emptyView2)
@@ -280,7 +285,7 @@ final class MainViewController: UIViewController {
             make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/5)
             make.leading.equalTo(searchBtn.snp.leading)
         }
-
+        
         nameLabel.snp.makeConstraints { make in
             make.centerY.equalTo(profileImage.snp.centerY)
             make.leading.equalTo(profileImage.snp.trailing).offset(30)
@@ -355,7 +360,7 @@ final class MainViewController: UIViewController {
         contributionLabel.snp.makeConstraints { make in
             make.center.equalTo(emptyView2.snp.center)
         }
-
+        
         groupView.snp.makeConstraints { make in
             make.top.equalTo(contributionView.snp.bottom).offset(30)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(40)
@@ -383,6 +388,8 @@ final class MainViewController: UIViewController {
         
         viewModel.getMyInformation().subscribe(onNext: { data in
             let imgUrl = URL(string: data.profile_image ?? "")!
+            self.timer?.invalidate()
+            self.updateData()
             
             self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
             self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
@@ -468,6 +475,102 @@ final class MainViewController: UIViewController {
                                             reviews: data.reviews ?? 0)
         })
         .disposed(by: self.disposeBag)
+    }
+    
+    /// MARK:
+    private func updateData(){
+        print("called update Data1")
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true, block: { _ in
+            self.viewModel.getMyInformation().subscribe(onNext: { data in
+                print("called update Data2")
+                let imgUrl = URL(string: data.profile_image ?? "")!
+                
+                self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
+                self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
+                self.nameLabel.text = data.github_id ?? ""
+                self.blockChainUrl = data.blockchain_url
+                switch data.tier{
+                case "BRONZE":
+                    self.tierImage.image = UIImage(named: "bronze")
+                case "SILVER":
+                    self.tierImage.image = UIImage(named: "silver")
+                case "GOLD":
+                    self.tierImage.image = UIImage(named: "gold")
+                case "PLATINUM":
+                    self.tierImage.image = UIImage(named: "platinum")
+                case "DIAMOND":
+                    self.tierImage.image = UIImage(named: "diamond")
+                default:
+                    print("error!\n")
+                }
+                let check = (data.is_last ?? false)
+                
+                
+                if data.organization_rank == 1{
+                    
+                    if data.member_github_ids?.count != 1{
+                        self.groupView.inputData(rank1: nil,
+                                                 top: nil,
+                                                 rank2: data.organization_rank ?? 1,
+                                                 me: data.member_github_ids?[0] ?? "Unknown",
+                                                 rank3: (data.organization_rank ?? 1)+1,
+                                                 under: data.member_github_ids?[1] ?? "Unknown")
+                    }
+                    else{
+                        self.groupView.inputData(rank1: nil,
+                                                 top: nil,
+                                                 rank2: data.organization_rank ?? 1,
+                                                 me: data.member_github_ids?[0] ?? "Unknown",
+                                                 rank3: nil,
+                                                 under: nil)
+                    }
+                }
+                else if check {
+                    if data.member_github_ids?.count != 1{
+                        self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                                 top: data.member_github_ids?[1] ?? "Unknown",
+                                                 rank2: (data.organization_rank ?? 0),
+                                                 me: data.member_github_ids?[2] ?? "Unknown",
+                                                 rank3: nil,
+                                                 under: nil)
+                    }
+                    else{
+                        self.groupView.inputData(rank1: nil,
+                                                 top: nil,
+                                                 rank2: (data.organization_rank ?? 0),
+                                                 me: data.member_github_ids?[0] ?? "Unknown",
+                                                 rank3: nil,
+                                                 under: nil)
+                    }
+                }
+                else if ((data.member_github_ids?.isEmpty) == nil){
+                    self.groupView.inputData(rank1: nil,
+                                             top: nil,
+                                             rank2: nil,
+                                             me: nil,
+                                             rank3: nil,
+                                             under: nil)
+                }
+                else{
+                    self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                             top: data.member_github_ids?[0] ?? "Unknown",
+                                             rank2: (data.organization_rank ?? 0),
+                                             me: data.member_github_ids?[1] ?? "Unknown",
+                                             rank3: (data.organization_rank ?? 0)+1,
+                                             under: data.member_github_ids?[2] ?? "Unknown")
+                }
+                
+                self.groupLabel.text = data.organization ?? "None"
+                
+                self.contributionView.timer?.invalidate()
+                self.contributionView.inputData(commit: data.commits ?? 0,
+                                                issue: data.issues ?? 0,
+                                                pr: data.pull_requests ?? 0,
+                                                reviews: data.reviews ?? 0)
+            })
+            .disposed(by: self.disposeBag)
+        })
     }
     
     
