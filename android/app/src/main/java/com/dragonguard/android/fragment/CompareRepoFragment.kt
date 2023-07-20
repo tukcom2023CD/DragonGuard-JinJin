@@ -52,7 +52,7 @@ class CompareRepoFragment(repoName1: String, repoName2: String, token: String,
     private lateinit var binding : FragmentCompareRepoBinding
     private var count = 0
     private val compareItems = arrayListOf("forks", "closed issues", "open issues", "stars", "subscribers", "watchers", "total commits",
-    "max commits", "min commits", "commiters", "average commits", "total additions", "max addtions", "min additions", "adders",
+    "max commits", "min commits", "contributors", "average commits", "total additions", "max addtions", "min additions", "adders",
     "average addtions", "total deletions", "max deletions", "min deletions", "deleters", "average deletions", "languages", "average lines")
     private val token = token
 
