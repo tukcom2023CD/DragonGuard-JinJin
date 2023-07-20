@@ -74,6 +74,40 @@ final class MainService{
         }
         
     }
+    
+    
+    func getDataFirstTime() -> Observable<MainModel>{
+        let url = APIURL.apiUrl.getMembersInfo(ip: ip)
+        let access = UserDefaults.standard.string(forKey: "Access")
+        
+        
+        return Observable.create(){ observer in
+            AF.request(url, headers: ["Authorization": "Bearer \(access ?? "")"])
+                .validate(statusCode: 200..<201)
+                .responseDecodable(of: MainModel.self) { response in
+                    print("main service")
+                    print("used accessToken \(access ?? "") ")
+                    
+                    print(response)
+                    switch response.result{
+                    case.success(let data):
+                        if !(data.profile_image?.isEmpty ?? true) &&
+                            !(data.github_id?.isEmpty ?? true) &&
+                            ((data.commits) != nil) &&
+                            data.tier != nil &&
+                            data.token_amount != nil
+                        {
+                            observer.onNext(data)
+                        }
+                    case .failure(let error):
+                        print("삐리삐리 에러발생 !! \(error)")
+                    }
+                }
+            return Disposables.create()
+            
+        }
+        
+    }
 }
 
 

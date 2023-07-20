@@ -21,7 +21,7 @@ final class MainViewController: UIViewController {
         self.view.backgroundColor = .white
         
         clickedBtn()
-        
+        getDatafirstTime()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -32,6 +32,7 @@ final class MainViewController: UIViewController {
         print("stop called api")
         timer?.invalidate()
     }
+    
     /*
      UI 작성
      */
@@ -382,6 +383,98 @@ final class MainViewController: UIViewController {
         
     }
     
+    func getDatafirstTime() {
+        viewModel.getDataFirstTime()
+            .subscribe(onNext: { data in
+                let imgUrl = URL(string: data.profile_image ?? "")!
+                self.timer?.invalidate()
+                self.updateData()
+                
+                self.profileImage.load(img: self.profileImage, url: imgUrl, size: nil)
+                self.tokenNumLabel.text = "\(data.token_amount ?? 0)"
+                self.nameLabel.text = data.github_id ?? ""
+                self.blockChainUrl = data.blockchain_url
+                switch data.tier{
+                case "BRONZE":
+                    self.tierImage.image = UIImage(named: "bronze")
+                case "SILVER":
+                    self.tierImage.image = UIImage(named: "silver")
+                case "GOLD":
+                    self.tierImage.image = UIImage(named: "gold")
+                case "PLATINUM":
+                    self.tierImage.image = UIImage(named: "platinum")
+                case "DIAMOND":
+                    self.tierImage.image = UIImage(named: "diamond")
+                default:
+                    print("error!\n")
+                }
+                let check = (data.is_last ?? false)
+                
+                
+                if data.organization_rank == 1{
+                    
+                    if data.member_github_ids?.count != 1{
+                        self.groupView.inputData(rank1: nil,
+                                                 top: nil,
+                                                 rank2: data.organization_rank ?? 1,
+                                                 me: data.member_github_ids?[0] ?? "Unknown",
+                                                 rank3: (data.organization_rank ?? 1)+1,
+                                                 under: data.member_github_ids?[1] ?? "Unknown")
+                    }
+                    else{
+                        self.groupView.inputData(rank1: nil,
+                                                 top: nil,
+                                                 rank2: data.organization_rank ?? 1,
+                                                 me: data.member_github_ids?[0] ?? "Unknown",
+                                                 rank3: nil,
+                                                 under: nil)
+                    }
+                }
+                else if check {
+                    if data.member_github_ids?.count != 1{
+                        self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                                 top: data.member_github_ids?[1] ?? "Unknown",
+                                                 rank2: (data.organization_rank ?? 0),
+                                                 me: data.member_github_ids?[2] ?? "Unknown",
+                                                 rank3: nil,
+                                                 under: nil)
+                    }
+                    else{
+                        self.groupView.inputData(rank1: nil,
+                                                 top: nil,
+                                                 rank2: (data.organization_rank ?? 0),
+                                                 me: data.member_github_ids?[0] ?? "Unknown",
+                                                 rank3: nil,
+                                                 under: nil)
+                    }
+                }
+                else if ((data.member_github_ids?.isEmpty) == nil){
+                    self.groupView.inputData(rank1: nil,
+                                             top: nil,
+                                             rank2: nil,
+                                             me: nil,
+                                             rank3: nil,
+                                             under: nil)
+                }
+                else{
+                    self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                             top: data.member_github_ids?[0] ?? "Unknown",
+                                             rank2: (data.organization_rank ?? 0),
+                                             me: data.member_github_ids?[1] ?? "Unknown",
+                                             rank3: (data.organization_rank ?? 0)+1,
+                                             under: data.member_github_ids?[2] ?? "Unknown")
+                }
+                
+                self.groupLabel.text = data.organization ?? "None"
+                
+                self.contributionView.timer?.invalidate()
+                self.contributionView.inputData(commit: data.commits ?? 0,
+                                                issue: data.issues ?? 0,
+                                                pr: data.pull_requests ?? 0,
+                                                reviews: data.reviews ?? 0)
+            })
+            .disposed(by: disposeBag)
+    }
     
     func getData(){
         addUIToView()

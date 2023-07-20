@@ -32,6 +32,25 @@ final class MainViewModel {
         }
     }
     
-    
+    func getDataFirstTime() -> Observable<MainModel>{
+        var count = 0
+        
+        return Observable<MainModel>.create(){ observer in
+            Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { timer in
+                self.service.getDataFirstTime()
+                    .subscribe(onNext: { list in
+                        observer.onNext(list)
+                        print(count)
+                        count += 1
+                        if count >= 3{
+                            count = 0
+                            timer.invalidate()
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
+            })
+            return Disposables.create()
+        }
+    }
     
 }
