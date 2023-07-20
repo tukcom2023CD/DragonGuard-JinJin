@@ -44,7 +44,6 @@
 		3B2E0DE02A43EF2700E6A7AD /* ContributorAutoUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DDF2A43EF2700E6A7AD /* ContributorAutoUIView.swift */; };
 		3B2E0DE22A43F12100E6A7AD /* ContributorAutoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DE12A43F12100E6A7AD /* ContributorAutoCollectionViewCell.swift */; };
 		3B2E0DE42A43F6C200E6A7AD /* OrganiRankInMyRank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E0DE32A43F6C200E6A7AD /* OrganiRankInMyRank.swift */; };
-		3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */; };
 		3B3B563429A8DA12005034FC /* CompareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563329A8DA12005034FC /* CompareService.swift */; };
 		3B3B563629A8ED3B005034FC /* CompareRepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */; };
 		3B3BBE052A516692009963D9 /* YourProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3BBE042A516692009963D9 /* YourProfileViewModel.swift */; };
@@ -214,7 +213,6 @@
 		3B2E0DDF2A43EF2700E6A7AD /* ContributorAutoUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributorAutoUIView.swift; sourceTree = "<group>"; };
 		3B2E0DE12A43F12100E6A7AD /* ContributorAutoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributorAutoCollectionViewCell.swift; sourceTree = "<group>"; };
 		3B2E0DE32A43F6C200E6A7AD /* OrganiRankInMyRank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganiRankInMyRank.swift; sourceTree = "<group>"; };
-		3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlipLoginCheckview.swift; sourceTree = "<group>"; };
 		3B3B563329A8DA12005034FC /* CompareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareService.swift; sourceTree = "<group>"; };
 		3B3B563529A8ED3B005034FC /* CompareRepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareRepoModel.swift; sourceTree = "<group>"; };
 		3B3BBE042A516692009963D9 /* YourProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourProfileViewModel.swift; sourceTree = "<group>"; };
@@ -443,7 +441,6 @@
 			children = (
 				3B58A18E29A6164D006A1817 /* LoginController.swift */,
 				3BF40D5D2A3E2E1B0052FA7C /* CustomLoginButton.swift */,
-				3B3B563129A8B3FC005034FC /* KlipLoginCheckview.swift */,
 			);
 			path = LoginController;
 			sourceTree = "<group>";
@@ -948,7 +945,6 @@
 				3BA78D942A04EED9000ACAD1 /* AdminCheckService.swift in Sources */,
 				3B3B563429A8DA12005034FC /* CompareService.swift in Sources */,
 				3B5FF1582A25EBED0022BE90 /* ChooseLanguageView.swift in Sources */,
-				3B3B563229A8B3FC005034FC /* KlipLoginCheckview.swift in Sources */,
 				3BE649F42A3DA4A3005D9F9E /* OrganizationInfoView.swift in Sources */,
 				3BF40D5E2A3E2E1B0052FA7C /* CustomLoginButton.swift in Sources */,
 				3BA78DA32A05018E000ACAD1 /* AdminTableViewCell.swift in Sources */,

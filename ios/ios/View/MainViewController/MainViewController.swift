@@ -16,6 +16,7 @@ final class MainViewController: UIViewController {
     private var blockChainUrl: String?
     private var timer: Timer?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
