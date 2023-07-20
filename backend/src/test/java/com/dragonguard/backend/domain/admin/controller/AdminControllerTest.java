@@ -51,8 +51,8 @@ class AdminControllerTest extends RestDocumentTest {
     @DisplayName("조직 요청 승인 혹은 반려가 수행되는가")
     void decideRequest() throws Exception {
         List<AdminOrganizationResponse> expected = List.of(
-                new AdminOrganizationResponse(2L, "한국공학대학교", OrganizationType.UNIVERSITY),
-                new AdminOrganizationResponse(3L, "Google", OrganizationType.COMPANY));
+                new AdminOrganizationResponse(2L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"),
+                new AdminOrganizationResponse(3L, "Google", OrganizationType.COMPANY, "gmail.com"));
         given(adminService.decideRequestedOrganization(any())).willReturn(expected);
 
         ResultActions perform =
@@ -75,8 +75,8 @@ class AdminControllerTest extends RestDocumentTest {
     @DisplayName("조직 상태에 따른 조회가 수행되는가")
     void getOrganizationsByStatus() throws Exception {
         List<AdminOrganizationResponse> expected = List.of(
-                new AdminOrganizationResponse(2L, "한국공학대학교", OrganizationType.UNIVERSITY),
-                new AdminOrganizationResponse(3L, "Google", OrganizationType.COMPANY));
+                new AdminOrganizationResponse(2L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"),
+                new AdminOrganizationResponse(3L, "Google", OrganizationType.COMPANY, "gmail.com"));
         given(adminService.getOrganizationsByStatus(any(), any())).willReturn(expected);
 
         ResultActions perform =
