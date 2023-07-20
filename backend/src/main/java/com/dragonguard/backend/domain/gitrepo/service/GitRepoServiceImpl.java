@@ -80,14 +80,18 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
 
         repoResponse.setClosedIssuesCount(requestClientGitRepoIssue(repoName, githubToken));
 
-        return getGitRepoResponse(repoName, repoResponse, requestClientGitRepoLanguage(repoName, githubToken));
+        return getGitRepoResponse(repoName, repoResponse, requestClientGitRepoLanguage(repoName, githubToken), githubToken);
     }
 
     private GitRepoClientResponse requestClientGitRepo(final String repoName, final String githubToken) {
         return gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
     }
 
-    private GitRepoCompareResponse getGitRepoResponse(final String repoName, final GitRepoClientResponse repoResponse, final GitRepoLanguageMap gitRepoLanguageMap) {
+    private GitRepoCompareResponse getGitRepoResponse(
+            final String repoName,
+            final GitRepoClientResponse repoResponse,
+            final GitRepoLanguageMap gitRepoLanguageMap,
+            final String githubToken) {
         GitRepo gitRepo = getEntityByName(repoName);
         if (gitRepo == null) return null;
 
@@ -97,6 +101,8 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
         List<String> profileUrls = gitRepoMembers.stream()
                 .map(gitRepoMember -> gitRepoMember.getMember().getProfileImage())
                 .collect(Collectors.toList());
+
+        repoResponse.setClosedIssuesCount(requestClientGitRepoIssue(repoName, githubToken));
 
         return new GitRepoCompareResponse(
                 repoResponse,
@@ -200,11 +206,13 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
                 getGitRepoResponse(
                         firstRepo,
                         requestClientGitRepo(firstRepo, githubToken),
-                        requestClientGitRepoLanguage(firstRepo, githubToken)),
+                        requestClientGitRepoLanguage(firstRepo, githubToken),
+                        githubToken),
                 getGitRepoResponse(
                         secondRepo,
                         requestClientGitRepo(secondRepo, githubToken),
-                        requestClientGitRepoLanguage(secondRepo, githubToken)));
+                        requestClientGitRepoLanguage(secondRepo, githubToken),
+                        githubToken));
     }
 
     public boolean gitRepoExistsByName(final String name) {

@@ -7,7 +7,6 @@ import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContribution
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoMemberCompareRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.*;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
@@ -103,7 +102,6 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
     }
 
     private List<GitRepoMemberResponse> getGitRepoMemberResponses(final String repo, final Integer year, final String githubToken) {
-        gitRepoServiceImpl.requestKafkaIssue(new GitRepoNameRequest(repo));
         return findMembersByGitRepoWithClient(new GitRepoInfoRequest(githubToken, repo, year));
     }
 
