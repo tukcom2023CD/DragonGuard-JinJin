@@ -32,6 +32,7 @@ class ApproveRequestOrgAdapter (private var datas : ArrayList<ApproveRequestOrgM
             current = currentPosition
             binding.requestOrgName.text = data1.name
             binding.requestOrgType.text = data1.type
+            binding.emailEndpoint.text = data1.email_endpoint
             binding.approveOrgBtn.setOnClickListener {
                 approveApproval(data1, RequestStatus.ACCEPTED, current)
                 notifyDataSetChanged()

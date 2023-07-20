@@ -21,6 +21,7 @@ class ApprovedOrgAdapter (private val datas : ArrayList<ApproveRequestOrgModelIt
     //리사이클러 뷰의 요소들을 넣어줌
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(data1: ApproveRequestOrgModelItem) {
+            binding.emailEndpoint.text = data1.email_endpoint
             binding.approvedOrgName.text = data1.name
             binding.approvedOrgType.text = data1.type
         }
