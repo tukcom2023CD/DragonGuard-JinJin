@@ -99,5 +99,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
             }
         }
     }
+    
+    func changeRootViewController(_ vc: UIViewController, animated: Bool = true) {
+        guard let window = self.window else { return }
+        window.rootViewController = vc
+    }
 }
 

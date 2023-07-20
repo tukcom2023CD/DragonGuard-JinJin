@@ -237,7 +237,7 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                 
                 if accessTokenCheck && refreshTokenCheck{
                     self.dismiss(animated: true)
-                    LoginViewModel.loginService.githubAuthSubject.onNext(true)
+                    LoginViewModel.loginService.githubAuthSubject.accept(true)
                 }
                 
             }

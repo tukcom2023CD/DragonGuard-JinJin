@@ -19,20 +19,20 @@ final class LoginViewModel {
     private var walletAddress = "" // 사용자 지갑 주소
     private var requestKey = "" // 사용자 Klip request Key
     
-    var githubAuthSubject = BehaviorSubject(value: false)   // github OAuth 완료 시 true 전송
+    var githubAuthSubject = BehaviorRelay(value: false)   // github OAuth 완료 시 true 전송
     var jwtTokenSubject = BehaviorSubject(value: "")    // jwt Token 전송
     // Github OAuth 완료했는지 확인 하는 용도
     private var checkGithubAuth = false {
         willSet{
-            githubAuthSubject.onNext(newValue)
+            githubAuthSubject.accept(newValue)
         }
     }
     
     // klip 지갑 연동 완료했는지 확인하는 용도
-    var klipAuthSubject = BehaviorSubject(value: false)     // klip 지갑 토큰 완료한 경우 true 전송
+    var klipAuthSubject = BehaviorRelay(value: false)     // klip 지갑 토큰 완료한 경우 true 전송
     private var checkKlipAuth = false{
         willSet{
-            klipAuthSubject.onNext(newValue)
+            klipAuthSubject.accept(newValue)
         }
     }
     

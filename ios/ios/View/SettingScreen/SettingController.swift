@@ -86,14 +86,9 @@ final class SettingController: UIViewController{
         
         LoginViewModel.loginService.logOutDone()
             .subscribe(onNext: { check in
+                print("Called \(check)")
                 if check{
-                    self.presentingViewController?.dismiss(animated: false, completion: nil)
-
-                    // 두 번째 모달 창 닫기
-                    self.presentingViewController?.presentingViewController?.dismiss(animated: false, completion: nil)
-
-                    // 세 번째 모달 창 닫기
-                    self.presentingViewController?.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(LoginController())
                 }
             })
             .disposed(by: self.disposeBag)
