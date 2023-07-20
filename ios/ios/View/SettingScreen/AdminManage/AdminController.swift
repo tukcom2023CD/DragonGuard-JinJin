@@ -103,7 +103,7 @@ extension AdminController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         // 팝업창 띄움
-        let sheet = UIAlertController(title: "승인", message: "\(self.requestList[indexPath.section].name ?? "")을 승인하시겠습니까?", preferredStyle: .alert)
+        let sheet = UIAlertController(title: "승인", message: "\(self.requestList[indexPath.section].name ?? "")을 승인하시겠습니까?\nEmail Endpoint : \(self.requestList[indexPath.section].email_endpoint ?? "")", preferredStyle: .alert)
         // 팝업창 확인 버튼
         let success = UIAlertAction(title: "승인", style: .default){ action in
             AdminViewModel.admin.updateOrganizationList(id: self.requestList[indexPath.section].id ?? 0,

@@ -7,14 +7,9 @@
 
 import Foundation
 
-struct AdminModel{
+struct AdminModel: Codable{
     let id: Int?
     let name: String?
     let type: String?
-}
-
-struct AdminDecodingModel: Codable{
-    let id: Int?
-    let name: String?
-    let type: String?
+    let email_endpoint: String?
 }

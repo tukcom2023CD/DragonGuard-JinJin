@@ -120,8 +120,6 @@ final class LoginController: UIViewController{
         webView.reload()
         newViewController.modalPresentationStyle = .fullScreen
         self.present(newViewController,animated: true)
-        //        self.navigationController?.pushViewController(newViewController,animated: true)
-        
     }
     
     
