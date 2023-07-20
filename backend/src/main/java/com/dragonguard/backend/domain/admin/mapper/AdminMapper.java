@@ -19,5 +19,7 @@ public interface AdminMapper {
     List<AdminOrganizationResponse> toResponseList(final List<Organization> organizations);
 
     @Mapping(target = "type", source = "organization.organizationType")
+    @Mapping(target = "emailEndpoint", source = "organization.emailEndpoint")
+    @Mapping(target = "name", source = "organization.name")
     AdminOrganizationResponse toResponse(final Organization organization);
 }

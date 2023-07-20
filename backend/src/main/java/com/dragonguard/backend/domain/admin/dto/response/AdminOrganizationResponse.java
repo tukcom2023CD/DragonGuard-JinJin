@@ -17,4 +17,5 @@ public class AdminOrganizationResponse {
     private Long id;
     private String name;
     private OrganizationType type;
+    private String emailEndpoint;
 }
