@@ -13,7 +13,7 @@ import Charts
 import Lottie
 
 final class CompareRepoUserController: UIViewController{
-    private let repositoryInfoTitleList: [String] = ["forks", "closed issues", "open issues", "stars", "contributers", "additions average", "deletions average", "languages", "code average"]
+    private let repositoryInfoTitleList: [String] = ["forks", "closed issues", "open issues", "stars", "contributors", "additions average", "deletions average", "languages", "code average"]
     private let selectionTitleList: [String] = ["Repository", "User"]
     private let disposeBag = DisposeBag()
     private var repoInfo: CompareRepoModel?
@@ -505,9 +505,9 @@ extension CompareRepoUserController: UITableViewDelegate, UITableViewDataSource{
                            title: repositoryInfoTitleList[indexPath.section],
                            repo2: self.repoInfo?.second_repo.git_repo.stargazers_count ?? 0)
         case 4:
-            cell.inputData(repo1: self.repoInfo?.first_repo.git_repo.subscribers_count ?? 0,
+            cell.inputData(repo1: self.repoInfo?.first_repo.profile_urls.count ?? 0,
                            title: repositoryInfoTitleList[indexPath.section],
-                           repo2: self.repoInfo?.second_repo.git_repo.subscribers_count ?? 0)
+                           repo2: self.repoInfo?.second_repo.profile_urls.count ?? 0)
         case 5:
             cell.inputData(repo1: Int(self.repoInfo?.first_repo.statistics.addition_stats.average ?? 0),
                            title: repositoryInfoTitleList[indexPath.section],
