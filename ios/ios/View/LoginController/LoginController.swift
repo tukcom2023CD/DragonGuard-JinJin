@@ -81,11 +81,6 @@ final class LoginController: UIViewController{
     
     // DeepLink 이동하는 함수
     private func moveToDeepLink(_ url: String){
-        // Klip 앱 이동 후 다른 화면 출력
-        let klipCheck = KlipLoginCheckView()
-        klipCheck.viewModel = LoginViewModel.loginService
-        self.present(klipCheck, animated: true)
-        
         // 사용자 기본 브라우저에서 deeplink 주소 열 수 있는지 확인 후 열기
         if let url = URL(string: url) {
             // 사용자의 기본 브라우저에서 url 확인
@@ -95,6 +90,7 @@ final class LoginController: UIViewController{
                     let configuration = SFSafariViewController.Configuration()
                     configuration.entersReaderIfAvailable = false
                     let deepLinkView = SFSafariViewController(url: url,configuration: configuration)
+                    deepLinkView.delegate = self
                     self.present(deepLinkView, animated: true)
                 }
             } else {
@@ -250,5 +246,19 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
     
 }
 
-
+extension LoginController: SFSafariViewControllerDelegate{
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        LoginViewModel.loginService.getWallet()
+            .subscribe(onNext: { address in
+                self.dismiss(animated: true)
+                print("지갑 주소")
+                print(address)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func safariViewControllerWillOpenInBrowser(_ controller: SFSafariViewController) {
+        print("safariViewControllerWillOpenInBrowser")
+    }
+}
 
