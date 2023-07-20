@@ -46,7 +46,7 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
     private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
     private final GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> gitRepoSparkLineClient;
-    private final GithubClient<GitRepoClientRequest, GitRepoIssueResponse[]> gitRepoIssueClient;
+    private final GithubClient<GitRepoClientRequest, Integer> gitRepoIssueClient;
 
     public List<Integer> updateAndGetSparkLine(final String name, final String githubToken, final GitRepo gitRepo) {
         List<Integer> savedSparkLine = gitRepo.getSparkLine();
@@ -117,7 +117,7 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
     }
 
     private Integer requestClientGitRepoIssue(final String repoName, final String githubToken) {
-        return gitRepoIssueClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName)).length;
+        return gitRepoIssueClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
     }
 
     public GitRepo findGitRepo(final String repoName) {
