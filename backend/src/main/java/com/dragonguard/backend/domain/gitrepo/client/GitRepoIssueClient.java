@@ -51,7 +51,7 @@ public class GitRepoIssueClient implements GithubClient<GitRepoClientRequest, In
                 .bodyToMono(GitRepoIssueResponse[].class)
                 .blockOptional()
                 .orElseThrow(WebClientException::new))
-                .filter(response -> Objects.nonNull(response.getPullRequest()))
+                .filter(response -> Objects.isNull(response.getPullRequest()))
                 .map(GitRepoIssueResponse::getUrl)
                 .collect(Collectors.toList());
     }
