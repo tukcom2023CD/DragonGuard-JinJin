@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -24,6 +25,8 @@ public class GitRepoIssueClient implements GithubClient<GitRepoClientRequest, In
     public Integer requestToGithub(GitRepoClientRequest request) {
         int page = 1;
         List<String> results = new ArrayList<>(getClosedIssueNum(request, page++));
+        if (results.isEmpty()) return 0;
+
         while (true) {
             List<String> closedIssues = getClosedIssueNum(request, page++);
             results.addAll(closedIssues);
@@ -48,8 +51,8 @@ public class GitRepoIssueClient implements GithubClient<GitRepoClientRequest, In
                 .bodyToMono(GitRepoIssueResponse[].class)
                 .blockOptional()
                 .orElseThrow(WebClientException::new))
+                .filter(response -> Objects.nonNull(response.getPullRequest()))
                 .map(GitRepoIssueResponse::getUrl)
-                .distinct()
                 .collect(Collectors.toList());
     }
 }

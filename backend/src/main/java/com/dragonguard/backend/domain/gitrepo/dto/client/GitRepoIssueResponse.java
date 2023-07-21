@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GitRepoIssueResponse {
     private String url;
+    private Object pullRequest;
 }
