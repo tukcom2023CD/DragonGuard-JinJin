@@ -40,20 +40,27 @@ final class KlipLoginService {
         let url = APIURL.apiUrl.klipResultGetAPI(requestKey: requestKey)
 
         return Observable.create(){ observer in
-            AF.request(url,
-                       encoding: JSONEncoding.default,
-                       headers: ["Content-Type": "application/json"])
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+                
+                AF.request(url,
+                           encoding: JSONEncoding.default,
+                           headers: ["Content-Type": "application/json"])
                 .validate(statusCode: 200..<201)
                 .responseDecodable(of: KlipResultModel.self) { response in
+                    print(response)
                     switch response.result{
                     case .success(let data):
-                        observer.onNext(data.result.klaytn_address)
-                        print("address \(data.result.klaytn_address)")
-                        
+                        if !data.result.klaytn_address.isEmpty{
+                            observer.onNext(data.result.klaytn_address)
+                            print("address \(data.result.klaytn_address)")
+                            timer.invalidate()
+                        }
                     case .failure(let error):
                         print("error!! \(error)")
+                        timer.invalidate()
                     }
                 }
+            })
             return Disposables.create()
         }
     }

@@ -104,7 +104,6 @@ final class MainViewController: UIViewController {
         view.layer.cornerRadius = 20
         view.layer.shadowColor = .init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
         view.clipsToBounds = true
-        //        view.layer.masksToBounds = true
         return view
     }()
     
@@ -433,12 +432,22 @@ final class MainViewController: UIViewController {
                 }
                 else if check {
                     if data.member_github_ids?.count != 1{
-                        self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
-                                                 top: data.member_github_ids?[1] ?? "Unknown",
-                                                 rank2: (data.organization_rank ?? 0),
-                                                 me: data.member_github_ids?[2] ?? "Unknown",
-                                                 rank3: nil,
-                                                 under: nil)
+                        if data.member_github_ids?.count == 2{
+                            self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                                     top: data.member_github_ids?[0] ?? "Unknown",
+                                                     rank2: (data.organization_rank ?? 0),
+                                                     me: data.member_github_ids?[1] ?? "Unknown",
+                                                     rank3: nil,
+                                                     under: nil)
+                        }
+                        else if data.member_github_ids?.count == 3{
+                            self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                                     top: data.member_github_ids?[1] ?? "Unknown",
+                                                     rank2: (data.organization_rank ?? 0),
+                                                     me: data.member_github_ids?[2] ?? "Unknown",
+                                                     rank3: nil,
+                                                     under: nil)
+                        }
                     }
                     else{
                         self.groupView.inputData(rank1: nil,
@@ -528,9 +537,9 @@ final class MainViewController: UIViewController {
             else if check {
                 if data.member_github_ids?.count != 1{
                     self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
-                                             top: data.member_github_ids?[1] ?? "Unknown",
+                                             top: data.member_github_ids?[0] ?? "Unknown",
                                              rank2: (data.organization_rank ?? 0),
-                                             me: data.member_github_ids?[2] ?? "Unknown",
+                                             me: data.member_github_ids?[1] ?? "Unknown",
                                              rank3: nil,
                                              under: nil)
                 }

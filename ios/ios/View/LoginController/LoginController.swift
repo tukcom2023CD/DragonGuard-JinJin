@@ -90,8 +90,16 @@ final class LoginController: UIViewController{
                     let configuration = SFSafariViewController.Configuration()
                     configuration.entersReaderIfAvailable = false
                     let deepLinkView = SFSafariViewController(url: url,configuration: configuration)
-                    deepLinkView.delegate = self
-                    self.present(deepLinkView, animated: true)
+//                    deepLinkView.delegate = self
+                    self.present(deepLinkView, animated: true){
+                        LoginViewModel.loginService.getWallet()
+                            .subscribe(onNext: { address in
+                                self.dismiss(animated: true)
+                                print("지갑 주소")
+                                print(address)
+                            })
+                            .disposed(by: self.disposeBag)
+                    }
                 }
             } else {
                 print("기본 브라우저를 열 수 없습니다.")
@@ -240,25 +248,4 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
         decisionHandler(.allow)
     }
     
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        
-    }
-    
 }
-
-extension LoginController: SFSafariViewControllerDelegate{
-    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        LoginViewModel.loginService.getWallet()
-            .subscribe(onNext: { address in
-                self.dismiss(animated: true)
-                print("지갑 주소")
-                print(address)
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    func safariViewControllerWillOpenInBrowser(_ controller: SFSafariViewController) {
-        print("safariViewControllerWillOpenInBrowser")
-    }
-}
-
