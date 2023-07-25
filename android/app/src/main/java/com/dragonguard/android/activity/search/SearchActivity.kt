@@ -21,6 +21,7 @@ import com.dragonguard.android.databinding.ActivitySearchBinding
 import com.dragonguard.android.adapters.HorizontalItemDecorator
 import com.dragonguard.android.adapters.RepositoryProfileAdapter
 import com.dragonguard.android.adapters.VerticalItemDecorator
+import com.dragonguard.android.model.search.UserNameModelItem
 import com.dragonguard.android.viewmodel.Viewmodel
 import kotlinx.coroutines.*
 
@@ -32,6 +33,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var repositoryProfileAdapter: RepositoryProfileAdapter
     private var position = 0
     private var repoNames = ArrayList<RepoSearchResultModel>()
+    private var userNames = ArrayList<UserNameModelItem>()
     private var count = 0
     private var changed = true
     private var lastSearch = ""
@@ -123,6 +125,7 @@ class SearchActivity : AppCompatActivity() {
                     Log.d("results", "name: $name ")
                     if(name != lastSearch) {
                         repoNames.clear()
+                        userNames.clear()
                     }
                     checkLanguage(languages=language, type=type, topics=topics, stars=stars, forks=forks, name=name)
                 } catch (e: Exception) {
@@ -271,43 +274,53 @@ class SearchActivity : AppCompatActivity() {
         coroutine.launch {
             if(!this@SearchActivity.isFinishing) {
                 if(type.isNotBlank()) {
-                    if(filterResult.toString().isNotEmpty()) {
+                    if(type == "USERS") {
                         val resultDeferred = coroutine.async(Dispatchers.IO) {
-                            viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
+                            viewmodel.searchUserNames(name, count, type, token)
                         }
                         val result = resultDeferred.await()
-                        delay(1000)
-                        if (!checkSearchResult(result)) {
-                            val secondDeferred = coroutine.async(Dispatchers.IO) {
-                                viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
-                            }
-                            val second = secondDeferred.await()
-                            if (checkSearchResult(second)) {
-                                initRecycler()
-                            } else {
-                                binding.loadingLottie.visibility = View.GONE
-                            }
-                        } else {
+                        if(checkUsers(result)) {
                             initRecycler()
                         }
                     } else {
-                        val resultDeferred = coroutine.async(Dispatchers.IO) {
-                            viewmodel.getSearchRepoResult(name, count, type, token)
-                        }
-                        val result = resultDeferred.await()
-                        delay(1000)
-                        if (!checkSearchResult(result)) {
-                            val secondDeferred = coroutine.async(Dispatchers.IO) {
-                                viewmodel.getSearchRepoResult(name, count, type, token)
+                        if(filterResult.toString().isNotEmpty()) {
+                            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
                             }
-                            val second = secondDeferred.await()
-                            if (checkSearchResult(second)) {
-                                initRecycler()
+                            val result = resultDeferred.await()
+                            delay(1000)
+                            if (!checkSearchResult(result)) {
+                                val secondDeferred = coroutine.async(Dispatchers.IO) {
+                                    viewmodel.getRepositoryNamesWithFilters(name, count, filterResult.toString(), type, token)
+                                }
+                                val second = secondDeferred.await()
+                                if (checkSearchResult(second)) {
+                                    initRecycler()
+                                } else {
+                                    binding.loadingLottie.visibility = View.GONE
+                                }
                             } else {
-                                binding.loadingLottie.visibility = View.GONE
+                                initRecycler()
                             }
                         } else {
-                            initRecycler()
+                            val resultDeferred = coroutine.async(Dispatchers.IO) {
+                                viewmodel.getSearchRepoResult(name, count, type, token)
+                            }
+                            val result = resultDeferred.await()
+                            delay(1000)
+                            if (!checkSearchResult(result)) {
+                                val secondDeferred = coroutine.async(Dispatchers.IO) {
+                                    viewmodel.getSearchRepoResult(name, count, type, token)
+                                }
+                                val second = secondDeferred.await()
+                                if (checkSearchResult(second)) {
+                                    initRecycler()
+                                } else {
+                                    binding.loadingLottie.visibility = View.GONE
+                                }
+                            } else {
+                                initRecycler()
+                            }
                         }
                     }
                 } else {
@@ -360,23 +373,61 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
+    private fun checkUsers(searchResult: ArrayList<UserNameModelItem>): Boolean {
+        return when (searchResult.isNullOrEmpty()) {
+            true -> {
+                if (changed) {
+                    changed = false
+                    false
+                } else {
+                    true
+                }
+            }
+            false -> {
+                changed = false
+                Log.d("api 시도", "api 성공$searchResult")
+                for(i in 0 until searchResult.size) {
+                    val compare = repoNames.filter { it.name == searchResult[i].name }
+                    if(compare.isEmpty()) {
+                        userNames.add(searchResult[i])
+                    }
+                }
+                true
+            }
+        }
+
+    }
+
 
     //    받아온 데이터를 리사이클러뷰에 추가하는 함수 initRecycler()
     private fun initRecycler() {
         Log.d("count", "count: $count")
-        if (count == 0) {
-            Log.d("values", "names: $repoNames")
-            repositoryProfileAdapter = if(type.isBlank()) {
-                RepositoryProfileAdapter(repoNames, this, token, "REPOSITORIES", imgList, repoCount)
+        if(type == "USERS") {
+            if (count == 0) {
+                Log.d("values", "names: $userNames")
+                repositoryProfileAdapter = RepositoryProfileAdapter(userNames, this, token, type, imgList, repoCount)
+                binding.searchResult.adapter = repositoryProfileAdapter
+                binding.searchResult.layoutManager = LinearLayoutManager(this)
+                repositoryProfileAdapter.notifyDataSetChanged()
+                binding.searchResult.visibility = View.VISIBLE
             } else {
-                RepositoryProfileAdapter(repoNames, this, token, type, imgList, repoCount)
+                repositoryProfileAdapter.notifyDataSetChanged()
             }
-            binding.searchResult.adapter = repositoryProfileAdapter
-            binding.searchResult.layoutManager = LinearLayoutManager(this)
-            repositoryProfileAdapter.notifyDataSetChanged()
-            binding.searchResult.visibility = View.VISIBLE
         } else {
-            repositoryProfileAdapter.notifyDataSetChanged()
+            if (count == 0) {
+                Log.d("values", "names: $repoNames")
+                repositoryProfileAdapter = if(type.isBlank()) {
+                    RepositoryProfileAdapter(repoNames, this, token, "REPOSITORIES", imgList, repoCount)
+                } else {
+                    RepositoryProfileAdapter(repoNames, this, token, type, imgList, repoCount)
+                }
+                binding.searchResult.adapter = repositoryProfileAdapter
+                binding.searchResult.layoutManager = LinearLayoutManager(this)
+                repositoryProfileAdapter.notifyDataSetChanged()
+                binding.searchResult.visibility = View.VISIBLE
+            } else {
+                repositoryProfileAdapter.notifyDataSetChanged()
+            }
         }
 
         count++
@@ -384,6 +435,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingLottie.pauseAnimation()
         binding.loadingLottie.visibility = View.GONE
         initScrollListener()
+        type = "REPOSITORIES"
     }
 
 

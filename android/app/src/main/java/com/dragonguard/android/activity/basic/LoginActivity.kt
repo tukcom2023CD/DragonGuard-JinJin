@@ -253,25 +253,32 @@ class LoginActivity : AppCompatActivity() {
                 Log.d("info", "로그인 화면 refresh: $refresh")
                 Log.d("info", "check key : $key")
                 Log.d("로그인 상태", "로그인 상태 결과 : $result")
-                if(result) {
-                    val intentF = Intent(applicationContext, MainActivity::class.java)
-                    intentF.putExtra("token", token)
-                    intentF.putExtra("refresh", refresh)
-                    setResult(1, intentF)
-                    finish()
-                } else {
-                    if(key.isNotBlank()) {
+                when(result) {
+                    true -> {
                         val intentF = Intent(applicationContext, MainActivity::class.java)
-                        Log.d("info", "key : $key")
-                        intentF.putExtra("key", key)
-                        intentF.putExtra("access", token)
+                        intentF.putExtra("token", token)
                         intentF.putExtra("refresh", refresh)
-                        setResult(0, intentF)
+                        setResult(1, intentF)
                         finish()
-                    } else {
-                        binding.githubAuth.isEnabled = false
-                        binding.walletAuth.isEnabled = true
+                    }
+                    false -> {
+                        if(key.isNotBlank()) {
+                            val intentF = Intent(applicationContext, MainActivity::class.java)
+                            Log.d("info", "key : $key")
+                            intentF.putExtra("key", key)
+                            intentF.putExtra("access", token)
+                            intentF.putExtra("refresh", refresh)
+                            setResult(0, intentF)
+                            finish()
+                        } else {
+                            binding.githubAuth.isEnabled = false
+                            binding.walletAuth.isEnabled = true
 //                        binding.walletFinish.isEnabled = true
+                        }
+                    }
+                    null -> {
+                        binding.githubAuth.isEnabled = true
+                        binding.walletAuth.isEnabled = false
                     }
                 }
             }

@@ -15,6 +15,7 @@ import com.dragonguard.android.model.rankings.OrgInternalRankingModel
 import com.dragonguard.android.model.rankings.OrganizationRankingModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
 import com.dragonguard.android.model.search.RepoSearchResultModel
+import com.dragonguard.android.model.search.UserNameModelItem
 import com.dragonguard.android.model.token.RefreshTokenModel
 import okhttp3.OkHttpClient
 import retrofit2.HttpException
@@ -79,6 +80,27 @@ class ApiRepository {
             repoNames = result.body()!!
         }catch (e : Exception){
             Log.d("error", "레포 필터별 검색: ${e.message}")
+            return repoNames
+        }
+        return repoNames
+    }
+
+    fun getUserNames(name: String, count: Int, type: String, token: String): ArrayList<UserNameModelItem> {
+        var repoNames : ArrayList<UserNameModelItem> = arrayListOf<UserNameModelItem>()
+        val queryMap = mutableMapOf<String, String>()
+        queryMap.put("page","${count+1}")
+        queryMap.put("name",name)
+        queryMap.put("type",type)
+
+        Log.d("api 호출", "$count 페이지 검색")
+
+        val repoName = api.getUserName(queryMap, "Bearer $token")
+        try{
+            val result = repoName.execute()
+            Log.d("result", "사용자 검색 결과: ${result.code()}")
+            repoNames = result.body()!!
+        }catch (e : Exception){
+            Log.d("error", "사용자 검색 error: ${e.message}")
             return repoNames
         }
         return repoNames
@@ -579,7 +601,7 @@ class ApiRepository {
         return userResult
     }
 
-    fun getLoginState(token: String): Boolean {
+    fun getLoginState(token: String): Boolean? {
         val authState = api.getLoginAuthState("Bearer $token")
 
         return try{

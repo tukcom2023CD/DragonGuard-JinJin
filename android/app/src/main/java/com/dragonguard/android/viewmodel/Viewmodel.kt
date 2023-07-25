@@ -19,6 +19,8 @@ import com.dragonguard.android.model.rankings.OrgInternalRankingModel
 import com.dragonguard.android.model.rankings.OrganizationRankingModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModelItem
 import com.dragonguard.android.model.search.RepoSearchResultModel
+import com.dragonguard.android.model.search.UserNameModel
+import com.dragonguard.android.model.search.UserNameModelItem
 import com.dragonguard.android.model.token.RefreshTokenModel
 import kotlinx.coroutines.*
 
@@ -221,7 +223,11 @@ class Viewmodel: ViewModel() {
         return repository.manualUserInfo(token)
     }
 
-    fun checkLoginState(token: String): Boolean {
+    fun checkLoginState(token: String): Boolean? {
         return repository.getLoginState(token)
+    }
+
+    fun searchUserNames(name: String, count: Int, type: String, token: String): ArrayList<UserNameModelItem> {
+        return repository.getUserNames(name, count, type ,token)
     }
 }

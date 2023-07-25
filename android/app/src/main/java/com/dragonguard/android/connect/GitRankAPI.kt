@@ -13,6 +13,7 @@ import com.dragonguard.android.model.rankings.OrgInternalRankingModel
 import com.dragonguard.android.model.rankings.OrganizationRankingModel
 import com.dragonguard.android.model.rankings.TotalUsersRankingModel
 import com.dragonguard.android.model.search.RepoNameModel
+import com.dragonguard.android.model.search.UserNameModel
 import com.dragonguard.android.model.token.RefreshTokenModel
 import retrofit2.Call
 import retrofit2.http.*
@@ -25,6 +26,9 @@ interface GitRankAPI {
 //    repo 검색 함수
     @GET("search")
     fun getRepoName(@QueryMap query: Map<String, String>, @Header("Authorization")token: String) : Call<RepoNameModel>
+
+    @GET("search")
+    fun getUserName(@QueryMap query: Map<String, String>, @Header("Authorization")token: String) : Call<UserNameModel>
 
 //    id에 해당하는 사용자의 정보를 받아오는 함수
     @GET("members/me")
