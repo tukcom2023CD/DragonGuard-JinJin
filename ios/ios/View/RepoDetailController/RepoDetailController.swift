@@ -299,6 +299,13 @@ extension RepoDetailController: UICollectionViewDelegate, UICollectionViewDataSo
             nextPage.modalPresentationStyle = .fullScreen
             present(nextPage, animated: false)
         }
+        else{
+            let sheet = UIAlertController(title: "\(userInfo?.git_repo_members?[indexPath.row].github_id ?? "")은 회원이 아닙니다.", message: nil, preferredStyle: .alert)
+            let success = UIAlertAction(title: "확인", style: .default)
+            
+            sheet.addAction(success)
+            self.present(sheet,animated: true)
+        }
     }
 }
 

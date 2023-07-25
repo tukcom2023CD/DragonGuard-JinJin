@@ -241,10 +241,19 @@ final class SearchViewController: UIViewController{
                 self.present(nextPage,animated: true)
             }
             if type == "USERS"{
-                let nextPage = YourProfileController()
-                nextPage.userName = resultList[sender.view?.tag ?? -1].name
-                nextPage.modalPresentationStyle = .fullScreen
-                self.present(nextPage,animated: true)
+                if resultList[sender.view?.tag ?? -1].is_service_member == true{
+                    let nextPage = YourProfileController()
+                    nextPage.userName = resultList[sender.view?.tag ?? -1].name
+                    nextPage.modalPresentationStyle = .fullScreen
+                    self.present(nextPage,animated: true)
+                }
+                else{
+                    let sheet = UIAlertController(title: "\(resultList[sender.view?.tag ?? -1].name)은 회원이 아닙니다.", message: nil, preferredStyle: .alert)
+                    let success = UIAlertAction(title: "확인", style: .default)
+                    
+                    sheet.addAction(success)
+                    self.present(sheet,animated: true)
+                }
             }
         }
         else if beforePage == "Compare1"{

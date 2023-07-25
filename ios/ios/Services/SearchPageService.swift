@@ -41,7 +41,8 @@ final class SearchPageService {
                                                                name: data.name ?? "",
                                                                language: data.language ?? "",
                                                                description: data.description ?? "",
-                                                               created_at: data.created_at ?? "")
+                                                               created_at: data.created_at ?? "",
+                                                               is_service_member: data.is_service_member ?? false)
                             resultArray.append(dataBundle)
                         }
                         observer.onNext(resultArray)

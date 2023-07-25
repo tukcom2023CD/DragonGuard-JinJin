@@ -13,6 +13,7 @@ struct SearchResultModel{
     let language: String
     let description: String
     let created_at: String
+    let is_service_member: Bool?
 }
 
 struct SearchResultDecodingModel: Codable{
@@ -21,5 +22,5 @@ struct SearchResultDecodingModel: Codable{
     let language: String?
     let description: String?
     let created_at: String?
-    
+    let is_service_member: Bool?
 }
