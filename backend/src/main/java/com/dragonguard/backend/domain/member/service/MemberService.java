@@ -47,8 +47,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
     private final KafkaProducer<KafkaContributionRequest> kafkaContributionClientProducer;
 
-    public Member findMemberOrSaveWithRole(final String githubId, final Role role, final AuthStep authStep, final boolean isChecked) {
-        if (!isChecked && memberRepository.existsByGithubId(githubId)) {
+    public Member findMemberOrSaveWithRole(final String githubId, final Role role, final AuthStep authStep) {
+        if (memberRepository.existsByGithubId(githubId)) {
             return getMemberByGithubId(githubId);
         }
         return memberRepository.save(memberMapper.toEntity(githubId, role, authStep));
@@ -214,6 +214,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public Boolean isServiceMember(final String githubId) {
         if (!memberRepository.existsByGithubId(githubId)) return false;
-        return findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE, Boolean.TRUE).isServiceMember();
+        return getMemberByGithubId(githubId).isServiceMember();
     }
 }

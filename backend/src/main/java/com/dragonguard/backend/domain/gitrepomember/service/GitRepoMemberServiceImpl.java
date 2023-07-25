@@ -96,7 +96,7 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
         return gitRepoMemberRepository.findByGitRepoAndMemberGithubId(gitRepo, githubId)
                 .orElseGet(() -> gitRepoMemberRepository.save(
                             gitRepoMemberMapper.toEntity(
-                                    memberService.findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE, Boolean.FALSE), gitRepo)));
+                                    memberService.findMemberOrSaveWithRole(githubId, Role.ROLE_USER, AuthStep.NONE), gitRepo)));
     }
 
     @Override
