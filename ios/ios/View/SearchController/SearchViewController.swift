@@ -268,7 +268,7 @@ final class SearchViewController: UIViewController{
         let nextPage = SearchAndFilterController()
         nextPage.modalPresentationStyle = .fullScreen
         nextPage.delegate = self
-
+        nextPage.beforePage = self.beforePage
         nextPage.resultList.subscribe(onNext: { list in
             self.resultList = list
         })

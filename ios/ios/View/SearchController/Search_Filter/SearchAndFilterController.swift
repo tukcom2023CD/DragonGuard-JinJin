@@ -19,11 +19,13 @@ final class SearchAndFilterController: UIViewController{
     private let disposeBag = DisposeBag()
     var resultList: BehaviorSubject<[SearchResultModel]> = BehaviorSubject(value: [])
     var delegate: SendSearchResultList?
+    var beforePage: String?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addUI()
+        checkBeforePage()
         self.view.backgroundColor = .white
     }
     
@@ -303,6 +305,14 @@ final class SearchAndFilterController: UIViewController{
     /*
      Etc
      */
+    
+    private func checkBeforePage(){
+        guard let beforePage = beforePage else {return}
+        
+        if beforePage == "Compare1" || beforePage == "Compare2" {
+            userBtn.isHidden = true
+        }
+    }
     
     // MARK: 뒤로가기 버튼
     @objc

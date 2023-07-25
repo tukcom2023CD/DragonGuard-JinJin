@@ -61,10 +61,11 @@ final class CompareService{
         let url = APIURL.apiUrl.compareRepoAPI(ip: ip)
         let body = ["first_repo": firstRepo, "second_repo": secondRepo]
         let access = UserDefaults.standard.string(forKey: "Access")
+        var check = false
         print("getCompareInfo\n\(url)")
         print("body \(body)")
         return Observable.create() { observer in
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+            Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true, block: { timer in
                 AF.request(url,
                            method: .post,
                            parameters: body,
@@ -76,8 +77,9 @@ final class CompareService{
                     print(res)
                     switch res.result{
                     case .success(let data):
-                        if !data.first_repo.profile_urls.isEmpty && !data.second_repo.profile_urls.isEmpty{
+                        if !data.first_repo.profile_urls.isEmpty && !data.second_repo.profile_urls.isEmpty && !check{
                             observer.onNext(data)
+                            check = true
                             timer.invalidate()
                         }
                     case .failure(let error):
