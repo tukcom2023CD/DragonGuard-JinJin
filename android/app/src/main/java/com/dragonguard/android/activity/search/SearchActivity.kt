@@ -126,6 +126,7 @@ class SearchActivity : AppCompatActivity() {
                     if(name != lastSearch) {
                         repoNames.clear()
                         userNames.clear()
+                        binding.searchResult.visibility = View.GONE
                     }
                     checkLanguage(languages=language, type=type, topics=topics, stars=stars, forks=forks, name=name)
                 } catch (e: Exception) {
