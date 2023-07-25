@@ -68,7 +68,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         }
     }
 
-    private boolean isBlockchainUpdatable(Member member) {
+    private boolean isBlockchainUpdatable(final Member member) {
         return member.getBlockchains().stream().map(Blockchain::getHistories).flatMap(List::stream)
                 .allMatch(h -> h.getBaseTime().getCreatedAt().isBefore(LocalDateTime.now().minusSeconds(20L)));
     }

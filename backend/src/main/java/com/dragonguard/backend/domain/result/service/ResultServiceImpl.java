@@ -40,11 +40,6 @@ public class ResultServiceImpl implements EntityLoader<Result, Long>, ResultServ
     }
 
     @Override
-    public void deleteAllLastResults(final Search search) {
-        resultRepository.findAllBySearchId(search.getId()).forEach(Result::delete);
-    }
-
-    @Override
     public UserResultSearchResponse saveResult(final UserClientResponse response, final Search search, final boolean isServiceMember) {
         Result result = resultRepository.save(resultMapper.toEntity(response, search.getId()));
         return resultMapper.toUserResponse(result, isServiceMember);

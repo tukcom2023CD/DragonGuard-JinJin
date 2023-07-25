@@ -41,11 +41,6 @@ public class SearchResultFacade implements SearchService, ResultService {
     }
 
     @Override
-    public void deleteAllLastResults(final Search search) {
-        resultServiceImpl.deleteAllLastResults(search);
-    }
-
-    @Override
     public UserResultSearchResponse saveResult(final UserClientResponse response, final Search search, final boolean isServiceMember) {
         return resultServiceImpl.saveResult(response, search, isServiceMember);
     }
@@ -78,7 +73,6 @@ public class SearchResultFacade implements SearchService, ResultService {
 
     private Search getSearch(final SearchRequest searchRequest) {
         Search search = findOrSaveSearch(searchRequest);
-        deleteAllLastResults(search);
         searchRequest.setGithubToken(authService.getLoginUser().getGithubToken());
         return search;
     }
