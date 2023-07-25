@@ -8,6 +8,6 @@ import com.dragonguard.backend.domain.search.entity.Search;
 
 public interface ResultService {
     void deleteAllLastResults(final Search search);
-    UserResultSearchResponse saveResult(final UserClientResponse response, final Search search);
+    UserResultSearchResponse saveResult(final UserClientResponse response, final Search search, final boolean isServiceMember);
     GitRepoResultResponse saveAndGetGitRepoResponse(final GitRepoSearchClientResponse request, final Search search);
 }

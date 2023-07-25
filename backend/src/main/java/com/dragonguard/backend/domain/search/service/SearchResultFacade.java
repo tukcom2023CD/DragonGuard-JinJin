@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.search.service;
 
 import com.dragonguard.backend.domain.member.service.AuthService;
+import com.dragonguard.backend.domain.member.service.MemberService;
 import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.result.service.ResultService;
 import com.dragonguard.backend.domain.result.service.ResultServiceImpl;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class SearchResultFacade implements SearchService, ResultService {
     private final SearchServiceImpl searchServiceImpl;
     private final ResultServiceImpl resultServiceImpl;
+    private final MemberService memberService;
     private final AuthService authService;
 
     @Override
@@ -44,8 +46,8 @@ public class SearchResultFacade implements SearchService, ResultService {
     }
 
     @Override
-    public UserResultSearchResponse saveResult(final UserClientResponse response, final Search search) {
-        return resultServiceImpl.saveResult(response, search);
+    public UserResultSearchResponse saveResult(final UserClientResponse response, final Search search, final boolean isServiceMember) {
+        return resultServiceImpl.saveResult(response, search, isServiceMember);
     }
 
     @Override
@@ -83,7 +85,7 @@ public class SearchResultFacade implements SearchService, ResultService {
 
     private List<UserResultSearchResponse> searchUser(final SearchRequest searchRequest, final Search search) {
         return Arrays.stream(searchServiceImpl.requestUserToGithub(searchRequest).getItems())
-                .map(response -> saveResult(response, search))
+                .map(response -> saveResult(response, search, memberService.isServiceMember(response.getLogin())))
                 .collect(Collectors.toList());
     }
 

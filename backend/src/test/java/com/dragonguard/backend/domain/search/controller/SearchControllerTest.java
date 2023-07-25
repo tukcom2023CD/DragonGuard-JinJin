@@ -36,12 +36,12 @@ class SearchControllerTest extends RestDocumentTest {
     void getSearchResult() throws Exception {
         // given
         List<UserResultSearchResponse> expected = Arrays.asList(
-                new UserResultSearchResponse(1L, "ohksj77"),
-                new UserResultSearchResponse(2L, "HJ39"),
-                new UserResultSearchResponse(3L, "posite"),
-                new UserResultSearchResponse(4L, "Sammuelwoojae"),
-                new UserResultSearchResponse(5L, "And"),
-                new UserResultSearchResponse(6L, "DragonGuard-JinJin"));
+                new UserResultSearchResponse(1L, "ohksj77", true),
+                new UserResultSearchResponse(2L, "HJ39", true),
+                new UserResultSearchResponse(3L, "posite", true),
+                new UserResultSearchResponse(4L, "Sammuelwoojae", true),
+                new UserResultSearchResponse(5L, "And", false),
+                new UserResultSearchResponse(6L, "DragonGuard-JinJin", false));
 
         given(searchService.getUserSearchResultByClient(any(), any())).willReturn(expected);
 
