@@ -44,7 +44,7 @@ final class MainViewController: UIViewController {
         let btn = UIButton()
         btn.backgroundColor = .white
         btn.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        btn.setTitle(" Repository or User ", for: .normal)
+        btn.setTitle(" 검색어 입력 ", for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         btn.setTitleColor(.lightGray, for: .normal)
         btn.layer.cornerRadius = 18

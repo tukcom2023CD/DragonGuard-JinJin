@@ -86,9 +86,6 @@
 		3B7BFF7129CBDE7C00A2F3F4 /* AddOrganizationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7BFF7029CBDE7C00A2F3F4 /* AddOrganizationController.swift */; };
 		3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
 		3B80B6DC298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */; };
-		3B83DFA52A4951A0003EF5F1 /* graphLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B83DFA22A4951A0003EF5F1 /* graphLottie.json */; };
-		3B83DFA62A4951A0003EF5F1 /* launchScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B83DFA32A4951A0003EF5F1 /* launchScreen.json */; };
-		3B83DFA72A4951A0003EF5F1 /* splashScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B83DFA42A4951A0003EF5F1 /* splashScreen.json */; };
 		3B87E57029D7173D000734BE /* AddOrganizationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B87E56F29D7173D000734BE /* AddOrganizationModel.swift */; };
 		3B9597A229D98193008E9335 /* CertificationEmailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9597A129D98193008E9335 /* CertificationEmailController.swift */; };
 		3B9756F9298A775900F27094 /* APIURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9756F8298A775900F27094 /* APIURL.swift */; };
@@ -155,6 +152,10 @@
 		A3AEEB652975311400004722 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A3AEEB642975311400004722 /* SnapKit */; };
 		A3E9514F2A42C2B300E8E67F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E9514E2A42C2B300E8E67F /* MainViewController.swift */; };
 		A3FA74F0298AB72800348D7D /* SearchPageResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */; };
+		CEAACA102A6FEFC5003537B7 /* graphLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = CEAACA0C2A6FEFC5003537B7 /* graphLottie.json */; };
+		CEAACA112A6FEFC5003537B7 /* competition-ranking-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = CEAACA0D2A6FEFC5003537B7 /* competition-ranking-animation.json */; };
+		CEAACA122A6FEFC5003537B7 /* launchScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = CEAACA0E2A6FEFC5003537B7 /* launchScreen.json */; };
+		CEAACA132A6FEFC5003537B7 /* splashScreen.json in Resources */ = {isa = PBXBuildFile; fileRef = CEAACA0F2A6FEFC5003537B7 /* splashScreen.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -247,9 +248,6 @@
 		3B7BFF6B29CBD89F00A2F3F4 /* SearchOrganizationListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchOrganizationListModel.swift; sourceTree = "<group>"; };
 		3B7BFF7029CBDE7C00A2F3F4 /* AddOrganizationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrganizationController.swift; sourceTree = "<group>"; };
 		3B80B6DA298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansKR-SemiBold.otf"; sourceTree = "<group>"; };
-		3B83DFA22A4951A0003EF5F1 /* graphLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = graphLottie.json; path = ../../../../lottie/graphLottie.json; sourceTree = "<group>"; };
-		3B83DFA32A4951A0003EF5F1 /* launchScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = launchScreen.json; path = ../../../../lottie/launchScreen.json; sourceTree = "<group>"; };
-		3B83DFA42A4951A0003EF5F1 /* splashScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = splashScreen.json; path = ../../../../lottie/splashScreen.json; sourceTree = "<group>"; };
 		3B87E56F29D7173D000734BE /* AddOrganizationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrganizationModel.swift; sourceTree = "<group>"; };
 		3B9597A129D98193008E9335 /* CertificationEmailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificationEmailController.swift; sourceTree = "<group>"; };
 		3B9756F8298A775900F27094 /* APIURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIURL.swift; sourceTree = "<group>"; };
@@ -314,6 +312,10 @@
 		A37AA6F929D35522002812F6 /* TierTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TierTableViewCell.swift; sourceTree = "<group>"; };
 		A3E9514E2A42C2B300E8E67F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		A3FA74EF298AB72800348D7D /* SearchPageResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageResultModel.swift; sourceTree = "<group>"; };
+		CEAACA0C2A6FEFC5003537B7 /* graphLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = graphLottie.json; path = ../../../../LottieJSON/graphLottie.json; sourceTree = "<group>"; };
+		CEAACA0D2A6FEFC5003537B7 /* competition-ranking-animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "competition-ranking-animation.json"; path = "../../../../LottieJSON/competition-ranking-animation.json"; sourceTree = "<group>"; };
+		CEAACA0E2A6FEFC5003537B7 /* launchScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = launchScreen.json; path = ../../../../LottieJSON/launchScreen.json; sourceTree = "<group>"; };
+		CEAACA0F2A6FEFC5003537B7 /* splashScreen.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = splashScreen.json; path = ../../../../LottieJSON/splashScreen.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -496,9 +498,10 @@
 		3B83DFA12A49515C003EF5F1 /* LottieFiles */ = {
 			isa = PBXGroup;
 			children = (
-				3B83DFA22A4951A0003EF5F1 /* graphLottie.json */,
-				3B83DFA32A4951A0003EF5F1 /* launchScreen.json */,
-				3B83DFA42A4951A0003EF5F1 /* splashScreen.json */,
+				CEAACA0D2A6FEFC5003537B7 /* competition-ranking-animation.json */,
+				CEAACA0C2A6FEFC5003537B7 /* graphLottie.json */,
+				CEAACA0E2A6FEFC5003537B7 /* launchScreen.json */,
+				CEAACA0F2A6FEFC5003537B7 /* splashScreen.json */,
 			);
 			path = LottieFiles;
 			sourceTree = "<group>";
@@ -899,10 +902,11 @@
 			files = (
 				3B80B6DB298956F3007FF716 /* IBMPlexSansKR-SemiBold.otf in Resources */,
 				3B1DB8842963428B00308F43 /* LaunchScreen.storyboard in Resources */,
+				CEAACA132A6FEFC5003537B7 /* splashScreen.json in Resources */,
+				CEAACA112A6FEFC5003537B7 /* competition-ranking-animation.json in Resources */,
 				3B1DB8812963428B00308F43 /* Assets.xcassets in Resources */,
-				3B83DFA62A4951A0003EF5F1 /* launchScreen.json in Resources */,
-				3B83DFA72A4951A0003EF5F1 /* splashScreen.json in Resources */,
-				3B83DFA52A4951A0003EF5F1 /* graphLottie.json in Resources */,
+				CEAACA122A6FEFC5003537B7 /* launchScreen.json in Resources */,
+				CEAACA102A6FEFC5003537B7 /* graphLottie.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

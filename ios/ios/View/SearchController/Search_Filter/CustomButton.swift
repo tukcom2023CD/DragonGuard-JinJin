@@ -31,8 +31,8 @@ final class CustomButton: UIButton{
         let field = UITextField()
         field.font = .systemFont(ofSize: 20)
         field.textColor = .black
-        field.placeholder = "Repository or User"
-        field.attributedPlaceholder = NSAttributedString(string: "Repository or User", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+        field.placeholder = "검색어 입력"
+        field.attributedPlaceholder = NSAttributedString(string: "검색어 입력", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
 
         return field
     }()
