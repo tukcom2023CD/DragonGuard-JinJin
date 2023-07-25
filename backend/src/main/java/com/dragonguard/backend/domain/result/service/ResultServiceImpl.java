@@ -46,9 +46,9 @@ public class ResultServiceImpl implements EntityLoader<Result, Long>, ResultServ
     }
 
     @Override
-    public GitRepoResultResponse saveAndGetGitRepoResponse(final GitRepoSearchClientResponse request, final Search search) {
-        Result result = resultRepository.save(resultMapper.toEntity(request.getFullName(), search.getId()));
-        return resultMapper.toGitRepoResponse(result.getId(), request);
+    public GitRepoResultResponse saveResultAndGetGitRepoResponse(final GitRepoSearchClientResponse response, final Search search) {
+        Result result = resultRepository.save(resultMapper.toEntity(response.getFullName(), search.getId()));
+        return resultMapper.toGitRepoResponse(result.getId(), response);
     }
 
     @Override

@@ -8,5 +8,5 @@ import com.dragonguard.backend.domain.search.entity.Search;
 
 public interface ResultService {
     UserResultSearchResponse saveResult(final UserClientResponse response, final Search search, final boolean isServiceMember);
-    GitRepoResultResponse saveAndGetGitRepoResponse(final GitRepoSearchClientResponse request, final Search search);
+    GitRepoResultResponse saveResultAndGetGitRepoResponse(final GitRepoSearchClientResponse request, final Search search);
 }

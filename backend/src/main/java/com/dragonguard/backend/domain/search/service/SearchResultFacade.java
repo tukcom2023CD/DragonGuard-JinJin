@@ -6,7 +6,6 @@ import com.dragonguard.backend.domain.result.entity.Result;
 import com.dragonguard.backend.domain.result.service.ResultService;
 import com.dragonguard.backend.domain.result.service.ResultServiceImpl;
 import com.dragonguard.backend.domain.search.dto.client.GitRepoSearchClientResponse;
-import com.dragonguard.backend.domain.search.dto.client.SearchRepoResponse;
 import com.dragonguard.backend.domain.search.dto.client.UserClientResponse;
 import com.dragonguard.backend.domain.search.dto.kafka.ScrapeResult;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
@@ -16,7 +15,6 @@ import com.dragonguard.backend.domain.search.entity.Search;
 import com.dragonguard.backend.domain.search.entity.SearchType;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,8 +44,8 @@ public class SearchResultFacade implements SearchService, ResultService {
     }
 
     @Override
-    public GitRepoResultResponse saveAndGetGitRepoResponse(final GitRepoSearchClientResponse response, final Search search) {
-        return resultServiceImpl.saveAndGetGitRepoResponse(response, search);
+    public GitRepoResultResponse saveResultAndGetGitRepoResponse(final GitRepoSearchClientResponse response, final Search search) {
+        return resultServiceImpl.saveResultAndGetGitRepoResponse(response, search);
     }
 
     public void saveAllResult(final List<ScrapeResult> results, final SearchRequest searchRequest) {
@@ -57,14 +55,12 @@ public class SearchResultFacade implements SearchService, ResultService {
         resultServiceImpl.saveAllResultsWithSearch(results, searchId, resultList);
     }
 
-    @Cacheable(value = "userResults", key = "{#name, #page}", cacheManager = "cacheManager")
     public List<UserResultSearchResponse> getUserSearchResultByClient(final String name, final Integer page) {
         SearchRequest searchRequest = new SearchRequest(name, SearchType.USERS, page);
         Search search = getSearch(searchRequest);
         return searchUser(searchRequest, search);
     }
 
-    @Cacheable(value = "repoResults", key = "{#name, #page, #filters}", cacheManager = "cacheManager")
     public List<GitRepoResultResponse> getGitRepoSearchResultByClient(final String name, final Integer page, final List<String> filters) {
         SearchRequest searchRequest = new SearchRequest(name, SearchType.REPOSITORIES, page, filters);
         Search search = getSearch(searchRequest);
@@ -84,9 +80,8 @@ public class SearchResultFacade implements SearchService, ResultService {
     }
 
     private List<GitRepoResultResponse> searchRepo(final SearchRequest searchRequest, final Search search) {
-        SearchRepoResponse clientResult = searchServiceImpl.requestRepoToGithub(searchRequest);
-        return Arrays.stream(clientResult.getItems())
-                .map(response -> saveAndGetGitRepoResponse(response, search))
+        return Arrays.stream(searchServiceImpl.requestRepoToGithub(searchRequest).getItems())
+                .map(response -> saveResultAndGetGitRepoResponse(response, search))
                 .collect(Collectors.toList());
     }
 }

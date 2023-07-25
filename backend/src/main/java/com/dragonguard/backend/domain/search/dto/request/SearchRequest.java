@@ -1,10 +1,7 @@
 package com.dragonguard.backend.domain.search.dto.request;
 
 import com.dragonguard.backend.domain.search.entity.SearchType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,8 +14,10 @@ import java.util.List;
  */
 
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"name", "type", "page", "filters"})
 public class SearchRequest {
     @Setter
     private String githubToken;

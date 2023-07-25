@@ -12,6 +12,7 @@ import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -70,11 +71,13 @@ public class SearchServiceImpl implements EntityLoader<Search, Long>, SearchServ
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public SearchUserResponse requestUserToGithub(SearchRequest searchRequest) {
+    @Cacheable(value = "userResults", key = "{#searchRequest}", cacheManager = "cacheManager")
+    public SearchUserResponse requestUserToGithub(final SearchRequest searchRequest) {
         return githubUserClient.requestToGithub(searchRequest);
     }
 
-    public SearchRepoResponse requestRepoToGithub(SearchRequest searchRequest) {
+    @Cacheable(value = "repoResults", key = "{#searchRequest}", cacheManager = "cacheManager")
+    public SearchRepoResponse requestRepoToGithub(final SearchRequest searchRequest) {
         return githubRepoClient.requestToGithub(searchRequest);
     }
 }
