@@ -21,7 +21,7 @@ public interface ResultMapper extends EntityMapper {
     @Mapping(target = "name", source = "userResponse.login")
     Result toEntity(final UserClientResponse userResponse, final Long searchId);
 
-    UserResultSearchResponse toUserResponse(final Result result, final boolean isServiceMember);
+    UserResultSearchResponse toUserResponse(final Result result, final Boolean isServiceMember);
 
     @Mapping(target = "name", source = "dto.fullName")
     @Mapping(target = "language", source = "dto.language")

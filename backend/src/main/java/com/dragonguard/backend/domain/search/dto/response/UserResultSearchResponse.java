@@ -15,5 +15,5 @@ import lombok.*;
 public class UserResultSearchResponse {
     private Long id;
     private String name;
-    private boolean isServiceMember;
+    private Boolean isServiceMember;
 }
