@@ -79,7 +79,7 @@ public class EmailServiceImpl implements EntityLoader<Email, Long>, EmailService
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
             mimeMessageHelper.setTo(memberEmail);
             mimeMessageHelper.setSubject(EMAIL_SUBJECT);
-            mimeMessageHelper.setText(getEmailText(random), true);
+            mimeMessageHelper.setText(getEmailText(random), Boolean.TRUE);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {}
     }

@@ -1,6 +1,6 @@
-package com.dragonguard.backend.config.batch;
+package com.dragonguard.backend.batch;
 
-import com.dragonguard.backend.config.batch.dto.GitRepoBatchRequest;
+import com.dragonguard.backend.batch.dto.GitRepoBatchRequest;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
@@ -15,6 +15,8 @@ import org.springframework.batch.item.function.FunctionItemProcessor;
 import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
@@ -31,6 +33,7 @@ import java.util.List;
 @EnableBatchProcessing
 @RequiredArgsConstructor
 public class GitRepoClientJobConfig {
+    private static final int POOL_SIZE = 10;
     private final GithubClient<GitRepoBatchRequest, Mono<List<GitRepoMember>>> gitRepoMemberBatchClient;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -47,6 +50,17 @@ public class GitRepoClientJobConfig {
     }
 
     @Bean
+    public TaskExecutor executor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(POOL_SIZE);
+        executor.setMaxPoolSize(POOL_SIZE);
+        executor.setThreadNamePrefix("multi-thread-");
+        executor.setWaitForTasksToCompleteOnShutdown(Boolean.TRUE);
+        executor.initialize();
+        return executor;
+    }
+
+    @Bean
     @JobScope
     public Step step() {
         return stepBuilderFactory.get("step")
@@ -60,6 +74,8 @@ public class GitRepoClientJobConfig {
                 .retryLimit(2)
                 .noRollback(WebClientRetryException.class)
                 .writer(writer())
+                .taskExecutor(executor())
+                .throttleLimit(POOL_SIZE)
                 .build();
     }
 

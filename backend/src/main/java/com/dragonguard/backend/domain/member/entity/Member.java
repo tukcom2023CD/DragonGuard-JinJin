@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 @Where(clause = "deleted_at is null")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {@Index(name = "member_index", columnList = "githubId")})
 public class Member implements Auditable {
 
     @Id

@@ -48,6 +48,7 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
     private final GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> gitRepoSparkLineClient;
     private final GithubClient<GitRepoClientRequest, Integer> gitRepoIssueClient;
 
+    @Override
     public List<Integer> updateAndGetSparkLine(final String name, final String githubToken, final GitRepo gitRepo) {
         List<Integer> savedSparkLine = gitRepo.getSparkLine();
         if (!savedSparkLine.isEmpty()) {
@@ -120,11 +121,9 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
         return gitRepoIssueClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
     }
 
+    @Override
     public GitRepo findGitRepo(final String repoName) {
-        if (gitRepoRepository.existsByName(repoName)) {
-            return gitRepoRepository.findByName(repoName).orElseThrow(EntityNotFoundException::new);
-        }
-        return gitRepoRepository.save(gitRepoMapper.toEntity(repoName));
+        return gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(repoName)));
     }
 
     private StatisticsResponse getStatistics(final GitRepo gitRepo) {
@@ -155,6 +154,7 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
                 deletions.isEmpty() ? new SummaryResponse(new IntSummaryStatistics(0, 0, 0, 0)) : new SummaryResponse(deletions.stream().mapToInt(Integer::intValue).summaryStatistics()));
     }
 
+    @Override
     public Optional<List<GitRepoMemberClientResponse>> requestClientGitRepoMember(final GitRepoInfoRequest gitRepoInfoRequest) {
         List<GitRepoMemberClientResponse> responses = gitRepoMemberClient.requestToGithub(gitRepoInfoRequest);
         if (responses == null || responses.isEmpty()) {
@@ -163,6 +163,7 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
         return Optional.of(responses);
     }
 
+    @Override
     public GitRepoContributionMap getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function) {
         if (contributions == null || contributions.isEmpty()
                 || contributions.stream().map(GitRepoMemberClientResponse::getWeeks).filter(Objects::nonNull).findFirst().isEmpty()) return null;
@@ -170,17 +171,16 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
                 .collect(Collectors.toMap(Function.identity(), mem -> mem.getWeeks().stream().mapToInt(function).sum())));
     }
 
+    @Override
     public GitRepo getEntityByName(final String name) {
-        if (!gitRepoRepository.existsByName(name)) {
-            return null;
-        }
-        return gitRepoRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
+        return gitRepoRepository.findByName(name).orElse(null);
     }
 
     private void requestKafkaSparkLine(final String githubToken, final Long id) {
         kafkaSparkLineProducer.send(new SparkLineKafka(githubToken, id));
     }
 
+    @Override
     public void requestKafkaGitRepoInfo(final String githubToken, final String name) {
         kafkaGitRepoInfoProducer.send(new GitRepoRequest(githubToken, name, LocalDate.now().getYear()));
     }
@@ -219,6 +219,7 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
         return gitRepoRepository.existsByName(name);
     }
 
+    @Override
     public void saveAll(final Set<GitRepo> gitRepos) {
         gitRepoRepository.saveAll(gitRepos);
     }

@@ -22,6 +22,7 @@ import java.util.List;
 @Where(clause = "deleted_at is null")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {@Index(name = "gitorganization_index", columnList = "name")})
 public class GitOrganization implements Auditable {
 
     @Id

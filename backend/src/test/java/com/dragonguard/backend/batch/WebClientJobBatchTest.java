@@ -30,18 +30,18 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.persistence.EntityManager;
 
 @Slf4j
-@ExtendWith(SpringExtension.class)
-@TypeExcludeFilters(DataJpaTypeExcludeFilter.class)
+@SpringBatchTest
 @AutoConfigureCache
 @AutoConfigureDataJpa
+@ActiveProfiles("test")
+@ImportAutoConfiguration
 @AutoConfigureTestDatabase
 @AutoConfigureTestEntityManager
-@ImportAutoConfiguration
+@ExtendWith(SpringExtension.class)
+@TypeExcludeFilters(DataJpaTypeExcludeFilter.class)
 @ComponentScan(excludeFilters  = {@ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE, classes = {KafkaConsumerConfig.class, KafkaProducerConfig.class})})
 @SpringBootTest("spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration")
-@SpringBatchTest
-@ActiveProfiles("test")
 @DisplayName("배치 작업중에서")
 @RunWith(SpringRunner.class)
 public class WebClientJobBatchTest extends GitRepoBatchTest {

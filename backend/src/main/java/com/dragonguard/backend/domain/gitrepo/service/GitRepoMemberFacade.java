@@ -12,7 +12,6 @@ import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
-import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberServiceImpl;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -24,33 +23,30 @@ import java.util.stream.Collectors;
 
 @TransactionService
 @RequiredArgsConstructor
-public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService {
-    private final GitRepoServiceImpl gitRepoServiceImpl;
-    private final GitRepoMemberServiceImpl gitRepoMemberServiceImpl;
+public class GitRepoMemberFacade {
+    private final GitRepoService gitRepoService;
+    private final GitRepoMemberService gitRepoMemberService;
     private final AuthService authService;
     private final GitRepoMemberMapper gitRepoMemberMapper;
 
-    @Override
     public TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request) {
-        return gitRepoServiceImpl.findTwoGitRepos(request);
+        return gitRepoService.findTwoGitRepos(request);
     }
 
-    @Override
     public TwoGitRepoResponse findTwoGitReposAndUpdate(final GitRepoCompareRequest request) {
-        return gitRepoServiceImpl.findTwoGitReposAndUpdate(request);
+        return gitRepoService.findTwoGitReposAndUpdate(request);
     }
 
-    @Override
     public GitRepo getEntityByName(final String name) {
-        return gitRepoServiceImpl.findGitRepo(name);
+        return gitRepoService.findGitRepo(name);
     }
 
     public GitRepoMemberCompareResponse findTwoGitRepoMember(final GitRepoMemberCompareRequest request) {
         GitRepoMember firstGitRepoMember =
-                gitRepoMemberServiceImpl.findByGitRepoAndMemberGithubId(gitRepoServiceImpl.findGitRepo(request.getFirstRepo()), request.getFirstGithubId());
+                gitRepoMemberService.findByGitRepoAndMemberGithubId(gitRepoService.findGitRepo(request.getFirstRepo()), request.getFirstGithubId());
 
         GitRepoMember secondGitRepoMember =
-                gitRepoMemberServiceImpl.findByGitRepoAndMemberGithubId(gitRepoServiceImpl.findGitRepo(request.getSecondRepo()), request.getSecondGithubId());
+                gitRepoMemberService.findByGitRepoAndMemberGithubId(gitRepoService.findGitRepo(request.getSecondRepo()), request.getSecondGithubId());
 
         return new GitRepoMemberCompareResponse(
                 gitRepoMemberMapper.toResponse(firstGitRepoMember),
@@ -58,7 +54,7 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
     }
 
     public List<GitRepoMemberResponse> requestToGithub(final GitRepoInfoRequest gitRepoInfoRequest, final GitRepo gitRepo) {
-        Optional<List<GitRepoMemberClientResponse>> responses = gitRepoServiceImpl.requestClientGitRepoMember(gitRepoInfoRequest);
+        Optional<List<GitRepoMemberClientResponse>> responses = gitRepoService.requestClientGitRepoMember(gitRepoInfoRequest);
         if (responses.isEmpty()) {
             return List.of();
         }
@@ -69,10 +65,10 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
 
         List<GitRepoMemberResponse> result = getResponseList(
                 contributions,
-                gitRepoServiceImpl.getContributionMap(contributions, Week::getA),
-                gitRepoServiceImpl.getContributionMap(contributions, Week::getD));
+                gitRepoService.getContributionMap(contributions, Week::getA),
+                gitRepoService.getContributionMap(contributions, Week::getD));
 
-        gitRepoMemberServiceImpl.saveAll(result, gitRepo);
+        gitRepoMemberService.saveAll(result, gitRepo);
         return result;
     }
 
@@ -92,12 +88,12 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
                             clientResponse.getTotal(),
                             additions.getContributionByKey(clientResponse),
                             deletions.getContributionByKey(clientResponse),
-                            gitRepoMemberServiceImpl.isServiceMember(githubId));
+                            gitRepoMemberService.isServiceMember(githubId));
                 }).collect(Collectors.toList());
     }
 
     private List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final GitRepoInfoRequest gitRepoInfoRequest) {
-        GitRepo gitRepo = gitRepoServiceImpl.findGitRepo(gitRepoInfoRequest.getName());
+        GitRepo gitRepo = gitRepoService.findGitRepo(gitRepoInfoRequest.getName());
         return requestToGithub(gitRepoInfoRequest, gitRepo);
     }
 
@@ -118,7 +114,7 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
     private List<GitRepoMemberResponse> getGitRepoMemberResponses(final GitRepo gitRepo, final String githubToken) {
         Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         if (isGitRepoMemberValid(gitRepoMembers)) {
-            gitRepoServiceImpl.requestKafkaGitRepoInfo(githubToken, gitRepo.getName());
+            gitRepoService.requestKafkaGitRepoInfo(githubToken, gitRepo.getName());
             return gitRepoMemberMapper.toResponseList(gitRepoMembers);
         }
         return requestToGithub(new GitRepoInfoRequest(githubToken, gitRepo.getName(), LocalDate.now().getYear()), gitRepo);
@@ -131,18 +127,18 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
 
     public GitRepoResponse findGitRepoInfos(final String name) {
         String githubToken = authService.getLoginUser().getGithubToken();
-        GitRepo gitRepo = gitRepoServiceImpl.findGitRepo(name);
+        GitRepo gitRepo = gitRepoService.findGitRepo(name);
 
         return new GitRepoResponse(
-                gitRepoServiceImpl.updateAndGetSparkLine(name, githubToken, gitRepo),
+                gitRepoService.updateAndGetSparkLine(name, githubToken, gitRepo),
                 getGitRepoMemberResponses(gitRepo, githubToken));
     }
     public GitRepoResponse findGitRepoInfosAndUpdate(final String name) {
-        if (gitRepoServiceImpl.gitRepoExistsByName(name)) {
+        if (gitRepoService.gitRepoExistsByName(name)) {
             String githubToken = authService.getLoginUser().getGithubToken();
-            GitRepo gitRepo = gitRepoServiceImpl.findGitRepo(name);
+            GitRepo gitRepo = gitRepoService.findGitRepo(name);
             return new GitRepoResponse(
-                    gitRepoServiceImpl.updateAndGetSparkLine(name, githubToken, gitRepo),
+                    gitRepoService.updateAndGetSparkLine(name, githubToken, gitRepo),
                     getGitRepoMemberResponses(gitRepo, githubToken));
         }
 
@@ -150,29 +146,14 @@ public class GitRepoMemberFacade implements GitRepoService, GitRepoMemberService
         String githubToken = authService.getLoginUser().getGithubToken();
 
         return new GitRepoResponse(
-                gitRepoServiceImpl.updateAndGetSparkLine(name, githubToken, gitRepoServiceImpl.findGitRepo(name)),
+                gitRepoService.updateAndGetSparkLine(name, githubToken, gitRepoService.findGitRepo(name)),
                 getGitRepoMemberResponses(name, year, githubToken));
     }
 
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(final GitRepoCompareRequest request) {
         String githubToken = authService.getLoginUser().getGithubToken();
         return new TwoGitRepoMemberResponse(
-                getGitRepoMemberResponses(gitRepoServiceImpl.findGitRepo(request.getFirstRepo()), githubToken),
-                getGitRepoMemberResponses(gitRepoServiceImpl.findGitRepo(request.getSecondRepo()), githubToken));
-    }
-
-    @Override
-    public void saveAllGitRepoMembers(final Set<GitRepoMember> gitRepoMembers) {
-        gitRepoMemberServiceImpl.saveAllGitRepoMembers(gitRepoMembers);
-    }
-
-    @Override
-    public void saveAll(final Set<GitRepo> gitRepos) {
-        gitRepoServiceImpl.saveAll(gitRepos);
-    }
-
-    @Override
-    public boolean gitRepoExistsByName(final String name) {
-        return gitRepoServiceImpl.gitRepoExistsByName(name);
+                getGitRepoMemberResponses(gitRepoService.findGitRepo(request.getFirstRepo()), githubToken),
+                getGitRepoMemberResponses(gitRepoService.findGitRepo(request.getSecondRepo()), githubToken));
     }
 }

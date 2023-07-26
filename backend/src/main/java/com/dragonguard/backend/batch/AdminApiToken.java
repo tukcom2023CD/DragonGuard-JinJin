@@ -1,4 +1,4 @@
-package com.dragonguard.backend.config.batch;
+package com.dragonguard.backend.batch;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

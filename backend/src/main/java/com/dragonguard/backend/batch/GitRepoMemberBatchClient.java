@@ -1,6 +1,6 @@
-package com.dragonguard.backend.config.batch;
+package com.dragonguard.backend.batch;
 
-import com.dragonguard.backend.config.batch.dto.GitRepoBatchRequest;
+import com.dragonguard.backend.batch.dto.GitRepoBatchRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.Week;
 import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;

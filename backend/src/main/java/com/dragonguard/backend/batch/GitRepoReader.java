@@ -1,4 +1,4 @@
-package com.dragonguard.backend.config.batch;
+package com.dragonguard.backend.batch;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;

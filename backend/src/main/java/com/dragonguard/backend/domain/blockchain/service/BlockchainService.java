@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.blockchain.service;
 
+import com.dragonguard.backend.domain.blockchain.dto.kafka.SmartContractKafkaRequest;
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
@@ -8,6 +9,7 @@ import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import java.util.UUID;
 @TransactionService
 @RequiredArgsConstructor
 public class BlockchainService implements EntityLoader<Blockchain, Long> {
+    private final KafkaProducer<SmartContractKafkaRequest> smartContractKafkaProducer;
     private final BlockchainRepository blockchainRepository;
     private final SmartContractService smartContractService;
     private final BlockchainMapper blockchainMapper;
@@ -36,12 +39,21 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     public void setTransaction(final Member member, final long contribution, final ContributeType contributeType) {
         if (contribution <= 0) return;
 
-        Blockchain blockchain = saveIfNone(member, contributeType);
-
+        Blockchain blockchain = getBlockchainOfType(member, contributeType);
         if (!blockchain.isNewHistory(contribution)) return;
 
+        sendKafkaSmartContractRequest(member.getId(), contribution, blockchain.getId());
+    }
+
+    private void sendKafkaSmartContractRequest(final UUID memberId, final long contribution, final Long blockchainId) {
+        smartContractKafkaProducer.send(new SmartContractKafkaRequest(memberId, contribution, blockchainId));
+    }
+
+    public void sendSmartContract(final Member member, final long contribution, final Long blockchainId) {
+        Blockchain blockchain = loadEntity(blockchainId);
+
         String walletAddress = member.getWalletAddress();
-        String transactionHash = transferTransaction(contribution, contributeType, walletAddress);
+        String transactionHash = transferTransaction(contribution, blockchain.getContributeType(), walletAddress);
         BigInteger amount = balanceOfTransaction(walletAddress);
 
         if (hasSameAmount(contribution, amount)) {
@@ -53,14 +65,6 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
             blockchain.addHistory(BigInteger.valueOf(contribution), transactionHash);
         }
-    }
-
-    private Blockchain saveIfNone(final Member member, final ContributeType contributeType) {
-        if (!blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
-            return blockchainMapper.toEntity(member, contributeType);
-        }
-        return blockchainRepository.findByMemberAndContributeType(member, contributeType)
-                .orElseThrow(EntityNotFoundException::new);
     }
 
     private BigInteger balanceOfTransaction(final String walletAddress) {
@@ -92,10 +96,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     public Blockchain getBlockchainOfType(final Member member, final ContributeType contributeType) {
-        if (!blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
-            blockchainRepository.save(blockchainMapper.toEntity(member, contributeType));
-        }
         return blockchainRepository.findByMemberAndContributeType(member, contributeType)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseGet(() -> blockchainRepository.save(blockchainMapper.toEntity(member, contributeType)));
     }
 }

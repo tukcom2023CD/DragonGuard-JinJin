@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.blockchain.messagequeue;
 
-import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaResponse;
+import com.dragonguard.backend.domain.blockchain.dto.kafka.SmartContractKafkaResponse;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.kafka.KafkaConsumer;
@@ -17,30 +17,30 @@ import java.util.UUID;
 
 /**
  * @author 김승진
- * @description 블록체인 토큰 생성 요청을 카프카로부터 받아오는 consumer
+ * @description 블록체인 스마트 컨트랙트 요청을 보내는 consumer
  */
 
 @Component
 @RequiredArgsConstructor
-public class BlockchainConsumer implements KafkaConsumer<BlockchainKafkaResponse> {
+public class SmartContractConsumer implements KafkaConsumer<SmartContractKafkaResponse> {
     private final EntityLoader<Member, UUID> memberService;
     private final BlockchainService blockchainService;
     private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.blockchain", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "gitrank.to.backend.smartcontract", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
-        BlockchainKafkaResponse response = readValue(message);
+        SmartContractKafkaResponse response = readValue(message);
 
         Member member = memberService.loadEntity(response.getMemberId());
 
-        blockchainService.setTransaction(member, response.getAmount(), response.getContributeType());
+        blockchainService.sendSmartContract(member, response.getAmount(), response.getBlockchainId());
     }
 
     @Override
     @SneakyThrows(JsonProcessingException.class)
-    public BlockchainKafkaResponse readValue(String message) {
-        return objectMapper.readValue(message, BlockchainKafkaResponse.class);
+    public SmartContractKafkaResponse readValue(String message) {
+        return objectMapper.readValue(message, SmartContractKafkaResponse.class);
     }
 }

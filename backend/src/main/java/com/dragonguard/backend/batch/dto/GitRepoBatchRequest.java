@@ -1,4 +1,4 @@
-package com.dragonguard.backend.config.batch.dto;
+package com.dragonguard.backend.batch.dto;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import lombok.AllArgsConstructor;

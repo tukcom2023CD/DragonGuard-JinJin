@@ -83,4 +83,11 @@ public class KafkaTopicConfig {
                 .name("gitrank.to.backend.blockchain")
                 .build();
     }
+
+    @Bean
+    public NewTopic smartContractTopic() {
+        return TopicBuilder
+                .name("gitrank.to.backend.smartcontract")
+                .build();
+    }
 }

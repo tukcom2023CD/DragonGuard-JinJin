@@ -1,4 +1,4 @@
-package com.dragonguard.backend.config.batch.dto;
+package com.dragonguard.backend.batch.dto;
 
 import com.dragonguard.backend.domain.gitrepo.dto.client.Author;
 import com.dragonguard.backend.domain.gitrepo.dto.client.Week;

@@ -15,7 +15,6 @@ import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +61,7 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
         return gitRepoMember;
     }
 
-
+    @Override
     public void saveAll(final List<GitRepoMemberResponse> gitRepoResponses, final GitRepo gitRepo) {
         gitRepoMemberRepository.saveAll(getGitRepoMembers(gitRepoResponses, gitRepo));
     }
@@ -92,6 +91,7 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
         return memberService.findMemberOrSave(gitRepoMemberResponse.getGithubId(), AuthStep.NONE, gitRepoMemberResponse.getProfileUrl());
     }
 
+    @Override
     public GitRepoMember findByGitRepoAndMemberGithubId(final GitRepo gitRepo, final String githubId) {
         return gitRepoMemberRepository.findByGitRepoAndMemberGithubId(gitRepo, githubId)
                 .orElseGet(() -> gitRepoMemberRepository.save(
@@ -106,10 +106,6 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
     }
 
     @Override
-    public void saveAllGitRepoMembers(final Set<GitRepoMember> gitRepoMembers) {
-        gitRepoMemberRepository.saveAll(gitRepoMembers);
-    }
-
     public Boolean isServiceMember(final String githubId) {
         return memberService.isServiceMember(githubId);
     }
