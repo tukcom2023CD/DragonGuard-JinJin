@@ -27,7 +27,7 @@ public class LogIntroduction {
     @Pointcut("execution(* com.dragonguard.backend..*Repository*.*(..))")
     public void allRepository() {}
 
-    @Pointcut("execution(* com.dragonguard.backend..*Producer*.*(..))")
+    @Pointcut("execution(* com.dragonguard.backend..*Consumer*.*(..))")
     public void allConsumer() {}
 
     @Pointcut("execution(* com.dragonguard.backend..*Producer*.*(..))")
