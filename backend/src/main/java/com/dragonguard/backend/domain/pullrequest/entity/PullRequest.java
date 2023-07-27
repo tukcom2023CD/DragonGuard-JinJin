@@ -63,7 +63,7 @@ public class PullRequest implements Auditable {
     }
 
     public boolean isOldContribution(Integer amount) {
-        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> LocalDateTime.now().minusHours(1L)).isAfter(LocalDateTime.now().minusSeconds(20L))
+        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L))
                 || this.amount.intValue() == amount.intValue();
     }
 }

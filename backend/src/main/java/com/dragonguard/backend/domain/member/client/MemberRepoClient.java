@@ -28,7 +28,7 @@ public class MemberRepoClient implements GithubClient<MemberClientRequest, Membe
                         uriBuilder -> uriBuilder
                                 .path("users/")
                                 .path(request.getGithubId())
-                                .path("/repos")
+                                .path("/repos?per_page=100")
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

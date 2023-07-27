@@ -28,7 +28,7 @@ public class MemberOrganizationClient implements GithubClient<MemberClientReques
                         uriBuilder -> uriBuilder
                                 .path("users/")
                                 .path(request.getGithubId())
-                                .path("/orgs")
+                                .path("/orgs?per_page=100")
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

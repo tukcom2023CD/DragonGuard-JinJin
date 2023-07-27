@@ -107,10 +107,14 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private void sendContributionRequestToKafka(final String githubId) {
+        Member member = memberRepository.findByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
+        if (!isBlockchainUpdatable(member)) return;
         kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
     }
 
     private void sendRepositoryRequestToKafka(final String githubId) {
+        Member member = memberRepository.findByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
+        if (!isBlockchainUpdatable(member)) return;
         kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
     }
 
