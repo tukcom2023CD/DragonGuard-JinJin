@@ -39,7 +39,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GitRepoClientJobConfig {
     private static final int POOL_SIZE = 3;
-    private static final int CHUNK_SIZE = 30;
+    private static final int CHUNK_SIZE = 1;
     private static final int RETRY_LIMIT = 2;
     private final GithubClient<GitRepoBatchRequest, Mono<List<GitRepoMember>>> gitRepoMemberBatchClient;
     private final JobBuilderFactory jobBuilderFactory;
