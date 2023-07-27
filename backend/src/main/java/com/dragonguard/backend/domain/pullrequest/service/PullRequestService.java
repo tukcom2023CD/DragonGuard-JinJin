@@ -33,9 +33,10 @@ public class PullRequestService implements ContributionService<PullRequest, Long
 
         if (existsByMemberAndYear(member, year)) {
             PullRequest pullRequest = findPullRequest(member, year);
-            if (pullRequest.isOldContribution(pullRequestNum)) return;
+            long newBlockchainAmount = pullRequestNum - blockchain.getSumOfAmount();
+            if (pullRequest.isNotUpdatable(pullRequestNum) && newBlockchainAmount == 0L) return;
             pullRequest.updatePullRequestNum(pullRequestNum);
-            sendTransaction(member, pullRequestNum - blockchain.getSumOfAmount(), blockchain);
+            sendTransaction(member, newBlockchainAmount, blockchain);
             return;
         }
         pullRequestRepository.save(pullRequestMapper.toEntity(member, pullRequestNum, year));

@@ -33,9 +33,10 @@ public class IssueService implements ContributionService<Issue, Long> {
 
         if (existsByMemberAndYear(member, year)) {
             Issue issue = findIssue(member, year);
-            if (issue.isOldContribution(issueNum)) return;
+            long newBlockchainAmount = issueNum - blockchain.getSumOfAmount();
+            if (issue.isNotUpdatable(issueNum) && newBlockchainAmount == 0L) return;
             issue.updateIssueNum(issueNum);
-            sendTransaction(member, issueNum - blockchain.getSumOfAmount(), blockchain);
+            sendTransaction(member, newBlockchainAmount, blockchain);
             return;
         }
         issueRepository.save(issueMapper.toEntity(member, issueNum, year));

@@ -33,9 +33,10 @@ public class CodeReviewService implements ContributionService<CodeReview, Long> 
 
         if (existsByMemberAndYear(member, year)) {
             CodeReview codeReview = findCodeReview(member, year);
-            if (codeReview.isOldContribution(codeReviewNum)) return;
+            long newBlockchainAmount = codeReviewNum - blockchain.getSumOfAmount();
+            if (codeReview.isNotUpdatable(codeReviewNum) && newBlockchainAmount == 0L) return;
             codeReview.updateCodeReviewNum(codeReviewNum);
-            sendTransaction(member, codeReviewNum - blockchain.getSumOfAmount(), blockchain);
+            sendTransaction(member, newBlockchainAmount, blockchain);
             return;
         }
         codeReviewRepository.save(codeReviewMapper.toEntity(member, codeReviewNum, year));

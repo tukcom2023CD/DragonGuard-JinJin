@@ -33,9 +33,10 @@ public class CommitService implements ContributionService<Commit, Long> {
 
         if (existsByMemberAndYear(member, year)) {
             Commit commit = findCommit(member, year);
-            if (commit.isOldContribution(commitNum)) return;
+            long newBlockchainAmount = commitNum - blockchain.getSumOfAmount();
+            if (commit.isNotUpdatable(commitNum) && newBlockchainAmount == 0L) return;
             commit.updateCommitNum(commitNum);
-            sendTransaction(member, commitNum - blockchain.getSumOfAmount(), blockchain);
+            sendTransaction(member, newBlockchainAmount, blockchain);
             return;
         }
         commitRepository.save(commitMapper.toEntity(member, commitNum, year));
