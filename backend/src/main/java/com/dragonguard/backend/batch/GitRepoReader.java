@@ -4,9 +4,6 @@ import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.NonTransientResourceException;
-import org.springframework.batch.item.ParseException;
-import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +23,7 @@ public class GitRepoReader implements ItemReader<GitRepo> {
     }
 
     @Override
-    public synchronized GitRepo read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+    public synchronized GitRepo read() throws Exception {
         if (nextIndex < list.size()) {
             return list.get(nextIndex++);
         }

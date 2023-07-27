@@ -232,13 +232,6 @@ public class Member implements Auditable {
         return this.pullRequest.getAmount();
     }
 
-    public int getCodeReviewSumWithRelation() {
-        if (this.codeReview == null) {
-            return 0;
-        }
-        return this.codeReview.getAmount();
-    }
-
     public boolean isWalletAddressExists() {
         return StringUtils.hasText(this.getWalletAddress());
     }

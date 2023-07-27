@@ -5,7 +5,6 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResp
 import com.dragonguard.backend.domain.gitrepo.dto.client.Week;
 import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
-import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoContribution;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
@@ -76,43 +75,37 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                     Set<GitRepoMember> gitRepoMembers = request.getGitRepo().getGitRepoMembers();
 
                     return result.stream().map(r -> {
-                        if (r.getAuthor() == null || !StringUtils.hasText(r.getAuthor().getLogin())) {
+                        if (Objects.isNull(r.getAuthor()) || !StringUtils.hasText(r.getAuthor().getLogin())) {
                             return null;
                         }
+                        List<Week> weeks = r.getWeeks();
 
-                        return Optional.ofNullable(gitRepoMembers.stream()
+                        GitRepoMember newGitRepoMember = Optional.ofNullable(gitRepoMembers.stream()
                                 .filter(grm -> grm.getMember().getGithubId().equals(r.getAuthor().getLogin()))
                                 .findFirst()
                                 .orElseGet(() -> {
-                                    List<Week> weeks = r.getWeeks();
                                     String githubId = r.getAuthor().getLogin();
                                     if (memberRepository.existsByGithubId(githubId)) {
                                         Member member = memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseThrow(EntityNotFoundException::new);
-                                        return gitRepoMemberMapper.toEntity(member, request.getGitRepo(),
-                                                new GitRepoContribution(r.getTotal(),
-                                                        weeks.stream().mapToInt(Week::getA).sum(),
-                                                        weeks.stream().mapToInt(Week::getD).sum()));
+                                        return gitRepoMemberMapper.toEntity(member, request.getGitRepo());
                                     }
                                     return gitRepoMemberMapper.toEntity(
                                             memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseGet(() -> memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.NONE)),
-                                            gitRepoRepository.findByIdWithGitRepoMember(request.getGitRepo().getId()).orElseThrow(EntityNotFoundException::new),
-                                            new GitRepoContribution(r.getTotal(),
-                                                    weeks.stream().mapToInt(Week::getA).sum(),
-                                                    weeks.stream().mapToInt(Week::getD).sum()));
+                                            gitRepoRepository.findByIdWithGitRepoMember(request.getGitRepo().getId()).orElseThrow(EntityNotFoundException::new));
 
                                 })).orElseGet(() -> {
                             return gitRepoMembers.stream()
                                     .filter(grm -> grm != null && grm.getMember().getGithubId().equals(r.getAuthor().getLogin()))
-                                    .findFirst()
-                                    .map(gitRepoMember -> {
-                                        List<Week> weeks = r.getWeeks();
-                                        gitRepoMember.updateGitRepoContribution(
-                                                r.getTotal(),
-                                                weeks.stream().mapToInt(Week::getA).sum(),
-                                                weeks.stream().mapToInt(Week::getD).sum());
-                                        return gitRepoMember;
-                                    }).orElse(null);
+                                    .findFirst().orElse(null);
                         });
+
+                        if (Objects.isNull(newGitRepoMember)) return null;
+
+                        newGitRepoMember.updateGitRepoContribution(r.getTotal(),
+                                weeks.stream().mapToInt(Week::getA).sum(),
+                                weeks.stream().mapToInt(Week::getD).sum());
+
+                        return newGitRepoMember;
                     }).filter(Objects::nonNull).collect(Collectors.toList());
                 }).filter(Objects::nonNull);
     }
