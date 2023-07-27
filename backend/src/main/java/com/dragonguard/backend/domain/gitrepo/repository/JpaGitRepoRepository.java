@@ -27,7 +27,7 @@ public interface JpaGitRepoRepository extends JpaRepository<GitRepo, Long>, GitR
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1500")})
     boolean existsByName(String name);
 
-    @Query("SELECT gr FROM GitRepo gr LEFT JOIN FETCH gr.gitRepoMembers grm LEFT JOIN FETCH grm.member")
+    @Query(value = "SELECT gr FROM GitRepo gr LEFT JOIN FETCH gr.gitRepoMembers grm LEFT JOIN FETCH grm.member", countQuery = "SELECT count(gr) FROM GitRepo gr")
     Page<GitRepo> findAllWithMember(Pageable pageable);
     @Query("SELECT gr FROM GitRepo gr LEFT JOIN FETCH gr.gitRepoMembers grm LEFT JOIN FETCH grm.member WHERE gr.id = :id")
     Optional<GitRepo> findByIdWithGitRepoMember(Long id);
