@@ -35,7 +35,10 @@ public class SmartContractConsumer implements KafkaConsumer<SmartContractKafkaRe
 
         Member member = memberService.loadEntity(response.getMemberId());
 
-        blockchainService.sendSmartContract(member, response.getAmount(), response.getBlockchainId());
+        blockchainService.sendSmartContract(
+                member,
+                response.getAmount(),
+                blockchainService.loadEntity(response.getBlockchainId()));
     }
 
     @Override
