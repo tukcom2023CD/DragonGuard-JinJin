@@ -22,7 +22,7 @@ public class GitRepoMemberWriter implements ItemWriter<List<GitRepoMember>> {
     public void write(final List<? extends List<GitRepoMember>> items) throws Exception {
         List<GitRepoMember> result = items.stream()
                 .flatMap(List::stream)
-                .peek(i -> memberRepository.findByGithubId(i.getMember().getGithubId()).orElseGet(() -> memberRepository.save(i.getMember())))
+                .peek(i -> memberRepository.save(i.getMember()))
                 .collect(Collectors.toList());
 
         gitRepoMemberRepository.saveAll(result);
