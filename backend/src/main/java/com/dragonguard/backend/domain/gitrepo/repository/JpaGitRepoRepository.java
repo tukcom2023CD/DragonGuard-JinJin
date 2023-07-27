@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.gitrepo.repository;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +10,6 @@ import org.springframework.data.jpa.repository.QueryHints;
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
 import java.awt.print.Pageable;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,7 +28,7 @@ public interface JpaGitRepoRepository extends JpaRepository<GitRepo, Long>, GitR
     boolean existsByName(String name);
 
     @Query("SELECT gr FROM GitRepo gr LEFT JOIN FETCH gr.gitRepoMembers grm LEFT JOIN FETCH grm.member")
-    List<GitRepo> findAllWithMember(Pageable pageable);
+    Page<GitRepo> findAllWithMember(Pageable pageable);
     @Query("SELECT gr FROM GitRepo gr LEFT JOIN FETCH gr.gitRepoMembers grm LEFT JOIN FETCH grm.member WHERE gr.id = :id")
     Optional<GitRepo> findByIdWithGitRepoMember(Long id);
 }

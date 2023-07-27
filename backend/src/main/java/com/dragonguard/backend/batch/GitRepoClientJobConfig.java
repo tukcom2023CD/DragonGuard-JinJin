@@ -46,7 +46,7 @@ public class GitRepoClientJobConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final AdminApiToken adminApiToken;
     private final GitRepoMemberWriter gitRepoMemberWriter;
-    private final JpaGitRepoRepository gitRepoRepository;
+    private final JpaGitRepoRepository jpaGitRepoRepository;
 
     @Bean
     public Job clientJob() {
@@ -113,7 +113,7 @@ public class GitRepoClientJobConfig {
     public RepositoryItemReader<GitRepo> reader() {
         return new RepositoryItemReaderBuilder<GitRepo>()
                 .name("notificationAlarmReader")
-                .repository(gitRepoRepository)
+                .repository(jpaGitRepoRepository)
                 .methodName("findAllWithMember")
                 .pageSize(CHUNK_SIZE)
                 .sorts(Collections.singletonMap("id", Sort.Direction.ASC))

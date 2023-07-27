@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.gitrepo.repository;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
+import org.springframework.data.domain.Page;
 
 import java.awt.print.Pageable;
 import java.util.List;
@@ -19,5 +20,5 @@ public interface GitRepoRepository {
     Optional<GitRepo> findByIdWithGitRepoMember(Long id);
     boolean existsByName(String name);
     List<GitRepo> findAll();
-    List<GitRepo> findAllWithMember(Pageable pageable);
+    Page<GitRepo> findAllWithMember(Pageable pageable);
 }
