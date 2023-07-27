@@ -4,7 +4,6 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -25,5 +24,5 @@ public interface MemberRepository extends JpaRepository<Member, UUID>, MemberQue
     void updateRefreshToken(UUID id, String token);
 
     @Query("SELECT m FROM Member m JOIN FETCH m.gitRepoMembers grm JOIN FETCH grm.gitRepo WHERE m.githubId = :githubId")
-    Optional<Member> findByGithubIdWithGitRepoMember(@Param("githubId") String githubId);
+    Optional<Member> findByGithubIdWithGitRepoMember(String githubId);
 }

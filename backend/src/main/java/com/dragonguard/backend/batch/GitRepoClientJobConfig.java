@@ -3,6 +3,7 @@ package com.dragonguard.backend.batch;
 import com.dragonguard.backend.batch.dto.GitRepoBatchRequest;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
+import com.dragonguard.backend.domain.gitrepo.repository.JpaGitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
@@ -11,16 +12,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.*;
+import org.springframework.batch.item.data.RepositoryItemReader;
+import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
 import org.springframework.batch.item.function.FunctionItemProcessor;
 import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -34,12 +39,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GitRepoClientJobConfig {
     private static final int POOL_SIZE = 3;
+    private static final int CHUNK_SIZE = 30;
+    private static final int RETRY_LIMIT = 2;
     private final GithubClient<GitRepoBatchRequest, Mono<List<GitRepoMember>>> gitRepoMemberBatchClient;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final AdminApiToken adminApiToken;
-    private final GitRepoReader gitRepoReader;
     private final GitRepoMemberWriter gitRepoMemberWriter;
+    private final JpaGitRepoRepository gitRepoRepository;
 
     @Bean
     public Job clientJob() {
@@ -64,14 +71,14 @@ public class GitRepoClientJobConfig {
     @JobScope
     public Step step() {
         return stepBuilderFactory.get("step")
-                .<GitRepo, List<GitRepoMember>>chunk(1)
+                .<GitRepo, List<GitRepoMember>>chunk(CHUNK_SIZE)
                 .reader(reader())
                 .processor(compositeProcessor())
                 .faultTolerant()
                 .retry(WebClientException.class)
                 .retry(WebClientResponseException.class)
                 .retry(ClientBadRequestException.class)
-                .retryLimit(2)
+                .retryLimit(RETRY_LIMIT)
                 .noRollback(WebClientRetryException.class)
                 .writer(writer())
                 .taskExecutor(executor())
@@ -103,7 +110,13 @@ public class GitRepoClientJobConfig {
 
     @Bean
     @StepScope
-    public GitRepoReader reader() {
-        return gitRepoReader;
+    public RepositoryItemReader<GitRepo> reader() {
+        return new RepositoryItemReaderBuilder<GitRepo>()
+                .name("notificationAlarmReader")
+                .repository(gitRepoRepository)
+                .methodName("findAllWithMember")
+                .pageSize(CHUNK_SIZE)
+                .sorts(Collections.singletonMap("id", Sort.Direction.ASC))
+                .build();
     }
 }
