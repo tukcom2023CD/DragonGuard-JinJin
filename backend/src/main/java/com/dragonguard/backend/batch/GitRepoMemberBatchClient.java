@@ -84,14 +84,15 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                                 .filter(grm -> grm.getMember().getGithubId().equals(r.getAuthor().getLogin()))
                                 .findFirst()
                                 .orElseGet(() -> {
+                                    List<Week> weeks = r.getWeeks();
                                     String githubId = r.getAuthor().getLogin();
                                     if (memberRepository.existsByGithubId(githubId)) {
                                         Member member = memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseThrow(EntityNotFoundException::new);
-                                        return gitRepoMemberMapper.toEntity(member, request.getGitRepo());
+                                        return gitRepoMemberMapper.toEntity(member, request.getGitRepo(),
+                                                new GitRepoContribution(r.getTotal(),
+                                                        weeks.stream().mapToInt(Week::getA).sum(),
+                                                        weeks.stream().mapToInt(Week::getD).sum()));
                                     }
-
-                                    List<Week> weeks = r.getWeeks();
-
                                     return gitRepoMemberMapper.toEntity(
                                             memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseGet(() -> memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.NONE)),
                                             gitRepoRepository.findByIdWithGitRepoMember(request.getGitRepo().getId()).orElseThrow(EntityNotFoundException::new),
