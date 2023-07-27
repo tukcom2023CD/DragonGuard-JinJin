@@ -31,8 +31,10 @@ public class CommitService implements ContributionService<Commit, Long> {
     public void saveContribution(final Member member, final Integer commitNum, final Integer year) {
         Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.COMMIT);
 
-        if (commitRepository.existsByMemberAndYear(member, year)) {
-            findCommitAndUpdateNum(member, commitNum, year);
+        if (existsByMemberAndYear(member, year)) {
+            Commit commit = findCommit(member, year);
+            if (commit.isOldContribution(commitNum)) return;
+            commit.updateCommitNum(commitNum);
             sendTransaction(member, commitNum - blockchain.getSumOfAmount(), blockchain);
             return;
         }
@@ -40,14 +42,18 @@ public class CommitService implements ContributionService<Commit, Long> {
         sendTransaction(member, commitNum.longValue(), blockchain);
     }
 
+    private Commit findCommit(final Member member, final Integer year) {
+        return commitRepository.findByMemberAndYear(member, year)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private boolean existsByMemberAndYear(final Member member, final Integer year) {
+        return commitRepository.existsByMemberAndYear(member, year);
+    }
+
     private void sendTransaction(final Member member, final Long amount, final Blockchain blockchain) {
         if (amount <= 0 || !member.isWalletAddressExists() || !blockchain.isNewHistory(amount)) return;
         blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.COMMIT));
-    }
-
-    private void findCommitAndUpdateNum(final Member member, final Integer codeReviewNum, final Integer year) {
-        Commit commit = commitRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
-        commit.updateCommitNum(codeReviewNum);
     }
 
     @Override

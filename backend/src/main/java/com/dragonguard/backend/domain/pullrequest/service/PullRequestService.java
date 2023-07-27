@@ -31,8 +31,10 @@ public class PullRequestService implements ContributionService<PullRequest, Long
     public void saveContribution(final Member member, final Integer pullRequestNum, final Integer year) {
         Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.PULL_REQUEST);
 
-        if (isExistsByMemberAndYear(member, year)) {
-            updatePullRequestNum(member, pullRequestNum, year);
+        if (existsByMemberAndYear(member, year)) {
+            PullRequest pullRequest = findPullRequest(member, year);
+            if (pullRequest.isOldContribution(pullRequestNum)) return;
+            pullRequest.updatePullRequestNum(pullRequestNum);
             sendTransaction(member, pullRequestNum - blockchain.getSumOfAmount(), blockchain);
             return;
         }
@@ -45,9 +47,8 @@ public class PullRequestService implements ContributionService<PullRequest, Long
         blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.PULL_REQUEST));
     }
 
-    private void updatePullRequestNum(final Member member, final Integer pullRequestNum, final Integer year) {
-        PullRequest pullRequest = pullRequestRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
-        pullRequest.updatePullRequestNum(pullRequestNum);
+    private PullRequest findPullRequest(final Member member, final Integer year) {
+        return pullRequestRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class PullRequestService implements ContributionService<PullRequest, Long
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private boolean isExistsByMemberAndYear(final Member member, final Integer year) {
+    private boolean existsByMemberAndYear(final Member member, final Integer year) {
         return pullRequestRepository.existsByMemberAndYear(member, year);
     }
 }

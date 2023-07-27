@@ -31,8 +31,10 @@ public class IssueService implements ContributionService<Issue, Long> {
     public void saveContribution(final Member member, final Integer issueNum, final Integer year) {
         Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.ISSUE);
 
-        if (issueRepository.existsByMemberAndYear(member, year)) {
-            findIssueAndUpdateNum(member, issueNum, year);
+        if (existsByMemberAndYear(member, year)) {
+            Issue issue = findIssue(member, year);
+            if (issue.isOldContribution(issueNum)) return;
+            issue.updateIssueNum(issueNum);
             sendTransaction(member, issueNum - blockchain.getSumOfAmount(), blockchain);
             return;
         }
@@ -40,14 +42,18 @@ public class IssueService implements ContributionService<Issue, Long> {
         sendTransaction(member, issueNum.longValue(), blockchain);
     }
 
+    private Issue findIssue(final Member member, final Integer year) {
+        return issueRepository.findByMemberAndYear(member, year)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private boolean existsByMemberAndYear(final Member member, final Integer year) {
+        return issueRepository.existsByMemberAndYear(member, year);
+    }
+
     private void sendTransaction(final Member member, final Long amount, final Blockchain blockchain) {
         if (amount <= 0 || !member.isWalletAddressExists() || !blockchain.isNewHistory(amount)) return;
         blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.ISSUE));
-    }
-
-    private void findIssueAndUpdateNum(final Member member, final Integer issueNum, final Integer year) {
-        Issue issue = issueRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
-        issue.updateIssueNum(issueNum);
     }
 
     @Override

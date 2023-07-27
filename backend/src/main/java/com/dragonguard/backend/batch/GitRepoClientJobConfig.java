@@ -33,7 +33,7 @@ import java.util.List;
 @EnableBatchProcessing
 @RequiredArgsConstructor
 public class GitRepoClientJobConfig {
-    private static final int POOL_SIZE = 10;
+    private static final int POOL_SIZE = 3;
     private final GithubClient<GitRepoBatchRequest, Mono<List<GitRepoMember>>> gitRepoMemberBatchClient;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;

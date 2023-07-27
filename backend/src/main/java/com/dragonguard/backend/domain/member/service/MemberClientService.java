@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.member.service;
 
-import com.dragonguard.backend.domain.codereview.service.CodeReviewService;
-import com.dragonguard.backend.domain.commit.service.CommitService;
+import com.dragonguard.backend.domain.codereview.entity.CodeReview;
+import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
@@ -9,11 +9,12 @@ import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
-import com.dragonguard.backend.domain.issue.service.IssueService;
+import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.member.dto.client.*;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.domain.pullrequest.service.PullRequestService;
+import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.global.client.GithubClient;
+import com.dragonguard.backend.global.service.ContributionService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
@@ -42,10 +43,10 @@ public class MemberClientService {
     private final GithubClient<MemberClientRequest, OrganizationRepoResponse[]> memberOrganizationRepoClient;
     private final GitOrganizationService gitOrganizationService;
     private final GitRepoMapper gitRepoMapper;
-    private final CommitService commitService;
-    private final IssueService issueService;
-    private final PullRequestService pullRequestService;
-    private final CodeReviewService codeReviewService;
+    private final ContributionService<Commit, Long> commitService;
+    private final ContributionService<Issue, Long> issueService;
+    private final ContributionService<PullRequest, Long> pullRequestService;
+    private final ContributionService<CodeReview, Long> codeReviewService;
     private final GitRepoRepository gitRepoRepository; // todo 순환참조 해결 후 repository 대신 service 주입받기
     private final GitRepoMemberRepository gitRepoMemberRepository; // todo 순환참조 해결 후 repository 대신 service 주입받기
     private final GitRepoMemberMapper gitRepoMemberMapper;

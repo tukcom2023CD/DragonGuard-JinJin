@@ -8,6 +8,8 @@ import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * @author 김승진
@@ -58,5 +60,10 @@ public class PullRequest implements Auditable {
 
     private void organize() {
         this.member.addPullRequest(this);
+    }
+
+    public boolean isOldContribution(Integer amount) {
+        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L))
+                || this.amount.intValue() == amount.intValue();
     }
 }

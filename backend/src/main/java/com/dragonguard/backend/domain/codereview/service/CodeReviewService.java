@@ -31,8 +31,10 @@ public class CodeReviewService implements ContributionService<CodeReview, Long> 
     public void saveContribution(final Member member, final Integer codeReviewNum, final Integer year) {
         Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.CODE_REVIEW);
 
-        if (codeReviewRepository.existsByMemberAndYear(member, year)) {
-            findCodeReviewAndUpdateNum(member, codeReviewNum, year);
+        if (existsByMemberAndYear(member, year)) {
+            CodeReview codeReview = findCodeReview(member, year);
+            if (codeReview.isOldContribution(codeReviewNum)) return;
+            codeReview.updateCodeReviewNum(codeReviewNum);
             sendTransaction(member, codeReviewNum - blockchain.getSumOfAmount(), blockchain);
             return;
         }
@@ -40,14 +42,18 @@ public class CodeReviewService implements ContributionService<CodeReview, Long> 
         sendTransaction(member, codeReviewNum.longValue(), blockchain);
     }
 
+    private CodeReview findCodeReview(final Member member, final Integer year) {
+        return codeReviewRepository.findByMemberAndYear(member, year)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private boolean existsByMemberAndYear(final Member member, final Integer year) {
+        return codeReviewRepository.existsByMemberAndYear(member, year);
+    }
+
     private void sendTransaction(final Member member, final Long amount, final Blockchain blockchain) {
         if (amount <= 0 || !member.isWalletAddressExists() || !blockchain.isNewHistory(amount)) return;
         blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.CODE_REVIEW));
-    }
-
-    private void findCodeReviewAndUpdateNum(final Member member, final Integer codeReviewNum, final Integer year) {
-        CodeReview codeReview = codeReviewRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
-        codeReview.updateCodeReviewNum(codeReviewNum);
     }
 
     @Override
