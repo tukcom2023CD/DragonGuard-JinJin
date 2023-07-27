@@ -6,6 +6,7 @@ import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class GitRepoMemberWriter implements ItemWriter<List<GitRepoMember>> {
     private final MemberRepository memberRepository;
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void write(final List<? extends List<GitRepoMember>> items) throws Exception {
         List<GitRepoMember> result = items.stream()
                 .flatMap(List::stream)
