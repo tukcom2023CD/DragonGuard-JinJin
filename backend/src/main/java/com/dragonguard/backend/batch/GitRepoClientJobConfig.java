@@ -18,9 +18,7 @@ import org.springframework.batch.item.function.FunctionItemProcessor;
 import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
@@ -38,7 +36,6 @@ import java.util.List;
 @EnableBatchProcessing
 @RequiredArgsConstructor
 public class GitRepoClientJobConfig {
-    private static final int POOL_SIZE = 3;
     private static final int CHUNK_SIZE = 1;
     private static final int RETRY_LIMIT = 2;
     private final GithubClient<GitRepoBatchRequest, Mono<List<GitRepoMember>>> gitRepoMemberBatchClient;
@@ -57,17 +54,6 @@ public class GitRepoClientJobConfig {
     }
 
     @Bean
-    public TaskExecutor executor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(POOL_SIZE);
-        executor.setMaxPoolSize(POOL_SIZE);
-        executor.setThreadNamePrefix("multi-thread-");
-        executor.setWaitForTasksToCompleteOnShutdown(Boolean.TRUE);
-        executor.initialize();
-        return executor;
-    }
-
-    @Bean
     @JobScope
     public Step step() {
         return stepBuilderFactory.get("step")
@@ -81,8 +67,6 @@ public class GitRepoClientJobConfig {
                 .retryLimit(RETRY_LIMIT)
                 .noRollback(WebClientRetryException.class)
                 .writer(writer())
-                .taskExecutor(executor())
-                .throttleLimit(POOL_SIZE)
                 .build();
     }
 
