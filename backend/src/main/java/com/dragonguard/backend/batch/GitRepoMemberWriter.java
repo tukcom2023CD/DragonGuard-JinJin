@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class CustomWriter implements ItemWriter<List<GitRepoMember>> {
+public class GitRepoMemberWriter implements ItemWriter<List<GitRepoMember>> {
     private final MemberRepository memberRepository;
     private final GitRepoMemberRepository gitRepoMemberRepository;
 

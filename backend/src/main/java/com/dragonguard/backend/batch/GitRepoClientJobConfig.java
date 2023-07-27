@@ -39,7 +39,7 @@ public class GitRepoClientJobConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final AdminApiToken adminApiToken;
     private final GitRepoReader gitRepoReader;
-    private final CustomWriter customWriter;
+    private final GitRepoMemberWriter gitRepoMemberWriter;
 
     @Bean
     public Job clientJob() {
@@ -97,8 +97,8 @@ public class GitRepoClientJobConfig {
     }
 
     @Bean
-    public CustomWriter writer() {
-        return customWriter;
+    public GitRepoMemberWriter writer() {
+        return gitRepoMemberWriter;
     }
 
     @Bean

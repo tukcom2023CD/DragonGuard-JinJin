@@ -5,6 +5,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResp
 import com.dragonguard.backend.domain.gitrepo.dto.client.Week;
 import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
+import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoContribution;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
@@ -16,8 +17,6 @@ import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -91,13 +90,14 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                                         return gitRepoMemberMapper.toEntity(member, request.getGitRepo());
                                     }
 
-                                    try {
-                                        return gitRepoMemberMapper.toEntity(
-                                                memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseGet(() -> memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.NONE)),
-                                                gitRepoRepository.findByIdWithGitRepoMember(request.getGitRepo().getId()).orElseThrow(EntityNotFoundException::new));
-                                    } catch (DataIntegrityViolationException | ConstraintViolationException e) {
-                                        return null;
-                                    }
+                                    List<Week> weeks = r.getWeeks();
+
+                                    return gitRepoMemberMapper.toEntity(
+                                            memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseGet(() -> memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.NONE)),
+                                            gitRepoRepository.findByIdWithGitRepoMember(request.getGitRepo().getId()).orElseThrow(EntityNotFoundException::new),
+                                            new GitRepoContribution(r.getTotal(),
+                                                    weeks.stream().mapToInt(Week::getA).sum(),
+                                                    weeks.stream().mapToInt(Week::getD).sum()));
 
                                 })).orElseGet(() -> {
                             return gitRepoMembers.stream()
