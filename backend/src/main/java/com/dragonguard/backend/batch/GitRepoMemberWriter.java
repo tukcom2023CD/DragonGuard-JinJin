@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -20,11 +19,8 @@ public class GitRepoMemberWriter implements ItemWriter<List<GitRepoMember>> {
     @Override
     @Transactional
     public void write(final List<? extends List<GitRepoMember>> items) throws Exception {
-        List<GitRepoMember> result = items.stream()
+        items.stream()
                 .flatMap(List::stream)
-                .peek(i -> memberRepository.save(i.getMember()))
-                .collect(Collectors.toList());
-
-        gitRepoMemberRepository.saveAll(result);
+                .forEach(i -> memberRepository.save(i.getMember()));
     }
 }
