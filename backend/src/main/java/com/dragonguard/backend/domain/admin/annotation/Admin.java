@@ -1,4 +1,4 @@
-package com.dragonguard.backend.domain.admin.authorization;
+package com.dragonguard.backend.domain.admin.annotation;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

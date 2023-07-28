@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.admin.controller;
 
-import com.dragonguard.backend.domain.admin.authorization.Admin;
+import com.dragonguard.backend.domain.admin.annotation.Admin;
 import com.dragonguard.backend.domain.admin.dto.request.AdminDecideRequest;
 import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationResponse;
 import com.dragonguard.backend.domain.admin.service.AdminService;
