@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.member.service;
 
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
+import com.dragonguard.backend.domain.blockchain.entity.History;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
@@ -24,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -69,8 +69,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private boolean isBlockchainUpdatable(final Member member) {
-        return member.getBlockchains().stream().map(Blockchain::getHistories).flatMap(List::stream)
-                .allMatch(h -> h.getBaseTime().getCreatedAt().isBefore(LocalDateTime.now().minusSeconds(20L)));
+        return !member.getCommit().updatedCurrently() || member.getBlockchains().stream()
+                .map(Blockchain::getHistories).flatMap(List::stream).allMatch(History::isUpdatable);
     }
 
     public MemberResponse getMember() {

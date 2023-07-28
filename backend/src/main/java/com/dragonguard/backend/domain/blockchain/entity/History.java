@@ -8,6 +8,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -41,5 +42,9 @@ public class History implements Auditable {
 
     public String getTransactionHashUrl() {
         return "https://baobab.scope.klaytn.com/tx/" + this.transactionHash + "?tabId=tokenTransfer";
+    }
+
+    public boolean isUpdatable() {
+        return this.baseTime.getCreatedAt().isBefore(LocalDateTime.now().minusSeconds(20L));
     }
 }

@@ -65,7 +65,10 @@ public class Commit implements Auditable {
     }
 
     public boolean isNotUpdatable(Integer amount) {
-        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L))
-                || this.amount.intValue() == amount.intValue();
+        return updatedCurrently() || this.amount.intValue() == amount.intValue();
+    }
+
+    public boolean updatedCurrently() {
+        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L));
     }
 }
