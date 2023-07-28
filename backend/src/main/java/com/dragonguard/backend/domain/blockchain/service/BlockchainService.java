@@ -87,7 +87,10 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     public Blockchain getBlockchainOfType(final Member member, final ContributeType contributeType) {
-        return blockchainRepository.findByMemberAndContributeType(member, contributeType)
-                .orElseGet(() -> blockchainRepository.save(blockchainMapper.toEntity(member, contributeType)));
+        if(blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
+            return blockchainRepository.findByMemberAndContributeType(member, contributeType)
+                    .orElseThrow(EntityNotFoundException::new);
+        }
+        return blockchainRepository.save(blockchainMapper.toEntity(member, contributeType));
     }
 }
