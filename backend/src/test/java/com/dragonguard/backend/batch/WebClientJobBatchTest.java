@@ -23,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTypeExcludeFil
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -36,6 +37,7 @@ import javax.persistence.EntityManager;
 @ActiveProfiles("test")
 @ImportAutoConfiguration
 @AutoConfigureTestDatabase
+@EmbeddedKafka(topics = {})
 @AutoConfigureTestEntityManager
 @ExtendWith(SpringExtension.class)
 @TypeExcludeFilters(DataJpaTypeExcludeFilter.class)
