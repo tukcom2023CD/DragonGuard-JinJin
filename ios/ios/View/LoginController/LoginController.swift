@@ -81,22 +81,15 @@ final class LoginController: UIViewController{
     
     // DeepLink 이동하는 함수
     private func moveToDeepLink(_ url: String){
-        // 사용자 기본 브라우저에서 deeplink 주소 열 수 있는지 확인 후 열기
+        
         if let url = URL(string: url) {
             UIApplication.shared.open(url, options: [:]){ handler in
-                print("handler \(handler)")
-                let configuration = SFSafariViewController.Configuration()
-                configuration.entersReaderIfAvailable = false
-                let deepLinkView = SFSafariViewController(url: url,configuration: configuration)
-                self.present(deepLinkView, animated: true){
-                    LoginViewModel.loginService.getWallet()
-                        .subscribe(onNext: { address in
-                            self.dismiss(animated: true)
-                            print("지갑 주소")
-                            print(address)
-                        })
-                        .disposed(by: self.disposeBag)
-                }
+                LoginViewModel.loginService.getWallet()
+                    .subscribe(onNext: { address in
+                        print("지갑 주소")
+                        print(address)
+                    })
+                    .disposed(by: self.disposeBag)
             }
         }
         
@@ -235,19 +228,19 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                     self.dismiss(animated: true)
                     LoginViewModel.loginService.githubAuthSubject.accept(true)
                     
-                    LoginViewModel.loginService.checkLoginUser()
-                        .subscribe(onNext: { check in
-                            if check{
-                                let rootView = TabBarViewController()
-                                self.klipLoginBtn.isEnabled = false
-                                self.goGithubBtn.isEnabled = true
-                                self.klipLoginBtn.layer.opacity = 1
-                                self.goGithubBtn.layer.opacity = 1
-                                rootView.modalPresentationStyle = .fullScreen
-                                self.present(rootView, animated: true)
-                            }
-                        })
-                        .disposed(by: self.disposeBag)
+//                    LoginViewModel.loginService.checkLoginUser()
+//                        .subscribe(onNext: { check in
+//                            if check{
+//                                let rootView = TabBarViewController()
+//                                self.klipLoginBtn.isEnabled = false
+//                                self.goGithubBtn.isEnabled = true
+//                                self.klipLoginBtn.layer.opacity = 1
+//                                self.goGithubBtn.layer.opacity = 1
+//                                rootView.modalPresentationStyle = .fullScreen
+//                                self.present(rootView, animated: true)
+//                            }
+//                        })
+//                        .disposed(by: self.disposeBag)
                 }
                 
             }
