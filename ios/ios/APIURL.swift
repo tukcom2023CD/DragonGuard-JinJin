@@ -80,6 +80,11 @@ final class APIURL{
         return url
     }
     
+    /// MARK: 이미 로그인했던 멤버인지 확인
+    func checkLoginUser(ip: String) -> String{
+        let url = "http://\(ip)/api/members/verify"
+        return url
+    }
     
     // MARK: KLIP prepare post API
     func klipPreparePostAPI() -> String{

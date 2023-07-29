@@ -16,19 +16,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
+//        
+//        if let accessToken = UserDefaults.standard.string(forKey: "Access"),
+//            let refreshToken = UserDefaults.standard.string(forKey: "Refresh"){
+//
+//            checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
+//        }
+//        else{
+//            moveLoginController()
+//        }
         
-        if let accessToken = UserDefaults.standard.string(forKey: "Access"),
-            let refreshToken = UserDefaults.standard.string(forKey: "Refresh"){
-
-            checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
-        }
-        else{
-            moveLoginController()
-        }
-        
-//        let rootView = YourProfileController()
-//        window?.rootViewController = rootView
-//        window?.makeKeyAndVisible()
+        let rootView = LoginController()
+        window?.rootViewController = rootView
+        window?.makeKeyAndVisible()
     }
     
     // MARK: go to LoginController

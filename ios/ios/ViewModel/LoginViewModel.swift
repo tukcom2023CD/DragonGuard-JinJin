@@ -80,6 +80,18 @@ final class LoginViewModel {
             .disposed(by: disposeBag)
     }
     
+    /// MARK: 로그인한 유저인지 확인
+    func checkLoginUser() -> Observable<Bool> {
+        return Observable.create {  observer in
+            self.post.checkLoginUser()
+                .subscribe(onNext:{  check in
+                    observer.onNext(check)
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
+    }
     
         
     // MARK: 로그아웃 확인하는 함수

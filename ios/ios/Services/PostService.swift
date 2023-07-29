@@ -58,4 +58,29 @@ class PostService {
             }
         }
     }
+    
+    /// 로그인한 사람인지 확인
+    func checkLoginUser() -> Observable<Bool> {
+        let url = APIURL.apiUrl.checkLoginUser(ip: APIURL.ip)
+        let accessToken = UserDefaults.standard.string(forKey: "Access")
+        
+        return Observable.create(){ observer in
+            AF.request(url,
+                       method: .get,
+                       headers: ["Authorization" : "Bearer \(accessToken ?? "")"])
+            .validate(statusCode: 200..<201)
+            .responseDecodable(of: CheckLoginUserModel.self) { res in
+                switch res.result{
+                case .success(let data):
+                    observer.onNext(data.is_login_user ?? false)
+                case .failure(let error):
+                    print("checkLoginUser error!\n\(error)")
+                }
+            }
+            
+            
+            
+            return Disposables.create()
+        }
+    }
 }

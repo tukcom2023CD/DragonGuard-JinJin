@@ -257,11 +257,13 @@ final class SearchViewController: UIViewController{
             }
         }
         else if beforePage == "Compare1"{
+            searchBar.placeholder = " Repository "
             NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 1, NotificationKey.repository: resultList[sender.view?.tag ?? -1].name])
             resultList = []
             self.dismiss(animated: true)
         }
         else if beforePage == "Compare2"{
+            searchBar.placeholder = " Repository "
             NotificationCenter.default.post(name: Notification.Name.data, object: nil,userInfo: [NotificationKey.choiceId: 2, NotificationKey.repository: resultList[sender.view?.tag ?? -1].name])
             resultList = []
             self.dismiss(animated: true)

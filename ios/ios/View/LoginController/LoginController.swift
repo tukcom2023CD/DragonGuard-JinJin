@@ -83,26 +83,20 @@ final class LoginController: UIViewController{
     private func moveToDeepLink(_ url: String){
         // 사용자 기본 브라우저에서 deeplink 주소 열 수 있는지 확인 후 열기
         if let url = URL(string: url) {
-            // 사용자의 기본 브라우저에서 url 확인
-            if UIApplication.shared.canOpenURL(url) {
-                // 사용자 기본 브라우저에서 url 열기
-                UIApplication.shared.open(url, options: [:]){ handler in
-                    let configuration = SFSafariViewController.Configuration()
-                    configuration.entersReaderIfAvailable = false
-                    let deepLinkView = SFSafariViewController(url: url,configuration: configuration)
-//                    deepLinkView.delegate = self
-                    self.present(deepLinkView, animated: true){
-                        LoginViewModel.loginService.getWallet()
-                            .subscribe(onNext: { address in
-                                self.dismiss(animated: true)
-                                print("지갑 주소")
-                                print(address)
-                            })
-                            .disposed(by: self.disposeBag)
-                    }
+            UIApplication.shared.open(url, options: [:]){ handler in
+                print("handler \(handler)")
+                let configuration = SFSafariViewController.Configuration()
+                configuration.entersReaderIfAvailable = false
+                let deepLinkView = SFSafariViewController(url: url,configuration: configuration)
+                self.present(deepLinkView, animated: true){
+                    LoginViewModel.loginService.getWallet()
+                        .subscribe(onNext: { address in
+                            self.dismiss(animated: true)
+                            print("지갑 주소")
+                            print(address)
+                        })
+                        .disposed(by: self.disposeBag)
                 }
-            } else {
-                print("기본 브라우저를 열 수 없습니다.")
             }
         }
         
@@ -240,6 +234,20 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                 if accessTokenCheck && refreshTokenCheck{
                     self.dismiss(animated: true)
                     LoginViewModel.loginService.githubAuthSubject.accept(true)
+                    
+                    LoginViewModel.loginService.checkLoginUser()
+                        .subscribe(onNext: { check in
+                            if check{
+                                let rootView = TabBarViewController()
+                                self.klipLoginBtn.isEnabled = false
+                                self.goGithubBtn.isEnabled = true
+                                self.klipLoginBtn.layer.opacity = 1
+                                self.goGithubBtn.layer.opacity = 1
+                                rootView.modalPresentationStyle = .fullScreen
+                                self.present(rootView, animated: true)
+                            }
+                        })
+                        .disposed(by: self.disposeBag)
                 }
                 
             }
