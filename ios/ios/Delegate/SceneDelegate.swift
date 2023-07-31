@@ -16,19 +16,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-//        
-//        if let accessToken = UserDefaults.standard.string(forKey: "Access"),
-//            let refreshToken = UserDefaults.standard.string(forKey: "Refresh"){
-//
-//            checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
-//        }
-//        else{
-//            moveLoginController()
-//        }
         
-        let rootView = LoginController()
-        window?.rootViewController = rootView
-        window?.makeKeyAndVisible()
+        if let accessToken = UserDefaults.standard.string(forKey: "Access"),
+            let refreshToken = UserDefaults.standard.string(forKey: "Refresh"){
+
+            checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
+        }
+        else{
+            moveLoginController()
+        }
+        
+//        let rootView = LoginController()
+//        window?.rootViewController = rootView
+//        window?.makeKeyAndVisible()
     }
     
     // MARK: go to LoginController
@@ -41,7 +41,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     // MARK: If success User, go to MainController
     func moveMainController(){
         let rootView = TabBarViewController()
-//        rootView.autoLoginCheck = true
         window?.rootViewController = rootView
         window?.makeKeyAndVisible()
     }
@@ -63,10 +62,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
                         complete()
                     }
                     else{
-                        self.checkRefreshToken(refreshToken: refreshToken, complete: self.getNewAccessToken)
+                        self.checkRefreshToken(refreshToken: refreshToken)
                     }
                 case .failure(let error):
-                    self.checkRefreshToken(refreshToken: refreshToken, complete: self.getNewAccessToken)
+                    self.checkRefreshToken(refreshToken: refreshToken)
                     print("checkValidUser error! \(error)")
                 }
             }
@@ -78,7 +77,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     }
     
     // MARK: Check User Refresh Token
-    func checkRefreshToken(refreshToken: String, complete: @escaping () -> ()){
+    func checkRefreshToken(refreshToken: String){
         let url = APIURL.apiUrl.getRefreshToken(ip: APIURL.ip)
 
         guard let accessToken = UserDefaults.standard.string(forKey: "Access") else {return}

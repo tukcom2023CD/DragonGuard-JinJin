@@ -228,19 +228,19 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                     self.dismiss(animated: true)
                     LoginViewModel.loginService.githubAuthSubject.accept(true)
                     
-//                    LoginViewModel.loginService.checkLoginUser()
-//                        .subscribe(onNext: { check in
-//                            if check{
-//                                let rootView = TabBarViewController()
-//                                self.klipLoginBtn.isEnabled = false
-//                                self.goGithubBtn.isEnabled = true
-//                                self.klipLoginBtn.layer.opacity = 1
-//                                self.goGithubBtn.layer.opacity = 1
-//                                rootView.modalPresentationStyle = .fullScreen
-//                                self.present(rootView, animated: true)
-//                            }
-//                        })
-//                        .disposed(by: self.disposeBag)
+                    LoginViewModel.loginService.checkLoginUser()
+                        .subscribe(onNext: { check in
+                            if check{
+                                let rootView = TabBarViewController()
+                                self.klipLoginBtn.isEnabled = false
+                                self.goGithubBtn.isEnabled = true
+                                self.klipLoginBtn.layer.opacity = 1
+                                self.goGithubBtn.layer.opacity = 1
+                                rootView.modalPresentationStyle = .fullScreen
+                                self.present(rootView, animated: true)
+                            }
+                        })
+                        .disposed(by: self.disposeBag)
                 }
                 
             }
