@@ -53,7 +53,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
         
         AF.request(url,
                    headers: ["Authorization": "Bearer \(accessToken)"])
-        .validate(statusCode: 200..<205)
+        .validate(statusCode: 200..<201)
         .responseDecodable(of: MainModel.self ){ response in
                 switch response.result{
                 case .success(let data):
@@ -71,11 +71,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
             }
     }
     
-    // MARK: If success about Refresh Token, get new Access Token
-    func getNewAccessToken(){
-        
-    }
-    
     // MARK: Check User Refresh Token
     func checkRefreshToken(refreshToken: String){
         let url = APIURL.apiUrl.getRefreshToken(ip: APIURL.ip)
@@ -85,7 +80,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
         
         AF.request(url,
                    headers: ["accessToken" : accessToken, "refreshToken" : refreshToken])
-        .validate(statusCode: 200..<205)
+        .validate(statusCode: 200..<201)
         .responseDecodable(of: TokenModel.self){ response in
             switch response.result{
             case .success(let data):
