@@ -44,7 +44,7 @@
 
 |_#01_ 조직 전체 랭킹|_#02_ 조직 타입별 랭킹|_#03_ 조직 내부의 개인 랭킹|
 |:----:|:----:|:----:|
-|<img src="https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/09b3ff58-4b9b-41aa-ac69-9e1f3c5cb7c0" width=250/>|<img src="https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/243c7058-1198-4e68-9ca7-ff840114a7c6" width=250/>|<img src="https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/aa120d82-9bd7-4530-9764-010bddda0313" width=250/>|
+|<img src="https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/09b3ff58-4b9b-41aa-ac69-9e1f3c5cb7c0" width=250/>|<img src="https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/243c7058-1198-4e68-9ca7-ff840114a7c6" width=250/>|<img src="https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/d3ffda72-602c-4a67-afbe-e39f1cdb5971" width=250/>|
 |_#04_ 전체 사용자 랭킹|_#05_ _#06_ Repository 비교|_#07_ Repository 필터링별 검색|
 |<img src="https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/af000586-0e46-46a2-a3c2-c5676a080036" width=250/>|<img src="https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/82162bef-23fb-404f-a228-5675e8a1c2a9" width=250/>|<img src="https://github.com/tukcom2023CD/DragonGuard-JinJin/assets/89020004/b033bc11-0fb2-4439-8da6-a982ce8ade0d" width=250/>|
 |_#07_ Repository 검색 결과|_#08_ 사용자 검색|_#09_ 메인 화면|
