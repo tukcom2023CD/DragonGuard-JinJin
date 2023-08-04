@@ -7,6 +7,8 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import java.util.function.BiConsumer;
+
 /**
  * @author 김승진
  * @description 각종 클래스의 요청에 대해 AOP로 로깅을 진행하는 클래스
@@ -38,35 +40,25 @@ public class LogIntroduction {
 
     @Before("allController()")
     public void controllerLog(JoinPoint joinPoint) {
-        infoLogging(joinPoint);
+        logging(joinPoint, log::info);
     }
 
     @Before("allService() || allRepository()")
     public void serviceAndRepositoryLog(JoinPoint joinPoint) {
-        infoLogging(joinPoint);
+        logging(joinPoint, log::debug);
     }
 
     @Before("allClient()")
     public void clientLog(JoinPoint joinPoint) {
-        debugLogging(joinPoint);
+        logging(joinPoint, log::debug);
     }
 
     @Before("allConsumer() || allProducer()")
     public void consumerAndLog(JoinPoint joinPoint) {
-        debugLogging(joinPoint);
+        logging(joinPoint, log::debug);
     }
 
-    private void infoLogging(JoinPoint joinPoint) {
-        log.info(
-                FORMAT,
-                joinPoint.getSignature().toShortString(),
-                joinPoint.getArgs());
-    }
-
-    private void debugLogging(JoinPoint joinPoint) {
-        log.debug(
-                FORMAT,
-                joinPoint.getSignature().toShortString(),
-                joinPoint.getArgs());
+    private void logging(JoinPoint joinPoint, BiConsumer<String, String> consumer) {
+        consumer.accept(FORMAT, joinPoint.getSignature().toShortString());
     }
 }
