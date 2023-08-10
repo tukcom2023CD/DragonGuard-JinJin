@@ -61,7 +61,7 @@ public class Blockchain implements Auditable {
     }
 
     public boolean isNewHistory(long amount) {
-        return amount > 0 && getSumOfAmount() != amount;
+        return amount > 0 && getSumOfAmount() >= amount;
     }
 
     public long getSumOfAmount() {
