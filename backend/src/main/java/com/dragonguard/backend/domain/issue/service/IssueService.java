@@ -30,7 +30,7 @@ public class IssueService implements ContributionService<Issue, Long> {
 
     @Override
     public void saveContribution(final Member member, final Integer issueNum, final Integer year) {
-        Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.ISSUE);
+        Blockchain blockchain = blockchainService.findBlockchainOfType(member, ContributeType.ISSUE);
 
         if (existsByMemberAndYear(member, year)) {
             Issue issue = getIssue(member, year);

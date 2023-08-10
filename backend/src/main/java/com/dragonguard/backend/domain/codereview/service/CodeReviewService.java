@@ -30,7 +30,7 @@ public class CodeReviewService implements ContributionService<CodeReview, Long> 
 
     @Override
     public void saveContribution(final Member member, final Integer codeReviewNum, final Integer year) {
-        Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.CODE_REVIEW);
+        Blockchain blockchain = blockchainService.findBlockchainOfType(member, ContributeType.CODE_REVIEW);
 
         if (existsByMemberAndYear(member, year)) {
             CodeReview codeReview = getCodeReview(member, year);

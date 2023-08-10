@@ -30,7 +30,7 @@ public class CommitService implements ContributionService<Commit, Long> {
 
     @Override
     public void saveContribution(final Member member, final Integer commitNum, final Integer year) {
-        Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.COMMIT);
+        Blockchain blockchain = blockchainService.findBlockchainOfType(member, ContributeType.COMMIT);
 
         if (existsByMemberAndYear(member, year)) {
             Commit commit = getCommit(member, year);

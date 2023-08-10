@@ -36,7 +36,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     public void setTransaction(final Member member, final long contribution, final ContributeType contributeType) {
         if (contribution <= 0) return;
 
-        Blockchain blockchain = getBlockchainOfType(member, contributeType);
+        Blockchain blockchain = findBlockchainOfType(member, contributeType);
         if (!blockchain.isNewHistory(contribution)) return;
 
         sendSmartContract(member, contribution - blockchain.getSumOfAmount(), blockchain);
@@ -86,7 +86,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         return contribution == amount.longValue();
     }
 
-    public Blockchain getBlockchainOfType(final Member member, final ContributeType contributeType) {
+    public Blockchain findBlockchainOfType(final Member member, final ContributeType contributeType) {
         if(blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
             return blockchainRepository.findByMemberAndContributeType(member, contributeType)
                     .orElseThrow(EntityNotFoundException::new);

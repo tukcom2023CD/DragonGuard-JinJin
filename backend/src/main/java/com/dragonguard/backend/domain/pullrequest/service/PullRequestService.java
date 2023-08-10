@@ -30,7 +30,7 @@ public class PullRequestService implements ContributionService<PullRequest, Long
 
     @Override
     public void saveContribution(final Member member, final Integer pullRequestNum, final Integer year) {
-        Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.PULL_REQUEST);
+        Blockchain blockchain = blockchainService.findBlockchainOfType(member, ContributeType.PULL_REQUEST);
 
         if (existsByMemberAndYear(member, year)) {
             PullRequest pullRequest = getPullRequest(member, year);
