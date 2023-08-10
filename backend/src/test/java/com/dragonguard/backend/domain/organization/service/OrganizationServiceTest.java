@@ -245,7 +245,7 @@ class OrganizationServiceTest extends LoginTest {
             //given
 
             //when
-            IdResponse<Long> result = organizationEmailFacade.findByName(OrganizationFixture.TUKOREA.getName());
+            IdResponse<Long> result = organizationEmailFacade.getByName(OrganizationFixture.TUKOREA.getName());
 
             //then
             Optional<Organization> org = organizationRepository.findById(result.getId());

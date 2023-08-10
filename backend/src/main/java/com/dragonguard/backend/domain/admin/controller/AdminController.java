@@ -47,6 +47,6 @@ public class AdminController {
     @GetMapping("/organizations")
     public ResponseEntity<List<AdminOrganizationResponse>> getOrganizationsByStatus(
             @RequestParam OrganizationStatus status, Pageable pageable) {
-        return ResponseEntity.ok(adminService.getOrganizationsByStatus(status, pageable));
+        return ResponseEntity.ok(adminService.findOrganizationsByStatus(status, pageable));
     }
 }

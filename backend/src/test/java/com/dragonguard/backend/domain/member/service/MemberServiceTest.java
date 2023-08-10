@@ -159,7 +159,7 @@ class MemberServiceTest extends LoginTest {
         org.addMember(member4, "d@tukorea.ac.kr");
 
         //when
-        List<MemberRankResponse> response = memberService.getMemberRankingByOrganization(org.getId(), PageRequest.of(0, 4));
+        List<MemberRankResponse> response = memberService.findMemberRankingByOrganization(org.getId(), PageRequest.of(0, 4));
 
         //then
         assertThat(response.stream().map(MemberRankResponse::getId).collect(Collectors.toList()))

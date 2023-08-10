@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @TransactionService
 @RequiredArgsConstructor
 public class CommitService implements ContributionService<Commit, Long> {
+    private static final long NONE = 0L;
     private final CommitRepository commitRepository;
     private final ContributionEntityMapper<Commit> commitMapper;
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
@@ -32,18 +33,18 @@ public class CommitService implements ContributionService<Commit, Long> {
         Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.COMMIT);
 
         if (existsByMemberAndYear(member, year)) {
-            Commit commit = findCommit(member, year);
+            Commit commit = getCommit(member, year);
             long newBlockchainAmount = commitNum - blockchain.getSumOfAmount();
-            if (commit.isNotUpdatable(commitNum) && newBlockchainAmount == 0L) return;
+            if (commit.isNotUpdatable(commitNum) && newBlockchainAmount == NONE) return;
             commit.updateCommitNum(commitNum);
-            sendTransaction(member, newBlockchainAmount, blockchain);
+            sendTransaction(member, commitNum.longValue(), blockchain);
             return;
         }
         commitRepository.save(commitMapper.toEntity(member, commitNum, year));
         sendTransaction(member, commitNum.longValue(), blockchain);
     }
 
-    private Commit findCommit(final Member member, final Integer year) {
+    private Commit getCommit(final Member member, final Integer year) {
         return commitRepository.findByMemberAndYear(member, year)
                 .orElseThrow(EntityNotFoundException::new);
     }

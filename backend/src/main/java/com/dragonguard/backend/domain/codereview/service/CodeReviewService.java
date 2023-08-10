@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @TransactionService
 @RequiredArgsConstructor
 public class CodeReviewService implements ContributionService<CodeReview, Long> {
+    private static final long NONE = 0L;
     private final CodeReviewRepository codeReviewRepository;
     private final ContributionEntityMapper<CodeReview> codeReviewMapper;
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
@@ -32,18 +33,18 @@ public class CodeReviewService implements ContributionService<CodeReview, Long> 
         Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.CODE_REVIEW);
 
         if (existsByMemberAndYear(member, year)) {
-            CodeReview codeReview = findCodeReview(member, year);
+            CodeReview codeReview = getCodeReview(member, year);
             long newBlockchainAmount = codeReviewNum - blockchain.getSumOfAmount();
-            if (codeReview.isNotUpdatable(codeReviewNum) && newBlockchainAmount == 0L) return;
+            if (codeReview.isNotUpdatable(codeReviewNum) && newBlockchainAmount == NONE) return;
             codeReview.updateCodeReviewNum(codeReviewNum);
-            sendTransaction(member, newBlockchainAmount, blockchain);
+            sendTransaction(member, codeReviewNum.longValue(), blockchain);
             return;
         }
         codeReviewRepository.save(codeReviewMapper.toEntity(member, codeReviewNum, year));
         sendTransaction(member, codeReviewNum.longValue(), blockchain);
     }
 
-    private CodeReview findCodeReview(final Member member, final Integer year) {
+    private CodeReview getCodeReview(final Member member, final Integer year) {
         return codeReviewRepository.findByMemberAndYear(member, year)
                 .orElseThrow(EntityNotFoundException::new);
     }

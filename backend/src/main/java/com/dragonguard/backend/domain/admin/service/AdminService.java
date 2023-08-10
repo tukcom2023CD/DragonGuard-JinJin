@@ -39,7 +39,7 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public List<AdminOrganizationResponse> getOrganizationsByStatus(final OrganizationStatus status, final Pageable pageable) {
+    public List<AdminOrganizationResponse> findOrganizationsByStatus(final OrganizationStatus status, final Pageable pageable) {
         List<Organization> organizations = organizationRepository
                 .findAllByOrganizationStatus(status, pageable);
 

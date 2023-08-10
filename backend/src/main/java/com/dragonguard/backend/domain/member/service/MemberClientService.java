@@ -89,11 +89,11 @@ public class MemberClientService {
                 member.getGithubToken(),
                 LocalDate.now().getYear());
 
-        saveGitRepos(getMemberRepoNames(request), member);
+        saveGitRepos(findMemberRepoNames(request), member);
         gitOrganizationService.findAndSaveGitOrganizations(getMemberOrganizationNames(request), member);
     }
 
-    public Set<String> getMemberRepoNames(final MemberClientRequest request) {
+    public Set<String> findMemberRepoNames(final MemberClientRequest request) {
         return Arrays.stream(memberRepoClient.requestToGithub(request))
                 .map(MemberRepoResponse::getFullName)
                 .filter(Objects::nonNull)

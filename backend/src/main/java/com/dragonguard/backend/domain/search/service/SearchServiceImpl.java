@@ -43,10 +43,10 @@ public class SearchServiceImpl implements EntityLoader<Search, Long>, SearchServ
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
         List<String> filters = searchRequest.getFilters();
 
-        return Optional.ofNullable(getSameSearch(searches, filters)).orElseGet(() ->  searchRepository.save(searchMapper.toSearch(searchRequest)));
+        return Optional.ofNullable(findSameSearch(searches, filters)).orElseGet(() ->  searchRepository.save(searchMapper.toSearch(searchRequest)));
     }
 
-    private Search getSameSearch(final List<Search> searches, final List<String> filters) {
+    private Search findSameSearch(final List<Search> searches, final List<String> filters) {
         return searches.stream().filter(search -> containsSameFilters(filters, search)).findFirst().orElse(null);
     }
 

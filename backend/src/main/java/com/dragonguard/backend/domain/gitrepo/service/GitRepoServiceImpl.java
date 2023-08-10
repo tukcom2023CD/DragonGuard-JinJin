@@ -71,29 +71,29 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
 
     @Override
     public TwoGitRepoResponse findTwoGitReposAndUpdate(final GitRepoCompareRequest twoGitRepoCompareRequest) {
-        return new TwoGitRepoResponse(getOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()),
-                getOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
+        return new TwoGitRepoResponse(findOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()),
+                findOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
     }
 
-    private GitRepoCompareResponse getOneRepoResponse(final String repoName) {
+    private GitRepoCompareResponse findOneRepoResponse(final String repoName) {
         String githubToken = authService.getLoginUser().getGithubToken();
         GitRepoClientResponse repoResponse = requestClientGitRepo(repoName, githubToken);
 
         repoResponse.setClosedIssuesCount(requestClientGitRepoIssue(repoName, githubToken));
 
-        return getGitRepoResponse(repoName, repoResponse, requestClientGitRepoLanguage(repoName, githubToken), githubToken);
+        return findGitRepoResponse(repoName, repoResponse, requestClientGitRepoLanguage(repoName, githubToken), githubToken);
     }
 
     private GitRepoClientResponse requestClientGitRepo(final String repoName, final String githubToken) {
         return gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
     }
 
-    private GitRepoCompareResponse getGitRepoResponse(
+    private GitRepoCompareResponse findGitRepoResponse(
             final String repoName,
             final GitRepoClientResponse repoResponse,
             final GitRepoLanguageMap gitRepoLanguageMap,
             final String githubToken) {
-        GitRepo gitRepo = getEntityByName(repoName);
+        GitRepo gitRepo = findEntityByName(repoName);
         if (gitRepo == null) return null;
 
         Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
@@ -172,7 +172,7 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
     }
 
     @Override
-    public GitRepo getEntityByName(final String name) {
+    public GitRepo findEntityByName(final String name) {
         return gitRepoRepository.findByName(name).orElse(null);
     }
 
@@ -203,12 +203,12 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
         String secondRepo = request.getSecondRepo();
 
         return new TwoGitRepoResponse(
-                getGitRepoResponse(
+                findGitRepoResponse(
                         firstRepo,
                         requestClientGitRepo(firstRepo, githubToken),
                         requestClientGitRepoLanguage(firstRepo, githubToken),
                         githubToken),
-                getGitRepoResponse(
+                findGitRepoResponse(
                         secondRepo,
                         requestClientGitRepo(secondRepo, githubToken),
                         requestClientGitRepoLanguage(secondRepo, githubToken),

@@ -77,7 +77,7 @@ class AdminControllerTest extends RestDocumentTest {
         List<AdminOrganizationResponse> expected = List.of(
                 new AdminOrganizationResponse(2L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"),
                 new AdminOrganizationResponse(3L, "Google", OrganizationType.COMPANY, "gmail.com"));
-        given(adminService.getOrganizationsByStatus(any(), any())).willReturn(expected);
+        given(adminService.findOrganizationsByStatus(any(), any())).willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(

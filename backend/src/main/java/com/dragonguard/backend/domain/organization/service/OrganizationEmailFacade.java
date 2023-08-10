@@ -62,19 +62,19 @@ public class OrganizationEmailFacade {
     }
 
     public List<OrganizationResponse> getOrganizationRank(Pageable pageable) {
-        return organizationService.getOrganizationRank(pageable);
+        return organizationService.findOrganizationRank(pageable);
     }
 
     public List<OrganizationResponse> getOrganizationRankByType(OrganizationType type, Pageable pageable) {
-        return organizationService.getOrganizationRankByType(type, pageable);
+        return organizationService.findOrganizationRankByType(type, pageable);
     }
 
     public List<OrganizationResponse> searchOrganization(OrganizationType type, String name, Pageable pageable) {
         return organizationService.searchOrganization(type, name, pageable);
     }
 
-    public IdResponse<Long> findByName(String name) {
-        return organizationService.findByName(name);
+    public IdResponse<Long> getByName(String name) {
+        return organizationService.getByName(name);
     }
 
     public IdResponse<Long> sendAndSaveEmail() {

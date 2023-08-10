@@ -63,18 +63,18 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
 
     @Override
     public void saveAll(final List<GitRepoMemberResponse> gitRepoResponses, final GitRepo gitRepo) {
-        gitRepoMemberRepository.saveAll(getGitRepoMembers(gitRepoResponses, gitRepo));
+        gitRepoMemberRepository.saveAll(findGitRepoMembers(gitRepoResponses, gitRepo));
     }
 
-    private List<GitRepoMember> getGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final GitRepo gitRepo) {
+    private List<GitRepoMember> findGitRepoMembers(final List<GitRepoMemberResponse> gitRepoResponses, final GitRepo gitRepo) {
         return gitRepoResponses.stream()
                 .distinct()
                 .map(gitRepoResponse ->
-                        getGitRepoMember(gitRepoResponse, getMemberByGitRepoResponse(gitRepoResponse), gitRepo))
+                        findGitRepoMember(gitRepoResponse, findMemberByGitRepoResponse(gitRepoResponse), gitRepo))
                 .collect(Collectors.toList());
     }
 
-    private GitRepoMember getGitRepoMember(final GitRepoMemberResponse response, final Member member, final GitRepo gitRepo) {
+    private GitRepoMember findGitRepoMember(final GitRepoMemberResponse response, final Member member, final GitRepo gitRepo) {
         GitRepoMember gitRepoMember = gitRepoMemberRepository.findByGitRepoAndMember(gitRepo, member)
                 .orElseGet(() -> gitRepoMemberMapper.toEntity(member, gitRepo));
 
@@ -87,7 +87,7 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
         return gitRepoMember;
     }
 
-    private Member getMemberByGitRepoResponse(final GitRepoMemberResponse gitRepoMemberResponse) {
+    private Member findMemberByGitRepoResponse(final GitRepoMemberResponse gitRepoMemberResponse) {
         return memberService.findMemberOrSave(gitRepoMemberResponse.getGithubId(), AuthStep.NONE, gitRepoMemberResponse.getProfileUrl());
     }
 

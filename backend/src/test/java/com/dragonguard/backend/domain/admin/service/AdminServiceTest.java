@@ -49,7 +49,7 @@ class AdminServiceTest extends LoginTest {
         adminService.decideRequestedOrganization(new AdminDecideRequest(organization2.getId(), OrganizationStatus.ACCEPTED));
 
         //when
-        List<AdminOrganizationResponse> acceptedList = adminService.getOrganizationsByStatus(OrganizationStatus.ACCEPTED, PageRequest.of(0, 20));
+        List<AdminOrganizationResponse> acceptedList = adminService.findOrganizationsByStatus(OrganizationStatus.ACCEPTED, PageRequest.of(0, 20));
 
         //then
         assertThat(acceptedList).hasSize(2);

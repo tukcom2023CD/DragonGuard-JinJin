@@ -18,7 +18,7 @@ import java.util.function.BiConsumer;
 @Aspect
 @Component
 public class LogIntroduction {
-    private static final String FORMAT = "METHOD : {}, ARGS : {}";
+    private static final String LOG_FORMAT = "METHOD : {}";
 
     @Pointcut("execution(* com.dragonguard.backend..*Controller*.*(..))")
     public void allController() {}
@@ -59,6 +59,6 @@ public class LogIntroduction {
     }
 
     private void logging(JoinPoint joinPoint, BiConsumer<String, String> consumer) {
-        consumer.accept(FORMAT, joinPoint.getSignature().toShortString());
+        consumer.accept(LOG_FORMAT, joinPoint.getSignature().toShortString());
     }
 }

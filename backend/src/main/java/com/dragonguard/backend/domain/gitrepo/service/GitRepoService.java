@@ -16,7 +16,7 @@ import java.util.function.ToIntFunction;
 public interface GitRepoService {
     TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request);
     TwoGitRepoResponse findTwoGitReposAndUpdate(final GitRepoCompareRequest request);
-    GitRepo getEntityByName(String name);
+    GitRepo findEntityByName(String name);
     void saveAll(final Set<GitRepo> gitRepos);
     boolean gitRepoExistsByName(final String name);
     GitRepo findGitRepo(String name);

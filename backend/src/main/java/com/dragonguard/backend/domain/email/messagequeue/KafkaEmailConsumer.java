@@ -1,8 +1,8 @@
 package com.dragonguard.backend.domain.email.messagequeue;
 
 import com.dragonguard.backend.domain.email.dto.kafka.KafkaEmail;
-import com.dragonguard.backend.domain.email.service.EmailServiceImpl;
 import com.dragonguard.backend.global.kafka.KafkaConsumer;
+import com.dragonguard.backend.utils.EmailSender;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class KafkaEmailConsumer implements KafkaConsumer<KafkaEmail> {
-    private final EmailServiceImpl emailServiceImpl;
+    private final EmailSender emailSender;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -27,7 +27,7 @@ public class KafkaEmailConsumer implements KafkaConsumer<KafkaEmail> {
     @KafkaListener(topics = "gitrank.to.backend.email", containerFactory = "kafkaListenerContainerFactory")
     public void consume(String message) {
         KafkaEmail kafkaEmail = readValue(message);
-        emailServiceImpl.sendEmail(kafkaEmail.getMemberEmail(), kafkaEmail.getRandom());
+        emailSender.send(kafkaEmail.getMemberEmail(), kafkaEmail.getRandom());
     }
 
     @Override

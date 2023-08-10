@@ -39,7 +39,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
         Blockchain blockchain = getBlockchainOfType(member, contributeType);
         if (!blockchain.isNewHistory(contribution)) return;
 
-        sendSmartContract(member, contribution, blockchain);
+        sendSmartContract(member, contribution - blockchain.getSumOfAmount(), blockchain);
     }
 
     public void sendSmartContract(final Member member, final long contribution, final Blockchain blockchain) {

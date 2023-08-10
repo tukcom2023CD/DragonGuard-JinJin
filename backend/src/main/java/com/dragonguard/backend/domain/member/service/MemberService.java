@@ -97,7 +97,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberRankResponse> getMemberRanking(final Pageable pageable) {
+    public List<MemberRankResponse> findMemberRanking(final Pageable pageable) {
         return memberRepository.findRanking(pageable);
     }
 
@@ -119,7 +119,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberRankResponse> getMemberRankingByOrganization(final Long organizationId, final Pageable pageable) {
+    public List<MemberRankResponse> findMemberRankingByOrganization(final Long organizationId, final Pageable pageable) {
         return memberRepository.findRankingByOrganization(organizationId, pageable);
     }
 
@@ -153,18 +153,18 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(final Member member) {
         return memberMapper.toRepoAndOrgResponse(
                 member.getProfileImage(),
-                getMemberGitOrganization(member),
-                getMemberGitRepo(member));
+                findMemberGitOrganization(member),
+                findMemberGitRepo(member));
     }
 
-    private List<GitRepo> getMemberGitRepo(final Member member) {
+    private List<GitRepo> findMemberGitRepo(final Member member) {
         return member.getGitRepoMembers().stream()
                 .map(GitRepoMember::getGitRepo)
                 .distinct()
                 .collect(Collectors.toList());
     }
 
-    private List<GitOrganization> getMemberGitOrganization(final Member member) {
+    private List<GitOrganization> findMemberGitOrganization(final Member member) {
         return member.getGitOrganizationMembers()
                 .stream()
                 .map(GitOrganizationMember::getGitOrganization)
@@ -181,14 +181,14 @@ public class MemberService implements EntityLoader<Member, UUID> {
         sendRepositoryRequestToKafka(githubId);
     }
 
-    public MemberGitOrganizationRepoResponse getMemberGitOrganizationRepo(final String gitOrganizationName) {
+    public MemberGitOrganizationRepoResponse findMemberGitOrganizationRepo(final String gitOrganizationName) {
         sendRepositoryRequestToKafka(authService.getLoginUser().getGithubId());
         return new MemberGitOrganizationRepoResponse(
-                gitOrganizationService.findByName(gitOrganizationName).getProfileImage(),
+                gitOrganizationService.getByName(gitOrganizationName).getProfileImage(),
                 memberClientService.requestGitOrganizationResponse(authService.getLoginUser().getGithubToken(), gitOrganizationName));
     }
 
-    public MemberDetailsResponse getMemberDetails(final String githubId) {
+    public MemberDetailsResponse findMemberDetails(final String githubId) {
         Member member = getMemberByGithubId(githubId);
         Integer rank = memberRepository.findRankingById(member.getId());
         return memberMapper.toDetailsResponse(member, rank);

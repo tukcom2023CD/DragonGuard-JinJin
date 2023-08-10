@@ -37,7 +37,7 @@ public class GitRepoMemberFacade {
         return gitRepoService.findTwoGitReposAndUpdate(request);
     }
 
-    public GitRepo getEntityByName(final String name) {
+    public GitRepo findEntityByName(final String name) {
         return gitRepoService.findGitRepo(name);
     }
 
@@ -97,13 +97,13 @@ public class GitRepoMemberFacade {
         return requestToGithub(gitRepoInfoRequest, gitRepo);
     }
 
-    private List<GitRepoMemberResponse> getGitRepoMemberResponses(final String repo, final Integer year, final String githubToken) {
+    private List<GitRepoMemberResponse> findGitRepoMemberResponses(final String repo, final Integer year, final String githubToken) {
         return findMembersByGitRepoWithClient(new GitRepoInfoRequest(githubToken, repo, year));
     }
 
     private TwoGitRepoMemberResponse getTwoGitRepoMemberResponse(final GitRepoCompareRequest gitRepoCompareRequest, final Integer year, final String githubToken) {
-        return new TwoGitRepoMemberResponse(getGitRepoMemberResponses(gitRepoCompareRequest.getFirstRepo(), year, githubToken),
-                getGitRepoMemberResponses(gitRepoCompareRequest.getSecondRepo(), year, githubToken));
+        return new TwoGitRepoMemberResponse(findGitRepoMemberResponses(gitRepoCompareRequest.getFirstRepo(), year, githubToken),
+                findGitRepoMemberResponses(gitRepoCompareRequest.getSecondRepo(), year, githubToken));
     }
 
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompareAndUpdate(final GitRepoCompareRequest gitRepoCompareRequest) {
@@ -111,7 +111,7 @@ public class GitRepoMemberFacade {
                 LocalDate.now().getYear(), authService.getLoginUser().getGithubToken());
     }
 
-    private List<GitRepoMemberResponse> getGitRepoMemberResponses(final GitRepo gitRepo, final String githubToken) {
+    private List<GitRepoMemberResponse> findGitRepoMemberResponses(final GitRepo gitRepo, final String githubToken) {
         Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         if (isGitRepoMemberValid(gitRepoMembers)) {
             gitRepoService.requestKafkaGitRepoInfo(githubToken, gitRepo.getName());
@@ -131,7 +131,7 @@ public class GitRepoMemberFacade {
 
         return new GitRepoResponse(
                 gitRepoService.updateAndGetSparkLine(name, githubToken, gitRepo),
-                getGitRepoMemberResponses(gitRepo, githubToken));
+                findGitRepoMemberResponses(gitRepo, githubToken));
     }
     public GitRepoResponse findGitRepoInfosAndUpdate(final String name) {
         if (gitRepoService.gitRepoExistsByName(name)) {
@@ -139,7 +139,7 @@ public class GitRepoMemberFacade {
             GitRepo gitRepo = gitRepoService.findGitRepo(name);
             return new GitRepoResponse(
                     gitRepoService.updateAndGetSparkLine(name, githubToken, gitRepo),
-                    getGitRepoMemberResponses(gitRepo, githubToken));
+                    findGitRepoMemberResponses(gitRepo, githubToken));
         }
 
         int year = LocalDate.now().getYear();
@@ -147,13 +147,13 @@ public class GitRepoMemberFacade {
 
         return new GitRepoResponse(
                 gitRepoService.updateAndGetSparkLine(name, githubToken, gitRepoService.findGitRepo(name)),
-                getGitRepoMemberResponses(name, year, githubToken));
+                findGitRepoMemberResponses(name, year, githubToken));
     }
 
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(final GitRepoCompareRequest request) {
         String githubToken = authService.getLoginUser().getGithubToken();
         return new TwoGitRepoMemberResponse(
-                getGitRepoMemberResponses(gitRepoService.findGitRepo(request.getFirstRepo()), githubToken),
-                getGitRepoMemberResponses(gitRepoService.findGitRepo(request.getSecondRepo()), githubToken));
+                findGitRepoMemberResponses(gitRepoService.findGitRepo(request.getFirstRepo()), githubToken),
+                findGitRepoMemberResponses(gitRepoService.findGitRepo(request.getSecondRepo()), githubToken));
     }
 }

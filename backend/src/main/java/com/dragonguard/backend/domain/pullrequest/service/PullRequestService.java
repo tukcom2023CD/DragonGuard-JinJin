@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @TransactionService
 @RequiredArgsConstructor
 public class PullRequestService implements ContributionService<PullRequest, Long> {
+    private static final long NONE = 0L;
     private final PullRequestRepository pullRequestRepository;
     private final ContributionEntityMapper<PullRequest> pullRequestMapper;
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
@@ -32,11 +33,11 @@ public class PullRequestService implements ContributionService<PullRequest, Long
         Blockchain blockchain = blockchainService.getBlockchainOfType(member, ContributeType.PULL_REQUEST);
 
         if (existsByMemberAndYear(member, year)) {
-            PullRequest pullRequest = findPullRequest(member, year);
+            PullRequest pullRequest = getPullRequest(member, year);
             long newBlockchainAmount = pullRequestNum - blockchain.getSumOfAmount();
-            if (pullRequest.isNotUpdatable(pullRequestNum) && newBlockchainAmount == 0L) return;
+            if (pullRequest.isNotUpdatable(pullRequestNum) && newBlockchainAmount == NONE) return;
             pullRequest.updatePullRequestNum(pullRequestNum);
-            sendTransaction(member, newBlockchainAmount, blockchain);
+            sendTransaction(member, pullRequestNum.longValue(), blockchain);
             return;
         }
         pullRequestRepository.save(pullRequestMapper.toEntity(member, pullRequestNum, year));
@@ -48,7 +49,7 @@ public class PullRequestService implements ContributionService<PullRequest, Long
         blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.PULL_REQUEST));
     }
 
-    private PullRequest findPullRequest(final Member member, final Integer year) {
+    private PullRequest getPullRequest(final Member member, final Integer year) {
         return pullRequestRepository.findByMemberAndYear(member, year).orElseThrow(EntityNotFoundException::new);
     }
 

@@ -13,8 +13,8 @@ public interface OrganizationService {
     IdResponse<Long> saveOrganization(final OrganizationRequest organizationRequest);
     void findAndAddMember(final AddMemberRequest addMemberRequest);
     List<OrganizationResponse> findByType(final OrganizationType organizationType, final Pageable pageable);
-    List<OrganizationResponse> getOrganizationRank(final Pageable pageable);
-    List<OrganizationResponse> getOrganizationRankByType(final OrganizationType type, final Pageable pageable);
+    List<OrganizationResponse> findOrganizationRank(final Pageable pageable);
+    List<OrganizationResponse> findOrganizationRankByType(final OrganizationType type, final Pageable pageable);
     List<OrganizationResponse> searchOrganization(final OrganizationType type, final String name, final Pageable pageable);
-    IdResponse<Long> findByName(final String name);
+    IdResponse<Long> getByName(final String name);
 }

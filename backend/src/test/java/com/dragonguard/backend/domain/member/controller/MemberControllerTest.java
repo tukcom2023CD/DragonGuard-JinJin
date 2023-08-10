@@ -128,7 +128,7 @@ class MemberControllerTest extends RestDocumentTest {
                 new MemberRankResponse(UUID.randomUUID(), "Jin", "ohksj777", 3000L, Tier.DIAMOND, "http://github123123412412412profileUrl"),
                 new MemberRankResponse(UUID.randomUUID(), "Lee", "ohksjj", 1000L, Tier.PLATINUM, "http://github123123412412412profileUrl"),
                 new MemberRankResponse(UUID.randomUUID(), "Da", "ohksjksj", 500L, Tier.GOLD, "http://github123123412412412profileUrl"));
-        given(memberService.getMemberRanking(any())).willReturn(expected);
+        given(memberService.findMemberRanking(any())).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -200,7 +200,7 @@ class MemberControllerTest extends RestDocumentTest {
                 new MemberRankResponse(UUID.randomUUID(), "넓은관용", "Sammuelwoojae", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"),
                 new MemberRankResponse(UUID.randomUUID(), "회사승진", "ohksj77", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"),
                 new MemberRankResponse(UUID.randomUUID(), "영어수학", "posite", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"));
-        given(memberService.getMemberRankingByOrganization(any(), any())).willReturn(expected);
+        given(memberService.findMemberRankingByOrganization(any(), any())).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -224,7 +224,7 @@ class MemberControllerTest extends RestDocumentTest {
                 "tukcom2023CD/DragonGuard-JinJin",
                 "tukcom2023CD/DragonGuard",
                 "tukcom2023CD/Yongari"));
-        given(memberService.getMemberGitOrganizationRepo(any())).willReturn(expected);
+        given(memberService.findMemberGitOrganizationRepo(any())).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -246,7 +246,7 @@ class MemberControllerTest extends RestDocumentTest {
         // given
         MemberDetailsResponse expected = new MemberDetailsResponse(
                 1, 2, 3, 4, "http://profileImage", List.of("gitRepo1", "gitRepo2"), "한국공학대학교", 10);
-        given(memberService.getMemberDetails(any())).willReturn(expected);
+        given(memberService.findMemberDetails(any())).willReturn(expected);
 
         // when
         ResultActions perform =

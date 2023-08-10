@@ -56,7 +56,7 @@ public class MemberController {
     @GetMapping("/ranking")
     public ResponseEntity<List<MemberRankResponse>> getRank(
             @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(memberService.getMemberRanking(pageable));
+        return ResponseEntity.ok(memberService.findMemberRanking(pageable));
     }
 
     /**
@@ -66,7 +66,7 @@ public class MemberController {
     public ResponseEntity<List<MemberRankResponse>> getOrganizationMemberRank(
             @RequestParam Long organizationId,
             @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(memberService.getMemberRankingByOrganization(organizationId, pageable));
+        return ResponseEntity.ok(memberService.findMemberRankingByOrganization(organizationId, pageable));
     }
 
     /**
@@ -99,7 +99,7 @@ public class MemberController {
      */
     @GetMapping("/details")
     public ResponseEntity<MemberDetailsResponse> getUserDetails(@RequestParam String githubId) {
-        return ResponseEntity.ok(memberService.getMemberDetails(githubId));
+        return ResponseEntity.ok(memberService.findMemberDetails(githubId));
     }
 
     /**
@@ -107,7 +107,7 @@ public class MemberController {
      */
     @GetMapping("/git-organizations/git-repos")
     public ResponseEntity<MemberGitOrganizationRepoResponse> getMemberGitOrganizationRepo(@RequestParam String name) {
-        return ResponseEntity.ok(memberService.getMemberGitOrganizationRepo(name));
+        return ResponseEntity.ok(memberService.findMemberGitOrganizationRepo(name));
     }
 
     /**

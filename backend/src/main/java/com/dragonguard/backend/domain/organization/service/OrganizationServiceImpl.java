@@ -36,11 +36,11 @@ public class OrganizationServiceImpl implements EntityLoader<Organization, Long>
 
     @Override
     public IdResponse<Long> saveOrganization(final OrganizationRequest organizationRequest) {
-        Long id = getOrSaveOrganization(organizationRequest);
+        Long id = findOrSaveOrganization(organizationRequest);
         return new IdResponse<>(id);
     }
 
-    private Long getOrSaveOrganization(final OrganizationRequest organizationRequest) {
+    private Long findOrSaveOrganization(final OrganizationRequest organizationRequest) {
         return organizationRepository.findByNameAndOrganizationTypeAndEmailEndpoint(
                         organizationRequest.getName(),
                         organizationRequest.getOrganizationType(),
@@ -66,13 +66,13 @@ public class OrganizationServiceImpl implements EntityLoader<Organization, Long>
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganizationResponse> getOrganizationRank(final Pageable pageable) {
+    public List<OrganizationResponse> findOrganizationRank(final Pageable pageable) {
         return organizationRepository.findRanking(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganizationResponse> getOrganizationRankByType(final OrganizationType type, final Pageable pageable) {
+    public List<OrganizationResponse> findOrganizationRankByType(final OrganizationType type, final Pageable pageable) {
         return organizationRepository.findRankingByType(type, pageable);
     }
 
@@ -84,7 +84,7 @@ public class OrganizationServiceImpl implements EntityLoader<Organization, Long>
 
     @Override
     @Transactional(readOnly = true)
-    public IdResponse<Long> findByName(final String name) {
+    public IdResponse<Long> getByName(final String name) {
         Organization organization = organizationRepository.findByName(name)
                 .orElseThrow(EntityNotFoundException::new);
         return new IdResponse<>(organization.getId());

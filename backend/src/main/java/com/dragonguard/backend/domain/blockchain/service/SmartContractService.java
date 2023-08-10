@@ -32,7 +32,6 @@ public class SmartContractService {
         try {
             return contract.send(sendOptions, SET_METHOD, walletAddress, BigInteger.valueOf(contribution), contributeType).getTransactionHash();
         } catch (Exception e) {
-            e.printStackTrace();
             throw new BlockchainException();
         }
     }

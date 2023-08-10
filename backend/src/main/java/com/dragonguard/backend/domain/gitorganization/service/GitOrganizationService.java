@@ -26,12 +26,12 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
     private final GitOrganizationMapper gitOrganizationMapper;
 
     public void findAndSaveGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
-        Set<GitOrganization> gitOrganizations = getNotSavedGitOrganizations(gitOrganizationNames, member);
+        Set<GitOrganization> gitOrganizations = findNotSavedGitOrganizations(gitOrganizationNames, member);
 
         saveAllGitOrganizations(gitOrganizations);
     }
 
-    private Set<GitOrganization> getNotSavedGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
+    private Set<GitOrganization> findNotSavedGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
         return gitOrganizationNames.stream()
                 .map(org -> {
                     String gitOrganizationName = org.getLogin();
@@ -60,7 +60,7 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public GitOrganization findByName(final String name) {
+    public GitOrganization getByName(final String name) {
         return gitOrganizationRepository.findByName(name)
                 .orElseThrow(EntityNotFoundException::new);
     }

@@ -35,10 +35,10 @@ public class AuthService {
 
         validateSavedRefreshTokenIfExpired(oldRefreshToken, UUID.fromString(user.getName()));
 
-        return findMemberAndUpdateRefreshToken(user);
+        return getMemberAndUpdateRefreshToken(user);
     }
 
-    private JwtToken findMemberAndUpdateRefreshToken(final UserPrinciple user) {
+    private JwtToken getMemberAndUpdateRefreshToken(final UserPrinciple user) {
         JwtToken jwtToken = jwtTokenProvider.createToken(user);
 
         memberRepository.findById(UUID.fromString(user.getName()))

@@ -61,7 +61,7 @@ class OrganizationControllerTest extends RestDocumentTest {
     void getOrganization() throws Exception {
         // given
         IdResponse<Long> expected = new IdResponse<>(1L);
-        given(organizationService.findByName(any())).willReturn(expected);
+        given(organizationService.getByName(any())).willReturn(expected);
 
         // when
         ResultActions perform =

@@ -38,7 +38,7 @@ public class OrganizationController {
      */
     @GetMapping("/search-id")
     public ResponseEntity<IdResponse<Long>> getOrganization(@RequestParam String name) {
-        return ResponseEntity.ok(organizationService.findByName(name));
+        return ResponseEntity.ok(organizationService.getByName(name));
     }
 
     /**
