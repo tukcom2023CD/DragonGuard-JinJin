@@ -630,7 +630,15 @@ final class MainViewController: UIViewController {
                     }
                 }
                 else if check {
-                    if data.member_github_ids?.count != 1{
+                    if data.member_github_ids?.count == 1{
+                        self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
+                                                 top: data.member_github_ids?[0] ?? "Unknown",
+                                                 rank2: (data.organization_rank ?? 0),
+                                                 me: data.member_github_ids?[1] ?? "Unknown",
+                                                 rank3: nil,
+                                                 under: nil)
+                    }
+                    else if data.member_github_ids?.count ?? 0 > 1 {
                         self.groupView.inputData(rank1: (data.organization_rank ?? 0)-1,
                                                  top: data.member_github_ids?[1] ?? "Unknown",
                                                  rank2: (data.organization_rank ?? 0),
