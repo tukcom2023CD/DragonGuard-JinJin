@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
             checkState(token, refresh)
         } else {
             binding.githubAuth.isEnabled = true
-            binding.walletAuth.isEnabled = true
+            binding.walletAuth.isEnabled = false
 //            binding.walletFinish.isEnabled = false
         }
         if (logout) {
