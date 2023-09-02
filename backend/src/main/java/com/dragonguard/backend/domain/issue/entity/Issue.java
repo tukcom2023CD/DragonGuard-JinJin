@@ -37,6 +37,9 @@ public class Issue implements Auditable {
     @Column(nullable = false)
     private Integer year;
 
+    @Version
+    private Long version;
+
     @Setter
     @Embedded
     @Column(nullable = false)

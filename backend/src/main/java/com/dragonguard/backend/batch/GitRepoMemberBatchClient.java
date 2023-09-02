@@ -16,6 +16,8 @@ import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -48,8 +50,7 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                         uriBuilder -> uriBuilder
                                 .path("repos/")
                                 .path(request.getGitRepo().getName())
-                                .path("/stats")
-                                .path("/contributors")
+                                .path("/stats/contributors")
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
@@ -58,55 +59,64 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                 .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
                 .bodyToFlux(GitRepoMemberClientResponse.class)
                 .collectList()
-                .flatMap(response -> {
-                    if (response == null || response.isEmpty() || response.stream()
-                            .anyMatch(g -> g.getTotal() == null || g.getWeeks() == null || g.getWeeks().isEmpty()
-                                    || g.getAuthor() == null || g.getAuthor().getLogin() == null || g.getAuthor().getAvatarUrl() == null)) {
-                        return Mono.error(WebClientException::new);
-                    }
-                    return Mono.just(response);
-                })
-                .retryWhen(
-                        Retry.fixedDelay(10, Duration.ofMillis(1500))
+                .flatMap(this::getResponseMono)
+                .retryWhen(Retry.fixedDelay(10, Duration.ofMillis(1500))
                                 .filter(WebClientException.class::isInstance)
                                 .onRetryExhaustedThrow(((retryBackoffSpec, retrySignal) -> new WebClientRetryException())))
                 .onErrorReturn(WebClientRetryException.class, List.of())
-                .mapNotNull(result -> {
-                    Set<GitRepoMember> gitRepoMembers = request.getGitRepo().getGitRepoMembers();
+                .mapNotNull(result -> getGitRepoMembers(request, result)).filter(Objects::nonNull);
+    }
 
-                    return result.stream().map(r -> {
-                        if (Objects.isNull(r.getAuthor()) || !StringUtils.hasText(r.getAuthor().getLogin())) {
-                            return null;
-                        }
-                        List<Week> weeks = r.getWeeks();
+    private List<GitRepoMember> getGitRepoMembers(final GitRepoBatchRequest request, final List<GitRepoMemberClientResponse> result) {
+        Set<GitRepoMember> gitRepoMembers = request.getGitRepo().getGitRepoMembers();
+        return result.stream()
+                .map(r -> getGitRepoMember(request, r, gitRepoMembers))
+                .filter(Objects::nonNull).collect(Collectors.toList());
+    }
 
-                        GitRepoMember newGitRepoMember = Optional.ofNullable(gitRepoMembers.stream()
-                                .filter(grm -> grm.getMember().getGithubId().equals(r.getAuthor().getLogin()))
-                                .findFirst()
-                                .orElseGet(() -> {
-                                    String githubId = r.getAuthor().getLogin();
-                                    if (memberRepository.existsByGithubId(githubId)) {
-                                        Member member = memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseThrow(EntityNotFoundException::new);
-                                        return gitRepoMemberMapper.toEntity(member, request.getGitRepo());
-                                    }
-                                    return gitRepoMemberMapper.toEntity(
-                                            memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseGet(() -> memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.NONE)),
-                                            gitRepoRepository.findByIdWithGitRepoMember(request.getGitRepo().getId()).orElseThrow(EntityNotFoundException::new));
+    private GitRepoMember getGitRepoMember(final GitRepoBatchRequest request, final GitRepoMemberClientResponse r, final Set<GitRepoMember> gitRepoMembers) {
+        if (Objects.isNull(r.getAuthor()) || !StringUtils.hasText(r.getAuthor().getLogin())) {
+            return null;
+        }
+        List<Week> weeks = r.getWeeks();
 
-                                })).orElseGet(() -> {
-                            return gitRepoMembers.stream()
-                                    .filter(grm -> grm != null && grm.getMember().getGithubId().equals(r.getAuthor().getLogin()))
-                                    .findFirst().orElse(null);
-                        });
+        GitRepoMember newGitRepoMember = getNewGitRepoMember(request, r, gitRepoMembers);
 
-                        if (Objects.isNull(newGitRepoMember)) return null;
+        if (Objects.isNull(newGitRepoMember)) return null;
 
-                        newGitRepoMember.updateGitRepoContribution(r.getTotal(),
-                                weeks.stream().mapToInt(Week::getA).sum(),
-                                weeks.stream().mapToInt(Week::getD).sum());
+        newGitRepoMember.updateGitRepoContribution(r.getTotal(),
+                weeks.stream().mapToInt(Week::getA).sum(),
+                weeks.stream().mapToInt(Week::getD).sum());
 
-                        return newGitRepoMember;
-                    }).filter(Objects::nonNull).collect(Collectors.toList());
-                }).filter(Objects::nonNull);
+        return newGitRepoMember;
+    }
+
+    private GitRepoMember getNewGitRepoMember(final GitRepoBatchRequest request, final GitRepoMemberClientResponse r, final Set<GitRepoMember> gitRepoMembers) {
+        return Optional.ofNullable(gitRepoMembers.stream()
+                .filter(grm -> grm.getMember().getGithubId().equals(r.getAuthor().getLogin()))
+                .findFirst()
+                .orElseGet(() -> getGitRepoMember(request, r))).orElseGet(() -> gitRepoMembers.stream()
+                .filter(grm -> grm != null && grm.getMember().getGithubId().equals(r.getAuthor().getLogin()))
+                .findFirst().orElse(null));
+    }
+
+    private Mono<List<GitRepoMemberClientResponse>> getResponseMono(final List<GitRepoMemberClientResponse> response) {
+        if (response == null || response.isEmpty() || response.stream()
+                .anyMatch(g -> g.getTotal() == null || g.getWeeks() == null || g.getWeeks().isEmpty()
+                        || g.getAuthor() == null || g.getAuthor().getLogin() == null || g.getAuthor().getAvatarUrl() == null)) {
+            return Mono.error(WebClientException::new);
+        }
+        return Mono.just(response);
+    }
+
+    private GitRepoMember getGitRepoMember(final GitRepoBatchRequest request, final GitRepoMemberClientResponse r) {
+        String githubId = r.getAuthor().getLogin();
+        if (memberRepository.existsByGithubId(githubId)) {
+            Member member = memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseThrow(EntityNotFoundException::new);
+            return gitRepoMemberMapper.toEntity(member, request.getGitRepo());
+        }
+        return gitRepoMemberMapper.toEntity(
+                memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseGet(() -> memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.NONE)),
+                gitRepoRepository.findByIdWithGitRepoMember(request.getGitRepo().getId()).orElseThrow(EntityNotFoundException::new));
     }
 }

@@ -36,6 +36,9 @@ public class CodeReview implements Auditable {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Member member;
 
+    @Version
+    private Long version;
+
     @Setter
     @Embedded
     @Column(nullable = false)
