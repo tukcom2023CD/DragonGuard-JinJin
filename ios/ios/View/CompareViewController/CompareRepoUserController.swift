@@ -13,7 +13,7 @@ import Charts
 import Lottie
 
 final class CompareRepoUserController: UIViewController{
-    private let repositoryInfoTitleList: [String] = ["forks", "closed issues", "open issues", "stars", "contributors", "additions average", "deletions average", "languages", "code average"]
+    private let repositoryInfoTitleList: [String] = ["forks", "closed issues", "open issues", "stars", "contributors", "additions average", "deletions average", "commit average", "languages", "code average"]
     private let selectionTitleList: [String] = ["Repository", "User"]
     private let disposeBag = DisposeBag()
     private var repoInfo: CompareRepoModel?
@@ -286,7 +286,7 @@ final class CompareRepoUserController: UIViewController{
             make.leading.equalTo(contentView.snp.leading).offset(30)
             make.trailing.equalTo(contentView.snp.trailing).offset(-30)
             make.bottom.equalTo(contentView.snp.bottom).offset(-20)
-            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*8/14)
+            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*10/14)
         }
         
         
@@ -517,10 +517,14 @@ extension CompareRepoUserController: UITableViewDelegate, UITableViewDataSource{
                            title: repositoryInfoTitleList[indexPath.section],
                            repo2: Int(self.repoInfo?.second_repo.statistics.deletion_stats.average ?? 0))
         case 7:
+            cell.inputData(repo1: Int(self.repoInfo?.first_repo.statistics.commit_stats.average ?? 0),
+                           title: repositoryInfoTitleList[indexPath.section],
+                           repo2: Int(self.repoInfo?.second_repo.statistics.commit_stats.average ?? 0))
+        case 8:
             cell.inputData(repo1: self.repoInfo?.first_repo.languages.language.count ?? 0,
                            title: repositoryInfoTitleList[indexPath.section],
                            repo2: self.repoInfo?.second_repo.languages.language.count ?? 0)
-        case 8:
+        case 9:
             cell.inputData(repo1: Int(self.repoInfo?.first_repo.languages_stats.average ?? 0),
                            title: repositoryInfoTitleList[indexPath.section],
                            repo2: Int(self.repoInfo?.second_repo.languages_stats.average ?? 0))
