@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
             checkState(token, refresh)
         } else {
             binding.githubAuth.isEnabled = true
-            binding.walletAuth.isEnabled = false
+            binding.walletAuth.isEnabled = true
 //            binding.walletFinish.isEnabled = false
         }
         if (logout) {
@@ -304,8 +304,12 @@ class LoginActivity : AppCompatActivity() {
                         Intent.ACTION_VIEW,
                         Uri.parse("https://klipwallet.com/?target=/a2a?request_key=${authResponse.request_key}")
                     )
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
-                    finishAffinity()
+//                    finishAffinity()
+//                    moveTaskToBack(true); // 태스크를 백그라운드로 이동
+//                    finishAndRemoveTask(); // 액티비티 종료 + 태스크 리스트에서 지우기
+//                    Process.killProcess(Process.myPid())
                 }
             }
         }

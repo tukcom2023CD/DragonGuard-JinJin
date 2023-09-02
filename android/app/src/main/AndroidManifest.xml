@@ -98,6 +98,7 @@
         <activity
             android:name=".activity.basic.MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
