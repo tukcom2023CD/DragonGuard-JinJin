@@ -305,6 +305,7 @@ class LoginActivity : AppCompatActivity() {
                         Uri.parse("https://klipwallet.com/?target=/a2a?request_key=${authResponse.request_key}")
                     )
                     startActivity(intent)
+                    finishAffinity()
                 }
             }
         }
