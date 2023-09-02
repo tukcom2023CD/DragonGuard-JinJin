@@ -23,29 +23,37 @@ final class CompareService{
         
         print("beforeSendingInfo\n\(url)")
         print("body \(body)")
-        return Observable.create(){ observer in
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
-                AF.request(url,
-                           method: .post,
-                           parameters: body,
-                           encoding: JSONEncoding(options: []),
-                           headers: ["Content-type": "application/json",
-                                     "Authorization": "Bearer \(access ?? "")"])
-                .validate(statusCode: 200..<201)
-                .responseDecodable(of: CompareUserModel.self) { res in
+        return Observable.create(){ [weak self] observer in
 
-                    switch res.result{
-                    case .success(let data):
-                        if !data.first_result.isEmpty && !data.second_result.isEmpty{
-                            observer.onNext(data)
-                            timer.invalidate()
-                        }
-                    case .failure(let error):
-                        print("beforeSendingInfo error!\n\(error)")
+            AF.request(url,
+                       method: .post,
+                       parameters: body,
+                       encoding: JSONEncoding(options: []),
+                       headers: ["Content-type": "application/json",
+                                 "Authorization": "Bearer \(access ?? "")"])
+            .validate(statusCode: 200..<201)
+            .responseDecodable(of: CompareUserModel.self) { res in
+                
+                switch res.result{
+                case .success(let data):
+                    if !data.first_result.isEmpty && !data.second_result.isEmpty{
+                        observer.onNext(data)
+                        return
                     }
-
+                    else{
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            let _ = self?.beforeSendingInfo(firstRepo: firstRepo, secondRepo: secondRepo)
+                        }
+                    }
+                case .failure(let error):
+                    print("beforeSendingInfo error!\n\(error)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        let _ = self?.beforeSendingInfo(firstRepo: firstRepo, secondRepo: secondRepo)
+                    }
                 }
-            })
+                
+            }
+
             return Disposables.create()
         }
         
@@ -61,32 +69,38 @@ final class CompareService{
         let url = APIURL.apiUrl.compareRepoAPI(ip: ip)
         let body = ["first_repo": firstRepo, "second_repo": secondRepo]
         let access = UserDefaults.standard.string(forKey: "Access")
-        var check = false
+        
         print("getCompareInfo\n\(url)")
         print("body \(body)")
-        return Observable.create() { observer in
-            Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true, block: { timer in
-                AF.request(url,
-                           method: .post,
-                           parameters: body,
-                           encoding: JSONEncoding.default,
-                           headers: ["Content-type": "application/json",
-                                     "Authorization": "Bearer \(access ?? "")"])
-                .validate(statusCode: 200..<205)
-                .responseDecodable(of: CompareRepoModel.self) { res in
-                    print(res)
-                    switch res.result{
-                    case .success(let data):
-                        if !data.first_repo.profile_urls.isEmpty && !data.second_repo.profile_urls.isEmpty && !check{
-                            observer.onNext(data)
-                            check = true
-                            timer.invalidate()
+        return Observable.create() { [weak self] observer in
+            
+            AF.request(url,
+                       method: .post,
+                       parameters: body,
+                       encoding: JSONEncoding.default,
+                       headers: ["Content-type": "application/json",
+                                 "Authorization": "Bearer \(access ?? "")"])
+            .validate(statusCode: 200..<205)
+            .responseDecodable(of: CompareRepoModel.self) { res in
+                print(res)
+                switch res.result{
+                case .success(let data):
+                    if !data.first_repo.profile_urls.isEmpty && !data.second_repo.profile_urls.isEmpty {
+                        observer.onNext(data)
+                        return
+                    }
+                    else{
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            let _ = self?.getCompareInfo(firstRepo: firstRepo, secondRepo: secondRepo)
                         }
-                    case .failure(let error):
-                        print("getCompareInfo error!\n\(error)")
+                    }
+                case .failure(let error):
+                    print("getCompareInfo error!\n\(error)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        let _ = self?.getCompareInfo(firstRepo: firstRepo, secondRepo: secondRepo)
                     }
                 }
-            })
+            }
             return Disposables.create()
         }
         
