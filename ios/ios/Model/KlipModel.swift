@@ -24,3 +24,7 @@ struct KlipResultModel: Codable{
 struct KlipKlaytnAddr: Codable{
     let klaytn_address: String
 }
+
+struct Klipchecking: Codable{
+    let is_login_user: Bool?
+}

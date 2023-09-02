@@ -8,19 +8,34 @@
 import UIKit
 import Alamofire
 import WebKit
+import RxSwift
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     var window: UIWindow?
     private let mainService = MainService()
+    private let disposeBag = DisposeBag()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
         if let accessToken = UserDefaults.standard.string(forKey: "Access"),
-            let refreshToken = UserDefaults.standard.string(forKey: "Refresh"){
-
-            checkValidUser(accessToken: accessToken, refreshToken: refreshToken, complete: moveMainController)
+           let refreshToken = UserDefaults.standard.string(forKey: "Refresh"){
+            
+            checkValidUser(accessToken: accessToken, refreshToken: refreshToken)
+                .subscribe(onNext: {
+                    self.checkingLoginKlip()
+                        .subscribe(onNext: { check in
+                            if check{
+                                self.moveMainController()
+                            }
+                            else{
+                                self.moveLoginController()
+                            }
+                        })
+                        .disposed(by: self.disposeBag)
+                })
+                .disposed(by: disposeBag)
         }
         else{
             moveLoginController()
@@ -41,36 +56,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
         window?.makeKeyAndVisible()
     }
     
-    // MARK: Check User Access Token
-    func checkValidUser(accessToken: String, refreshToken: String, complete: @escaping () -> () ){
-        let url = APIURL.apiUrl.getMembersInfo(ip: APIURL.ip)
-        
-        guard let accessToken = UserDefaults.standard.string(forKey: "Access") else {return}
-        
-        AF.request(url,
-                   headers: ["Authorization": "Bearer \(accessToken)"])
-        .validate(statusCode: 200..<201)
-        .responseDecodable(of: MainModel.self ){ response in
-                switch response.result{
-                case .success(let data):
-                    if data.id != ""{
-                        self.mainService.updateProfile()
-                        complete()
-                    }
-                    else{
-                        self.checkRefreshToken(refreshToken: refreshToken)
-                    }
-                case .failure(let error):
-                    self.checkRefreshToken(refreshToken: refreshToken)
-                    print("checkValidUser error! \(error)")
-                }
-            }
-    }
-    
     // MARK: Check User Refresh Token
     func checkRefreshToken(refreshToken: String){
         let url = APIURL.apiUrl.getRefreshToken(ip: APIURL.ip)
-
+        
         guard let accessToken = UserDefaults.standard.string(forKey: "Access") else {return}
         guard let refreshToken = UserDefaults.standard.string(forKey: "Refresh") else {return}
         
@@ -90,10 +79,65 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
         }
     }
     
+    // MARK: Check User Access Token
+    func checkValidUser(accessToken: String, refreshToken: String) -> Observable<Void>{
+        let url = APIURL.apiUrl.getMembersInfo(ip: APIURL.ip)
+        
+        let accessToken = UserDefaults.standard.string(forKey: "Access") ?? ""
+        
+        return Observable.create { observer in
+            AF.request(url,
+                       headers: ["Authorization": "Bearer \(accessToken)"])
+            .validate(statusCode: 200..<201)
+            .responseDecodable(of: MainModel.self ){ response in
+                switch response.result{
+                case .success(let data):
+                    if data.id != ""{
+                        self.mainService.updateProfile()
+                        observer.onNext(())
+                    }
+                    else{
+                        self.checkRefreshToken(refreshToken: refreshToken)
+                    }
+                case .failure(let error):
+                    self.checkRefreshToken(refreshToken: refreshToken)
+                    print("checkValidUser error! \(error)")
+                }
+            }
+            
+            return Disposables.create()
+        }
+        
+    }
+    
+    /// MARK: 클립까지 인증했는지 확인
+    private func checkingLoginKlip() -> Observable<Bool>{
+        let url = APIURL.apiUrl.getMembersInfo(ip: APIURL.ip)
+        
+        let accessToken = UserDefaults.standard.string(forKey: "Access") ?? ""
+        
+        return Observable.create { observer in
+            AF.request(url,
+                       headers: ["Authorization": "Bearer \(accessToken)"])
+            .validate(statusCode: 200..<201)
+            .responseDecodable(of: Klipchecking.self ){ response in
+                switch response.result{
+                case .success(let data):
+                    observer.onNext(data.is_login_user ?? false)
+                case .failure(let error):
+                    print("checkingLoginKlip error!\n\(error)")
+                    self.moveLoginController()
+                }
+            }
+            return Disposables.create()
+        }
+        
+    }
+    
+    
     func changeRootViewController(_ vc: UIViewController, animated: Bool = true) {
         guard let window = self.window else { return }
         window.rootViewController = vc
     }
     
 }
-
