@@ -12,8 +12,7 @@ import Foundation
 final class APIURL{
     
     static let apiUrl = APIURL()
-    static let ip = ""
-    
+    static let ip = (Bundle.main.infoDictionary?["ip"] ?? "") as? String ?? ""
     
     private init(){}
     

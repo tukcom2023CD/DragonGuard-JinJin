@@ -15,7 +15,7 @@ import Alamofire
 
 final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
-    var autoLoginCheck: Bool?
+//    var autoLoginCheck: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,7 +71,8 @@ final class LoginController: UIViewController{
      UI Action 작성
      */
     
-    @objc func clickedKlipLoginBtn(){
+    @objc
+    private func clickedKlipLoginBtn(){
         LoginViewModel.loginService.prepareKlip()
             .subscribe(onNext: { url in
                 self.moveToDeepLink(url)
@@ -95,7 +96,8 @@ final class LoginController: UIViewController{
         
     }
     
-    @objc func clickedGoGihbubBtn(){
+    @objc
+    private func clickedGoGihbubBtn(){
         let url = URL(string: APIURL.apiUrl.callBackendForGithubLogin(ip: APIURL.ip))!
         print("url \(url)")
         let urlRequest = URLRequest(url: url)

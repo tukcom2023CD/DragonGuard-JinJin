@@ -25,10 +25,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
         else{
             moveLoginController()
         }
-        
-//        let rootView = LoginController()
-//        window?.rootViewController = rootView
-//        window?.makeKeyAndVisible()
     }
     
     // MARK: go to LoginController

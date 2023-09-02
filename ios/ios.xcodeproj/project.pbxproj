@@ -271,6 +271,7 @@
 		3BB9D8AF2A57EBC40085BB41 /* RepositoriesInOrganizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoriesInOrganizationViewModel.swift; sourceTree = "<group>"; };
 		3BB9D8B12A57EBD40085BB41 /* RepositoriesInOrganizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoriesInOrganizationService.swift; sourceTree = "<group>"; };
 		3BB9D8B32A57EBF50085BB41 /* RepositoriesInOrganizationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoriesInOrganizationModel.swift; sourceTree = "<group>"; };
+		3BC522F62AA2FFD50062DAA2 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		3BC994E529CAD018005150FB /* TokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenModel.swift; sourceTree = "<group>"; };
 		3BD6EDD929DD646D00DEF7E0 /* RankingInOrganizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingInOrganizationService.swift; sourceTree = "<group>"; };
 		3BD6EDDB29DD664600DEF7E0 /* MemberInOrganizationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberInOrganizationModel.swift; sourceTree = "<group>"; };
@@ -400,6 +401,7 @@
 			children = (
 				3B83DFA12A49515C003EF5F1 /* LottieFiles */,
 				3B9756F8298A775900F27094 /* APIURL.swift */,
+				3BC522F62AA2FFD50062DAA2 /* Config.xcconfig */,
 				3B18AA1F29A7BD0E0051C086 /* Notification.swift */,
 				3BE649EC2A3D9184005D9F9E /* Extension.swift */,
 				3B80B6DD298957DF007FF716 /* Fonts */,
@@ -1223,6 +1225,7 @@
 		};
 		3B1DB8892963428B00308F43 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3BC522F62AA2FFD50062DAA2 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1252,6 +1255,7 @@
 		};
 		3B1DB88A2963428B00308F43 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3BC522F62AA2FFD50062DAA2 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1281,6 +1285,7 @@
 		};
 		3BE3F7D5297060DC0005B640 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3BC522F62AA2FFD50062DAA2 /* Config.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1300,6 +1305,7 @@
 		};
 		3BE3F7D6297060DC0005B640 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3BC522F62AA2FFD50062DAA2 /* Config.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1319,6 +1325,7 @@
 		};
 		3BE3F7E5297064340005B640 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3BC522F62AA2FFD50062DAA2 /* Config.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1336,6 +1343,7 @@
 		};
 		3BE3F7E6297064340005B640 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3BC522F62AA2FFD50062DAA2 /* Config.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
