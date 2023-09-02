@@ -112,7 +112,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate{
     
     /// MARK: 클립까지 인증했는지 확인
     private func checkingLoginKlip() -> Observable<Bool>{
-        let url = APIURL.apiUrl.getMembersInfo(ip: APIURL.ip)
+        let url = APIURL.apiUrl.checkKlipLogin(ip: APIURL.ip)
         
         let accessToken = UserDefaults.standard.string(forKey: "Access") ?? ""
         

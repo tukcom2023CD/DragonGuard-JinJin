@@ -242,5 +242,11 @@ final class APIURL{
         let url = "http://\(ip)/api/members/git-organizations/git-repos?name=\(name)"
         return url
     }
+    
+    func checkKlipLogin(ip: String) -> String {
+        let url = "http://\(ip)/api/members/verify"
+        return url
+    }
+    
 }
 
