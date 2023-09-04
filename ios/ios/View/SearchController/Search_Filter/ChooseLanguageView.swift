@@ -137,18 +137,3 @@ final class LanguageUITableViewCell: UITableViewCell{
         label.text = text
     }
 }
-
-
-import SwiftUI
-struct VCPreViewChooseLanguageView:PreviewProvider {
-    static var previews: some View {
-        ChooseLanguageView()        .toPreview().previewDevice("iPhone 14 Pro")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
-struct VCPreViewChooseLanguageView2:PreviewProvider {
-    static var previews: some View {
-        ChooseLanguageView().toPreview().previewDevice("iPhone 11")
-        // 실행할 ViewController이름 구분해서 잘 지정하기
-    }
-}
