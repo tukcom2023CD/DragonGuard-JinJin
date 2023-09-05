@@ -52,7 +52,7 @@ class SearchActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
         binding.searchViewModel = viewmodel
 
-//        this.onBackPressedDispatcher.addCallback(this, callback)
+        this.onBackPressedDispatcher.addCallback(this, callback)
         binding.searchResult.addItemDecoration(VerticalItemDecorator(20))
         binding.searchResult.addItemDecoration(HorizontalItemDecorator(10))
 
@@ -478,6 +478,15 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            val intent = Intent(this@SearchActivity, MainActivity::class.java)
+            intent.addFlags(FLAG_ACTIVITY_SINGLE_TOP)
+            intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
+        }
+    }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
