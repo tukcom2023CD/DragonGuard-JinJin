@@ -65,7 +65,8 @@
 
 ## Docs
 <a href="https://github.com/tukcom2023CD/DragonGuard-JinJin/wiki">GitRank Wiki</a><br>
-<a href="https://ohksj77.github.io/DragonGuard-JinJin-API-Docs/">Backend API Docs</a>
+<a href="https://ohksj77.github.io/DragonGuard-JinJin-API-Docs/">Backend API Docs</a><br>
+<a href="https://www.youtube.com/watch?v=aBx-MzU7E7c">Trailer (소개 영상)</a>
 
 ## 멤버 소개
 
