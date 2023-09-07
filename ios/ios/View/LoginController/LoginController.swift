@@ -241,6 +241,9 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                                 rootView.modalPresentationStyle = .fullScreen
                                 self.present(rootView, animated: true)
                             }
+                            else{
+                                
+                            }
                         })
                         .disposed(by: self.disposeBag)
                 }

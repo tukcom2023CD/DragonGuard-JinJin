@@ -157,7 +157,7 @@ final class AllUserRankingController: UIViewController{
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(selectionCollectionView.snp.bottom)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
         contentView.snp.makeConstraints { make in
