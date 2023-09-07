@@ -201,6 +201,16 @@ final class LoginController: UIViewController{
         
     }
     
+    // 클립인증 하라는 안내문구
+    private func alert(){
+        // 팝업창 띄움
+        let sheet = UIAlertController(title: "클립 인증 해주세요!", message: nil, preferredStyle: .alert)
+        // 팝업창 확인 버튼
+        sheet.addAction(UIAlertAction(title: "확인", style: .default))
+        // 화면에 표시
+        present(sheet,animated: true)
+    }
+    
 }
 
 extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate{
@@ -231,7 +241,8 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                     LoginViewModel.loginService.githubAuthSubject.accept(true)
                     
                     LoginViewModel.loginService.checkLoginUser()
-                        .subscribe(onNext: { check in
+                        .subscribe(onNext: { [weak self] check in
+                            guard let self = self else { return }
                             if check{
                                 let rootView = TabBarViewController()
                                 self.klipLoginBtn.isEnabled = false
@@ -242,7 +253,7 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                                 self.present(rootView, animated: true)
                             }
                             else{
-                                
+                                self.alert()
                             }
                         })
                         .disposed(by: self.disposeBag)
@@ -253,5 +264,7 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
         
         decisionHandler(.allow)
     }
+    
+    
     
 }
