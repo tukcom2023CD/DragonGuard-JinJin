@@ -590,10 +590,11 @@ extension SearchAndFilterController: UITextFieldDelegate{
         
         SearchPageViewModel.viewModel.getSearchData(searchWord: AfterTrim, type: self.type, filtering: filtering)
             .subscribe(onNext: { list in
-                if !list.isEmpty{
+                print("list \(list)")
+//                if !list.isEmpty{
                     self.delegate?.sendList(list: list, type: self.type)
                     self.dismiss(animated: true)
-                }
+//                }
             })
             .disposed(by: self.disposeBag)
         

@@ -197,7 +197,7 @@ final class SearchViewController: UIViewController{
             make.bottom.equalTo(contentView.snp.bottom)
         }
 
-        inputDataIntoList()
+//        inputDataIntoList()
     }
 
     // MARK: 데이터 삽입
@@ -207,24 +207,36 @@ final class SearchViewController: UIViewController{
             view.removeFromSuperview()
         }
 
-        var index = 0
-        resultList.forEach { result in
-
-            let resultUI = SearchResultUIVIew()
-            resultUI.snp.makeConstraints { make in
-                make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.height/8)
+        if !resultList.isEmpty{
+            var index = 0
+            resultList.forEach { result in
+                
+                let resultUI = SearchResultUIVIew()
+                resultUI.snp.makeConstraints { make in
+                    make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.height/8)
+                }
+                
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+                resultUI.tag = index
+                index += 1
+                resultUI.isUserInteractionEnabled = true
+                
+                resultUI.addGestureRecognizer(tapGesture)
+                resultUI.inputInfo(title: result.name,
+                                   create: result.created_at,
+                                   language: result.language)
+                stackView.addArrangedSubview(resultUI)
             }
-
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
-            resultUI.tag = index
-            index += 1
-            resultUI.isUserInteractionEnabled = true
-
-            resultUI.addGestureRecognizer(tapGesture)
-            resultUI.inputInfo(title: result.name,
-                               create: result.created_at,
-                               language: result.language)
-            stackView.addArrangedSubview(resultUI)
+        }
+        else if resultList.isEmpty{   // 검색 결과 값이 없는 경우
+            let img = UIImageView(image: UIImage(named: "pomi"))
+            
+            img.snp.makeConstraints { make in
+                make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.height/3)
+            }
+            
+            stackView.addArrangedSubview(img)
+            
         }
     }
 

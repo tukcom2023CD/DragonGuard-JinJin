@@ -35,9 +35,9 @@ final class SearchPageService {
                     guard let responseResult = response.value else {return}
                     var resultArray = [SearchResultModel]() // 결과 저장할 변수
 
-                    if(responseResult.count != 0 && resultArray.count == 0){
+//                    if(responseResult.count != 0 && resultArray.count == 0){
                         for data in responseResult {
-                            let dataBundle = SearchResultModel(id: data.id,
+                            let dataBundle = SearchResultModel(id: data.id ?? 0,
                                                                name: data.name ?? "",
                                                                language: data.language ?? "",
                                                                description: data.description ?? "",
@@ -46,7 +46,7 @@ final class SearchPageService {
                             resultArray.append(dataBundle)
                         }
                         observer.onNext(resultArray)
-                    }
+//                    }
                 }
             
             return Disposables.create()
