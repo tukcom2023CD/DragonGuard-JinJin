@@ -23,7 +23,7 @@ final class LoginController: UIViewController{
         
         addUItoView()
         checkClearAuths()
-        
+        bind()
     }
     
     /*
@@ -201,6 +201,17 @@ final class LoginController: UIViewController{
         
     }
     
+    /// MARK:
+    private func bind(){
+        LoginViewModel.loginService.checkNewMemberInKlip
+            .bind { [weak self] check in
+                if check{
+                    self?.alert()
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
     // 클립인증 하라는 안내문구
     private func alert(){
         // 팝업창 띄움
@@ -251,9 +262,6 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                                 self.goGithubBtn.layer.opacity = 1
                                 rootView.modalPresentationStyle = .fullScreen
                                 self.present(rootView, animated: true)
-                            }
-                            else{
-                                self.alert()
                             }
                         })
                         .disposed(by: self.disposeBag)

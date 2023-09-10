@@ -19,6 +19,9 @@ final class LoginViewModel {
     private var walletAddress = "" // 사용자 지갑 주소
     private var requestKey = "" // 사용자 Klip request Key
     
+    /// 새로운 멤머인지 확인 true: 클립인증 필요, false: 불필요
+    var checkNewMemberInKlip = BehaviorRelay(value: false)
+    
     var githubAuthSubject = BehaviorRelay(value: false)   // github OAuth 완료 시 true 전송
     var jwtTokenSubject = BehaviorSubject(value: "")    // jwt Token 전송
     // Github OAuth 완료했는지 확인 하는 용도
@@ -84,7 +87,10 @@ final class LoginViewModel {
     func checkLoginUser() -> Observable<Bool> {
         return Observable.create {  observer in
             self.post.checkLoginUser()
-                .subscribe(onNext:{  check in
+                .subscribe(onNext:{  [weak self] check in
+                    if !check{
+                        self?.checkNewMemberInKlip.accept(true)
+                    }
                     observer.onNext(check)
                 })
                 .disposed(by: self.disposeBag)
