@@ -169,7 +169,7 @@ final class AllUserRankingController: UIViewController{
             make.top.equalTo(contentView.snp.top)
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
-            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/3)
+            make.height.equalTo(260)
         }
         
         tableView.snp.makeConstraints { make in
@@ -177,9 +177,7 @@ final class AllUserRankingController: UIViewController{
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
             make.bottom.equalTo(contentView.snp.bottom)
-            
             let height = 130
-            
             if Int(height)*(userTierData.count)+10 > 0{
                 make.height.equalTo(Int(height)*(userTierData.count)+10)
             }
@@ -229,7 +227,6 @@ final class AllUserRankingController: UIViewController{
             make.trailing.equalTo(contentView.snp.trailing)
             make.bottom.equalTo(contentView.snp.bottom)
             let height = 130
-            
             if Int(height)*(userTierTypeOfRankingData.count)+10 > 0{
                 make.height.equalTo(Int(height)*(userTierTypeOfRankingData.count)+10)
             }
