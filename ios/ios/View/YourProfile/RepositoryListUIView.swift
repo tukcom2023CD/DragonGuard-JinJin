@@ -75,9 +75,7 @@ extension RepositoryListUIView: UITableViewDelegate, UITableViewDataSource{
         self.delegate?.clickedRepos(repoName: self.repoList[indexPath.row])
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return (heightSize ?? 0)/8
-    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return 100 }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return repoList.count }
 }

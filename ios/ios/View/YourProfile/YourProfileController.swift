@@ -184,8 +184,8 @@ final class YourProfileController: UIViewController{
             make.top.equalTo(contributorView.snp.bottom).offset(50)
             make.leading.equalTo(contentView.snp.leading).offset(20)
             make.trailing.equalTo(contentView.snp.trailing).offset(-20)
-            make.bottom.equalTo(contentView.snp.bottom)
-            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height*CGFloat(listCount ?? 0)/8+10)
+            make.bottom.equalTo(contentView.snp.bottom).offset(-10)
+            make.height.equalTo((100 * CGFloat(listCount ?? 0))+10)
         }
         
         repoTitle.snp.makeConstraints { make in

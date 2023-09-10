@@ -218,7 +218,7 @@ final class AllUserRankingController: UIViewController{
             make.top.equalTo(contentView.snp.top)
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
-            make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/3)
+            make.height.equalTo(260)
         }
         
         typeTableView.snp.makeConstraints { make in

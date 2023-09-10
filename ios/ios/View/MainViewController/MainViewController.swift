@@ -38,6 +38,19 @@ final class MainViewController: UIViewController {
      UI 작성
      */
     
+    /// MARK:
+    private lazy var scrollView: UIScrollView = {
+        let view = UIScrollView()
+        
+        return view
+    }()
+    
+    /// MARK:
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        
+        return view
+    }()
     
     // MARK: 검색 버튼
     private lazy var searchBtn: UIButton = {
@@ -241,30 +254,33 @@ final class MainViewController: UIViewController {
     
     // MARK: UI 등록
     private func addUIToView(){
-        view.addSubview(searchBtn)
-        view.addSubview(profileImage)
-        view.addSubview(nameLabel)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        contentView.addSubview(searchBtn)
+        contentView.addSubview(profileImage)
+        contentView.addSubview(nameLabel)
         
         
-        view.addSubview(tierView)
+        contentView.addSubview(tierView)
         tierView.addSubview(tierImage)
-        view.addSubview(emptyView)
+        contentView.addSubview(emptyView)
         emptyView.addSubview(tierLabel)
         
         
-        view.addSubview(tokenView)
-        view.addSubview(emptyView1)
+        contentView.addSubview(tokenView)
+        contentView.addSubview(emptyView1)
         emptyView1.addSubview(tokenLabel)
         tokenView.addSubview(tokenImage)
         tokenView.addSubview(tokenNumLabel)
         
         
-        view.addSubview(contributionView)
-        view.addSubview(emptyView2)
+        contentView.addSubview(contributionView)
+        contentView.addSubview(emptyView2)
         emptyView2.addSubview(contributionLabel)
         
-        view.addSubview(groupView)
-        view.addSubview(emptyView3)
+        contentView.addSubview(groupView)
+        contentView.addSubview(emptyView3)
         emptyView3.addSubview(groupLabel)
         
         setAutoLayout()
@@ -273,11 +289,23 @@ final class MainViewController: UIViewController {
     // MARK: setting AutoLayout
     private func setAutoLayout(){
         
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.top.equalTo(scrollView.snp.top)
+            make.bottom.equalTo(scrollView.snp.bottom)
+            make.leading.equalTo(scrollView.snp.leading)
+            make.trailing.equalTo(scrollView.snp.trailing)
+            make.width.equalTo(scrollView.snp.width)
+        }
+        
         searchBtn.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(contentView.snp.top).offset(20)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width/10)
             make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*35/60)
-            make.centerX.equalTo(view.snp.centerX)
+            make.centerX.equalTo(contentView.snp.centerX)
         }
         
         profileImage.snp.makeConstraints { make in
@@ -293,7 +321,7 @@ final class MainViewController: UIViewController {
         }
         
         tierView.snp.makeConstraints { make in
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
+            make.leading.equalTo(contentView.snp.leading).offset(30)
             make.top.equalTo(profileImage.snp.bottom).offset(30)
             make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/5)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/5)
@@ -319,7 +347,7 @@ final class MainViewController: UIViewController {
         
         tokenView.snp.makeConstraints { make in
             make.top.equalTo(tierView.snp.top)
-            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-30)
             make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/5)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/5)
         }
@@ -346,10 +374,10 @@ final class MainViewController: UIViewController {
         }
         
         contributionView.snp.makeConstraints { make in
-            make.top.equalTo(tokenView.snp.bottom).offset(50)
-            make.height.lessThanOrEqualTo(view.safeAreaLayoutGuide.layoutFrame.height/8)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(30)
-            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-30)
+            make.top.equalTo(tokenView.snp.bottom).offset(30)
+            make.height.equalTo(100)
+            make.leading.equalTo(contentView.snp.leading).offset(30)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-30)
         }
         
         emptyView2.snp.makeConstraints { make in
@@ -365,9 +393,10 @@ final class MainViewController: UIViewController {
         
         groupView.snp.makeConstraints { make in
             make.top.equalTo(contributionView.snp.bottom).offset(30)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(40)
-            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-40)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
+            make.leading.equalTo(contentView.snp.leading).offset(40)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-40)
+            make.height.equalTo(150)
+            make.bottom.equalTo(contentView.snp.bottom).offset(-30)
         }
         
         emptyView3.snp.makeConstraints { make in
@@ -608,7 +637,6 @@ final class MainViewController: UIViewController {
                     print("error!\n")
                 }
                 let check = (data.is_last ?? false)
-                
                 
                 if data.organization_rank == 1{
                     
