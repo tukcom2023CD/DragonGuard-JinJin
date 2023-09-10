@@ -79,8 +79,8 @@ final class DetailInfoTableViewCell: UITableViewCell{
         addUI_Repository()
         
         let user = title.split(separator: "/")[0]
-        
-        repositoryView.inputData(imgPath: imgPath, title: title, userName: String(user))
+        let title = title.split(separator: "/")[1]
+        repositoryView.inputData(imgPath: imgPath, title: String(title), userName: String(user))
     }
     
 }

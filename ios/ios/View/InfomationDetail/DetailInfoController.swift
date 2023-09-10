@@ -97,13 +97,16 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailInfoTableViewCell.identifier, for: indexPath) as? DetailInfoTableViewCell else {return UITableViewCell() }
         cell.backgroundColor = .clear
         if indexPath.section == 0{
+            cell.removeFromSuperview()
             cell.inputData_Organizaion(data: dataList?.git_organizations?[indexPath.row])
         }
         else if indexPath.section == 1{
+            cell.removeFromSuperview()
             cell.inputData_Repository(title: dataList?.git_repos?[indexPath.row] ?? "",
                                       imgPath: dataList?.member_profile_image ?? "",
                                       myId: "")
         }
+        
         return cell
     }
     
@@ -137,7 +140,7 @@ extension DetailInfoController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.safeAreaLayoutGuide.layoutFrame.height/6
+        return 130
     }
     
     func numberOfSections(in tableView: UITableView) -> Int { return 2 }
