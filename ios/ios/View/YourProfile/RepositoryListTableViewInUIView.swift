@@ -68,21 +68,25 @@ final class RepositoryListTableViewInUIView: UIView{
         
         titleImg.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
+            make.width.equalTo(30)
             make.leading.equalToSuperview().offset(15)
         }
         
         userNameLabel.snp.makeConstraints { make in
             make.centerY.equalTo(titleImg.snp.centerY)
             make.leading.equalTo(titleImg.snp.trailing).offset(5)
+            make.trailing.equalTo(sendingImage.snp.leading).offset(-5)
         }
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleImg.snp.leading)
             make.top.equalTo(titleImg.snp.bottom).offset(5)
+            make.trailing.equalTo(sendingImage.snp.leading).offset(-5)
         }
         
         sendingImage.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-10)
+            make.width.height.equalTo(30)
             make.centerY.equalToSuperview()
         }
     }
@@ -91,8 +95,8 @@ final class RepositoryListTableViewInUIView: UIView{
         addUI_Repository()
         
         titleImg.load(img: titleImg, url: URL(string: imgPath ?? "")!, size: 30)
-        titleLabel.text = title ?? "a"
-        userNameLabel.text = userName ?? "a"
+        titleLabel.text = title ?? ""
+        userNameLabel.text = userName ?? ""
     }
         
 }

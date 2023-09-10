@@ -47,6 +47,7 @@ final class OrganizationListTableViewCell: UITableViewCell{
         rankingLabel.snp.makeConstraints { make in
             make.leading.equalTo(30)
             make.centerY.equalToSuperview()
+            make.width.equalTo(30)
         }
         
         customUIView.snp.makeConstraints { make in

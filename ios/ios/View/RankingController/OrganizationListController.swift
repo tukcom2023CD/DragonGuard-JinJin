@@ -125,6 +125,6 @@ extension OrganizationListController: UITableViewDelegate, UITableViewDataSource
         return memberList.count
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.safeAreaLayoutGuide.layoutFrame.height/6
+        return 100
     }
 }
