@@ -147,10 +147,7 @@ final class AllUserRankingController: UIViewController{
         tableView.register(AllUserTableviewCell.self, forCellReuseIdentifier: AllUserTableviewCell.identifier)
         setAutoLayout()
     }
-//    @objc
-//    private func handleTapped(sender: UITapGestureRecognizer) {
-//            print("asdfjlksdafjaisf")
-//    }
+
     // MARK: AutoLayout After loading
     private func setAutoLayout(){
  
@@ -181,7 +178,7 @@ final class AllUserRankingController: UIViewController{
             make.trailing.equalTo(contentView.snp.trailing)
             make.bottom.equalTo(contentView.snp.bottom)
             
-            let height = view.safeAreaLayoutGuide.layoutFrame.height/6
+            let height = 130
             
             if Int(height)*(userTierData.count)+10 > 0{
                 make.height.equalTo(Int(height)*(userTierData.count)+10)
@@ -231,7 +228,7 @@ final class AllUserRankingController: UIViewController{
             make.leading.equalTo(contentView.snp.leading)
             make.trailing.equalTo(contentView.snp.trailing)
             make.bottom.equalTo(contentView.snp.bottom)
-            let height = view.safeAreaLayoutGuide.layoutFrame.height/6
+            let height = 130
             
             if Int(height)*(userTierTypeOfRankingData.count)+10 > 0{
                 make.height.equalTo(Int(height)*(userTierTypeOfRankingData.count)+10)
@@ -503,7 +500,7 @@ extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.safeAreaLayoutGuide.layoutFrame.height/6
+        return 130
     }
     
 }

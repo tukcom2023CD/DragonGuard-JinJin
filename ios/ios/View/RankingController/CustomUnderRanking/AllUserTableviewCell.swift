@@ -47,11 +47,12 @@ final class AllUserTableviewCell: UITableViewCell{
         
         rankingLabel.snp.makeConstraints { make in
             make.leading.equalTo(30)
+            make.width.equalTo(30)
             make.centerY.equalToSuperview()
         }
         
         customUIView.snp.makeConstraints { make in
-            make.leading.equalTo(rankingLabel.snp.trailing)
+            make.leading.equalTo(rankingLabel.snp.trailing).offset(30)
             make.centerY.equalToSuperview()
             make.top.equalToSuperview().offset(10)
             make.bottom.equalToSuperview().offset(-10)
