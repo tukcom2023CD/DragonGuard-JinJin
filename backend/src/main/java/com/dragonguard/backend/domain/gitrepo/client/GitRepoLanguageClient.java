@@ -27,7 +27,7 @@ public class GitRepoLanguageClient implements GithubClient<GitRepoClientRequest,
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .path(String.format(PATH_FORMAT))
+                                .path(String.format(PATH_FORMAT, request.getName()))
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

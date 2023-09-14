@@ -26,7 +26,7 @@ public class GitRepoIssueClient implements GithubClient<GitRepoClientRequest, In
     private final WebClient webClient;
 
     @Override
-    public Integer requestToGithub(GitRepoClientRequest request) {
+    public Integer requestToGithub(final GitRepoClientRequest request) {
         int page = FIRST_PAGE;
         final List<String> results = new ArrayList<>(getClosedIssueNum(request, page++));
         if (results.isEmpty()) {
