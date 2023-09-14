@@ -1,11 +1,9 @@
 package com.dragonguard.backend.domain.member.repository;
 
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.repository.EntityRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -16,8 +14,7 @@ import java.util.UUID;
  * @description 멤버 DB CRUD를 담당하는 인터페이스
  */
 
-@Repository
-public interface MemberRepository extends EntityRepository<Member, UUID>, MemberQueryRepository {
+public interface MemberRepository extends JpaRepository<Member, UUID>, MemberQueryRepository {
     @Query("SELECT m.refreshToken FROM Member m WHERE m.id = :id")
     String findRefreshTokenById(final UUID id);
 

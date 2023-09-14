@@ -48,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     public void deleteCode(final Long id) {
-        loadEntity(id).delete();
+        emailRepository.softDeleteById(id);
     }
 
     @Override
