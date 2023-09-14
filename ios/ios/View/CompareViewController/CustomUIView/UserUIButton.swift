@@ -24,6 +24,8 @@ final class UserUIButton: UIButton{
     private lazy var imgView: UIImageView = {
         let imgView = UIImageView()
         imgView.image = UIImage(systemName: "person.circle")?.resize(newWidth: 80, newHeight: 80)
+        imgView.layoutIfNeeded()
+        imgView.layer.cornerRadius = 20
         return imgView
     }()
     
@@ -34,6 +36,8 @@ final class UserUIButton: UIButton{
         label.backgroundColor = .clear
         label.text = "User"
         label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
+        label.textAlignment = .center
         return label
     }()
     
@@ -50,7 +54,7 @@ final class UserUIButton: UIButton{
 
         userName.snp.makeConstraints { make in
             make.top.equalTo(imgView.snp.bottom).offset(20)
-            make.centerX.equalTo(imgView.snp.centerX)
+            make.leading.trailing.equalToSuperview()
         }
     }
     

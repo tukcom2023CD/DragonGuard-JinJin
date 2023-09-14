@@ -142,7 +142,6 @@ final class CompareRepoUserController: UIViewController{
         btn.layer.shadowOffset = CGSize(width: 3, height: 3)
         btn.layer.shadowOpacity = 1
         btn.layer.shadowColor = .init(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
-        btn.layer.cornerRadius = 20
         btn.clipsToBounds = true
         btn.layer.masksToBounds = true
         return btn
@@ -156,7 +155,6 @@ final class CompareRepoUserController: UIViewController{
         btn.layer.shadowOffset = CGSize(width: 3, height: 3)
         btn.layer.shadowOpacity = 1
         btn.layer.shadowColor = .init(red: 100/255, green: 100/255, blue: 100/255, alpha: 1)
-        btn.layer.cornerRadius = 20
         btn.layer.masksToBounds = true
         btn.clipsToBounds = true
         return btn
