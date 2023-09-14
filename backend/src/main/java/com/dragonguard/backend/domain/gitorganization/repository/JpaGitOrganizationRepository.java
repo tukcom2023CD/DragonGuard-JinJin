@@ -6,6 +6,7 @@ import com.dragonguard.backend.global.repository.EntityRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
@@ -16,6 +17,7 @@ import java.util.List;
  * @description 깃허브 Organization 관련 DB 접근을 도와주는 Repository
  */
 
+@Repository
 public interface JpaGitOrganizationRepository extends EntityRepository<GitOrganization, Long>, GitOrganizationRepository {
 
     @Query("SELECT DISTINCT go FROM GitOrganization go JOIN FETCH go.gitOrganizationMembers gom JOIN FETCH gom.member m WHERE m = :member")

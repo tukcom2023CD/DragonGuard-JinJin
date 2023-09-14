@@ -5,6 +5,7 @@ import com.dragonguard.backend.global.repository.EntityRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
@@ -15,6 +16,7 @@ import java.util.Optional;
  * @description 깃허브 Repository 관련 DB와의 CRUD를 담당하는 클래스
  */
 
+@Repository
 public interface JpaGitRepoRepository extends EntityRepository<GitRepo, Long>, GitRepoRepository {
     @Lock(LockModeType.PESSIMISTIC_READ)
     @Query("SELECT gr FROM GitRepo gr WHERE gr.name = :name")
