@@ -1,8 +1,6 @@
 package com.dragonguard.backend.global.repository;
 
 import com.dragonguard.backend.domain.member.entity.Member;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.Optional;
 
@@ -12,7 +10,8 @@ import java.util.Optional;
  */
 
 public interface ContributionRepository<T, ID> {
-    Optional<T> findById(final ID id);
-    Optional<T> findByMemberAndYear(final Member member, final int year);
-    boolean existsByMemberAndYear(final Member member, final int year);
+    T save(T contribution);
+    Optional<T> findById(ID id);
+    Optional<T> findByMemberAndYear(Member member, int year);
+    boolean existsByMemberAndYear(Member member, int year);
 }

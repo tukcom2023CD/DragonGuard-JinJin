@@ -138,25 +138,19 @@ public class Member implements Auditable {
     }
 
     public void addCommit(final Commit commit) {
-        checkAndAddContribution(commit, c -> this.commit = c);
+        this.commit = commit;
     }
 
     public void addIssue(final Issue issue) {
-        checkAndAddContribution(issue, i -> this.issue = i);
+        this.issue = issue;
     }
 
     public void addPullRequest(final PullRequest pullRequest) {
-        checkAndAddContribution(pullRequest, pr -> this.pullRequest = pr);
+        this.pullRequest = pullRequest;
     }
 
     public void addCodeReview(final CodeReview codeReview) {
-        checkAndAddContribution(codeReview, cr -> this.codeReview = cr);
-    }
-
-    private <T> void checkAndAddContribution(
-            final T newContribution,
-            final Consumer<T> update) {
-        update.accept(newContribution);
+        this.codeReview = codeReview;
     }
 
     public void updateTier() {

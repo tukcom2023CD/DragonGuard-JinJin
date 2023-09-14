@@ -93,11 +93,7 @@ public class GitRepoServiceImpl implements GitRepoService {
             final GitRepoClientResponse repoResponse,
             final GitRepoLanguages gitRepoLanguages,
             final String githubToken) {
-        final Optional<GitRepo> optionalGitRepo = findByName(repoName);
-        if (optionalGitRepo.isEmpty()) {
-            return null;
-        }
-        final GitRepo gitRepo = optionalGitRepo.get();
+        final GitRepo gitRepo = findGitRepo(repoName);
         final Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         repoResponse.setClosedIssuesCount(requestClientGitRepoIssue(repoName, githubToken));
 
@@ -183,10 +179,6 @@ public class GitRepoServiceImpl implements GitRepoService {
                 || contributions.stream().map(GitRepoMemberClientResponse::getWeeks).filter(Objects::nonNull).findFirst().isEmpty();
     }
 
-    private Optional<GitRepo> findByName(final String name) {
-        return gitRepoRepository.findByName(name);
-    }
-
     private void requestKafkaSparkLine(final String githubToken, final Long id) {
         kafkaSparkLineProducer.send(new SparkLineKafka(githubToken, id));
     }
@@ -203,11 +195,6 @@ public class GitRepoServiceImpl implements GitRepoService {
     }
 
     @Override
-    @Cacheable(value = "twoGitRepos", key = "{#request.firstRepo, #request.secondRepo}", cacheManager = "cacheManager",
-            unless = "#result.firstRepo.getProfileUrls().?[#this == null].size() > 0 " +
-                    "|| #result.secondRepo.getProfileUrls().?[#this == null].size() > 0 " +
-                    "|| #result.firstRepo.statistics.additionStats.max == 0 " +
-                    "|| #result.secondRepo.statistics.additionStats.max == 0")
     public TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request) {
         String githubToken = authService.getLoginUser().getGithubToken();
         String firstRepo = request.getFirstRepo();

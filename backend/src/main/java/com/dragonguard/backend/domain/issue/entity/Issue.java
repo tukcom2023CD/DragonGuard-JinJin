@@ -43,7 +43,6 @@ public class Issue implements Auditable {
     @Builder
     public Issue(final Member member, final Integer amount, final Integer year) {
         if (amount < 0) return;
-        this.member = member;
         this.amount = amount;
         this.year = year;
         organizeMember(member);
@@ -54,11 +53,15 @@ public class Issue implements Auditable {
     }
 
     private void organizeMember(final Member member) {
-        member.addIssue(this);
+        this.member = member;
+        this.member.addIssue(this);
     }
 
     public boolean isNotUpdatable(final Integer amount) {
-        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L))
-                || this.amount.intValue() == amount.intValue();
+        return updatedCurrently() || this.amount.intValue() == amount.intValue();
+    }
+
+    private boolean updatedCurrently() {
+        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L));
     }
 }

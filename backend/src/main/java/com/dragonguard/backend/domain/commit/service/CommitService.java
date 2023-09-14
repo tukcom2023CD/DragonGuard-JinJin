@@ -9,7 +9,7 @@ import com.dragonguard.backend.domain.commit.repository.CommitRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
+import com.dragonguard.backend.global.mapper.ContributionMapper;
 import com.dragonguard.backend.global.service.ContributionService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class CommitService implements ContributionService<Commit, Long> {
     private static final long NO_AMOUNT = 0L;
     private final CommitRepository commitRepository;
-    private final ContributionEntityMapper<Commit> commitMapper;
+    private final ContributionMapper<Commit> commitMapper;
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
     private final BlockchainService blockchainService;
 
@@ -42,8 +42,7 @@ public class CommitService implements ContributionService<Commit, Long> {
 
     private void updateAndSendTransaction(final Member member, final Integer commitNum, final Integer year, final Blockchain blockchain) {
         final Commit commit = getCommit(member, year);
-        final long newBlockchainAmount = commitNum - blockchain.getSumOfAmount();
-        if (isNotUpdatable(commitNum, commit, newBlockchainAmount)) {
+        if (isNotUpdatable(commitNum, commit, commitNum - blockchain.getSumOfAmount())) {
             return;
         }
         commit.updateCommitNum(commitNum);

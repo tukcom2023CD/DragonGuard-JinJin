@@ -9,7 +9,7 @@ import com.dragonguard.backend.domain.issue.repository.IssueRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
+import com.dragonguard.backend.global.mapper.ContributionMapper;
 import com.dragonguard.backend.global.service.ContributionService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class IssueService implements ContributionService<Issue, Long> {
     private static final long NO_AMOUNT = 0L;
     private final IssueRepository issueRepository;
-    private final ContributionEntityMapper<Issue> issueMapper;
+    private final ContributionMapper<Issue> issueMapper;
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
     private final BlockchainService blockchainService;
 

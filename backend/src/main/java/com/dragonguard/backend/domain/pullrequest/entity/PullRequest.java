@@ -43,22 +43,25 @@ public class PullRequest implements Auditable {
     @Builder
     public PullRequest(final Member member, final Integer amount, final Integer year) {
         if (amount < 0) return;
-        this.member = member;
         this.amount = amount;
         this.year = year;
-        organizeMember();
+        organizeMember(member);
     }
 
     public void updatePullRequestNum(final Integer amount) {
         this.amount = amount;
     }
 
-    private void organizeMember() {
+    private void organizeMember(final Member member) {
+        this.member = member;
         this.member.addPullRequest(this);
     }
 
     public boolean isNotUpdatable(final Integer amount) {
-        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L))
-                || this.amount.intValue() == amount.intValue();
+        return updatedCurrently() || this.amount.intValue() == amount.intValue();
+    }
+
+    private boolean updatedCurrently() {
+        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L));
     }
 }

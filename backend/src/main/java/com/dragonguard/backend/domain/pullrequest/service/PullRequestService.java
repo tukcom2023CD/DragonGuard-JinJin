@@ -9,7 +9,7 @@ import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.repository.PullRequestRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
+import com.dragonguard.backend.global.mapper.ContributionMapper;
 import com.dragonguard.backend.global.service.ContributionService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class PullRequestService implements ContributionService<PullRequest, Long> {
     private static final long NO_AMOUNT = 0L;
     private final PullRequestRepository pullRequestRepository;
-    private final ContributionEntityMapper<PullRequest> pullRequestMapper;
+    private final ContributionMapper<PullRequest> pullRequestMapper;
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
     private final BlockchainService blockchainService;
 

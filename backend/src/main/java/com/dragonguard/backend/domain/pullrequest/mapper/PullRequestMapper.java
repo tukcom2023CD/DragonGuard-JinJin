@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.pullrequest.mapper;
 
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
-import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
+import com.dragonguard.backend.global.mapper.ContributionMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants.ComponentModel;
 
@@ -11,4 +11,4 @@ import org.mapstruct.MappingConstants.ComponentModel;
  */
 
 @Mapper(componentModel = ComponentModel.SPRING)
-public interface PullRequestMapper extends ContributionEntityMapper<PullRequest> {}
+public interface PullRequestMapper extends ContributionMapper<PullRequest> {}

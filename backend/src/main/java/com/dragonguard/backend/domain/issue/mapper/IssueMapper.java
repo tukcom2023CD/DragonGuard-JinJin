@@ -1,9 +1,8 @@
 package com.dragonguard.backend.domain.issue.mapper;
 
 import com.dragonguard.backend.domain.issue.entity.Issue;
-import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
+import com.dragonguard.backend.global.mapper.ContributionMapper;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingConstants.ComponentModel;
 
 /**
@@ -12,4 +11,4 @@ import org.mapstruct.MappingConstants.ComponentModel;
  */
 
 @Mapper(componentModel = ComponentModel.SPRING)
-public interface IssueMapper extends ContributionEntityMapper<Issue> {}
+public interface IssueMapper extends ContributionMapper<Issue> {}

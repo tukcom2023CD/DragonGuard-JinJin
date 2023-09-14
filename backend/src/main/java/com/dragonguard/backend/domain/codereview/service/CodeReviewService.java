@@ -9,7 +9,7 @@ import com.dragonguard.backend.domain.codereview.repository.CodeReviewRepository
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
+import com.dragonguard.backend.global.mapper.ContributionMapper;
 import com.dragonguard.backend.global.service.ContributionService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class CodeReviewService implements ContributionService<CodeReview, Long> {
     private static final long NO_AMOUNT = 0L;
     private final CodeReviewRepository codeReviewRepository;
-    private final ContributionEntityMapper<CodeReview> codeReviewMapper;
+    private final ContributionMapper<CodeReview> codeReviewMapper;
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
     private final BlockchainService blockchainService;
 
@@ -42,8 +42,7 @@ public class CodeReviewService implements ContributionService<CodeReview, Long> 
 
     private void updateAndSendTransaction(final Member member, final Integer codeReviewNum, final Integer year, final Blockchain blockchain) {
         final CodeReview codeReview = getCodeReview(member, year);
-        final long newBlockchainAmount = codeReviewNum - blockchain.getSumOfAmount();
-        if (isNotUpdatable(codeReviewNum, codeReview, newBlockchainAmount)) {
+        if (isNotUpdatable(codeReviewNum, codeReview, codeReviewNum - blockchain.getSumOfAmount())) {
             return;
         }
         codeReview.updateCodeReviewNum(codeReviewNum);

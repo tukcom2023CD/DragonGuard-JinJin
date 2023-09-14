@@ -1,12 +1,10 @@
 package com.dragonguard.backend.domain.codereview.entity;
 
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -46,20 +44,23 @@ public class CodeReview implements Auditable {
         if (amount < 0) return;
         this.year = year;
         this.amount = amount;
-        this.member = member;
-        organize();
+        organizeMember(member);
     }
 
-    private void organize() {
+    private void organizeMember(final Member member) {
+        this.member = member;
         this.member.addCodeReview(this);
     }
 
-    public void updateCodeReviewNum(final Integer codeReviewNum) {
-        this.amount = codeReviewNum;
+    public void updateCodeReviewNum(final Integer amount) {
+        this.amount = amount;
     }
 
     public boolean isNotUpdatable(final Integer amount) {
-        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L))
-                || this.amount.intValue() == amount.intValue();
+        return updatedCurrently() || this.amount.intValue() == amount.intValue();
+    }
+
+    private boolean updatedCurrently() {
+        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L));
     }
 }

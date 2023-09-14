@@ -45,16 +45,16 @@ public class Commit implements Auditable {
         if (amount < 0) return;
         this.year = year;
         this.amount = amount;
+        organizeMember(member);
+    }
+
+    private void organizeMember(final Member member) {
         this.member = member;
-        organizeMember();
+        this.member.addCommit(this);
     }
 
-    private void organizeMember() {
-        member.addCommit(this);
-    }
-
-    public void updateCommitNum(final Integer commitNum) {
-        this.amount = commitNum;
+    public void updateCommitNum(final Integer amount) {
+        this.amount = amount;
     }
 
     public boolean isNotUpdatable(final Integer amount) {

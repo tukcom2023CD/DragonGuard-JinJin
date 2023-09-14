@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.commit.mapper;
 
 import com.dragonguard.backend.domain.commit.entity.Commit;
-import com.dragonguard.backend.global.mapper.ContributionEntityMapper;
+import com.dragonguard.backend.global.mapper.ContributionMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants.ComponentModel;
 
@@ -13,4 +13,4 @@ import java.time.LocalDate;
  */
 
 @Mapper(componentModel = ComponentModel.SPRING, imports = {LocalDate.class})
-public interface CommitMapper extends ContributionEntityMapper<Commit> {}
+public interface CommitMapper extends ContributionMapper<Commit> {}
