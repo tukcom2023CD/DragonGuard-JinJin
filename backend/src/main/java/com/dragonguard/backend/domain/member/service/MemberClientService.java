@@ -11,6 +11,8 @@ import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.member.dto.client.*;
+import com.dragonguard.backend.domain.member.dto.constant.ContributionServiceComponent;
+import com.dragonguard.backend.domain.member.dto.constant.GithubClientComponent;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.global.client.GithubClient;
@@ -51,34 +53,34 @@ public class MemberClientService {
     }
 
     private void requestCodeReviewClientAndSave(final Member member, final MemberClientRequest request) {
-        final int codeReviewNum = getGithubClient("memberCodeReviewClient", MemberCodeReviewResponse.class)
+        final int codeReviewNum = getGithubClient(GithubClientComponent.CODE_REVIEW_COMPONENT.getName(), MemberCodeReviewResponse.class)
                 .requestToGithub(request).getTotalCount();
 
-        getContributionService("codeReviewService", CodeReview.class)
+        getContributionService(ContributionServiceComponent.CODE_REVIEW_COMPONENT.getName(), CodeReview.class)
                 .saveContribution(member, codeReviewNum, request.getYear());
     }
 
     private void requestPullRequestClientAndSave(final Member member, final MemberClientRequest request) {
-        final int pullRequestNum = getGithubClient("memberPullRequestClient", MemberPullRequestResponse.class)
+        final int pullRequestNum = getGithubClient(GithubClientComponent.PULL_REQUEST_COMPONENT.getName(), MemberPullRequestResponse.class)
                 .requestToGithub(request).getTotalCount();
 
-        getContributionService("pullRequestService", PullRequest.class)
+        getContributionService(ContributionServiceComponent.PULL_REQUEST_COMPONENT.getName(), PullRequest.class)
                 .saveContribution(member, pullRequestNum, request.getYear());
     }
 
     private void requestIssueClientAndSave(final Member member, final MemberClientRequest request) {
-        final int issueNum = getGithubClient("memberIssueClient", MemberIssueResponse.class)
+        final int issueNum = getGithubClient(GithubClientComponent.ISSUE_COMPONENT.getName(), MemberIssueResponse.class)
                 .requestToGithub(request).getTotalCount();
 
-        getContributionService("issueService", Issue.class)
+        getContributionService(ContributionServiceComponent.ISSUE_COMPONENT.getName(), Issue.class)
                 .saveContribution(member, issueNum, request.getYear());
     }
 
     private void requestCommitClientAndSave(final Member member, final MemberClientRequest request) {
-        final int commitNum = getGithubClient("memberCommitClient", MemberCommitResponse.class)
+        final int commitNum = getGithubClient(GithubClientComponent.COMMIT_COMPONENT.getName(), MemberCommitResponse.class)
                 .requestToGithub(request).getTotalCount();
 
-        getContributionService("commitService", Commit.class)
+        getContributionService(ContributionServiceComponent.COMMIT_COMPONENT.getName(), Commit.class)
                 .saveContribution(member, commitNum, request.getYear());
     }
 

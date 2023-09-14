@@ -28,8 +28,6 @@ public class MemberCommitClient implements GithubClient<MemberClientRequest, Mem
                 .uri(
                         uriBuilder -> uriBuilder
                                 .path(String.format(PATH_FORMAT, request.getGithubId(), request.getYear()))
-                                .path("search/commits?q=author:")
-                                .path(request.getGithubId() + "+committer-date:%3E" + request.getYear() + "-01-01")
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
