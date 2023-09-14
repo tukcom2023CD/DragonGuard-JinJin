@@ -129,7 +129,7 @@ public class GitRepoMemberFacade {
 
     private boolean isGitRepoMemberValid(final Set<GitRepoMember> gitRepoMembers) {
         return !gitRepoMembers.isEmpty() && gitRepoMembers.stream().noneMatch(grm ->
-                Objects.isNull(grm.getGitRepoContribution()) || StringUtils.hasText(grm.getMember().getProfileImage()));
+                Objects.isNull(grm.getGitRepoContribution()) || Objects.isNull(grm.getMember().getProfileImage()));
     }
 
     public GitRepoResponse findGitRepoInfos(final String name) {

@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 @TransactionService
 @RequiredArgsConstructor
 public class MemberClientService {
-    private final Map<String, GithubClient<MemberClientRequest, ?>> githubClients;
-    private final Map<String, ContributionService<?, Long>> contributionServices;
+    private final Map<String, GithubClient> githubClients;
+    private final Map<String, ContributionService> contributionServices;
     private final GitOrganizationService gitOrganizationService;
     private final GitRepoMapper gitRepoMapper;
     private final GitRepoRepository gitRepoRepository;              // todo 순환참조 해결

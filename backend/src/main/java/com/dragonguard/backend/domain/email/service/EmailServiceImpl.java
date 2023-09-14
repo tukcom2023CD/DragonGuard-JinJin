@@ -44,7 +44,9 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private void validateMemberEmail(final String memberEmail) {
-        if (!StringUtils.hasText(memberEmail)) throw new EmailException();
+        if (!StringUtils.hasText(memberEmail)) {
+            throw new EmailException();
+        }
     }
 
     public void deleteCode(final Long id) {
