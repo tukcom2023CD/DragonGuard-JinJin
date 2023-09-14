@@ -127,7 +127,7 @@ extension OrganizationDetailController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.safeAreaLayoutGuide.layoutFrame.height/6
+        return 130
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return data?.git_repos?.count ?? 0 }
