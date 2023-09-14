@@ -26,8 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
-@Slf4j
-@DatabaseTest
 @DisplayName("email 서비스의")
 class EmailServiceTest extends LoginTest {
 

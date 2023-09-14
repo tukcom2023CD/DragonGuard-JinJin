@@ -32,8 +32,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@Slf4j
-@DatabaseTest
 @DisplayName("Organization 서비스의")
 class OrganizationServiceTest extends LoginTest {
     @Autowired private OrganizationEmailFacade organizationEmailFacade;

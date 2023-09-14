@@ -38,15 +38,16 @@ import javax.persistence.EntityManager;
 @ImportAutoConfiguration
 @AutoConfigureTestDatabase
 @EmbeddedKafka(topics = {})
+@DisplayName("배치 작업중에서")
 @AutoConfigureTestEntityManager
 @ExtendWith(SpringExtension.class)
 @TypeExcludeFilters(DataJpaTypeExcludeFilter.class)
 @ComponentScan(excludeFilters  = {@ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE, classes = {KafkaConsumerConfig.class, KafkaProducerConfig.class})})
 @SpringBootTest("spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration")
-@DisplayName("배치 작업중에서")
 @RunWith(SpringRunner.class)
-public class WebClientJobBatchTest extends GitRepoBatchTest {
+public class
+WebClientJobBatchTest extends GitRepoBatchTest {
     @Autowired private JobLauncherTestUtils jobLauncherTestUtils;
     @Autowired private GitRepoMemberRepository gitRepoMemberRepository;
     @Autowired private GitRepoRepository gitRepoRepository;
@@ -56,13 +57,10 @@ public class WebClientJobBatchTest extends GitRepoBatchTest {
     @DisplayName("깃허브 Rest API를 호출하여 GitRepo의 GitRepoMember를 업데이트하는 작업을 수행하는가")
     public void runBatch() throws Exception {
         gitRepoRepository.saveAll(gitRepos);
-        em.clear();
 
         log.info("BEFORE SIZE: {}", gitRepoMemberRepository.findAll().size());
 
         jobLauncherTestUtils.launchJob();
-
-        Thread.sleep(5000);
 
         em.clear();
 

@@ -29,7 +29,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@DatabaseTest
 @DisplayName("GitRepo 서비스의")
 class GitRepoServiceImplTest extends LoginTest {
     @Autowired private GitRepoServiceImpl gitRepoServiceImpl;

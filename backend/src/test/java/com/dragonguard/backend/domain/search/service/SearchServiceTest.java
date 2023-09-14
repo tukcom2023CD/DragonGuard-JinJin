@@ -25,7 +25,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@DatabaseTest
 @DisplayName("Search 서비스의")
 class SearchServiceTest extends LoginTest {
     @Autowired private SearchServiceImpl searchService;

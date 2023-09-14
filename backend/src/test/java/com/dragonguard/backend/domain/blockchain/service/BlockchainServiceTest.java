@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@DatabaseTest
 @DisplayName("blockchain 서비스의")
 class BlockchainServiceTest extends LoginTest {
 

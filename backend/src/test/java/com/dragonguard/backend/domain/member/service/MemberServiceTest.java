@@ -43,7 +43,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@DatabaseTest
 @DisplayName("Member 서비스의")
 class MemberServiceTest extends LoginTest {
     @Autowired private MemberService memberService;

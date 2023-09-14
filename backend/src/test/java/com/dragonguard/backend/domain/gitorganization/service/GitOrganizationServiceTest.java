@@ -17,7 +17,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DatabaseTest
 @DisplayName("GitOrganization 서비스의")
 class GitOrganizationServiceTest extends LoginTest {
     @Autowired private GitOrganizationService gitOrganizationService;

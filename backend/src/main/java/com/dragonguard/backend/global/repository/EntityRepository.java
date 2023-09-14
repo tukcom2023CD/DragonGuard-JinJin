@@ -5,6 +5,7 @@ import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.exception.UnsupportedDeletionException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -12,19 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
  * @description soft delete 를 위한 repository 인터페이스
  */
 
-public interface EntityRepository<T extends Auditable, ID> extends JpaRepository<T, ID> {
+@NoRepositoryBean
+public interface EntityRepository<T, ID> extends JpaRepository<T, ID> {
 
     @Modifying
     @Transactional
     default void softDelete(final T entity) {
-        entity.delete();
+        ((Auditable) entity).delete();
     }
 
     @Modifying
     @Transactional
     default void softDeleteById(final ID id) {
         final T entity = findById(id).orElseThrow(EntityNotFoundException::new);
-        entity.delete();
+        ((Auditable) entity).delete();
     }
 
     @Override

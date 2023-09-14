@@ -17,7 +17,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DatabaseTest
 @DisplayName("admin 서비스의")
 class AdminServiceTest extends LoginTest {
 

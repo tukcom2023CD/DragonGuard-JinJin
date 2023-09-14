@@ -10,7 +10,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@DatabaseTest
 @DisplayName("Auth 서비스의")
 class AuthServiceTest extends LoginTest {
 
@@ -18,7 +17,7 @@ class AuthServiceTest extends LoginTest {
     @DisplayName("리프레시 토큰 갱신 기능이 수행되는가")
     void refreshToken() {
         //given
-        JwtToken expected = new JwtToken("accessToken", "refreshToken", "Bearer");
+        JwtToken expected = new JwtToken("accessToken", "refreshToken");
         when(authService.refreshToken(any(), any())).thenReturn(expected);
 
         //when

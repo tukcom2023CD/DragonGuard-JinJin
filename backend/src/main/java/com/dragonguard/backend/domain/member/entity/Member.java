@@ -169,7 +169,7 @@ public class Member implements Auditable {
     }
 
     public void updateTier() {
-        if (sumOfTokens > NO_TOKEN) {
+        if (sumOfTokens != null && sumOfTokens > NO_TOKEN) {
             this.tier = checkTier(sumOfTokens);
             return;
         }

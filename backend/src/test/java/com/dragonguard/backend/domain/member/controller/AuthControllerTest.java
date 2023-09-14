@@ -29,7 +29,7 @@ class AuthControllerTest extends RestDocumentTest {
     @DisplayName("리프레시 토큰 갱신이 수행되는가")
     void authorize() throws Exception {
         // given
-        JwtToken jwtToken = new JwtToken("1234.1234.1234", "4321.4321.4321", "bearer");
+        JwtToken jwtToken = new JwtToken("1234.1234.1234", "4321.4321.4321");
         given(authService.refreshToken(any(), any())).willReturn(jwtToken);
 
         // when

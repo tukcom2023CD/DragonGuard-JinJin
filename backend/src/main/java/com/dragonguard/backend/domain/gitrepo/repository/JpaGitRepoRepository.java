@@ -26,7 +26,7 @@ public interface JpaGitRepoRepository extends EntityRepository<GitRepo, Long>, G
     boolean existsByName(final String name);
 
     @Query("SELECT gr FROM GitRepo gr")
-    @EntityGraph(attributePaths = {"gitRepo.gitRepoMembers.member"})
+    @EntityGraph(attributePaths = {"gitRepoMembers.member"})
     Page<GitRepo> findAllWithMember(final Pageable pageable);
 
     @Query("SELECT gr FROM GitRepo gr LEFT JOIN FETCH gr.gitRepoMembers grm LEFT JOIN FETCH grm.member WHERE gr.id = :id")

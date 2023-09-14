@@ -16,7 +16,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DatabaseTest
 @DisplayName("commit 서비스의")
 class CommitServiceTest extends LoginTest {
     @Autowired private CommitService commitService;

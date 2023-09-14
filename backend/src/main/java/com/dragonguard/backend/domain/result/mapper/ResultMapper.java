@@ -5,17 +5,17 @@ import com.dragonguard.backend.domain.search.dto.client.GitRepoSearchClientRespo
 import com.dragonguard.backend.domain.search.dto.client.UserClientResponse;
 import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponse;
 import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponse;
-import com.dragonguard.backend.global.mapper.EntityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants.ComponentModel;
 
 /**
  * @author 김승진
  * @description 검색 결과 Entity와 dto의 변환을 돕는 클래스
  */
 
-@Mapper(componentModel = "spring")
-public interface ResultMapper extends EntityMapper {
+@Mapper(componentModel = ComponentModel.SPRING)
+public interface ResultMapper {
     Result toEntity(final String name, final Long searchId);
 
     @Mapping(target = "name", source = "userResponse.login")
