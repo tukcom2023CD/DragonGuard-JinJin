@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.search.entity;
 
+import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
@@ -15,6 +16,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Filter implements Auditable {
     @Id

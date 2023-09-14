@@ -11,6 +11,7 @@ import com.dragonguard.backend.domain.member.exception.InvalidGithubTokenExcepti
 import com.dragonguard.backend.domain.member.exception.NoSuchWalletAddressException;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
+import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 @Entity
 @SoftDelete
 @EqualsAndHashCode(of = "githubId")
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {@Index(name = "member_index", columnList = "githubId")})
 public class Member implements Auditable {

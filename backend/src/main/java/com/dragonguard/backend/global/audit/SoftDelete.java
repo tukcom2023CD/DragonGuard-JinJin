@@ -13,5 +13,4 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
 public @interface SoftDelete {}

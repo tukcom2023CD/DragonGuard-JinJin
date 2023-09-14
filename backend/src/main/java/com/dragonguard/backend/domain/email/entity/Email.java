@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.email.entity;
 
+import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Email implements Auditable {
     @Id

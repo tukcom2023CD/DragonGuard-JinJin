@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.codereview.entity;
 
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @Getter
 @Entity
 @SoftDelete
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CodeReview implements Auditable {
     @Id

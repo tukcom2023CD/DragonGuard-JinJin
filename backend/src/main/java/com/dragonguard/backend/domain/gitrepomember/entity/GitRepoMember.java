@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.gitrepomember.entity;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
@@ -17,6 +18,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @SoftDelete
+@EntityListeners(AuditListener.class)
 @EqualsAndHashCode(of = {"gitRepo", "member"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GitRepoMember implements Auditable {

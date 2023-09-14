@@ -3,6 +3,7 @@ package com.dragonguard.backend.domain.blockchain.entity;
 import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Where(clause = "deleted_at is null")
+@SoftDelete
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class History implements Auditable {

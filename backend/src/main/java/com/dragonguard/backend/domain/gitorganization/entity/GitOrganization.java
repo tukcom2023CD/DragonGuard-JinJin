@@ -21,6 +21,7 @@ import java.util.List;
 @Entity
 @SoftDelete
 @EqualsAndHashCode(of = "name")
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {@Index(name = "gitorganization_index", columnList = "name")})
 public class GitOrganization implements Auditable {

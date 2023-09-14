@@ -23,6 +23,7 @@ import java.util.Set;
 @Entity
 @SoftDelete
 @EqualsAndHashCode(of = "name")
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {@Index(name = "gitrepo_index", columnList = "name")})
 public class GitRepo implements Auditable {
