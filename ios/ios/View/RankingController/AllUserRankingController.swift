@@ -457,13 +457,14 @@ extension AllUserRankingController: UITableViewDelegate, UITableViewDataSource{
         if tableView == typeTableView{
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TypeRankingTableViewCell.identifier, for: indexPath) as? TypeRankingTableViewCell else { return UITableViewCell()}
             cell.backgroundColor = .white
-            
+            cell.selectionStyle = .none
             cell.inputData(rank: indexPath.row + 4, data: userTierTypeOfRankingData[indexPath.row])
             return cell
         }
         else{
             guard let cell = tableView.dequeueReusableCell(withIdentifier: AllUserTableviewCell.identifier, for: indexPath) as? AllUserTableviewCell else { return UITableViewCell()}
             cell.backgroundColor = .white
+            cell.selectionStyle = .none
             cell.inputData(rank: indexPath.row + 4, userData: userTierData[indexPath.row])
             return cell
         }

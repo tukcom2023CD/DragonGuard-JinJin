@@ -108,7 +108,7 @@ extension OrganizationListController: UITableViewDelegate, UITableViewDataSource
         guard let cell = tableView.dequeueReusableCell(withIdentifier: OrganizationListTableViewCell.identfier, for: indexPath) as? OrganizationListTableViewCell else {return UITableViewCell()}
         cell.inputData(rank: (indexPath.row + 1), userData: memberList[indexPath.row])
         cell.backgroundColor = .clear
-        
+        cell.selectionStyle = .none
         return cell
     }
     

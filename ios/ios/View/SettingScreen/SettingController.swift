@@ -213,7 +213,7 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
                 self.logOut()
             }
             else{
-                
+                print("탈퇴임")
             }
             
         default:
