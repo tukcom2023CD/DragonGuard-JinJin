@@ -7,12 +7,13 @@ import com.dragonguard.backend.domain.search.dto.kafka.ScrapeResult;
 import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponse;
 import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponse;
 import com.dragonguard.backend.domain.search.entity.Search;
+import com.dragonguard.backend.global.service.EntityLoader;
 
 import java.util.List;
 
-public interface ResultService {
+public interface ResultService extends EntityLoader<Result, Long> {
     UserResultSearchResponse saveResult(final UserClientResponse response, final Search search, final boolean isServiceMember);
     GitRepoResultResponse saveResultAndGetGitRepoResponse(final GitRepoSearchClientResponse request, final Search search);
-    List<Result> findAllBySearchId(Long searchId);
-    void saveAllResultsWithSearch(List<ScrapeResult> results, Long searchId, List<Result> resultList);
+    List<Result> findAllBySearchId(final Long searchId);
+    void saveAllResultsWithSearch(final List<ScrapeResult> results, final Long searchId, final List<Result> resultList);
 }

@@ -19,16 +19,15 @@ import java.nio.charset.StandardCharsets;
 @Component
 @RequiredArgsConstructor
 public class OrganizationRepoClient implements GithubClient<MemberClientRequest, OrganizationRepoResponse[]> {
+    private static final String PATH_FORMAT = "orgs/%s/repos";
     private final WebClient webClient;
 
     @Override
-    public OrganizationRepoResponse[] requestToGithub(MemberClientRequest request) {
+    public OrganizationRepoResponse[] requestToGithub(final MemberClientRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .path("orgs/")
-                                .path(request.getGithubId())
-                                .path("/repos")
+                                .path(String.format(PATH_FORMAT, request.getGithubId()))
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

@@ -11,9 +11,9 @@ import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.organization.dto.response.RelatedRankWithMemberResponse;
-import com.dragonguard.backend.global.mapper.EntityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.Named;
 
 import java.util.List;
@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
  * @description 멤버 Entity와 dto의 변환을 돕는 클래스
  */
 
-@Mapper(componentModel = "spring", imports = {GitRepo.class, GitRepoMember.class, Collectors.class})
-public interface MemberMapper extends EntityMapper {
+@Mapper(componentModel = ComponentModel.SPRING, imports = {GitRepo.class, GitRepoMember.class, Collectors.class})
+public interface MemberMapper {
     @Mapping(target = "githubId", source = "githubId")
     @Mapping(target = "profileImage", source = "profileUrl")
     @Mapping(target = "authStep", source = "authStep")
@@ -37,22 +37,22 @@ public interface MemberMapper extends EntityMapper {
 
     @Mapping(target = "organizationRank", source = "relatedRank.organizationRank")
     @Mapping(target = "memberGithubIds", source = "relatedRank.memberGithubIds")
-    @Mapping(target = "tokenAmount", expression = "java(member.getSumOfTokens())")
+    @Mapping(target = "tokenAmount", source = "member.sumOfTokens")
     @Mapping(target = "isLast", source = "relatedRank.isLast")
     @Mapping(target = "organization", source = "organization")
-    @Mapping(target = "commits", expression = "java(member.getSumOfCommits().orElse(null))")
-    @Mapping(target = "issues", expression = "java(member.getSumOfIssues().orElse(null))")
-    @Mapping(target = "pullRequests", expression = "java(member.getSumOfPullRequests().orElse(null))")
-    @Mapping(target = "reviews", expression = "java(member.getSumOfCodeReviews().orElse(null))")
+    @Mapping(target = "commits", source = "member.sumOfCommits")
+    @Mapping(target = "issues", source = "member.sumOfIssues")
+    @Mapping(target = "pullRequests", source = "member.sumOfPullRequests")
+    @Mapping(target = "reviews", source = "member.sumOfCodeReviews")
     MemberResponse toResponse(final Member member, final Integer rank, final String organization, final RelatedRankWithMemberResponse relatedRank);
 
     @Mapping(target = "rank", source = "rank")
-    @Mapping(target = "tokenAmount", expression = "java(member.getSumOfTokens())")
+    @Mapping(target = "tokenAmount", source = "member.sumOfTokens")
     @Mapping(target = "organization", source = "member.organization.name")
-    @Mapping(target = "commits", expression = "java(member.getSumOfCommits().orElse(null))")
-    @Mapping(target = "issues", expression = "java(member.getSumOfIssues().orElse(null))")
-    @Mapping(target = "pullRequests", expression = "java(member.getSumOfPullRequests().orElse(null))")
-    @Mapping(target = "reviews", expression = "java(member.getSumOfCodeReviews().orElse(null))")
+    @Mapping(target = "commits", source = "member.sumOfCommits")
+    @Mapping(target = "issues", source = "member.sumOfIssues")
+    @Mapping(target = "pullRequests", source = "member.sumOfPullRequests")
+    @Mapping(target = "reviews", source = "member.sumOfCodeReviews")
     MemberResponse toResponse(final Member member, final Integer rank);
 
     @Mapping(target = "gitOrganizations", source = "gitOrganizations", qualifiedByName = "getGitOrganizationNames")
@@ -60,15 +60,15 @@ public interface MemberMapper extends EntityMapper {
     @Mapping(target = "memberProfileImage", source = "memberProfileImage")
     MemberGitReposAndGitOrganizationsResponse toRepoAndOrgResponse(final String memberProfileImage, final List<GitOrganization> gitOrganizations, final List<GitRepo> gitRepos);
 
-    @Mapping(target = "commits", expression = "java(member.getSumOfCommits().orElse(null))")
-    @Mapping(target = "issues", expression = "java(member.getSumOfIssues().orElse(null))")
-    @Mapping(target = "pullRequests", expression = "java(member.getSumOfPullRequests().orElse(null))")
-    @Mapping(target = "reviews", expression = "java(member.getSumOfCodeReviews().orElse(null))")
+    @Mapping(target = "commits", source = "member.sumOfCommits")
+    @Mapping(target = "issues", source = "member.sumOfIssues")
+    @Mapping(target = "pullRequests", source = "member.sumOfPullRequests")
+    @Mapping(target = "reviews", source = "member.sumOfCodeReviews")
     @Mapping(target = "profileImage", source = "member.profileImage")
-    @Mapping(target = "gitRepos", expression = "java(member.getGitRepoMembers().stream().map(GitRepoMember::getGitRepo).map(GitRepo::getName).collect(Collectors.toList()))")
-    @Mapping(target = "organization", expression = "java(member.getOrganization() != null ? member.getOrganization().getName() : null)")
+    @Mapping(target = "gitRepos", expression = "java(member.getGitRepoNames())")
+    @Mapping(target = "organization", expression = "java(member.getOrganizationName())")
     @Mapping(target = "rank", source = "rank")
-    MemberDetailsResponse toDetailsResponse(Member member, Integer rank);
+    MemberDetailsResponse toDetailsResponse(final Member member, final Integer rank);
 
     @Named("getGitOrganizationNames")
     default List<MemberGitOrganizationResponse> getGitOrganizationNames(final List<GitOrganization> gitOrganizations) {

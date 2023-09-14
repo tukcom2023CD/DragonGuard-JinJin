@@ -12,9 +12,9 @@ import java.util.Optional;
  */
 
 public interface GitOrganizationRepository {
-    List<GitOrganization> findAllByMember(Member member);
-    <S extends GitOrganization> List<S> saveAll(Iterable<S> entities);
-    Optional<GitOrganization> findByName(String name);
-    Optional<GitOrganization> findById(Long id);
-    boolean existsByName(String name);
+    List<GitOrganization> findAllByMember(final Member member);
+    <S extends GitOrganization> List<S> saveAll(final Iterable<S> entities);
+    Optional<GitOrganization> findByName(final String name);
+    Optional<GitOrganization> findById(final Long id);
+    boolean existsByName(final String name);
 }

@@ -29,9 +29,9 @@ public class KafkaContributionClientConsumer implements KafkaConsumer<Contributi
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.contribution.client", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(String message) {
-        ContributionClientResponse response = readValue(message);
-        Member member = memberRepository.findByGithubId(response.getGithubId())
+    public void consume(final String message) {
+        final ContributionClientResponse response = readValue(message);
+        final Member member = memberRepository.findByGithubId(response.getGithubId())
                 .orElseThrow(EntityNotFoundException::new);
 
         memberService.updateContributionAndTransaction(member);
@@ -39,7 +39,7 @@ public class KafkaContributionClientConsumer implements KafkaConsumer<Contributi
 
     @Override
     @SneakyThrows(JsonProcessingException.class)
-    public ContributionClientResponse readValue(String message) {
+    public ContributionClientResponse readValue(final String message) {
         return objectMapper.readValue(message, ContributionClientResponse.class);
     }
 }

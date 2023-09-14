@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @TransactionService
 @RequiredArgsConstructor
 public class CommitService implements ContributionService<Commit, Long> {
-    private static final long NONE = 0L;
+    private static final long NO_AMOUNT = 0L;
     private final CommitRepository commitRepository;
     private final ContributionEntityMapper<Commit> commitMapper;
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
@@ -30,18 +30,28 @@ public class CommitService implements ContributionService<Commit, Long> {
 
     @Override
     public void saveContribution(final Member member, final Integer commitNum, final Integer year) {
-        Blockchain blockchain = blockchainService.findBlockchainOfType(member, ContributeType.COMMIT);
+        final Blockchain blockchain = blockchainService.findBlockchainOfType(member, ContributeType.COMMIT);
 
         if (existsByMemberAndYear(member, year)) {
-            Commit commit = getCommit(member, year);
-            long newBlockchainAmount = commitNum - blockchain.getSumOfAmount();
-            if (commit.isNotUpdatable(commitNum) && newBlockchainAmount == NONE) return;
-            commit.updateCommitNum(commitNum);
-            sendTransaction(member, commitNum.longValue(), blockchain);
+            updateAndSendTransaction(member, commitNum, year, blockchain);
             return;
         }
         commitRepository.save(commitMapper.toEntity(member, commitNum, year));
         sendTransaction(member, commitNum.longValue(), blockchain);
+    }
+
+    private void updateAndSendTransaction(final Member member, final Integer commitNum, final Integer year, final Blockchain blockchain) {
+        final Commit commit = getCommit(member, year);
+        final long newBlockchainAmount = commitNum - blockchain.getSumOfAmount();
+        if (isNotUpdatable(commitNum, commit, newBlockchainAmount)) {
+            return;
+        }
+        commit.updateCommitNum(commitNum);
+        sendTransaction(member, commitNum.longValue(), blockchain);
+    }
+
+    private boolean isNotUpdatable(final Integer commitNum, final Commit commit, final long newBlockchainAmount) {
+        return commit.isNotUpdatable(commitNum) && newBlockchainAmount == NO_AMOUNT;
     }
 
     private Commit getCommit(final Member member, final Integer year) {
@@ -54,8 +64,14 @@ public class CommitService implements ContributionService<Commit, Long> {
     }
 
     private void sendTransaction(final Member member, final Long amount, final Blockchain blockchain) {
-        if (amount <= 0 || !member.isWalletAddressExists() || !blockchain.isNewHistory(amount)) return;
+        if (isInvalidToTransaction(member, amount, blockchain)) {
+            return;
+        }
         blockchainKafkaProducer.send(new BlockchainKafkaRequest(member.getId(), amount, ContributeType.COMMIT));
+    }
+
+    private boolean isInvalidToTransaction(final Member member, final Long amount, final Blockchain blockchain) {
+        return amount <= NO_AMOUNT || !member.isWalletAddressExists() || !blockchain.isNewHistory(amount);
     }
 
     @Override

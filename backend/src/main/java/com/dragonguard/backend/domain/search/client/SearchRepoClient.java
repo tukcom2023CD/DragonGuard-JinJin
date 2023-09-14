@@ -24,10 +24,12 @@ import java.util.function.Function;
 @Component
 @RequiredArgsConstructor
 public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoResponse> {
+    private static final int PER_PAGE_SIZE = 10;
+    private static final String PATH_FORMAT = "search/%s?q=%s&per_page=%d&page=%d";
     private final WebClient webClient;
 
     @Override
-    public SearchRepoResponse requestToGithub(SearchRequest request) {
+    public SearchRepoResponse requestToGithub(final SearchRequest request) {
         return webClient.get()
                 .uri(getUriBuilder(request))
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
@@ -39,26 +41,26 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
                 .orElseThrow(WebClientException::new);
     }
 
-    private Function<UriBuilder, URI> getUriBuilder(SearchRequest request) {
+    private Function<UriBuilder, URI> getUriBuilder(final SearchRequest request) {
         List<String> filters = request.getFilters();
 
         if (Objects.isNull(filters) || filters.isEmpty()) {
             return uriBuilder -> uriBuilder
-                    .path("search")
-                    .path("/" + request.getType().toString().toLowerCase())
-                    .queryParam("q", request.getName().strip())
-                    .queryParam("per_page", 10)
-                    .queryParam("page", request.getPage())
+                    .path(String.format(String.format(
+                            PATH_FORMAT,
+                            request.getType().getLowerCase(),
+                            request.getName(),
+                            PER_PAGE_SIZE,
+                            request.getPage())))
                     .build();
         }
-        String query = String.join("%20", filters);
-
         return uriBuilder -> uriBuilder
-                .path("search")
-                .path("/" + request.getType().toString().toLowerCase())
-                .queryParam("q", request.getName().strip().concat("%20" + query))
-                .queryParam("per_page", 10)
-                .queryParam("page", request.getPage())
+                .path(String.format(String.format(
+                        PATH_FORMAT,
+                        request.getType().getLowerCase(),
+                        request.getName().strip().concat("%20" + String.join("%20", filters)),
+                        PER_PAGE_SIZE,
+                        request.getPage())))
                 .build();
     }
 }

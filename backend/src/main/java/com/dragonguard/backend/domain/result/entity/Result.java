@@ -1,10 +1,9 @@
 package com.dragonguard.backend.domain.result.entity;
 
-import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -15,9 +14,8 @@ import javax.persistence.*;
 
 @Getter
 @Entity
+@SoftDelete
 @EqualsAndHashCode(of = "name")
-@Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Result implements Auditable {
 
@@ -36,7 +34,7 @@ public class Result implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Result(String name, Long searchId) {
+    public Result(final String name, final Long searchId) {
         this.name = name;
         this.searchId = searchId;
     }

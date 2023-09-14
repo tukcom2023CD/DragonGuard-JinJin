@@ -19,13 +19,15 @@ import java.nio.charset.StandardCharsets;
 @Component
 @RequiredArgsConstructor
 public class MemberCommitClient implements GithubClient<MemberClientRequest, MemberCommitResponse> {
+    private static final String PATH_FORMAT = "search/commits?q=author:%s+committer-date:%%3E%d-01-01";
     private final WebClient webClient;
 
     @Override
-    public MemberCommitResponse requestToGithub(MemberClientRequest request) {
+    public MemberCommitResponse requestToGithub(final MemberClientRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
+                                .path(String.format(PATH_FORMAT, request.getGithubId(), request.getYear()))
                                 .path("search/commits?q=author:")
                                 .path(request.getGithubId() + "+committer-date:%3E" + request.getYear() + "-01-01")
                                 .build())

@@ -23,19 +23,25 @@ import java.util.List;
 @TransactionService
 @RequiredArgsConstructor
 public class AdminService {
+    private static final int DEFAULT_PAGE = 0;
+    private static final int DEFAULT_PAGE_SIZE = 20;
     private final OrganizationRepository organizationRepository;
     private final AdminMapper adminMapper;
 
     public List<AdminOrganizationResponse> decideRequestedOrganization(final AdminDecideRequest adminDecideRequest) {
-        Organization organization = organizationRepository.findById(adminDecideRequest.getId())
-                .orElseThrow(EntityNotFoundException::new);
-        OrganizationStatus beforeStatus = organization.getOrganizationStatus();
+        final Organization organization = getOrganization(adminDecideRequest);
+        final OrganizationStatus beforeStatus = organization.getOrganizationStatus();
         organization.updateStatus(adminDecideRequest.getDecide());
 
-        List<Organization> organizations = organizationRepository
-                .findAllByOrganizationStatus(beforeStatus, PageRequest.of(0, 20));
+        final List<Organization> organizations = organizationRepository
+                .findAllByOrganizationStatus(beforeStatus, PageRequest.of(DEFAULT_PAGE, DEFAULT_PAGE_SIZE));
 
         return adminMapper.toResponseList(organizations);
+    }
+
+    private Organization getOrganization(final AdminDecideRequest adminDecideRequest) {
+        return organizationRepository.findById(adminDecideRequest.getId())
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional(readOnly = true)

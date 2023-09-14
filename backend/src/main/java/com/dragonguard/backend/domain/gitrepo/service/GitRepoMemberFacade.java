@@ -3,7 +3,7 @@ package com.dragonguard.backend.domain.gitrepo.service;
 import com.dragonguard.backend.domain.gitrepo.dto.client.Author;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.Week;
-import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributionMap;
+import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributions;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoMemberCompareRequest;
@@ -42,10 +42,10 @@ public class GitRepoMemberFacade {
     }
 
     public GitRepoMemberCompareResponse findTwoGitRepoMember(final GitRepoMemberCompareRequest request) {
-        GitRepoMember firstGitRepoMember =
+        final GitRepoMember firstGitRepoMember =
                 gitRepoMemberService.findByGitRepoAndMemberGithubId(gitRepoService.findGitRepo(request.getFirstRepo()), request.getFirstGithubId());
 
-        GitRepoMember secondGitRepoMember =
+        final GitRepoMember secondGitRepoMember =
                 gitRepoMemberService.findByGitRepoAndMemberGithubId(gitRepoService.findGitRepo(request.getSecondRepo()), request.getSecondGithubId());
 
         return new GitRepoMemberCompareResponse(
@@ -54,16 +54,15 @@ public class GitRepoMemberFacade {
     }
 
     public List<GitRepoMemberResponse> requestToGithub(final GitRepoInfoRequest gitRepoInfoRequest, final GitRepo gitRepo) {
-        Optional<List<GitRepoMemberClientResponse>> responses = gitRepoService.requestClientGitRepoMember(gitRepoInfoRequest);
-        if (responses.isEmpty()) {
-            return List.of();
-        }
-        Set<GitRepoMemberClientResponse> contributions = new HashSet<>(responses.get());
-        if (contributions.isEmpty() || contributions.stream().anyMatch(c -> !StringUtils.hasText(c.getAuthor().getAvatarUrl()))) {
-            return List.of();
-        }
+        return gitRepoService.requestClientGitRepoMember(gitRepoInfoRequest)
+                .map(HashSet::new)
+                .filter(this::hasEmptyProfileUrl)
+                .map(contribution -> saveAndGetResult(gitRepo, contribution))
+                .orElseGet(List::of);
+    }
 
-        List<GitRepoMemberResponse> result = getResponseList(
+    private List<GitRepoMemberResponse> saveAndGetResult(final GitRepo gitRepo, final Set<GitRepoMemberClientResponse> contributions) {
+        final List<GitRepoMemberResponse> result = getResponseList(
                 contributions,
                 gitRepoService.getContributionMap(contributions, Week::getA),
                 gitRepoService.getContributionMap(contributions, Week::getD));
@@ -72,13 +71,17 @@ public class GitRepoMemberFacade {
         return result;
     }
 
+    private boolean hasEmptyProfileUrl(final Set<GitRepoMemberClientResponse> contributions) {
+        return contributions.isEmpty() || contributions.stream().anyMatch(c -> !StringUtils.hasText(c.getAuthor().getAvatarUrl()));
+    }
+
     private List<GitRepoMemberResponse> getResponseList(
             final Set<GitRepoMemberClientResponse> contributions,
-            final GitRepoContributionMap additions,
-            final GitRepoContributionMap deletions) {
+            final GitRepoContributions additions,
+            final GitRepoContributions deletions) {
 
         return contributions.stream()
-                .filter(c -> c.getWeeks() != null && !c.getWeeks().isEmpty() && c.getTotal() != null && c.getAuthor() != null)
+                .filter(this::hasNoEmptyValue)
                 .map(clientResponse -> {
                     Author author = clientResponse.getAuthor();
                     String githubId = author.getLogin();
@@ -92,8 +95,12 @@ public class GitRepoMemberFacade {
                 }).collect(Collectors.toList());
     }
 
+    private boolean hasNoEmptyValue(final GitRepoMemberClientResponse c) {
+        return c.getWeeks() != null && !c.getWeeks().isEmpty() && c.getTotal() != null && c.getAuthor() != null;
+    }
+
     private List<GitRepoMemberResponse> findMembersByGitRepoWithClient(final GitRepoInfoRequest gitRepoInfoRequest) {
-        GitRepo gitRepo = gitRepoService.findGitRepo(gitRepoInfoRequest.getName());
+        final GitRepo gitRepo = gitRepoService.findGitRepo(gitRepoInfoRequest.getName());
         return requestToGithub(gitRepoInfoRequest, gitRepo);
     }
 
@@ -112,7 +119,7 @@ public class GitRepoMemberFacade {
     }
 
     private List<GitRepoMemberResponse> findGitRepoMemberResponses(final GitRepo gitRepo, final String githubToken) {
-        Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
+        final Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         if (isGitRepoMemberValid(gitRepoMembers)) {
             gitRepoService.requestKafkaGitRepoInfo(githubToken, gitRepo.getName());
             return gitRepoMemberMapper.toResponseList(gitRepoMembers);
@@ -126,8 +133,8 @@ public class GitRepoMemberFacade {
     }
 
     public GitRepoResponse findGitRepoInfos(final String name) {
-        String githubToken = authService.getLoginUser().getGithubToken();
-        GitRepo gitRepo = gitRepoService.findGitRepo(name);
+        final String githubToken = authService.getLoginUser().getGithubToken();
+        final GitRepo gitRepo = gitRepoService.findGitRepo(name);
 
         return new GitRepoResponse(
                 gitRepoService.updateAndGetSparkLine(name, githubToken, gitRepo),
@@ -135,23 +142,22 @@ public class GitRepoMemberFacade {
     }
     public GitRepoResponse findGitRepoInfosAndUpdate(final String name) {
         if (gitRepoService.gitRepoExistsByName(name)) {
-            String githubToken = authService.getLoginUser().getGithubToken();
-            GitRepo gitRepo = gitRepoService.findGitRepo(name);
+            final String githubToken = authService.getLoginUser().getGithubToken();
+            final GitRepo gitRepo = gitRepoService.findGitRepo(name);
             return new GitRepoResponse(
                     gitRepoService.updateAndGetSparkLine(name, githubToken, gitRepo),
                     findGitRepoMemberResponses(gitRepo, githubToken));
         }
 
-        int year = LocalDate.now().getYear();
-        String githubToken = authService.getLoginUser().getGithubToken();
+        final String githubToken = authService.getLoginUser().getGithubToken();
 
         return new GitRepoResponse(
                 gitRepoService.updateAndGetSparkLine(name, githubToken, gitRepoService.findGitRepo(name)),
-                findGitRepoMemberResponses(name, year, githubToken));
+                findGitRepoMemberResponses(name, LocalDate.now().getYear(), githubToken));
     }
 
     public TwoGitRepoMemberResponse findMembersByGitRepoForCompare(final GitRepoCompareRequest request) {
-        String githubToken = authService.getLoginUser().getGithubToken();
+        final String githubToken = authService.getLoginUser().getGithubToken();
         return new TwoGitRepoMemberResponse(
                 findGitRepoMemberResponses(gitRepoService.findGitRepo(request.getFirstRepo()), githubToken),
                 findGitRepoMemberResponses(gitRepoService.findGitRepo(request.getSecondRepo()), githubToken));

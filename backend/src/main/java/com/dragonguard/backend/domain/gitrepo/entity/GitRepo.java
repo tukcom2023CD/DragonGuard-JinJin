@@ -4,6 +4,7 @@ import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -20,9 +21,8 @@ import java.util.Set;
 
 @Getter
 @Entity
+@SoftDelete
 @EqualsAndHashCode(of = "name")
-@Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {@Index(name = "gitrepo_index", columnList = "name")})
 public class GitRepo implements Auditable {
@@ -47,15 +47,15 @@ public class GitRepo implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public GitRepo(String name) {
+    public GitRepo(final String name) {
         this.name = name;
     }
 
-    public void organizeGitRepoMember(GitRepoMember gitRepoMember) {
+    public void organizeGitRepoMember(final GitRepoMember gitRepoMember) {
         this.gitRepoMembers.add(gitRepoMember);
     }
 
-    public void updateSparkLine(List<Integer> sparkLine) {
+    public void updateSparkLine(final List<Integer> sparkLine) {
         this.sparkLine = sparkLine;
     }
 }

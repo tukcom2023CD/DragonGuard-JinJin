@@ -19,16 +19,14 @@ import java.nio.charset.StandardCharsets;
 @Component
 @RequiredArgsConstructor
 public class GitRepoSparkLineClient implements GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> {
+    private static final String PATH_FORMAT = "repos/%s/stats/participation";
     private final WebClient webClient;
     @Override
-    public GitRepoSparkLineResponse requestToGithub(GitRepoClientRequest request) {
+    public GitRepoSparkLineResponse requestToGithub(final GitRepoClientRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .path("repos/")
-                                .path(request.getName())
-                                .path("/stats")
-                                .path("/participation")
+                                .path(String.format(PATH_FORMAT, request.getName()))
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

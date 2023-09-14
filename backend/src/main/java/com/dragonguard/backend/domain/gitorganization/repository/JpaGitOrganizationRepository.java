@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.gitorganization.repository;
 
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.member.entity.Member;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.dragonguard.backend.global.repository.EntityRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
@@ -16,12 +16,12 @@ import java.util.List;
  * @description 깃허브 Organization 관련 DB 접근을 도와주는 Repository
  */
 
-public interface JpaGitOrganizationRepository extends JpaRepository<GitOrganization, Long>, GitOrganizationRepository {
+public interface JpaGitOrganizationRepository extends EntityRepository<GitOrganization, Long>, GitOrganizationRepository {
 
     @Query("SELECT DISTINCT go FROM GitOrganization go JOIN FETCH go.gitOrganizationMembers gom JOIN FETCH gom.member m WHERE m = :member")
-    List<GitOrganization> findAllByMember(Member member);
+    List<GitOrganization> findAllByMember(final Member member);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1500")})
-    boolean existsByName(String name);
+    boolean existsByName(final String name);
 }

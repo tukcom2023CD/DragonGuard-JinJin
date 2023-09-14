@@ -3,13 +3,15 @@ package com.dragonguard.backend.domain.organization.service;
 import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.global.dto.IdResponse;
+import com.dragonguard.backend.global.service.EntityLoader;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface OrganizationService {
+public interface OrganizationService extends EntityLoader<Organization, Long> {
     IdResponse<Long> saveOrganization(final OrganizationRequest organizationRequest);
     void findAndAddMember(final AddMemberRequest addMemberRequest);
     List<OrganizationResponse> findByType(final OrganizationType organizationType, final Pageable pageable);

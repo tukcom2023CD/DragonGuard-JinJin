@@ -4,6 +4,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -18,8 +19,7 @@ import java.util.Optional;
 
 @Getter
 @Entity
-@Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
+@SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CodeReview implements Auditable {
     @Id
@@ -36,16 +36,13 @@ public class CodeReview implements Auditable {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Member member;
 
-    @Version
-    private Long version;
-
     @Setter
     @Embedded
     @Column(nullable = false)
     private BaseTime baseTime;
 
     @Builder
-    public CodeReview(Integer year, Integer amount, Member member) {
+    public CodeReview(final Integer year, final Integer amount, final Member member) {
         if (amount < 0) return;
         this.year = year;
         this.amount = amount;
@@ -57,16 +54,16 @@ public class CodeReview implements Auditable {
         this.member.addCodeReview(this);
     }
 
-    public void updateCodeReviewNum(Integer codeReviewNum) {
+    public void updateCodeReviewNum(final Integer codeReviewNum) {
         this.amount = codeReviewNum;
     }
 
-    public boolean customEqualsWithAmount(CodeReview codeReview) {
+    public boolean customEqualsWithAmount(final CodeReview codeReview) {
         return year.intValue() == codeReview.year && amount.intValue() == codeReview.amount.intValue()
                 && member.getGithubId().equals(codeReview.member.getGithubId());
     }
 
-    public boolean isNotUpdatable(Integer amount) {
+    public boolean isNotUpdatable(final Integer amount) {
         return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L))
                 || this.amount.intValue() == amount.intValue();
     }

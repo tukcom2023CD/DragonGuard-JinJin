@@ -14,10 +14,10 @@ import java.util.UUID;
  */
 
 public interface MemberQueryRepository {
-    List<MemberRankResponse> findRanking(Pageable pageable);
-    Integer findRankingById(UUID id);
-    List<MemberRankResponse> findRankingByOrganization(Long organizationId, Pageable pageable);
-    Optional<Member> findByGithubId(String githubId);
-    String findRefreshTokenById(UUID id);
-    boolean existsByGithubId(String githubId);
+    List<MemberRankResponse> findRanking(final Pageable pageable);
+    Integer findRankingById(final UUID id);
+    List<MemberRankResponse> findRankingByOrganization(final Long organizationId, final Pageable pageable);
+    Optional<Member> findByGithubId(final String githubId);
+    String findRefreshTokenById(final UUID id);
+    boolean existsByGithubId(final String githubId);
 }

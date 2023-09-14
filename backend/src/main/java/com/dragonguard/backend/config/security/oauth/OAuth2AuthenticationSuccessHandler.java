@@ -29,30 +29,26 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     public void onAuthenticationSuccess(
-            HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+            final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication)
             throws IOException {
-        String targetUri = determineTargetUrl(request, response, authentication);
+        final String targetUri = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
             return;
         }
         clearAuthenticationAttributes(request, response);
 
-        UserPrinciple loginUser = (UserPrinciple) authentication.getPrincipal();
+        final UserPrinciple loginUser = (UserPrinciple) authentication.getPrincipal();
         jwtSetupService.addJwtTokensInCookie(response, loginUser);
         getRedirectStrategy().sendRedirect(request, response, targetUri);
     }
 
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-
-        String accessToken = tokenProvider.createToken((UserPrinciple) authentication.getPrincipal()).getAccessToken();
-
+    protected String determineTargetUrl(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) {
         return UriComponentsBuilder.fromUriString(redirectUri)
-                .queryParam("accessToken", accessToken)
                 .build().toUriString();
     }
 
-    protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
+    protected void clearAuthenticationAttributes(final HttpServletRequest request, final HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
     }
 }

@@ -14,9 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class KafkaEmailProducer implements KafkaProducer<KafkaEmail> {
+    private static final String TOPIC = "gitrank.to.backend.email";
+    private static final String KEY = "email";
     private final KafkaTemplate<String, Object> kafkaTemplate;
     @Override
-    public void send(KafkaEmail request) {
-        kafkaTemplate.send("gitrank.to.backend.email", "email", request);
+    public void send(final KafkaEmail request) {
+        kafkaTemplate.send(TOPIC, KEY, request);
     }
 }

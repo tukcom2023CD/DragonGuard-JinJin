@@ -20,15 +20,15 @@ import java.time.LocalDate;
 @Component
 @RequiredArgsConstructor
 public class MemberIssueClient implements GithubClient<MemberClientRequest, MemberIssueResponse> {
+    private static final String PATH_FORMAT = "search/issues?q=type:issue+author:%s+created:%d-01-01..%s";
     private final WebClient webClient;
 
     @Override
-    public MemberIssueResponse requestToGithub(MemberClientRequest request) {
+    public MemberIssueResponse requestToGithub(final MemberClientRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .path("search/issues?q=type:issue+author:")
-                                .path(request.getGithubId() + "+created:" + request.getYear() + "-01-01.." + LocalDate.now())
+                                .path(String.format(PATH_FORMAT, request.getGithubId(), request.getYear(), LocalDate.now()))
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

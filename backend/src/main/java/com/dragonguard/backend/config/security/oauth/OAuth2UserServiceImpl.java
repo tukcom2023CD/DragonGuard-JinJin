@@ -33,24 +33,24 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
-        Map<String, Object> attributes = oAuth2User.getAttributes();
-        String githubId = (String) attributes.get("login");
-        String profileImage = (String) attributes.get("avatar_url");
-        String name = (String) attributes.get("name");
+        final OAuth2User oAuth2User = super.loadUser(userRequest);
+        final Map<String, Object> attributes = oAuth2User.getAttributes();
+        final String githubId = (String) attributes.get("login");
+        final String profileImage = (String) attributes.get("avatar_url");
+        final String name = (String) attributes.get("name");
 
         if (!memberRepository.existsByGithubId(githubId)) {
             memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY, name, profileImage));
         }
 
-        Member user = memberRepository.findByGithubId(githubId)
+        final Member user = memberRepository.findByGithubId(githubId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (user.getAuthStep().equals(AuthStep.NONE)) {
+        if (user.getAuthStep().isNone()) {
             user.updateAuthStepAndNameAndProfileImage(AuthStep.GITHUB_ONLY, name, profileImage);
         }
 
-        String githubToken = userRequest.getAccessToken().getTokenValue();
+        final String githubToken = userRequest.getAccessToken().getTokenValue();
         user.updateGithubToken(githubToken);
 
         kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));

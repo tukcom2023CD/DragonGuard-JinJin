@@ -7,12 +7,14 @@ import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
+import reactor.util.retry.RetryBackoffSpec;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -26,17 +28,17 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, List<GitRepoMemberClientResponse>> {
+    private static final String PATH_FORMAT = "repos/%s/stats/contributors";
+    private static final int MAX_ATTEMPTS = 10;
+    private static final int DURATION_OF_MILLIS = 1500;
     private final WebClient webClient;
 
     @Override
-    public List<GitRepoMemberClientResponse> requestToGithub(GitRepoInfoRequest request) {
+    public List<GitRepoMemberClientResponse> requestToGithub(final GitRepoInfoRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .path("repos/")
-                                .path(request.getName())
-                                .path("/stats")
-                                .path("/contributors")
+                                .path(String.format(PATH_FORMAT, request.getName()))
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
@@ -47,19 +49,28 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Lis
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.empty())
                 .bodyToFlux(GitRepoMemberClientResponse.class)
                 .collectList()
-                .flatMap(response -> {
-                    if (response == null || response.isEmpty() || response.stream()
-                            .anyMatch(g -> g.getTotal() == null || g.getWeeks() == null || g.getWeeks().isEmpty()
-                                    || g.getAuthor() == null || g.getAuthor().getLogin() == null || g.getAuthor().getAvatarUrl() == null)) {
-                        return Mono.error(WebClientException::new);
-                    }
-                    return Mono.just(response);
-                }).retryWhen(
-                        Retry.fixedDelay(10, Duration.ofMillis(1500))
-                                .filter(WebClientException.class::isInstance)
-                                .onRetryExhaustedThrow(((retryBackoffSpec, retrySignal) -> new WebClientRetryException())))
+                .flatMap(this::validateResponse).retryWhen(getRetrySpec())
                 .onErrorReturn(WebClientRetryException.class, List.of())
                 .blockOptional()
                 .orElseThrow(WebClientException::new);
+    }
+
+    private RetryBackoffSpec getRetrySpec() {
+        return Retry.fixedDelay(MAX_ATTEMPTS, Duration.ofMillis(DURATION_OF_MILLIS))
+                .filter(WebClientException.class::isInstance)
+                .onRetryExhaustedThrow(((retryBackoffSpec, retrySignal) -> new WebClientRetryException()));
+    }
+
+    private Mono<List<GitRepoMemberClientResponse>> validateResponse(final List<GitRepoMemberClientResponse> response) {
+        if (isResponseEmpty(response)) {
+            return Mono.error(WebClientException::new);
+        }
+        return Mono.just(response);
+    }
+
+    private boolean isResponseEmpty(final List<GitRepoMemberClientResponse> response) {
+        return response == null || response.isEmpty() || response.stream()
+                .anyMatch(g -> g.getTotal() == null || g.getWeeks() == null || g.getWeeks().isEmpty()
+                        || g.getAuthor() == null || g.getAuthor().getLogin() == null || g.getAuthor().getAvatarUrl() == null);
     }
 }

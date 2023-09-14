@@ -11,7 +11,7 @@ import java.util.Map;
  */
 
 @RequiredArgsConstructor
-public class GitRepoContributionMap {
+public class GitRepoContributions {
     private final Map<GitRepoMemberClientResponse, Integer> contributions;
 
     public Integer getContributionByKey(GitRepoMemberClientResponse key) {

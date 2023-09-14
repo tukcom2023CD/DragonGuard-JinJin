@@ -14,10 +14,12 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class KafkaContributionClientProducer implements KafkaProducer<KafkaContributionRequest> {
+    private static final String TOPIC = "gitrank.to.backend.contribution.client";
+    private static final String KEY = "contribution";
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Override
-    public void send(KafkaContributionRequest request) {
-        kafkaTemplate.send("gitrank.to.backend.contribution.client", "contribution", request);
+    public void send(final KafkaContributionRequest request) {
+        kafkaTemplate.send(TOPIC, KEY, request);
     }
 }

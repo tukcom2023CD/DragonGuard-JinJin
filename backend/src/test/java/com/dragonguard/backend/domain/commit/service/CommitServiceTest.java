@@ -9,8 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,12 +30,13 @@ class CommitServiceTest extends LoginTest {
 
         //when
         commitService.saveContribution(memberRepository.findById(loginUser.getId()).orElse(null), 100, LocalDateTime.now().getYear());
-        List<Commit> commits = commitRepository.findAllByMember(loginUser);
+        Optional<Commit> commits = commitRepository.findByMemberAndYear(loginUser, LocalDate.now().getYear());
 
         //then
-        assertThat(commits).hasSize(1);
-        assertThat(commits.get(0).getAmount()).isEqualTo(100);
-        assertThat(commits.get(0).getMember().getGithubId()).isEqualTo(loginUser.getGithubId());
+        assertThat(commits).isNotEmpty();
+        final Commit commit = commits.get();
+        assertThat(commit.getAmount()).isEqualTo(100);
+        assertThat(commit.getMember().getGithubId()).isEqualTo(loginUser.getGithubId());
     }
 
     @Test

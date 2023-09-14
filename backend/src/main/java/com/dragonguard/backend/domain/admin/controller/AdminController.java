@@ -37,7 +37,7 @@ public class AdminController {
      * 조직 승인 요청에 대해 관리자의 선택에 대한 요청을 받는 api
      */
     @PostMapping("/organizations/decide")
-    public ResponseEntity<List<AdminOrganizationResponse>> decideRequest(@RequestBody @Valid AdminDecideRequest adminDecideRequest) {
+    public ResponseEntity<List<AdminOrganizationResponse>> decideRequest(@RequestBody @Valid final AdminDecideRequest adminDecideRequest) {
         return ResponseEntity.ok(adminService.decideRequestedOrganization(adminDecideRequest));
     }
 
@@ -46,7 +46,7 @@ public class AdminController {
      */
     @GetMapping("/organizations")
     public ResponseEntity<List<AdminOrganizationResponse>> getOrganizationsByStatus(
-            @RequestParam OrganizationStatus status, Pageable pageable) {
+            @RequestParam final OrganizationStatus status, final Pageable pageable) {
         return ResponseEntity.ok(adminService.findOrganizationsByStatus(status, pageable));
     }
 }

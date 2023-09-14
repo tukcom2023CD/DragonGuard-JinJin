@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 
 public interface Auditable {
     BaseTime getBaseTime();
-    void setBaseTime(BaseTime baseTime);
+    void setBaseTime(final BaseTime baseTime);
+
     default void delete() {
-        getBaseTime().setDeletedAt(LocalDateTime.now());
+        this.getBaseTime().setDeletedAt(LocalDateTime.now());
     }
 }

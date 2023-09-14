@@ -20,15 +20,15 @@ import java.time.LocalDate;
 @Component
 @RequiredArgsConstructor
 public class MemberCodeReviewClient implements GithubClient<MemberClientRequest, MemberCodeReviewResponse> {
+    private static final String PATH_FORMAT = "search/issues?q=reviewed-by:%s+type:pr+created:%d-01-01..%s";
     private final WebClient webClient;
 
     @Override
-    public MemberCodeReviewResponse requestToGithub(MemberClientRequest request) {
+    public MemberCodeReviewResponse requestToGithub(final MemberClientRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .path("search/issues?q=reviewed-by:")
-                                .path(request.getGithubId() + "+type:pr+created:" + request.getYear() + "-01-01.." + LocalDate.now())
+                                .path(String.format(PATH_FORMAT, request.getGithubId(), request.getYear(), LocalDate.now()))
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

@@ -6,5 +6,5 @@ package com.dragonguard.backend.global.client;
  */
 
 public interface GithubClient<T, R> {
-    R requestToGithub(T request);
+    R requestToGithub(final T request);
 }

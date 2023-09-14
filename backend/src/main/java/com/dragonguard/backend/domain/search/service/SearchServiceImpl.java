@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @TransactionService
 @RequiredArgsConstructor
-public class SearchServiceImpl implements EntityLoader<Search, Long>, SearchService {
+public class SearchServiceImpl implements SearchService {
     private final SearchRepository searchRepository;
     private final SearchMapper searchMapper;
     private final GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
@@ -39,19 +39,12 @@ public class SearchServiceImpl implements EntityLoader<Search, Long>, SearchServ
         if (isValidSearchRequest(searchRequest)) {
             return findOrGetSearchWithSearchAttributes(searchRequest);
         }
-        List<Search> searches = searchRepository
+        final List<Search> searches = searchRepository
                 .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
-        List<String> filters = searchRequest.getFilters();
+        final List<String> filters = searchRequest.getFilters();
 
-        return Optional.ofNullable(findSameSearch(searches, filters)).orElseGet(() ->  searchRepository.save(searchMapper.toSearch(searchRequest)));
-    }
-
-    private Search findSameSearch(final List<Search> searches, final List<String> filters) {
-        return searches.stream().filter(search -> containsSameFilters(filters, search)).findFirst().orElse(null);
-    }
-
-    private boolean containsSameFilters(final List<String> filters, final Search search) {
-        return new HashSet<>(search.getFilters().stream().map(Filter::getFilter).collect(Collectors.toList())).containsAll(filters);
+        return Optional.ofNullable(findSameSearch(searches, filters))
+                .orElseGet(() ->  searchRepository.save(searchMapper.toSearch(searchRequest)));
     }
 
     private Search findOrGetSearchWithSearchAttributes(final SearchRequest searchRequest) {
@@ -63,6 +56,17 @@ public class SearchServiceImpl implements EntityLoader<Search, Long>, SearchServ
 
     private boolean isValidSearchRequest(final SearchRequest searchRequest) {
         return Objects.isNull(searchRequest.getFilters()) || searchRequest.getFilters().isEmpty();
+    }
+
+    private boolean containsSameFilters(final List<String> filters, final Search search) {
+        return new HashSet<>(search.getFilters().stream()
+                .map(Filter::getFilter)
+                .collect(Collectors.toList()))
+                .containsAll(filters);
+    }
+
+    private Search findSameSearch(final List<Search> searches, final List<String> filters) {
+        return searches.stream().filter(search -> containsSameFilters(filters, search)).findFirst().orElse(null);
     }
 
     @Override

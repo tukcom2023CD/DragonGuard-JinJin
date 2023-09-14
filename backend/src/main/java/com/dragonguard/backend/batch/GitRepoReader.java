@@ -23,7 +23,7 @@ public class GitRepoReader implements ItemReader<GitRepo> {
     }
 
     @Override
-    public synchronized GitRepo read() throws Exception {
+    public synchronized GitRepo read() {
         if (nextIndex < list.size()) {
             return list.get(nextIndex++);
         }

@@ -3,6 +3,7 @@ package com.dragonguard.backend.domain.member.entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
@@ -24,4 +25,11 @@ public enum Tier {
 
     private final Predicate<Long> tierPredicate;
     private final String korean;
+
+    public static Tier checkTier(final long amount) {
+        return Arrays.stream(values())
+                .filter(t -> t.getTierPredicate().test(amount))
+                .findFirst()
+                .orElse(Tier.SPROUT);
+    }
 }

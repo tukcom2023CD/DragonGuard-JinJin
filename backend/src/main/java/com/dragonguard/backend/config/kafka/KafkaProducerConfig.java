@@ -23,18 +23,17 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class KafkaProducerConfig {
-
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
     private final ObjectMapper objectMapper;
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
-        Map<String, Object> props = new HashMap<>();
+        final Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
-        DefaultKafkaProducerFactory<String, Object> producerFactory = new DefaultKafkaProducerFactory<>(props);
+        final DefaultKafkaProducerFactory<String, Object> producerFactory = new DefaultKafkaProducerFactory<>(props);
         producerFactory.setValueSerializer(new JsonSerializer<>(objectMapper));
         return producerFactory;
     }

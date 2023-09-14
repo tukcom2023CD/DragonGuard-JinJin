@@ -63,7 +63,7 @@ class MemberServiceTest extends LoginTest {
         //given
 
         //when
-        UUID userId = memberService.findMemberOrSave("HJ39", AuthStep.NONE, "http:/githubProfileUrl").getId();
+        UUID userId = memberService.saveIfNone("HJ39", AuthStep.NONE, "http:/githubProfileUrl").getId();
 
         UUID adminResult = memberRepository.findById(loginUser.getId()).orElseThrow().getId();
         UUID userResult = memberRepository.findById(userId).orElseThrow().getId();
@@ -77,19 +77,19 @@ class MemberServiceTest extends LoginTest {
     @DisplayName("전체 활용도 업데이트 기능이 수행되는가")
     void updateContributions() {
         //given
-        Integer issue = loginUser.getSumOfIssues().orElse(0);
-        Integer commit = loginUser.getSumOfCommits().orElse(0);
-        Integer pullRequest = loginUser.getSumOfPullRequests().orElse(0);
-        Integer review = loginUser.getSumOfCodeReviews().orElse(0);
+        Integer issue = loginUser.getSumOfIssues();
+        Integer commit = loginUser.getSumOfCommits();
+        Integer pullRequest = loginUser.getSumOfPullRequests();
+        Integer review = loginUser.getSumOfCodeReviews();
 
         //when
         memberService.updateContributions();
 
         //then
-        assertThat(loginUser.getIssueSumWithRelation()).isNotEqualTo(issue);
-        assertThat(loginUser.getCommitSumWithRelation()).isNotEqualTo(commit);
-        assertThat(loginUser.getPullRequestSumWithRelation()).isNotEqualTo(pullRequest);
-        assertThat(loginUser.getSumOfCodeReviews().orElse(0)).isNotEqualTo(review);
+        assertThat(loginUser.getSumOfIssues()).isNotEqualTo(issue);
+        assertThat(loginUser.getSumOfCommits()).isNotEqualTo(commit);
+        assertThat(loginUser.getSumOfPullRequests()).isNotEqualTo(pullRequest);
+        assertThat(loginUser.getSumOfCodeReviews()).isNotEqualTo(review);
     }
 
     @Test

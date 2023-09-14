@@ -29,7 +29,7 @@ public class GitRepoController {
      */
     @GetMapping
     public ResponseEntity<GitRepoResponse> getGitRepoMembers(
-            @RequestParam String name) {
+            @RequestParam final String name) {
         return ResponseEntity.ok(gitRepoMemberFacade.findGitRepoInfos(name));
     }
 
@@ -38,7 +38,7 @@ public class GitRepoController {
      */
     @PostMapping("/compare")
     public ResponseEntity<TwoGitRepoResponse> getTwoGitRepos(
-            @RequestBody @Valid GitRepoCompareRequest request) {
+            @RequestBody @Valid final GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoMemberFacade.findTwoGitRepos(request));
     }
 
@@ -47,7 +47,7 @@ public class GitRepoController {
      */
     @PostMapping("/compare/git-repos-members")
     public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompare(
-            @RequestBody @Valid GitRepoCompareRequest request) {
+            @RequestBody @Valid final GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoMemberFacade.findMembersByGitRepoForCompare(request));
     }
 
@@ -56,7 +56,7 @@ public class GitRepoController {
      */
     @GetMapping("/update")
     public ResponseEntity<GitRepoResponse> getGitRepoMembersAndUpdate(
-            @RequestParam String name) {
+            @RequestParam final String name) {
         return ResponseEntity.ok(gitRepoMemberFacade.findGitRepoInfosAndUpdate(name));
     }
 
@@ -65,7 +65,7 @@ public class GitRepoController {
      */
     @PostMapping("/compare/update")
     public ResponseEntity<TwoGitRepoResponse> getTwoGitReposAndUpdate(
-            @RequestBody @Valid GitRepoCompareRequest request) {
+            @RequestBody @Valid final GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoMemberFacade.findTwoGitReposAndUpdate(request));
     }
 
@@ -74,7 +74,7 @@ public class GitRepoController {
      */
     @PostMapping("/compare/git-repos-members/update")
     public ResponseEntity<TwoGitRepoMemberResponse> getGitRepoMembersForCompareAndUpdate(
-            @RequestBody @Valid GitRepoCompareRequest request) {
+            @RequestBody @Valid final GitRepoCompareRequest request) {
         return ResponseEntity.ok(gitRepoMemberFacade.findMembersByGitRepoForCompareAndUpdate(request));
     }
 
@@ -83,7 +83,7 @@ public class GitRepoController {
      */
     @PostMapping("/compare/members")
     public ResponseEntity<GitRepoMemberCompareResponse> getTwoGitRepoMember(
-            @RequestBody @Valid GitRepoMemberCompareRequest request) {
+            @RequestBody @Valid final GitRepoMemberCompareRequest request) {
         return ResponseEntity.ok(gitRepoMemberFacade.findTwoGitRepoMember(request));
     }
 }

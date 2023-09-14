@@ -55,7 +55,7 @@ public class MemberController {
      */
     @GetMapping("/ranking")
     public ResponseEntity<List<MemberRankResponse>> getRank(
-            @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) final Pageable pageable) {
         return ResponseEntity.ok(memberService.findMemberRanking(pageable));
     }
 
@@ -65,7 +65,7 @@ public class MemberController {
     @GetMapping("/ranking/organization")
     public ResponseEntity<List<MemberRankResponse>> getOrganizationMemberRank(
             @RequestParam Long organizationId,
-            @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) final Pageable pageable) {
         return ResponseEntity.ok(memberService.findMemberRankingByOrganization(organizationId, pageable));
     }
 
@@ -73,7 +73,7 @@ public class MemberController {
      * 유저들의 지갑 주소 업데이트를 위한 api
      */
     @PostMapping("/wallet-address")
-    public ResponseEntity<Void> updateWalletAddress(@RequestBody @Valid WalletRequest walletRequest) {
+    public ResponseEntity<Void> updateWalletAddress(@RequestBody @Valid final WalletRequest walletRequest) {
         memberService.updateWalletAddress(walletRequest);
         return ResponseEntity.ok().build();
     }
@@ -98,7 +98,7 @@ public class MemberController {
      * 로그인한 유저를 제외한 다른 유저의 상세 정보 조회를 위한 api
      */
     @GetMapping("/details")
-    public ResponseEntity<MemberDetailsResponse> getUserDetails(@RequestParam String githubId) {
+    public ResponseEntity<MemberDetailsResponse> getUserDetails(@RequestParam final String githubId) {
         return ResponseEntity.ok(memberService.findMemberDetails(githubId));
     }
 
@@ -106,7 +106,7 @@ public class MemberController {
      * 로그인한 유저의 깃허브 organization 내부 repository 목록 조회를 위한 api
      */
     @GetMapping("/git-organizations/git-repos")
-    public ResponseEntity<MemberGitOrganizationRepoResponse> getMemberGitOrganizationRepo(@RequestParam String name) {
+    public ResponseEntity<MemberGitOrganizationRepoResponse> getMemberGitOrganizationRepo(@RequestParam final String name) {
         return ResponseEntity.ok(memberService.findMemberGitOrganizationRepo(name));
     }
 
@@ -116,5 +116,14 @@ public class MemberController {
     @GetMapping("/verify")
     public ResponseEntity<MemberLoginVerifyResponse> getMemberLoginVerify() {
         return ResponseEntity.ok(memberService.verifyMember());
+    }
+
+    /**
+     * 회원 탈퇴 api
+     */
+    @PostMapping("/withdraw")
+    public ResponseEntity<Void> withdraw() {
+        memberService.withdraw();
+        return ResponseEntity.ok().build();
     }
 }

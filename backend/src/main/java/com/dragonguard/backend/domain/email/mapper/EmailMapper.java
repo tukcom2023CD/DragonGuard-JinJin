@@ -1,8 +1,8 @@
 package com.dragonguard.backend.domain.email.mapper;
 
 import com.dragonguard.backend.domain.email.entity.Email;
-import com.dragonguard.backend.global.mapper.EntityMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants.ComponentModel;
 
 import java.util.UUID;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
  * @description 이메일 정보 Entity와 dto의 변환을 돕는 클래스
  */
 
-@Mapper(componentModel = "spring")
-public interface EmailMapper extends EntityMapper {
+@Mapper(componentModel = ComponentModel.SPRING)
+public interface EmailMapper {
     Email toEntity(final Integer code, final UUID memberId);
 }

@@ -1,11 +1,10 @@
 package com.dragonguard.backend.domain.commit.entity;
 
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,8 +17,7 @@ import java.util.Optional;
 
 @Getter
 @Entity
-@Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
+@SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Commit implements Auditable {
 
@@ -37,37 +35,34 @@ public class Commit implements Auditable {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Member member;
 
-    @Version
-    private Long version;
-
     @Setter
     @Embedded
     @Column(nullable = false)
     private BaseTime baseTime;
 
     @Builder
-    public Commit(Integer year, Integer amount, Member member) {
+    public Commit(final Integer year, final Integer amount, final Member member) {
         if (amount < 0) return;
         this.year = year;
         this.amount = amount;
         this.member = member;
-        organize();
+        organizeMember();
     }
 
-    public boolean customEqualsWithAmount(Commit commit) {
+    public boolean customEqualsWithAmount(final Commit commit) {
         return year.intValue() == commit.year && amount.intValue() == commit.amount.intValue()
                 && member.getGithubId().equals(commit.member.getGithubId());
     }
 
-    private void organize() {
+    private void organizeMember() {
         member.addCommit(this);
     }
 
-    public void updateCommitNum(Integer commitNum) {
+    public void updateCommitNum(final Integer commitNum) {
         this.amount = commitNum;
     }
 
-    public boolean isNotUpdatable(Integer amount) {
+    public boolean isNotUpdatable(final Integer amount) {
         return updatedCurrently() || this.amount.intValue() == amount.intValue();
     }
 

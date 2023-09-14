@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class EmailErrorAdvice {
     @ExceptionHandler(EmailException.class)
-    public ResponseEntity<ErrorResponse> emailException(EmailException e) {
+    public ResponseEntity<ErrorResponse> emailException(final EmailException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 }

@@ -23,7 +23,7 @@ import java.util.List;
 
 @TransactionService
 @RequiredArgsConstructor
-public class ResultServiceImpl implements EntityLoader<Result, Long>, ResultService {
+public class ResultServiceImpl implements ResultService {
     private final ResultRepository resultRepository;
     private final ResultMapper resultMapper;
 

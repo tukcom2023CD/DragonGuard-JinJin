@@ -26,24 +26,24 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
     private final GitOrganizationMapper gitOrganizationMapper;
 
     public void findAndSaveGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
-        Set<GitOrganization> gitOrganizations = findNotSavedGitOrganizations(gitOrganizationNames, member);
-
+        final Set<GitOrganization> gitOrganizations = findNotSavedGitOrganizations(gitOrganizationNames, member);
         saveAllGitOrganizations(gitOrganizations);
     }
 
     private Set<GitOrganization> findNotSavedGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
         return gitOrganizationNames.stream()
-                .map(org -> {
-                    String gitOrganizationName = org.getLogin();
-                    if (!gitOrganizationRepository.existsByName(gitOrganizationName)) {
-                        return gitOrganizationMapper.toEntity(gitOrganizationName, org.getAvatarUrl(), member);
-                    }
-                    GitOrganization gitOrganization = gitOrganizationRepository.findByName(gitOrganizationName)
-                            .orElseThrow(EntityNotFoundException::new);
-                    gitOrganization.addGitOrganizationMember(member);
+                .map(org -> getGitOrganization(member, org)).collect(Collectors.toSet());
+    }
 
-                    return gitOrganization;
-                }).collect(Collectors.toSet());
+    private GitOrganization getGitOrganization(final Member member, final MemberOrganizationResponse org) {
+        final String gitOrganizationName = org.getLogin();
+        if (!gitOrganizationRepository.existsByName(gitOrganizationName)) {
+            return gitOrganizationMapper.toEntity(gitOrganizationName, org.getAvatarUrl(), member);
+        }
+        final GitOrganization gitOrganization = getByName(gitOrganizationName);
+        gitOrganization.addGitOrganizationMember(member);
+
+        return gitOrganization;
     }
 
     private void saveAllGitOrganizations(final Set<GitOrganization> gitOrganizations) {

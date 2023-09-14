@@ -19,16 +19,15 @@ import java.nio.charset.StandardCharsets;
 @Component
 @RequiredArgsConstructor
 public class MemberOrganizationClient implements GithubClient<MemberClientRequest, MemberOrganizationResponse[]> {
+    private static final String PATH_FORMAT = "users/%s/orgs?per_page=100";
     private final WebClient webClient;
 
     @Override
-    public MemberOrganizationResponse[] requestToGithub(MemberClientRequest request) {
+    public MemberOrganizationResponse[] requestToGithub(final MemberClientRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .path("users/")
-                                .path(request.getGithubId())
-                                .path("/orgs?per_page=100")
+                                .path(String.format(PATH_FORMAT, request.getGithubId()))
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

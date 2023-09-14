@@ -19,17 +19,15 @@ import java.nio.charset.StandardCharsets;
 @Component
 @RequiredArgsConstructor
 public class SearchUserClient implements GithubClient<SearchRequest, SearchUserResponse> {
+    private static final int PER_PAGE_SIZE = 10;
+    private static final String PATH_FORMAT = "search/%s?q=%s&per_page=%d&page=%d";
     private final WebClient webClient;
 
     @Override
     public SearchUserResponse requestToGithub(SearchRequest request) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("search")
-                        .path("/" + request.getType().toString().toLowerCase())
-                        .queryParam("q", request.getName())
-                        .queryParam("per_page", 10)
-                        .queryParam("page", request.getPage())
+                        .path(String.format(PATH_FORMAT, request.getType().getLowerCase(), request.getName(), PER_PAGE_SIZE, request.getPage()))
                         .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

@@ -3,7 +3,7 @@ package com.dragonguard.backend.domain.gitrepomember.repository;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.member.entity.Member;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.dragonguard.backend.global.repository.EntityRepository;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import java.util.List;
  * @description GitRepoMember 관련 DB와의 CRUD를 담당하는 클래스
  */
 
-public interface GitRepoMemberRepository extends JpaRepository<GitRepoMember, Long>, GitRepoMemberQueryRepository {
-    <S extends GitRepoMember> List<S> saveAll(Iterable<S> entities);
-    GitRepoMember save(GitRepoMember gitRepoMember);
-    boolean existsByGitRepoAndMember(GitRepo gitRepo, Member member);
+public interface GitRepoMemberRepository extends EntityRepository<GitRepoMember, Long>, GitRepoMemberQueryRepository {
+    <S extends GitRepoMember> List<S> saveAll(final Iterable<S> entities);
+    GitRepoMember save(final GitRepoMember gitRepoMember);
+    boolean existsByGitRepoAndMember(final GitRepo gitRepo, final Member member);
 }

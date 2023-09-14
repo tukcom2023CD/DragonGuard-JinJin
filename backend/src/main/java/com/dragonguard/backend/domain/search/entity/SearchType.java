@@ -12,4 +12,8 @@ public enum SearchType {
     USERS("유저"), REPOSITORIES("레포지토리");
 
     private final String korean;
+
+    public String getLowerCase() {
+        return toString().toLowerCase();
+    }
 }

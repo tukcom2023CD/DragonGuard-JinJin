@@ -14,10 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class KafkaGitRepoProducer implements KafkaProducer<GitRepoInfoRequest> {
-
+    private static final String TOPIC = "gitrank.to.scrape.git-repos";
+    private static final String KEY = "git-repos";
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void send(GitRepoInfoRequest request) {
-        kafkaTemplate.send("gitrank.to.scrape.git-repos", "git-repos", request);
+    public void send(final GitRepoInfoRequest request) {
+        kafkaTemplate.send(TOPIC, KEY, request);
     }
 }

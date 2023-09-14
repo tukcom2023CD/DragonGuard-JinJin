@@ -7,7 +7,8 @@ import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import java.util.List;
 
 public interface GitRepoMemberService {
-    GitRepoMember findByGitRepoAndMemberGithubId(GitRepo gitRepo, String githubId);
-    void saveAll(List<GitRepoMemberResponse> result, GitRepo gitRepo);
-    Boolean isServiceMember(String githubId);
+    GitRepoMember findByGitRepoAndMemberGithubId(final GitRepo gitRepo, final String githubId);
+    void saveAll(final List<GitRepoMemberResponse> result, final GitRepo gitRepo);
+    Boolean isServiceMember(final String githubId);
+    void updateOrSaveAll(final List<GitRepoMemberResponse> gitRepoMemberResponses, final GitRepo gitRepo);
 }

@@ -14,10 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class KafkaSearchScrapeProducer implements KafkaProducer<KafkaSearchRequest> {
-
+    private static final String TOPIC = "gitrank.to.scrape.result";
+    private static final String KEY = "";
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void send(KafkaSearchRequest request) {
-        kafkaTemplate.send("gitrank.to.scrape.result", "result", request);
+    public void send(final KafkaSearchRequest request) {
+        kafkaTemplate.send(TOPIC, KEY, request);
     }
 }

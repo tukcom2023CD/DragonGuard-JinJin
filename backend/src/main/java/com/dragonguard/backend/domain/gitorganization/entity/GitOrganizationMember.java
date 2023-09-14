@@ -38,7 +38,7 @@ public class GitOrganizationMember implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public GitOrganizationMember(GitOrganization gitOrganization, Member member) {
+    public GitOrganizationMember(final GitOrganization gitOrganization, final Member member) {
         this.gitOrganization = gitOrganization;
         this.member = member;
         organize();

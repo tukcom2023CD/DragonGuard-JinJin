@@ -2,11 +2,10 @@ package com.dragonguard.backend.domain.gitrepomember.entity;
 
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -17,11 +16,11 @@ import javax.persistence.*;
 
 @Getter
 @Entity
+@SoftDelete
 @EqualsAndHashCode(of = {"gitRepo", "member"})
-@Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GitRepoMember implements Auditable {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -43,7 +42,7 @@ public class GitRepoMember implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public GitRepoMember(GitRepo gitRepo, Member member, GitRepoContribution gitRepoContribution) {
+    public GitRepoMember(final GitRepo gitRepo, final Member member, final GitRepoContribution gitRepoContribution) {
         this.gitRepo = gitRepo;
         this.member = member;
         this.gitRepoContribution = gitRepoContribution;
@@ -55,17 +54,17 @@ public class GitRepoMember implements Auditable {
         this.member.organizeGitRepoMember(this);
     }
 
-    public void update(GitRepoMember gitRepoMember) {
+    public void update(final GitRepoMember gitRepoMember) {
         this.gitRepo = gitRepoMember.gitRepo;
         this.member = gitRepoMember.member;
         this.gitRepoContribution = gitRepoMember.gitRepoContribution;
     }
 
-    public void updateGitRepoContribution(Integer commits, Integer additions, Integer deletions) {
+    public void updateGitRepoContribution(final Integer commits, final Integer additions, final Integer deletions) {
         this.gitRepoContribution = new GitRepoContribution(commits, additions, deletions);
     }
 
-    public void updateProfileImageAndContribution(String profileUrl, Integer commits, Integer additions, Integer deletions) {
+    public void updateProfileImageAndContribution(final String profileUrl, final Integer commits, final Integer additions, final Integer deletions) {
         this.member.updateProfileImage(profileUrl);
         updateGitRepoContribution(commits, additions, deletions);
     }

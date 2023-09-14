@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 
 public interface SearchRepository {
-    List<Search> findByNameAndTypeAndPage(String name, SearchType type, Integer page);
-    Search save(Search search);
-    Optional<Search> findById(Long id);
+    List<Search> findByNameAndTypeAndPage(final String name, final SearchType type, final Integer page);
+    Search save(final Search search);
+    Optional<Search> findById(final Long id);
 }

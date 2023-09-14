@@ -18,6 +18,7 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class UserPrinciple implements UserDetails, OAuth2User {
+    private static final String DEFAULT_PASSWORD = "password";
     private Member member;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
@@ -39,7 +40,7 @@ public class UserPrinciple implements UserDetails, OAuth2User {
 
     @Override
     public String getPassword() {
-        return "password";
+        return DEFAULT_PASSWORD;
     }
 
     @Override

@@ -19,10 +19,7 @@ import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -34,28 +31,18 @@ import java.util.stream.Collectors;
 @TransactionService
 @RequiredArgsConstructor
 public class MemberClientService {
-    private final GithubClient<MemberClientRequest, MemberCommitResponse> memberCommitClient;
-    private final GithubClient<MemberClientRequest, MemberIssueResponse> memberIssueClient;
-    private final GithubClient<MemberClientRequest, MemberPullRequestResponse> memberPullRequestClient;
-    private final GithubClient<MemberClientRequest, MemberCodeReviewResponse> memberCodeReviewClient;
-    private final GithubClient<MemberClientRequest, MemberRepoResponse[]> memberRepoClient;
-    private final GithubClient<MemberClientRequest, MemberOrganizationResponse[]> memberOrganizationClient;
-    private final GithubClient<MemberClientRequest, OrganizationRepoResponse[]> memberOrganizationRepoClient;
+    private final Map<String, GithubClient<MemberClientRequest, ?>> githubClients;
+    private final Map<String, ContributionService<?, Long>> contributionServices;
     private final GitOrganizationService gitOrganizationService;
     private final GitRepoMapper gitRepoMapper;
-    private final ContributionService<Commit, Long> commitService;
-    private final ContributionService<Issue, Long> issueService;
-    private final ContributionService<PullRequest, Long> pullRequestService;
-    private final ContributionService<CodeReview, Long> codeReviewService;
-    private final GitRepoRepository gitRepoRepository; // todo 순환참조 해결 후 repository 대신 service 주입받기
-    private final GitRepoMemberRepository gitRepoMemberRepository; // todo 순환참조 해결 후 repository 대신 service 주입받기
+    private final GitRepoRepository gitRepoRepository;              // todo 순환참조 해결
+    private final GitRepoMemberRepository gitRepoMemberRepository;  // todo 순환참조 해결
     private final GitRepoMemberMapper gitRepoMemberMapper;
 
     public void addMemberContribution(final Member member) {
-        int year = LocalDate.now().getYear();
-        String githubId = member.getGithubId();
-
-        MemberClientRequest request = new MemberClientRequest(githubId,  member.getGithubToken(), year);
+        final int year = LocalDate.now().getYear();
+        final String githubId = member.getGithubId();
+        final MemberClientRequest request = new MemberClientRequest(githubId,  member.getGithubToken(), year);
 
         requestCommitClientAndSave(member, request);
         requestIssueClientAndSave(member, request);
@@ -64,53 +51,69 @@ public class MemberClientService {
     }
 
     private void requestCodeReviewClientAndSave(final Member member, final MemberClientRequest request) {
-        int codeReviewNum = memberCodeReviewClient.requestToGithub(request).getTotalCount();
-        codeReviewService.saveContribution(member, codeReviewNum, request.getYear());
+        final int codeReviewNum = getGithubClient("memberCodeReviewClient", MemberCodeReviewResponse.class)
+                .requestToGithub(request).getTotalCount();
+
+        getContributionService("codeReviewService", CodeReview.class)
+                .saveContribution(member, codeReviewNum, request.getYear());
     }
 
     private void requestPullRequestClientAndSave(final Member member, final MemberClientRequest request) {
-        int pullRequestNum = memberPullRequestClient.requestToGithub(request).getTotalCount();
-        pullRequestService.saveContribution(member, pullRequestNum, request.getYear());
+        final int pullRequestNum = getGithubClient("memberPullRequestClient", MemberPullRequestResponse.class)
+                .requestToGithub(request).getTotalCount();
+
+        getContributionService("pullRequestService", PullRequest.class)
+                .saveContribution(member, pullRequestNum, request.getYear());
     }
 
     private void requestIssueClientAndSave(final Member member, final MemberClientRequest request) {
-        int issueNum = memberIssueClient.requestToGithub(request).getTotalCount();
-        issueService.saveContribution(member, issueNum, request.getYear());
+        final int issueNum = getGithubClient("memberIssueClient", MemberIssueResponse.class)
+                .requestToGithub(request).getTotalCount();
+
+        getContributionService("issueService", Issue.class)
+                .saveContribution(member, issueNum, request.getYear());
     }
 
     private void requestCommitClientAndSave(final Member member, final MemberClientRequest request) {
-        int commitNum = memberCommitClient.requestToGithub(request).getTotalCount();
-        commitService.saveContribution(member, commitNum, request.getYear());
+        final int commitNum = getGithubClient("memberCommitClient", MemberCommitResponse.class)
+                .requestToGithub(request).getTotalCount();
+
+        getContributionService("commitService", Commit.class)
+                .saveContribution(member, commitNum, request.getYear());
     }
 
     public void addMemberGitRepoAndGitOrganization(final Member member) {
-        MemberClientRequest request = new MemberClientRequest(
+        final MemberClientRequest request = new MemberClientRequest(
                 member.getGithubId(),
                 member.getGithubToken(),
                 LocalDate.now().getYear());
 
-        saveGitRepos(findMemberRepoNames(request), member);
+        saveGitRepoAndGitRepoMember(findMemberRepoNames(request), member);
         gitOrganizationService.findAndSaveGitOrganizations(getMemberOrganizationNames(request), member);
     }
 
     public Set<String> findMemberRepoNames(final MemberClientRequest request) {
-        return Arrays.stream(memberRepoClient.requestToGithub(request))
+        return Arrays.stream(getGithubClient("memberRepoClient", MemberRepoResponse[].class).requestToGithub(request))
                 .map(MemberRepoResponse::getFullName)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 
     public Set<MemberOrganizationResponse> getMemberOrganizationNames(final MemberClientRequest request) {
-        return Arrays.stream(memberOrganizationClient.requestToGithub(request))
-                .filter(response -> response != null && response.getLogin() != null && response.getAvatarUrl() != null)
+        return Arrays.stream(getGithubClient("memberOrganizationClient", MemberOrganizationResponse[].class).requestToGithub(request))
+                .filter(this::isValidResponse)
                 .collect(Collectors.toSet());
     }
 
-    private void saveGitRepos(final Set<String> gitRepoNames, final Member member) {
-        Set<GitRepo> gitRepos = findIfGitRepoNotExists(gitRepoNames);
+    private boolean isValidResponse(final MemberOrganizationResponse response) {
+        return response != null && response.getLogin() != null && response.getAvatarUrl() != null;
+    }
+
+    private void saveGitRepoAndGitRepoMember(final Set<String> gitRepoNames, final Member member) {
+        final Set<GitRepo> gitRepos = findIfGitRepoNotExists(gitRepoNames);
         saveAllGitRepos(gitRepos);
 
-        Set<GitRepoMember> gitRepoMembers = findIfGitRepoMemberNotExists(member, gitRepos);
+        final Set<GitRepoMember> gitRepoMembers = findIfGitRepoMemberNotExists(member, gitRepos);
         saveAllGitRepoMembers(gitRepoMembers);
     }
 
@@ -121,7 +124,7 @@ public class MemberClientService {
     private Set<GitRepoMember> findIfGitRepoMemberNotExists(final Member member, final Set<GitRepo> gitRepos) {
         return gitRepos.stream()
                 .filter(gitRepo -> !gitRepoMemberRepository.existsByGitRepoAndMember(gitRepo, member))
-                .map(gr -> gitRepoMemberMapper.toEntity(member, gr))
+                .map(gitRepo -> gitRepoMemberMapper.toEntity(member, gitRepo))
                 .collect(Collectors.toSet());
     }
 
@@ -137,10 +140,20 @@ public class MemberClientService {
     }
 
     public List<String> requestGitOrganizationResponse(final String githubToken, final String gitOrganizationName) {
-        OrganizationRepoResponse[] clientResponse = memberOrganizationRepoClient.requestToGithub(new MemberClientRequest(gitOrganizationName, githubToken, LocalDate.now().getYear()));
+        final OrganizationRepoResponse[] clientResponse
+                = getGithubClient("memberOrganizationRepoClient", OrganizationRepoResponse[].class)
+                .requestToGithub(new MemberClientRequest(gitOrganizationName, githubToken, LocalDate.now().getYear()));
 
         return Arrays.stream(clientResponse)
                 .map(OrganizationRepoResponse::getFullName)
                 .collect(Collectors.toList());
+    }
+
+    private <T> GithubClient<MemberClientRequest, T> getGithubClient(final String componentName, final Class<T> type) {
+        return (GithubClient<MemberClientRequest, T>) githubClients.get(componentName);
+    }
+
+    private <T> ContributionService<T, Long> getContributionService(final String componentName, final Class<T> type) {
+        return (ContributionService<T, Long>) contributionServices.get(componentName);
     }
 }

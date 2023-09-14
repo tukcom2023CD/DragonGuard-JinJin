@@ -33,15 +33,17 @@ public class OrganizationEmailFacade {
     private final EmailService emailService;
     private final AuthService authService;
 
-    public IdResponse<Long> addMemberAndSendEmail(AddMemberRequest addMemberRequest) {
+    public IdResponse<Long> addMemberAndSendEmail(final AddMemberRequest addMemberRequest) {
         organizationService.findAndAddMember(addMemberRequest);
         return emailService.sendAndSaveEmail();
     }
 
     public CheckCodeResponse isCodeMatching(final EmailRequest emailRequest) {
-        Long id = emailRequest.getId();
+        final Long id = emailRequest.getId();
 
-        if (isValidCode(emailRequest)) return new CheckCodeResponse(Boolean.FALSE);
+        if (isValidCode(emailRequest)) {
+            return new CheckCodeResponse(false);
+        }
         deleteCode(id);
 
         Member member = authService.getLoginUser();
@@ -49,31 +51,32 @@ public class OrganizationEmailFacade {
         return new CheckCodeResponse(true);
     }
 
-    private boolean isValidCode(EmailRequest emailRequest) {
-        return !emailEntityLoader.loadEntity(emailRequest.getId()).getCode().equals(emailRequest.getCode());
+    private boolean isValidCode(final EmailRequest emailRequest) {
+        final Email email = emailEntityLoader.loadEntity(emailRequest.getId());
+        return email.notMatchCode(emailRequest.getCode());
     }
 
-    public IdResponse<Long> saveOrganization(OrganizationRequest organizationRequest) {
+    public IdResponse<Long> saveOrganization(final OrganizationRequest organizationRequest) {
         return organizationService.saveOrganization(organizationRequest);
     }
 
-    public List<OrganizationResponse> findByType(OrganizationType organizationType, Pageable pageable) {
+    public List<OrganizationResponse> findByType(final OrganizationType organizationType, final Pageable pageable) {
         return organizationService.findByType(organizationType, pageable);
     }
 
-    public List<OrganizationResponse> getOrganizationRank(Pageable pageable) {
+    public List<OrganizationResponse> getOrganizationRank(final Pageable pageable) {
         return organizationService.findOrganizationRank(pageable);
     }
 
-    public List<OrganizationResponse> getOrganizationRankByType(OrganizationType type, Pageable pageable) {
+    public List<OrganizationResponse> getOrganizationRankByType(final OrganizationType type, final Pageable pageable) {
         return organizationService.findOrganizationRankByType(type, pageable);
     }
 
-    public List<OrganizationResponse> searchOrganization(OrganizationType type, String name, Pageable pageable) {
+    public List<OrganizationResponse> searchOrganization(final OrganizationType type, final String name, final Pageable pageable) {
         return organizationService.searchOrganization(type, name, pageable);
     }
 
-    public IdResponse<Long> getByName(String name) {
+    public IdResponse<Long> getByName(final String name) {
         return organizationService.getByName(name);
     }
 
@@ -81,7 +84,7 @@ public class OrganizationEmailFacade {
         return emailService.sendAndSaveEmail();
     }
 
-    public void deleteCode(Long id) {
+    public void deleteCode(final Long id) {
         emailService.deleteCode(id);
     }
 }

@@ -4,6 +4,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -18,9 +19,8 @@ import java.util.List;
 
 @Getter
 @Entity
+@SoftDelete
 @EqualsAndHashCode(of = "name")
-@Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {@Index(name = "gitorganization_index", columnList = "name")})
 public class GitOrganization implements Auditable {
@@ -43,13 +43,13 @@ public class GitOrganization implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public GitOrganization(String name, String profileImage, Member member) {
+    public GitOrganization(final String name, final String profileImage, final Member member) {
         this.name = name;
         this.profileImage = profileImage;
         addGitOrganizationMember(member);
     }
 
-    public void addGitOrganizationMember(Member member) {
+    public void addGitOrganizationMember(final Member member) {
         this.gitOrganizationMembers.add(new GitOrganizationMember(this, member));
     }
 }

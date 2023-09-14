@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 @Component
 @RequiredArgsConstructor
 public class KlaytnFaucetClient {
+    private static final String ADDRESS_PARAMETER = "address";
     private final BlockchainProperties blockchainProperties;
 
     @Scheduled(cron = "0 5 0 * * *", zone = "Asia/Seoul")
@@ -32,7 +33,7 @@ public class KlaytnFaucetClient {
         webClient().post()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .queryParam("address", blockchainProperties.getWalletAddress())
+                                .queryParam(ADDRESS_PARAMETER, blockchainProperties.getWalletAddress())
                                 .build())
                 .headers(headers -> headers.setContentType(MediaType.APPLICATION_JSON))
                 .accept(MediaType.APPLICATION_JSON)

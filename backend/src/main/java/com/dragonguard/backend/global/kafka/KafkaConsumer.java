@@ -6,6 +6,6 @@ package com.dragonguard.backend.global.kafka;
  */
 
 public interface KafkaConsumer<T> {
-    void consume(String message);
-    T readValue(String message);
+    void consume(final String message);
+    T readValue(final String message);
 }

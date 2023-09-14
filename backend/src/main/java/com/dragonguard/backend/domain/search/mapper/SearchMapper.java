@@ -3,9 +3,9 @@ package com.dragonguard.backend.domain.search.mapper;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.entity.Filter;
 import com.dragonguard.backend.domain.search.entity.Search;
-import com.dragonguard.backend.global.mapper.EntityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.Named;
 
 import java.util.List;
@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
  * @description 검색 Entity와 dto의 변환을 돕는 클래스
  */
 
-@Mapper(componentModel = "spring")
-public interface SearchMapper extends EntityMapper {
+@Mapper(componentModel = ComponentModel.SPRING)
+public interface SearchMapper {
     @Mapping(target = "filters", qualifiedByName = "getGitOrganizationNames")
     Search toSearch(final SearchRequest searchRequest);
 

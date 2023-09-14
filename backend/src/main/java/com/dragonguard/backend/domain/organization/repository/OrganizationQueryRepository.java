@@ -16,13 +16,13 @@ import java.util.UUID;
  */
 
 public interface OrganizationQueryRepository {
-    List<OrganizationResponse> findRanking(Pageable pageable);
+    List<OrganizationResponse> findRanking(final Pageable pageable);
 
-    List<OrganizationResponse> findRankingByType(OrganizationType type, Pageable pageable);
+    List<OrganizationResponse> findRankingByType(final OrganizationType type, final Pageable pageable);
 
-    List<OrganizationResponse> findByTypeAndSearchWord(OrganizationType type, String name, Pageable pageable);
+    List<OrganizationResponse> findByTypeAndSearchWord(final OrganizationType type, final String name, final Pageable pageable);
 
-    RelatedRankWithMemberResponse findRankingByMemberId(UUID memberId, String githubId);
+    RelatedRankWithMemberResponse findRankingByMemberId(final UUID memberId, final String githubId);
 
-    List<Organization> findAllByOrganizationStatus(OrganizationStatus organizationStatus, Pageable pageable);
+    List<Organization> findAllByOrganizationStatus(final OrganizationStatus organizationStatus, final Pageable pageable);
 }

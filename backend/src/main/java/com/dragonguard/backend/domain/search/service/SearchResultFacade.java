@@ -45,26 +45,26 @@ public class SearchResultFacade {
     }
 
     public void saveAllResult(final List<ScrapeResult> results, final SearchRequest searchRequest) {
-        Long searchId = findOrSaveSearch(searchRequest).getId();
-        List<Result> resultList = resultService.findAllBySearchId(searchId);
+        final Long searchId = findOrSaveSearch(searchRequest).getId();
+        final List<Result> resultList = resultService.findAllBySearchId(searchId);
 
         resultService.saveAllResultsWithSearch(results, searchId, resultList);
     }
 
     public List<UserResultSearchResponse> getUserSearchResultByClient(final String name, final Integer page) {
-        SearchRequest searchRequest = new SearchRequest(name, SearchType.USERS, page);
-        Search search = getSearch(searchRequest);
+        final SearchRequest searchRequest = new SearchRequest(name, SearchType.USERS, page);
+        final Search search = getSearch(searchRequest);
         return searchUser(searchRequest, search);
     }
 
     public List<GitRepoResultResponse> getGitRepoSearchResultByClient(final String name, final Integer page, final List<String> filters) {
-        SearchRequest searchRequest = new SearchRequest(name, SearchType.REPOSITORIES, page, filters);
-        Search search = getSearch(searchRequest);
+        final SearchRequest searchRequest = new SearchRequest(name, SearchType.REPOSITORIES, page, filters);
+        final Search search = getSearch(searchRequest);
         return searchRepo(searchRequest, search);
     }
 
     private Search getSearch(final SearchRequest searchRequest) {
-        Search search = findOrSaveSearch(searchRequest);
+        final Search search = findOrSaveSearch(searchRequest);
         searchRequest.setGithubToken(authService.getLoginUser().getGithubToken());
         return search;
     }

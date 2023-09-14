@@ -16,8 +16,6 @@ import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -37,6 +35,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchRequest, Mono<List<GitRepoMember>>> {
+    private static final String PATH_FORMAT = "repos/%s/stats/contributors";
     private final WebClient webClient;
     private final GitRepoMemberMapper gitRepoMemberMapper;
     private final MemberMapper memberMapper;
@@ -48,9 +47,7 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .path("repos/")
-                                .path(request.getGitRepo().getName())
-                                .path("/stats/contributors")
+                                .path(String.format(PATH_FORMAT, request.getGitRepo().getName()))
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
@@ -59,7 +56,7 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                 .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
                 .bodyToFlux(GitRepoMemberClientResponse.class)
                 .collectList()
-                .flatMap(this::getResponseMono)
+                .flatMap(this::validateResponse)
                 .retryWhen(Retry.fixedDelay(10, Duration.ofMillis(1500))
                                 .filter(WebClientException.class::isInstance)
                                 .onRetryExhaustedThrow(((retryBackoffSpec, retrySignal) -> new WebClientRetryException())))
@@ -100,13 +97,17 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                 .findFirst().orElse(null));
     }
 
-    private Mono<List<GitRepoMemberClientResponse>> getResponseMono(final List<GitRepoMemberClientResponse> response) {
-        if (response == null || response.isEmpty() || response.stream()
-                .anyMatch(g -> g.getTotal() == null || g.getWeeks() == null || g.getWeeks().isEmpty()
-                        || g.getAuthor() == null || g.getAuthor().getLogin() == null || g.getAuthor().getAvatarUrl() == null)) {
+    private Mono<List<GitRepoMemberClientResponse>> validateResponse(final List<GitRepoMemberClientResponse> response) {
+        if (isResponseEmpty(response)) {
             return Mono.error(WebClientException::new);
         }
         return Mono.just(response);
+    }
+
+    private boolean isResponseEmpty(final List<GitRepoMemberClientResponse> response) {
+        return response == null || response.isEmpty() || response.stream()
+                .anyMatch(g -> g.getTotal() == null || g.getWeeks() == null || g.getWeeks().isEmpty()
+                        || g.getAuthor() == null || g.getAuthor().getLogin() == null || g.getAuthor().getAvatarUrl() == null);
     }
 
     private GitRepoMember getGitRepoMember(final GitRepoBatchRequest request, final GitRepoMemberClientResponse r) {

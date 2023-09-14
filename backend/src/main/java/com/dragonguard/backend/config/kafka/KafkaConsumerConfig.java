@@ -26,6 +26,9 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class KafkaConsumerConfig {
+    private static final Long RETRY_INTERVAL = 2000L;
+    private static final Long MAX_ATTEMPTS = 3L;
+
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
@@ -34,7 +37,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
-        Map<String, Object> props = new HashMap<>();
+        final Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -46,9 +49,9 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        final ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
-        factory.setCommonErrorHandler(new DefaultErrorHandler(new FixedBackOff(2000L, 2L)));
+        factory.setCommonErrorHandler(new DefaultErrorHandler(new FixedBackOff(RETRY_INTERVAL, MAX_ATTEMPTS)));
         return factory;
     }
 }

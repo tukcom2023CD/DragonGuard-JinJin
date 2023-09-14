@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class BlockchainErrorAdvice {
     @ExceptionHandler(BlockchainException.class)
-    public ResponseEntity<ErrorResponse> blockchainException(BlockchainException e) {
+    public ResponseEntity<ErrorResponse> blockchainException(final BlockchainException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 }

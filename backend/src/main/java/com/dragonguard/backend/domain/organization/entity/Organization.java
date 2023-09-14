@@ -1,9 +1,9 @@
 package com.dragonguard.backend.domain.organization.entity;
 
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Where;
@@ -20,8 +20,7 @@ import java.util.Set;
 
 @Getter
 @Entity
-@Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
+@SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Organization implements Auditable {
     @Id
@@ -54,32 +53,48 @@ public class Organization implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Organization(String name, OrganizationType organizationType, String emailEndpoint) {
+    public Organization(final String name, final OrganizationType organizationType, final String emailEndpoint) {
         this.name = name;
         this.organizationType = organizationType;
-        if (validateEmailEndpoint(emailEndpoint)) {
+        validateEmailEndPoint(emailEndpoint);
+    }
+
+    private void validateEmailEndPoint(final String emailEndpoint) {
+        if (validEmailEndpoint(emailEndpoint)) {
             this.emailEndpoint = emailEndpoint.strip();
         }
     }
 
-    public void addMember(Member member, String emailAddress) {
+    public void addMember(final Member member, final String emailAddress) {
         if (emailAddress.endsWith(emailEndpoint)) {
             this.members.add(member);
             member.updateOrganization(this, emailAddress);
         }
     }
 
-    public void updateStatus(OrganizationStatus organizationStatus) {
-        if (organizationStatus.equals(OrganizationStatus.ACCEPTED)) {
-            this.organizationStatus = OrganizationStatus.ACCEPTED;
-            this.members.forEach(m -> m.finishAuth(this));
+    public void updateStatus(final OrganizationStatus organizationStatus) {
+        if (organizationStatus.isAccepted()) {
+            updateToAccepted();
             return;
         }
+        deleteWhenDenied();
+    }
+
+    private void deleteWhenDenied() {
         this.members.forEach(Member::undoFinishingAuthAndDeleteOrganization);
         delete();
     }
 
-    private boolean validateEmailEndpoint(String emailEndpoint) {
+    private void updateToAccepted() {
+        this.organizationStatus = OrganizationStatus.ACCEPTED;
+        this.members.forEach(m -> m.finishAuth(this));
+    }
+
+    private boolean validEmailEndpoint(final String emailEndpoint) {
         return StringUtils.hasText(emailEndpoint) && !emailEndpoint.contains("@");
+    }
+
+    public void deleteMember(final Member member) {
+        this.members.remove(member);
     }
 }

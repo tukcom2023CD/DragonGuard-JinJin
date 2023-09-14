@@ -12,6 +12,6 @@ import java.util.Optional;
  */
 
 public interface GitRepoMemberQueryRepository {
-    Optional<GitRepoMember> findByGitRepoAndMember(GitRepo gitRepo, Member member);
-    Optional<GitRepoMember> findByGitRepoAndMemberGithubId(GitRepo gitRepo, String githubId);
+    Optional<GitRepoMember> findByGitRepoAndMember(final GitRepo gitRepo, final Member member);
+    Optional<GitRepoMember> findByGitRepoAndMemberGithubId(final GitRepo gitRepo, final String githubId);
 }

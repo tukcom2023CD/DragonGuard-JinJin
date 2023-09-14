@@ -19,16 +19,15 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class GitRepoLanguageClient implements GithubClient<GitRepoClientRequest, Map<String, Integer>> {
+    private static final String PATH_FORMAT = "repos/%s/languages";
     private final WebClient webClient;
 
     @Override
-    public Map<String, Integer> requestToGithub(GitRepoClientRequest request) {
+    public Map<String, Integer> requestToGithub(final GitRepoClientRequest request) {
         return webClient.get()
                 .uri(
                         uriBuilder -> uriBuilder
-                                .path("repos/")
-                                .path(request.getName())
-                                .path("/languages")
+                                .path(String.format(PATH_FORMAT))
                                 .build())
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)

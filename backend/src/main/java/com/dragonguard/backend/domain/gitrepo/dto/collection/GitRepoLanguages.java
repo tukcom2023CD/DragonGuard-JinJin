@@ -13,11 +13,14 @@ import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
-public class GitRepoLanguageMap {
+public class GitRepoLanguages {
+    private static final int NO_CONTRIBUTION = 0;
     private final Map<String, Integer> languages;
 
     public IntSummaryStatistics getStatistics() {
-        return languages.keySet().isEmpty() ? new IntSummaryStatistics(0, 0, 0, 0)
-                : languages.keySet().stream().mapToInt(languages::get).summaryStatistics();
+        if (languages.keySet().isEmpty()) {
+            return new IntSummaryStatistics(NO_CONTRIBUTION, NO_CONTRIBUTION, NO_CONTRIBUTION, NO_CONTRIBUTION);
+        }
+        return languages.keySet().stream().mapToInt(languages::get).summaryStatistics();
     }
 }

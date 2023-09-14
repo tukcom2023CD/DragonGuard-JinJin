@@ -18,28 +18,25 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    private final Key key;
     private static final Long ACCESS_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 1000; // 1 Day
     private static final Long REFRESH_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 14 * 1000; // 14 Days
+    private static final String USER_ID_CLAIM_NAME = "id";
     private final MemberRepository memberRepository;
+    private final Key key;
 
-    public JwtToken createToken(UserPrinciple userDetails) {
-        Claims accessClaims = getAccessClaims(userDetails);
-        Claims refreshClaims = getRefreshClaims();
-
-        String accessToken = getToken(userDetails, accessClaims, ACCESS_TOKEN_EXPIRE_LENGTH);
-        String refreshToken = getToken(userDetails, refreshClaims, REFRESH_TOKEN_EXPIRE_LENGTH);
+    public JwtToken createToken(final UserPrinciple userDetails) {
+        final String accessToken = getToken(userDetails, getAccessClaims(userDetails), ACCESS_TOKEN_EXPIRE_LENGTH);
+        final String refreshToken = getToken(userDetails, getRefreshClaims(), REFRESH_TOKEN_EXPIRE_LENGTH);
 
         saveRefreshToken(refreshToken, userDetails);
 
         return JwtToken.builder()
-                .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(final String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -48,15 +45,15 @@ public class JwtTokenProvider {
         }
     }
 
-    private void saveRefreshToken(String refreshToken, UserPrinciple userDetails) {
-        UUID id = UUID.fromString(userDetails.getName());
+    private void saveRefreshToken(final String refreshToken, final UserPrinciple userDetails) {
+        final UUID id = UUID.fromString(userDetails.getName());
 
         memberRepository.updateRefreshToken(id, refreshToken);
     }
 
-    private Claims getAccessClaims(UserPrinciple userDetails) {
+    private Claims getAccessClaims(final UserPrinciple userDetails) {
         Claims claims = Jwts.claims();
-        claims.put("id", userDetails.getName());
+        claims.put(USER_ID_CLAIM_NAME, userDetails.getName());
         return claims;
     }
 
@@ -64,8 +61,8 @@ public class JwtTokenProvider {
         return Jwts.claims();
     }
 
-    private String getToken(UserPrinciple loginUser, Claims claims, Long validationSecond) {
-        long now = new Date().getTime();
+    private String getToken(final UserPrinciple loginUser, final Claims claims, final Long validationSecond) {
+        final long now = new Date().getTime();
 
         return Jwts.builder()
                 .setSubject(loginUser.getName())

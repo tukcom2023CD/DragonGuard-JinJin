@@ -20,13 +20,14 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class JobScheduler {
+    private static final String MAP_KEY_NOW = "now";
     private final JobLauncher jobLauncher;
     private final Job clientJob;
 
     @Scheduled(cron = "0 50 1,3,5,7,9,11,13,15,17,19,21,23 * * *", zone = "Asia/Seoul")
     public void launchJob() throws Exception {
-        Map<String, JobParameter> jobParametersMap = new HashMap<>();
-        jobParametersMap.put("now", new JobParameter(LocalDateTime.now().toString()));
+        final Map<String, JobParameter> jobParametersMap = new HashMap<>();
+        jobParametersMap.put(MAP_KEY_NOW, new JobParameter(LocalDateTime.now().toString()));
         jobLauncher.run(clientJob, new JobParameters(jobParametersMap));
     }
 }

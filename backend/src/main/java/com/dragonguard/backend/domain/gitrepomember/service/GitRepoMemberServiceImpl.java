@@ -29,8 +29,9 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
     private final MemberService memberService;
     private final GitRepoMemberMapper gitRepoMemberMapper;
 
+    @Override
     public void updateOrSaveAll(final List<GitRepoMemberResponse> gitRepoResponses, final GitRepo gitRepo) {
-        List<GitRepoMember> gitRepoMembers = validateAndGetGitRepoMembers(gitRepoResponses, gitRepo);
+        final List<GitRepoMember> gitRepoMembers = validateAndGetGitRepoMembers(gitRepoResponses, gitRepo);
         saveOrUpdateGitRepoMembers(gitRepoMembers);
     }
 
@@ -53,10 +54,10 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
     }
 
     private GitRepoMember saveAndGetGitRepoMember(final GitRepoMemberResponse response, final GitRepo gitRepo) {
-        String githubId = response.getGithubId();
-        GitRepoMember gitRepoMember = gitRepoMemberRepository.findByGitRepoAndMemberGithubId(gitRepo, githubId)
+        final String githubId = response.getGithubId();
+        final GitRepoMember gitRepoMember = gitRepoMemberRepository.findByGitRepoAndMemberGithubId(gitRepo, githubId)
                 .orElseGet(() -> gitRepoMemberRepository.save(
-                            gitRepoMemberMapper.toEntity(memberService.findMemberOrSave(githubId, AuthStep.NONE, response.getProfileUrl()), gitRepo)));
+                            gitRepoMemberMapper.toEntity(memberService.saveIfNone(githubId, AuthStep.NONE, response.getProfileUrl()), gitRepo)));
         gitRepoMember.updateProfileImageAndContribution(response.getProfileUrl(), response.getCommits(), response.getAdditions(), response.getDeletions());
         return gitRepoMember;
     }
@@ -75,7 +76,7 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
     }
 
     private GitRepoMember findGitRepoMember(final GitRepoMemberResponse response, final Member member, final GitRepo gitRepo) {
-        GitRepoMember gitRepoMember = gitRepoMemberRepository.findByGitRepoAndMember(gitRepo, member)
+        final GitRepoMember gitRepoMember = gitRepoMemberRepository.findByGitRepoAndMember(gitRepo, member)
                 .orElseGet(() -> gitRepoMemberMapper.toEntity(member, gitRepo));
 
         gitRepoMember.updateProfileImageAndContribution(
@@ -88,7 +89,7 @@ public class GitRepoMemberServiceImpl implements EntityLoader<GitRepoMember, Lon
     }
 
     private Member findMemberByGitRepoResponse(final GitRepoMemberResponse gitRepoMemberResponse) {
-        return memberService.findMemberOrSave(gitRepoMemberResponse.getGithubId(), AuthStep.NONE, gitRepoMemberResponse.getProfileUrl());
+        return memberService.saveIfNone(gitRepoMemberResponse.getGithubId(), AuthStep.NONE, gitRepoMemberResponse.getProfileUrl());
     }
 
     @Override

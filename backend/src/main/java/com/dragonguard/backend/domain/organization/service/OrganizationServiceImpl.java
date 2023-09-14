@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 @TransactionService
 @RequiredArgsConstructor
-public class OrganizationServiceImpl implements EntityLoader<Organization, Long>, OrganizationService {
+public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final OrganizationMapper organizationMapper;
     private final AuthService authService;

@@ -23,7 +23,7 @@ import org.springframework.util.StringUtils;
 
 @TransactionService
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EntityLoader<Email, Long>, EmailService {
+public class EmailServiceImpl implements EmailService {
     private final EmailRepository emailRepository;
     private final AuthService authService;
     private final EmailMapper emailMapper;
@@ -31,15 +31,15 @@ public class EmailServiceImpl implements EntityLoader<Email, Long>, EmailService
     private final RandomCodeGenerator randomCodeGenerator;
 
     public IdResponse<Long> sendAndSaveEmail() {
-        Member member = authService.getLoginUser();
-        String memberEmail = member.getEmailAddress();
+        final Member member = authService.getLoginUser();
+        final String memberEmail = member.getEmailAddress();
 
         validateMemberEmail(memberEmail);
 
-        int randomCode = randomCodeGenerator.generate();
+        final int randomCode = randomCodeGenerator.generate();
         requestToSendEmail(memberEmail, randomCode);
 
-        Email savedEmail = emailRepository.save(emailMapper.toEntity(randomCode, member.getId()));
+        final Email savedEmail = emailRepository.save(emailMapper.toEntity(randomCode, member.getId()));
         return new IdResponse<>(savedEmail.getId());
     }
 

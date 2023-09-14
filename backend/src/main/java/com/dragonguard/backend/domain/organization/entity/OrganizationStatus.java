@@ -12,4 +12,8 @@ public enum OrganizationStatus {
     REQUESTED("승인 요청"), ACCEPTED("승인 완료"), DENIED("요청 거부");
 
     private final String korean;
+
+    public boolean isAccepted() {
+        return this == ACCEPTED;
+    }
 }

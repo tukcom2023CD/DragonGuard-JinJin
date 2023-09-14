@@ -22,47 +22,37 @@ import javax.validation.ValidationException;
 @RestControllerAdvice
 public class GlobalErrorAdvice {
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorResponse> entityNotFoundException(EntityNotFoundException e) {
+    public ResponseEntity<ErrorResponse> entityNotFoundException(final EntityNotFoundException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<ErrorResponse> webClientResponseException(WebClientResponseException e) {
+    public ResponseEntity<ErrorResponse> webClientResponseException(final WebClientResponseException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(DecodingException.class)
-    public ResponseEntity<ErrorResponse> decodingException(DecodingException e) {
+    public ResponseEntity<ErrorResponse> decodingException(final DecodingException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ErrorResponse> validationException(ValidationException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponse> dataIntegrityViolationException(DataIntegrityViolationException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> constraintViolationException(ConstraintViolationException e) {
+    public ResponseEntity<ErrorResponse> validationException(final ValidationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(MismatchedInputException.class)
-    public ResponseEntity<ErrorResponse> mismatchedInputException(MismatchedInputException e) {
+    public ResponseEntity<ErrorResponse> mismatchedInputException(final MismatchedInputException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<ErrorResponse> nullPointerException(NullPointerException e) {
+    public ResponseEntity<ErrorResponse> nullPointerException(final NullPointerException e) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(WebClientException.class)
-    public ResponseEntity<Void> webClientException(WebClientException e) {
+    public ResponseEntity<Void> webClientException(final WebClientException e) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

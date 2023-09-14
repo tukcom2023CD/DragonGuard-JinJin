@@ -28,7 +28,7 @@ public class SearchController {
      */
     @GetMapping(params = "type=USERS")
     public ResponseEntity<List<UserResultSearchResponse>> getUsersSearchResult(
-            @RequestParam String name, @RequestParam Integer page) {
+            @RequestParam final String name, @RequestParam final Integer page) {
         return ResponseEntity.ok(searchService.getUserSearchResultByClient(name, page));
     }
 
@@ -37,8 +37,8 @@ public class SearchController {
      */
     @GetMapping(params = "type=REPOSITORIES")
     public ResponseEntity<List<GitRepoResultResponse>> getReposSearchResult(
-            @RequestParam(value = "filters", required = false) List<String> filters,
-            @RequestParam String name, @RequestParam Integer page) {
+            @RequestParam(value = "filters", required = false) final List<String> filters,
+            @RequestParam final String name, @RequestParam final Integer page) {
         return ResponseEntity.ok(searchService.getGitRepoSearchResultByClient(name, page, filters));
     }
 }

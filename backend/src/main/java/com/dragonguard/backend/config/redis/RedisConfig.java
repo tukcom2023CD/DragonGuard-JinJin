@@ -28,6 +28,7 @@ import java.time.Duration;
 @EnableRedisRepositories
 @RequiredArgsConstructor
 public class RedisConfig {
+    private static final Long TIME_TO_LIVE = 1L;
     private final RedisProperties redisProperties;
 
     @Bean
@@ -49,7 +50,7 @@ public class RedisConfig {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
-                .entryTtl(Duration.ofHours(1L));
+                .entryTtl(Duration.ofHours(TIME_TO_LIVE));
 
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(cf).cacheDefaults(redisCacheConfiguration).build();
     }

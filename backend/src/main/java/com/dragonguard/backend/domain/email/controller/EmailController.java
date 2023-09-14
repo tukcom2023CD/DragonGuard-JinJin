@@ -33,7 +33,7 @@ public class EmailController {
      * 조직 인증 이메일의 인증 번호 검증 및 검증 성공 시 회원을 조직에 추가해주는 api
      */
     @GetMapping("/check")
-    public ResponseEntity<CheckCodeResponse> checkCode(@Valid EmailRequest emailRequest) {
+    public ResponseEntity<CheckCodeResponse> checkCode(@Valid final EmailRequest emailRequest) {
         return ResponseEntity.ok(organizationEmailFacade.isCodeMatching(emailRequest));
     }
 
@@ -41,7 +41,7 @@ public class EmailController {
      * 인증 시간이 지날 때까지 인증에 실패한 경우 코드 삭제 api
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCode(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCode(@PathVariable final Long id) {
         organizationEmailFacade.deleteCode(id);
         return ResponseEntity.ok().build();
     }

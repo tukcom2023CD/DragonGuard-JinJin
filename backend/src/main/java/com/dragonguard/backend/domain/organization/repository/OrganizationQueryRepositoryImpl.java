@@ -27,11 +27,16 @@ import static com.dragonguard.backend.domain.organization.entity.QOrganization.o
 @Repository
 @RequiredArgsConstructor
 public class OrganizationQueryRepositoryImpl implements OrganizationQueryRepository {
+    private static final Long FROM_FIRST_OFFSET = 0L;
+    private static final Long FROM_TWO_UPPER_OFFSET = 2L;
+    private static final Long FROM_THREE_UPPER_OFFSET = 3L;
+    private static final int FIRST_RANK = 1;
+    private static final int SECOND_RANK = 2;
     private final JPAQueryFactory jpaQueryFactory;
     private final OrganizationQDtoFactory organizationQDtoFactory;
 
     @Override
-    public List<OrganizationResponse> findRanking(Pageable pageable) {
+    public List<OrganizationResponse> findRanking(final Pageable pageable) {
         return jpaQueryFactory
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization, member)
@@ -46,7 +51,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     }
 
     @Override
-    public List<OrganizationResponse> findRankingByType(OrganizationType type, Pageable pageable) {
+    public List<OrganizationResponse> findRankingByType(final OrganizationType type, final Pageable pageable) {
         return jpaQueryFactory
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization, member)
@@ -61,7 +66,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     }
 
     @Override
-    public List<OrganizationResponse> findByTypeAndSearchWord(OrganizationType type, String name, Pageable pageable) {
+    public List<OrganizationResponse> findByTypeAndSearchWord(final OrganizationType type, final String name, final Pageable pageable) {
         return jpaQueryFactory
                 .select(organizationQDtoFactory.qOrganizationResponse())
                 .from(organization)
@@ -74,7 +79,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     }
 
     @Override
-    public RelatedRankWithMemberResponse findRankingByMemberId(UUID memberId, String githubId) {
+    public RelatedRankWithMemberResponse findRankingByMemberId(final UUID memberId, final String githubId) {
         return getRelatedRankWithMemberResponse(jpaQueryFactory
                 .select(member)
                 .from(member, organization)
@@ -89,9 +94,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .fetch().size() + 1, githubId);
     }
 
-    private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(int rank, String githubId) {
-        long offset = getOffset(rank);
-        List<String> relatedRank = jpaQueryFactory
+    private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(final int rank, final String githubId) {
+        final List<String> relatedRank = jpaQueryFactory
                 .select(member.githubId, member.id, member.sumOfTokens)
                 .from(member, organization)
                 .leftJoin(organization.members, member)
@@ -100,14 +104,18 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .where(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED)
                         .and(member.authStep.eq(AuthStep.ALL)))
                 .distinct()
-                .offset(offset)
+                .offset(getOffset(rank))
                 .limit(3)
                 .fetch().stream().map(t -> t.get(member.githubId)).collect(Collectors.toList());
-        return new RelatedRankWithMemberResponse(rank, relatedRank.isEmpty() || relatedRank.get(relatedRank.size() - 1).equals(githubId), relatedRank);
+        return new RelatedRankWithMemberResponse(rank, isLast(githubId, relatedRank), relatedRank);
+    }
+
+    private boolean isLast(final String githubId, final List<String> relatedRank) {
+        return relatedRank.isEmpty() || relatedRank.get(relatedRank.size() - 1).equals(githubId);
     }
 
     @Override
-    public List<Organization> findAllByOrganizationStatus(OrganizationStatus organizationStatus, Pageable pageable) {
+    public List<Organization> findAllByOrganizationStatus(final OrganizationStatus organizationStatus, final Pageable pageable) {
         return jpaQueryFactory
                 .selectFrom(organization)
                 .where(organization.organizationStatus.eq(organizationStatus))
@@ -116,8 +124,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .fetch();
     }
 
-    private long getOffset(int rank) {
-        int size = jpaQueryFactory
+    private long getOffset(final int rank) {
+        final int size = jpaQueryFactory
                 .select(member.id)
                 .from(member, organization)
                 .leftJoin(organization.members, member)
@@ -126,15 +134,35 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .fetch()
                 .size();
 
-        if (rank == 1) {
-            return 0L;
+        return getOffsetWithSize(rank, size);
+    }
+
+    private long getOffsetWithSize(final int rank, final int size) {
+        if (rank == FIRST_RANK) {
+            return FROM_FIRST_OFFSET;
         }
-        if (size == rank) {
-            if (rank == 2) {
-                return 0L;
-            }
-            return rank - 3L;
+        return getNotFirstRankOffset(rank, size);
+    }
+
+    private long getNotFirstRankOffset(final int rank, final int size) {
+        if (isLastRank(rank, size)) {
+            return getLastRankOffset(rank);
         }
-        return rank - 2L;
+        return rank - FROM_TWO_UPPER_OFFSET;
+    }
+
+    private boolean isLastRank(final int rank, final int size) {
+        return size == rank;
+    }
+
+    private long getLastRankOffset(final int rank) {
+        if (isTwoRankers(rank)) {
+            return FROM_FIRST_OFFSET;
+        }
+        return rank - FROM_THREE_UPPER_OFFSET;
+    }
+
+    private boolean isTwoRankers(final int rank) {
+        return rank == SECOND_RANK;
     }
 }

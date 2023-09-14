@@ -24,27 +24,27 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class JwtValidator {
-    private final Key key;
+    private static final String USER_ID_CLAIM_NAME = "id";
+    private static final String EMPTY_CREDENTIAL = "";
     private final MemberRepository memberRepository;
     private final UserDetailsMapper userDetailsMapper;
+    private final Key key;
 
     @Transactional
-    public Authentication getAuthentication(String accessToken) {
-        Claims claims = getTokenBodyClaims(accessToken);
-        Optional<Member> member = memberRepository.findById(extractUUID(claims));
-        if (member.isEmpty()) {
-            return null;
-        }
-        UserPrinciple loginUser = userDetailsMapper.mapToLoginUser(member.get());
+    public Authentication getAuthentication(final String accessToken) {
+        final Claims claims = getTokenBodyClaims(accessToken);
 
-        return new UsernamePasswordAuthenticationToken(loginUser, "", loginUser.getAuthorities());
+        return memberRepository.findById(extractUUID(claims))
+                .map(userDetailsMapper::mapToLoginUser)
+                .map(loginUser -> new UsernamePasswordAuthenticationToken(loginUser, EMPTY_CREDENTIAL, loginUser.getAuthorities()))
+                .orElse(null);
     }
 
-    public UUID extractUUID(Claims claims) {
-        return UUID.fromString(claims.get("id", String.class));
+    public UUID extractUUID(final Claims claims) {
+        return UUID.fromString(claims.get(USER_ID_CLAIM_NAME, String.class));
     }
 
-    public Claims getTokenBodyClaims(String accessToken) {
+    public Claims getTokenBodyClaims(final String accessToken) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

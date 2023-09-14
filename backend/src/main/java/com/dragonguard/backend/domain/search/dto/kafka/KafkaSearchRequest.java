@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
  * @description 검색에 대한 Kafka 요청 정보를 담는 dto
  */
 
-@Builder
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class KafkaSearchRequest {

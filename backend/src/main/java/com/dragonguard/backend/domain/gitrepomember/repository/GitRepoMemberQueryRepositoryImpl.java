@@ -25,7 +25,7 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Optional<GitRepoMember> findByGitRepoAndMember(GitRepo gitRepo, Member member) {
+    public Optional<GitRepoMember> findByGitRepoAndMember(final GitRepo gitRepo, final Member member) {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(gitRepoMember)
                 .where(gitRepoMember.gitRepo.eq(gitRepo)
@@ -34,7 +34,7 @@ public class GitRepoMemberQueryRepositoryImpl implements GitRepoMemberQueryRepos
     }
 
     @Override
-    public Optional<GitRepoMember> findByGitRepoAndMemberGithubId(GitRepo gitRepo, String githubId) {
+    public Optional<GitRepoMember> findByGitRepoAndMemberGithubId(final GitRepo gitRepo, final String githubId) {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(gitRepoMember)
                 .leftJoin(gitRepoMember.member, member)

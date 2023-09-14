@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @Service
 @RequiredArgsConstructor
 public class JwtSetupService {
+    private static final String DEFAULT_PATH = "/";
     private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${app.auth.token.access-header}")
@@ -25,17 +26,18 @@ public class JwtSetupService {
     @Value("${app.auth.token.refresh-header}")
     private String refreshTokenHeaderTag;
 
-    public void addJwtTokensInCookie(HttpServletResponse response, UserPrinciple loginUser) {
+    public void addJwtTokensInCookie(final HttpServletResponse response, final UserPrinciple loginUser) {
         JwtToken jwtToken = jwtTokenProvider.createToken(loginUser);
-        ResponseCookie accessTokenCookie =
-                setCookie(accessTokenHeaderTag, jwtToken.getAccessToken());
-        response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
-        ResponseCookie refreshTokenCookie =
-                setCookie(refreshTokenHeaderTag, jwtToken.getRefreshToken());
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+        addCookie(response, jwtToken.getAccessToken(), accessTokenHeaderTag);
+        addCookie(response, jwtToken.getRefreshToken(), refreshTokenHeaderTag);
     }
 
-    private ResponseCookie setCookie(String key, String value) {
-        return ResponseCookie.from(key, value).path("/").httpOnly(true).build();
+    private void addCookie(final HttpServletResponse response, final String token, final String tag) {
+        ResponseCookie tokenCookie = setCookie(tag, token);
+        response.addHeader(HttpHeaders.SET_COOKIE, tokenCookie.toString());
+    }
+
+    private ResponseCookie setCookie(final String key, final String value) {
+        return ResponseCookie.from(key, value).path(DEFAULT_PATH).httpOnly(true).build();
     }
 }

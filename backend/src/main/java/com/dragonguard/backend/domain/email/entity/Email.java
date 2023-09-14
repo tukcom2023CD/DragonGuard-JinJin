@@ -1,10 +1,9 @@
 package com.dragonguard.backend.domain.email.entity;
 
-import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -16,8 +15,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
+@SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Email implements Auditable {
     @Id
@@ -36,8 +34,12 @@ public class Email implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Email(UUID memberId, Integer code) {
+    public Email(final UUID memberId, final Integer code) {
         this.memberId = memberId;
         this.code = code;
+    }
+
+    public boolean notMatchCode(final int code) {
+        return this.code != code;
     }
 }

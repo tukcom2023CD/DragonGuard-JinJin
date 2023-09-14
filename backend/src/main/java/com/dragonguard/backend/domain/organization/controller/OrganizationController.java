@@ -29,7 +29,7 @@ public class OrganizationController {
      * 조직을 등록하기 위해 요청하는 api (이후 관리자의 승인 필요)
      */
     @PostMapping
-    public ResponseEntity<IdResponse<Long>> saveOrganization(@RequestBody @Valid OrganizationRequest organizationRequest) {
+    public ResponseEntity<IdResponse<Long>> saveOrganization(@RequestBody @Valid final OrganizationRequest organizationRequest) {
         return ResponseEntity.ok(organizationService.saveOrganization(organizationRequest));
     }
 
@@ -37,7 +37,7 @@ public class OrganizationController {
      * 조직의 이름을 통해 id를 조회하는 api
      */
     @GetMapping("/search-id")
-    public ResponseEntity<IdResponse<Long>> getOrganization(@RequestParam String name) {
+    public ResponseEntity<IdResponse<Long>> getOrganization(@RequestParam final String name) {
         return ResponseEntity.ok(organizationService.getByName(name));
     }
 
@@ -45,7 +45,7 @@ public class OrganizationController {
      * 멤버의 조직에 추가 요청 api (이후 이메일 인증 필요)
      */
     @PostMapping("/add-member")
-    public ResponseEntity<IdResponse<Long>> addMemberToOrganization(@RequestBody @Valid AddMemberRequest addMemberRequest) {
+    public ResponseEntity<IdResponse<Long>> addMemberToOrganization(@RequestBody @Valid final AddMemberRequest addMemberRequest) {
         return ResponseEntity.ok(organizationService.addMemberAndSendEmail(addMemberRequest));
     }
 
@@ -53,7 +53,7 @@ public class OrganizationController {
      * 조직 타입별 조회 api
      */
     @GetMapping
-    public ResponseEntity<List<OrganizationResponse>> getOrganizations(@RequestParam OrganizationType type, Pageable pageable) {
+    public ResponseEntity<List<OrganizationResponse>> getOrganizations(@RequestParam final OrganizationType type, final Pageable pageable) {
         return ResponseEntity.ok(organizationService.findByType(type, pageable));
     }
 
@@ -61,7 +61,7 @@ public class OrganizationController {
      * 조직 자체의 랭킹을 페이징을 통해 조회하는 api
      */
     @GetMapping("/ranking/all")
-    public ResponseEntity<List<OrganizationResponse>> getOrganizationRank(Pageable pageable) {
+    public ResponseEntity<List<OrganizationResponse>> getOrganizationRank(final Pageable pageable) {
         return ResponseEntity.ok(organizationService.getOrganizationRank(pageable));
     }
 
@@ -70,7 +70,7 @@ public class OrganizationController {
      */
     @GetMapping("/ranking")
     public ResponseEntity<List<OrganizationResponse>> getOrganizationRankByType(
-            @RequestParam OrganizationType type, Pageable pageable) {
+            @RequestParam final OrganizationType type, final Pageable pageable) {
         return ResponseEntity.ok(organizationService.getOrganizationRankByType(type, pageable));
     }
 
@@ -79,7 +79,7 @@ public class OrganizationController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<OrganizationResponse>> searchOrganization(
-            @RequestParam OrganizationType type, @RequestParam String name, Pageable pageable) {
+            @RequestParam final OrganizationType type, @RequestParam final String name, final Pageable pageable) {
         return ResponseEntity.ok(organizationService.searchOrganization(type, name, pageable));
     }
 }

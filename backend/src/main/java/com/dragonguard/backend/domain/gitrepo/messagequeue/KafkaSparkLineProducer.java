@@ -14,9 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class KafkaSparkLineProducer implements KafkaProducer<SparkLineKafka> {
+    private static final String TOPIC = "gitrank.to.backend.spark-line";
+    private static final String KEY = "spark-line";
     private final KafkaTemplate<String, Object> kafkaTemplate;
     @Override
-    public void send(SparkLineKafka request) {
-        kafkaTemplate.send("gitrank.to.backend.spark-line", "spark-line", request);
+    public void send(final SparkLineKafka request) {
+        kafkaTemplate.send(TOPIC, KEY, request);
     }
 }

@@ -38,6 +38,11 @@ import java.util.List;
 public class GitRepoClientJobConfig {
     private static final int CHUNK_SIZE = 1;
     private static final int RETRY_LIMIT = 2;
+    private static final String CLIENT_JOB = "clientJob";
+    private static final String STEP_NAME = "step";
+    private static final String READER_NAME = "gitRepoReader";
+    private static final String REPOSITORY_METHOD_NAME = "findAllWithMember";
+    private static final String SORT_CLASSIFIER = "id";
     private final GithubClient<GitRepoBatchRequest, Mono<List<GitRepoMember>>> gitRepoMemberBatchClient;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -47,7 +52,7 @@ public class GitRepoClientJobConfig {
 
     @Bean
     public Job clientJob() {
-        return jobBuilderFactory.get("clientJob")
+        return jobBuilderFactory.get(CLIENT_JOB)
                 .start(step())
                 .preventRestart()
                 .build();
@@ -56,7 +61,7 @@ public class GitRepoClientJobConfig {
     @Bean
     @JobScope
     public Step step() {
-        return stepBuilderFactory.get("step")
+        return stepBuilderFactory.get(STEP_NAME)
                 .<GitRepo, List<GitRepoMember>>chunk(CHUNK_SIZE)
                 .reader(reader())
                 .processor(compositeProcessor())
@@ -96,11 +101,11 @@ public class GitRepoClientJobConfig {
     @StepScope
     public RepositoryItemReader<GitRepo> reader() {
         return new RepositoryItemReaderBuilder<GitRepo>()
-                .name("notificationAlarmReader")
+                .name(READER_NAME)
                 .repository(jpaGitRepoRepository)
-                .methodName("findAllWithMember")
+                .methodName(REPOSITORY_METHOD_NAME)
                 .pageSize(CHUNK_SIZE)
-                .sorts(Collections.singletonMap("id", Sort.Direction.ASC))
+                .sorts(Collections.singletonMap(SORT_CLASSIFIER, Sort.Direction.ASC))
                 .build();
     }
 }

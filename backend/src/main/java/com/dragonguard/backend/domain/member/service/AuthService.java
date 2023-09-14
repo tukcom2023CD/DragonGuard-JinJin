@@ -31,7 +31,7 @@ public class AuthService {
     public JwtToken refreshToken(final String oldRefreshToken, final String oldAccessToken) {
         validateTokens(oldRefreshToken, oldAccessToken);
 
-        UserPrinciple user = getUserDetails(oldAccessToken);
+        final UserPrinciple user = getUserDetails(oldAccessToken);
 
         validateSavedRefreshTokenIfExpired(oldRefreshToken, UUID.fromString(user.getName()));
 
@@ -39,16 +39,17 @@ public class AuthService {
     }
 
     private JwtToken getMemberAndUpdateRefreshToken(final UserPrinciple user) {
-        JwtToken jwtToken = jwtTokenProvider.createToken(user);
+        final JwtToken jwtToken = jwtTokenProvider.createToken(user);
 
         memberRepository.findById(UUID.fromString(user.getName()))
                 .orElseThrow(EntityNotFoundException::new)
                 .updateRefreshToken(jwtToken.getRefreshToken());
+
         return jwtToken;
     }
 
     private UserPrinciple getUserDetails(final String oldAccessToken) {
-        Authentication authentication = jwtValidator.getAuthentication(oldAccessToken);
+        final Authentication authentication = jwtValidator.getAuthentication(oldAccessToken);
         return (UserPrinciple) authentication.getPrincipal();
     }
 
@@ -58,7 +59,7 @@ public class AuthService {
     }
 
     private void validateSavedRefreshTokenIfExpired(final String oldRefreshToken, final UUID id) {
-        String savedToken = memberRepository.findRefreshTokenById(id);
+        final String savedToken = memberRepository.findRefreshTokenById(id);
         if (!savedToken.equals(oldRefreshToken)) {
             throw new JwtProcessingException();
         }
@@ -71,13 +72,17 @@ public class AuthService {
     }
 
     private void validateJwtTokens(final String oldRefreshToken, final String oldAccessToken) {
-        if (!StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken)) {
+        if (isEmptyToken(oldRefreshToken, oldAccessToken)) {
             throw new JwtProcessingException();
         }
     }
 
+    private boolean isEmptyToken(final String oldRefreshToken, final String oldAccessToken) {
+        return !StringUtils.hasText(oldRefreshToken) || !StringUtils.hasText(oldAccessToken);
+    }
+
     public UUID getLoginUserId() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return UUID.fromString(((UserPrinciple) principal).getName());
     }
 

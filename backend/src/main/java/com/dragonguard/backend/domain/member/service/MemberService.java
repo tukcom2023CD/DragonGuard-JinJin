@@ -54,7 +54,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return memberRepository.save(memberMapper.toEntity(githubId, role, authStep));
     }
 
-    public Member findMemberOrSave(final String githubId, final AuthStep authStep, String profileUrl) {
+    public Member saveIfNone(final String githubId, final AuthStep authStep, final String profileUrl) {
         if (memberRepository.existsByGithubId(githubId)) {
             return getMemberByGithubId(githubId);
         }
@@ -62,7 +62,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public void updateContributions() {
-        Member member = authService.getLoginUser();
+        final Member member = authService.getLoginUser();
         if (isBlockchainUpdatable(member)) {
             sendGitRepoAndContributionRequestToKafka(member.getGithubId());
         }
@@ -74,7 +74,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberResponse getMember() {
-        Member member = authService.getLoginUser();
+        final Member member = authService.getLoginUser();
         return getMemberResponseWithValidateOrganization(member);
     }
 
@@ -87,7 +87,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private MemberResponse getMemberResponse(final Member member) {
-        UUID memberId = member.getId();
+        final UUID memberId = member.getId();
 
         return memberMapper.toResponse(
                 member,
@@ -102,19 +102,23 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public void updateWalletAddress(final WalletRequest walletRequest) {
-        Member member = authService.getLoginUser();
+        final Member member = authService.getLoginUser();
         member.updateWalletAddress(walletRequest.getWalletAddress());
     }
 
     private void sendContributionRequestToKafka(final String githubId) {
-        Member member = memberRepository.findByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
-        if (!isBlockchainUpdatable(member)) return;
+        Member member = getMemberByGithubId(githubId);
+        if (!isBlockchainUpdatable(member)) {
+            return;
+        }
         kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
     }
 
     private void sendRepositoryRequestToKafka(final String githubId) {
-        Member member = memberRepository.findByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
-        if (!isBlockchainUpdatable(member)) return;
+        final Member member = getMemberByGithubId(githubId);
+        if (!isBlockchainUpdatable(member)) {
+            return;
+        }
         kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
     }
 
@@ -130,9 +134,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberGitReposAndGitOrganizationsResponse findMemberDetails() {
-        Member member = authService.getLoginUser();
-        String githubId = member.getGithubId();
-        sendRepositoryRequestToKafka(githubId);
+        final Member member = authService.getLoginUser();
+        sendRepositoryRequestToKafka(member.getGithubId());
 
         return getMemberGitReposAndGitOrganizations(member);
     }
@@ -189,8 +192,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberDetailsResponse findMemberDetails(final String githubId) {
-        Member member = getMemberByGithubId(githubId);
-        Integer rank = memberRepository.findRankingById(member.getId());
+        final Member member = getMemberByGithubId(githubId);
+        final Integer rank = memberRepository.findRankingById(member.getId());
         return memberMapper.toDetailsResponse(member, rank);
     }
 
@@ -200,24 +203,31 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public MemberResponse updateContributionsAndGetProfile() {
-        Member member = authService.getLoginUser();
-
+        final Member member = authService.getLoginUser();
         memberClientService.addMemberGitRepoAndGitOrganization(member);
 
-        if (member.isWalletAddressExists()) updateContributionAndTransaction(member);
+        if (member.isWalletAddressExists()) {
+            updateContributionAndTransaction(member);
+        }
         return getMemberResponseWithValidateOrganization(member);
     }
 
     public MemberLoginVerifyResponse verifyMember() {
-        AuthStep authStep = authService.getLoginUser().getAuthStep();
-        if (authStep.equals(AuthStep.GITHUB_ONLY)) {
-            return new MemberLoginVerifyResponse(Boolean.FALSE);
+        final AuthStep authStep = authService.getLoginUser().getAuthStep();
+        if (authStep.isGithubOnly()) {
+            return new MemberLoginVerifyResponse(false);
         }
-        return new MemberLoginVerifyResponse(Boolean.TRUE);
+        return new MemberLoginVerifyResponse(true);
     }
 
     public Boolean isServiceMember(final String githubId) {
-        if (!memberRepository.existsByGithubId(githubId)) return false;
+        if (!memberRepository.existsByGithubId(githubId)) {
+            return false;
+        }
         return getMemberByGithubId(githubId).isServiceMember();
+    }
+
+    public void withdraw() {
+        authService.getLoginUser().withdraw();
     }
 }

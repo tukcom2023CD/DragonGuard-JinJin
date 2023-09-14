@@ -9,5 +9,5 @@ import org.springframework.data.domain.Sort;
  */
 
 public interface OrderConverter {
-    OrderSpecifier<?>[] convert(Sort sort);
+    OrderSpecifier<?>[] convert(final Sort sort);
 }

@@ -4,13 +4,16 @@ import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.codereview.entity.CodeReview;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
+import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.issue.entity.Issue;
+import com.dragonguard.backend.domain.member.exception.InvalidGithubTokenException;
+import com.dragonguard.backend.domain.member.exception.NoSuchWalletAddressException;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
-import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
@@ -20,6 +23,8 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -29,12 +34,13 @@ import java.util.stream.Collectors;
 
 @Getter
 @Entity
+@SoftDelete
 @EqualsAndHashCode(of = "githubId")
-@Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {@Index(name = "member_index", columnList = "githubId")})
 public class Member implements Auditable {
+    private static final String BLOCKCHAIN_URL = "https://baobab.scope.klaytn.com/account/%s?tabId=txList";
+    private static final Long NO_TOKEN = 0L;
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -115,67 +121,78 @@ public class Member implements Auditable {
     private Long sumOfTokens;
 
     @Builder
-    public Member(String name, String githubId, String walletAddress, String profileImage, Role role, AuthStep authStep) {
+    public Member(final String name, final String githubId, final String walletAddress, final String profileImage, final Role role, final AuthStep authStep) {
         this.name = name;
         this.githubId = githubId;
         this.walletAddress = walletAddress;
         this.profileImage = profileImage;
         this.tier = Tier.SPROUT;
         this.authStep = authStep;
+        addRoleIfAdmin(role);
+    }
+
+    private void addRoleIfAdmin(final Role role) {
         if (role != null && role.equals(Role.ROLE_ADMIN)) {
             this.role.add(role);
         }
     }
 
-    public void addCommit(Commit commit) {
-        if (commit == null || (this.commit != null && this.commit.customEqualsWithAmount(commit))) return;
-        this.commit = commit;
+    public void addCommit(final Commit commit) {
+        checkAndAddContribution(commit, this.commit, c -> this.commit = c, this.commit::customEqualsWithAmount);
     }
 
-    public void addIssue(Issue issue) {
-        if (issue == null || (this.issue != null && this.issue.customEqualsWithAmount(issue))) return;
-        this.issue = issue;
+    public void addIssue(final Issue issue) {
+        checkAndAddContribution(issue, this.issue, i -> this.issue = i, this.issue::customEqualsWithAmount);
     }
 
-    public void addPullRequest(PullRequest pullRequest) {
-        if (pullRequest == null || (this.pullRequest != null && this.pullRequest.customEqualsWithAmount(pullRequest))) return;
-        this.pullRequest = pullRequest;
+    public void addPullRequest(final PullRequest pullRequest) {
+        checkAndAddContribution(pullRequest, this.pullRequest, pr -> this.pullRequest = pr, this.pullRequest::customEqualsWithAmount);
     }
 
-    public void addCodeReview(CodeReview codeReview) {
-        if (codeReview == null || (this.codeReview != null && this.codeReview.customEqualsWithAmount(codeReview))) return;
-        this.codeReview = codeReview;
+    public void addCodeReview(final CodeReview codeReview) {
+        checkAndAddContribution(codeReview, this.codeReview, cr -> this.codeReview = cr, this.codeReview::customEqualsWithAmount);
+    }
+
+    private <T> void checkAndAddContribution(
+            final T newContribution,
+            final T oldContribution,
+            final Consumer<T> update,
+            final Function<T, Boolean> customEquals) {
+        if (isContributionUpdatable(oldContribution, customEquals)) {
+            return;
+        }
+        update.accept(newContribution);
+    }
+
+    private <T> boolean isContributionUpdatable(final T contribution, final Function<T, Boolean> customEquals) {
+        return contribution != null && customEquals.apply(contribution);
     }
 
     public void updateTier() {
-        if (sumOfTokens > 0) {
+        if (sumOfTokens > NO_TOKEN) {
             this.tier = checkTier(sumOfTokens);
             return;
         }
+        this.tier = checkTier(getSumOfTokensWithBlockchain());
+    }
+
+    private long getSumOfTokensWithBlockchain() {
         if (blockchains.isEmpty()) {
-            this.tier = checkTier(0L);
-            return;
+            return NO_TOKEN;
         }
 
-        long amount = this.blockchains.stream()
+        return this.blockchains.stream()
                 .map(Blockchain::getSumOfAmount)
                 .mapToLong(b -> Long.parseLong(b.toString()))
                 .sum();
-
-        if (amount < 0) deleteContributions();
-
-        this.tier = checkTier(amount);
     }
 
     public Tier checkTier(long amount) {
-        return Arrays.stream(Tier.values())
-                .filter(t -> t.getTierPredicate().test(amount))
-                .findFirst()
-                .orElse(Tier.SPROUT);
+        return Tier.checkTier(amount);
     }
 
-    public void updateWalletAddress(String walletAddress) {
-        if (!authStep.equals(AuthStep.ALL)) {
+    public void updateWalletAddress(final String walletAddress) {
+        if (!authStep.isAll()) {
             this.authStep = AuthStep.GITHUB_AND_KLIP;
             this.walletAddress = walletAddress;
         }
@@ -185,51 +202,30 @@ public class Member implements Auditable {
         return role.stream().map(Role::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
-    public void updateGithubToken(String githubToken) {
+    public void updateGithubToken(final String githubToken) {
         this.githubToken = githubToken;
     }
 
-    public void updateRefreshToken(String refreshToken) {
+    public void updateRefreshToken(final String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
-    public void updateOrganization(Organization organization, String emailAddress) {
+    public void updateOrganization(final Organization organization, final String emailAddress) {
         this.organization = organization;
         this.emailAddress = emailAddress;
     }
 
-    public void organizeGitOrganizationMember(GitOrganizationMember gitOrganizationMember) {
+    public void organizeGitOrganizationMember(final GitOrganizationMember gitOrganizationMember) {
         this.gitOrganizationMembers.add(gitOrganizationMember);
     }
 
-    public void organizeGitRepoMember(GitRepoMember gitRepoMember) {
+    public void organizeGitRepoMember(final GitRepoMember gitRepoMember) {
         this.gitRepoMembers.add(gitRepoMember);
     }
 
-    public void finishAuth(Organization organization) {
+    public void finishAuth(final Organization organization) {
         this.authStep = AuthStep.ALL;
         this.organization = organization;
-    }
-
-    public int getCommitSumWithRelation() {
-        if (this.commit == null) {
-            return 0;
-        }
-        return this.commit.getAmount();
-    }
-
-    public int getIssueSumWithRelation() {
-        if (this.issue == null) {
-            return 0;
-        }
-        return this.issue.getAmount();
-    }
-
-    public int getPullRequestSumWithRelation() {
-        if (this.pullRequest == null) {
-            return 0;
-        }
-        return this.pullRequest.getAmount();
     }
 
     public boolean isWalletAddressExists() {
@@ -237,79 +233,86 @@ public class Member implements Auditable {
     }
 
     public String getBlockchainUrl() {
-        if (!isWalletAddressExists()) {
-            return null;
-        }
-        return "https://baobab.scope.klaytn.com/account/" + this.walletAddress + "?tabId=txList";
+        validateWalletAddress();
+        return String.format(BLOCKCHAIN_URL, this.walletAddress);
     }
 
     public String getGithubToken() {
-        if (StringUtils.hasText(this.githubToken)) {
-            return this.githubToken;
+        validateGithubToken();
+        return this.githubToken;
+    }
+
+    private void validateGithubToken() {
+        if (!StringUtils.hasText(this.githubToken)) {
+            throw new InvalidGithubTokenException();
         }
-        return "";
     }
 
-    public Optional<Integer> getSumOfCodeReviews() {
-        return Optional.ofNullable(sumOfCodeReviews);
+    public List<String> getGitRepoNames() {
+        return this.gitRepoMembers.stream().map(GitRepoMember::getGitRepo).map(GitRepo::getName).collect(Collectors.toList());
     }
 
-    public Optional<Integer> getSumOfCommits() {
-        return Optional.ofNullable(sumOfCommits);
+    public String getOrganizationName() {
+        if (this.organization == null) {
+            return null;
+        }
+        return this.organization.getName();
     }
 
-    public Optional<Integer> getSumOfIssues() {
-        return Optional.ofNullable(sumOfIssues);
-    }
-
-    public Optional<Integer> getSumOfPullRequests() {
-        return Optional.ofNullable(sumOfPullRequests);
-    }
-
-    public void deleteContributions() {
-        this.commit.delete();
-        this.pullRequest.delete();
-        this.issue.delete();
-        this.codeReview.delete();
-
-        this.commit = null;
-        this.pullRequest = null;
-        this.issue = null;
-        this.codeReview = null;
-
-        this.blockchains.forEach(Blockchain::delete);
-        this.blockchains.clear();
-
-        this.tier = Tier.SPROUT;
-    }
-
-    public boolean validateWalletAddressAndUpdateTier() {
-        if (!isWalletAddressExists()) return true;
+    public void validateWalletAddressAndUpdateTier() {
+        validateWalletAddress();
         updateTier();
-        return false;
     }
 
-    public void organizeBlockchain(Blockchain blockchain) {
+    private void validateWalletAddress() {
+        if (!isWalletAddressExists()) {
+            throw new NoSuchWalletAddressException();
+        }
+    }
+
+    public void organizeBlockchain(final Blockchain blockchain) {
         this.blockchains.add(blockchain);
         updateTier();
     }
 
     public boolean isServiceMember() {
-        return !this.authStep.equals(AuthStep.NONE) && !this.authStep.equals(AuthStep.GITHUB_ONLY);
+        return !this.authStep.isServiceMemberAuthStep();
     }
 
-    public void updateAuthStepAndNameAndProfileImage(AuthStep authStep, String name, String profileImage) {
+    public void updateAuthStepAndNameAndProfileImage(final AuthStep authStep, final String name, final String profileImage) {
         this.authStep = authStep;
         this.name = name;
         this.profileImage = profileImage;
     }
 
-    public void updateProfileImage(String profileImage) {
+    public void updateProfileImage(final String profileImage) {
         this.profileImage = profileImage;
     }
 
     public void undoFinishingAuthAndDeleteOrganization() {
         this.organization = null;
         this.authStep = AuthStep.GITHUB_AND_KLIP;
+    }
+
+    public void withdraw() {
+        this.walletAddress = null;
+        this.tier = Tier.SPROUT;
+        this.authStep = AuthStep.NONE;
+        this.commit.delete();
+        this.commit = null;
+        this.issue.delete();
+        this.issue = null;
+        this.pullRequest.delete();
+        this.pullRequest = null;
+        this.codeReview.delete();
+        this.codeReview = null;
+        this.blockchains.forEach(Blockchain::deleteByMember);
+        this.blockchains = new ArrayList<>();
+        this.organization.deleteMember(this);
+        this.organization = null;
+        this.role = new ArrayList<>();
+        this.refreshToken = null;
+        this.githubToken = null;
+        this.emailAddress = null;
     }
 }

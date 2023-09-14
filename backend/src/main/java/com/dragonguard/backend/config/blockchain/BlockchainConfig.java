@@ -44,22 +44,21 @@ public class BlockchainConfig {
 
     @Bean
     public Contract contract() {
-        Caver caver = caver();
-        AbstractKeyring keyring = keyring();
+        final Caver caver = caver();
+        final AbstractKeyring keyring = keyring();
         caver.wallet.add(keyring);
         try {
-            Contract contract = caver.contract.create(blockchainProperties.getAbi());
+            final Contract contract = caver.contract.create(blockchainProperties.getAbi());
             return contract.deploy(sendOptions(), blockchainProperties.getByteCode(), TOKEN_NAME, TOKEN_SYMBOL, BigInteger.valueOf(TOKEN_AMOUNT));
         } catch(Exception e) {
-            e.printStackTrace();
             throw new BlockchainException();
         }
     }
 
     @Bean
     public SendOptions sendOptions() {
-        AbstractKeyring keyring = keyring();
-        SendOptions options = new SendOptions();
+        final AbstractKeyring keyring = keyring();
+        final SendOptions options = new SendOptions();
         options.setFrom(keyring.getAddress());
         options.setGas(BigInteger.valueOf(4000000));
         options.setFeeDelegation(true);

@@ -13,9 +13,11 @@ import java.util.Map;
 
 @Component
 public class UserDetailsMapper {
-    public UserPrinciple mapToLoginUser(Member user) {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("id", user.getId());
+    private static final String USER_ID = "id";
+
+    public UserPrinciple mapToLoginUser(final Member user) {
+        final Map<String, Object> attributes = new HashMap<>();
+        attributes.put(USER_ID, user.getId());
         return new UserPrinciple(user, user.getRole(), attributes);
     }
 }

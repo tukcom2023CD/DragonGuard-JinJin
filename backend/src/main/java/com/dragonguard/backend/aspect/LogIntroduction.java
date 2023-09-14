@@ -39,26 +39,26 @@ public class LogIntroduction {
     public void allClient() {}
 
     @Before("allController()")
-    public void controllerLog(JoinPoint joinPoint) {
+    public void controllerLog(final JoinPoint joinPoint) {
         logging(joinPoint, log::info);
     }
 
     @Before("allService() || allRepository()")
-    public void serviceAndRepositoryLog(JoinPoint joinPoint) {
+    public void serviceAndRepositoryLog(final JoinPoint joinPoint) {
         logging(joinPoint, log::debug);
     }
 
     @Before("allClient()")
-    public void clientLog(JoinPoint joinPoint) {
+    public void clientLog(final JoinPoint joinPoint) {
         logging(joinPoint, log::debug);
     }
 
     @Before("allConsumer() || allProducer()")
-    public void consumerAndLog(JoinPoint joinPoint) {
+    public void consumerAndLog(final JoinPoint joinPoint) {
         logging(joinPoint, log::debug);
     }
 
-    private void logging(JoinPoint joinPoint, BiConsumer<String, String> consumer) {
+    private void logging(final JoinPoint joinPoint, final BiConsumer<String, String> consumer) {
         consumer.accept(LOG_FORMAT, joinPoint.getSignature().toShortString());
     }
 }

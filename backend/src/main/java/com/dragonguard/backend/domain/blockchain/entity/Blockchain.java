@@ -1,11 +1,10 @@
 package com.dragonguard.backend.domain.blockchain.entity;
 
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -19,10 +18,10 @@ import java.util.List;
 
 @Getter
 @Entity
-@Where(clause = "deleted_at is null")
-@EntityListeners(AuditListener.class)
+@SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Blockchain implements Auditable {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -45,7 +44,7 @@ public class Blockchain implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Blockchain(ContributeType contributeType, Member member) {
+    public Blockchain(final ContributeType contributeType, final Member member) {
         this.contributeType = contributeType;
         this.member = member;
         this.address = member.getWalletAddress();
@@ -56,15 +55,20 @@ public class Blockchain implements Auditable {
         this.member.organizeBlockchain(this);
     }
 
-    public void addHistory(BigInteger amount, String transactionHash) {
+    public void addHistory(final BigInteger amount, final String transactionHash) {
         this.histories.add(new History(transactionHash, amount, this));
     }
 
-    public boolean isNewHistory(long amount) {
+    public boolean isNewHistory(final long amount) {
         return amount > 0 && getSumOfAmount() < amount;
     }
 
     public long getSumOfAmount() {
         return this.histories.stream().map(History::getAmount).mapToLong(BigInteger::longValue).sum();
+    }
+
+    public void deleteByMember() {
+        this.histories.forEach(History::delete);
+        this.delete();
     }
 }

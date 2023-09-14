@@ -1,6 +1,7 @@
 package com.dragonguard.backend.global.repository;
 
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.audit.Auditable;
 
 import java.util.Optional;
 
@@ -9,9 +10,9 @@ import java.util.Optional;
  * @description 기여도 관련 Repository를 묶는 인터페이스
  */
 
-public interface ContributionRepository<T, ID> {
-    T save(T contribution);
-    Optional<T> findById(ID id);
-    Optional<T> findByMemberAndYear(Member member, int year);
-    boolean existsByMemberAndYear(Member member, int year);
+public interface ContributionRepository<T extends Auditable, ID> extends EntityRepository<T, ID> {
+    T save(final T contribution);
+    Optional<T> findById(final ID id);
+    Optional<T> findByMemberAndYear(final Member member, final int year);
+    boolean existsByMemberAndYear(final Member member, final int year);
 }

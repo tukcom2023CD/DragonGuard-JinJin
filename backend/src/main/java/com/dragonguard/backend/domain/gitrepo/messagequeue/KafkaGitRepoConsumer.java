@@ -5,7 +5,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoMemberDetailsResp
 import com.dragonguard.backend.domain.gitrepo.dto.response.GitRepoMemberResponse;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
-import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberServiceImpl;
+import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,45 +28,45 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class KafkaGitRepoConsumer implements KafkaConsumer<GitRepoKafkaResponse> {
-    private final GitRepoMemberServiceImpl gitRepoMemberServiceImpl;
+    private final GitRepoMemberService gitRepoMemberService;
     private final GitRepoRepository gitRepoRepository;
     private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(String message) {
-        GitRepoKafkaResponse response = readValue(message);
+    public void consume(final String message) {
+        final GitRepoKafkaResponse response = readValue(message);
 
-        List<GitRepoMemberDetailsResponse> result = response.getResult();
+        final List<GitRepoMemberDetailsResponse> result = response.getResult();
 
         if (Objects.isNull(result) || result.isEmpty()) return;
 
-        List<GitRepoMemberResponse> gitRepoMemberResponses = result.stream()
+        final List<GitRepoMemberResponse> gitRepoMemberResponses = result.stream()
                 .map(this::toGitRepoMemberResponse)
                 .collect(Collectors.toList());
 
-        GitRepo gitRepo = findGitRepoByName(result.get(0).getGitRepo());
-        gitRepoMemberServiceImpl.updateOrSaveAll(gitRepoMemberResponses, gitRepo);
+        final GitRepo gitRepo = findGitRepoByName(result.get(0).getGitRepo());
+        gitRepoMemberService.updateOrSaveAll(gitRepoMemberResponses, gitRepo);
     }
 
-    private GitRepo findGitRepoByName(String name) {
+    private GitRepo findGitRepoByName(final String name) {
         return gitRepoRepository.findByName(name)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private GitRepoMemberResponse toGitRepoMemberResponse(final GitRepoMemberDetailsResponse r) {
+    private GitRepoMemberResponse toGitRepoMemberResponse(final GitRepoMemberDetailsResponse response) {
         return GitRepoMemberResponse.builder()
-                .githubId(r.getMember())
-                .commits(r.getCommits())
-                .additions(r.getAddition())
-                .deletions(r.getDeletion())
+                .githubId(response.getMember())
+                .commits(response.getCommits())
+                .additions(response.getAddition())
+                .deletions(response.getDeletion())
                 .build();
     }
 
     @Override
     @SneakyThrows(JsonProcessingException.class)
-    public GitRepoKafkaResponse readValue(String message) {
+    public GitRepoKafkaResponse readValue(final String message) {
         return objectMapper.readValue(message, GitRepoKafkaResponse.class);
     }
 }

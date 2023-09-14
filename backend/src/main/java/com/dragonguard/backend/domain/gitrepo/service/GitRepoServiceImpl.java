@@ -1,8 +1,8 @@
 package com.dragonguard.backend.domain.gitrepo.service;
 
 import com.dragonguard.backend.domain.gitrepo.dto.client.*;
-import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributionMap;
-import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoLanguageMap;
+import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributions;
+import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoLanguages;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.SparkLineKafka;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
@@ -18,7 +18,6 @@ import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.client.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.service.EntityLoader;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,7 +35,8 @@ import java.util.stream.Collectors;
 
 @TransactionService
 @RequiredArgsConstructor
-public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoService {
+public class GitRepoServiceImpl implements GitRepoService {
+    private static final int NO_CONTRIBUTION = 0;
     private final GitRepoRepository gitRepoRepository;
     private final AuthService authService;
     private final GitRepoMapper gitRepoMapper;
@@ -50,18 +50,18 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
 
     @Override
     public List<Integer> updateAndGetSparkLine(final String name, final String githubToken, final GitRepo gitRepo) {
-        List<Integer> savedSparkLine = gitRepo.getSparkLine();
+        final List<Integer> savedSparkLine = gitRepo.getSparkLine();
         if (!savedSparkLine.isEmpty()) {
             requestKafkaSparkLine(githubToken, gitRepo.getId());
             return savedSparkLine;
         }
-        List<Integer> sparkLine = requestClientSparkLine(githubToken, name);
+        final List<Integer> sparkLine = requestClientSparkLine(githubToken, name);
         gitRepo.updateSparkLine(sparkLine);
         return sparkLine;
     }
 
     public void updateSparkLine(final Long id, final String githubToken) {
-        GitRepo gitRepo = loadEntity(id);
+        final GitRepo gitRepo = loadEntity(id);
         gitRepo.updateSparkLine(requestClientSparkLine(githubToken, gitRepo.getName()));
     }
 
@@ -76,8 +76,8 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
     }
 
     private GitRepoCompareResponse findOneRepoResponse(final String repoName) {
-        String githubToken = authService.getLoginUser().getGithubToken();
-        GitRepoClientResponse repoResponse = requestClientGitRepo(repoName, githubToken);
+        final String githubToken = authService.getLoginUser().getGithubToken();
+        final GitRepoClientResponse repoResponse = requestClientGitRepo(repoName, githubToken);
 
         repoResponse.setClosedIssuesCount(requestClientGitRepoIssue(repoName, githubToken));
 
@@ -91,30 +91,32 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
     private GitRepoCompareResponse findGitRepoResponse(
             final String repoName,
             final GitRepoClientResponse repoResponse,
-            final GitRepoLanguageMap gitRepoLanguageMap,
+            final GitRepoLanguages gitRepoLanguages,
             final String githubToken) {
-        GitRepo gitRepo = findEntityByName(repoName);
-        if (gitRepo == null) return null;
-
-        Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
-        if (gitRepoMembers.isEmpty()) return null;
-
-        List<String> profileUrls = gitRepoMembers.stream()
-                .map(gitRepoMember -> gitRepoMember.getMember().getProfileImage())
-                .collect(Collectors.toList());
-
+        final Optional<GitRepo> optionalGitRepo = findByName(repoName);
+        if (optionalGitRepo.isEmpty()) {
+            return null;
+        }
+        final GitRepo gitRepo = optionalGitRepo.get();
+        final Set<GitRepoMember> gitRepoMembers = gitRepo.getGitRepoMembers();
         repoResponse.setClosedIssuesCount(requestClientGitRepoIssue(repoName, githubToken));
 
         return new GitRepoCompareResponse(
                 repoResponse,
                 getStatistics(gitRepo),
-                gitRepoLanguageMap.getLanguages(),
-                new SummaryResponse(gitRepoLanguageMap.getStatistics()),
-                profileUrls);
+                gitRepoLanguages.getLanguages(),
+                new SummaryResponse(gitRepoLanguages.getStatistics()),
+                getProfileUrls(gitRepoMembers));
     }
 
-    private GitRepoLanguageMap requestClientGitRepoLanguage(final String repoName, final String githubToken) {
-        return new GitRepoLanguageMap(gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName)));
+    private List<String> getProfileUrls(final Set<GitRepoMember> gitRepoMembers) {
+        return gitRepoMembers.stream()
+                .map(gitRepoMember -> gitRepoMember.getMember().getProfileImage())
+                .collect(Collectors.toList());
+    }
+
+    private GitRepoLanguages requestClientGitRepoLanguage(final String repoName, final String githubToken) {
+        return new GitRepoLanguages(gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName)));
     }
 
     private Integer requestClientGitRepoIssue(final String repoName, final String githubToken) {
@@ -148,10 +150,14 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
     }
 
     private StatisticsResponse getStatisticsResponse(final List<Integer> commits, final List<Integer> additions, final List<Integer> deletions) {
-        return new StatisticsResponse(
-                commits.isEmpty() ? new SummaryResponse(new IntSummaryStatistics(0, 0, 0, 0)) : new SummaryResponse(commits.stream().mapToInt(Integer::intValue).summaryStatistics()),
-                additions.isEmpty() ? new SummaryResponse(new IntSummaryStatistics(0, 0, 0, 0)) : new SummaryResponse(additions.stream().mapToInt(Integer::intValue).summaryStatistics()),
-                deletions.isEmpty() ? new SummaryResponse(new IntSummaryStatistics(0, 0, 0, 0)) : new SummaryResponse(deletions.stream().mapToInt(Integer::intValue).summaryStatistics()));
+        return new StatisticsResponse(getSummaryResponse(commits), getSummaryResponse(additions), getSummaryResponse(deletions));
+    }
+
+    private SummaryResponse getSummaryResponse(final List<Integer> contributions) {
+        if (contributions.isEmpty()) {
+            return new SummaryResponse(new IntSummaryStatistics(NO_CONTRIBUTION, NO_CONTRIBUTION, NO_CONTRIBUTION, NO_CONTRIBUTION));
+        }
+        return new SummaryResponse(contributions.stream().mapToInt(Integer::intValue).summaryStatistics());
     }
 
     @Override
@@ -164,16 +170,21 @@ public class GitRepoServiceImpl implements EntityLoader<GitRepo, Long>, GitRepoS
     }
 
     @Override
-    public GitRepoContributionMap getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function) {
-        if (contributions == null || contributions.isEmpty()
-                || contributions.stream().map(GitRepoMemberClientResponse::getWeeks).filter(Objects::nonNull).findFirst().isEmpty()) return null;
-        return new GitRepoContributionMap(contributions.stream()
+    public GitRepoContributions getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function) {
+        if (hasNoContribution(contributions)) {
+            return null;
+        }
+        return new GitRepoContributions(contributions.stream()
                 .collect(Collectors.toMap(Function.identity(), mem -> mem.getWeeks().stream().mapToInt(function).sum())));
     }
 
-    @Override
-    public GitRepo findEntityByName(final String name) {
-        return gitRepoRepository.findByName(name).orElse(null);
+    private boolean hasNoContribution(final Set<GitRepoMemberClientResponse> contributions) {
+        return contributions == null || contributions.isEmpty()
+                || contributions.stream().map(GitRepoMemberClientResponse::getWeeks).filter(Objects::nonNull).findFirst().isEmpty();
+    }
+
+    private Optional<GitRepo> findByName(final String name) {
+        return gitRepoRepository.findByName(name);
     }
 
     private void requestKafkaSparkLine(final String githubToken, final Long id) {
