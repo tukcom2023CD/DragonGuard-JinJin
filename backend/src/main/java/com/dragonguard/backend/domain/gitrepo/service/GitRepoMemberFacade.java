@@ -56,7 +56,7 @@ public class GitRepoMemberFacade {
     public List<GitRepoMemberResponse> requestToGithub(final GitRepoInfoRequest gitRepoInfoRequest, final GitRepo gitRepo) {
         return gitRepoService.requestClientGitRepoMember(gitRepoInfoRequest)
                 .map(HashSet::new)
-                .filter(this::hasEmptyProfileUrl)
+                .filter(response -> !this.hasEmptyProfileUrl(response))
                 .map(contribution -> saveAndGetResult(gitRepo, contribution))
                 .orElseGet(List::of);
     }
