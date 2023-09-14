@@ -79,8 +79,9 @@ final class RepoDetailController: UIViewController{
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = selectedTitle ?? "None"
-        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 25)
+        label.font = UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)
         label.backgroundColor = .clear
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .black
         return label
     }()
@@ -212,7 +213,8 @@ final class RepoDetailController: UIViewController{
             make.top.equalTo(titleLabel.snp.bottom).offset(30)
             make.leading.equalTo(customView.snp.leading).offset(30)
             make.trailing.equalTo(customView.snp.trailing).offset(-30)
-            make.height.equalTo((Int(self.view.safeAreaLayoutGuide.layoutFrame.height)*(userInfo?.git_repo_members?.count ?? 0)/9))
+            
+            make.height.equalTo(75*(userInfo?.git_repo_members?.count ?? 0))
         }
         
         // 유저 커밋 그래프

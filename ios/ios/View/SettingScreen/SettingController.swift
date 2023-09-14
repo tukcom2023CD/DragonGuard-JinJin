@@ -11,7 +11,7 @@ import RxSwift
 
 final class SettingController: UIViewController{
     // 설정화면에 출력될 종류들
-    let settingData = ["토큰 부여 기준","FAQ","버전 정보","조직인증","로그아웃"]
+    let settingData = ["토큰 부여 기준","FAQ","버전 정보","조직인증","로그아웃","회원탈퇴"]
     let adminSettingData = ["토큰 부여 기준","FAQ","버전 정보","조직인증","관리자","로그아웃"]
     private let disposeBag = DisposeBag()
     private var checkAdmin: Bool = false
@@ -209,7 +209,13 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
                 self.logOut()
             }
         case 5:
-            self.logOut()
+            if checkAdmin{
+                self.logOut()
+            }
+            else{
+                
+            }
+            
         default:
             return
         }
