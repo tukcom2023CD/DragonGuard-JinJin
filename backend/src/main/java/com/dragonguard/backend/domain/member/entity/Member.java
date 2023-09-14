@@ -25,6 +25,7 @@ import javax.persistence.*;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -157,15 +158,15 @@ public class Member implements Auditable {
             final T newContribution,
             final T oldContribution,
             final Consumer<T> update,
-            final Function<T, Boolean> customEquals) {
+            final Predicate<T> customEquals) {
         if (isContributionUpdatable(oldContribution, customEquals)) {
             return;
         }
         update.accept(newContribution);
     }
 
-    private <T> boolean isContributionUpdatable(final T contribution, final Function<T, Boolean> customEquals) {
-        return contribution != null && customEquals.apply(contribution);
+    private <T> boolean isContributionUpdatable(final T contribution, final Predicate<T> customEquals) {
+        return contribution != null && customEquals.test(contribution);
     }
 
     public void updateTier() {
