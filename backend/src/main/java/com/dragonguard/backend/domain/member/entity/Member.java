@@ -24,7 +24,6 @@ import org.springframework.util.StringUtils;
 import javax.persistence.*;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -139,34 +138,25 @@ public class Member implements Auditable {
     }
 
     public void addCommit(final Commit commit) {
-        checkAndAddContribution(commit, this.commit, c -> this.commit = c, this.commit::customEqualsWithAmount);
+        checkAndAddContribution(commit, c -> this.commit = c);
     }
 
     public void addIssue(final Issue issue) {
-        checkAndAddContribution(issue, this.issue, i -> this.issue = i, this.issue::customEqualsWithAmount);
+        checkAndAddContribution(issue, i -> this.issue = i);
     }
 
     public void addPullRequest(final PullRequest pullRequest) {
-        checkAndAddContribution(pullRequest, this.pullRequest, pr -> this.pullRequest = pr, this.pullRequest::customEqualsWithAmount);
+        checkAndAddContribution(pullRequest, pr -> this.pullRequest = pr);
     }
 
     public void addCodeReview(final CodeReview codeReview) {
-        checkAndAddContribution(codeReview, this.codeReview, cr -> this.codeReview = cr, this.codeReview::customEqualsWithAmount);
+        checkAndAddContribution(codeReview, cr -> this.codeReview = cr);
     }
 
     private <T> void checkAndAddContribution(
             final T newContribution,
-            final T oldContribution,
-            final Consumer<T> update,
-            final Predicate<T> customEquals) {
-        if (isContributionUpdatable(oldContribution, customEquals)) {
-            return;
-        }
+            final Consumer<T> update) {
         update.accept(newContribution);
-    }
-
-    private <T> boolean isContributionUpdatable(final T contribution, final Predicate<T> customEquals) {
-        return contribution != null && customEquals.test(contribution);
     }
 
     public void updateTier() {

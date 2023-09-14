@@ -58,11 +58,6 @@ public class CodeReview implements Auditable {
         this.amount = codeReviewNum;
     }
 
-    public boolean customEqualsWithAmount(final CodeReview codeReview) {
-        return year.intValue() == codeReview.year && amount.intValue() == codeReview.amount.intValue()
-                && member.getGithubId().equals(codeReview.member.getGithubId());
-    }
-
     public boolean isNotUpdatable(final Integer amount) {
         return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L))
                 || this.amount.intValue() == amount.intValue();

@@ -53,10 +53,6 @@ public class Issue implements Auditable {
         this.amount = amount;
     }
 
-    public boolean customEqualsWithAmount(final Issue issue) {
-        return member.getGithubId().equals(issue.member.getGithubId()) && amount.intValue() == issue.amount.intValue() && year.intValue() == issue.year.intValue();
-    }
-
     private void organizeMember(final Member member) {
         member.addIssue(this);
     }
