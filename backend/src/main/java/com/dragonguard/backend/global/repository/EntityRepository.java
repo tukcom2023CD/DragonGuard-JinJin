@@ -7,6 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author 김승진
+ * @description soft delete 를 위한 repository 인터페이스
+ */
+
 public interface EntityRepository<T extends Auditable, ID> extends JpaRepository<T, ID> {
 
     @Modifying

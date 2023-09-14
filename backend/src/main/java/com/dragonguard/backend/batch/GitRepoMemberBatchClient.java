@@ -65,7 +65,7 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
     }
 
     private List<GitRepoMember> getGitRepoMembers(final GitRepoBatchRequest request, final List<GitRepoMemberClientResponse> result) {
-        Set<GitRepoMember> gitRepoMembers = request.getGitRepo().getGitRepoMembers();
+        final Set<GitRepoMember> gitRepoMembers = request.getGitRepo().getGitRepoMembers();
         return result.stream()
                 .map(r -> getGitRepoMember(request, r, gitRepoMembers))
                 .filter(Objects::nonNull).collect(Collectors.toList());
@@ -75,9 +75,9 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
         if (Objects.isNull(r.getAuthor()) || !StringUtils.hasText(r.getAuthor().getLogin())) {
             return null;
         }
-        List<Week> weeks = r.getWeeks();
+        final List<Week> weeks = r.getWeeks();
 
-        GitRepoMember newGitRepoMember = getNewGitRepoMember(request, r, gitRepoMembers);
+        final GitRepoMember newGitRepoMember = getNewGitRepoMember(request, r, gitRepoMembers);
 
         if (Objects.isNull(newGitRepoMember)) return null;
 
@@ -111,7 +111,7 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
     }
 
     private GitRepoMember getGitRepoMember(final GitRepoBatchRequest request, final GitRepoMemberClientResponse r) {
-        String githubId = r.getAuthor().getLogin();
+        final String githubId = r.getAuthor().getLogin();
         if (memberRepository.existsByGithubId(githubId)) {
             Member member = memberRepository.findByGithubIdWithGitRepoMember(githubId).orElseThrow(EntityNotFoundException::new);
             return gitRepoMemberMapper.toEntity(member, request.getGitRepo());
