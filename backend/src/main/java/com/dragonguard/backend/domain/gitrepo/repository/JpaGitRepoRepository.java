@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.*;
 
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,9 +25,8 @@ public interface JpaGitRepoRepository extends JpaRepository<GitRepo, Long>, GitR
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="1500")})
     boolean existsByName(final String name);
 
-    @Query("SELECT gr FROM GitRepo gr")
     @EntityGraph(attributePaths = {"gitRepoMembers.member"})
-    Page<GitRepo> findAllWithMember(final Pageable pageable);
+    List<GitRepo> findAll();
 
     @Query("SELECT gr FROM GitRepo gr LEFT JOIN FETCH gr.gitRepoMembers grm LEFT JOIN FETCH grm.member WHERE gr.id = :id")
     Optional<GitRepo> findByIdWithGitRepoMember(final Long id);

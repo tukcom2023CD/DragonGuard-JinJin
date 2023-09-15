@@ -20,5 +20,4 @@ public interface GitRepoRepository {
     Optional<GitRepo> findByIdWithGitRepoMember(final Long id);
     boolean existsByName(final String name);
     List<GitRepo> findAll();
-    Page<GitRepo> findAllWithMember(final Pageable pageable);
 }

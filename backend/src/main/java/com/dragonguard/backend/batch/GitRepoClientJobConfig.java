@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.*;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
 import org.springframework.batch.item.function.FunctionItemProcessor;
@@ -40,15 +41,12 @@ public class GitRepoClientJobConfig {
     private static final int RETRY_LIMIT = 2;
     private static final String CLIENT_JOB = "clientJob";
     private static final String STEP_NAME = "step";
-    private static final String READER_NAME = "gitRepoReader";
-    private static final String REPOSITORY_METHOD_NAME = "findAllWithMember";
-    private static final String SORT_CLASSIFIER = "id";
     private final GithubClient<GitRepoBatchRequest, Mono<List<GitRepoMember>>> gitRepoMemberBatchClient;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final AdminApiToken adminApiToken;
     private final GitRepoMemberWriter gitRepoMemberWriter;
-    private final JpaGitRepoRepository jpaGitRepoRepository;
+    private final GitRepoReader gitRepoReader;
 
     @Bean
     public Job clientJob() {
@@ -99,13 +97,7 @@ public class GitRepoClientJobConfig {
 
     @Bean
     @StepScope
-    public RepositoryItemReader<GitRepo> reader() {
-        return new RepositoryItemReaderBuilder<GitRepo>()
-                .name(READER_NAME)
-                .repository(jpaGitRepoRepository)
-                .methodName(REPOSITORY_METHOD_NAME)
-                .pageSize(CHUNK_SIZE)
-                .sorts(Collections.singletonMap(SORT_CLASSIFIER, Sort.Direction.ASC))
-                .build();
+    public ItemReader<GitRepo> reader() {
+        return gitRepoReader;
     }
 }
