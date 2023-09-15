@@ -281,17 +281,29 @@ public class Member implements Auditable {
         this.walletAddress = null;
         this.tier = Tier.SPROUT;
         this.authStep = AuthStep.NONE;
-        this.commit.delete();
+        if (commit != null) {
+            this.commit.delete();
+        }
         this.commit = null;
-        this.issue.delete();
+        if (issue != null) {
+            this.issue.delete();
+        }
         this.issue = null;
-        this.pullRequest.delete();
+        if (pullRequest != null) {
+            this.pullRequest.delete();
+        }
         this.pullRequest = null;
-        this.codeReview.delete();
+        if (codeReview != null) {
+            this.codeReview.delete();
+        }
         this.codeReview = null;
-        this.blockchains.forEach(Blockchain::deleteByMember);
-        this.blockchains = new ArrayList<>();
-        this.organization.deleteMember(this);
+        if (!blockchains.isEmpty()) {
+            this.blockchains.forEach(Blockchain::deleteByMember);
+            this.blockchains = new ArrayList<>();
+        }
+        if (organization != null) {
+            this.organization.deleteMember(this);
+        }
         this.organization = null;
         this.role = new ArrayList<>(List.of(Role.ROLE_USER));
         this.refreshToken = null;
