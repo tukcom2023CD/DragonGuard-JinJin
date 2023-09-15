@@ -121,7 +121,7 @@ public class MemberController {
     /**
      * 회원 탈퇴 api
      */
-    @PostMapping("/withdraw")
+    @DeleteMapping("/withdraw")
     public ResponseEntity<WithdrawStatus> withdraw() {
         return ResponseEntity.ok(memberService.withdraw());
     }
