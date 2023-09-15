@@ -24,7 +24,6 @@ final class WithDrawService {
                 print(res)
                 switch res.result{
                 case .success(let data):
-                    print(data)
                     observer.onNext(true)
                 case .failure(let error):
                     observer.onNext(false)
