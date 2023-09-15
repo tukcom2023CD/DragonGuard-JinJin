@@ -260,7 +260,7 @@ public class Member implements Auditable {
     }
 
     public boolean isServiceMember() {
-        return !this.authStep.isServiceMemberAuthStep();
+        return this.authStep.isServiceMemberAuthStep();
     }
 
     public void updateAuthStepAndNameAndProfileImage(final AuthStep authStep, final String name, final String profileImage) {
