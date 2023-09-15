@@ -25,7 +25,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Value("${app.oauth2.authorizedRedirectUri}")
     private String redirectUri;
     private final JwtSetupService jwtSetupService;
-    private final JwtTokenProvider tokenProvider;
 
     @Override
     public void onAuthenticationSuccess(

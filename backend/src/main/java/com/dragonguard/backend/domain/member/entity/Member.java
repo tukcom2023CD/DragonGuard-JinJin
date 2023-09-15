@@ -220,7 +220,9 @@ public class Member implements Auditable {
     }
 
     public String getBlockchainUrl() {
-        validateWalletAddress();
+        if (!isWalletAddressExists()) {
+            throw new NoSuchWalletAddressException();
+        }
         return String.format(BLOCKCHAIN_URL, this.walletAddress);
     }
 
@@ -247,13 +249,8 @@ public class Member implements Auditable {
     }
 
     public void validateWalletAddressAndUpdateTier() {
-        validateWalletAddress();
-        updateTier();
-    }
-
-    private void validateWalletAddress() {
-        if (!isWalletAddressExists()) {
-            throw new NoSuchWalletAddressException();
+        if (isWalletAddressExists()) {
+            updateTier();
         }
     }
 

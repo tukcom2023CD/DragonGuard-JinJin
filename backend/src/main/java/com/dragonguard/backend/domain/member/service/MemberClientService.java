@@ -11,8 +11,8 @@ import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.member.dto.client.*;
-import com.dragonguard.backend.domain.member.dto.constant.ContributionServiceComponent;
-import com.dragonguard.backend.domain.member.dto.constant.GithubClientComponent;
+import com.dragonguard.backend.domain.member.constant.ContributionServiceComponent;
+import com.dragonguard.backend.domain.member.constant.GithubClientComponent;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.global.client.GithubClient;
@@ -95,14 +95,14 @@ public class MemberClientService {
     }
 
     public Set<String> findMemberRepoNames(final MemberClientRequest request) {
-        return Arrays.stream(getGithubClient("memberRepoClient", MemberRepoResponse[].class).requestToGithub(request))
+        return Arrays.stream(getGithubClient(GithubClientComponent.MEMBER_REPOSITORY_COMPONENT.getName(), MemberRepoResponse[].class).requestToGithub(request))
                 .map(MemberRepoResponse::getFullName)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 
     public Set<MemberOrganizationResponse> getMemberOrganizationNames(final MemberClientRequest request) {
-        return Arrays.stream(getGithubClient("memberOrganizationClient", MemberOrganizationResponse[].class).requestToGithub(request))
+        return Arrays.stream(getGithubClient(GithubClientComponent.MEMBER_ORGANIZATION_COMPONENT.getName(), MemberOrganizationResponse[].class).requestToGithub(request))
                 .filter(this::isValidResponse)
                 .collect(Collectors.toSet());
     }
@@ -143,7 +143,7 @@ public class MemberClientService {
 
     public List<String> requestGitOrganizationResponse(final String githubToken, final String gitOrganizationName) {
         final OrganizationRepoResponse[] clientResponse
-                = getGithubClient("memberOrganizationRepoClient", OrganizationRepoResponse[].class)
+                = getGithubClient(GithubClientComponent.ORGANIZATION_REPOSITORY_COMPONENT.getName(), OrganizationRepoResponse[].class)
                 .requestToGithub(new MemberClientRequest(gitOrganizationName, githubToken, LocalDate.now().getYear()));
 
         return Arrays.stream(clientResponse)

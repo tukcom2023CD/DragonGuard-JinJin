@@ -1,4 +1,4 @@
-package com.dragonguard.backend.domain.member.dto.constant;
+package com.dragonguard.backend.domain.member.constant;
 
 import lombok.RequiredArgsConstructor;
 

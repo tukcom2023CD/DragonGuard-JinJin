@@ -38,3 +38,6 @@ operation::update and get member by jwt[snippets='http-request,http-response']
 
 === 이미 로그인했던 멤버인지 확인
 operation::verify member[snippets='http-request,http-response']
+
+=== 회원 탈퇴
+operation::withdraw member[snippets='http-request,http-response']

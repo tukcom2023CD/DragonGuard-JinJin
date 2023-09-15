@@ -303,4 +303,23 @@ class MemberControllerTest extends RestDocumentTest {
         perform.andDo(print())
                 .andDo(document("verify member", getDocumentRequest(), getDocumentResponse()));
     }
+
+    @Test
+    @DisplayName("멤버의 회원 탈퇴가 수행되는가")
+    void withdraw() throws Exception {
+        //given
+        willDoNothing().given(memberService).withdraw();
+
+        //when
+        ResultActions perform = mockMvc.perform(
+                post("/members/withdraw")
+                        .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
+
+        //then
+        perform.andExpect(status().isOk());
+
+        //docs
+        perform.andDo(print())
+                .andDo(document("withdraw member", getDocumentRequest(), getDocumentResponse()));
+    }
 }
