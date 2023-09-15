@@ -13,8 +13,8 @@ android {
         applicationId "com.dragonguard.android"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         buildConfigField("String", "api", properties.getProperty("ipApi"))
         buildConfigField("String", "prepare", properties.getProperty("walletPrepare"))
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

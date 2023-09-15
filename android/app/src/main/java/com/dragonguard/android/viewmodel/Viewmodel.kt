@@ -60,7 +60,7 @@ class Viewmodel: ViewModel() {
 
 //
     fun getUserInfo(token: String): UserInfoModel{
-        Log.d("token", "Bearer : $token")
+        Log.d("tokenG", "Bearer : $token")
         return repository.getUserInfo(token)
     }
 
@@ -219,7 +219,7 @@ class Viewmodel: ViewModel() {
     }
 
     fun updateUserInfo(token: String): UserInfoModel{
-        Log.d("token", "Bearer : $token")
+        Log.d("tokenU", "Bearer : $token")
         return repository.manualUserInfo(token)
     }
 

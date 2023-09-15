@@ -155,20 +155,25 @@ class MainActivity : AppCompatActivity() {
         if (loginOut) {
             prefs.setWalletAddress("")
         }
+        val intent = intent
         val key = intent.getStringExtra("key")
         val refresh = intent.getStringExtra("refresh")
         val access = intent.getStringExtra("access")
-        Log.d("cookie", "webview cookie : $refresh")
+        Log.d("tokenMain", "access : $access")
         if (access != null) {
             token = access
             prefs.setJwtToken(access)
-        } else {
-            token = prefs.getJwtToken("")
         }
         if (refresh != null) {
             prefs.setRefreshToken(refresh)
         }
+        if(!key.isNullOrBlank() ) {
+            Log.d("key", "key: $key")
+            prefs.setKey(key)
+            authRequestResult(prefs.getKey(""))
+        }
         CoroutineScope(Dispatchers.IO).launch {
+            delay(3000)
             val currentState = checkState(token)
             if (currentState) {
                 if (NetworkCheck.checkNetworkState(this@MainActivity)) {
@@ -186,7 +191,6 @@ class MainActivity : AppCompatActivity() {
 //            intent.putExtra("wallet_address", prefs.getWalletAddress(""))
 //            intent.putExtra("token", prefs.getJwtToken(""))
 //            intent.putExtra("refresh", prefs.getRefreshToken(""))
-                intent.putExtra("key", prefs.getKey(""))
                 intent.putExtra("logout", true)
                 withContext(Dispatchers.Main) {
                     activityResultLauncher.launch(intent)
@@ -445,7 +449,6 @@ class MainActivity : AppCompatActivity() {
                 binding.mainNav.visibility = View.VISIBLE
                 Log.d("메인", "메인화면 초기화")
                 imgRefresh = false
-                refreshMain()
                 var sum = 0
                 realModel.commits?.let {
                     sum += it
@@ -464,6 +467,7 @@ class MainActivity : AppCompatActivity() {
                     post = false
                     postCommits()
                 }
+                refreshMain()
 //                if(realModel.tier != "SPROUT") {
 //                    finish = true
 //                }
@@ -571,20 +575,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun checkState(token: String): Boolean {
-        var result = false
+        var result: Boolean? = false
         val coroutine = CoroutineScope(Dispatchers.Main)
         coroutine.launch {
             if (!this@MainActivity.isFinishing) {
                 val resultDeffered = coroutine.async(Dispatchers.IO) {
                     viewmodel.checkLoginState(token)
                 }
-                result = resultDeffered.await()!!
+                result = resultDeffered.await()
 
             }
 
         }
         delay(2000)
-        return result
+        return if(result == null) {
+            false
+        } else {
+            result!!
+        }
     }
 
 

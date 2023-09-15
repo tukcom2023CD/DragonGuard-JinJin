@@ -57,11 +57,21 @@ class LoginActivity : AppCompatActivity() {
         Log.d("info", "로그인 화면 token: $token")
         Log.d("info", "로그인 화면 refresh: $refresh")
         val logout = intent.getBooleanExtra("logout", false)
-        if (!token.isNullOrEmpty() && !refresh.isNullOrEmpty()) {
+        if (prefs.getJwtToken("").isNotBlank() && prefs.getRefreshToken("").isNotBlank()) {
 //            Toast.makeText(applicationContext, "jwt token : $token", Toast.LENGTH_SHORT).show()
-            binding.githubAuth.isEnabled = false
-            binding.githubAuth.setTextColor(Color.BLACK)
-            checkState(token, refresh)
+            if(prefs.getKey("").isNotBlank()){
+                val intentF = Intent(applicationContext, MainActivity::class.java)
+                Log.d("info", "key : $key")
+                intentF.putExtra("key", key)
+                intentF.putExtra("access", token)
+                intentF.putExtra("refresh", refresh)
+                startActivity(intentF)
+                finish()
+            } else {
+                binding.githubAuth.isEnabled = false
+                binding.githubAuth.setTextColor(Color.BLACK)
+                checkState(prefs.getJwtToken(""), prefs.getRefreshToken(""))
+            }
         } else {
             binding.githubAuth.isEnabled = true
             binding.walletAuth.isEnabled = false
@@ -147,7 +157,7 @@ class LoginActivity : AppCompatActivity() {
                             prefs.setJwtToken(access)
                             prefs.setRefreshToken(refresh)
                             if (walletAddress.isNotBlank()) {
-                                val intentH = Intent(applicationContext, MainActivity::class.java)
+                                val intentH = Intent(this@LoginActivity, MainActivity::class.java)
                                 intentH.putExtra("access", access)
                                 intentH.putExtra("refresh", refresh)
                                 startActivity(intentH)
@@ -256,10 +266,10 @@ class LoginActivity : AppCompatActivity() {
                 when(result) {
                     true -> {
                         val intentF = Intent(applicationContext, MainActivity::class.java)
-                        intentF.putExtra("token", token)
+                        intentF.putExtra("access", token)
                         intentF.putExtra("refresh", refresh)
-                        setResult(1, intentF)
                         startActivity(intentF)
+                        finish()
                     }
                     false -> {
                         if(key.isNotBlank()) {
@@ -268,8 +278,8 @@ class LoginActivity : AppCompatActivity() {
                             intentF.putExtra("key", key)
                             intentF.putExtra("access", token)
                             intentF.putExtra("refresh", refresh)
-                            setResult(0, intentF)
                             startActivity(intentF)
+                            finish()
                         } else {
                             binding.githubAuth.isEnabled = false
                             binding.walletAuth.isEnabled = true
@@ -277,7 +287,9 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
                     null -> {
+                        binding.githubAuth.setTextColor(Color.WHITE)
                         binding.githubAuth.isEnabled = true
+
                         binding.walletAuth.isEnabled = false
                     }
                 }

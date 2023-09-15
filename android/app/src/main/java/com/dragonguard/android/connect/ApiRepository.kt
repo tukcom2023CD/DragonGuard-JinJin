@@ -607,7 +607,11 @@ class ApiRepository {
         return try{
             val result = authState.execute()
             Log.d("result", "로그인 상태 확인 결과: ${result.code()}")
-            result.body()!!.is_login_user
+            if(result.code() == 200){
+                return result.body()!!.is_login_user
+            } else {
+                return null
+            }
         } catch (e: Exception) {
             Log.d("error", "로그인 상태 확인 오류: ${e.message}")
             false
