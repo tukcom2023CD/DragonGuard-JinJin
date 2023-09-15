@@ -15,8 +15,7 @@ import java.util.UUID;
  */
 
 public interface MemberRepository extends JpaRepository<Member, UUID>, MemberQueryRepository {
-    @Query("SELECT m.refreshToken FROM Member m WHERE m.id = :id")
-    String findRefreshTokenById(final UUID id);
+    Optional<Member> findByRefreshToken(final String refreshToken);
 
     @Modifying
     @Transactional

@@ -25,8 +25,8 @@ public class JwtTokenProvider {
     private final Key key;
 
     public JwtToken createToken(final UserPrinciple userDetails) {
-        final String accessToken = getToken(userDetails, getAccessClaims(userDetails), ACCESS_TOKEN_EXPIRE_LENGTH);
-        final String refreshToken = getToken(userDetails, getRefreshClaims(), REFRESH_TOKEN_EXPIRE_LENGTH);
+        final String accessToken = getToken(userDetails, getClaims(userDetails), ACCESS_TOKEN_EXPIRE_LENGTH);
+        final String refreshToken = getToken(userDetails, getClaims(userDetails), REFRESH_TOKEN_EXPIRE_LENGTH);
 
         saveRefreshToken(refreshToken, userDetails);
 
@@ -51,14 +51,10 @@ public class JwtTokenProvider {
         memberRepository.updateRefreshToken(id, refreshToken);
     }
 
-    private Claims getAccessClaims(final UserPrinciple userDetails) {
+    private Claims getClaims(final UserPrinciple userDetails) {
         Claims claims = Jwts.claims();
         claims.put(USER_ID_CLAIM_NAME, userDetails.getName());
         return claims;
-    }
-
-    private Claims getRefreshClaims() {
-        return Jwts.claims();
     }
 
     private String getToken(final UserPrinciple loginUser, final Claims claims, final Long validationSecond) {

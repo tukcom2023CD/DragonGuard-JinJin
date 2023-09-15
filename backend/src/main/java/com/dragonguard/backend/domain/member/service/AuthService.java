@@ -30,27 +30,19 @@ public class AuthService {
 
     public JwtToken refreshToken(final String oldRefreshToken, final String oldAccessToken) {
         validateTokens(oldRefreshToken, oldAccessToken);
+        final UserPrinciple userPrinciple = getAuthenticationByToken(oldRefreshToken);
 
-        final UserPrinciple user = getUserDetails(oldAccessToken);
-
-        validateSavedRefreshTokenIfExpired(oldRefreshToken, UUID.fromString(user.getName()));
-
-        return getMemberAndUpdateRefreshToken(user);
+        return getMemberAndUpdateRefreshToken(userPrinciple);
     }
 
-    private JwtToken getMemberAndUpdateRefreshToken(final UserPrinciple user) {
-        final JwtToken jwtToken = jwtTokenProvider.createToken(user);
+    private JwtToken getMemberAndUpdateRefreshToken(final UserPrinciple userPrinciple) {
+        final JwtToken jwtToken = jwtTokenProvider.createToken(userPrinciple);
 
-        memberRepository.findById(UUID.fromString(user.getName()))
+        memberRepository.findById(UUID.fromString(userPrinciple.getName()))
                 .orElseThrow(EntityNotFoundException::new)
                 .updateRefreshToken(jwtToken.getRefreshToken());
 
         return jwtToken;
-    }
-
-    private UserPrinciple getUserDetails(final String oldAccessToken) {
-        final Authentication authentication = jwtValidator.getAuthentication(oldAccessToken);
-        return (UserPrinciple) authentication.getPrincipal();
     }
 
     private void validateTokens(final String oldRefreshToken, final String oldAccessToken) {
@@ -58,11 +50,8 @@ public class AuthService {
         validateIfRefreshTokenExpired(oldRefreshToken);
     }
 
-    private void validateSavedRefreshTokenIfExpired(final String oldRefreshToken, final UUID id) {
-        final String savedToken = memberRepository.findRefreshTokenById(id);
-        if (!savedToken.equals(oldRefreshToken)) {
-            throw new JwtProcessingException();
-        }
+    private UserPrinciple getAuthenticationByToken(final String oldRefreshToken) {
+        return (UserPrinciple) jwtValidator.getAuthentication(oldRefreshToken).getPrincipal();
     }
 
     private void validateIfRefreshTokenExpired(final String oldRefreshToken) {

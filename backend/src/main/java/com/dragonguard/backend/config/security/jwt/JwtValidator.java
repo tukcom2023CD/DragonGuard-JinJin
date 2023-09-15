@@ -31,8 +31,8 @@ public class JwtValidator {
     private final Key key;
 
     @Transactional
-    public Authentication getAuthentication(final String accessToken) {
-        final Claims claims = getTokenBodyClaims(accessToken);
+    public Authentication getAuthentication(final String token) {
+        final Claims claims = getTokenBodyClaims(token);
 
         return memberRepository.findById(extractUUID(claims))
                 .map(userDetailsMapper::mapToLoginUser)
@@ -40,15 +40,15 @@ public class JwtValidator {
                 .orElse(null);
     }
 
-    public UUID extractUUID(final Claims claims) {
+    private UUID extractUUID(final Claims claims) {
         return UUID.fromString(claims.get(USER_ID_CLAIM_NAME, String.class));
     }
 
-    public Claims getTokenBodyClaims(final String accessToken) {
+    private Claims getTokenBodyClaims(final String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(accessToken)
+                .parseClaimsJws(token)
                 .getBody();
     }
 }
