@@ -229,7 +229,7 @@ final class SearchViewController: UIViewController{
             }
         }
         else if resultList.isEmpty{   // 검색 결과 값이 없는 경우
-            let img = UIImageView(image: UIImage(named: "pomi"))
+            let img = UIImageView(image: UIImage(named: "notFound"))
             
             img.snp.makeConstraints { make in
                 make.height.equalTo(self.view.safeAreaLayoutGuide.layoutFrame.height/3)

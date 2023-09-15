@@ -17,9 +17,9 @@ final class WithDrawService {
         
         return Observable.create { observer in
             AF.request(url,
-                       method: .post,
+                       method: .delete,
                        headers: ["Authorization": "Bearer \(access ?? "")"])
-            .validate(statusCode: 200..<201)
+            .validate(statusCode: 204..<205)
             .responseString { res in
                 print(res)
                 switch res.result{
