@@ -39,7 +39,6 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(of = "githubId")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(indexes = {@Index(name = "member_index", columnList = "githubId")})
 public class Member implements Auditable {
     private static final String BLOCKCHAIN_URL = "https://baobab.scope.klaytn.com/account/%s?tabId=txList";
     private static final Long NO_TOKEN = 0L;
@@ -294,7 +293,7 @@ public class Member implements Auditable {
         this.blockchains = new ArrayList<>();
         this.organization.deleteMember(this);
         this.organization = null;
-        this.role = new ArrayList<>();
+        this.role = new ArrayList<>(List.of(Role.ROLE_USER));
         this.refreshToken = null;
         this.githubToken = null;
         this.emailAddress = null;

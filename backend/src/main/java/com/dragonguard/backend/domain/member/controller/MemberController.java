@@ -122,8 +122,7 @@ public class MemberController {
      * 회원 탈퇴 api
      */
     @PostMapping("/withdraw")
-    public ResponseEntity<Void> withdraw() {
-        memberService.withdraw();
-        return ResponseEntity.ok().build();
+    public ResponseEntity<WithdrawStatus> withdraw() {
+        return ResponseEntity.ok(memberService.withdraw());
     }
 }

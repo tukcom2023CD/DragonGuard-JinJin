@@ -26,6 +26,7 @@ import java.util.function.Function;
 public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoResponse> {
     private static final int PER_PAGE_SIZE = 10;
     private static final String PATH_FORMAT = "search/%s?q=%s&per_page=%d&page=%d";
+    private static final String FILTER_DELIMITER = "%20";
     private final WebClient webClient;
 
     @Override
@@ -58,7 +59,7 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
                 .path(String.format(String.format(
                         PATH_FORMAT,
                         request.getType().getLowerCase(),
-                        request.getName().strip().concat("%20" + String.join("%20", filters)),
+                        request.getName().strip().concat(FILTER_DELIMITER + String.join(FILTER_DELIMITER, filters)),
                         PER_PAGE_SIZE,
                         request.getPage())))
                 .build();

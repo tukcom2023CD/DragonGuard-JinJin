@@ -24,7 +24,7 @@ public class SearchUserClient implements GithubClient<SearchRequest, SearchUserR
     private final WebClient webClient;
 
     @Override
-    public SearchUserResponse requestToGithub(SearchRequest request) {
+    public SearchUserResponse requestToGithub(final SearchRequest request) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(String.format(PATH_FORMAT, request.getType().getLowerCase(), request.getName(), PER_PAGE_SIZE, request.getPage()))
