@@ -71,11 +71,11 @@ final class LoginViewModel {
             return Disposables.create()
         }
     }
-
+    
     // 사용자 지갑 주소 서버로 전송
     func userWalletAddress(){
         let access = UserDefaults.standard.string(forKey: "Access")
-
+        
         post.sendMyWalletAddress(token: access ?? "", walletAddress: self.walletAddress)
             .subscribe(onNext: { msg in
                 self.post.updateMyDB()
@@ -100,7 +100,7 @@ final class LoginViewModel {
         }
     }
     
-        
+    
     // MARK: 로그아웃 확인하는 함수
     func logOutDone() -> Observable<Bool>{
         return Observable.create { observer in
@@ -112,8 +112,21 @@ final class LoginViewModel {
     }
     
     func deleteMemberInfo() -> Observable<Bool> {
-        return withDrawService.withDraw()
+        return Observable.create { observer in
+            self.withDrawService.withDraw()
+                .subscribe(onNext:{ check in
+                    if check{
+                        self.checkKlipAuth = false
+                        self.checkGithubAuth = false
+                        observer.onNext(true)
+                    }
+                })
+                .disposed(by: self.disposeBag)
+            
+            return Disposables.create()
+        }
     }
+    
 }
 
 

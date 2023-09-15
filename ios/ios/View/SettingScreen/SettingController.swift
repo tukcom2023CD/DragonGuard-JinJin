@@ -206,24 +206,45 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
                 self.present(nextPage, animated: true)
             }
             else{
-                self.logOut()
+                let sheet = UIAlertController(title: "로그아웃 하시겠습니까?", message: nil, preferredStyle: .alert)
+                sheet.addAction(UIAlertAction(title: "확인", style: .default,handler: { _ in
+                    self.logOut()
+                }))
+                sheet.addAction(UIAlertAction(title: "취소", style: .default))
+                present(sheet,animated: true)
             }
         case 5:
             if checkAdmin{
-                self.logOut()
+                let sheet = UIAlertController(title: "로그아웃 하시겠습니까?", message: nil, preferredStyle: .alert)
+                sheet.addAction(UIAlertAction(title: "확인", style: .default,handler: { _ in
+                    self.logOut()
+                }))
+                
+                sheet.addAction(UIAlertAction(title: "취소", style: .default))
+                present(sheet,animated: true)
             }
             else{
-                LoginViewModel.loginService.deleteMemberInfo()
-                    .subscribe(onNext:{ check in
-                        if check{
-                            print("success!")
-                            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(LoginController())
-                        }
-                        else{
-                            print("error!")
-                        }
-                    })
-                    .disposed(by: disposeBag)
+                let sheet = UIAlertController(title: "정말 탈퇴하시겠습니까?", message: nil, preferredStyle: .alert)
+                sheet.addAction(UIAlertAction(title: "확인", style: .default,handler: { _ in
+                    LoginViewModel.loginService.deleteMemberInfo()
+                        .subscribe(onNext:{ check in
+                            if check{
+                                print("success!")
+                                UserDefaults.standard.removeObject(forKey: "Access")
+                                UserDefaults.standard.removeObject(forKey: "Refresh")
+                                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(LoginController())
+                            }
+                            else{
+                                print("error!")
+                            }
+                        })
+                        .disposed(by: self.disposeBag)
+                }))
+                
+                sheet.addAction(UIAlertAction(title: "취소", style: .default))
+                present(sheet,animated: true)
+                
+               
             }
             
         default:

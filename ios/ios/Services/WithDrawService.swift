@@ -20,10 +20,11 @@ final class WithDrawService {
                        method: .post,
                        headers: ["Authorization": "Bearer \(access ?? "")"])
             .validate(statusCode: 200..<201)
-            .response { res in
+            .responseString { res in
                 print(res)
                 switch res.result{
-                case .success(let _):
+                case .success(let data):
+                    print(data)
                     observer.onNext(true)
                 case .failure(let error):
                     observer.onNext(false)
