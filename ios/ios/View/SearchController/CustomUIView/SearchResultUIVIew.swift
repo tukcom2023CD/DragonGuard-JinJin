@@ -82,10 +82,14 @@ final class SearchResultUIVIew: UIView{
     
     func inputInfo(title: String, create: String, language: String){
         self.titleLabel.text = title
-        var date = create.split(separator: "T")
-        let time = date[1].split(separator: "Z")
-        self.createLabel.text = "\(date[0]) \(time[0])"
-        
+        if create != "" {
+            var date = create.split(separator: "T")
+            let time = date[1].split(separator: "Z")
+            self.createLabel.text = "\(date[0]) \(time[0])"
+        }
+        else{
+            self.createLabel.text = ""
+        }
         self.languageLabel.text = language
     }
     
