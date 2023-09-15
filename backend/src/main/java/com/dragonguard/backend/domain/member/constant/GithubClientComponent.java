@@ -10,7 +10,7 @@ public enum GithubClientComponent {
     CODE_REVIEW_COMPONENT("memberCodeReviewClient"),
     MEMBER_REPOSITORY_COMPONENT("memberRepoClient"),
     MEMBER_ORGANIZATION_COMPONENT("memberOrganizationClient"),
-    ORGANIZATION_REPOSITORY_COMPONENT("memberOrganizationRepoClient");
+    ORGANIZATION_REPOSITORY_COMPONENT("organizationRepoClient");
 
     private final String toComponentName;
 
