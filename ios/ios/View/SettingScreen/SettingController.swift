@@ -213,7 +213,17 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
                 self.logOut()
             }
             else{
-                print("탈퇴임")
+                LoginViewModel.loginService.deleteMemberInfo()
+                    .subscribe(onNext:{ check in
+                        if check{
+                            print("success!")
+                            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(LoginController())
+                        }
+                        else{
+                            print("error!")
+                        }
+                    })
+                    .disposed(by: disposeBag)
             }
             
         default:

@@ -248,5 +248,10 @@ final class APIURL{
         return url
     }
     
+    func withDrawMember(ip: String) -> String {
+        let url = "http://\(ip)/api/members/withdraw"
+        return url
+    }
+    
 }
 

@@ -15,6 +15,7 @@ final class LoginViewModel {
     static let loginService = LoginViewModel()
     let service = KlipLoginService()
     let post = PostService()
+    let withDrawService = WithDrawService()
     private let disposeBag = DisposeBag()
     private var walletAddress = "" // 사용자 지갑 주소
     private var requestKey = "" // 사용자 Klip request Key
@@ -108,6 +109,10 @@ final class LoginViewModel {
             observer.onNext(true)
             return Disposables.create()
         }
+    }
+    
+    func deleteMemberInfo() -> Observable<Bool> {
+        return withDrawService.withDraw()
     }
 }
 
