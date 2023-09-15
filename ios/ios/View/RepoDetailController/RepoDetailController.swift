@@ -83,7 +83,6 @@ final class RepoDetailController: UIViewController{
         attributeString.addAttribute(.font, value: UIFont.systemFont(ofSize: 15), range: ((selectedTitle ?? "") as NSString).range(of: "\(title?[0] ?? "")/"))
         attributeString.addAttribute(.font, value: UIFont(name: "IBMPlexSansKR-SemiBold", size: 20)!, range: ((selectedTitle ?? "") as NSString).range(of: "\(title?[1] ?? "")"))
         attributeString.insert(NSMutableAttributedString(string: "\n"), at: (title?[0].count ?? 0) + 1)
-        print(attributeString)
         label.attributedText = attributeString
         label.numberOfLines = 2
         label.backgroundColor = .clear
@@ -218,8 +217,7 @@ final class RepoDetailController: UIViewController{
             make.top.equalTo(titleLabel.snp.bottom).offset(30)
             make.leading.equalTo(customView.snp.leading).offset(30)
             make.trailing.equalTo(customView.snp.trailing).offset(-30)
-            
-            make.height.equalTo(75*(userInfo?.git_repo_members?.count ?? 0))
+            make.height.equalTo(80*(userInfo?.git_repo_members?.count ?? 0))
         }
         
         // 유저 커밋 그래프
@@ -291,9 +289,7 @@ extension RepoDetailController: UICollectionViewDelegate, UICollectionViewDataSo
         
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = self.view.safeAreaLayoutGuide.layoutFrame.width*4/5
-        let height = self.view.safeAreaLayoutGuide.layoutFrame.height/10
-        
-        return CGSize(width: width, height: height)
+        return CGSize(width: width, height: 70)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
