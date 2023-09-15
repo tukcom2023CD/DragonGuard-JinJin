@@ -26,7 +26,7 @@ import java.util.function.Function;
 public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoResponse> {
     private static final int PER_PAGE_SIZE = 10;
     private static final String PATH_FORMAT = "search/%s?q=%s&per_page=%d&page=%d";
-    private static final String FILTER_DELIMITER = "%20";
+    private static final String FILTER_DELIMITER = "%%20";
     private final WebClient webClient;
 
     @Override

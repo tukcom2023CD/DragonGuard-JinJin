@@ -227,7 +227,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return getMemberByGithubId(githubId).isServiceMember();
     }
 
-    @Transactional
     public void withdraw() {
         authService.getLoginUser().withdraw();
     }

@@ -71,6 +71,7 @@ public class Blockchain implements Auditable {
 
     public void deleteByMember() {
         this.histories.forEach(History::delete);
+        this.histories = new ArrayList<>();
         this.delete();
     }
 }
