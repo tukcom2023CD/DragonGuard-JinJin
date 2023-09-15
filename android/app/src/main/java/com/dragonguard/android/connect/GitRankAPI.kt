@@ -148,4 +148,7 @@ interface GitRankAPI {
 
     @GET("members/verify")
     fun getLoginAuthState(@Header("Authorization")access: String): Call<AuthStateModel>
+
+    @DELETE("members/withdraw")
+    fun postWithDraw(@Header("Authorization")access: String): Call<Unit>
 }

@@ -139,7 +139,7 @@ class LoginActivity : AppCompatActivity() {
                             .getCookie("${BuildConfig.api}oauth2/authorize/github")
                         Log.d("cookie", "onPageFinished original url: $url")
                         Log.d("cookie", "onPageFinished original: $cookies")
-                        if (cookies.contains("Access") && url!!.startsWith("gitrank://github-auth?")) {
+                        if (cookies.contains("Access") && url!!.startsWith("gitrank://github-auth")) {
                             val splits = cookies.split("; ")
                             val access = splits[1].split("=")[1]
                             val refresh = splits[2].split("=")[1]
@@ -259,7 +259,7 @@ class LoginActivity : AppCompatActivity() {
                         intentF.putExtra("token", token)
                         intentF.putExtra("refresh", refresh)
                         setResult(1, intentF)
-                        finish()
+                        startActivity(intentF)
                     }
                     false -> {
                         if(key.isNotBlank()) {
@@ -269,7 +269,7 @@ class LoginActivity : AppCompatActivity() {
                             intentF.putExtra("access", token)
                             intentF.putExtra("refresh", refresh)
                             setResult(0, intentF)
-                            finish()
+                            startActivity(intentF)
                         } else {
                             binding.githubAuth.isEnabled = false
                             binding.walletAuth.isEnabled = true

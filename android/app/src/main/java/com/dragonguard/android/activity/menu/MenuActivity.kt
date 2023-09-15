@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -82,6 +84,9 @@ class MenuActivity : AppCompatActivity() {
             intent.putExtra("token", token)
             startActivity(intent)
         }
+        binding.withdrawBtn.setOnClickListener {
+            withDraw()
+        }
     }
 
     private fun checkAdmin() {
@@ -95,8 +100,10 @@ class MenuActivity : AppCompatActivity() {
                 Log.d("admin", "admin: $result")
                 if(result) {
                     binding.adminFun.visibility = View.VISIBLE
+                    binding.withdrawFrame.visibility = View.GONE
                 } else {
                     binding.adminFun.visibility = View.GONE
+                    binding.withdrawFrame.visibility = View.VISIBLE
                 }
             }
         }
@@ -117,5 +124,25 @@ class MenuActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun withDraw() {
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            if(!this@MenuActivity.isFinishing) {
+                val resultDeferred = coroutine.async(Dispatchers.IO){
+                    viewmodel.withDrawAccount(token)
+                }
+                val result = resultDeferred.await()
+                Log.d("withdraw", "withdraw: $result")
+                if(result) {
+                    Handler(Looper.getMainLooper()).postDelayed({val intent = Intent(applicationContext, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        intent.putExtra("logout", true)
+                        startActivity(intent)}, 1000)
+                }
+            }
+        }
     }
 }

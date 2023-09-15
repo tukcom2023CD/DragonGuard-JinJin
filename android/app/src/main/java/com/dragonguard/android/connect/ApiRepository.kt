@@ -613,4 +613,18 @@ class ApiRepository {
             false
         }
     }
+
+    fun withDrawAccount(token: String): Boolean {
+        val withDraw = api.postWithDraw("Bearer $token")
+        Log.d("token", "token: $token")
+        return try {
+            val result = withDraw.execute()
+            Log.d("token", "code: ${result.code()}")
+            result.code() == 204
+        } catch (e: Exception) {
+            Log.d("error", "회원 탈퇴 실패 오류: ${e.message}")
+            false
+        }
+
+    }
 }

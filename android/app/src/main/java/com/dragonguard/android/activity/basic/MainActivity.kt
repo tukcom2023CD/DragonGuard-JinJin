@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             count = 0
             if (it.resultCode == 0) {
+                Log.d("지갑주소 전송", "전송전 0")
                 val walletIntent = it.data
                 try {
                     val requestKey = walletIntent!!.getStringExtra("key")
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
             } else if (it.resultCode == 1) {
+                Log.d("지갑주소 전송", "전송전 1")
                 val tokenIntent = it.data
                 val realToken = tokenIntent!!.getStringExtra("token")
                 val refreshToken = tokenIntent!!.getStringExtra("refresh")
@@ -92,12 +94,19 @@ class MainActivity : AppCompatActivity() {
     private var added = false
     private var realModel = UserInfoModel(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
     private var finish = false
+    private var post = true
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         count = 0
         finish = false
         Log.d("on", "onnewintent")
         val logout = intent?.getBooleanExtra("logout", false)
+        if(token == "") {
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            intent.putExtra("key", prefs.getKey(""))
+            activityResultLauncher.launch(intent)
+        }
         if (logout != null) {
             if(!this@MainActivity.isFinishing) {
                 loginOut = logout
@@ -146,7 +155,7 @@ class MainActivity : AppCompatActivity() {
         if (loginOut) {
             prefs.setWalletAddress("")
         }
-
+        val key = intent.getStringExtra("key")
         val refresh = intent.getStringExtra("refresh")
         val access = intent.getStringExtra("access")
         Log.d("cookie", "webview cookie : $refresh")
@@ -159,31 +168,43 @@ class MainActivity : AppCompatActivity() {
         if (refresh != null) {
             prefs.setRefreshToken(refresh)
         }
-        if (token.isBlank() || prefs.getWalletAddress("").isBlank()) {
-            Log.d("로그인 필요", "로그인 필요")
-            val intent = Intent(applicationContext, LoginActivity::class.java)
-            intent.putExtra("wallet_address", prefs.getWalletAddress(""))
-            intent.putExtra("token", prefs.getJwtToken(""))
-            intent.putExtra("refresh", prefs.getRefreshToken(""))
-            intent.putExtra("key", prefs.getKey(""))
-            intent.putExtra("logout", true)
-            activityResultLauncher.launch(intent)
-        } else {
-            if (NetworkCheck.checkNetworkState(this)) {
-                binding.mainLoading.resumeAnimation()
-                binding.mainLoading.visibility = View.VISIBLE
-                refreshCommits()
+        CoroutineScope(Dispatchers.IO).launch {
+            val currentState = checkState(token)
+            if (currentState) {
+                if (NetworkCheck.checkNetworkState(this@MainActivity)) {
+                    withContext(Dispatchers.Main) {
+                        binding.mainLoading.resumeAnimation()
+                        binding.mainLoading.visibility = View.VISIBLE
+                        refreshCommits()
+                    }
+                }
+
+            } else {
+                Log.d("token", "token: $token  wallet: ${prefs.getWalletAddress("")}")
+                Log.d("로그인 필요", "로그인 필요")
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+//            intent.putExtra("wallet_address", prefs.getWalletAddress(""))
+//            intent.putExtra("token", prefs.getJwtToken(""))
+//            intent.putExtra("refresh", prefs.getRefreshToken(""))
+                intent.putExtra("key", prefs.getKey(""))
+                intent.putExtra("logout", true)
+                withContext(Dispatchers.Main) {
+                    activityResultLauncher.launch(intent)
+                }
             }
         }
+
+
 
 
         binding.mainNav.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.bottom_main -> {
                     if(mainFrag != null ) {
+                        val main = MainFragment(token, realModel, true)
                         Log.d("added", "added: $added    main clicked")
                         val transaction = supportFragmentManager.beginTransaction()
-                        transaction.replace(binding.contentFrame.id, mainFrag!!)
+                        transaction.replace(binding.contentFrame.id, main)
                             .commit()
                         added = true
                     }
@@ -250,10 +271,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun multipleSearchUser() {
-        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 500)
         Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 3500)
         Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 6500)
         Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 9500)
+        Handler(Looper.getMainLooper()).postDelayed({ searchUser() }, 12500)
     }
 
     /*  메인화면의 유저 정보 검색하기(프로필 사진, 기여도, 랭킹)
@@ -337,9 +358,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun refreshMain() {
+        val main = MainFragment(token, realModel, true)
         if(realCount >= 1) {
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(binding.contentFrame.id, mainFrag!!)
+            transaction.replace(binding.contentFrame.id, main)
                 .commit()
             added = true
             return
@@ -347,9 +369,8 @@ class MainActivity : AppCompatActivity() {
         if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(1).itemId && state ) {
             Log.d("added", "added: $added    refreshMain")
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(binding.contentFrame.id, mainFrag!!)
+            transaction.replace(binding.contentFrame.id, main)
                 .commit()
-
             added = true
         }
     }
@@ -425,6 +446,24 @@ class MainActivity : AppCompatActivity() {
                 Log.d("메인", "메인화면 초기화")
                 imgRefresh = false
                 refreshMain()
+                var sum = 0
+                realModel.commits?.let {
+                    sum += it
+                }
+                realModel.issues?.let {
+                    sum += it
+                }
+                realModel.pull_requests?.let {
+                    sum += it
+                }
+                realModel.reviews?.let {
+                    sum += it
+                }
+                Log.d("sum", "sum : $sum  amount: ${realModel.token_amount}")
+                if(sum != 0 && realModel.token_amount != sum && post) {
+                    post = false
+                    postCommits()
+                }
 //                if(realModel.tier != "SPROUT") {
 //                    finish = true
 //                }
@@ -504,7 +543,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 val refreshResult = refreshDeffered.await()
                 Log.d("post", "post token : $token")
-                multipleSearchUser()
+                Handler(Looper.getMainLooper()).postDelayed({searchUser()}, 2000)
             }
         }
     }
@@ -530,5 +569,24 @@ class MainActivity : AppCompatActivity() {
     fun getNavSize(): Int {
         return binding.mainNav.height
     }
+
+    private suspend fun checkState(token: String): Boolean {
+        var result = false
+        val coroutine = CoroutineScope(Dispatchers.Main)
+        coroutine.launch {
+            if (!this@MainActivity.isFinishing) {
+                val resultDeffered = coroutine.async(Dispatchers.IO) {
+                    viewmodel.checkLoginState(token)
+                }
+                result = resultDeffered.await()!!
+
+            }
+
+        }
+        delay(2000)
+        return result
+    }
+
+
 
 }

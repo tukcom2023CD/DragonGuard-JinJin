@@ -20,6 +20,7 @@ import com.dragonguard.android.model.contributors.GitRepoMember
 import com.dragonguard.android.model.contributors.RepoContributorsModel
 import com.dragonguard.android.adapters.ContributorsAdapter
 import com.dragonguard.android.viewmodel.Viewmodel
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
@@ -267,6 +268,8 @@ class RepoContributorsActivity : AppCompatActivity() {
             xAxis.setDrawGridLines(false)
             axisLeft.setDrawGridLines(false)
             axisRight.setDrawGridLines(false)
+            animateY(1000, Easing.EaseInOutCubic)
+            animateX(1000, Easing.EaseInOutCubic)
         }
 
         data.apply {

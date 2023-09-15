@@ -230,4 +230,8 @@ class Viewmodel: ViewModel() {
     fun searchUserNames(name: String, count: Int, type: String, token: String): ArrayList<UserNameModelItem> {
         return repository.getUserNames(name, count, type ,token)
     }
+
+    fun withDrawAccount(token: String): Boolean {
+        return repository.withDrawAccount(token)
+    }
 }

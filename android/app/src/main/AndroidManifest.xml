@@ -89,17 +89,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.basic.LoginActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.basic.LoadingActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.basic.MainActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -116,6 +108,14 @@
                     android:scheme="gitrank" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.basic.LoadingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.basic.MainActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
     </application>
 
 </manifest>
