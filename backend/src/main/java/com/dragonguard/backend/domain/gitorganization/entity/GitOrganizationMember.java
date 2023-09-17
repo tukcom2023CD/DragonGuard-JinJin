@@ -6,7 +6,6 @@ import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 

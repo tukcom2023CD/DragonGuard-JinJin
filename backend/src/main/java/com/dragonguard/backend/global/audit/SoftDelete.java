@@ -2,7 +2,6 @@ package com.dragonguard.backend.global.audit;
 
 import org.hibernate.annotations.Where;
 
-import javax.persistence.EntityListeners;
 import java.lang.annotation.*;
 
 /**

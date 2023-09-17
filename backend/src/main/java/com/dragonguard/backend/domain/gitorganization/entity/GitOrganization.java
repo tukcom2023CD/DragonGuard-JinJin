@@ -6,7 +6,6 @@ import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ import java.util.List;
 @EqualsAndHashCode(of = "name")
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(indexes = {@Index(name = "gitorganization_index", columnList = "name")})
 public class GitOrganization implements Auditable {
 
     @Id
