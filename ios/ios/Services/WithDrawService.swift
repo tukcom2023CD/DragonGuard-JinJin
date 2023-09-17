@@ -23,7 +23,7 @@ final class WithDrawService {
             .responseString { res in
                 print(res)
                 switch res.result{
-                case .success(let data):
+                case .success(_):
                     observer.onNext(true)
                 case .failure(let error):
                     observer.onNext(false)

@@ -70,6 +70,7 @@ class PostService {
                        headers: ["Authorization" : "Bearer \(accessToken ?? "")"])
             .validate(statusCode: 200..<201)
             .responseDecodable(of: CheckLoginUserModel.self) { res in
+                print(res)
                 switch res.result{
                 case .success(let data):
                     observer.onNext(data.is_login_user ?? false)

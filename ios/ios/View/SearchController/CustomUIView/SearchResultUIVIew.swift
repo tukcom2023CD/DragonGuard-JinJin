@@ -83,7 +83,7 @@ final class SearchResultUIVIew: UIView{
     func inputInfo(title: String, create: String, language: String){
         self.titleLabel.text = title
         if create != "" {
-            var date = create.split(separator: "T")
+            let date = create.split(separator: "T")
             let time = date[1].split(separator: "Z")
             self.createLabel.text = "\(date[0]) \(time[0])"
         }

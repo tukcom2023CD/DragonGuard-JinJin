@@ -89,6 +89,7 @@ final class LoginViewModel {
         return Observable.create {  observer in
             self.post.checkLoginUser()
                 .subscribe(onNext:{  [weak self] check in
+                    print("checkLoginUser \(check)")
                     if !check{
                         self?.checkNewMemberInKlip.accept(true)
                     }
@@ -118,6 +119,8 @@ final class LoginViewModel {
                     if check{
                         self.checkKlipAuth = false
                         self.checkGithubAuth = false
+                        UserDefaults.standard.removeObject(forKey: "Access")
+                        UserDefaults.standard.removeObject(forKey: "Refresh")
                         observer.onNext(true)
                     }
                 })

@@ -15,7 +15,7 @@ import Alamofire
 
 final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
-//    var autoLoginCheck: Bool?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +26,15 @@ final class LoginController: UIViewController{
         bind()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        klipLoginBtn.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        klipLoginBtn.isHidden = true
+    }
     /*
      UI 코드 작성
      */
@@ -52,6 +61,7 @@ final class LoginController: UIViewController{
         btn.clipsToBounds = true
         btn.layer.cornerRadius = 20
         btn.isEnabled = false
+        btn.isHidden = true
         btn.addTarget(self, action: #selector(clickedKlipLoginBtn), for: .touchUpInside)
         return btn
     }()
@@ -66,6 +76,8 @@ final class LoginController: UIViewController{
         btn.addTarget(self, action: #selector(clickedGoGihbubBtn), for: .touchUpInside)
         return btn
     }()
+    
+    
     
     /*
      UI Action 작성
@@ -131,6 +143,7 @@ final class LoginController: UIViewController{
                     self.klipLoginBtn.layer.opacity = 1
                     self.goGithubBtn.layer.opacity = 1
                     rootView.modalPresentationStyle = .fullScreen
+                    self.klipLoginBtn.isHidden = true
                     self.present(rootView, animated: true)
                 }
                 else if first{
@@ -184,15 +197,15 @@ final class LoginController: UIViewController{
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/2)
         }
         
-        klipLoginBtn.snp.makeConstraints({ make in
+        goGithubBtn.snp.makeConstraints({ make in
             make.top.equalTo(imgView.snp.bottom).offset(30)
             make.centerX.equalTo(view.snp.centerX)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/18)
             make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/3)
         })
         
-        goGithubBtn.snp.makeConstraints({ make in
-            make.top.equalTo(klipLoginBtn.snp.bottom).offset(30)
+        klipLoginBtn.snp.makeConstraints({ make in
+            make.top.equalTo(goGithubBtn.snp.bottom).offset(30)
             make.centerX.equalTo(view.snp.centerX)
             make.height.equalTo(view.safeAreaLayoutGuide.layoutFrame.height/18)
             make.width.equalTo(view.safeAreaLayoutGuide.layoutFrame.width*2/3)
@@ -206,6 +219,8 @@ final class LoginController: UIViewController{
         LoginViewModel.loginService.checkNewMemberInKlip
             .bind { [weak self] check in
                 if check{
+                    self?.klipLoginBtn.isHidden = false
+                    self?.klipLoginBtn.isEnabled = true
                     self?.alert()
                 }
             }
@@ -257,7 +272,9 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                             if check{
                                 let rootView = TabBarViewController()
                                 self.klipLoginBtn.isEnabled = false
+                                self.klipLoginBtn.isHidden = true
                                 self.goGithubBtn.isEnabled = true
+                                
                                 self.klipLoginBtn.layer.opacity = 1
                                 self.goGithubBtn.layer.opacity = 1
                                 rootView.modalPresentationStyle = .fullScreen

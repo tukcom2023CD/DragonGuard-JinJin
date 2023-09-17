@@ -230,8 +230,6 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
                         .subscribe(onNext:{ check in
                             if check{
                                 print("success!")
-                                UserDefaults.standard.removeObject(forKey: "Access")
-                                UserDefaults.standard.removeObject(forKey: "Refresh")
                                 (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(LoginController())
                             }
                             else{
