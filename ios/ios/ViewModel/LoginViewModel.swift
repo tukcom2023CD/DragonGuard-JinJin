@@ -119,6 +119,8 @@ final class LoginViewModel {
                     if check{
                         self.checkKlipAuth = false
                         self.checkGithubAuth = false
+                        self.klipAuthSubject.accept(false)
+                        self.githubAuthSubject.accept(false)
                         UserDefaults.standard.removeObject(forKey: "Access")
                         UserDefaults.standard.removeObject(forKey: "Refresh")
                         observer.onNext(true)
