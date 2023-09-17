@@ -152,6 +152,8 @@ class MainActivity : AppCompatActivity() {
         prefs = IdPreference(applicationContext)
         this.onBackPressedDispatcher.addCallback(this, callback)
         binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(1).itemId
+        binding.mainLoading.resumeAnimation()
+        binding.mainLoading.visibility = View.VISIBLE
         if (loginOut) {
             prefs.setWalletAddress("")
         }
@@ -173,13 +175,12 @@ class MainActivity : AppCompatActivity() {
             authRequestResult(prefs.getKey(""))
         }
         CoroutineScope(Dispatchers.IO).launch {
-            delay(3000)
+            delay(2000)
             val currentState = checkState(token)
+            Log.d("로그인 상태 main", currentState.toString())
             if (currentState) {
                 if (NetworkCheck.checkNetworkState(this@MainActivity)) {
                     withContext(Dispatchers.Main) {
-                        binding.mainLoading.resumeAnimation()
-                        binding.mainLoading.visibility = View.VISIBLE
                         refreshCommits()
                     }
                 }
@@ -362,6 +363,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun refreshMain() {
+        binding.mainLoading.pauseAnimation()
+        binding.mainLoading.visibility = View.GONE
+        binding.mainNav.visibility = View.VISIBLE
         val main = MainFragment(token, realModel, true)
         if(realCount >= 1) {
             val transaction = supportFragmentManager.beginTransaction()
@@ -444,9 +448,9 @@ class MainActivity : AppCompatActivity() {
             if(realModel.commits != null && realModel.github_id != null && realModel.profile_image != null && realModel.auth_step != null) {
                 Log.d("userInfo", "id:${userInfo.github_id}")
                 mainFrag = MainFragment(token, realModel, imgRefresh)
-                binding.mainLoading.pauseAnimation()
-                binding.mainLoading.visibility = View.GONE
-                binding.mainNav.visibility = View.VISIBLE
+//                binding.mainLoading.pauseAnimation()
+//                binding.mainLoading.visibility = View.GONE
+//                binding.mainNav.visibility = View.VISIBLE
                 Log.d("메인", "메인화면 초기화")
                 imgRefresh = false
                 var sum = 0
@@ -575,19 +579,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun checkState(token: String): Boolean {
+        Log.d("로그인 상태 main", "로그인 토큰 : $token")
         var result: Boolean? = false
         val coroutine = CoroutineScope(Dispatchers.Main)
-        coroutine.launch {
+        coroutine.async {
             if (!this@MainActivity.isFinishing) {
                 val resultDeffered = coroutine.async(Dispatchers.IO) {
                     viewmodel.checkLoginState(token)
                 }
-                result = resultDeffered.await()
 
+                result = resultDeffered.await()
+                Log.d("로그인 상태 main", "로그인 상태 결과 : $result")
             }
 
-        }
-        delay(2000)
+        }.await()
         return if(result == null) {
             false
         } else {
