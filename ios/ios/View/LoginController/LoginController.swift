@@ -15,7 +15,6 @@ import Alamofire
 
 final class LoginController: UIViewController{
     let disposeBag = DisposeBag()
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,6 +126,19 @@ final class LoginController: UIViewController{
         self.present(newViewController,animated: true)
     }
     
+    private func deleteCookies(){
+        let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache, WKWebsiteDataTypeCookies])
+        let date = NSDate(timeIntervalSince1970: 0)
+        WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set, modifiedSince: date as Date, completionHandler:{ })
+        
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), completionHandler: {
+            (records) -> Void in
+            for record in records{
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+                print("delete cache data")
+            }
+        })
+    }
     
     // 사용자가 인증을 완료했는지 확인하는 함수
     func checkClearAuths(){
@@ -145,6 +157,9 @@ final class LoginController: UIViewController{
                     rootView.modalPresentationStyle = .fullScreen
                     self.klipLoginBtn.isHidden = true
                     self.present(rootView, animated: true)
+                    
+                    self.deleteCookies()
+                    
                 }
                 else if first{
                     self.goGithubBtn.layer.opacity = 0.4
@@ -254,6 +269,7 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
                 if cookie.name == "Access" {
                     UserDefaults.standard.set(cookie.value, forKey:"Access")
                     print("@@@ Access  저장하기: \(cookie.value)")
+                    
                     accessTokenCheck = true
                 }
                 if cookie.name == "Refresh" {
