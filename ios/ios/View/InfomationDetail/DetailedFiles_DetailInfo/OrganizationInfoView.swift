@@ -56,16 +56,18 @@ final class OrganizationInfoView: UIView{
         titleImg.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(10)
             make.centerY.equalToSuperview()
-            
+            make.height.width.equalTo(60)
         }
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleImg.snp.trailing).offset(10)
+            make.trailing.equalTo(sendingImage.snp.leading).offset(-5)
             make.centerY.equalToSuperview()
         }
         
         sendingImage.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-10)
+            make.height.width.equalTo(30)
             make.centerY.equalToSuperview()
         }
     }

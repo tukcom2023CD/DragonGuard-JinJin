@@ -142,6 +142,7 @@
 		3BE64A0E2A3E03E4005D9F9E /* BlockChainListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE64A0D2A3E03E4005D9F9E /* BlockChainListTableViewCell.swift */; };
 		3BE64A102A3E05E1005D9F9E /* BlockChainListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE64A0F2A3E05E1005D9F9E /* BlockChainListModel.swift */; };
 		3BE64A142A3E2A53005D9F9E /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE64A132A3E2A53005D9F9E /* TabBarViewController.swift */; };
+		3BEE4F032AB7578F00FA5F2D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BEE4F022AB7578F00FA5F2D /* WebKit.framework */; };
 		3BEFEC3329D3E1A100DBBCA8 /* AddOrganizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */; };
 		3BEFEC3529D3FB9500DBBCA8 /* EmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */; };
 		3BEFEC3729D3FBDF00DBBCA8 /* EmailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */; };
@@ -307,6 +308,7 @@
 		3BE64A0D2A3E03E4005D9F9E /* BlockChainListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockChainListTableViewCell.swift; sourceTree = "<group>"; };
 		3BE64A0F2A3E05E1005D9F9E /* BlockChainListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockChainListModel.swift; sourceTree = "<group>"; };
 		3BE64A132A3E2A53005D9F9E /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TabBarViewController.swift; path = ios/View/MainViewController/TabBarViewController.swift; sourceTree = SOURCE_ROOT; };
+		3BEE4F022AB7578F00FA5F2D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		3BEFEC3229D3E1A100DBBCA8 /* AddOrganizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrganizationService.swift; sourceTree = "<group>"; };
 		3BEFEC3429D3FB9500DBBCA8 /* EmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailService.swift; sourceTree = "<group>"; };
 		3BEFEC3629D3FBDF00DBBCA8 /* EmailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailModel.swift; sourceTree = "<group>"; };
@@ -326,6 +328,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BEE4F032AB7578F00FA5F2D /* WebKit.framework in Frameworks */,
 				3BA0EEE62979A16700B9E952 /* Charts in Frameworks */,
 				A3AEEB622975286C00004722 /* RxSwift in Frameworks */,
 				A3AEEB652975311400004722 /* SnapKit in Frameworks */,
@@ -479,6 +482,7 @@
 		3B7B1D2C298404AE0038BD67 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3BEE4F022AB7578F00FA5F2D /* WebKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

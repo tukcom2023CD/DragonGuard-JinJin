@@ -57,6 +57,8 @@ final class DetailInfoTableViewCell: UITableViewCell{
     }
     
     func inputData_Organizaion(data: Organ_InfoModel?){
+        repositoryView.removeFromSuperview()
+        organzationView.removeFromSuperview()
         addUI_Organizaion()
         
         organzationView.inputData(imgPath: data?.profile_image ?? "", title: data?.name ?? "none")
@@ -76,6 +78,8 @@ final class DetailInfoTableViewCell: UITableViewCell{
     }
   
     func inputData_Repository(title: String, imgPath: String, myId: String){
+        organzationView.removeFromSuperview()
+        repositoryView.removeFromSuperview()
         addUI_Repository()
         
         let user = title.split(separator: "/")[0]

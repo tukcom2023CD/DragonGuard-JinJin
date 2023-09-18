@@ -71,6 +71,7 @@ final class RepositoryInfoView: UIView{
         titleImg.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.leading.equalToSuperview().offset(15)
+            make.height.width.equalTo(60)
         }
         
         userNameLabel.snp.makeConstraints { make in
@@ -81,10 +82,12 @@ final class RepositoryInfoView: UIView{
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleImg.snp.leading)
             make.top.equalTo(titleImg.snp.bottom).offset(5)
+            make.trailing.equalTo(sendingImage.snp.leading).offset(-5)
         }
         
         sendingImage.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-10)
+            make.height.width.equalTo(30)
             make.centerY.equalToSuperview()
         }
     }
