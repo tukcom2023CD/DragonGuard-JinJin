@@ -158,8 +158,10 @@ class LoginActivity : AppCompatActivity() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 try{
                     if (!this@LoginActivity.isFinishing) {
-                        val cookies = CookieManager.getInstance()
-                            .getCookie("${BuildConfig.api}oauth2/authorize/github")
+                        val cookies = CookieManager.getInstance().getCookie(oauthUrl)
+                        val cookie = CookieManager.getInstance()
+                            .getCookie(appUrl)
+                        Log.d("cookie", "$oauthUrl: $cookies  $appUrl: $cookie")
                         Log.d("cookie", "onPageFinished original url: $url")
                         Log.d("cookie", "onPageFinished original: $cookies")
                         if (cookies.contains("Access") && url!!.startsWith(appUrl)) {
@@ -277,17 +279,17 @@ class LoginActivity : AppCompatActivity() {
 
     inner class MyCustomTabsCallback : CustomTabsCallback() {
         override fun onNavigationEvent(navigationEvent: Int, extras: Bundle?) {
-            when (navigationEvent) {
-                CustomTabsCallback.NAVIGATION_STARTED -> {
-                    checkCookie(navigationEvent)
-                }
-                CustomTabsCallback.TAB_HIDDEN -> {
-                    checkCookie(navigationEvent)
-                }
-                CustomTabsCallback.NAVIGATION_FINISHED -> { checkCookie(navigationEvent)}
-                else -> {checkCookie(navigationEvent)}
+//            when (navigationEvent) {
+//                CustomTabsCallback.NAVIGATION_STARTED -> {
+//                    checkCookie(navigationEvent)
+//                }
+//                CustomTabsCallback.TAB_HIDDEN -> {
+//                    checkCookie(navigationEvent)
+//                }
+//                CustomTabsCallback.NAVIGATION_FINISHED -> { checkCookie(navigationEvent)}
+//                else -> {checkCookie(navigationEvent)}
 //                // 기타 필요한 경우 처리
-            }
+//            }
         }
 
     }
@@ -438,19 +440,34 @@ class LoginActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         val uri = intent?.data
         Log.d("uri new", "uri: $uri")
-        if (uri != null && uri.toString().startsWith(appUrl)) {
-            checkCookie(0)
+        if (uri != null && uri.toString().startsWith("$appUrl?")) {
+            val urlSplit = uri.toString().split("?")
+            val queries = urlSplit[1].split("&")
+            val access = queries[0].split("=")[1]
+            val refresh = queries[1].split("=")[1]
+            prefs.setJwtToken(access)
+            prefs.setRefreshToken(refresh)
+            if (walletAddress.isNotBlank()) {
+                val intentH = Intent(this@LoginActivity, MainActivity::class.java)
+                intentH.putExtra("access", access)
+                intentH.putExtra("refresh", refresh)
+                startActivity(intentH)
+            } else {
+                Log.d("start", "access: $access, refresh: $refresh")
+                binding.loginMain.visibility = View.VISIBLE
+                checkState(prefs.getJwtToken(""), prefs.getRefreshToken(""))
+            }
+        } else {
+            checkState(prefs.getJwtToken(""), prefs.getRefreshToken(""))
         }
     }
 
     override fun onRestart() {
         super.onRestart()
-        checkCookie(0)
     }
 
     override fun onResume() {
         super.onResume()
-        checkCookie(0)
     }
 
     override fun onDestroy() {
