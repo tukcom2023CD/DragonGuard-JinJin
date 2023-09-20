@@ -85,14 +85,10 @@ class MainFragment(
 
         drawInfo()
         CoroutineScope(Dispatchers.IO).launch {
-            if (!repeat && this@MainFragment.isAdded && !this@MainFragment.isDetached && this@MainFragment.isVisible && !this@MainFragment.isRemoving
-                && !prefs.getRepeat(false)
-            ) {
-                prefs.setRepeat(true)
-                while (true) {
-                    Thread.sleep(3000)
-                    handler.sendEmptyMessage(0)
-                }
+            prefs.setRepeat(true)
+            while (true) {
+                Thread.sleep(3000)
+                handler.sendEmptyMessage(0)
             }
         }
     }

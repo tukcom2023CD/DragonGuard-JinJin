@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
             if(!this@MainActivity.isFinishing) {
                 loginOut = logout
                 if (loginOut) {
-                    binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(1).itemId
+                    binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(0).itemId
                     prefs.setWalletAddress("")
                     loginOut = true
                     prefs.setJwtToken("")

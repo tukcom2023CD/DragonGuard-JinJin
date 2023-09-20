@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/bottom_rankings"
-        android:icon="@drawable/ranking"
-        android:title="랭킹"
-        app:showAsAction="ifRoom">
-    </item>
-    <item
         android:id="@+id/bottom_main"
         android:icon="@drawable/home"
         android:title="홈"
+        app:showAsAction="ifRoom">
+    </item>
+    <item
+        android:id="@+id/bottom_rankings"
+        android:icon="@drawable/ranking"
+        android:title="랭킹"
         app:showAsAction="ifRoom">
     </item>
     <item
