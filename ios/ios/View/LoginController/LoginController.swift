@@ -307,5 +307,15 @@ extension LoginController: UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate
     }
     
     
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        print("webview error!!\n\(error)")
+    }
+    
+    
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        print("\(#function)")
+        print("Reload");
+        webView.reload()
+    }
     
 }

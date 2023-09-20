@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 import RxSwift
+import WebKit
+import SafariServices
 
 final class SettingController: UIViewController{
     // 설정화면에 출력될 종류들
@@ -88,11 +90,27 @@ final class SettingController: UIViewController{
             .subscribe(onNext: { check in
                 print("Called \(check)")
                 if check{
+                    self.deleteCookies()
                     (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(LoginController())
                 }
             })
             .disposed(by: self.disposeBag)
 
+    }
+    
+    private func deleteCookies(){
+        let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache, WKWebsiteDataTypeCookies])
+        let date = NSDate(timeIntervalSince1970: 0)
+        WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set, modifiedSince: date as Date, completionHandler:{ })
+        
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), completionHandler: {
+            (records) -> Void in
+            for record in records{
+                print("record \(record)")
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+                print("delete cache data")
+            }
+        })
     }
     
     /*
@@ -209,6 +227,7 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
                 let sheet = UIAlertController(title: "로그아웃 하시겠습니까?", message: nil, preferredStyle: .alert)
                 sheet.addAction(UIAlertAction(title: "확인", style: .default,handler: { _ in
                     self.logOut()
+                    self.deleteCookies()
                 }))
                 sheet.addAction(UIAlertAction(title: "취소", style: .default))
                 present(sheet,animated: true)
@@ -218,6 +237,7 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
                 let sheet = UIAlertController(title: "로그아웃 하시겠습니까?", message: nil, preferredStyle: .alert)
                 sheet.addAction(UIAlertAction(title: "확인", style: .default,handler: { _ in
                     self.logOut()
+                    self.deleteCookies()
                 }))
                 
                 sheet.addAction(UIAlertAction(title: "취소", style: .default))
@@ -230,6 +250,7 @@ extension SettingController: UITableViewDelegate, UITableViewDataSource{
                         .subscribe(onNext:{ check in
                             if check{
                                 print("success!")
+                                self.deleteCookies()
                                 (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(LoginController())
                             }
                             else{
