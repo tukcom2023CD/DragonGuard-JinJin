@@ -1,6 +1,7 @@
 package com.dragonguard.backend.config.security.oauth;
 
 import com.dragonguard.backend.config.security.jwt.JwtSetupService;
+import com.dragonguard.backend.config.security.jwt.JwtToken;
 import com.dragonguard.backend.config.security.jwt.JwtTokenProvider;
 import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
 import lombok.RequiredArgsConstructor;
@@ -22,32 +23,35 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    private static final String REFRESH_TAG = "refresh";
+    private static final String ACCESS_TAG = "access";
+
     @Value("${app.oauth2.authorizedRedirectUri}")
     private String redirectUri;
     private final JwtSetupService jwtSetupService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public void onAuthenticationSuccess(
             final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication)
             throws IOException {
-        final String targetUri = determineTargetUrl(request, response, authentication);
-
         if (response.isCommitted()) {
             return;
         }
-        clearAuthenticationAttributes(request, response);
+        super.clearAuthenticationAttributes(request);
 
         final UserPrinciple loginUser = (UserPrinciple) authentication.getPrincipal();
-        jwtSetupService.addJwtTokensInCookie(response, loginUser);
+        final JwtToken jwtToken = jwtTokenProvider.createToken(loginUser);
+        final String targetUri = determineTargetUrl(jwtToken);
+
+        jwtSetupService.addJwtTokensInCookie(response, jwtToken);
         getRedirectStrategy().sendRedirect(request, response, targetUri);
     }
 
-    protected String determineTargetUrl(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) {
+    private String determineTargetUrl(final JwtToken jwtToken) {
         return UriComponentsBuilder.fromUriString(redirectUri)
+                .queryParam(ACCESS_TAG, jwtToken.getAccessToken())
+                .queryParam(REFRESH_TAG, jwtToken.getRefreshToken())
                 .build().toUriString();
-    }
-
-    protected void clearAuthenticationAttributes(final HttpServletRequest request, final HttpServletResponse response) {
-        super.clearAuthenticationAttributes(request);
     }
 }

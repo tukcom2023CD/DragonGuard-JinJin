@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class JwtSetupService {
     private static final String DEFAULT_PATH = "/";
-    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${app.auth.token.access-header}")
     private String accessTokenHeaderTag;
@@ -26,14 +25,13 @@ public class JwtSetupService {
     @Value("${app.auth.token.refresh-header}")
     private String refreshTokenHeaderTag;
 
-    public void addJwtTokensInCookie(final HttpServletResponse response, final UserPrinciple loginUser) {
-        JwtToken jwtToken = jwtTokenProvider.createToken(loginUser);
+    public void addJwtTokensInCookie(final HttpServletResponse response, final JwtToken jwtToken) {
         addCookie(response, jwtToken.getAccessToken(), accessTokenHeaderTag);
         addCookie(response, jwtToken.getRefreshToken(), refreshTokenHeaderTag);
     }
 
     private void addCookie(final HttpServletResponse response, final String token, final String tag) {
-        ResponseCookie tokenCookie = setCookie(tag, token);
+        final ResponseCookie tokenCookie = setCookie(tag, token);
         response.addHeader(HttpHeaders.SET_COOKIE, tokenCookie.toString());
     }
 
