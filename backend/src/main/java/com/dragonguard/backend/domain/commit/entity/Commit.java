@@ -5,6 +5,7 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+import com.dragonguard.backend.global.entity.Contribution;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ import java.util.Optional;
 @SoftDelete
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Commit implements Auditable {
+public class Commit implements Auditable, Contribution {
 
     @Id
     @GeneratedValue
@@ -55,15 +56,17 @@ public class Commit implements Auditable {
         this.member.addCommit(this);
     }
 
-    public void updateCommitNum(final Integer amount) {
+    @Override
+    public void updateContributionNum(final Integer amount) {
         this.amount = amount;
     }
 
+    @Override
     public boolean isNotUpdatable(final Integer amount) {
         return updatedCurrently() || this.amount.intValue() == amount.intValue();
     }
 
     public boolean updatedCurrently() {
-        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L));
+        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(UPDATE_TIME_UNIT));
     }
 }

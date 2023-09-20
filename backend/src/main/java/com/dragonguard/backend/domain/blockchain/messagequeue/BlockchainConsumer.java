@@ -30,17 +30,17 @@ public class BlockchainConsumer implements KafkaConsumer<BlockchainKafkaResponse
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.blockchain", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(String message) {
-        BlockchainKafkaResponse response = readValue(message);
+    public void consume(final String message) {
+        final BlockchainKafkaResponse response = readValue(message);
 
-        Member member = memberService.loadEntity(response.getMemberId());
+        final Member member = memberService.loadEntity(response.getMemberId());
 
         blockchainService.setTransaction(member, response.getAmount(), response.getContributeType());
     }
 
     @Override
     @SneakyThrows(JsonProcessingException.class)
-    public BlockchainKafkaResponse readValue(String message) {
+    public BlockchainKafkaResponse readValue(final String message) {
         return objectMapper.readValue(message, BlockchainKafkaResponse.class);
     }
 }

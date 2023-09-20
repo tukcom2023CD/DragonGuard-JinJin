@@ -96,6 +96,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
+    @Override
     public RelatedRankWithMemberResponse findRankingByMemberId(final UUID memberId, final String githubId) {
         return organizationRepository.findRankingByMemberId(memberId, githubId);
     }

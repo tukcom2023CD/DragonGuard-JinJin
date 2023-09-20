@@ -218,7 +218,11 @@ public class GitRepoServiceImpl implements GitRepoService {
     }
 
     @Override
-    public void saveAll(final Set<GitRepo> gitRepos) {
+    public void saveAllIfNotExists(final Set<String> gitRepoNames) {
+        final List<GitRepo> gitRepos = gitRepoNames.stream()
+                .map(this::findGitRepo)
+                .collect(Collectors.toList());
+
         gitRepoRepository.saveAll(gitRepos);
     }
 }

@@ -12,6 +12,7 @@ import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
+import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +68,7 @@ public class GitRepoMemberFacade {
                 gitRepoService.getContributionMap(contributions, Week::getA),
                 gitRepoService.getContributionMap(contributions, Week::getD));
 
-        gitRepoMemberService.saveAll(result, gitRepo);
+        gitRepoMemberService.saveAllIfNotExists(result, gitRepo);
         return result;
     }
 
@@ -161,5 +162,22 @@ public class GitRepoMemberFacade {
         return new TwoGitRepoMemberResponse(
                 findGitRepoMemberResponses(gitRepoService.findGitRepo(request.getFirstRepo()), githubToken),
                 findGitRepoMemberResponses(gitRepoService.findGitRepo(request.getSecondRepo()), githubToken));
+    }
+
+    public void saveAllGitRepoMembers(final Member member, final Set<String> gitRepoNames) {
+        final Set<GitRepo> gitRepos = gitRepoNames.stream()
+                .map(gitRepoService::findGitRepo)
+                .collect(Collectors.toSet());
+
+        gitRepoMemberService.saveAllIfNotExists(member, gitRepos);
+    }
+
+    public void saveAllGitRepos(final Set<String> gitRepoNames) {
+        gitRepoService.saveAllIfNotExists(gitRepoNames);
+    }
+
+    public void updateOrSaveAll(final List<GitRepoMemberResponse> gitRepoMemberResponses, final String gitRepoName) {
+        final GitRepo gitRepo = gitRepoService.findGitRepo(gitRepoName);
+        gitRepoMemberService.updateOrSaveAll(gitRepoMemberResponses, gitRepo);
     }
 }

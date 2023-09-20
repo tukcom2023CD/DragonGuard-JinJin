@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 김승진
@@ -20,7 +21,7 @@ public class MemberDetailsResponse {
     private Integer pullRequests;
     private Integer reviews;
     private String profileImage;
-    private List<String> gitRepos;
+    private Set<String> gitRepos;
     private String organization;
     private Integer rank;
 }

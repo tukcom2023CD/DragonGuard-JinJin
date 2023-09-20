@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.member.controller;
 
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.*;
-import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.domain.member.service.MemberFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,14 +22,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/members")
 public class MemberController {
-    private final MemberService memberService;
+    private final MemberFacade memberFacade;
 
     /**
      * 로그인한 유저의 기여도 정보 업데이트를 위한 api
      */
     @PostMapping("/contributions")
     public ResponseEntity<Void> updateContribution() {
-        memberService.updateContributions();
+        memberFacade.updateContributions();
         return ResponseEntity.ok().build();
     }
 
@@ -38,7 +38,7 @@ public class MemberController {
      */
     @PostMapping("/me/update")
     public ResponseEntity<MemberResponse> updateContributionsAndGetProfile() {
-        return ResponseEntity.ok(memberService.updateContributionsAndGetProfile());
+        return ResponseEntity.ok(memberFacade.updateContributionsAndGetProfile());
     }
 
     /**
@@ -46,7 +46,7 @@ public class MemberController {
      */
     @PostMapping("/blockchains")
     public ResponseEntity<Void> updateBlockchain() {
-        memberService.updateBlockchain();
+        memberFacade.updateBlockchain();
         return ResponseEntity.ok().build();
     }
 
@@ -56,7 +56,7 @@ public class MemberController {
     @GetMapping("/ranking")
     public ResponseEntity<List<MemberRankResponse>> getRank(
             @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) final Pageable pageable) {
-        return ResponseEntity.ok(memberService.findMemberRanking(pageable));
+        return ResponseEntity.ok(memberFacade.findMemberRanking(pageable));
     }
 
     /**
@@ -66,7 +66,7 @@ public class MemberController {
     public ResponseEntity<List<MemberRankResponse>> getOrganizationMemberRank(
             @RequestParam Long organizationId,
             @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC) final Pageable pageable) {
-        return ResponseEntity.ok(memberService.findMemberRankingByOrganization(organizationId, pageable));
+        return ResponseEntity.ok(memberFacade.findMemberRankingByOrganization(organizationId, pageable));
     }
 
     /**
@@ -74,7 +74,7 @@ public class MemberController {
      */
     @PostMapping("/wallet-address")
     public ResponseEntity<Void> updateWalletAddress(@RequestBody @Valid final WalletRequest walletRequest) {
-        memberService.updateWalletAddress(walletRequest);
+        memberFacade.updateWalletAddress(walletRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -83,7 +83,7 @@ public class MemberController {
      */
     @GetMapping("/me")
     public ResponseEntity<MemberResponse> getCurrentUser() {
-        return ResponseEntity.ok(memberService.getMember());
+        return ResponseEntity.ok(memberFacade.getMember());
     }
 
     /**
@@ -91,7 +91,7 @@ public class MemberController {
      */
     @GetMapping("/me/details")
     public ResponseEntity<MemberGitReposAndGitOrganizationsResponse> getCurrentUserDetails() {
-        return ResponseEntity.ok(memberService.findMemberDetails());
+        return ResponseEntity.ok(memberFacade.findMemberDetails());
     }
 
     /**
@@ -99,7 +99,7 @@ public class MemberController {
      */
     @GetMapping("/details")
     public ResponseEntity<MemberDetailsResponse> getUserDetails(@RequestParam final String githubId) {
-        return ResponseEntity.ok(memberService.findMemberDetails(githubId));
+        return ResponseEntity.ok(memberFacade.findMemberDetails(githubId));
     }
 
     /**
@@ -107,7 +107,7 @@ public class MemberController {
      */
     @GetMapping("/git-organizations/git-repos")
     public ResponseEntity<MemberGitOrganizationRepoResponse> getMemberGitOrganizationRepo(@RequestParam final String name) {
-        return ResponseEntity.ok(memberService.findMemberGitOrganizationRepo(name));
+        return ResponseEntity.ok(memberFacade.findMemberGitOrganizationRepo(name));
     }
 
     /**
@@ -115,7 +115,7 @@ public class MemberController {
      */
     @GetMapping("/verify")
     public ResponseEntity<MemberLoginVerifyResponse> getMemberLoginVerify() {
-        return ResponseEntity.ok(memberService.verifyMember());
+        return ResponseEntity.ok(memberFacade.verifyMember());
     }
 
     /**
@@ -123,7 +123,7 @@ public class MemberController {
      */
     @DeleteMapping("/withdraw")
     public ResponseEntity<Void> withdraw() {
-        memberService.withdraw();
+        memberFacade.withdraw();
         return ResponseEntity.noContent().build();
     }
 }

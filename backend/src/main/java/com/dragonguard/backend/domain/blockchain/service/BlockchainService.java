@@ -30,32 +30,22 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private final SmartContractService smartContractService;
     private final BlockchainMapper blockchainMapper;
     private final AuthService authService;
-    @Value("#{'${admin}'.split(',')}")
-    private List<String> admins;
 
     public void setTransaction(final Member member, final long contribution, final ContributeType contributeType) {
         if (contribution <= 0) return;
 
-        Blockchain blockchain = findBlockchainOfType(member, contributeType);
-        if (!blockchain.isNewHistory(contribution)) return;
+        final Blockchain blockchain = findByType(member, contributeType);
+        if (!blockchain.isNewHistory(contribution)) {
+            return;
+        }
 
         sendSmartContract(member, contribution - blockchain.getSumOfAmount(), blockchain);
     }
 
-    public void sendSmartContract(final Member member, final long contribution, final Blockchain blockchain) {
-        String walletAddress = member.getWalletAddress();
-        String transactionHash = transferTransaction(contribution, blockchain.getContributeType(), walletAddress);
-        BigInteger amount = balanceOfTransaction(walletAddress);
-
-        if (hasSameAmount(contribution, amount)) {
-            blockchain.addHistory(amount, transactionHash);
-            return; // 일반 유저는 모두 여기서 return 됩니다.
-        }
-
-        // 블록체인 스마트 컨트랙트를 배포한 사람의 경우 맨 처음 토큰 개수가 다르게 부여되는 현상 때문에 작성한 코드
-        if (admins.stream().anyMatch(admin -> admin.strip().equals(member.getGithubId()))) {
-            blockchain.addHistory(BigInteger.valueOf(contribution), transactionHash);
-        }
+    private void sendSmartContract(final Member member, final long contribution, final Blockchain blockchain) {
+        final String walletAddress = member.getWalletAddress();
+        final String transactionHash = transferTransaction(contribution, blockchain.getContributeType(), walletAddress);
+        blockchain.addHistory(BigInteger.valueOf(contribution), transactionHash);
     }
 
     private BigInteger balanceOfTransaction(final String walletAddress) {
@@ -68,7 +58,7 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
     @Transactional(readOnly = true)
     public List<BlockchainResponse> getBlockchainList() {
-        UUID memberId = authService.getLoginUserId();
+        final UUID memberId = authService.getLoginUserId();
         return getBlockchainResponses(memberId);
     }
 
@@ -82,15 +72,8 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private boolean hasSameAmount(final long contribution, final BigInteger amount) {
-        return contribution == amount.longValue();
-    }
-
-    public Blockchain findBlockchainOfType(final Member member, final ContributeType contributeType) {
-        if(blockchainRepository.existsByMemberAndContributeType(member, contributeType)) {
-            return blockchainRepository.findByMemberAndContributeType(member, contributeType)
-                    .orElseThrow(EntityNotFoundException::new);
-        }
-        return blockchainRepository.save(blockchainMapper.toEntity(member, contributeType));
+    public Blockchain findByType(final Member member, final ContributeType contributeType) {
+        return blockchainRepository.findByMemberAndContributeType(member, contributeType)
+                .orElseGet(() -> blockchainRepository.save(blockchainMapper.toEntity(member, contributeType)));
     }
 }

@@ -17,7 +17,7 @@ import java.util.function.ToIntFunction;
 public interface GitRepoService extends EntityLoader<GitRepo, Long> {
     TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request);
     TwoGitRepoResponse findTwoGitReposAndUpdate(final GitRepoCompareRequest request);
-    void saveAll(final Set<GitRepo> gitRepos);
+    void saveAllIfNotExists(final Set<String> gitRepos);
     boolean gitRepoExistsByName(final String name);
     GitRepo findGitRepo(final String name);
     Optional<List<GitRepoMemberClientResponse>> requestClientGitRepoMember(final GitRepoInfoRequest gitRepoInfoRequest);

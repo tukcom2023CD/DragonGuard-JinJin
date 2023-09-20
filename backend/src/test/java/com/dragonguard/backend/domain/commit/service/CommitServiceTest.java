@@ -1,5 +1,6 @@
 package com.dragonguard.backend.domain.commit.service;
 
+import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.commit.repository.CommitRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
@@ -28,7 +29,7 @@ class CommitServiceTest extends LoginTest {
         //given
 
         //when
-        commitService.saveContribution(memberRepository.findById(loginUser.getId()).orElse(null), 100, LocalDateTime.now().getYear());
+        commitService.saveContribution(memberRepository.findById(loginUser.getId()).orElse(null), 100, LocalDateTime.now().getYear(), ContributeType.COMMIT);
         Optional<Commit> commits = commitRepository.findByMemberAndYear(loginUser, LocalDate.now().getYear());
 
         //then

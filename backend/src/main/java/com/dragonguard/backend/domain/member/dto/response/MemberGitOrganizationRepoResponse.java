@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 김승진
@@ -14,5 +15,5 @@ import java.util.List;
 @AllArgsConstructor
 public class MemberGitOrganizationRepoResponse {
     private String profileImage;
-    private List<String> gitRepos;
+    private Set<String> gitRepos;
 }

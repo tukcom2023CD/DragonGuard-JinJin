@@ -16,7 +16,8 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
-import com.dragonguard.backend.domain.organization.service.OrganizationServiceImpl;
+import com.dragonguard.backend.domain.organization.entity.Organization;
+import com.dragonguard.backend.domain.organization.service.OrganizationService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.kafka.KafkaProducer;
 import com.dragonguard.backend.global.service.EntityLoader;
@@ -39,10 +40,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberService implements EntityLoader<Member, UUID> {
     private final MemberRepository memberRepository;
-    private final MemberClientService memberClientService;
     private final MemberMapper memberMapper;
     private final AuthService authService;
-    private final OrganizationServiceImpl organizationService;
+    private final OrganizationService organizationService;
     private final GitOrganizationService gitOrganizationService;
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
     private final KafkaProducer<KafkaContributionRequest> kafkaContributionClientProducer;
@@ -68,7 +68,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         }
     }
 
-    private boolean isBlockchainUpdatable(final Member member) {
+    public boolean isBlockchainUpdatable(final Member member) {
         return !member.getCommit().updatedCurrently() || member.getBlockchains().stream()
                 .map(Blockchain::getHistories).flatMap(List::stream).allMatch(History::isUpdatable);
     }
@@ -148,11 +148,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
         member.validateWalletAddressAndUpdateTier();
     }
 
-    public void updateContributionAndTransaction(final Member member) {
-        memberClientService.addMemberContribution(member);
-        member.validateWalletAddressAndUpdateTier();
-    }
-
     private MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(final Member member) {
         return memberMapper.toRepoAndOrgResponse(
                 member.getProfileImage(),
@@ -184,30 +179,23 @@ public class MemberService implements EntityLoader<Member, UUID> {
         sendRepositoryRequestToKafka(githubId);
     }
 
-    public MemberGitOrganizationRepoResponse findMemberGitOrganizationRepo(final String gitOrganizationName) {
-        sendRepositoryRequestToKafka(authService.getLoginUser().getGithubId());
-        return new MemberGitOrganizationRepoResponse(
-                gitOrganizationService.getByName(gitOrganizationName).getProfileImage(),
-                memberClientService.requestGitOrganizationResponse(authService.getLoginUser().getGithubToken(), gitOrganizationName));
-    }
-
     public MemberDetailsResponse findMemberDetails(final String githubId) {
         final Member member = getMemberByGithubId(githubId);
         final Integer rank = memberRepository.findRankingById(member.getId());
         return memberMapper.toDetailsResponse(member, rank);
     }
 
-    private Member getMemberByGithubId(final String githubId) {
+    public Member getMemberByGithubId(final String githubId) {
         return memberRepository.findByGithubId(githubId)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
     public MemberResponse updateContributionsAndGetProfile() {
         final Member member = authService.getLoginUser();
-        memberClientService.addMemberGitRepoAndGitOrganization(member);
+        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(member.getGithubId()));
 
         if (member.isWalletAddressExists()) {
-            updateContributionAndTransaction(member);
+            sendContributionRequestToKafka(member.getGithubId());
         }
         return getMemberResponseWithValidateOrganization(member);
     }
@@ -229,5 +217,9 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public void withdraw() {
         authService.getLoginUser().withdraw();
+    }
+
+    public GitOrganization getGitOrganizationByName(final String gitOrganizationName) {
+        return gitOrganizationService.getByName(gitOrganizationName);
     }
 }

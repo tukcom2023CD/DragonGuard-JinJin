@@ -236,8 +236,8 @@ public class Member implements Auditable {
         }
     }
 
-    public List<String> getGitRepoNames() {
-        return this.gitRepoMembers.stream().map(GitRepoMember::getGitRepo).map(GitRepo::getName).collect(Collectors.toList());
+    public Set<String> getGitRepoNames() {
+        return this.gitRepoMembers.stream().map(GitRepoMember::getGitRepo).map(GitRepo::getName).collect(Collectors.toSet());
     }
 
     public String getOrganizationName() {

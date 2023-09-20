@@ -4,7 +4,7 @@ import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.*;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Tier;
-import com.dragonguard.backend.domain.member.service.MemberService;
+import com.dragonguard.backend.domain.member.service.MemberFacade;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(MemberController.class)
 class MemberControllerTest extends RestDocumentTest {
     @MockBean
-    private MemberService memberService;
+    private MemberFacade memberFacade;
 
     @Test
     @DisplayName("멤버 기여도 내역 업데이트가 수행되는가")
@@ -79,7 +80,7 @@ class MemberControllerTest extends RestDocumentTest {
     void getMember() throws Exception {
         // given
         MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1000L, "한국공학대학교", "http://abcd.efgh", 1, true, List.of("ohksj", "ksj77"));
-        given(memberService.getMember()).willReturn(expected);
+        given(memberFacade.getMember()).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -100,8 +101,8 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 조회가 수행되는가")
     void getMemberDetails() throws Exception {
         // given
-        MemberGitReposAndGitOrganizationsResponse expected = new MemberGitReposAndGitOrganizationsResponse(List.of(new MemberGitOrganizationResponse("tukcom2023CD", "http://orgGithubProfile")), List.of("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/DragonGuard", "tukcom2023CD/Jin-Jin"), "http://memberGithubProfile");
-        given(memberService.findMemberDetails()).willReturn(expected);
+        MemberGitReposAndGitOrganizationsResponse expected = new MemberGitReposAndGitOrganizationsResponse(Set.of(new MemberGitOrganizationResponse("tukcom2023CD", "http://orgGithubProfile")), Set.of("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/DragonGuard", "tukcom2023CD/Jin-Jin"), "http://memberGithubProfile");
+        given(memberFacade.findMemberDetails()).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -128,7 +129,7 @@ class MemberControllerTest extends RestDocumentTest {
                 new MemberRankResponse(UUID.randomUUID(), "Jin", "ohksj777", 3000L, Tier.DIAMOND, "http://github123123412412412profileUrl"),
                 new MemberRankResponse(UUID.randomUUID(), "Lee", "ohksjj", 1000L, Tier.PLATINUM, "http://github123123412412412profileUrl"),
                 new MemberRankResponse(UUID.randomUUID(), "Da", "ohksjksj", 500L, Tier.GOLD, "http://github123123412412412profileUrl"));
-        given(memberService.findMemberRanking(any())).willReturn(expected);
+        given(memberFacade.findMemberRanking(any())).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -150,7 +151,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버 지갑 주소 갱신이 수행되는가")
     void updateWalletAddress() throws Exception {
         // given
-        willDoNothing().given(memberService).updateWalletAddress(any());
+        willDoNothing().given(memberFacade).updateWalletAddress(any());
 
         // when
         ResultActions perform =
@@ -175,7 +176,7 @@ class MemberControllerTest extends RestDocumentTest {
     void getMemberWithJwt() throws Exception {
         // given
         MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1000L, "한국공학대학교", "http://abcd.efgh", 1, true, List.of("ohksj", "ksj77"));
-        given(memberService.getMember()).willReturn(expected);
+        given(memberFacade.getMember()).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -200,7 +201,7 @@ class MemberControllerTest extends RestDocumentTest {
                 new MemberRankResponse(UUID.randomUUID(), "넓은관용", "Sammuelwoojae", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"),
                 new MemberRankResponse(UUID.randomUUID(), "회사승진", "ohksj77", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"),
                 new MemberRankResponse(UUID.randomUUID(), "영어수학", "posite", 20L, Tier.SPROUT, "http://githubUserProfileImageUrl"));
-        given(memberService.findMemberRankingByOrganization(any(), any())).willReturn(expected);
+        given(memberFacade.findMemberRankingByOrganization(any(), any())).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -220,11 +221,11 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버의 조직에 소속된 레포 조회가 수행되는가")
     void getMemberGitOrganizationRepo() throws Exception {
         // given
-        MemberGitOrganizationRepoResponse expected = new MemberGitOrganizationRepoResponse("http://someProfileImageOfOrg", List.of(
+        MemberGitOrganizationRepoResponse expected = new MemberGitOrganizationRepoResponse("http://someProfileImageOfOrg", Set.of(
                 "tukcom2023CD/DragonGuard-JinJin",
                 "tukcom2023CD/DragonGuard",
                 "tukcom2023CD/Yongari"));
-        given(memberService.findMemberGitOrganizationRepo(any())).willReturn(expected);
+        given(memberFacade.findMemberGitOrganizationRepo(any())).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -245,8 +246,8 @@ class MemberControllerTest extends RestDocumentTest {
     void getOtherMemberDetails() throws Exception {
         // given
         MemberDetailsResponse expected = new MemberDetailsResponse(
-                1, 2, 3, 4, "http://profileImage", List.of("gitRepo1", "gitRepo2"), "한국공학대학교", 10);
-        given(memberService.findMemberDetails(any())).willReturn(expected);
+                1, 2, 3, 4, "http://profileImage", Set.of("gitRepo1", "gitRepo2"), "한국공학대학교", 10);
+        given(memberFacade.findMemberDetails(any())).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -267,7 +268,7 @@ class MemberControllerTest extends RestDocumentTest {
     void updateAndGetMemberProfile() throws Exception {
         // given
         MemberResponse expected = new MemberResponse(UUID.randomUUID(), "김승진", "ohksj77", 100, 100, 100, 100, Tier.SILVER, AuthStep.GITHUB_ONLY, "http://abcd.efgh", 1000, 1000L, "한국공학대학교", "http://abcd.efgh", 1, true, List.of("ohksj", "ksj77"));
-        given(memberService.updateContributionsAndGetProfile()).willReturn(expected);
+        given(memberFacade.updateContributionsAndGetProfile()).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -288,7 +289,7 @@ class MemberControllerTest extends RestDocumentTest {
     void verifyMember() throws Exception {
         // given
         MemberLoginVerifyResponse expected = new MemberLoginVerifyResponse(Boolean.TRUE);
-        given(memberService.verifyMember()).willReturn(expected);
+        given(memberFacade.verifyMember()).willReturn(expected);
 
         // when
         ResultActions perform =
@@ -308,7 +309,7 @@ class MemberControllerTest extends RestDocumentTest {
     @DisplayName("멤버의 회원 탈퇴가 수행되는가")
     void withdraw() throws Exception {
         //given
-        willDoNothing().given(memberService).withdraw();
+        willDoNothing().given(memberFacade).withdraw();
 
         //when
         ResultActions perform = mockMvc.perform(

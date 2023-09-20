@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.member.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
@@ -10,6 +11,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"name", "profileImage"})
 public class MemberGitOrganizationResponse {
     private String name;
     private String profileImage;

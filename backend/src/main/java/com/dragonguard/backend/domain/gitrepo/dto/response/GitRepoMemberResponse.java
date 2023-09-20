@@ -1,5 +1,8 @@
 package com.dragonguard.backend.domain.gitrepo.dto.response;
 
+import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoMemberDetailsResponse;
+import com.dragonguard.backend.domain.member.entity.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 /**
@@ -19,4 +22,29 @@ public class GitRepoMemberResponse {
     private Integer additions;
     private Integer deletions;
     private Boolean isServiceMember;
+    @JsonIgnore
+    private Member member;
+
+    public GitRepoMemberResponse(final GitRepoMemberDetailsResponse response, final Member member) {
+        this.githubId = response.getMember();
+        this.commits = response.getCommits();
+        this.additions = response.getAddition();
+        this.deletions = response.getDeletion();
+        this.member = member;
+    }
+
+    public GitRepoMemberResponse(
+            final String githubId,
+            final String profileUrl,
+            final Integer commits,
+            final Integer additions,
+            final Integer deletions,
+            final Boolean isServiceMember) {
+        this.githubId = githubId;
+        this.profileUrl = profileUrl;
+        this.commits = commits;
+        this.additions = additions;
+        this.deletions = deletions;
+        this.isServiceMember = isServiceMember;
+    }
 }

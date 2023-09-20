@@ -5,6 +5,7 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+import com.dragonguard.backend.global.entity.Contribution;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ import java.util.Optional;
 @SoftDelete
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Issue implements Auditable {
+public class Issue implements Auditable, Contribution {
 
     @Id
     @GeneratedValue
@@ -50,7 +51,8 @@ public class Issue implements Auditable {
         organizeMember(member);
     }
 
-    public void updateIssueNum(final Integer amount) {
+    @Override
+    public void updateContributionNum(final Integer amount) {
         this.amount = amount;
     }
 
@@ -59,6 +61,7 @@ public class Issue implements Auditable {
         this.member.addIssue(this);
     }
 
+    @Override
     public boolean isNotUpdatable(final Integer amount) {
         return updatedCurrently() || this.amount.intValue() == amount.intValue();
     }

@@ -17,7 +17,7 @@ public class BlockchainProducer implements KafkaProducer<BlockchainKafkaRequest>
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Override
-    public void send(BlockchainKafkaRequest request) {
+    public void send(final BlockchainKafkaRequest request) {
         kafkaTemplate.send("gitrank.to.backend.blockchain", "blockchain", request);
     }
 }

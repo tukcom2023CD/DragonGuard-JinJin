@@ -18,6 +18,7 @@ import org.mapstruct.Named;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -72,12 +73,12 @@ public interface MemberMapper {
     MemberDetailsResponse toDetailsResponse(final Member member, final Integer rank);
 
     @Named("getGitOrganizationNames")
-    default List<MemberGitOrganizationResponse> getGitOrganizationNames(final List<GitOrganization> gitOrganizations) {
-        return gitOrganizations.stream().map(org -> new MemberGitOrganizationResponse(org.getName(), org.getProfileImage())).distinct().collect(Collectors.toList());
+    default Set<MemberGitOrganizationResponse> getGitOrganizationNames(final List<GitOrganization> gitOrganizations) {
+        return gitOrganizations.stream().map(org -> new MemberGitOrganizationResponse(org.getName(), org.getProfileImage())).collect(Collectors.toSet());
     }
 
     @Named("getGitRepoNames")
-    default List<String> getGitRepoNames(final List<GitRepo> gitRepos) {
-        return gitRepos.stream().map(GitRepo::getName).distinct().collect(Collectors.toList());
+    default Set<String> getGitRepoNames(final List<GitRepo> gitRepos) {
+        return gitRepos.stream().map(GitRepo::getName).collect(Collectors.toSet());
     }
 }
