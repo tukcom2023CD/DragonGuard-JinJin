@@ -78,7 +78,7 @@ final class OrganizationListTableViewCell: UITableViewCell{
         case "DIAMOND":
             customUIView.layer.borderColor = CGColor(red: 0/255, green: 219/255, blue: 249/255, alpha: 1.0) /* #00dbf9 */
         default:
-            customUIView.layer.borderColor = CGColor(red: 255/255, green: 25/255, blue: 255/255, alpha: 1.0)
+            customUIView.layer.borderColor = CGColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1.0)
         }
     }
 
