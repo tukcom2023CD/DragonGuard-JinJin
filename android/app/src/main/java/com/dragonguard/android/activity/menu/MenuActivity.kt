@@ -39,7 +39,7 @@ class MenuActivity : AppCompatActivity() {
         versionDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         versionDialog.setContentView(R.layout.version_dialog)
         val version = versionDialog.findViewById<TextView>(R.id.gitrank_version)
-        version.append("v1.0")
+        version.append("v1.1.3")
 
         setSupportActionBar(binding.toolbar) //커스텀한 toolbar를 액션바로 사용
         supportActionBar?.setDisplayShowTitleEnabled(false)
