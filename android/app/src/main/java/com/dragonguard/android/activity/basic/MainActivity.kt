@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
 
         prefs = IdPreference(applicationContext)
         this.onBackPressedDispatcher.addCallback(this, callback)
-        binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(1).itemId
+        binding.mainNav.selectedItemId = binding.mainNav.menu.getItem(0).itemId
         binding.mainLoading.resumeAnimation()
         binding.mainLoading.visibility = View.VISIBLE
         if (loginOut) {
@@ -374,7 +374,7 @@ class MainActivity : AppCompatActivity() {
             added = true
             return
         }
-        if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(1).itemId && state ) {
+        if(mainFrag != null && binding.mainNav.selectedItemId == binding.mainNav.menu.getItem(0).itemId && state ) {
             Log.d("added", "added: $added    refreshMain")
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(binding.contentFrame.id, main)

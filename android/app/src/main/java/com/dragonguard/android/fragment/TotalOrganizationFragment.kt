@@ -15,7 +15,6 @@ import com.dragonguard.android.R
 import com.dragonguard.android.activity.ranking.MyOrganizationInternalActivity
 import com.dragonguard.android.adapters.RankingsAdapter
 import com.dragonguard.android.databinding.FragmentAllRankingsBinding
-import com.dragonguard.android.databinding.FragmentTotalOrganizationBinding
 import com.dragonguard.android.model.rankings.OrganizationRankingModel
 import com.dragonguard.android.model.rankings.TotalOrganizationModel
 import com.dragonguard.android.viewmodel.Viewmodel
@@ -26,7 +25,7 @@ import kotlinx.coroutines.launch
 
 
 class TotalOrganizationFragment(private val token: String) : Fragment() {
-    private lateinit var binding: FragmentTotalOrganizationBinding
+    private lateinit var binding: FragmentAllRankingsBinding
     private var viewmodel = Viewmodel()
     private var page = 0
     private var position = 0
@@ -39,7 +38,7 @@ class TotalOrganizationFragment(private val token: String) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentTotalOrganizationBinding.inflate(inflater, container, false)
+        binding = FragmentAllRankingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 

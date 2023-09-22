@@ -46,8 +46,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:fontFamily="@font/ibm_semibold"
+                    android:gravity="center"
                     android:text="인증번호를 입력해주세요!!"
                     android:textColor="@color/black"
                     android:textSize="25sp" />
@@ -56,21 +56,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.05" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:weightSum="5"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="5">
 
                     <TextView
+                        android:id="@+id/remain_time"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/ibm_semibold"
                         android:textColor="@color/black"
-                        android:textSize="25sp"
-                        android:id="@+id/remain_time"/>
+                        android:textSize="25sp" />
 
                 </LinearLayout>
 
@@ -78,9 +79,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:weightSum="5"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="5">
 
 
                     <EditText
@@ -89,8 +90,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:fontFamily="@font/ibm_semibold"
-                        android:textColor="@color/black"
                         android:text="@={authEamilViewmodel.onAuthEmailListener}"
+                        android:textColor="@color/black"
                         android:textSize="20sp" />
 
                 </LinearLayout>
@@ -99,23 +100,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:weightSum="5"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="5">
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/resend_code"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/round_pink"
-                        android:textSize="20sp"
                         android:fontFamily="@font/ibm_semibold"
+                        android:paddingHorizontal="10dp"
+                        android:text="이메일 재전송"
                         android:textColor="@color/black"
-                        android:text="이메일 재전송"/>
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
-                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -1,7 +1,9 @@
 package com.dragonguard.android.activity.basic
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.*
@@ -58,8 +60,13 @@ class LoginActivity : AppCompatActivity() {
         prefs = IdPreference(applicationContext)
         //쿠키 확인 코드
         this.onBackPressedDispatcher.addCallback(this, callback)
+        val defaultBrowser = getDefaultBrowserPackageName(this@LoginActivity)
+        if(defaultBrowser != null) {
+            CustomTabsClient.bindCustomTabsService(this@LoginActivity, defaultBrowser, connection)
+        } else {
+            CustomTabsClient.bindCustomTabsService(this@LoginActivity, "com.android.chrome", connection)
+        }
 
-        CustomTabsClient.bindCustomTabsService(this@LoginActivity, "com.android.chrome", connection)
 
         val intent = intent
         var token = intent.getStringExtra("token")
@@ -245,6 +252,7 @@ class LoginActivity : AppCompatActivity() {
                 val customTabsIntent = CustomTabsIntent.Builder()
                     .setSession(sessions!!)
                     .build()
+
                 customTabsIntent.launchUrl(this@LoginActivity, Uri.parse(oauthUrl))
             }
 //            val intentG = Intent(Intent.ACTION_VIEW, Uri.parse(oauthUrl))
@@ -275,6 +283,17 @@ class LoginActivity : AppCompatActivity() {
         override fun onServiceDisconnected(name: ComponentName?) {
             // 서비스 연결 해제 시 필요한 작업을 수행합니다.
         }
+    }
+
+    private fun getDefaultBrowserPackageName(context: Context): String? {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com"))
+        val resolveInfoList = context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+
+        for (resolveInfo in resolveInfoList) {
+            // 첫 번째 매치를 사용하거나 원하는 로직에 따라 패키지를 선택할 수 있습니다.
+            return resolveInfo.activityInfo.packageName
+        }
+        return null
     }
 
     inner class MyCustomTabsCallback : CustomTabsCallback() {

@@ -101,6 +101,8 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
 
     private fun initRecycler() {
         binding.eachRankings.setItemViewCacheSize(usersRanking.size)
+        binding.eachRankings.setHasFixedSize(true)
+        binding.eachRankings.isNestedScrollingEnabled = true
 //        Toast.makeText(applicationContext, "개수 : ${usersRanking.size}",Toast.LENGTH_SHORT).show()
         if(page == 0) {
             when( usersRanking.size) {
@@ -168,7 +170,7 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                         binding.firstFrame.setBackgroundResource(R.drawable.shadow_diamond)
                     }
                     else -> {
-                        binding.firstFrame.setBackgroundResource(R.drawable.shadow)
+                        binding.firstFrame.setBackgroundResource(R.drawable.shadow_unrank)
                     }
                 }
                 binding.firstId.text = model.github_id
@@ -205,7 +207,7 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                         binding.secondFrame.setBackgroundResource(R.drawable.shadow_diamond)
                     }
                     else -> {
-                        binding.secondFrame.setBackgroundResource(R.drawable.shadow)
+                        binding.secondFrame.setBackgroundResource(R.drawable.shadow_unrank)
                     }
                 }
                 binding.secondId.text = model.github_id
@@ -242,7 +244,7 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                         binding.thirdFrame.setBackgroundResource(R.drawable.shadow_diamond)
                     }
                     else -> {
-                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow)
+                        binding.thirdFrame.setBackgroundResource(R.drawable.shadow_unrank)
                     }
                 }
                 binding.thirdId.text = model.github_id
@@ -283,6 +285,8 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                 val lastVisibleItem = (layoutManager as LinearLayoutManager)
                     .findLastCompletelyVisibleItemPosition()
                 val itemTotalCount = recyclerView.adapter!!.itemCount - 1
+                Log.d("마지막 item", lastVisibleItem.toString())
+                Log.d("갯수", itemTotalCount.toString())
                 position = recyclerView.adapter!!.itemCount - 1
                 // 마지막으로 보여진 아이템 position 이
                 // 전체 아이템 개수보다 1개 모자란 경우, 데이터를 loadMore 한다

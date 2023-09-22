@@ -37,37 +37,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.5"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:weightSum="5">
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.25"/>
+                    android:layout_weight="0.25" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
                     android:fontFamily="@font/ibm_semibold"
-                    android:textSize="20sp"
-                    android:text="조직 이름"/>
+                    android:text="조직 이름"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.25"/>
+                    android:layout_weight="0.25" />
 
                 <com.dragonguard.android.custom.edittext.CustomEdittext
                     android:id="@+id/org_name_edit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingStart="10dp"
                     android:layout_weight="3"
                     android:background="@drawable/search_border"
                     android:fontFamily="@font/ibm_semibold"
                     android:imeOptions="actionSearch"
+                    android:paddingStart="10dp"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -77,27 +77,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.5"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:weightSum="5">
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.25"/>
+                    android:layout_weight="0.25" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
                     android:fontFamily="@font/ibm_semibold"
-                    android:textSize="20sp"
-                    android:text="조직 타입"/>
+                    android:text="조직 타입"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.25"/>
+                    android:layout_weight="0.25" />
 
                 <Spinner
                     android:id="@+id/org_type_spinner"
@@ -105,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:background="@drawable/round_pink"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
@@ -113,27 +113,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.5"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:weightSum="5">
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.25"/>
+                    android:layout_weight="0.25" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
                     android:fontFamily="@font/ibm_semibold"
-                    android:textSize="20sp"
-                    android:text="조직 이메일"/>
+                    android:text="조직 이메일"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.25"/>
+                    android:layout_weight="0.25" />
 
                 <com.dragonguard.android.custom.edittext.CustomEdittext
                     android:id="@+id/org_email_edit"
@@ -141,13 +141,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:background="@drawable/search_border"
-                    android:paddingStart="10dp"
                     android:fontFamily="@font/ibm_semibold"
                     android:hint="\@ 뒷부분만 작성해주세요"
                     android:imeOptions="actionSearch"
+                    android:importantForAutofill="no"
+                    android:paddingStart="10dp"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:importantForAutofill="no" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -163,10 +163,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/round_pink"
-                    android:textSize="20sp"
                     android:fontFamily="@font/ibm_semibold"
+                    android:paddingHorizontal="10dp"
+                    android:text="조직 등록하기"
                     android:textColor="@color/black"
-                    android:text="조직 등록하기"/>
+                    android:textSize="20sp" />
 
             </LinearLayout>
 

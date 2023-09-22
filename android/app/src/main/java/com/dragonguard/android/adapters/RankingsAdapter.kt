@@ -52,7 +52,7 @@ class RankingsAdapter(private val rankings: List<*>, private val context: Contex
                             binding.rankerContent.setBackgroundResource(R.drawable.shadow_diamond)
                         }
                         else -> {
-                            binding.rankerContent.setBackgroundResource(R.drawable.shadow)
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_unrank)
                         }
                     }
                     binding.rankingItem.setOnClickListener {
@@ -108,7 +108,7 @@ class RankingsAdapter(private val rankings: List<*>, private val context: Contex
                             binding.rankerContent.setBackgroundResource(R.drawable.shadow_diamond)
                         }
                         else -> {
-                            binding.rankerContent.setBackgroundResource(R.drawable.shadow)
+                            binding.rankerContent.setBackgroundResource(R.drawable.shadow_unrank)
                         }
                     }
                 }
