@@ -39,4 +39,5 @@ class UserSheetfragment (private val context: CompareUserFragment, private val f
         binding.secondFilterItems.layoutManager = LinearLayoutManager(requireContext())
         binding.secondFilterItems.adapter?.notifyDataSetChanged()
     }
+
 }

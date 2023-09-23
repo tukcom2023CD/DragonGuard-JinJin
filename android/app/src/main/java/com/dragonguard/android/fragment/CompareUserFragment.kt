@@ -41,6 +41,8 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
     private lateinit var binding : FragmentCompareUserBinding
     private var viewmodel = Viewmodel()
     private val token = token
+    lateinit var userGroup1: UserSheetfragment
+    lateinit var userGroup2: UserSheetfragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,12 +63,12 @@ class CompareUserFragment(repoName1: String, repoName2: String, token: String) :
     //activity 구성 이후 화면을 초기화하는 함수
     private fun updateUI() {
         binding.user1Frame.setOnClickListener {
-            val bottomSheetFragment = UserSheetfragment(this, contributors1, contributors2,1, repo1, repo2, binding)
-            bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
+            userGroup1 = UserSheetfragment(this, contributors1, contributors2,1, repo1, repo2, binding)
+            userGroup1.show(parentFragmentManager, userGroup1.tag)
         }
         binding.user2Frame.setOnClickListener {
-            val bottomSheetFragment = UserSheetfragment(this, contributors1, contributors2,2, repo1, repo2, binding)
-            bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
+            userGroup2 = UserSheetfragment(this, contributors1, contributors2,2, repo1, repo2, binding)
+            userGroup2.show(parentFragmentManager, userGroup2.tag)
         }
         binding.user1Profile.clipToOutline = true
         binding.user2Profile.clipToOutline = true

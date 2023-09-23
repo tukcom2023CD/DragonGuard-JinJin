@@ -41,6 +41,7 @@ class UserListAdapter(private val users: ArrayList<GitRepoMember>, private val u
                         if(userFragment.user1 != "null" && userFragment.user2 != "null" && userFragment.user1.isNotBlank() && userFragment.user2.isNotBlank()) {
                             userFragment.initGraph()
                         }
+                        userFragment.userGroup1.dismiss()
                     }
                     2 -> {
                         Glide.with(fragmentBinding.user2Profile).load(users[position].profile_url)
@@ -52,9 +53,11 @@ class UserListAdapter(private val users: ArrayList<GitRepoMember>, private val u
                         if(userFragment.user1 != "null" && userFragment.user2 != "null" && userFragment.user1.isNotBlank() && userFragment.user2.isNotBlank()) {
                             userFragment.initGraph()
                         }
+                        userFragment.userGroup2.dismiss()
                     }
                 }
             }
+
         }
 
     }

@@ -16,9 +16,8 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
-            android:layout_weight="0.3"
             android:background="#ffffff"
             android:gravity="start"
             app:layout_collapseMode="pin">
