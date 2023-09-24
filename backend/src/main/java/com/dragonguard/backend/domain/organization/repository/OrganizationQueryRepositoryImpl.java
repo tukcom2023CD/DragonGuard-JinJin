@@ -1,13 +1,11 @@
 package com.dragonguard.backend.domain.organization.repository;
 
 import com.dragonguard.backend.domain.member.entity.AuthStep;
-import com.dragonguard.backend.domain.member.entity.QMember;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.domain.organization.dto.response.RelatedRankWithMemberResponse;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
-import com.dragonguard.backend.domain.organization.entity.QOrganization;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +32,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     private static final Long FROM_THREE_UPPER_OFFSET = 3L;
     private static final int FIRST_RANK = 1;
     private static final int SECOND_RANK = 2;
+    private static final int RELATED_RANK_SIZE = 3;
+    private static final int LIST_INDEX_MINUS_UNIT = 1;
     private final JPAQueryFactory jpaQueryFactory;
     private final OrganizationQDtoFactory organizationQDtoFactory;
 
@@ -82,7 +82,6 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
 
     @Override
     public RelatedRankWithMemberResponse findRankingByMemberId(final UUID memberId, final String githubId) {
-        final QOrganization qOrganization = organizationQDtoFactory.qOrganization();
         return getRelatedRankWithMemberResponse(jpaQueryFactory
                 .select(member)
                 .from(member, organization)
@@ -92,9 +91,9 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                         JPAExpressions
                                 .select(member.sumOfTokens)
                                 .from(member)
-                                .leftJoin(member.organization, qOrganization)
+                                .leftJoin(member.organization, organization)
                                 .where(member.id.eq(memberId)
-                                        .and(qOrganization.id.eq(member.organization.id))))
+                                        .and(organization.id.eq(member.organization.id))))
                         .and(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED)
                                 .and(member.authStep.eq(AuthStep.ALL))))
                 .distinct()
@@ -102,22 +101,32 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
     }
 
     private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(final int rank, final String githubId) {
+        final Long organizationId = getOrganizationIdByGithubId(githubId);
+
         final List<String> relatedRank = jpaQueryFactory
                 .select(member.githubId, member.id, member.sumOfTokens)
-                .from(member, organization)
+                .from(member)
                 .leftJoin(member.organization, organization)
                 .on(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED))
-                .where(member.authStep.eq(AuthStep.ALL))
+                .where(member.authStep.eq(AuthStep.ALL).and(member.organization.id.eq(organizationId)))
                 .orderBy(member.sumOfTokens.desc())
                 .distinct()
                 .offset(getOffset(rank))
-                .limit(3)
+                .limit(RELATED_RANK_SIZE)
                 .fetch().stream().map(t -> t.get(member.githubId)).collect(Collectors.toList());
         return new RelatedRankWithMemberResponse(rank, isLast(githubId, relatedRank), relatedRank);
     }
 
+    private Long getOrganizationIdByGithubId(final String githubId) {
+        return jpaQueryFactory
+                .select(member.organization.id)
+                .from(member)
+                .where(member.githubId.eq(githubId))
+                .fetchFirst();
+    }
+
     private boolean isLast(final String githubId, final List<String> relatedRank) {
-        return relatedRank.isEmpty() || relatedRank.get(relatedRank.size() - 1).equals(githubId);
+        return relatedRank.isEmpty() || relatedRank.get(relatedRank.size() - LIST_INDEX_MINUS_UNIT).equals(githubId);
     }
 
     @Override

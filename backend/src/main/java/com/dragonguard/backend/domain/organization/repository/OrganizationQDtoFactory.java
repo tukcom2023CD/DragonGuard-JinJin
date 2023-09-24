@@ -26,9 +26,4 @@ public class OrganizationQDtoFactory {
                 organization.emailEndpoint,
                 organization.sumOfMemberTokens);
     }
-
-    @Bean
-    public QOrganization qOrganization() {
-        return new QOrganization(qOrganization);
-    }
 }
