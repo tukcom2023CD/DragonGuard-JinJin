@@ -103,7 +103,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
 
     private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(final int rank, final String githubId) {
         final List<String> relatedRank = jpaQueryFactory
-                .select(member.githubId)
+                .select(member.githubId, member.id, member.sumOfTokens)
                 .from(member, organization)
                 .leftJoin(member.organization, organization)
                 .on(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED))
@@ -112,7 +112,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .distinct()
                 .offset(getOffset(rank))
                 .limit(3)
-                .fetch();
+                .fetch().stream().map(t -> t.get(member.githubId)).collect(Collectors.toList());
         return new RelatedRankWithMemberResponse(rank, isLast(githubId, relatedRank), relatedRank);
     }
 
