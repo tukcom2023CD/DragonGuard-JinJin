@@ -89,7 +89,8 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                         JPAExpressions
                                 .select(member.sumOfTokens).from(member).where(member.id.eq(memberId)))
                         .and(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED)
-                                .and(member.authStep.eq(AuthStep.ALL))))
+                                .and(member.authStep.eq(AuthStep.ALL)))
+                        .and(organization.id.eq(member.organization.id)))
                 .distinct()
                 .fetch().size() + 1, githubId);
     }
