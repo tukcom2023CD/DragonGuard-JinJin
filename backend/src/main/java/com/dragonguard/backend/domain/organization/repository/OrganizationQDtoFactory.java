@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.organization.repository;
 
 import com.dragonguard.backend.domain.organization.dto.response.QOrganizationResponse;
+import com.dragonguard.backend.domain.organization.entity.QOrganization;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,8 @@ import static com.dragonguard.backend.domain.organization.entity.QOrganization.o
 
 @Component
 public class OrganizationQDtoFactory {
+    private static final String qOrganization = "qOrganization";
+
     @Bean
     public QOrganizationResponse qOrganizationResponse() {
         return new QOrganizationResponse(
@@ -22,5 +25,10 @@ public class OrganizationQDtoFactory {
                 organization.organizationType,
                 organization.emailEndpoint,
                 organization.sumOfMemberTokens);
+    }
+
+    @Bean
+    public QOrganization qOrganization() {
+        return new QOrganization(qOrganization);
     }
 }

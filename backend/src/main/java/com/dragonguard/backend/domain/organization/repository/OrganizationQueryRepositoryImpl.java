@@ -1,11 +1,13 @@
 package com.dragonguard.backend.domain.organization.repository;
 
 import com.dragonguard.backend.domain.member.entity.AuthStep;
+import com.dragonguard.backend.domain.member.entity.QMember;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.domain.organization.dto.response.RelatedRankWithMemberResponse;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
+import com.dragonguard.backend.domain.organization.entity.QOrganization;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -80,6 +82,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
 
     @Override
     public RelatedRankWithMemberResponse findRankingByMemberId(final UUID memberId, final String githubId) {
+        final QOrganization qOrganization = organizationQDtoFactory.qOrganization();
         return getRelatedRankWithMemberResponse(jpaQueryFactory
                 .select(member)
                 .from(member, organization)
@@ -87,17 +90,20 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .on(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED))
                 .where(member.sumOfTokens.gt(
                         JPAExpressions
-                                .select(member.sumOfTokens).from(member).where(member.id.eq(memberId)))
+                                .select(member.sumOfTokens)
+                                .from(member)
+                                .leftJoin(member.organization, qOrganization)
+                                .where(member.id.eq(memberId)
+                                        .and(qOrganization.id.eq(member.organization.id))))
                         .and(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED)
-                                .and(member.authStep.eq(AuthStep.ALL)))
-                        .and(organization.id.eq(member.organization.id)))
+                                .and(member.authStep.eq(AuthStep.ALL))))
                 .distinct()
                 .fetch().size() + 1, githubId);
     }
 
     private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(final int rank, final String githubId) {
         final List<String> relatedRank = jpaQueryFactory
-                .select(member.githubId, member.id, member.sumOfTokens)
+                .select(member.githubId)
                 .from(member, organization)
                 .leftJoin(member.organization, organization)
                 .on(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED))
@@ -106,7 +112,7 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                 .distinct()
                 .offset(getOffset(rank))
                 .limit(3)
-                .fetch().stream().map(t -> t.get(member.githubId)).collect(Collectors.toList());
+                .fetch();
         return new RelatedRankWithMemberResponse(rank, isLast(githubId, relatedRank), relatedRank);
     }
 
