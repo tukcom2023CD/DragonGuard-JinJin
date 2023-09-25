@@ -82,27 +82,27 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
 
     @Override
     public RelatedRankWithMemberResponse findRankingByMemberId(final UUID memberId, final String githubId) {
+        final Long organizationId = getOrganizationIdByGithubId(githubId);
+
         return getRelatedRankWithMemberResponse(jpaQueryFactory
                 .select(member)
                 .from(member, organization)
                 .leftJoin(member.organization, organization)
-                .on(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED))
+                .on(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED).and(organization.id.eq(organizationId)))
                 .where(member.sumOfTokens.gt(
                         JPAExpressions
                                 .select(member.sumOfTokens)
                                 .from(member)
                                 .leftJoin(member.organization, organization)
                                 .where(member.id.eq(memberId)
-                                        .and(organization.id.eq(member.organization.id))))
+                                        .and(organization.id.eq(organizationId))))
                         .and(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED)
                                 .and(member.authStep.eq(AuthStep.ALL))))
                 .distinct()
-                .fetch().size() + 1, githubId);
+                .fetch().size() + 1, githubId, organizationId);
     }
 
-    private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(final int rank, final String githubId) {
-        final Long organizationId = getOrganizationIdByGithubId(githubId);
-
+    private RelatedRankWithMemberResponse getRelatedRankWithMemberResponse(final int rank, final String githubId, final Long organizationId) {
         final List<String> relatedRank = jpaQueryFactory
                 .select(member.githubId, member.id, member.sumOfTokens)
                 .from(member)
