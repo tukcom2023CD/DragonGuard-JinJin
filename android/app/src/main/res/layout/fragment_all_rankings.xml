@@ -25,7 +25,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:weightSum="5"
                 tools:context=".fragment.AllRankingsFragment">
 
                 <LinearLayout
@@ -199,7 +198,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/each_rankings"
                     android:layout_width="match_parent"
-                    android:layout_height="450dp"
+                    android:layout_height="600dp"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
                     tools:listitem="@layout/ranking_list" />

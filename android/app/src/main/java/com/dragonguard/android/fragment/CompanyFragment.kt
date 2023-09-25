@@ -130,7 +130,9 @@ class CompanyFragment(private val token: String): Fragment() {
                     totalOrgRankings.removeFirst()
 
                     rankingsAdapter = RankingsAdapter(totalOrgRankings, requireActivity(), token)
-                    binding.eachRankings.adapter = rankingsAdapter
+                    val layoutmanager = LinearLayoutManager(requireContext())
+                    layoutmanager.initialPrefetchItemCount = 10
+                    binding.eachRankings.layoutManager = layoutmanager
                     binding.eachRankings.layoutManager = LinearLayoutManager(requireContext())
 //            totalUserRankingAdapter.notifyDataSetChanged()
                     binding.eachRankings.visibility = View.VISIBLE

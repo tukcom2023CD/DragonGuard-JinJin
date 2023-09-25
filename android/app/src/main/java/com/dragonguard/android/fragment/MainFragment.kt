@@ -203,14 +203,40 @@ class MainFragment(
                 }
                 else -> {
                     when (info.member_github_ids?.size) {
-                        2 -> {
-                            binding.user1Githubid.text = info.member_github_ids!![0]
-                            binding.user1Ranking.text = info.organization_rank!!.minus(1).toString()
-
+                        0 -> {
+                            binding.user2Githubid.text = info.github_id
+                            binding.user2Githubid.setTextAppearance(R.style.mainRanking)
+                            binding.user2Ranking.text = info.organization_rank.toString()
+                            binding.user2Ranking.setTextAppearance(R.style.mainRanking)
+                        }
+                        1 -> {
                             binding.user2Githubid.text = info.member_github_ids!![1]
                             binding.user2Githubid.setTextAppearance(R.style.mainRanking)
                             binding.user2Ranking.text = info.organization_rank.toString()
                             binding.user2Ranking.setTextAppearance(R.style.mainRanking)
+                        }
+                        2 -> {
+                            when (info.is_last) {
+                                true -> {
+                                    binding.user1Githubid.text = info.member_github_ids!![0]
+                                    binding.user1Ranking.text = info.organization_rank!!.minus(1).toString()
+
+                                    binding.user2Githubid.text = info.member_github_ids!![1]
+                                    binding.user2Githubid.setTextAppearance(R.style.mainRanking)
+                                    binding.user2Ranking.text = info.organization_rank.toString()
+                                    binding.user2Ranking.setTextAppearance(R.style.mainRanking)
+                                }
+                                false -> {
+                                    binding.user2Githubid.text = info.member_github_ids!![1]
+                                    binding.user2Ranking.text = info.organization_rank!!.toString()
+                                    binding.user2Githubid.setTextAppearance(R.style.mainRanking)
+                                    binding.user2Ranking.setTextAppearance(R.style.mainRanking)
+
+                                    binding.user3Githubid.text = info.member_github_ids!![1]
+                                    binding.user3Ranking.text = info.organization_rank!!.plus(1).toString()
+
+                                }
+                            }
                         }
                         3 -> {
                             when (info.is_last) {

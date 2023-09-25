@@ -129,7 +129,9 @@ class AllRankingsFragment(private val token: String, private val rankingType: St
                     if(this@AllRankingsFragment.isAdded && !this@AllRankingsFragment.isDetached && this@AllRankingsFragment.isVisible && !this@AllRankingsFragment.isRemoving) {
                         rankingsAdapter = RankingsAdapter(usersRanking, requireActivity(), token)
                         binding.eachRankings.adapter = rankingsAdapter
-                        binding.eachRankings.layoutManager = LinearLayoutManager(requireContext())
+                        val layoutmanager = LinearLayoutManager(requireContext())
+                        layoutmanager.initialPrefetchItemCount = 4
+                        binding.eachRankings.layoutManager = layoutmanager
 //            totalUserRankingAdapter.notifyDataSetChanged()
                         binding.eachRankings.visibility = View.VISIBLE
                     }
