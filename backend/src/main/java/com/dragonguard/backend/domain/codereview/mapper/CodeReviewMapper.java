@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.codereview.mapper;
 
 import com.dragonguard.backend.domain.codereview.entity.CodeReview;
-import com.dragonguard.backend.global.mapper.ContributionMapper;
+import com.dragonguard.backend.global.template.mapper.ContributionMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants.ComponentModel;
 

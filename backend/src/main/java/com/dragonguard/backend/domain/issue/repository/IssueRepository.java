@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.issue.repository;
 
 import com.dragonguard.backend.domain.issue.entity.Issue;
-import com.dragonguard.backend.global.repository.ContributionRepository;
+import com.dragonguard.backend.global.template.repository.ContributionRepository;
 
 /**
  * @author 김승진

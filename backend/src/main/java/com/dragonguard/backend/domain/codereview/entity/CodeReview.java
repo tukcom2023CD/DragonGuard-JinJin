@@ -2,10 +2,9 @@ package com.dragonguard.backend.domain.codereview.entity;
 
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.audit.AuditListener;
-import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
-import com.dragonguard.backend.global.entity.Contribution;
+import com.dragonguard.backend.global.template.entity.Contribution;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +21,10 @@ import java.util.Optional;
 @SoftDelete
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CodeReview implements Auditable, Contribution {
+public class CodeReview implements Contribution {
+
+    private static final Long UPDATE_TIME_UNIT = 20L;
+
     @Id
     @GeneratedValue
     private Long id;

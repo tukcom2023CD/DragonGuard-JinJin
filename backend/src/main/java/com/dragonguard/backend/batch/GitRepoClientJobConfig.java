@@ -3,9 +3,8 @@ package com.dragonguard.backend.batch;
 import com.dragonguard.backend.batch.dto.GitRepoBatchRequest;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
-import com.dragonguard.backend.domain.gitrepo.repository.JpaGitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
-import com.dragonguard.backend.global.client.GithubClient;
+import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
@@ -13,18 +12,14 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.*;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.data.RepositoryItemReader;
-import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
 import org.springframework.batch.item.function.FunctionItemProcessor;
 import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 

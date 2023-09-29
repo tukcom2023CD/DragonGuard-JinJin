@@ -12,7 +12,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
-import com.dragonguard.backend.global.client.GithubClient;
+import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchRequest, Mono<List<GitRepoMember>>> {
     private static final String PATH_FORMAT = "repos/%s/stats/contributors";
+    private static final int MAX_ATTEMPTS = 10;
+    private static final int DURATION_OF_MILLIS = 1500;
     private final WebClient webClient;
     private final GitRepoMemberMapper gitRepoMemberMapper;
     private final MemberMapper memberMapper;
@@ -53,11 +55,11 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()
-                .onStatus(hs -> hs.equals(HttpStatus.NO_CONTENT), response -> Mono.error(WebClientException::new))
+                .onStatus(hs -> hs.equals(HttpStatus.ACCEPTED), response -> Mono.error(WebClientException::new))
                 .bodyToFlux(GitRepoMemberClientResponse.class)
                 .collectList()
                 .flatMap(this::validateResponse)
-                .retryWhen(Retry.fixedDelay(10, Duration.ofMillis(1500))
+                .retryWhen(Retry.fixedDelay(MAX_ATTEMPTS, Duration.ofMillis(DURATION_OF_MILLIS))
                                 .filter(WebClientException.class::isInstance)
                                 .onRetryExhaustedThrow(((retryBackoffSpec, retrySignal) -> new WebClientRetryException())))
                 .onErrorReturn(WebClientRetryException.class, List.of())
@@ -68,24 +70,28 @@ public class GitRepoMemberBatchClient implements GithubClient<GitRepoBatchReques
         final Set<GitRepoMember> gitRepoMembers = request.getGitRepo().getGitRepoMembers();
         return result.stream()
                 .map(r -> getGitRepoMember(request, r, gitRepoMembers))
-                .filter(Objects::nonNull).collect(Collectors.toList());
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
-    private GitRepoMember getGitRepoMember(final GitRepoBatchRequest request, final GitRepoMemberClientResponse r, final Set<GitRepoMember> gitRepoMembers) {
+    private Optional<GitRepoMember> getGitRepoMember(final GitRepoBatchRequest request, final GitRepoMemberClientResponse r, final Set<GitRepoMember> gitRepoMembers) {
         if (Objects.isNull(r.getAuthor()) || !StringUtils.hasText(r.getAuthor().getLogin())) {
-            return null;
+            return Optional.empty();
         }
         final List<Week> weeks = r.getWeeks();
 
         final GitRepoMember newGitRepoMember = getNewGitRepoMember(request, r, gitRepoMembers);
 
-        if (Objects.isNull(newGitRepoMember)) return null;
+        if (Objects.isNull(newGitRepoMember)) {
+            return Optional.empty();
+        }
 
         newGitRepoMember.updateGitRepoContribution(r.getTotal(),
                 weeks.stream().mapToInt(Week::getA).sum(),
                 weeks.stream().mapToInt(Week::getD).sum());
 
-        return newGitRepoMember;
+        return Optional.of(newGitRepoMember);
     }
 
     private GitRepoMember getNewGitRepoMember(final GitRepoBatchRequest request, final GitRepoMemberClientResponse r, final Set<GitRepoMember> gitRepoMembers) {

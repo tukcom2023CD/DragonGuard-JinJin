@@ -27,6 +27,7 @@ public class BlockchainConfig {
     private static final String TOKEN_NAME = "Gitter";
     private static final String TOKEN_SYMBOL = "GTR";
     private static final Long TOKEN_AMOUNT = 10000000000000L;
+    private static final Integer DEFAULT_GAS_VALUE = 4000000;
 
     @Bean
     public AbstractKeyring keyring() {
@@ -60,7 +61,7 @@ public class BlockchainConfig {
         final AbstractKeyring keyring = keyring();
         final SendOptions options = new SendOptions();
         options.setFrom(keyring.getAddress());
-        options.setGas(BigInteger.valueOf(4000000));
+        options.setGas(BigInteger.valueOf(DEFAULT_GAS_VALUE));
         options.setFeeDelegation(true);
         options.setFeePayer(keyring.getAddress());
         return options;

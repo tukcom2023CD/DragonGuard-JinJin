@@ -41,14 +41,14 @@ public class KlaytnFaucetClient {
     }
 
     public WebClient webClient() throws SSLException {
-        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(blockchainProperties.getKlaytnApiUrl());
+        final DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(blockchainProperties.getKlaytnApiUrl());
         factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
 
-        SslContext sslContext = SslContextBuilder.forClient()
+        final SslContext sslContext = SslContextBuilder.forClient()
                 .trustManager(InsecureTrustManagerFactory.INSTANCE)
                 .build();
 
-        HttpClient httpClient = HttpClient.create()
+        final HttpClient httpClient = HttpClient.create()
                 .secure(t -> t.sslContext(sslContext));
 
         return WebClient.builder()

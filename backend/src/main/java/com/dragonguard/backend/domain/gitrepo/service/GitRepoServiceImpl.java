@@ -15,12 +15,11 @@ import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.member.service.AuthService;
-import com.dragonguard.backend.global.client.GithubClient;
+import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.service.TransactionService;
+import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 
 import java.time.LocalDate;
 import java.util.*;

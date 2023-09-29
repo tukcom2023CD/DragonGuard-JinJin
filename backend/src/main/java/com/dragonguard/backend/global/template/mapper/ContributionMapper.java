@@ -1,4 +1,4 @@
-package com.dragonguard.backend.global.mapper;
+package com.dragonguard.backend.global.template.mapper;
 
 import com.dragonguard.backend.domain.member.entity.Member;
 

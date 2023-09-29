@@ -4,7 +4,7 @@ import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationSer
 import com.dragonguard.backend.domain.gitrepo.service.GitRepoMemberFacade;
 import com.dragonguard.backend.domain.member.dto.client.MemberOrganizationResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.service.TransactionService;
+import com.dragonguard.backend.global.template.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Set;

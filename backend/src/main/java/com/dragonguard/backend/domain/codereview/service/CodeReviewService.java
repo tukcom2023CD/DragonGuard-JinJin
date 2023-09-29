@@ -3,11 +3,11 @@ package com.dragonguard.backend.domain.codereview.service;
 import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaRequest;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.codereview.entity.CodeReview;
-import com.dragonguard.backend.global.kafka.KafkaProducer;
-import com.dragonguard.backend.global.mapper.ContributionMapper;
-import com.dragonguard.backend.global.repository.ContributionRepository;
-import com.dragonguard.backend.global.service.ContributionService;
-import com.dragonguard.backend.global.service.TransactionService;
+import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.mapper.ContributionMapper;
+import com.dragonguard.backend.global.template.repository.ContributionRepository;
+import com.dragonguard.backend.global.template.service.ContributionService;
+import com.dragonguard.backend.global.template.service.TransactionService;
 
 /**
  * @author 김승진

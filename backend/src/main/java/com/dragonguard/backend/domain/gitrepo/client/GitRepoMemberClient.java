@@ -3,11 +3,10 @@ package com.dragonguard.backend.domain.gitrepo.client;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
-import com.dragonguard.backend.global.client.GithubClient;
+import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -44,7 +43,7 @@ public class GitRepoMemberClient implements GithubClient<GitRepoInfoRequest, Lis
                 .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .retrieve()
-                .onStatus(HttpStatus.NO_CONTENT::equals, response -> Mono.error(WebClientException::new))
+                .onStatus(HttpStatus.ACCEPTED::equals, response -> Mono.error(WebClientException::new))
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(ClientBadRequestException::new))
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.empty())
                 .bodyToFlux(GitRepoMemberClientResponse.class)

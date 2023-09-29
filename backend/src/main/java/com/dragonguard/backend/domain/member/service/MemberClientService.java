@@ -2,8 +2,8 @@ package com.dragonguard.backend.domain.member.service;
 
 import com.dragonguard.backend.domain.member.dto.client.*;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.client.GithubClient;
-import com.dragonguard.backend.global.service.TransactionService;
+import com.dragonguard.backend.global.template.client.GithubClient;
+import com.dragonguard.backend.global.template.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;

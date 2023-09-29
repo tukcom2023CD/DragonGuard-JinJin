@@ -7,7 +7,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
-import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.template.service.EntityLoader;
 
 import java.util.List;
 import java.util.Optional;

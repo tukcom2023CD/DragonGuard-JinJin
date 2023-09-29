@@ -8,7 +8,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.TransactionService;
+import com.dragonguard.backend.global.template.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;

@@ -7,7 +7,7 @@ import com.dragonguard.backend.domain.search.dto.kafka.SearchKafkaResponse;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.entity.SearchType;
 import com.dragonguard.backend.domain.search.service.SearchResultFacade;
-import com.dragonguard.backend.global.kafka.KafkaConsumer;
+import com.dragonguard.backend.global.template.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class KafkaResultScrapeConsumer implements KafkaConsumer<ResultKafkaRespo
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.result", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(String message) {
+    public void consume(final String message) {
         ResultKafkaResponse resultResponse = readValue(message);
 
         List<ScrapeResult> result = resultResponse.getResult().stream()
@@ -51,7 +51,7 @@ public class KafkaResultScrapeConsumer implements KafkaConsumer<ResultKafkaRespo
 
     @Override
     @SneakyThrows(JsonProcessingException.class)
-    public ResultKafkaResponse readValue(String message) {
+    public ResultKafkaResponse readValue(final String message) {
         return objectMapper.readValue(message, ResultKafkaResponse.class);
     }
 }

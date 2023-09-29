@@ -2,10 +2,9 @@ package com.dragonguard.backend.domain.pullrequest.entity;
 
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.audit.AuditListener;
-import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
-import com.dragonguard.backend.global.entity.Contribution;
+import com.dragonguard.backend.global.template.entity.Contribution;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +21,9 @@ import java.util.Optional;
 @SoftDelete
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PullRequest implements Auditable, Contribution {
+public class PullRequest implements Contribution {
+
+    private static final Long UPDATE_TIME_UNIT = 20L;
 
     @Id
     @GeneratedValue
@@ -67,6 +68,6 @@ public class PullRequest implements Auditable, Contribution {
     }
 
     private boolean updatedCurrently() {
-        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(20L));
+        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(UPDATE_TIME_UNIT));
     }
 }

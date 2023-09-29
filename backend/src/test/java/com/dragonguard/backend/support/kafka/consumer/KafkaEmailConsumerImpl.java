@@ -1,7 +1,7 @@
 package com.dragonguard.backend.support.kafka.consumer;
 
 import com.dragonguard.backend.domain.email.dto.kafka.KafkaEmail;
-import com.dragonguard.backend.global.kafka.KafkaConsumer;
+import com.dragonguard.backend.global.template.kafka.KafkaConsumer;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 

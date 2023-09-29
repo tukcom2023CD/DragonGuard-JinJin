@@ -15,7 +15,6 @@ import static com.dragonguard.backend.domain.organization.entity.QOrganization.o
 
 @Component
 public class OrganizationQDtoFactory {
-    private static final String qOrganization = "qOrganization";
 
     @Bean
     public QOrganizationResponse qOrganizationResponse() {

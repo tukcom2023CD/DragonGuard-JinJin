@@ -4,7 +4,7 @@ import com.dragonguard.backend.domain.search.dto.client.SearchRepoResponse;
 import com.dragonguard.backend.domain.search.dto.client.SearchUserResponse;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.entity.Search;
-import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.template.service.EntityLoader;
 
 public interface SearchService extends EntityLoader<Search, Long> {
     Search findOrSaveSearch(final SearchRequest searchRequest);

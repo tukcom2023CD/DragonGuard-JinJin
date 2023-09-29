@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.member.repository;
 
-import com.dragonguard.backend.global.converter.OrderConverter;
+import com.dragonguard.backend.global.template.converter.OrderConverter;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import org.springframework.data.domain.Sort;
@@ -31,7 +31,7 @@ public class MemberOrderConverter implements OrderConverter {
     }
 
     @Override
-    public OrderSpecifier<?>[] convert(Sort sort) {
+    public OrderSpecifier<?>[] convert(final Sort sort) {
         return sort.stream()
                 .map(
                         s -> {

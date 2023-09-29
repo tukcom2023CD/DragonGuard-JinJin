@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.search.client;
 
 import com.dragonguard.backend.domain.search.dto.client.SearchUserResponse;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
-import com.dragonguard.backend.global.client.GithubClient;
+import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

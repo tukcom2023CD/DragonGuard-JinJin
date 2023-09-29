@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.gitrepo.messagequeue;
 
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.domain.gitrepo.service.GitRepoMemberFacade;
-import com.dragonguard.backend.global.kafka.KafkaConsumer;
+import com.dragonguard.backend.global.template.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

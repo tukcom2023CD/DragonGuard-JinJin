@@ -7,7 +7,7 @@ import com.dragonguard.backend.domain.organization.dto.response.RelatedRankWithM
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.global.dto.IdResponse;
-import com.dragonguard.backend.global.service.EntityLoader;
+import com.dragonguard.backend.global.template.service.EntityLoader;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

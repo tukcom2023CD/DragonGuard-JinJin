@@ -7,10 +7,9 @@ import com.dragonguard.backend.domain.search.entity.Filter;
 import com.dragonguard.backend.domain.search.entity.Search;
 import com.dragonguard.backend.domain.search.mapper.SearchMapper;
 import com.dragonguard.backend.domain.search.repository.SearchRepository;
-import com.dragonguard.backend.global.client.GithubClient;
+import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
+import com.dragonguard.backend.global.template.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 

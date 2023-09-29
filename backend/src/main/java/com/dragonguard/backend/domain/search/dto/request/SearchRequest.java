@@ -33,13 +33,13 @@ public class SearchRequest {
 
     private List<String> filters;
 
-    public SearchRequest(String name, SearchType type, Integer page) {
+    public SearchRequest(final String name, final SearchType type, final Integer page) {
         this.name = name;
         this.type = type;
         this.page = page;
     }
 
-    public SearchRequest(String name, SearchType type, Integer page, List<String> filters) {
+    public SearchRequest(final String name, final SearchType type, final Integer page, final List<String> filters) {
         this.name = name;
         this.type = type;
         this.page = page;

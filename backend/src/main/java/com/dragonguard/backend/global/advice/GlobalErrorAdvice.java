@@ -46,11 +46,6 @@ public class GlobalErrorAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<ErrorResponse> nullPointerException(final NullPointerException e) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ErrorResponse(e.getMessage()));
-    }
-
     @ExceptionHandler(WebClientException.class)
     public ResponseEntity<Void> webClientException(final WebClientException e) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

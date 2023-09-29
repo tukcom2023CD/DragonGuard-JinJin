@@ -30,7 +30,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     private final MemberQDtoFactory qDtoFactory;
 
     @Override
-    public List<MemberRankResponse> findRanking(Pageable pageable) {
+    public List<MemberRankResponse> findRanking(final Pageable pageable) {
         return jpaQueryFactory
                 .select(qDtoFactory.qMemberRankResponse())
                 .from(member)
@@ -42,7 +42,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     }
 
     @Override
-    public Integer findRankingById(UUID id) {
+    public Integer findRankingById(final UUID id) {
         return jpaQueryFactory
                 .selectFrom(member)
                 .where(member.walletAddress.isNotNull().and(member.sumOfTokens.gt(
@@ -52,7 +52,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     }
 
     @Override
-    public List<MemberRankResponse> findRankingByOrganization(Long organizationId, Pageable pageable) {
+    public List<MemberRankResponse> findRankingByOrganization(final Long organizationId, final Pageable pageable) {
         return jpaQueryFactory
                 .select(qDtoFactory.qMemberRankResponse())
                 .from(member)
@@ -64,7 +64,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     }
 
     @Override
-    public Optional<Member> findByGithubId(String githubId) {
+    public Optional<Member> findByGithubId(final String githubId) {
         return Optional.ofNullable(jpaQueryFactory
                 .selectFrom(member)
                 .where(member.githubId.eq(githubId))
@@ -72,7 +72,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     }
 
     @Override
-    public String findRefreshTokenById(UUID id) {
+    public String findRefreshTokenById(final UUID id) {
         return jpaQueryFactory
                 .select(member.refreshToken)
                 .from(member)
@@ -81,7 +81,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     }
 
     @Override
-    public boolean existsByGithubId(String githubId) {
+    public boolean existsByGithubId(final String githubId) {
         return jpaQueryFactory
                 .selectFrom(member)
                 .where(member.githubId.eq(githubId))

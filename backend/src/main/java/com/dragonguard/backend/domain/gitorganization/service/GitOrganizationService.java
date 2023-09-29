@@ -6,8 +6,8 @@ import com.dragonguard.backend.domain.gitorganization.repository.GitOrganization
 import com.dragonguard.backend.domain.member.dto.client.MemberOrganizationResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
+import com.dragonguard.backend.global.template.service.EntityLoader;
+import com.dragonguard.backend.global.template.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

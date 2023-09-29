@@ -8,10 +8,9 @@ import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.service.EntityLoader;
-import com.dragonguard.backend.global.service.TransactionService;
+import com.dragonguard.backend.global.template.service.EntityLoader;
+import com.dragonguard.backend.global.template.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;

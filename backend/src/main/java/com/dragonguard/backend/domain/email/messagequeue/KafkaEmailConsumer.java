@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.email.messagequeue;
 
 import com.dragonguard.backend.domain.email.dto.kafka.KafkaEmail;
 import com.dragonguard.backend.domain.email.exception.EmailException;
-import com.dragonguard.backend.global.kafka.KafkaConsumer;
+import com.dragonguard.backend.global.template.kafka.KafkaConsumer;
 import com.dragonguard.backend.utils.EmailSender;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

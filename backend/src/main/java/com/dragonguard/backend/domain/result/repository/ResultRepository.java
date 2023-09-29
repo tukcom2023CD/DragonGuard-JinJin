@@ -11,8 +11,8 @@ import java.util.Optional;
  */
 
 public interface ResultRepository {
-    List<Result> findAllBySearchId(Long searchId);
-    boolean existsByNameAndSearchId(String name, Long searchId);
-    Result save(Result result);
-    Optional<Result> findById(Long id);
+    List<Result> findAllBySearchId(final Long searchId);
+    boolean existsByNameAndSearchId(final String name, final Long searchId);
+    Result save(final Result result);
+    Optional<Result> findById(final Long id);
 }
