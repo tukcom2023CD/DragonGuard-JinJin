@@ -23,8 +23,6 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Issue implements Contribution {
 
-    private static final Long UPDATE_TIME_UNIT = 20L;
-
     @Id
     @GeneratedValue
     private Long id;
@@ -64,10 +62,6 @@ public class Issue implements Contribution {
 
     @Override
     public boolean isNotUpdatable(final Integer amount) {
-        return updatedCurrently() || this.amount.intValue() == amount.intValue();
-    }
-
-    private boolean updatedCurrently() {
-        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(UPDATE_TIME_UNIT));
+        return this.amount.intValue() == amount.intValue();
     }
 }

@@ -23,8 +23,6 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CodeReview implements Contribution {
 
-    private static final Long UPDATE_TIME_UNIT = 20L;
-
     @Id
     @GeneratedValue
     private Long id;
@@ -57,10 +55,6 @@ public class CodeReview implements Contribution {
         this.member.addCodeReview(this);
     }
 
-    public void updateCodeReviewNum(final Integer amount) {
-        this.amount = amount;
-    }
-
     @Override
     public void updateContributionNum(final Integer amount) {
         this.amount = amount;
@@ -68,10 +62,6 @@ public class CodeReview implements Contribution {
 
     @Override
     public boolean isNotUpdatable(final Integer amount) {
-        return updatedCurrently() || this.amount.intValue() == amount.intValue();
-    }
-
-    private boolean updatedCurrently() {
-        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(UPDATE_TIME_UNIT));
+        return this.amount.intValue() == amount.intValue();
     }
 }

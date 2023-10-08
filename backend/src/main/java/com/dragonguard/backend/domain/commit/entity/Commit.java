@@ -8,8 +8,6 @@ import com.dragonguard.backend.global.template.entity.Contribution;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * @author 김승진
@@ -22,8 +20,6 @@ import java.util.Optional;
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Commit implements Contribution {
-
-    private static final Long UPDATE_TIME_UNIT = 20L;
 
     @Id
     @GeneratedValue
@@ -64,10 +60,6 @@ public class Commit implements Contribution {
 
     @Override
     public boolean isNotUpdatable(final Integer amount) {
-        return updatedCurrently() || this.amount.intValue() == amount.intValue();
-    }
-
-    public boolean updatedCurrently() {
-        return Optional.ofNullable(this.baseTime.getUpdatedAt()).orElseGet(() -> this.baseTime.getCreatedAt()).isAfter(LocalDateTime.now().minusSeconds(UPDATE_TIME_UNIT));
+        return this.amount.intValue() == amount.intValue();
     }
 }

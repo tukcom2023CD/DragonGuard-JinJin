@@ -69,7 +69,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public boolean isBlockchainUpdatable(final Member member) {
-        return !member.getCommit().updatedCurrently() || member.getBlockchains().stream()
+        return member.getBlockchains().stream()
                 .map(Blockchain::getHistories).flatMap(List::stream).allMatch(History::isUpdatable);
     }
 
