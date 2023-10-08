@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +26,10 @@ public class KafkaSparkLineConsumer implements KafkaConsumer<SparkLineKafka> {
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.spark-line", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(final String message) {
+    public void consume(final String message, final Acknowledgment acknowledgment) {
         final SparkLineKafka sparkLine = readValue(message);
         gitRepoServiceImpl.updateSparkLine(sparkLine.getId(), sparkLine.getGithubToken());
+        acknowledgment.acknowledge();
     }
 
     @Override

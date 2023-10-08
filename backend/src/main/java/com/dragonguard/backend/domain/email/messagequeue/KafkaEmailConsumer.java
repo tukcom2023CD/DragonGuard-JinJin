@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +29,10 @@ public class KafkaEmailConsumer implements KafkaConsumer<KafkaEmail> {
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.email", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(final String message) {
+    public void consume(final String message, final Acknowledgment acknowledgment) {
         final KafkaEmail kafkaEmail = readValue(message);
         sendEmail(kafkaEmail);
+        acknowledgment.acknowledge();
     }
 
     private void sendEmail(final KafkaEmail kafkaEmail) {
