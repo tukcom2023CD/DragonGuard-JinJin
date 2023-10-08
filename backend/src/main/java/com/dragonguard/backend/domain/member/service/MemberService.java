@@ -17,10 +17,11 @@ import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.service.OrganizationService;
+import com.dragonguard.backend.global.annotation.DistributedLock;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
 import com.dragonguard.backend.global.template.service.EntityLoader;
-import com.dragonguard.backend.global.template.service.TransactionService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,7 +107,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private void sendContributionRequestToKafka(final String githubId) {
-        Member member = getMemberByGithubId(githubId);
+        final Member member = getMemberByGithubId(githubId);
         if (!isBlockchainUpdatable(member)) {
             return;
         }
@@ -173,7 +174,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return Objects.isNull(member.getOrganization());
     }
 
-    private void sendGitRepoAndContributionRequestToKafka(final String githubId) {
+    @DistributedLock(name = "#githubId.concat('sendGitRepoAndContributionRequestToKafka')")
+    public void sendGitRepoAndContributionRequestToKafka(final String githubId) {
         sendContributionRequestToKafka(githubId);
         sendRepositoryRequestToKafka(githubId);
     }

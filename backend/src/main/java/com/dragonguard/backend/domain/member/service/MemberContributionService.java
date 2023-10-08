@@ -7,7 +7,7 @@ import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.global.template.service.ContributionService;
-import com.dragonguard.backend.global.template.service.TransactionService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 @TransactionService

@@ -1,6 +1,9 @@
 package com.dragonguard.backend.config.redis;
 
 import lombok.RequiredArgsConstructor;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +32,16 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class RedisConfig {
     private static final Long TIME_TO_LIVE = 1L;
+    private static final String REDISSON_HOST_PREFIX = "redis://";
+    private static final String URL_DELIMITER = ":";
     private final RedisProperties redisProperties;
+
+    @Bean
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        config.useSingleServer().setAddress(REDISSON_HOST_PREFIX + redisProperties.getHost() + URL_DELIMITER + redisProperties.getPort());
+        return Redisson.create(config);
+    }
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {

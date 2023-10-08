@@ -5,7 +5,7 @@ import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.*;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
-import com.dragonguard.backend.global.template.service.TransactionService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 

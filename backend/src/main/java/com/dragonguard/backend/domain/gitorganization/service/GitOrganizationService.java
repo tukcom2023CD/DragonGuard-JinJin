@@ -7,7 +7,7 @@ import com.dragonguard.backend.domain.member.dto.client.MemberOrganizationRespon
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.service.EntityLoader;
-import com.dragonguard.backend.global.template.service.TransactionService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

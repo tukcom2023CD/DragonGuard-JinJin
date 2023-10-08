@@ -18,7 +18,7 @@ import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
-import com.dragonguard.backend.global.template.service.TransactionService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;

@@ -1,5 +1,6 @@
 package com.dragonguard.backend.global.advice;
 
+import com.dragonguard.backend.global.exception.DistributedLockUnavailableException;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.exception.WebClientException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
@@ -43,6 +44,16 @@ public class GlobalErrorAdvice {
 
     @ExceptionHandler(MismatchedInputException.class)
     public ResponseEntity<ErrorResponse> mismatchedInputException(final MismatchedInputException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(DistributedLockUnavailableException.class)
+    public ResponseEntity<ErrorResponse> distributedLockUnavailableException(final DistributedLockUnavailableException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(InterruptedException.class)
+    public ResponseEntity<ErrorResponse> interruptedException(final InterruptedException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 

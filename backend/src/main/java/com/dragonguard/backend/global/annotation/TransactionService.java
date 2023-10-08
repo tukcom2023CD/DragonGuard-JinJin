@@ -1,4 +1,4 @@
-package com.dragonguard.backend.global.template.service;
+package com.dragonguard.backend.global.annotation;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -14,7 +14,7 @@ import com.dragonguard.backend.domain.gitrepomember.mapper.GitRepoMemberMapper;
 import com.dragonguard.backend.domain.gitrepomember.service.GitRepoMemberService;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.AuthService;
-import com.dragonguard.backend.global.template.service.TransactionService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 

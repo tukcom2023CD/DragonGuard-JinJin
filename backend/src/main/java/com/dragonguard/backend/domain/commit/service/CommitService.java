@@ -7,7 +7,7 @@ import com.dragonguard.backend.global.template.kafka.KafkaProducer;
 import com.dragonguard.backend.global.template.mapper.ContributionMapper;
 import com.dragonguard.backend.global.template.repository.ContributionRepository;
 import com.dragonguard.backend.global.template.service.ContributionService;
-import com.dragonguard.backend.global.template.service.TransactionService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 
 /**
  * @author 김승진

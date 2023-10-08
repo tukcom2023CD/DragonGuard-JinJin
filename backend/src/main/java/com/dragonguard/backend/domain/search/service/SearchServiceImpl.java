@@ -9,7 +9,7 @@ import com.dragonguard.backend.domain.search.mapper.SearchMapper;
 import com.dragonguard.backend.domain.search.repository.SearchRepository;
 import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.template.service.TransactionService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 

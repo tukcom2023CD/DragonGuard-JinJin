@@ -9,7 +9,7 @@ import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
-import com.dragonguard.backend.global.template.service.TransactionService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

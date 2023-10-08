@@ -12,7 +12,7 @@ import com.dragonguard.backend.domain.organization.mapper.OrganizationMapper;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.global.dto.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.template.service.TransactionService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
