@@ -65,7 +65,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public RetryTopicConfiguration retryTopicConfig(KafkaTemplate<String, String> kafkaTemplate) {
+    public RetryTopicConfiguration retryTopicConfig(final KafkaTemplate<String, Object> kafkaTemplate) {
         return RetryTopicConfigurationBuilder
                 .newInstance()
                 .autoCreateTopicsWith(REPLICA_COUNT, REPLICA_FACTOR)
