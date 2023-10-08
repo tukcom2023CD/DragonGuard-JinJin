@@ -25,6 +25,6 @@ public class DeadLetterService {
     }
 
     public List<DeadLetter> findNotRetried() {
-        return deadLetterRepository.findAllByIsRetriedIsFalse();
+        return deadLetterRepository.findAll();
     }
 }
