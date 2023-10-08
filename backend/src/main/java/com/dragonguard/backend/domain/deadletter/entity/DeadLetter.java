@@ -41,20 +41,17 @@ public class DeadLetter implements Auditable {
     @Column(nullable = false)
     private String valueObject;
 
-    private String errorMessage;
-
     @Setter
     @Embedded
     @Column(nullable = false)
     private BaseTime baseTime;
 
     @Builder
-    public DeadLetter(final String topicName, final String keyName, final Integer partitionId, final Long offsetNumber, final String valueObject, final String errorMessage) {
+    public DeadLetter(final String topicName, final String keyName, final Integer partitionId, final Long offsetNumber, final String valueObject) {
         this.topicName = topicName;
         this.keyName = keyName;
         this.partitionId = partitionId;
         this.offsetNumber = offsetNumber;
         this.valueObject = valueObject;
-        this.errorMessage = errorMessage;
     }
 }

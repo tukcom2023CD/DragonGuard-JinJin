@@ -20,8 +20,8 @@ public class DeadLetterService {
     private final DeadLetterRepository deadLetterRepository;
     private final DeadLetterMapper deadLetterMapper;
 
-    public void saveFailedMessage(final String topic, final String key, final int partitionId, final Long offset, final String value, final String errorMessage) {
-        deadLetterRepository.save(deadLetterMapper.toEntity(topic, key, partitionId, offset, value, errorMessage));
+    public void saveFailedMessage(final String topic, final String key, final int partitionId, final Long offset, final String value) {
+        deadLetterRepository.save(deadLetterMapper.toEntity(topic, key, partitionId, offset, value));
     }
 
     public List<DeadLetter> findNotRetried() {
