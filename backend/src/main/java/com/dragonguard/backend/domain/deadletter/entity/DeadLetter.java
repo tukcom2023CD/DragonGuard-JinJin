@@ -35,7 +35,7 @@ public class DeadLetter implements Auditable {
 
     private Integer partitionId;
 
-    private Long offset;
+    private Long offsetNumber;
 
     @Column(nullable = false)
     private String value;
@@ -48,11 +48,11 @@ public class DeadLetter implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public DeadLetter(final String topic, final String key, final Integer partitionId, final Long offset, final String value, final String errorMessage) {
+    public DeadLetter(final String topic, final String key, final Integer partitionId, final Long offsetNumber, final String value, final String errorMessage) {
         this.topic = topic;
         this.key = key;
         this.partitionId = partitionId;
-        this.offset = offset;
+        this.offsetNumber = offsetNumber;
         this.value = value;
         this.errorMessage = errorMessage;
     }

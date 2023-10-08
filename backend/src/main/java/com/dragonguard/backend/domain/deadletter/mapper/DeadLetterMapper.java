@@ -18,5 +18,5 @@ public interface DeadLetterMapper {
     @Mapping(target = "key", source = "key")
     @Mapping(target = "value", source = "value")
     @Mapping(target = "errorMessage", source = "errorMessage")
-    DeadLetter toEntity(final String topic, final String key, final int partitionId, final Long offset, final String value, final String errorMessage);
+    DeadLetter toEntity(final String topic, final String key, final int partitionId, final Long offsetNumber, final String value, final String errorMessage);
 }
