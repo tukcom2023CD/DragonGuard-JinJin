@@ -18,7 +18,6 @@ import java.util.UUID;
 @Getter
 @Entity
 @SoftDelete
-@Table(name = "deadletter") // 테이블 생성 오류 해결을 위함
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeadLetter implements Auditable {
