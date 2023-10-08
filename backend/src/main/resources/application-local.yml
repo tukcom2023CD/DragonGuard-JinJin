@@ -45,7 +45,7 @@ spring:
     bootstrap-servers: localhost:9092
     consumer:
       group-id: gitrank
-      enable-auto-commit: false
+      enable-auto-commit: true
     listener:
       ack-mode: manual
 

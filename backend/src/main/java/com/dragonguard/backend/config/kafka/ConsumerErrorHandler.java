@@ -35,7 +35,7 @@ public class ConsumerErrorHandler {
                                         @Header(KafkaHeaders.RECEIVED_PARTITION_ID) final int partitionId,
                                         @Header(KafkaHeaders.OFFSET) final Long offset,
                                         @Header(KafkaHeaders.GROUP_ID) final String groupId) throws JsonProcessingException {
-        final String value = objectMapper.writeValueAsString(record.value());
+        final String value = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(record.value());
         final String key = record.key();
         log.error("[DLT] received message={} with key={} partitionId={}, offset={}, topic={}, groupId={}", value, key, partitionId, offset, topic, groupId);
         deadLetterService.saveFailedMessage(topic, key, partitionId, offset, value);
