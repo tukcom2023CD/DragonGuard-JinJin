@@ -3,8 +3,8 @@ package com.dragonguard.backend.domain.deadletter.service;
 import com.dragonguard.backend.domain.deadletter.entity.DeadLetter;
 import com.dragonguard.backend.domain.deadletter.mapper.DeadLetterMapper;
 import com.dragonguard.backend.domain.deadletter.repository.DeadLetterRepository;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * @description Kafka의 Dead Letter 서비스
  */
 
-@Service
+@TransactionService
 @RequiredArgsConstructor
 public class DeadLetterService {
 

@@ -10,6 +10,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,9 +39,13 @@ public class ConsumerErrorHandler {
         deadLetterService.saveFailedMessage(topic, key, partitionId, offset, value, errorMessage);
     }
 
+    @Transactional
     @Scheduled(fixedDelay = 1000 * 60 * 15, zone = "Asia/Seoul")
     public void retryDeadLetter() {
         final List<DeadLetter> deadLetters = deadLetterService.findNotRetried();
-        deadLetters.forEach(deadLetter -> kafkaTemplate.send(deadLetter.getTopic(), deadLetter.getKey(), deadLetter.getValue()));
+        deadLetters.forEach(deadLetter -> {
+            kafkaTemplate.send(deadLetter.getTopic(), deadLetter.getKey(), deadLetter.getValue());
+            deadLetter.delete();
+        });
     }
 }

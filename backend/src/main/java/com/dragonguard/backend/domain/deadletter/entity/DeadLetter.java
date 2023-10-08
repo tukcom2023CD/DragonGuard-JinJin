@@ -1,15 +1,13 @@
 package com.dragonguard.backend.domain.deadletter.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.dragonguard.backend.global.audit.AuditListener;
+import com.dragonguard.backend.global.audit.Auditable;
+import com.dragonguard.backend.global.audit.BaseTime;
+import com.dragonguard.backend.global.audit.SoftDelete;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 /**
@@ -19,8 +17,11 @@ import java.util.UUID;
 
 @Getter
 @Entity
+@SoftDelete
+@Table(name = "deadletter") // 테이블 생성 오류 해결을 위함
+@EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DeadLetter {
+public class DeadLetter implements Auditable {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -28,13 +29,24 @@ public class DeadLetter {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @Column(nullable = false)
     private String topic;
+
     private String key;
+
     private Integer partitionId;
+
     private Long offset;
+
+    @Column(nullable = false)
     private String value;
+
     private String errorMessage;
-    private Boolean isRetried;
+
+    @Setter
+    @Embedded
+    @Column(nullable = false)
+    private BaseTime baseTime;
 
     @Builder
     public DeadLetter(final String topic, final String key, final Integer partitionId, final Long offset, final String value, final String errorMessage) {
@@ -44,6 +56,5 @@ public class DeadLetter {
         this.offset = offset;
         this.value = value;
         this.errorMessage = errorMessage;
-        this.isRetried = false;
     }
 }
