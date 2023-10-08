@@ -38,7 +38,7 @@ public class ConsumerErrorHandler {
                                         @Header(KafkaHeaders.GROUP_ID) final String groupId) throws JsonProcessingException {
         final String value = objectMapper.writeValueAsString(record.value());
         final String key = record.key();
-        log.error("[DLT] received message={} with key={} partitionId={}, offset={}, topic={}, groupId={}", value, key, partitionId, offset, topic, groupId);
+        log.error("[DLT] received message with key={} partitionId={}, offset={}, topic={}, groupId={}", key, partitionId, offset, topic, groupId);
         deadLetterService.saveFailedMessage(topic, key, partitionId, offset, value, errorMessage);
     }
 
@@ -47,7 +47,7 @@ public class ConsumerErrorHandler {
     public void retryDeadLetter() {
         final List<DeadLetter> deadLetters = deadLetterService.findNotRetried();
         deadLetters.forEach(deadLetter -> {
-            kafkaTemplate.send(deadLetter.getTopic(), deadLetter.getKey(), deadLetter.getValue());
+            kafkaTemplate.send(deadLetter.getTopicName(), deadLetter.getKeyName(), deadLetter.getValueObject());
             deadLetter.delete();
         });
     }

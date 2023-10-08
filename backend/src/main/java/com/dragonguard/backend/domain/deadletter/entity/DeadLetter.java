@@ -29,16 +29,17 @@ public class DeadLetter implements Auditable {
     private UUID id;
 
     @Column(nullable = false)
-    private String topic;
+    private String topicName;
 
-    private String key;
+    private String keyName;
 
     private Integer partitionId;
 
     private Long offsetNumber;
 
+    @Lob
     @Column(nullable = false)
-    private String value;
+    private String valueObject;
 
     private String errorMessage;
 
@@ -48,12 +49,12 @@ public class DeadLetter implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public DeadLetter(final String topic, final String key, final Integer partitionId, final Long offsetNumber, final String value, final String errorMessage) {
-        this.topic = topic;
-        this.key = key;
+    public DeadLetter(final String topicName, final String keyName, final Integer partitionId, final Long offsetNumber, final String valueObject, final String errorMessage) {
+        this.topicName = topicName;
+        this.keyName = keyName;
         this.partitionId = partitionId;
         this.offsetNumber = offsetNumber;
-        this.value = value;
+        this.valueObject = valueObject;
         this.errorMessage = errorMessage;
     }
 }

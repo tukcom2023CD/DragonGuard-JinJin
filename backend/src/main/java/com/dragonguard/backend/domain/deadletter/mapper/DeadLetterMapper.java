@@ -14,9 +14,9 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DeadLetterMapper {
 
-    @Mapping(target = "topic", source = "topic")
-    @Mapping(target = "key", source = "key")
-    @Mapping(target = "value", source = "value")
+    @Mapping(target = "topicName", source = "topicName")
+    @Mapping(target = "keyName", source = "keyName")
+    @Mapping(target = "valueObject", source = "valueObject")
     @Mapping(target = "errorMessage", source = "errorMessage")
-    DeadLetter toEntity(final String topic, final String key, final int partitionId, final Long offsetNumber, final String value, final String errorMessage);
+    DeadLetter toEntity(final String topicName, final String keyName, final int partitionId, final Long offsetNumber, final String valueObject, final String errorMessage);
 }
