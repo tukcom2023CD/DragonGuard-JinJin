@@ -2,6 +2,8 @@ package com.dragonguard.backend.config.kafka;
 
 import com.dragonguard.backend.domain.deadletter.entity.DeadLetter;
 import com.dragonguard.backend.domain.deadletter.service.DeadLetterService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -26,14 +28,15 @@ public class ConsumerErrorHandler {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final DeadLetterService deadLetterService;
+    private final ObjectMapper objectMapper;
 
-    public void postProcessDltMessage(final ConsumerRecord<String, String> record,
+    public void postProcessDltMessage(final ConsumerRecord<String, ?> record,
                                         @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic,
                                         @Header(KafkaHeaders.RECEIVED_PARTITION_ID) final int partitionId,
                                         @Header(KafkaHeaders.OFFSET) final Long offset,
                                         @Header(KafkaHeaders.EXCEPTION_MESSAGE) final String errorMessage,
-                                        @Header(KafkaHeaders.GROUP_ID) final String groupId) {
-        final String value = record.value();
+                                        @Header(KafkaHeaders.GROUP_ID) final String groupId) throws JsonProcessingException {
+        final String value = objectMapper.writeValueAsString(record.value());
         final String key = record.key();
         log.error("[DLT] received message={} with key={} partitionId={}, offset={}, topic={}, groupId={}", value, key, partitionId, offset, topic, groupId);
         deadLetterService.saveFailedMessage(topic, key, partitionId, offset, value, errorMessage);
