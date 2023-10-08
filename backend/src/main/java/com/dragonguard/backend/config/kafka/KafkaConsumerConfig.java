@@ -10,7 +10,12 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.kafka.retrytopic.RetryTopicConfiguration;
+import org.springframework.kafka.retrytopic.RetryTopicConfigurationBuilder;
+import org.springframework.kafka.retrytopic.TopicSuffixingStrategy;
+import org.springframework.kafka.support.EndpointHandlerMethod;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.util.backoff.FixedBackOff;
 
@@ -26,8 +31,12 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class KafkaConsumerConfig {
-    private static final Long RETRY_INTERVAL = 2000L;
-    private static final Long MAX_ATTEMPTS = 3L;
+    private static final long RETRY_INTERVAL = 2000L;
+    private static final int MAX_ATTEMPTS = 3;
+    private static final int REPLICA_COUNT = 1;
+    private static final short REPLICA_FACTOR = 1;
+    private static final String ERROR_HANDLING_METHOD = "postProcessDltMessage";
+
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -53,5 +62,18 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(consumerFactory());
         factory.setCommonErrorHandler(new DefaultErrorHandler(new FixedBackOff(RETRY_INTERVAL, MAX_ATTEMPTS)));
         return factory;
+    }
+
+    @Bean
+    public RetryTopicConfiguration retryTopicConfig(KafkaTemplate<String, String> kafkaTemplate) {
+        return RetryTopicConfigurationBuilder
+                .newInstance()
+                .autoCreateTopicsWith(REPLICA_COUNT, REPLICA_FACTOR)
+                .maxAttempts(MAX_ATTEMPTS)
+                .fixedBackOff(RETRY_INTERVAL)
+                .listenerFactory(kafkaListenerContainerFactory())
+                .setTopicSuffixingStrategy(TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
+                .dltHandlerMethod(new EndpointHandlerMethod(ConsumerErrorHandler.class, ERROR_HANDLING_METHOD))
+                .create(kafkaTemplate);
     }
 }
