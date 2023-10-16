@@ -53,10 +53,10 @@ public class EmailSender {
     }
 
     private String getDeadLetterText(final DeadLetter deadLetter) {
-        final String content = "topic-name" + deadLetter.getTopicName()
-                + "key-name" + deadLetter.getKeyName()
-                + "time" + deadLetter.getBaseTime().getCreatedAt()
-                + "payload" + deadLetter.getValueObject();
+        final String content = "topic-name : " + deadLetter.getTopicName() + "\n"
+                + "key-name : " + deadLetter.getKeyName() + "\n"
+                + "time : " + deadLetter.getBaseTime().getCreatedAt() + "\n"
+                + "payload : " + deadLetter.getValueObject();
 
         return String.format(DEAD_LETTER_CONTENT, content);
     }
