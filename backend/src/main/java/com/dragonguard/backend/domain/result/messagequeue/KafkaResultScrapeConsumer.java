@@ -27,19 +27,21 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaResultScrapeConsumer implements KafkaConsumer<ResultKafkaResponse> {
+public class KafkaResultScrapeConsumer implements KafkaConsumer {
     private final SearchResultFacade resultService;
+    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.result", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(final ResultKafkaResponse message, final Acknowledgment acknowledgment) {
-        List<ScrapeResult> result = message.getResult().stream()
+    public void consume(final String message, final Acknowledgment acknowledgment) throws JsonProcessingException {
+        final ResultKafkaResponse response = objectMapper.readValue(message, ResultKafkaResponse.class);
+        List<ScrapeResult> result = response.getResult().stream()
                 .map(ResultDetailsResponse::getName)
                 .map(ScrapeResult::new)
                 .collect(Collectors.toList());
 
-        SearchKafkaResponse searchResponse = message.getSearch();
+        SearchKafkaResponse searchResponse = response.getSearch();
 
         SearchRequest searchRequest = new SearchRequest(searchResponse.getName(),
                 SearchType.valueOf((searchResponse.getType()).toUpperCase()), searchResponse.getPage());

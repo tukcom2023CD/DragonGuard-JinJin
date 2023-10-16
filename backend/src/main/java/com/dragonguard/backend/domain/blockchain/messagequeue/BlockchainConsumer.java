@@ -24,17 +24,19 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class BlockchainConsumer implements KafkaConsumer<BlockchainKafkaResponse> {
+public class BlockchainConsumer implements KafkaConsumer {
     private final EntityLoader<Member, UUID> memberService;
     private final BlockchainService blockchainService;
+    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.blockchain", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(@Payload final BlockchainKafkaResponse message, final Acknowledgment acknowledgment) {
-        final Member member = memberService.loadEntity(message.getMemberId());
+    public void consume(@Payload final String message, final Acknowledgment acknowledgment) throws JsonProcessingException {
+        final BlockchainKafkaResponse response = objectMapper.readValue(message, BlockchainKafkaResponse.class);
+        final Member member = memberService.loadEntity(response.getMemberId());
 
-        blockchainService.setTransaction(member, message.getAmount(), message.getContributeType());
+        blockchainService.setTransaction(member, response.getAmount(), response.getContributeType());
         acknowledgment.acknowledge();
     }
 }

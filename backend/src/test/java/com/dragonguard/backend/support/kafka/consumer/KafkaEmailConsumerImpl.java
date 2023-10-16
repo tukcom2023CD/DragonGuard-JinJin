@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Primary
 @Component
-public class KafkaEmailConsumerImpl implements KafkaConsumer<KafkaEmail> {
+public class KafkaEmailConsumerImpl implements KafkaConsumer {
     @Override
-    public void consume(KafkaEmail message, Acknowledgment acknowledgment) {}
+    public void consume(String message, Acknowledgment acknowledgment) {}
 }

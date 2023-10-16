@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author 김승진
@@ -23,7 +21,7 @@ public class EmailSender {
     private static final String EMAIL_SUBJECT = "GitRank 조직 인증";
     private static final String EMAIL_CONTENT = "<html><head></head><body><div>다음 번호를 입력해주세요:\n<div><h1>%d</h1></body></html>";
     private static final String DEAD_LETTER_SUBJECT = "GitRank 데드레터 발생";
-    private static final String DEAD_LETTER_CONTENT = "<html><head></head><body><h1>데드레터 목록</h1><div>%s</div></body></html>";
+    private static final String DEAD_LETTER_CONTENT = "<html><head></head><body><h2>발생 데드레터 데이터</h2><div>%s</div></body></html>";
 
     @Value("${admin-email}")
     private String adminEmail;
@@ -53,9 +51,9 @@ public class EmailSender {
     }
 
     private String getDeadLetterText(final DeadLetter deadLetter) {
-        final String content = "topic-name : " + deadLetter.getTopicName() + "\n"
-                + "key-name : " + deadLetter.getKeyName() + "\n"
-                + "time : " + deadLetter.getBaseTime().getCreatedAt() + "\n"
+        final String content = "topic-name : " + deadLetter.getTopicName() + "<br>"
+                + "key-name : " + deadLetter.getKeyName() + "<br>"
+                + "time : " + deadLetter.getBaseTime().getCreatedAt() + "<br>"
                 + "payload : " + deadLetter.getValueObject();
 
         return String.format(DEAD_LETTER_CONTENT, content);

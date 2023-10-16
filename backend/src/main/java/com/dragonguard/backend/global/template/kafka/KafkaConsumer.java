@@ -1,5 +1,6 @@
 package com.dragonguard.backend.global.template.kafka;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.kafka.support.Acknowledgment;
 
 /**
@@ -7,6 +8,6 @@ import org.springframework.kafka.support.Acknowledgment;
  * @description Kafka Consumer 의 공통 기능을 뽑아낸 인터페이스
  */
 
-public interface KafkaConsumer<T> {
-    void consume(final T message, final Acknowledgment acknowledgment);
+public interface KafkaConsumer {
+    void consume(final String message, final Acknowledgment acknowledgment) throws JsonProcessingException;
 }

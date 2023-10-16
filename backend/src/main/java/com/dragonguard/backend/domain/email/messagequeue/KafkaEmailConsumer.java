@@ -23,14 +23,15 @@ import javax.mail.MessagingException;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaEmailConsumer implements KafkaConsumer<KafkaEmail> {
+public class KafkaEmailConsumer implements KafkaConsumer {
     private final EmailSender emailSender;
+    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.email", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(@Payload final KafkaEmail message, final Acknowledgment acknowledgment) {
-        sendEmail(message);
+    public void consume(@Payload final String message, final Acknowledgment acknowledgment) throws JsonProcessingException {
+        sendEmail(objectMapper.readValue(message, KafkaEmail.class));
         acknowledgment.acknowledge();
     }
 

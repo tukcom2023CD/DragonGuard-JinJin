@@ -6,7 +6,6 @@ import com.dragonguard.backend.global.template.kafka.KafkaConsumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -20,13 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaGitRepoInfoConsumer implements KafkaConsumer<GitRepoInfoRequest> {
+public class KafkaGitRepoInfoConsumer implements KafkaConsumer {
     private final GitRepoMemberFacade gitRepoMemberFacade;
+    private final ObjectMapper objectMapper;
+
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.git-repos-info", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(@Payload final GitRepoInfoRequest message, final Acknowledgment acknowledgment) {
-        gitRepoMemberFacade.requestToGithub(message, gitRepoMemberFacade.findEntityByName(message.getName()));
+    public void consume(@Payload final String message, final Acknowledgment acknowledgment) throws JsonProcessingException {
+        final GitRepoInfoRequest request = objectMapper.readValue(message, GitRepoInfoRequest.class);
+        gitRepoMemberFacade.requestToGithub(request, gitRepoMemberFacade.findEntityByName(request.getName()));
         acknowledgment.acknowledge();
     }
 }

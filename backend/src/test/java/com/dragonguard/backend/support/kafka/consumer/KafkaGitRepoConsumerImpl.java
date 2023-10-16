@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Primary
 @Component
-public class KafkaGitRepoConsumerImpl implements KafkaConsumer<GitRepoKafkaResponse> {
+public class KafkaGitRepoConsumerImpl implements KafkaConsumer {
     @Override
-    public void consume(GitRepoKafkaResponse message, Acknowledgment acknowledgment) {}
+    public void consume(String message, Acknowledgment acknowledgment) {}
 }

@@ -29,16 +29,17 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaGitRepoConsumer implements KafkaConsumer<GitRepoKafkaResponse> {
+public class KafkaGitRepoConsumer implements KafkaConsumer {
     private static final Integer DEFAULT_INDEX = 0;
     private final GitRepoMemberFacade gitRepoMemberFacade;
     private final MemberService memberService;
+    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(@Payload final GitRepoKafkaResponse message, final Acknowledgment acknowledgment) {
-        final List<GitRepoMemberDetailsResponse> result = message.getResult();
+    public void consume(@Payload final String message, final Acknowledgment acknowledgment) throws JsonProcessingException {
+        final List<GitRepoMemberDetailsResponse> result = objectMapper.readValue(message, GitRepoKafkaResponse.class).getResult();
 
         if (Objects.isNull(result) || result.isEmpty()) {
             return;

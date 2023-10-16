@@ -25,15 +25,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class KafkaContributionClientConsumer implements KafkaConsumer<ContributionClientResponse> {
+public class KafkaContributionClientConsumer implements KafkaConsumer {
     private final MemberClientService memberClientService;
     private final MemberRepository memberRepository;
-
+    private final ObjectMapper objectMapper;
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.contribution.client", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(@Payload final ContributionClientResponse message, final Acknowledgment acknowledgment) {
-        final Member member = memberRepository.findByGithubId(message.getGithubId())
+    public void consume(@Payload final String message, final Acknowledgment acknowledgment) throws JsonProcessingException {
+        final Member member = memberRepository.findByGithubId(objectMapper.readValue(message, ContributionClientResponse.class).getGithubId())
                 .orElseThrow(EntityNotFoundException::new);
 
         memberClientService.addMemberContribution(member);

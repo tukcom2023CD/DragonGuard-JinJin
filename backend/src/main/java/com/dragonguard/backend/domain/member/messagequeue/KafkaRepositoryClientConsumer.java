@@ -23,15 +23,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class KafkaRepositoryClientConsumer implements KafkaConsumer<RepositoryClientResponse> {
+public class KafkaRepositoryClientConsumer implements KafkaConsumer {
     private final MemberClientService memberClientService;
     private final MemberRepository memberRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.repository.client", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(@Payload final RepositoryClientResponse message, final Acknowledgment acknowledgment) {
-        final Member member = memberRepository.findByGithubId(message.getGithubId())
+    public void consume(@Payload final String message, final Acknowledgment acknowledgment) throws JsonProcessingException {
+        final Member member = memberRepository.findByGithubId(objectMapper.readValue(message, RepositoryClientResponse.class).getGithubId())
                 .orElseThrow(EntityNotFoundException::new);
 
         memberClientService.addMemberGitRepoAndGitOrganization(member);

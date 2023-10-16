@@ -1,5 +1,6 @@
 package com.dragonguard.backend.config.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -37,7 +38,6 @@ public class KafkaConsumerConfig {
     private static final int REPLICA_COUNT = 1;
     private static final short REPLICA_FACTOR = 1;
     private static final String ERROR_HANDLING_METHOD = "postProcessDltMessage";
-
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
