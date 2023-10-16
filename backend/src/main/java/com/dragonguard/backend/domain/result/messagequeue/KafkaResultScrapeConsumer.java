@@ -29,31 +29,22 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class KafkaResultScrapeConsumer implements KafkaConsumer<ResultKafkaResponse> {
     private final SearchResultFacade resultService;
-    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.result", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(final String message, final Acknowledgment acknowledgment) {
-        ResultKafkaResponse resultResponse = readValue(message);
-
-        List<ScrapeResult> result = resultResponse.getResult().stream()
+    public void consume(final ResultKafkaResponse message, final Acknowledgment acknowledgment) {
+        List<ScrapeResult> result = message.getResult().stream()
                 .map(ResultDetailsResponse::getName)
                 .map(ScrapeResult::new)
                 .collect(Collectors.toList());
 
-        SearchKafkaResponse searchResponse = resultResponse.getSearch();
+        SearchKafkaResponse searchResponse = message.getSearch();
 
         SearchRequest searchRequest = new SearchRequest(searchResponse.getName(),
                 SearchType.valueOf((searchResponse.getType()).toUpperCase()), searchResponse.getPage());
 
         resultService.saveAllResult(result, searchRequest);
         acknowledgment.acknowledge();
-    }
-
-    @Override
-    @SneakyThrows(JsonProcessingException.class)
-    public ResultKafkaResponse readValue(final String message) {
-        return objectMapper.readValue(message, ResultKafkaResponse.class);
     }
 }

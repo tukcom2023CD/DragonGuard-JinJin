@@ -8,6 +8,5 @@ import org.springframework.kafka.support.Acknowledgment;
  */
 
 public interface KafkaConsumer<T> {
-    void consume(final String message, final Acknowledgment acknowledgment);
-    T readValue(final String message);
+    void consume(final T message, final Acknowledgment acknowledgment);
 }

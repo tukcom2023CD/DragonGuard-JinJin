@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.member.client;
 
 import com.dragonguard.backend.domain.member.dto.client.MemberClientRequest;
 import com.dragonguard.backend.domain.member.dto.client.MemberCodeReviewResponse;
+import com.dragonguard.backend.global.annotation.DistributedLock;
 import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.WebClientException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class MemberCodeReviewClient implements GithubClient<MemberClientRequest,
     private final WebClient webClient;
 
     @Override
+    @DistributedLock(name = "#request.getGithubId().concat('memberCodeReviewClient')")
     public MemberCodeReviewResponse requestToGithub(final MemberClientRequest request) {
         return webClient.get()
                 .uri(

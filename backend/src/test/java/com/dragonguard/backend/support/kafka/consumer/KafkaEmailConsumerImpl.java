@@ -10,10 +10,5 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaEmailConsumerImpl implements KafkaConsumer<KafkaEmail> {
     @Override
-    public void consume(String message, Acknowledgment acknowledgment) {}
-
-    @Override
-    public KafkaEmail readValue(String message) {
-        return null;
-    }
+    public void consume(KafkaEmail message, Acknowledgment acknowledgment) {}
 }

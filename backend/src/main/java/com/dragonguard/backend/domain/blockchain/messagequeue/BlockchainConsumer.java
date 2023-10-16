@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,23 +27,14 @@ import java.util.UUID;
 public class BlockchainConsumer implements KafkaConsumer<BlockchainKafkaResponse> {
     private final EntityLoader<Member, UUID> memberService;
     private final BlockchainService blockchainService;
-    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.blockchain", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(final String message, final Acknowledgment acknowledgment) {
-        final BlockchainKafkaResponse response = readValue(message);
+    public void consume(@Payload final BlockchainKafkaResponse message, final Acknowledgment acknowledgment) {
+        final Member member = memberService.loadEntity(message.getMemberId());
 
-        final Member member = memberService.loadEntity(response.getMemberId());
-
-        blockchainService.setTransaction(member, response.getAmount(), response.getContributeType());
+        blockchainService.setTransaction(member, message.getAmount(), message.getContributeType());
         acknowledgment.acknowledge();
-    }
-
-    @Override
-    @SneakyThrows(JsonProcessingException.class)
-    public BlockchainKafkaResponse readValue(final String message) {
-        return objectMapper.readValue(message, BlockchainKafkaResponse.class);
     }
 }

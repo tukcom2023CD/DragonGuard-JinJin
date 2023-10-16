@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,23 +26,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class KafkaRepositoryClientConsumer implements KafkaConsumer<RepositoryClientResponse> {
     private final MemberClientService memberClientService;
     private final MemberRepository memberRepository;
-    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.repository.client", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(final String message, final Acknowledgment acknowledgment) {
-        final RepositoryClientResponse response = readValue(message);
-        final Member member = memberRepository.findByGithubId(response.getGithubId())
+    public void consume(@Payload final RepositoryClientResponse message, final Acknowledgment acknowledgment) {
+        final Member member = memberRepository.findByGithubId(message.getGithubId())
                 .orElseThrow(EntityNotFoundException::new);
 
         memberClientService.addMemberGitRepoAndGitOrganization(member);
         acknowledgment.acknowledge();
-    }
-
-    @Override
-    @SneakyThrows(JsonProcessingException.class)
-    public RepositoryClientResponse readValue(final String message) {
-        return objectMapper.readValue(message, RepositoryClientResponse.class);
     }
 }

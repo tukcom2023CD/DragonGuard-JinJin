@@ -17,5 +17,6 @@ public interface DeadLetterMapper {
     @Mapping(target = "topicName", source = "topicName")
     @Mapping(target = "keyName", source = "keyName")
     @Mapping(target = "valueObject", source = "valueObject")
-    DeadLetter toEntity(final String topicName, final String keyName, final int partitionId, final Long offsetNumber, final String valueObject);
+    @Mapping(target = "groupId", source = "groupId")
+    DeadLetter toEntity(final String topicName, final String keyName, final int partitionId, final Long offsetNumber, final String valueObject, final String groupId);
 }

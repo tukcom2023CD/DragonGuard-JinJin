@@ -17,7 +17,6 @@ import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.service.OrganizationService;
-import com.dragonguard.backend.global.annotation.DistributedLock;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
 import com.dragonguard.backend.global.template.service.EntityLoader;
@@ -174,7 +173,6 @@ public class MemberService implements EntityLoader<Member, UUID> {
         return Objects.isNull(member.getOrganization());
     }
 
-    @DistributedLock(name = "#githubId.concat('sendGitRepoAndContributionRequestToKafka')")
     public void sendGitRepoAndContributionRequestToKafka(final String githubId) {
         sendContributionRequestToKafka(githubId);
         sendRepositoryRequestToKafka(githubId);

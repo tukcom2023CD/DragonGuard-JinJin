@@ -2,7 +2,6 @@ package com.dragonguard.backend.domain.member.service;
 
 import com.dragonguard.backend.domain.member.dto.client.*;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.annotation.DistributedLock;
 import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,6 @@ public class MemberClientService {
     private final MemberContributionService memberContributionService;
     private final GitOrganizationGitRepoService gitOrganizationGitRepoService;
 
-    @DistributedLock(name = "#member.getId().toString().concat('addMemberContribution')")
     public void addMemberContribution(final Member member) {
         final int year = LocalDate.now().getYear();
         final String githubId = member.getGithubId();

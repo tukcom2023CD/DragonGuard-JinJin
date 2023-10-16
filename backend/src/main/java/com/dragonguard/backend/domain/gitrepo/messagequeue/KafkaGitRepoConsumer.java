@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,15 +33,12 @@ public class KafkaGitRepoConsumer implements KafkaConsumer<GitRepoKafkaResponse>
     private static final Integer DEFAULT_INDEX = 0;
     private final GitRepoMemberFacade gitRepoMemberFacade;
     private final MemberService memberService;
-    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.git-repos", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(final String message, final Acknowledgment acknowledgment) {
-        final GitRepoKafkaResponse response = readValue(message);
-
-        final List<GitRepoMemberDetailsResponse> result = response.getResult();
+    public void consume(@Payload final GitRepoKafkaResponse message, final Acknowledgment acknowledgment) {
+        final List<GitRepoMemberDetailsResponse> result = message.getResult();
 
         if (Objects.isNull(result) || result.isEmpty()) {
             return;
@@ -52,11 +50,5 @@ public class KafkaGitRepoConsumer implements KafkaConsumer<GitRepoKafkaResponse>
 
         gitRepoMemberFacade.updateOrSaveAll(gitRepoMemberResponses, result.get(DEFAULT_INDEX).getGitRepo());
         acknowledgment.acknowledge();
-    }
-
-    @Override
-    @SneakyThrows(JsonProcessingException.class)
-    public GitRepoKafkaResponse readValue(final String message) {
-        return objectMapper.readValue(message, GitRepoKafkaResponse.class);
     }
 }

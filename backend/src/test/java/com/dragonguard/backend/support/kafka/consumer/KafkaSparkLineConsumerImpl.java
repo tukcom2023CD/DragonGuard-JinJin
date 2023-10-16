@@ -10,10 +10,5 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaSparkLineConsumerImpl implements KafkaConsumer<SparkLineKafka> {
     @Override
-    public void consume(String message, Acknowledgment acknowledgment) {}
-
-    @Override
-    public SparkLineKafka readValue(String message) {
-        return null;
-    }
+    public void consume(SparkLineKafka message, Acknowledgment acknowledgment) {}
 }

@@ -1,14 +1,12 @@
 package com.dragonguard.backend.domain.gitrepo.messagequeue;
 
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.SparkLineKafka;
-import com.dragonguard.backend.domain.gitrepo.service.GitRepoServiceImpl;
+import com.dragonguard.backend.domain.gitrepo.service.GitRepoService;
 import com.dragonguard.backend.global.template.kafka.KafkaConsumer;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,21 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class KafkaSparkLineConsumer implements KafkaConsumer<SparkLineKafka> {
-    private final ObjectMapper objectMapper;
-    private final GitRepoServiceImpl gitRepoServiceImpl;
+    private final GitRepoService gitRepoService;
 
     @Override
     @Transactional
     @KafkaListener(topics = "gitrank.to.backend.spark-line", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(final String message, final Acknowledgment acknowledgment) {
-        final SparkLineKafka sparkLine = readValue(message);
-        gitRepoServiceImpl.updateSparkLine(sparkLine.getId(), sparkLine.getGithubToken());
+    public void consume(@Payload final SparkLineKafka message, final Acknowledgment acknowledgment) {
+        gitRepoService.updateSparkLine(message.getId(), message.getGithubToken());
         acknowledgment.acknowledge();
-    }
-
-    @Override
-    @SneakyThrows(JsonProcessingException.class)
-    public SparkLineKafka readValue(final String message) {
-        return objectMapper.readValue(message, SparkLineKafka.class);
     }
 }

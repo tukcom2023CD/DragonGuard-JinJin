@@ -24,4 +24,5 @@ public interface GitRepoService extends EntityLoader<GitRepo, Long> {
     GitRepoContributions getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function);
     void requestKafkaGitRepoInfo(final String githubToken, final String name);
     List<Integer> updateAndGetSparkLine(final String name, final String githubToken, final GitRepo gitRepo);
+    void updateSparkLine(final Long id, final String githubToken);
 }

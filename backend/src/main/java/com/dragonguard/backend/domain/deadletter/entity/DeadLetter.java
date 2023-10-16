@@ -37,6 +37,8 @@ public class DeadLetter implements Auditable {
 
     private Long offsetNumber;
 
+    private String groupId;
+
     @Lob
     @Column(nullable = false)
     private String valueObject;
@@ -47,11 +49,12 @@ public class DeadLetter implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public DeadLetter(final String topicName, final String keyName, final Integer partitionId, final Long offsetNumber, final String valueObject) {
+    public DeadLetter(final String topicName, final String keyName, final Integer partitionId, final Long offsetNumber, final String valueObject, final String groupId) {
         this.topicName = topicName;
         this.keyName = keyName;
         this.partitionId = partitionId;
         this.offsetNumber = offsetNumber;
         this.valueObject = valueObject;
+        this.groupId = groupId;
     }
 }
