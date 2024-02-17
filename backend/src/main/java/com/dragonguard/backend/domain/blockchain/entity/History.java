@@ -4,11 +4,13 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+
 import lombok.*;
 
-import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -16,12 +18,11 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class History implements Auditable {
-    private static final String TRANSACTION_URL_FORMAT = "https://baobab.scope.klaytn.com/tx/%s?tabId=tokenTransfer";
+    private static final String TRANSACTION_URL_FORMAT =
+            "https://baobab.scope.klaytn.com/tx/%s?tabId=tokenTransfer";
     private static final Long UPDATE_TIME_UNIT = 20L;
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @Id @GeneratedValue private Long id;
 
     private String transactionHash;
 
@@ -37,7 +38,8 @@ public class History implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public History(final String transactionHash, final BigInteger amount, final Blockchain blockchain) {
+    public History(
+            final String transactionHash, final BigInteger amount, final Blockchain blockchain) {
         this.transactionHash = transactionHash;
         this.amount = amount;
         this.blockchain = blockchain;
@@ -48,6 +50,8 @@ public class History implements Auditable {
     }
 
     public boolean isUpdatable() {
-        return this.baseTime.getCreatedAt().isBefore(LocalDateTime.now().minusSeconds(UPDATE_TIME_UNIT));
+        return this.baseTime
+                .getCreatedAt()
+                .isBefore(LocalDateTime.now().minusSeconds(UPDATE_TIME_UNIT));
     }
 }

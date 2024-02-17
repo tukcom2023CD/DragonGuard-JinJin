@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
  * @author 김승진
  * @description 검색에 대한 Kafka 요청 정보를 담는 dto
  */
-
 @Getter
 @Builder
 @NoArgsConstructor

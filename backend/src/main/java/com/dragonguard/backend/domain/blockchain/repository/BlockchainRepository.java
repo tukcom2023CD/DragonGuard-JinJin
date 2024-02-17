@@ -12,10 +12,13 @@ import java.util.UUID;
  * @author 김승진
  * @description 블록체인 테이블의 DB 접근을 수행하는 로직을 가진 인터페이스
  */
-
 public interface BlockchainRepository {
     Blockchain save(final Blockchain blockchain);
+
     Optional<Blockchain> findById(final Long id);
-    Optional<Blockchain> findByMemberAndContributeType(final Member member, final ContributeType contributeType);
+
+    Optional<Blockchain> findByMemberAndContributeType(
+            final Member member, final ContributeType contributeType);
+
     List<Blockchain> findByMemberId(final UUID memberId);
 }

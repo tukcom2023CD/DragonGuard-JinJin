@@ -15,10 +15,11 @@ import com.dragonguard.backend.domain.gitrepo.mapper.GitRepoMapper;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.member.service.AuthService;
-import com.dragonguard.backend.global.template.client.GithubClient;
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.template.kafka.KafkaProducer;
 import com.dragonguard.backend.global.annotation.TransactionService;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.template.client.GithubClient;
+import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
@@ -31,7 +32,6 @@ import java.util.stream.Collectors;
  * @author 김승진
  * @description 깃허브 Repository 관련 서비스 로직을 처리하는 클래스
  */
-
 @TransactionService
 @RequiredArgsConstructor
 public class GitRepoServiceImpl implements GitRepoService {
@@ -41,14 +41,17 @@ public class GitRepoServiceImpl implements GitRepoService {
     private final GitRepoMapper gitRepoMapper;
     private final KafkaProducer<SparkLineKafka> kafkaSparkLineProducer;
     private final KafkaProducer<GitRepoRequest> kafkaGitRepoInfoProducer;
-    private final GithubClient<GitRepoInfoRequest, List<GitRepoMemberClientResponse>> gitRepoMemberClient;
+    private final GithubClient<GitRepoInfoRequest, List<GitRepoMemberClientResponse>>
+            gitRepoMemberClient;
     private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
-    private final GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse> gitRepoSparkLineClient;
+    private final GithubClient<GitRepoClientRequest, GitRepoSparkLineResponse>
+            gitRepoSparkLineClient;
     private final GithubClient<GitRepoClientRequest, Integer> gitRepoIssueClient;
 
     @Override
-    public List<Integer> updateAndGetSparkLine(final String name, final String githubToken, final GitRepo gitRepo) {
+    public List<Integer> updateAndGetSparkLine(
+            final String name, final String githubToken, final GitRepo gitRepo) {
         final List<Integer> savedSparkLine = gitRepo.getSparkLine();
         if (!savedSparkLine.isEmpty()) {
             requestKafkaSparkLine(githubToken, gitRepo.getId());
@@ -65,12 +68,17 @@ public class GitRepoServiceImpl implements GitRepoService {
     }
 
     private List<Integer> requestClientSparkLine(final String githubToken, final String name) {
-        return Arrays.asList(gitRepoSparkLineClient.requestToGithub(new GitRepoClientRequest(githubToken, name)).getAll());
+        return Arrays.asList(
+                gitRepoSparkLineClient
+                        .requestToGithub(new GitRepoClientRequest(githubToken, name))
+                        .getAll());
     }
 
     @Override
-    public TwoGitRepoResponse findTwoGitReposAndUpdate(final GitRepoCompareRequest twoGitRepoCompareRequest) {
-        return new TwoGitRepoResponse(findOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()),
+    public TwoGitRepoResponse findTwoGitReposAndUpdate(
+            final GitRepoCompareRequest twoGitRepoCompareRequest) {
+        return new TwoGitRepoResponse(
+                findOneRepoResponse(twoGitRepoCompareRequest.getFirstRepo()),
                 findOneRepoResponse(twoGitRepoCompareRequest.getSecondRepo()));
     }
 
@@ -80,10 +88,15 @@ public class GitRepoServiceImpl implements GitRepoService {
 
         repoResponse.setClosedIssuesCount(requestClientGitRepoIssue(repoName, githubToken));
 
-        return findGitRepoResponse(repoName, repoResponse, requestClientGitRepoLanguage(repoName, githubToken), githubToken);
+        return findGitRepoResponse(
+                repoName,
+                repoResponse,
+                requestClientGitRepoLanguage(repoName, githubToken),
+                githubToken);
     }
 
-    private GitRepoClientResponse requestClientGitRepo(final String repoName, final String githubToken) {
+    private GitRepoClientResponse requestClientGitRepo(
+            final String repoName, final String githubToken) {
         return gitRepoClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName));
     }
 
@@ -110,8 +123,11 @@ public class GitRepoServiceImpl implements GitRepoService {
                 .collect(Collectors.toList());
     }
 
-    private GitRepoLanguages requestClientGitRepoLanguage(final String repoName, final String githubToken) {
-        return new GitRepoLanguages(gitRepoLanguageClient.requestToGithub(new GitRepoClientRequest(githubToken, repoName)));
+    private GitRepoLanguages requestClientGitRepoLanguage(
+            final String repoName, final String githubToken) {
+        return new GitRepoLanguages(
+                gitRepoLanguageClient.requestToGithub(
+                        new GitRepoClientRequest(githubToken, repoName)));
     }
 
     private Integer requestClientGitRepoIssue(final String repoName, final String githubToken) {
@@ -120,7 +136,9 @@ public class GitRepoServiceImpl implements GitRepoService {
 
     @Override
     public GitRepo findGitRepo(final String repoName) {
-        return gitRepoRepository.findByName(repoName).orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(repoName)));
+        return gitRepoRepository
+                .findByName(repoName)
+                .orElseGet(() -> gitRepoRepository.save(gitRepoMapper.toEntity(repoName)));
     }
 
     private StatisticsResponse getStatistics(final GitRepo gitRepo) {
@@ -130,34 +148,56 @@ public class GitRepoServiceImpl implements GitRepoService {
             return getStatisticsResponse(List.of(), List.of(), List.of());
         }
         return getStatisticsResponse(
-                getContributionList(gitRepoMembers, gitRepoMember -> gitRepoMember.getGitRepoContribution().getCommits()),
-                getContributionList(gitRepoMembers, gitRepoMember -> gitRepoMember.getGitRepoContribution().getAdditions()),
-                getContributionList(gitRepoMembers, gitRepoMember -> gitRepoMember.getGitRepoContribution().getDeletions()));
+                getContributionList(
+                        gitRepoMembers,
+                        gitRepoMember -> gitRepoMember.getGitRepoContribution().getCommits()),
+                getContributionList(
+                        gitRepoMembers,
+                        gitRepoMember -> gitRepoMember.getGitRepoContribution().getAdditions()),
+                getContributionList(
+                        gitRepoMembers,
+                        gitRepoMember -> gitRepoMember.getGitRepoContribution().getDeletions()));
     }
 
     private boolean isContributionEmpty(final Set<GitRepoMember> gitRepoMembers) {
-        return gitRepoMembers.stream().anyMatch(grm -> grm.getGitRepoContribution() == null
-                || grm.getGitRepoContribution().getCommits() == null);
+        return gitRepoMembers.stream()
+                .anyMatch(
+                        grm ->
+                                grm.getGitRepoContribution() == null
+                                        || grm.getGitRepoContribution().getCommits() == null);
     }
 
-    private List<Integer> getContributionList(final Set<GitRepoMember> gitRepoMembers, final Function<GitRepoMember, Integer> function) {
+    private List<Integer> getContributionList(
+            final Set<GitRepoMember> gitRepoMembers,
+            final Function<GitRepoMember, Integer> function) {
         return gitRepoMembers.stream().map(function).collect(Collectors.toList());
     }
 
-    private StatisticsResponse getStatisticsResponse(final List<Integer> commits, final List<Integer> additions, final List<Integer> deletions) {
-        return new StatisticsResponse(getSummaryResponse(commits), getSummaryResponse(additions), getSummaryResponse(deletions));
+    private StatisticsResponse getStatisticsResponse(
+            final List<Integer> commits,
+            final List<Integer> additions,
+            final List<Integer> deletions) {
+        return new StatisticsResponse(
+                getSummaryResponse(commits),
+                getSummaryResponse(additions),
+                getSummaryResponse(deletions));
     }
 
     private SummaryResponse getSummaryResponse(final List<Integer> contributions) {
         if (contributions.isEmpty()) {
-            return new SummaryResponse(new IntSummaryStatistics(NO_CONTRIBUTION, NO_CONTRIBUTION, NO_CONTRIBUTION, NO_CONTRIBUTION));
+            return new SummaryResponse(
+                    new IntSummaryStatistics(
+                            NO_CONTRIBUTION, NO_CONTRIBUTION, NO_CONTRIBUTION, NO_CONTRIBUTION));
         }
-        return new SummaryResponse(contributions.stream().mapToInt(Integer::intValue).summaryStatistics());
+        return new SummaryResponse(
+                contributions.stream().mapToInt(Integer::intValue).summaryStatistics());
     }
 
     @Override
-    public Optional<List<GitRepoMemberClientResponse>> requestClientGitRepoMember(final GitRepoInfoRequest gitRepoInfoRequest) {
-        List<GitRepoMemberClientResponse> responses = gitRepoMemberClient.requestToGithub(gitRepoInfoRequest);
+    public Optional<List<GitRepoMemberClientResponse>> requestClientGitRepoMember(
+            final GitRepoInfoRequest gitRepoInfoRequest) {
+        List<GitRepoMemberClientResponse> responses =
+                gitRepoMemberClient.requestToGithub(gitRepoInfoRequest);
         if (responses == null || responses.isEmpty()) {
             return Optional.empty();
         }
@@ -165,17 +205,28 @@ public class GitRepoServiceImpl implements GitRepoService {
     }
 
     @Override
-    public GitRepoContributions getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function) {
+    public GitRepoContributions getContributionMap(
+            final Set<GitRepoMemberClientResponse> contributions,
+            final ToIntFunction<Week> function) {
         if (hasNoContribution(contributions)) {
             return null;
         }
-        return new GitRepoContributions(contributions.stream()
-                .collect(Collectors.toMap(Function.identity(), mem -> mem.getWeeks().stream().mapToInt(function).sum())));
+        return new GitRepoContributions(
+                contributions.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        Function.identity(),
+                                        mem -> mem.getWeeks().stream().mapToInt(function).sum())));
     }
 
     private boolean hasNoContribution(final Set<GitRepoMemberClientResponse> contributions) {
-        return contributions == null || contributions.isEmpty()
-                || contributions.stream().map(GitRepoMemberClientResponse::getWeeks).filter(Objects::nonNull).findFirst().isEmpty();
+        return contributions == null
+                || contributions.isEmpty()
+                || contributions.stream()
+                        .map(GitRepoMemberClientResponse::getWeeks)
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                        .isEmpty();
     }
 
     private void requestKafkaSparkLine(final String githubToken, final Long id) {
@@ -184,13 +235,13 @@ public class GitRepoServiceImpl implements GitRepoService {
 
     @Override
     public void requestKafkaGitRepoInfo(final String githubToken, final String name) {
-        kafkaGitRepoInfoProducer.send(new GitRepoRequest(githubToken, name, LocalDate.now().getYear()));
+        kafkaGitRepoInfoProducer.send(
+                new GitRepoRequest(githubToken, name, LocalDate.now().getYear()));
     }
 
     @Override
     public GitRepo loadEntity(final Long id) {
-        return gitRepoRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+        return gitRepoRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -218,9 +269,8 @@ public class GitRepoServiceImpl implements GitRepoService {
 
     @Override
     public void saveAllIfNotExists(final Set<String> gitRepoNames) {
-        final List<GitRepo> gitRepos = gitRepoNames.stream()
-                .map(this::findGitRepo)
-                .collect(Collectors.toList());
+        final List<GitRepo> gitRepos =
+                gitRepoNames.stream().map(this::findGitRepo).collect(Collectors.toList());
 
         gitRepoRepository.saveAll(gitRepos);
     }

@@ -5,7 +5,9 @@ import com.dragonguard.backend.config.kafka.KafkaProducerConfig;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.support.batch.GitRepoBatchTest;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,12 +44,16 @@ import javax.persistence.EntityManager;
 @AutoConfigureTestEntityManager
 @ExtendWith(SpringExtension.class)
 @TypeExcludeFilters(DataJpaTypeExcludeFilter.class)
-@ComponentScan(excludeFilters  = {@ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes = {KafkaConsumerConfig.class, KafkaProducerConfig.class})})
-@SpringBootTest("spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration")
+@ComponentScan(
+        excludeFilters = {
+            @ComponentScan.Filter(
+                    type = FilterType.ASSIGNABLE_TYPE,
+                    classes = {KafkaConsumerConfig.class, KafkaProducerConfig.class})
+        })
+@SpringBootTest(
+        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration")
 @RunWith(SpringRunner.class)
-public class
-WebClientJobBatchTest extends GitRepoBatchTest {
+public class WebClientJobBatchTest extends GitRepoBatchTest {
     @Autowired private JobLauncherTestUtils jobLauncherTestUtils;
     @Autowired private GitRepoMemberRepository gitRepoMemberRepository;
     @Autowired private GitRepoRepository gitRepoRepository;

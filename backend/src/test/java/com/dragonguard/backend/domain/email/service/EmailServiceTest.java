@@ -1,5 +1,9 @@
 package com.dragonguard.backend.domain.email.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+
 import com.dragonguard.backend.domain.email.dto.kafka.KafkaEmail;
 import com.dragonguard.backend.domain.email.dto.request.EmailRequest;
 import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
@@ -12,17 +16,15 @@ import com.dragonguard.backend.domain.organization.service.OrganizationEmailFaca
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
 import com.dragonguard.backend.support.database.LoginTest;
 import com.dragonguard.backend.support.fixture.organization.entity.OrganizationFixture;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import javax.persistence.EntityManager;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
+import javax.persistence.EntityManager;
 
 @DisplayName("email 서비스의")
 class EmailServiceTest extends LoginTest {
@@ -38,48 +40,58 @@ class EmailServiceTest extends LoginTest {
     @Test
     @DisplayName("이메일 전송이 수행되는가")
     void sendEmail() {
-        //given
-        Organization organization = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
-        organization.addMember(memberRepository.findById(loginUser.getId()).orElse(null), "ohksj77@tukorea.ac.kr");
+        // given
+        Organization organization =
+                organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
+        organization.addMember(
+                memberRepository.findById(loginUser.getId()).orElse(null), "ohksj77@tukorea.ac.kr");
 
         doNothing().when(kafkaEmailProducer).send(any());
 
-        //when
+        // when
         Long emailId = organizationEmailFacade.sendAndSaveEmail().getId();
 
-        //then
+        // then
         assertThat(emailRepository.findById(emailId)).isNotEmpty();
     }
 
     @Test
     @DisplayName("이메일 코드 db 삭제가 수행되는가")
     void deleteCode() {
-        //given
-        Long given = emailRepository.save(Email.builder().code(11111).memberId(loginUser.getId()).build()).getId();
+        // given
+        Long given =
+                emailRepository
+                        .save(Email.builder().code(11111).memberId(loginUser.getId()).build())
+                        .getId();
 
-        //when
+        // when
         organizationEmailFacade.deleteCode(given);
 
         em.clear();
 
         Optional<Email> result = emailRepository.findById(given);
 
-        //then
+        // then
         assertThat(result).isEmpty();
     }
 
     @Test
     @DisplayName("이메일 코드 일치 확인이 수행되는가")
     void isCodeMatching() {
-        //given
+        // given
         int code = 11111;
-        Long given = emailRepository.save(Email.builder().code(code).memberId(loginUser.getId()).build()).getId();
+        Long given =
+                emailRepository
+                        .save(Email.builder().code(code).memberId(loginUser.getId()).build())
+                        .getId();
 
-        //when
-        CheckCodeResponse falseResult = organizationEmailFacade.isCodeMatching(new EmailRequest(given, code + 1, 1L));
-        CheckCodeResponse trueResult = organizationEmailFacade.isCodeMatching(new EmailRequest(given, code, 1L));
+        // when
+        CheckCodeResponse falseResult =
+                organizationEmailFacade.isCodeMatching(new EmailRequest(given, code + 1, 1L));
+        CheckCodeResponse trueResult =
+                organizationEmailFacade.isCodeMatching(new EmailRequest(given, code, 1L));
 
-        //then
+        // then
         assertThat(falseResult.getIsValidCode()).isFalse();
         assertThat(trueResult.getIsValidCode()).isTrue();
     }
@@ -87,13 +99,15 @@ class EmailServiceTest extends LoginTest {
     @Test
     @DisplayName("이메일 단건 조회가 수행되는가")
     void loadEntity() {
-        //given
-        Email given = emailRepository.save(Email.builder().code(11111).memberId(loginUser.getId()).build());
+        // given
+        Email given =
+                emailRepository.save(
+                        Email.builder().code(11111).memberId(loginUser.getId()).build());
 
-        //when
+        // when
         Email result = emailServiceImpl.loadEntity(given.getId());
 
-        //then
+        // then
         assertThat(given).isEqualTo(result);
     }
 }

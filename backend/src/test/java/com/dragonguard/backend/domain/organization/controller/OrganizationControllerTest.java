@@ -1,5 +1,16 @@
 package com.dragonguard.backend.domain.organization.controller;
 
+import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
+import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
@@ -7,6 +18,7 @@ import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.service.OrganizationEmailFacade;
 import com.dragonguard.backend.global.dto.IdResponse;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,21 +28,10 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
-import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @DisplayName("organization 컨트롤러의")
 @WebMvcTest(OrganizationController.class)
 class OrganizationControllerTest extends RestDocumentTest {
-    @MockBean
-    private OrganizationEmailFacade organizationService;
+    @MockBean private OrganizationEmailFacade organizationService;
 
     @Test
     @DisplayName("조직 생성이 수행되는가")
@@ -45,7 +46,11 @@ class OrganizationControllerTest extends RestDocumentTest {
                         post("/organizations")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
-                                        toRequestBody(new OrganizationRequest("한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr")))
+                                        toRequestBody(
+                                                new OrganizationRequest(
+                                                        "한국공학대학교",
+                                                        OrganizationType.UNIVERSITY,
+                                                        "tukorea.ac.kr")))
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
@@ -53,7 +58,11 @@ class OrganizationControllerTest extends RestDocumentTest {
 
         // docs
         perform.andDo(print())
-                .andDo(document("create organization", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "create organization",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
@@ -75,7 +84,11 @@ class OrganizationControllerTest extends RestDocumentTest {
 
         // docs
         perform.andDo(print())
-                .andDo(document("get organization id", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get organization id",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
@@ -100,17 +113,29 @@ class OrganizationControllerTest extends RestDocumentTest {
 
         // docs
         perform.andDo(print())
-                .andDo(document("add member to organization", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "add member to organization",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
     @DisplayName("타입별 조직 목록 조회가 수행되는가")
     void getOrganizations() throws Exception {
         // given
-        List<OrganizationResponse> expected = List.of(
-                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr", 100000L),
-                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
-                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
+        List<OrganizationResponse> expected =
+                List.of(
+                        new OrganizationResponse(
+                                1L,
+                                "한국공학대학교",
+                                OrganizationType.UNIVERSITY,
+                                "tukorea.ac.kr",
+                                100000L),
+                        new OrganizationResponse(
+                                2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
+                        new OrganizationResponse(
+                                3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
         given(organizationService.findByType(any(), any())).willReturn(expected);
 
         // when
@@ -125,17 +150,29 @@ class OrganizationControllerTest extends RestDocumentTest {
 
         // docs
         perform.andDo(print())
-                .andDo(document("get organization by type", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get organization by type",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
     @DisplayName("전체 조직 랭킹 조회가 수행되는가")
     void getOrganizationRank() throws Exception {
         // given
-        List<OrganizationResponse> expected = List.of(
-                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr", 100000L),
-                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
-                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
+        List<OrganizationResponse> expected =
+                List.of(
+                        new OrganizationResponse(
+                                1L,
+                                "한국공학대학교",
+                                OrganizationType.UNIVERSITY,
+                                "tukorea.ac.kr",
+                                100000L),
+                        new OrganizationResponse(
+                                2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
+                        new OrganizationResponse(
+                                3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
         given(organizationService.getOrganizationRank(any())).willReturn(expected);
 
         // when
@@ -150,17 +187,29 @@ class OrganizationControllerTest extends RestDocumentTest {
 
         // docs
         perform.andDo(print())
-                .andDo(document("get organization ranking", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get organization ranking",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
     @DisplayName("조직 타입별 랭킹 조회가 수행되는가")
     void getOrganizationRankByType() throws Exception {
         // given
-        List<OrganizationResponse> expected = List.of(
-                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr", 100000L),
-                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
-                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
+        List<OrganizationResponse> expected =
+                List.of(
+                        new OrganizationResponse(
+                                1L,
+                                "한국공학대학교",
+                                OrganizationType.UNIVERSITY,
+                                "tukorea.ac.kr",
+                                100000L),
+                        new OrganizationResponse(
+                                2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
+                        new OrganizationResponse(
+                                3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
         given(organizationService.getOrganizationRankByType(any(), any())).willReturn(expected);
 
         // when
@@ -175,17 +224,29 @@ class OrganizationControllerTest extends RestDocumentTest {
 
         // docs
         perform.andDo(print())
-                .andDo(document("get organization ranking by type", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get organization ranking by type",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
     @DisplayName("조직 검색이 수행되는가")
     void searchOrganization() throws Exception {
         // given
-        List<OrganizationResponse> expected = List.of(
-                new OrganizationResponse(1L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr", 100000L),
-                new OrganizationResponse(2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
-                new OrganizationResponse(3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
+        List<OrganizationResponse> expected =
+                List.of(
+                        new OrganizationResponse(
+                                1L,
+                                "한국공학대학교",
+                                OrganizationType.UNIVERSITY,
+                                "tukorea.ac.kr",
+                                100000L),
+                        new OrganizationResponse(
+                                2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
+                        new OrganizationResponse(
+                                3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
         given(organizationService.searchOrganization(any(), any(), any())).willReturn(expected);
 
         // when
@@ -200,6 +261,10 @@ class OrganizationControllerTest extends RestDocumentTest {
 
         // docs
         perform.andDo(print())
-                .andDo(document("search organization", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "search organization",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 }

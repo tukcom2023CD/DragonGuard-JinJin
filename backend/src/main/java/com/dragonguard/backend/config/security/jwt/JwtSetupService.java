@@ -1,7 +1,7 @@
 package com.dragonguard.backend.config.security.jwt;
 
-import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
  * @author 김승진
  * @description JWT와 쿠키의 연계를 돕는 클래스
  */
-
 @Service
 @RequiredArgsConstructor
 public class JwtSetupService {
@@ -30,7 +29,8 @@ public class JwtSetupService {
         addCookie(response, jwtToken.getRefreshToken(), refreshTokenHeaderTag);
     }
 
-    private void addCookie(final HttpServletResponse response, final String token, final String tag) {
+    private void addCookie(
+            final HttpServletResponse response, final String token, final String tag) {
         final ResponseCookie tokenCookie = setCookie(tag, token);
         response.addHeader(HttpHeaders.SET_COOKIE, tokenCookie.toString());
     }

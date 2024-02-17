@@ -7,10 +7,12 @@ import com.dragonguard.backend.domain.search.entity.Filter;
 import com.dragonguard.backend.domain.search.entity.Search;
 import com.dragonguard.backend.domain.search.mapper.SearchMapper;
 import com.dragonguard.backend.domain.search.repository.SearchRepository;
-import com.dragonguard.backend.global.template.client.GithubClient;
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.annotation.TransactionService;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
+import com.dragonguard.backend.global.template.client.GithubClient;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.HashSet;
@@ -19,12 +21,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 /**
  * @author 김승진
  * @description 검색 관련 서비스 로직을 처리하는 클래스
  */
-
 @TransactionService
 @RequiredArgsConstructor
 public class SearchServiceImpl implements SearchService {
@@ -38,18 +38,22 @@ public class SearchServiceImpl implements SearchService {
         if (isValidSearchRequest(searchRequest)) {
             return findOrGetSearchWithSearchAttributes(searchRequest);
         }
-        final List<Search> searches = searchRepository
-                .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
+        final List<Search> searches =
+                searchRepository.findByNameAndTypeAndPage(
+                        searchRequest.getName(), searchRequest.getType(), searchRequest.getPage());
         final List<String> filters = searchRequest.getFilters();
 
         return Optional.ofNullable(findSameSearch(searches, filters))
-                .orElseGet(() ->  searchRepository.save(searchMapper.toSearch(searchRequest)));
+                .orElseGet(() -> searchRepository.save(searchMapper.toSearch(searchRequest)));
     }
 
     private Search findOrGetSearchWithSearchAttributes(final SearchRequest searchRequest) {
         return searchRepository
-                .findByNameAndTypeAndPage(searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
-                .stream().filter(entity -> entity.getFilters().isEmpty()).findFirst()
+                .findByNameAndTypeAndPage(
+                        searchRequest.getName(), searchRequest.getType(), searchRequest.getPage())
+                .stream()
+                .filter(entity -> entity.getFilters().isEmpty())
+                .findFirst()
                 .orElseGet(() -> searchRepository.save(searchMapper.toSearch(searchRequest)));
     }
 
@@ -58,20 +62,23 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private boolean containsSameFilters(final List<String> filters, final Search search) {
-        return new HashSet<>(search.getFilters().stream()
-                .map(Filter::getFilter)
-                .collect(Collectors.toList()))
+        return new HashSet<>(
+                        search.getFilters().stream()
+                                .map(Filter::getFilter)
+                                .collect(Collectors.toList()))
                 .containsAll(filters);
     }
 
     private Search findSameSearch(final List<Search> searches, final List<String> filters) {
-        return searches.stream().filter(search -> containsSameFilters(filters, search)).findFirst().orElse(null);
+        return searches.stream()
+                .filter(search -> containsSameFilters(filters, search))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public Search loadEntity(final Long id) {
-        return searchRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+        return searchRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Cacheable(value = "userResults", key = "{#searchRequest}", cacheManager = "cacheManager")

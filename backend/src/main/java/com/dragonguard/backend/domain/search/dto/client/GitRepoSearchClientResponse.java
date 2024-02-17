@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
  * @author 김승진
  * @description 검색 결과를 Github REST API에서 받아오는 dto
  */
-
 @Getter
 @Builder
 @NoArgsConstructor

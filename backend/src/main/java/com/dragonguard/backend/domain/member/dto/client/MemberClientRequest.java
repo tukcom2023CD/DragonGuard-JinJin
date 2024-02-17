@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
  * @author 김승진
  * @description WebClient로의 요청시 필요한 dto
  */
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

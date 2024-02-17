@@ -5,6 +5,7 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
 import com.dragonguard.backend.global.template.entity.Contribution;
+
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +14,6 @@ import javax.persistence.*;
  * @author 김승진
  * @description 커밋 정보를 담는 DB Entity
  */
-
 @Getter
 @Entity
 @SoftDelete
@@ -21,9 +21,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Commit implements Contribution {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @Id @GeneratedValue private Long id;
 
     @Column(nullable = false)
     private Integer year;

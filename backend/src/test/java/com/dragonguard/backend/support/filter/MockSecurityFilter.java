@@ -3,9 +3,10 @@ package com.dragonguard.backend.support.filter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.IOException;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 public class MockSecurityFilter implements Filter {
     @Override

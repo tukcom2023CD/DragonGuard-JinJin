@@ -1,5 +1,9 @@
 package com.dragonguard.backend.domain.member.service;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
@@ -22,26 +26,23 @@ import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.domain.pullrequest.repository.PullRequestRepository;
-import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
 import com.dragonguard.backend.support.fixture.member.entity.MemberFixture;
 import com.dragonguard.backend.support.fixture.organization.entity.OrganizationFixture;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 
-import javax.persistence.EntityManager;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import javax.persistence.EntityManager;
 
 @DisplayName("Member 서비스의")
 class MemberServiceTest extends LoginTest {
@@ -59,15 +60,16 @@ class MemberServiceTest extends LoginTest {
     @Test
     @DisplayName("멤버 저장 기능이 수행되는가")
     void saveMember() {
-        //given
+        // given
 
-        //when
-        UUID userId = memberService.saveIfNone("HJ39", AuthStep.NONE, "http:/githubProfileUrl").getId();
+        // when
+        UUID userId =
+                memberService.saveIfNone("HJ39", AuthStep.NONE, "http:/githubProfileUrl").getId();
 
         UUID adminResult = memberRepository.findById(loginUser.getId()).orElseThrow().getId();
         UUID userResult = memberRepository.findById(userId).orElseThrow().getId();
 
-        //then
+        // then
         assertThat(adminResult).isEqualTo(loginUser.getId());
         assertThat(userResult).isEqualTo(userId);
     }
@@ -75,16 +77,16 @@ class MemberServiceTest extends LoginTest {
     @Test
     @DisplayName("전체 활용도 업데이트 기능이 수행되는가")
     void updateContributions() {
-        //given
+        // given
         Integer issue = loginUser.getSumOfIssues();
         Integer commit = loginUser.getSumOfCommits();
         Integer pullRequest = loginUser.getSumOfPullRequests();
         Integer review = loginUser.getSumOfCodeReviews();
 
-        //when
+        // when
         memberService.updateContributions();
 
-        //then
+        // then
         assertThat(loginUser.getSumOfIssues()).isNotEqualTo(issue);
         assertThat(loginUser.getSumOfCommits()).isNotEqualTo(commit);
         assertThat(loginUser.getSumOfPullRequests()).isNotEqualTo(pullRequest);
@@ -94,7 +96,7 @@ class MemberServiceTest extends LoginTest {
     @Test
     @DisplayName("블록체인 내역 업데이트가 수행되는가")
     void updateBlockchain() {
-        //given
+        // given
         int year = LocalDate.now().getYear();
         List<Blockchain> before = loginUser.getBlockchains();
         when(smartContractService.transfer(any(), any(), any())).thenReturn("123123");
@@ -107,27 +109,36 @@ class MemberServiceTest extends LoginTest {
 
         commitRepository.save(Commit.builder().year(year).member(loginUser).amount(200).build());
         issueRepository.save(Issue.builder().year(year).member(loginUser).amount(200).build());
-        pullRequestRepository.save(PullRequest.builder().year(year).member(loginUser).amount(200).build());
-        codeReviewRepository.save(CodeReview.builder().year(year).member(loginUser).amount(200).build());
+        pullRequestRepository.save(
+                PullRequest.builder().year(year).member(loginUser).amount(200).build());
+        codeReviewRepository.save(
+                CodeReview.builder().year(year).member(loginUser).amount(200).build());
 
         loginUser = authService.getLoginUser();
 
-        //when
+        // when
         memberService.updateBlockchain();
 
-        //then
+        // then
         List<Blockchain> after = loginUser.getBlockchains();
-//        assertThat(before.stream().map(Blockchain::getAmount).mapToLong(BigInteger::longValue).sum())
-//                .isNotEqualTo(after.stream().map(Blockchain::getAmount).mapToLong(BigInteger::longValue).sum());
+        //
+        // assertThat(before.stream().map(Blockchain::getAmount).mapToLong(BigInteger::longValue).sum())
+        //
+        // .isNotEqualTo(after.stream().map(Blockchain::getAmount).mapToLong(BigInteger::longValue).sum());
     }
 
     @Test
     @DisplayName("티어 조회가 수행되는가")
     void getTier() {
-        //given
+        // given
         loginUser = authService.getLoginUser();
         int contributionNum = 20000;
-        Blockchain blockchain = blockchainRepository.save(Blockchain.builder().member(loginUser).contributeType(ContributeType.COMMIT).build());
+        Blockchain blockchain =
+                blockchainRepository.save(
+                        Blockchain.builder()
+                                .member(loginUser)
+                                .contributeType(ContributeType.COMMIT)
+                                .build());
         blockchain.addHistory(BigInteger.valueOf(20000L), "woiufheawoiuerhg");
 
         loginUser.updateTier();
@@ -135,17 +146,17 @@ class MemberServiceTest extends LoginTest {
         em.flush();
         em.clear();
 
-        //when
+        // when
         Tier tier = authService.getLoginUser().getTier();
 
-        //then
+        // then
         assertThat(tier).isEqualTo(loginUser.checkTier(contributionNum));
     }
 
     @Test
     @DisplayName("조직별 멤버 랭킹 리스트 조회가 수행되는가")
     void getMemberRankingByOrganization() {
-        //given
+        // given
         Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
         Member member1 = authService.getLoginUser();
         Member member2 = memberRepository.save(MemberFixture.POSITE.toEntity());
@@ -157,31 +168,38 @@ class MemberServiceTest extends LoginTest {
         org.addMember(member3, "c@tukorea.ac.kr");
         org.addMember(member4, "d@tukorea.ac.kr");
 
-        //when
-        List<MemberRankResponse> response = memberService.findMemberRankingByOrganization(org.getId(), PageRequest.of(0, 4));
+        // when
+        List<MemberRankResponse> response =
+                memberService.findMemberRankingByOrganization(org.getId(), PageRequest.of(0, 4));
 
-        //then
+        // then
         assertThat(response.stream().map(MemberRankResponse::getId).collect(Collectors.toList()))
-                .isEqualTo(List.of(member1.getId(), member2.getId(), member3.getId(), member4.getId()));
+                .isEqualTo(
+                        List.of(
+                                member1.getId(),
+                                member2.getId(),
+                                member3.getId(),
+                                member4.getId()));
     }
 
     @Test
     @DisplayName("지갑 주소 갱신이 수행되는가")
     void updateWalletAddress() {
-        //given
+        // given
         Member member = authService.getLoginUser();
         String before = member.getWalletAddress();
 
-        //when
+        // when
         String after = "Dragon1234Guard4321JinJin";
         memberService.updateWalletAddress(new WalletRequest(after));
 
         em.flush();
         em.clear();
 
-        String walletAddress = memberRepository.findById(loginUser.getId()).get().getWalletAddress();
+        String walletAddress =
+                memberRepository.findById(loginUser.getId()).get().getWalletAddress();
 
-        //then
+        // then
         assertThat(before).isNotEqualTo(after);
         assertThat(walletAddress).isEqualTo(after);
     }
@@ -189,31 +207,31 @@ class MemberServiceTest extends LoginTest {
     @Test
     @DisplayName("멤버 본인 상세 조회가 수행되는가")
     void getMember() {
-        //given
+        // given
         Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
         Member member = authService.getLoginUser();
         org.addMember(member, "ohksj77@tukorea.ac.kr");
 
-        //when
+        // when
         MemberResponse result = memberService.getMember();
 
-        //then
+        // then
         assertThat(result.getId()).isEqualTo(loginUser.getId());
     }
 
     @Test
     @DisplayName("멤버 레포와 깃 org 조회가 수행되는가")
     void findMemberDetailByGithubId() {
-        //given
+        // given
         Member member = authService.getLoginUser();
         Organization org = organizationRepository.save(OrganizationFixture.TUKOREA.toEntity());
         org.addMember(member, "ohksj77@tukorea.ac.kr");
         member.finishAuth(org);
 
-        //when
+        // when
         MemberGitReposAndGitOrganizationsResponse result = memberService.findMemberDetails();
 
-        //then
+        // then
         assertThat(result.getGitOrganizations()).isNotNull(); // todo 더 정확한 validation 필요
     }
 }

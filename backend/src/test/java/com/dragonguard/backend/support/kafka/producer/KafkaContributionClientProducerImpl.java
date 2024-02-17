@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Primary
 @Component
-public class KafkaContributionClientProducerImpl implements KafkaProducer<KafkaContributionRequest> {
+public class KafkaContributionClientProducerImpl
+        implements KafkaProducer<KafkaContributionRequest> {
     @Override
     public void send(KafkaContributionRequest request) {}
 }

@@ -1,17 +1,8 @@
 package com.dragonguard.backend.domain.member.controller;
 
-import com.dragonguard.backend.config.security.jwt.JwtToken;
-import com.dragonguard.backend.domain.member.service.AuthService;
-import com.dragonguard.backend.support.docs.RestDocumentTest;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
-
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -19,11 +10,21 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.dragonguard.backend.config.security.jwt.JwtToken;
+import com.dragonguard.backend.domain.member.service.AuthService;
+import com.dragonguard.backend.support.docs.RestDocumentTest;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+
 @DisplayName("auth 컨트롤러의")
 @WebMvcTest(AuthController.class)
 class AuthControllerTest extends RestDocumentTest {
-    @MockBean
-    private AuthService authService;
+    @MockBean private AuthService authService;
 
     @Test
     @DisplayName("리프레시 토큰 갱신이 수행되는가")

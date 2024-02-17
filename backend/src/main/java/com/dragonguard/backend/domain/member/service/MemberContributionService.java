@@ -6,8 +6,8 @@ import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
-import com.dragonguard.backend.global.template.service.ContributionService;
 import com.dragonguard.backend.global.annotation.TransactionService;
+import com.dragonguard.backend.global.template.service.ContributionService;
 import lombok.RequiredArgsConstructor;
 
 @TransactionService
@@ -23,7 +23,8 @@ public class MemberContributionService {
     }
 
     public void savePullRequest(final Member member, final int pullRequestNum, final Integer year) {
-        pullRequestService.saveContribution(member, pullRequestNum, year, ContributeType.PULL_REQUEST);
+        pullRequestService.saveContribution(
+                member, pullRequestNum, year, ContributeType.PULL_REQUEST);
     }
 
     public void saveIssue(final Member member, final int issueNum, final Integer year) {

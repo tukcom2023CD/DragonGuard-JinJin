@@ -11,6 +11,7 @@ import java.time.LocalDate;
  * @author 김승진
  * @description 커밋내역 Entity와 dto의 변환을 돕는 클래스
  */
-
-@Mapper(componentModel = ComponentModel.SPRING, imports = {LocalDate.class})
+@Mapper(
+        componentModel = ComponentModel.SPRING,
+        imports = {LocalDate.class})
 public interface CommitMapper extends ContributionMapper<Commit> {}

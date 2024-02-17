@@ -5,9 +5,10 @@ import com.dragonguard.backend.domain.gitorganization.mapper.GitOrganizationMapp
 import com.dragonguard.backend.domain.gitorganization.repository.GitOrganizationRepository;
 import com.dragonguard.backend.domain.member.dto.client.MemberOrganizationResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.service.EntityLoader;
-import com.dragonguard.backend.global.annotation.TransactionService;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -18,24 +19,28 @@ import java.util.stream.Collectors;
  * @author 김승진
  * @description 깃허브 Organization 관련 서비스 로직을 담당하는 Service
  */
-
 @TransactionService
 @RequiredArgsConstructor
 public class GitOrganizationService implements EntityLoader<GitOrganization, Long> {
     private final GitOrganizationRepository gitOrganizationRepository;
     private final GitOrganizationMapper gitOrganizationMapper;
 
-    public void findAndSaveGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
-        final Set<GitOrganization> gitOrganizations = findNotSavedGitOrganizations(gitOrganizationNames, member);
+    public void findAndSaveGitOrganizations(
+            final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
+        final Set<GitOrganization> gitOrganizations =
+                findNotSavedGitOrganizations(gitOrganizationNames, member);
         saveAllGitOrganizations(gitOrganizations);
     }
 
-    private Set<GitOrganization> findNotSavedGitOrganizations(final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
+    private Set<GitOrganization> findNotSavedGitOrganizations(
+            final Set<MemberOrganizationResponse> gitOrganizationNames, final Member member) {
         return gitOrganizationNames.stream()
-                .map(org -> getGitOrganization(member, org)).collect(Collectors.toSet());
+                .map(org -> getGitOrganization(member, org))
+                .collect(Collectors.toSet());
     }
 
-    private GitOrganization getGitOrganization(final Member member, final MemberOrganizationResponse org) {
+    private GitOrganization getGitOrganization(
+            final Member member, final MemberOrganizationResponse org) {
         final String gitOrganizationName = org.getLogin();
         if (!gitOrganizationRepository.existsByName(gitOrganizationName)) {
             return gitOrganizationMapper.toEntity(gitOrganizationName, org.getAvatarUrl(), member);
@@ -56,12 +61,10 @@ public class GitOrganizationService implements EntityLoader<GitOrganization, Lon
 
     @Override
     public GitOrganization loadEntity(final Long id) {
-        return gitOrganizationRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+        return gitOrganizationRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public GitOrganization getByName(final String name) {
-        return gitOrganizationRepository.findByName(name)
-                .orElseThrow(EntityNotFoundException::new);
+        return gitOrganizationRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
     }
 }

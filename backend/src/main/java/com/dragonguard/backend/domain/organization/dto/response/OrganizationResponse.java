@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
  * @author 김승진
  * @description 조직(회사, 대학교)관련 응답정보를 담는 dto
  */
-
 @Getter
 @Builder
 @NoArgsConstructor
@@ -22,7 +21,12 @@ public class OrganizationResponse {
     private Long tokenSum;
 
     @QueryProjection
-    public OrganizationResponse(Long id, String name, OrganizationType organizationType, String emailEndpoint, Long tokenSum) {
+    public OrganizationResponse(
+            Long id,
+            String name,
+            OrganizationType organizationType,
+            String emailEndpoint,
+            Long tokenSum) {
         this.id = id;
         this.name = name;
         this.organizationType = organizationType;

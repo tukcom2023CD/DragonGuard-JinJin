@@ -10,7 +10,6 @@ import java.util.UUID;
  * @author 김승진
  * @description 블록체인 관련 응답 정보를 담는 dto
  */
-
 @Getter
 @Builder
 @AllArgsConstructor

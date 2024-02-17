@@ -2,7 +2,9 @@ package com.dragonguard.backend.domain.gitrepo.messagequeue;
 
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Component;
  * @author 김승진
  * @description 깃허브 Repository 정보를 스크래핑하기 위해 kafka로 요청하는 Producer
  */
-
 @Component
 @RequiredArgsConstructor
 public class KafkaGitRepoProducer implements KafkaProducer<GitRepoInfoRequest> {

@@ -12,15 +12,11 @@ import javax.validation.constraints.NotNull;
  * @author 김승진
  * @description 조직(회사, 대학교)관련 요청정보를 담는 dto
  */
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrganizationRequest {
-    @NotBlank
-    private String name;
-    @NotNull
-    private OrganizationType organizationType;
-    @NotBlank
-    private String emailEndpoint;
+    @NotBlank private String name;
+    @NotNull private OrganizationType organizationType;
+    @NotBlank private String emailEndpoint;
 }

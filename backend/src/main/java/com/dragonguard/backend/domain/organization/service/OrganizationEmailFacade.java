@@ -11,9 +11,9 @@ import com.dragonguard.backend.domain.organization.dto.request.OrganizationReque
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.dto.IdResponse;
 import com.dragonguard.backend.global.template.service.EntityLoader;
-import com.dragonguard.backend.global.annotation.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 
@@ -23,7 +23,6 @@ import java.util.List;
  * @author 김승진
  * @description 파사드 패턴으로 뽑아낸 조직 파사드 서비스
  */
-
 @TransactionService
 @RequiredArgsConstructor
 public class OrganizationEmailFacade {
@@ -60,7 +59,8 @@ public class OrganizationEmailFacade {
         return organizationService.saveOrganization(organizationRequest);
     }
 
-    public List<OrganizationResponse> findByType(final OrganizationType organizationType, final Pageable pageable) {
+    public List<OrganizationResponse> findByType(
+            final OrganizationType organizationType, final Pageable pageable) {
         return organizationService.findByType(organizationType, pageable);
     }
 
@@ -68,11 +68,13 @@ public class OrganizationEmailFacade {
         return organizationService.findOrganizationRank(pageable);
     }
 
-    public List<OrganizationResponse> getOrganizationRankByType(final OrganizationType type, final Pageable pageable) {
+    public List<OrganizationResponse> getOrganizationRankByType(
+            final OrganizationType type, final Pageable pageable) {
         return organizationService.findOrganizationRankByType(type, pageable);
     }
 
-    public List<OrganizationResponse> searchOrganization(final OrganizationType type, final String name, final Pageable pageable) {
+    public List<OrganizationResponse> searchOrganization(
+            final OrganizationType type, final String name, final Pageable pageable) {
         return organizationService.searchOrganization(type, name, pageable);
     }
 

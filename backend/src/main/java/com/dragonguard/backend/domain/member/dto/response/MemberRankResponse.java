@@ -10,18 +10,18 @@ import java.util.UUID;
  * @author 김승진
  * @description 멤버 랭킹 응답 정보를 담는 dto
  */
-
 @Getter
 public class MemberRankResponse {
-    private UUID id;
-    private String name;
-    private String githubId;
-    private Long tokens;
-    private Tier tier;
-    private String profileImage;
+    private final UUID id;
+    private final String name;
+    private final String githubId;
+    private final Long tokens;
+    private final Tier tier;
+    private final String profileImage;
 
     @QueryProjection
-    public MemberRankResponse(UUID id, String name, String githubId, Long tokens, Tier tier, String profileImage) {
+    public MemberRankResponse(
+            UUID id, String name, String githubId, Long tokens, Tier tier, String profileImage) {
         this.id = id;
         this.name = name;
         this.githubId = githubId;

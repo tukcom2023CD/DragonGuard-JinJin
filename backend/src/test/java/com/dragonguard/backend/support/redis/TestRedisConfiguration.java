@@ -1,6 +1,7 @@
 package com.dragonguard.backend.support.redis;
 
 import com.dragonguard.backend.config.redis.RedisProperties;
+
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.data.redis.connection.RedisServer;
 

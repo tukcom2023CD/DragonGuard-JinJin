@@ -1,6 +1,7 @@
 package com.dragonguard.backend.config.redis;
 
 import lombok.RequiredArgsConstructor;
+
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -12,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
@@ -21,12 +22,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-
 /**
  * @author 김승진
  * @description Redis 캐쉬를 사용하기 위한 설정을 등록하는 클래스
  */
-
 @Configuration
 @EnableCaching
 @EnableRedisRepositories
@@ -40,7 +39,12 @@ public class RedisConfig {
     @Bean
     public RedissonClient redissonClient() {
         final Config config = new Config();
-        config.useSingleServer().setAddress(REDISSON_HOST_PREFIX + redisProperties.getHost() + URL_DELIMITER + redisProperties.getPort());
+        config.useSingleServer()
+                .setAddress(
+                        REDISSON_HOST_PREFIX
+                                + redisProperties.getHost()
+                                + URL_DELIMITER
+                                + redisProperties.getPort());
         return Redisson.create(config);
     }
 
@@ -60,11 +64,18 @@ public class RedisConfig {
 
     @Bean
     public CacheManager cacheManager(final RedisConnectionFactory cf) {
-        final RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
-                .entryTtl(Duration.ofHours(TIME_TO_LIVE));
+        final RedisCacheConfiguration redisCacheConfiguration =
+                RedisCacheConfiguration.defaultCacheConfig()
+                        .serializeKeysWith(
+                                RedisSerializationContext.SerializationPair.fromSerializer(
+                                        new StringRedisSerializer()))
+                        .serializeValuesWith(
+                                RedisSerializationContext.SerializationPair.fromSerializer(
+                                        new GenericJackson2JsonRedisSerializer()))
+                        .entryTtl(Duration.ofHours(TIME_TO_LIVE));
 
-        return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(cf).cacheDefaults(redisCacheConfiguration).build();
+        return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(cf)
+                .cacheDefaults(redisCacheConfiguration)
+                .build();
     }
 }

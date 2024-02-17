@@ -1,21 +1,20 @@
 package com.dragonguard.backend.domain.commit.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.commit.repository.CommitRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
-import com.dragonguard.backend.support.database.DatabaseTest;
 import com.dragonguard.backend.support.database.LoginTest;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("commit 서비스의")
 class CommitServiceTest extends LoginTest {
@@ -26,13 +25,18 @@ class CommitServiceTest extends LoginTest {
     @Test
     @DisplayName("커밋 내역 저장이 수행되는가")
     void saveCommits() {
-        //given
+        // given
 
-        //when
-        commitService.saveContribution(memberRepository.findById(loginUser.getId()).orElse(null), 100, LocalDateTime.now().getYear(), ContributeType.COMMIT);
-        Optional<Commit> commits = commitRepository.findByMemberAndYear(loginUser, LocalDate.now().getYear());
+        // when
+        commitService.saveContribution(
+                memberRepository.findById(loginUser.getId()).orElse(null),
+                100,
+                LocalDateTime.now().getYear(),
+                ContributeType.COMMIT);
+        Optional<Commit> commits =
+                commitRepository.findByMemberAndYear(loginUser, LocalDate.now().getYear());
 
-        //then
+        // then
         assertThat(commits).isNotEmpty();
         final Commit commit = commits.get();
         assertThat(commit.getAmount()).isEqualTo(100);
@@ -42,13 +46,19 @@ class CommitServiceTest extends LoginTest {
     @Test
     @DisplayName("commit 단건 조회가 수행되는가")
     void loadEntity() {
-        //given
-        Commit given = commitRepository.save(Commit.builder().year(LocalDateTime.now().getYear()).amount(1).member(memberRepository.findById(loginUser.getId()).orElse(null)).build());
+        // given
+        Commit given =
+                commitRepository.save(
+                        Commit.builder()
+                                .year(LocalDateTime.now().getYear())
+                                .amount(1)
+                                .member(memberRepository.findById(loginUser.getId()).orElse(null))
+                                .build());
 
-        //when
+        // when
         Commit result = commitService.loadEntity(given.getId());
 
-        //then
+        // then
         assertThat(given).isEqualTo(result);
     }
 }

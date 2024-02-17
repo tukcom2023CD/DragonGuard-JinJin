@@ -12,12 +12,17 @@ import java.util.UUID;
  * @author 김승진
  * @description 멤버 DB 조회 접근에 대한 인터페이스
  */
-
 public interface MemberQueryRepository {
     List<MemberRankResponse> findRanking(final Pageable pageable);
+
     Integer findRankingById(final UUID id);
-    List<MemberRankResponse> findRankingByOrganization(final Long organizationId, final Pageable pageable);
+
+    List<MemberRankResponse> findRankingByOrganization(
+            final Long organizationId, final Pageable pageable);
+
     Optional<Member> findByGithubId(final String githubId);
+
     String findRefreshTokenById(final UUID id);
+
     boolean existsByGithubId(final String githubId);
 }

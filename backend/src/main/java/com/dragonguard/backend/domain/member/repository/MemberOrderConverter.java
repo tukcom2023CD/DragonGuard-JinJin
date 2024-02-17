@@ -1,21 +1,19 @@
 package com.dragonguard.backend.domain.member.repository;
 
+import static com.dragonguard.backend.domain.member.entity.QMember.member;
+
 import com.dragonguard.backend.global.template.converter.OrderConverter;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.dragonguard.backend.domain.member.entity.QMember.member;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
 /**
  * @author 김승진
  * @description 멤버 정렬 조건을 설정하는 클래스
  */
-
 @Component
 public class MemberOrderConverter implements OrderConverter {
 

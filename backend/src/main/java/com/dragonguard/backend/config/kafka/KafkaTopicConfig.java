@@ -5,89 +5,65 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
-
 /**
  * @author 김승진
  * @description Kafka의 토픽을 생성해주는 클래스
  */
-
 @Configuration
 public class KafkaTopicConfig {
 
     @Bean
     public NewTopic commitTopic() {
-        return TopicBuilder
-                .name("gitrank.to.scrape.contribution")
-                .build();
+        return TopicBuilder.name("gitrank.to.scrape.contribution").build();
     }
 
     @Bean
     public NewTopic resultTopic() {
-        return TopicBuilder
-                .name("gitrank.to.scrape.result")
-                .build();
+        return TopicBuilder.name("gitrank.to.scrape.result").build();
     }
 
     @Bean
     public NewTopic gitRepoTopic() {
-        return TopicBuilder
-                .name("gitrank.to.scrape.git-repos")
-                .build();
+        return TopicBuilder.name("gitrank.to.scrape.git-repos").build();
     }
 
     @Bean
     public NewTopic issueTopic() {
-        return TopicBuilder
-                .name("gitrank.to.scrape.issues")
-                .build();
+        return TopicBuilder.name("gitrank.to.scrape.issues").build();
     }
 
     @Bean
     public NewTopic contributionTopic() {
-        return TopicBuilder
-                .name("gitrank.to.backend.contribution.client")
-                .build();
+        return TopicBuilder.name("gitrank.to.backend.contribution.client").build();
     }
 
     @Bean
     public NewTopic repositoryTopic() {
-        return TopicBuilder
-                .name("gitrank.to.backend.repository.client")
-                .build();
+        return TopicBuilder.name("gitrank.to.backend.repository.client").build();
     }
 
     @Bean
     public NewTopic emailTopic() {
-        return TopicBuilder
-                .name("gitrank.to.backend.email")
-                .build();
+        return TopicBuilder.name("gitrank.to.backend.email").build();
     }
 
     @Bean
     public NewTopic sparkLineTopic() {
-        return TopicBuilder
-                .name("gitrank.to.backend.spark-line")
-                .build();
+        return TopicBuilder.name("gitrank.to.backend.spark-line").build();
     }
 
     @Bean
     public NewTopic gitRepoInfoTopic() {
-        return TopicBuilder
-                .name("gitrank.to.backend.git-repos-info")
-                .build();
+        return TopicBuilder.name("gitrank.to.backend.git-repos-info").build();
     }
 
     @Bean
     public NewTopic blockchainTopic() {
-        return TopicBuilder
-                .name("gitrank.to.backend.blockchain")
-                .build();
+        return TopicBuilder.name("gitrank.to.backend.blockchain").build();
     }
 
     @Bean
     public NewTopic smartContractTopic() {
-        return TopicBuilder
-                .name("gitrank.to.backend.smartcontract")
-                .build();
+        return TopicBuilder.name("gitrank.to.backend.smartcontract").build();
     }
 }

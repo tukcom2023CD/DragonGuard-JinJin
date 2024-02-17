@@ -1,10 +1,9 @@
 package com.dragonguard.backend.config.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,13 +13,11 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.ContainerProperties;
-import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.retrytopic.RetryTopicConfiguration;
 import org.springframework.kafka.retrytopic.RetryTopicConfigurationBuilder;
 import org.springframework.kafka.retrytopic.TopicSuffixingStrategy;
 import org.springframework.kafka.support.EndpointHandlerMethod;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +26,6 @@ import java.util.Map;
  * @author 김승진
  * @description Kafka의 Consumer들을 위한 설정 클래스
  */
-
 @EnableKafka
 @Configuration
 @RequiredArgsConstructor
@@ -60,22 +56,25 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-        final ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        final ConcurrentKafkaListenerContainerFactory<String, String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }
 
     @Bean
-    public RetryTopicConfiguration retryTopicConfig(final KafkaTemplate<String, Object> kafkaTemplate) {
-        return RetryTopicConfigurationBuilder
-                .newInstance()
+    public RetryTopicConfiguration retryTopicConfig(
+            final KafkaTemplate<String, Object> kafkaTemplate) {
+        return RetryTopicConfigurationBuilder.newInstance()
                 .autoCreateTopicsWith(REPLICA_COUNT, REPLICA_FACTOR)
                 .maxAttempts(MAX_ATTEMPTS)
                 .fixedBackOff(RETRY_INTERVAL)
                 .listenerFactory(kafkaListenerContainerFactory())
                 .setTopicSuffixingStrategy(TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
-                .dltHandlerMethod(new EndpointHandlerMethod(ConsumerErrorHandler.class, ERROR_HANDLING_METHOD))
+                .dltHandlerMethod(
+                        new EndpointHandlerMethod(
+                                ConsumerErrorHandler.class, ERROR_HANDLING_METHOD))
                 .create(kafkaTemplate);
     }
 }

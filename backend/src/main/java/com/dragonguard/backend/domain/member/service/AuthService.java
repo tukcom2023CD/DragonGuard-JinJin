@@ -7,9 +7,11 @@ import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.exception.JwtProcessingException;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
-import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.annotation.TransactionService;
+import com.dragonguard.backend.global.exception.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
@@ -19,7 +21,6 @@ import java.util.UUID;
  * @author 김승진
  * @description 멤버 인증 관련 서비스 로직을 담당하는 클래스
  */
-
 @TransactionService
 @RequiredArgsConstructor
 public class AuthService {
@@ -37,7 +38,8 @@ public class AuthService {
     private JwtToken getMemberAndUpdateRefreshToken(final UserPrinciple userPrinciple) {
         final JwtToken jwtToken = jwtTokenProvider.createToken(userPrinciple);
 
-        memberRepository.findById(UUID.fromString(userPrinciple.getName()))
+        memberRepository
+                .findById(UUID.fromString(userPrinciple.getName()))
                 .orElseThrow(EntityNotFoundException::new)
                 .updateRefreshToken(jwtToken.getRefreshToken());
 
@@ -70,12 +72,14 @@ public class AuthService {
     }
 
     public UUID getLoginUserId() {
-        final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final Object principal =
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return UUID.fromString(((UserPrinciple) principal).getName());
     }
 
     public Member getLoginUser() {
-        return memberRepository.findById(getLoginUserId())
+        return memberRepository
+                .findById(getLoginUserId())
                 .orElseThrow(EntityNotFoundException::new);
     }
 }

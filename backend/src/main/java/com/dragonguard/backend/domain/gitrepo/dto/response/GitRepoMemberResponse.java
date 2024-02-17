@@ -3,13 +3,13 @@ package com.dragonguard.backend.domain.gitrepo.dto.response;
 import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoMemberDetailsResponse;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 
 /**
  * @author 김승진
  * @description 깃허브 Repository 관련 멤버 기여도 정보를 Github REST API에서 응답을 받아 담는 dto
  */
-
 @Getter
 @Builder
 @NoArgsConstructor
@@ -22,8 +22,7 @@ public class GitRepoMemberResponse {
     private Integer additions;
     private Integer deletions;
     private Boolean isServiceMember;
-    @JsonIgnore
-    private Member member;
+    @JsonIgnore private Member member;
 
     public GitRepoMemberResponse(final GitRepoMemberDetailsResponse response, final Member member) {
         this.githubId = response.getMember();

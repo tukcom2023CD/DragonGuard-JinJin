@@ -15,24 +15,27 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+
 import lombok.*;
+
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.*;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
+
+import javax.persistence.*;
 
 /**
  * @author 김승진
  * @description 멤버 정보를 담는 DB Entity
  */
-
 @Getter
 @Entity
 @SoftDelete
@@ -40,8 +43,17 @@ import java.util.stream.Collectors;
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member implements Auditable {
-    private static final String BLOCKCHAIN_URL = "https://baobab.scope.klaytn.com/account/%s?tabId=txList";
+    private static final String BLOCKCHAIN_URL =
+            "https://baobab.scope.klaytn.com/account/%s?tabId=txList";
     private static final Long NO_TOKEN = 0L;
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private final List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "member",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private final List<GitRepoMember> gitRepoMembers = new ArrayList<>();
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -55,7 +67,6 @@ public class Member implements Auditable {
     private String githubId;
 
     private String profileImage;
-
     private String walletAddress;
 
     @Enumerated(EnumType.STRING)
@@ -78,12 +89,6 @@ public class Member implements Auditable {
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
-    private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private List<GitRepoMember> gitRepoMembers = new ArrayList<>();
 
     @JoinColumn
     @Where(clause = "organization_status = 'ACCEPTED'")
@@ -118,11 +123,18 @@ public class Member implements Auditable {
     @Formula("(SELECT COALESCE(sum(cr.amount), 0) FROM code_review cr WHERE cr.member_id = id)")
     private Integer sumOfCodeReviews;
 
-    @Formula("(SELECT COALESCE(sum(h.amount), 0) FROM member m left join blockchain b on b.member_id = m.id left join history h on h.blockchain_id = b.id where m.id = id)")
+    @Formula(
+            "(SELECT COALESCE(sum(h.amount), 0) FROM member m left join blockchain b on b.member_id = m.id left join history h on h.blockchain_id = b.id where m.id = id)")
     private Long sumOfTokens;
 
     @Builder
-    public Member(final String name, final String githubId, final String walletAddress, final String profileImage, final Role role, final AuthStep authStep) {
+    public Member(
+            final String name,
+            final String githubId,
+            final String walletAddress,
+            final String profileImage,
+            final Role role,
+            final AuthStep authStep) {
         this.name = name;
         this.githubId = githubId;
         this.walletAddress = walletAddress;
@@ -185,7 +197,10 @@ public class Member implements Auditable {
     }
 
     public List<SimpleGrantedAuthority> getRole() {
-        return role.stream().map(Role::name).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return role.stream()
+                .map(Role::name)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     public void updateGithubToken(final String githubToken) {
@@ -237,7 +252,10 @@ public class Member implements Auditable {
     }
 
     public Set<String> getGitRepoNames() {
-        return this.gitRepoMembers.stream().map(GitRepoMember::getGitRepo).map(GitRepo::getName).collect(Collectors.toSet());
+        return this.gitRepoMembers.stream()
+                .map(GitRepoMember::getGitRepo)
+                .map(GitRepo::getName)
+                .collect(Collectors.toSet());
     }
 
     public String getOrganizationName() {
@@ -262,7 +280,8 @@ public class Member implements Auditable {
         return this.authStep.isServiceMemberAuthStep();
     }
 
-    public void updateAuthStepAndNameAndProfileImage(final AuthStep authStep, final String name, final String profileImage) {
+    public void updateAuthStepAndNameAndProfileImage(
+            final AuthStep authStep, final String name, final String profileImage) {
         this.authStep = authStep;
         this.name = name;
         this.profileImage = profileImage;

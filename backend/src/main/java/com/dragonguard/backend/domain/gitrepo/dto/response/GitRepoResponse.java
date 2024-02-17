@@ -9,7 +9,6 @@ import java.util.List;
  * @author 김승진
  * @description 레포지토리 관련 응답 정보를 담는 dto 클래스
  */
-
 @Getter
 @AllArgsConstructor
 public class GitRepoResponse {

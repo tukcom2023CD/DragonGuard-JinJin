@@ -1,14 +1,12 @@
 package com.dragonguard.backend.utils;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Random;
+import org.springframework.stereotype.Component;
 
 /**
  * @author 김승진
  * @description 랜덤 인증 코드 생성에 사용될 util 클래스
  */
-
 @Component
 public class RandomCodeGenerator {
     private static final int MIN = 10000;

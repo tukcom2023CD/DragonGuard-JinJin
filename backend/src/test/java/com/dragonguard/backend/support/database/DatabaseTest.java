@@ -2,6 +2,7 @@ package com.dragonguard.backend.support.database;
 
 import com.dragonguard.backend.config.kafka.KafkaConsumerConfig;
 import com.dragonguard.backend.config.kafka.KafkaProducerConfig;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -17,9 +18,16 @@ import java.lang.annotation.Target;
 @Transactional
 @ActiveProfiles("test")
 @EmbeddedKafka(topics = {})
-@ComponentScan(excludeFilters  = {@ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE, classes = {KafkaConsumerConfig.class, KafkaProducerConfig.class})})
+@ComponentScan(
+        excludeFilters = {
+            @ComponentScan.Filter(
+                    type = FilterType.ASSIGNABLE_TYPE,
+                    classes = {KafkaConsumerConfig.class, KafkaProducerConfig.class})
+        })
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, value = "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration")
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.MOCK,
+        value =
+                "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration")
 public @interface DatabaseTest {}
