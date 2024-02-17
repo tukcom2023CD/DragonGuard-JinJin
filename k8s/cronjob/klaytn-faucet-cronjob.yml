@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: klaytn-faucet-cronjob
+spec:
+  schedule: "0 5 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: klaytn-faucet-cronjob
+              image: curlimages/curl:7.77.0
+              imagePullPolicy: IfNotPresent
+              command:
+                - "/bin/sh"
+                - "-c"
+                - |
+                  curl -X "POST" "http://gitrank-backend/api/cronjob/klaytn-faucet" \
+                       -H 'Content-Type: application/json; charset=utf-8'                  
+          restartPolicy: Never

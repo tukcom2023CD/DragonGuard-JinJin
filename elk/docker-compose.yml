@@ -3,12 +3,12 @@ version: '3.9'
 services:
   elasticsearch:
     build:
-      context: ./elk/elasticsearch
+      context: ./elasticsearch
       args:
         ELASTIC_VERSION: 8.5.2
     container_name: elasticsearch
     volumes:
-      - ./elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
       - elasticsearch:/usr/share/elasticsearch/data:Z
     ports:
       - 9200:9200
@@ -27,8 +27,8 @@ services:
         ELASTIC_VERSION: 8.5.2
     container_name: logstash
     volumes:
-      - ./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
-      - ./elk/logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
     ports:
       - 5044:5044
       - 50000:50000/tcp
@@ -43,12 +43,12 @@ services:
 
   kibana:
     build:
-      context: ./elk/kibana
+      context: ./kibana
       args:
         ELASTIC_VERSION: 8.5.2
     container_name: kibana
     volumes:
-      - ./elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
     ports:
       - 5601:5601
     environment:
@@ -60,13 +60,13 @@ services:
 
   filebeat:
     build:
-      context: ./elk/filebeat
+      context: ./filebeat
       args:
         ELASTIC_VERSION: 8.5.2
     entrypoint: "filebeat -e -strict.perms=false"
     container_name: filebeat
     volumes:
-      - ./elk/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml
       - ./nginx/log:/var/log/nginx
     depends_on:
       - logstash

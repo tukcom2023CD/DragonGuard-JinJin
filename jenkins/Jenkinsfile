@@ -1,0 +1,69 @@
+import groovy.json.JsonOutput
+import jdk.jfr.ContentType
+
+pipeline {
+	agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: "master",
+                    credentialsId: 'gitrank',
+                    url: 'git@github.com:tukcom2023CD/DragonGuard-JinJin.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                retry(2) {
+                    sh """#!/bin/bash
+
+                    ./gradlew -Dspring.profiles.active=prod -Dfile.encoding=UTF-8 -Pprofile=prod clean build
+                    """
+                }
+            }
+        }
+        stage('Tag and Push') {
+            steps {
+                retry(3) {
+                    withCredentials([string(credentialsId: 'dockerhub-user-id', variable: 'DOCKER_USER_ID'), string(credentialsId: 'dockerhub-user-password', variable: 'DOCKER_USER_PASSWORD')]) {
+                    sh """#!/bin/bash
+                    ./gradlew -Dspring.profiles.active=prod -Pprofile=prod jib \
+                       -Djib.container.jvmFlags='-Dspring.profiles.active=prod' \
+                       -Djib.to.image=ohksj77/gitrank-backend:prod-${BUILD_NUMBER} \
+                       -Djib.to.auth.username=${DOCKER_USER_ID} \
+                       -Djib.to.auth.password='${DOCKER_USER_PASSWORD}' --stacktrace
+                    """
+                    }
+                }
+            }
+        }
+        stage('Clean Up') {
+            steps {
+                step([$class: 'WsCleanup'])
+            }
+        }
+        stage('GitOps Checkout') {
+            steps {
+                git branch: "master",
+                    credentialsId: 'gitrank',
+                    url: 'git@github.com:tukcom2023CD/DragonGuard-JinJin.git'
+            }
+        }
+        stage('GitOps Patch') {
+            steps {
+                sshagent(credentials : ['gitrank']) {
+                    sh '''#!/bin/bash
+                    cd k8s/backend
+                    BEFORE=$(cat deployment.yaml | grep 'image: ohksj77/gitrank-backend:prod-' | sed -e 's/^ *//g' -e 's/ *$//g')
+                    sed -i "s@$BEFORE@image: ohksj77/gitrank-backend:prod-$BUILD_NUMBER@g" deployment.yaml
+
+                    git config user.name ohksj77
+                    git config user.email ohksj77@gmail.com
+                    git add .
+                    git commit -m "chore: jenkins push $BUILD_NUMBER"
+                    git push origin master
+                    '''
+                }
+            }
+        }
+    }
+}
