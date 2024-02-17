@@ -17,5 +17,12 @@ spec:
                 - "-c"
                 - |
                   curl -X "POST" "http://gitrank-backend/api/cronjob/klaytn-faucet" \
-                       -H 'Content-Type: application/json; charset=utf-8'                  
+                       -H 'Cronjob-Auth: ${CRONJOB_AUTH}'
+                       -H 'Content-Type: application/json; charset=utf-8'
+              env:
+                - name: CRONJOB_AUTH
+                  valueFrom:
+                    secretKeyRef:
+                      name: gitrank-secret
+                      key: cronjob.auth          
           restartPolicy: Never

@@ -1,5 +1,6 @@
 package com.dragonguard.backend.global.advice;
 
+import com.dragonguard.backend.global.exception.CronjobException;
 import com.dragonguard.backend.global.exception.DistributedLockUnavailableException;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.exception.WebClientException;
@@ -68,5 +69,11 @@ public class GlobalErrorAdvice {
     @ExceptionHandler(WebClientException.class)
     public ResponseEntity<Void> webClientException(final WebClientException e) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @ExceptionHandler(CronjobException.class)
+    public ResponseEntity<ErrorResponse> cronjobException(final CronjobException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(e.getMessage()));
     }
 }
