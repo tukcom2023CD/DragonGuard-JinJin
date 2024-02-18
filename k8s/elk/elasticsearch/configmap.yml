@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch
+data:
+  elasticsearch.yml: |
+    cluster.name: docker-cluster
+    network.host: 0.0.0.0
+
+    xpack.license.self_generated.type: basic
+    xpack.security.enabled: false
+    xpack.monitoring.collection.enabled: false

@@ -1,0 +1,3 @@
+resources:
+  - daemonset.yml
+  - configmap.yml
