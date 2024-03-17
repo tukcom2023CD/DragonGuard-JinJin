@@ -113,8 +113,4 @@ public class MemberClientService {
                 .map(OrganizationRepoResponse::getFullName)
                 .collect(Collectors.toSet());
     }
-
-    public Object test() {
-        return null;
-    }
 }

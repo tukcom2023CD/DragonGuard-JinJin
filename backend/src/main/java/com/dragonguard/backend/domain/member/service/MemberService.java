@@ -21,6 +21,7 @@ import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
 import com.dragonguard.backend.global.template.service.EntityLoader;
+import com.dragonguard.backend.utils.RedisRankingUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,6 +47,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private final GitOrganizationService gitOrganizationService;
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
     private final KafkaProducer<KafkaContributionRequest> kafkaContributionClientProducer;
+    private final RedisRankingUtils redisRankingUtils;
 
     public Member findMemberOrSaveWithRole(
             final String githubId, final Role role, final AuthStep authStep) {
@@ -103,7 +105,9 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     @Transactional(readOnly = true)
     public List<MemberRankResponse> findMemberRanking(final Pageable pageable) {
-        return memberRepository.findRanking(pageable);
+        final int pageSize = pageable.getPageSize();
+        final int offset = pageable.getPageNumber() * pageSize;
+        return redisRankingUtils.getTopUsers(offset, offset + pageSize);
     }
 
     public void updateWalletAddress(final WalletRequest walletRequest) {

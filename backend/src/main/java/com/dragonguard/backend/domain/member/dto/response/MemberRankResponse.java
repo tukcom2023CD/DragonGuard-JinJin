@@ -2,7 +2,9 @@ package com.dragonguard.backend.domain.member.dto.response;
 
 import com.dragonguard.backend.domain.member.entity.Tier;
 import com.querydsl.core.annotations.QueryProjection;
+
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
@@ -11,17 +13,23 @@ import java.util.UUID;
  * @description 멤버 랭킹 응답 정보를 담는 dto
  */
 @Getter
+@NoArgsConstructor
 public class MemberRankResponse {
-    private final UUID id;
-    private final String name;
-    private final String githubId;
-    private final Long tokens;
-    private final Tier tier;
-    private final String profileImage;
+    private UUID id;
+    private String name;
+    private String githubId;
+    private Long tokens;
+    private Tier tier;
+    private String profileImage;
 
     @QueryProjection
     public MemberRankResponse(
-            UUID id, String name, String githubId, Long tokens, Tier tier, String profileImage) {
+            final UUID id,
+            final String name,
+            final String githubId,
+            final Long tokens,
+            final Tier tier,
+            final String profileImage) {
         this.id = id;
         this.name = name;
         this.githubId = githubId;
