@@ -5,18 +5,19 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+
 import lombok.*;
 
-import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.*;
 
 /**
  * @author 김승진
  * @description 블록체인 정보를 담는 DB Entity
  */
-
 @Getter
 @Entity
 @SoftDelete
@@ -24,9 +25,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Blockchain implements Auditable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @Id @GeneratedValue private Long id;
 
     @Enumerated(EnumType.STRING)
     private ContributeType contributeType;
@@ -66,7 +65,10 @@ public class Blockchain implements Auditable {
     }
 
     public long getSumOfAmount() {
-        return this.histories.stream().map(History::getAmount).mapToLong(BigInteger::longValue).sum();
+        return this.histories.stream()
+                .map(History::getAmount)
+                .mapToLong(BigInteger::longValue)
+                .sum();
     }
 
     public void deleteByMember() {

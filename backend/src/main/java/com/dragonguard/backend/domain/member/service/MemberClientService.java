@@ -2,26 +2,29 @@ package com.dragonguard.backend.domain.member.service;
 
 import com.dragonguard.backend.domain.member.dto.client.*;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.annotation.TransactionService;
+import com.dragonguard.backend.global.template.client.GithubClient;
+
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
-
 
 /**
  * @author 김승진
  * @description WebClient로의 요청을 처리하는 Service
  */
-
 @TransactionService
 @RequiredArgsConstructor
 public class MemberClientService {
-    private final GithubClient<MemberClientRequest, OrganizationRepoResponse[]> organizationRepositoryClient;
+    private final GithubClient<MemberClientRequest, OrganizationRepoResponse[]>
+            organizationRepositoryClient;
     private final GithubClient<MemberClientRequest, MemberRepoResponse[]> repositoryClient;
-    private final GithubClient<MemberClientRequest, MemberOrganizationResponse[]> organizationClient;
+    private final GithubClient<MemberClientRequest, MemberOrganizationResponse[]>
+            organizationClient;
     private final GithubClient<MemberClientRequest, MemberCodeReviewResponse> codeReviewClient;
     private final GithubClient<MemberClientRequest, MemberPullRequestResponse> pullRequestClient;
     private final GithubClient<MemberClientRequest, MemberIssueResponse> issueClient;
@@ -33,7 +36,8 @@ public class MemberClientService {
     public void addMemberContribution(final Member member) {
         final int year = LocalDate.now().getYear();
         final String githubId = member.getGithubId();
-        final MemberClientRequest request = new MemberClientRequest(githubId,  member.getGithubToken(), year);
+        final MemberClientRequest request =
+                new MemberClientRequest(githubId, member.getGithubToken(), year);
 
         requestCommitClientAndSave(member, request);
         requestIssueClientAndSave(member, request);
@@ -41,13 +45,15 @@ public class MemberClientService {
         requestCodeReviewClientAndSave(member, request);
     }
 
-    private void requestCodeReviewClientAndSave(final Member member, final MemberClientRequest request) {
+    private void requestCodeReviewClientAndSave(
+            final Member member, final MemberClientRequest request) {
         final int codeReviewNum = codeReviewClient.requestToGithub(request).getTotalCount();
 
         memberContributionService.saveCodeReview(member, codeReviewNum, request.getYear());
     }
 
-    private void requestPullRequestClientAndSave(final Member member, final MemberClientRequest request) {
+    private void requestPullRequestClientAndSave(
+            final Member member, final MemberClientRequest request) {
         final int pullRequestNum = pullRequestClient.requestToGithub(request).getTotalCount();
 
         memberContributionService.savePullRequest(member, pullRequestNum, request.getYear());
@@ -59,7 +65,8 @@ public class MemberClientService {
         memberContributionService.saveIssue(member, issueNum, request.getYear());
     }
 
-    private void requestCommitClientAndSave(final Member member, final MemberClientRequest request) {
+    private void requestCommitClientAndSave(
+            final Member member, final MemberClientRequest request) {
         final int commitNum = commitClient.requestToGithub(request).getTotalCount();
 
         memberContributionService.saveCommit(member, commitNum, request.getYear());
@@ -67,13 +74,14 @@ public class MemberClientService {
 
     public void addMemberGitRepoAndGitOrganization(final Member member) {
         final String githubToken = member.getGithubToken();
-        final MemberClientRequest request = new MemberClientRequest(
-                member.getGithubId(),
-                githubToken,
-                LocalDate.now().getYear());
+        final MemberClientRequest request =
+                new MemberClientRequest(
+                        member.getGithubId(), githubToken, LocalDate.now().getYear());
 
-        final Set<MemberOrganizationResponse> organizationResponses = getMemberOrganizationNames(request);
-        gitOrganizationGitRepoService.saveAll(findMemberRepoNames(request), organizationResponses, member);
+        final Set<MemberOrganizationResponse> organizationResponses =
+                getMemberOrganizationNames(request);
+        gitOrganizationGitRepoService.saveAll(
+                findMemberRepoNames(request), organizationResponses, member);
     }
 
     private Set<String> findMemberRepoNames(final MemberClientRequest request) {
@@ -83,7 +91,8 @@ public class MemberClientService {
                 .collect(Collectors.toSet());
     }
 
-    private Set<MemberOrganizationResponse> getMemberOrganizationNames(final MemberClientRequest request) {
+    private Set<MemberOrganizationResponse> getMemberOrganizationNames(
+            final MemberClientRequest request) {
         return Arrays.stream(organizationClient.requestToGithub(request))
                 .filter(this::isValidResponse)
                 .collect(Collectors.toSet());
@@ -93,16 +102,15 @@ public class MemberClientService {
         return response != null && response.getLogin() != null && response.getAvatarUrl() != null;
     }
 
-    public Set<String> requestGitOrganizationResponse(final String githubToken, final String gitOrganizationName) {
-        final OrganizationRepoResponse[] clientResponse
-                = organizationRepositoryClient.requestToGithub(new MemberClientRequest(gitOrganizationName, githubToken, LocalDate.now().getYear()));
+    public Set<String> requestGitOrganizationResponse(
+            final String githubToken, final String gitOrganizationName) {
+        final OrganizationRepoResponse[] clientResponse =
+                organizationRepositoryClient.requestToGithub(
+                        new MemberClientRequest(
+                                gitOrganizationName, githubToken, LocalDate.now().getYear()));
 
         return Arrays.stream(clientResponse)
                 .map(OrganizationRepoResponse::getFullName)
                 .collect(Collectors.toSet());
-    }
-
-    public Object test() {
-        return null;
     }
 }

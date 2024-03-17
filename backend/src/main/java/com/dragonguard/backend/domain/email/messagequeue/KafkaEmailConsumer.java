@@ -6,8 +6,9 @@ import com.dragonguard.backend.global.template.kafka.KafkaConsumer;
 import com.dragonguard.backend.utils.EmailSender;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -20,7 +21,6 @@ import javax.mail.MessagingException;
  * @author 김승진
  * @description Kafka로 이메일을 보내기 위한 요청을 처리하는 Consumer
  */
-
 @Component
 @RequiredArgsConstructor
 public class KafkaEmailConsumer implements KafkaConsumer {
@@ -29,8 +29,11 @@ public class KafkaEmailConsumer implements KafkaConsumer {
 
     @Override
     @Transactional
-    @KafkaListener(topics = "gitrank.to.backend.email", containerFactory = "kafkaListenerContainerFactory")
-    public void consume(@Payload final String message, final Acknowledgment acknowledgment) throws JsonProcessingException {
+    @KafkaListener(
+            topics = "gitrank.to.backend.email",
+            containerFactory = "kafkaListenerContainerFactory")
+    public void consume(@Payload final String message, final Acknowledgment acknowledgment)
+            throws JsonProcessingException {
         sendEmail(objectMapper.readValue(message, KafkaEmail.class));
         acknowledgment.acknowledge();
     }

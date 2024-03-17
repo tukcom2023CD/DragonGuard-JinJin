@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.gitrepo.dto.client;
 
 import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.SummaryResponse;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,6 @@ import java.util.Map;
  * @author 김승진
  * @description 깃허브 Repository 관련 응답 정보를 담는 dto
  */
-
 @Getter
 @ToString
 @NoArgsConstructor

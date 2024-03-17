@@ -10,3 +10,5 @@ backend/src/main/resources/env.yml
 backend/src/main/resources/keyring.json
 backend/src/main/resources/abi.json
 k8s/secret.yml
+*/.terraform/
+*.hcl

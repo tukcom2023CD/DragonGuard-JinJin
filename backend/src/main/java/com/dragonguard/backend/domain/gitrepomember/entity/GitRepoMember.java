@@ -6,6 +6,7 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,7 +15,6 @@ import javax.persistence.*;
  * @author 김승진
  * @description 깃허브 Repository 구성원 정보를 담는 DB Entity
  */
-
 @Getter
 @Entity
 @SoftDelete
@@ -23,20 +23,19 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GitRepoMember implements Auditable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @Id @GeneratedValue private Long id;
 
     @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
     private GitRepo gitRepo;
 
     @JoinColumn(columnDefinition = "BINARY(16)")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Member member;
 
-    @Embedded
-    private GitRepoContribution gitRepoContribution;
+    @Embedded private GitRepoContribution gitRepoContribution;
 
     @Setter
     @Embedded
@@ -44,7 +43,10 @@ public class GitRepoMember implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public GitRepoMember(final GitRepo gitRepo, final Member member, final GitRepoContribution gitRepoContribution) {
+    public GitRepoMember(
+            final GitRepo gitRepo,
+            final Member member,
+            final GitRepoContribution gitRepoContribution) {
         this.gitRepo = gitRepo;
         this.member = member;
         this.gitRepoContribution = gitRepoContribution;
@@ -62,11 +64,16 @@ public class GitRepoMember implements Auditable {
         this.gitRepoContribution = gitRepoMember.gitRepoContribution;
     }
 
-    public void updateGitRepoContribution(final Integer commits, final Integer additions, final Integer deletions) {
+    public void updateGitRepoContribution(
+            final Integer commits, final Integer additions, final Integer deletions) {
         this.gitRepoContribution = new GitRepoContribution(commits, additions, deletions);
     }
 
-    public void updateProfileImageAndContribution(final String profileUrl, final Integer commits, final Integer additions, final Integer deletions) {
+    public void updateProfileImageAndContribution(
+            final String profileUrl,
+            final Integer commits,
+            final Integer additions,
+            final Integer deletions) {
         this.member.updateProfileImage(profileUrl);
         updateGitRepoContribution(commits, additions, deletions);
     }

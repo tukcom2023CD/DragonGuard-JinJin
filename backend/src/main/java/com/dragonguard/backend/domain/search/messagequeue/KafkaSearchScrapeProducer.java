@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
  * @author 김승진
  * @description 검색 결과를 요청하는 kafka producer 클래스
  */
-
 @Component
 @RequiredArgsConstructor
 public class KafkaSearchScrapeProducer implements KafkaProducer<KafkaSearchRequest> {

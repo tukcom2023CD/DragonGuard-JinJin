@@ -11,8 +11,13 @@ import java.util.Set;
 
 public interface GitRepoMemberService extends EntityLoader<GitRepoMember, Long> {
     GitRepoMember findByGitRepoAndMemberGithubId(final GitRepo gitRepo, final String githubId);
+
     void saveAllIfNotExists(final List<GitRepoMemberResponse> result, final GitRepo gitRepo);
+
     Boolean isServiceMember(final String githubId);
-    void updateOrSaveAll(final List<GitRepoMemberResponse> gitRepoMemberResponses, final GitRepo gitRepo);
+
+    void updateOrSaveAll(
+            final List<GitRepoMemberResponse> gitRepoMemberResponses, final GitRepo gitRepo);
+
     void saveAllIfNotExists(final Member member, final Set<GitRepo> gitRepos);
 }

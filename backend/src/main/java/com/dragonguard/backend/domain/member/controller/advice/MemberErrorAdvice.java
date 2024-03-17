@@ -14,26 +14,31 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @author 김승진
  * @description 멤버 관련 요청에서 나타날 수 있는 예외를 처리하는 ControllerAdvice 클래스
  */
-
 @RestControllerAdvice
 public class MemberErrorAdvice {
     @ExceptionHandler(JwtProcessingException.class)
     public ResponseEntity<ErrorResponse> jwtProcessingException(final JwtProcessingException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorResponse> jwtExpiredException(final ExpiredJwtException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(InvalidGithubTokenException.class)
-    public ResponseEntity<ErrorResponse> invalidGithubTokenException(final InvalidGithubTokenException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    public ResponseEntity<ErrorResponse> invalidGithubTokenException(
+            final InvalidGithubTokenException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(NoSuchWalletAddressException.class)
-    public ResponseEntity<ErrorResponse> noSuchWalletAddressException(final NoSuchWalletAddressException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    public ResponseEntity<ErrorResponse> noSuchWalletAddressException(
+            final NoSuchWalletAddressException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(e.getMessage()));
     }
 }

@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.klaytn.caver.abi.datatypes.Type;
 import com.klaytn.caver.contract.Contract;
 import com.klaytn.caver.contract.SendOptions;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -18,19 +20,27 @@ import java.util.List;
  * @author 김승진
  * @description 블록체인 스마트 컨트랙트로의 접근을 수행하는 클래스
  */
-
 @Service
 @RequiredArgsConstructor
 public class SmartContractService {
+    private static final String SET_METHOD = "set";
+    private static final String BALANCE_OF_METHOD = "balanceOf";
     private final Contract contract;
     private final ObjectMapper objectMapper;
     private final SendOptions sendOptions;
-    private static final String SET_METHOD = "set";
-    private static final String BALANCE_OF_METHOD = "balanceOf";
 
-    public String transfer(final long contribution, final ContributeType contributeType, final String walletAddress) {
+    public String transfer(
+            final long contribution,
+            final ContributeType contributeType,
+            final String walletAddress) {
         try {
-            return contract.send(sendOptions, SET_METHOD, walletAddress, BigInteger.valueOf(contribution), contributeType).getTransactionHash();
+            return contract.send(
+                            sendOptions,
+                            SET_METHOD,
+                            walletAddress,
+                            BigInteger.valueOf(contribution),
+                            contributeType)
+                    .getTransactionHash();
         } catch (Exception e) {
             throw new BlockchainException();
         }

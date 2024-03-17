@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
  * @author 김승진
  * @description 어노테이션의 EL을 파싱해주는 유틸 클래스
  */
-
 @Component
 public class CustomSpringELParser {
 

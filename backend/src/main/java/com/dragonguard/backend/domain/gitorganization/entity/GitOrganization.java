@@ -5,17 +5,18 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.*;
 
 /**
  * @author 김승진
  * @description 깃허브 Organization DB Entity
  */
-
 @Getter
 @Entity
 @SoftDelete
@@ -24,15 +25,13 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GitOrganization implements Auditable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "gitOrganization")
+    private final List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
+
+    @Id @GeneratedValue private Long id;
 
     @Column(unique = true, nullable = false)
     private String name;
-
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "gitOrganization")
-    private List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
     private String profileImage;
 

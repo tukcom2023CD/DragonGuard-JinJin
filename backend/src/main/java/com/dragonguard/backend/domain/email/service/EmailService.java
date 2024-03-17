@@ -6,5 +6,6 @@ import com.dragonguard.backend.global.template.service.EntityLoader;
 
 public interface EmailService extends EntityLoader<Email, Long> {
     IdResponse<Long> sendAndSaveEmail();
+
     void deleteCode(final Long id);
 }

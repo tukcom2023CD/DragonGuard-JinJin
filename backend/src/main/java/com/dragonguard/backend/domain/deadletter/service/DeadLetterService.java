@@ -13,7 +13,6 @@ import javax.mail.MessagingException;
  * @author 김승진
  * @description Kafka의 Dead Letter 서비스
  */
-
 @TransactionService
 @RequiredArgsConstructor
 public class DeadLetterService {
@@ -22,8 +21,17 @@ public class DeadLetterService {
     private final DeadLetterMapper deadLetterMapper;
     private final EmailSender emailSender;
 
-    public void saveFailedMessage(final String topic, final String key, final int partitionId, final Long offset, final String value, final String groupId) throws MessagingException {
-        final DeadLetter deadLetter = deadLetterRepository.save(deadLetterMapper.toEntity(topic, key, partitionId, offset, value, groupId));
+    public void saveFailedMessage(
+            final String topic,
+            final String key,
+            final int partitionId,
+            final Long offset,
+            final String value,
+            final String groupId)
+            throws MessagingException {
+        final DeadLetter deadLetter =
+                deadLetterRepository.save(
+                        deadLetterMapper.toEntity(topic, key, partitionId, offset, value, groupId));
         sendToAdminEmail(deadLetter);
     }
 

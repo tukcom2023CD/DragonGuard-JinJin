@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Primary
 @Component
-public class KafkaGitRepoInfoProducerImpl  implements KafkaProducer<GitRepoInfoRequest> {
+public class KafkaGitRepoInfoProducerImpl implements KafkaProducer<GitRepoInfoRequest> {
     @Override
     public void send(GitRepoInfoRequest request) {}
 }

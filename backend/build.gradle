@@ -79,7 +79,7 @@ dependencies {
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
-	runtimeOnly 'com.h2database:h2:1.4.200'
+	testRuntimeOnly 'com.h2database:h2:1.4.200'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
 	annotationProcessor 'org.projectlombok:lombok'

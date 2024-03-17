@@ -2,6 +2,7 @@ package com.dragonguard.backend.support.fixture.organization.entity;
 
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

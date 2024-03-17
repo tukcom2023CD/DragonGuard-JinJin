@@ -8,7 +8,6 @@ build/
 htmlReport/
 .json
 env.yml
-*.sql
 
 ### STS ###
 .apt_generated

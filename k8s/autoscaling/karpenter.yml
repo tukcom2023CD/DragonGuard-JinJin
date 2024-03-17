@@ -1,0 +1,13 @@
+apiVersion: karpenter.k8s.aws/v1alpha1
+kind: AWSNodeTemplate
+metadata:
+  name: gitrank-karpenter
+  labels:
+    app: karpenter
+    version: v0.25.0
+spec:
+  amiFamily: Ubuntu2004
+  subnetSelector:
+    karpenter.sh/discovery: gitrank-cluster
+  securityGroupSelector:
+    karpenter.sh/discovery: gitrank-cluster

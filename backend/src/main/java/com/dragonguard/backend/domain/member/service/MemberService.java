@@ -17,11 +17,14 @@ import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.service.OrganizationService;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
 import com.dragonguard.backend.global.template.service.EntityLoader;
-import com.dragonguard.backend.global.annotation.TransactionService;
+import com.dragonguard.backend.utils.RedisRankingUtils;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +37,6 @@ import java.util.stream.Collectors;
  * @author 김승진
  * @description 멤버관련 서비스 로직을 담당하는 클래스
  */
-
 @TransactionService
 @RequiredArgsConstructor
 public class MemberService implements EntityLoader<Member, UUID> {
@@ -45,15 +47,18 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private final GitOrganizationService gitOrganizationService;
     private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
     private final KafkaProducer<KafkaContributionRequest> kafkaContributionClientProducer;
+    private final RedisRankingUtils redisRankingUtils;
 
-    public Member findMemberOrSaveWithRole(final String githubId, final Role role, final AuthStep authStep) {
+    public Member findMemberOrSaveWithRole(
+            final String githubId, final Role role, final AuthStep authStep) {
         if (memberRepository.existsByGithubId(githubId)) {
             return getMemberByGithubId(githubId);
         }
         return memberRepository.save(memberMapper.toEntity(githubId, role, authStep));
     }
 
-    public Member saveIfNone(final String githubId, final AuthStep authStep, final String profileUrl) {
+    public Member saveIfNone(
+            final String githubId, final AuthStep authStep, final String profileUrl) {
         if (memberRepository.existsByGithubId(githubId)) {
             return getMemberByGithubId(githubId);
         }
@@ -69,7 +74,9 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public boolean isBlockchainUpdatable(final Member member) {
         return member.getBlockchains().stream()
-                .map(Blockchain::getHistories).flatMap(List::stream).allMatch(History::isUpdatable);
+                .map(Blockchain::getHistories)
+                .flatMap(List::stream)
+                .allMatch(History::isUpdatable);
     }
 
     public MemberResponse getMember() {
@@ -80,7 +87,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private MemberResponse getMemberResponseWithValidateOrganization(final Member member) {
         member.validateWalletAddressAndUpdateTier();
         if (hasNoOrganization(member)) {
-            return memberMapper.toResponse(member, memberRepository.findRankingById(member.getId()));
+            return memberMapper.toResponse(
+                    member, memberRepository.findRankingById(member.getId()));
         }
         return getMemberResponse(member);
     }
@@ -97,7 +105,9 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     @Transactional(readOnly = true)
     public List<MemberRankResponse> findMemberRanking(final Pageable pageable) {
-        return memberRepository.findRanking(pageable);
+        final int pageSize = pageable.getPageSize();
+        final int offset = pageable.getPageNumber() * pageSize;
+        return redisRankingUtils.getTopUsers(offset, offset + pageSize);
     }
 
     public void updateWalletAddress(final WalletRequest walletRequest) {
@@ -122,14 +132,14 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberRankResponse> findMemberRankingByOrganization(final Long organizationId, final Pageable pageable) {
+    public List<MemberRankResponse> findMemberRankingByOrganization(
+            final Long organizationId, final Pageable pageable) {
         return memberRepository.findRankingByOrganization(organizationId, pageable);
     }
 
     @Override
     public Member loadEntity(final UUID id) {
-        return memberRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+        return memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public MemberGitReposAndGitOrganizationsResponse findMemberDetails() {
@@ -147,7 +157,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
         member.validateWalletAddressAndUpdateTier();
     }
 
-    private MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(final Member member) {
+    private MemberGitReposAndGitOrganizationsResponse getMemberGitReposAndGitOrganizations(
+            final Member member) {
         return memberMapper.toRepoAndOrgResponse(
                 member.getProfileImage(),
                 findMemberGitOrganization(member),
@@ -162,8 +173,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private List<GitOrganization> findMemberGitOrganization(final Member member) {
-        return member.getGitOrganizationMembers()
-                .stream()
+        return member.getGitOrganizationMembers().stream()
                 .map(GitOrganizationMember::getGitOrganization)
                 .distinct()
                 .collect(Collectors.toList());
@@ -185,8 +195,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public Member getMemberByGithubId(final String githubId) {
-        return memberRepository.findByGithubId(githubId)
-                .orElseThrow(EntityNotFoundException::new);
+        return memberRepository.findByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
     }
 
     public MemberResponse updateContributionsAndGetProfile() {

@@ -12,7 +12,6 @@ import java.lang.annotation.Target;
  * @author 김승진
  * @description 트랜잭션을 사용할 서비스들에 붙을 어노테이션
  */
-
 @Service
 @Transactional
 @Target(ElementType.TYPE)

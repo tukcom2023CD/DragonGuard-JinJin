@@ -16,13 +16,26 @@ import java.util.function.ToIntFunction;
 
 public interface GitRepoService extends EntityLoader<GitRepo, Long> {
     TwoGitRepoResponse findTwoGitRepos(final GitRepoCompareRequest request);
+
     TwoGitRepoResponse findTwoGitReposAndUpdate(final GitRepoCompareRequest request);
+
     void saveAllIfNotExists(final Set<String> gitRepos);
+
     boolean gitRepoExistsByName(final String name);
+
     GitRepo findGitRepo(final String name);
-    Optional<List<GitRepoMemberClientResponse>> requestClientGitRepoMember(final GitRepoInfoRequest gitRepoInfoRequest);
-    GitRepoContributions getContributionMap(final Set<GitRepoMemberClientResponse> contributions, final ToIntFunction<Week> function);
+
+    Optional<List<GitRepoMemberClientResponse>> requestClientGitRepoMember(
+            final GitRepoInfoRequest gitRepoInfoRequest);
+
+    GitRepoContributions getContributionMap(
+            final Set<GitRepoMemberClientResponse> contributions,
+            final ToIntFunction<Week> function);
+
     void requestKafkaGitRepoInfo(final String githubToken, final String name);
-    List<Integer> updateAndGetSparkLine(final String name, final String githubToken, final GitRepo gitRepo);
+
+    List<Integer> updateAndGetSparkLine(
+            final String name, final String githubToken, final GitRepo gitRepo);
+
     void updateSparkLine(final Long id, final String githubToken);
 }

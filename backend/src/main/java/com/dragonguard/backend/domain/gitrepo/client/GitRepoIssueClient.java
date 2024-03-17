@@ -2,9 +2,11 @@ package com.dragonguard.backend.domain.gitrepo.client;
 
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoIssueResponse;
-import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.WebClientException;
+import com.dragonguard.backend.global.template.client.GithubClient;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -44,18 +46,25 @@ public class GitRepoIssueClient implements GithubClient<GitRepoClientRequest, In
     }
 
     private List<String> getClosedIssueNum(final GitRepoClientRequest request, final int page) {
-        return Arrays.stream(webClient.get()
-                .uri(
-                        uriBuilder -> uriBuilder
-                                .path(String.format(PATH_FORMAT, request.getName(), page))
-                                .build())
-                .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
-                .accept(MediaType.APPLICATION_JSON)
-                .acceptCharset(StandardCharsets.UTF_8)
-                .retrieve()
-                .bodyToMono(GitRepoIssueResponse[].class)
-                .blockOptional()
-                .orElseThrow(WebClientException::new))
+        return Arrays.stream(
+                        webClient
+                                .get()
+                                .uri(
+                                        uriBuilder ->
+                                                uriBuilder
+                                                        .path(
+                                                                String.format(
+                                                                        PATH_FORMAT,
+                                                                        request.getName(),
+                                                                        page))
+                                                        .build())
+                                .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
+                                .accept(MediaType.APPLICATION_JSON)
+                                .acceptCharset(StandardCharsets.UTF_8)
+                                .retrieve()
+                                .bodyToMono(GitRepoIssueResponse[].class)
+                                .blockOptional()
+                                .orElseThrow(WebClientException::new))
                 .filter(response -> Objects.isNull(response.getPullRequest()))
                 .map(GitRepoIssueResponse::getUrl)
                 .collect(Collectors.toList());

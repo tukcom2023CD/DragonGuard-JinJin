@@ -10,10 +10,12 @@ import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.mapper.OrganizationMapper;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.dto.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.annotation.TransactionService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +27,6 @@ import java.util.stream.Collectors;
  * @author 김승진
  * @description 조직(회사, 대학교) 관련 서비스 로직을 수행하는 클래스
  */
-
 @TransactionService
 @RequiredArgsConstructor
 public class OrganizationServiceImpl implements OrganizationService {
@@ -40,11 +41,16 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     private Long findOrSaveOrganization(final OrganizationRequest organizationRequest) {
-        return organizationRepository.findByNameAndOrganizationTypeAndEmailEndpoint(
+        return organizationRepository
+                .findByNameAndOrganizationTypeAndEmailEndpoint(
                         organizationRequest.getName(),
                         organizationRequest.getOrganizationType(),
                         organizationRequest.getEmailEndpoint())
-                .orElseGet(() -> organizationRepository.save(organizationMapper.toEntity(organizationRequest))).getId();
+                .orElseGet(
+                        () ->
+                                organizationRepository.save(
+                                        organizationMapper.toEntity(organizationRequest)))
+                .getId();
     }
 
     @Override
@@ -57,7 +63,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganizationResponse> findByType(final OrganizationType organizationType, final Pageable pageable) {
+    public List<OrganizationResponse> findByType(
+            final OrganizationType organizationType, final Pageable pageable) {
         return organizationRepository.findAllByType(organizationType, pageable).stream()
                 .map(organizationMapper::toResponse)
                 .collect(Collectors.toList());
@@ -71,32 +78,34 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganizationResponse> findOrganizationRankByType(final OrganizationType type, final Pageable pageable) {
+    public List<OrganizationResponse> findOrganizationRankByType(
+            final OrganizationType type, final Pageable pageable) {
         return organizationRepository.findRankingByType(type, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganizationResponse> searchOrganization(final OrganizationType type, final String name, final Pageable pageable) {
+    public List<OrganizationResponse> searchOrganization(
+            final OrganizationType type, final String name, final Pageable pageable) {
         return organizationRepository.findByTypeAndSearchWord(type, name, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public IdResponse<Long> getByName(final String name) {
-        Organization organization = organizationRepository.findByName(name)
-                .orElseThrow(EntityNotFoundException::new);
+        Organization organization =
+                organizationRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
         return new IdResponse<>(organization.getId());
     }
 
     @Override
     public Organization loadEntity(final Long id) {
-        return organizationRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+        return organizationRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
-    public RelatedRankWithMemberResponse findRankingByMemberId(final UUID memberId, final String githubId) {
+    public RelatedRankWithMemberResponse findRankingByMemberId(
+            final UUID memberId, final String githubId) {
         return organizationRepository.findRankingByMemberId(memberId, githubId);
     }
 }

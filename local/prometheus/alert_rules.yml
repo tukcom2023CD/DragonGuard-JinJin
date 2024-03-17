@@ -1,0 +1,58 @@
+groups:
+- name: slack-alert
+  rules:
+
+  - alert: Container Down
+    expr: up == 0
+    for: 20s
+    labels:
+      severity: warning
+    annotations:
+      summary: Container Down
+      description: "A container is absent\n  INSTANCE = {{ $labels.instance }}\n  JOB = {{ $labels.job }}"
+
+  - alert: ContainerCpuUsage
+    expr: (sum(rate(container_cpu_usage_seconds_total{name!=""}[3m])) BY (instance, name) * 100) > 70
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: Container CPU usage (instance {{ $labels.instance }})
+      description: "Container CPU usage is above 70%\n  INSTANCE = {{ $labels.instance }}\n  JOB = {{ $labels.job }}"
+
+  - alert: ContainerMemoryUsage
+    expr: (sum(container_memory_working_set_bytes{name!=""}) BY (instance, name) / sum(container_spec_memory_limit_bytes > 0) BY (instance, name) * 100) > 80
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: Container Memory usage (instance {{ $labels.instance }})
+      description: "Container Memory usage is above 80%\n  INSTANCE = {{ $labels.instance }}\n  JOB = {{ $labels.job }}"
+
+
+  - alert: HostOutOfMemory
+    expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Host out of memory (instance {{ $labels.instance }})"
+      description: "Node memory is filling up (< 10% left)\n  INSTANCE = {{ $labels.instance }}\n  JOB = {{ $labels.job }}"
+
+  - alert: HostMemoryUnderMemoryPressure
+    expr: rate(node_vmstat_pgmajfault[1m]) > 1000
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Host memory under memory pressure (instance {{ $labels.instance }})"
+      description: "The node is under heavy memory pressure. High rate of major page faults\n  INSTANCE = {{ $labels.instance }}\n  JOB = {{ $labels.job }}"
+
+  - alert: HostHighCpuLoad
+    expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 80
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Host high CPU load (instance {{ $labels.instance }})"
+      description: "CPU load is > 80%\n  INSTANCE = {{ $labels.instance }}\n  JOB = {{ $labels.job }}"

@@ -7,10 +7,12 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
+import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
-import com.dragonguard.backend.global.annotation.TransactionService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -22,7 +24,6 @@ import java.util.Map;
  * @author 김승진
  * @description OAuth2UserService의 구현체로 유저를 로드한다.
  */
-
 @TransactionService
 @RequiredArgsConstructor
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
@@ -40,11 +41,13 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         final String name = (String) attributes.get("name");
 
         if (!memberRepository.existsByGithubId(githubId)) {
-            memberRepository.save(memberMapper.toEntity(githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY, name, profileImage));
+            memberRepository.save(
+                    memberMapper.toEntity(
+                            githubId, Role.ROLE_USER, AuthStep.GITHUB_ONLY, name, profileImage));
         }
 
-        final Member user = memberRepository.findByGithubId(githubId)
-                .orElseThrow(EntityNotFoundException::new);
+        final Member user =
+                memberRepository.findByGithubId(githubId).orElseThrow(EntityNotFoundException::new);
 
         if (user.getAuthStep().isNone()) {
             user.updateAuthStepAndNameAndProfileImage(AuthStep.GITHUB_ONLY, name, profileImage);

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat
+data:
+  filebeat.yml: |
+    filebeat.inputs:
+      - type: log
+        enabled: true
+        paths:
+          - /var/log/nginx/*.log
+
+    output.logstash:
+      enabled: true
+      hosts: ["logstash:5044"]
+
+    setup.kibana:
+      host: "http://kibana:5601"
+      username: "elastic"
+      password: "changeme"

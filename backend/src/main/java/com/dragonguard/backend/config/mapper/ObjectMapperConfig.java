@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
  * @author 김승진
  * @description json 파싱용으로 쓰이는 objectMapper를 스프링 빈으로 등록하는 설정 클래스
  */
-
 @Configuration
 public class ObjectMapperConfig {
     @Bean

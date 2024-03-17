@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - name: prometheus
+        image: prom/prometheus:latest
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: prometheus-config-volume
+          mountPath: /etc/prometheus/
+        - name: prometheus-storage-volume
+          mountPath: /prometheus/
+        - name: alert-rules
+          mountPath: /etc/prometheus/alert_rules.yml
+          subPath: alert_rules.yml
+      volumes:
+      - name: alert-rules
+        configMap:
+          name: prometheus
+      - name: prometheus-config-volume
+        configMap:
+          name: prometheus
+      - name: prometheus-storage-volume
+        emptyDir: {}

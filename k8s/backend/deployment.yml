@@ -129,3 +129,8 @@ spec:
                 secretKeyRef:
                   name: gitrank-secret
                   key: admin-tokens
+            - name: CRONJOB_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: gitrank-secret
+                  key: gitrank-cronjob-auth

@@ -8,7 +8,6 @@ import lombok.Getter;
  * @author 김승진
  * @description JWT의 정보를 담는 클래스
  */
-
 @Getter
 @Builder
 @AllArgsConstructor

@@ -2,9 +2,11 @@ package com.dragonguard.backend.domain.search.client;
 
 import com.dragonguard.backend.domain.search.dto.client.SearchRepoResponse;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
-import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.global.exception.WebClientException;
+import com.dragonguard.backend.global.template.client.GithubClient;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,7 +22,6 @@ import java.util.function.Function;
  * @author 김승진
  * @description Repository 검색에 대한 Github REST API 요청을 수행하는 클래스
  */
-
 @Component
 @RequiredArgsConstructor
 public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoResponse> {
@@ -31,7 +32,8 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
 
     @Override
     public SearchRepoResponse requestToGithub(final SearchRequest request) {
-        return webClient.get()
+        return webClient
+                .get()
                 .uri(getUriBuilder(request))
                 .headers(headers -> headers.setBearerAuth(request.getGithubToken()))
                 .accept(MediaType.APPLICATION_JSON)
@@ -46,22 +48,34 @@ public class SearchRepoClient implements GithubClient<SearchRequest, SearchRepoR
         List<String> filters = request.getFilters();
 
         if (Objects.isNull(filters) || filters.isEmpty()) {
-            return uriBuilder -> uriBuilder
-                    .path(String.format(String.format(
-                            PATH_FORMAT,
-                            request.getType().getLowerCase(),
-                            request.getName(),
-                            PER_PAGE_SIZE,
-                            request.getPage())))
-                    .build();
+            return uriBuilder ->
+                    uriBuilder
+                            .path(
+                                    String.format(
+                                            String.format(
+                                                    PATH_FORMAT,
+                                                    request.getType().getLowerCase(),
+                                                    request.getName(),
+                                                    PER_PAGE_SIZE,
+                                                    request.getPage())))
+                            .build();
         }
-        return uriBuilder -> uriBuilder
-                .path(String.format(String.format(
-                        PATH_FORMAT,
-                        request.getType().getLowerCase(),
-                        request.getName().strip().concat(FILTER_DELIMITER + String.join(FILTER_DELIMITER, filters)),
-                        PER_PAGE_SIZE,
-                        request.getPage())))
-                .build();
+        return uriBuilder ->
+                uriBuilder
+                        .path(
+                                String.format(
+                                        String.format(
+                                                PATH_FORMAT,
+                                                request.getType().getLowerCase(),
+                                                request.getName()
+                                                        .strip()
+                                                        .concat(
+                                                                FILTER_DELIMITER
+                                                                        + String.join(
+                                                                                FILTER_DELIMITER,
+                                                                                filters)),
+                                                PER_PAGE_SIZE,
+                                                request.getPage())))
+                        .build();
     }
 }

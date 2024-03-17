@@ -1,18 +1,8 @@
 package com.dragonguard.backend.domain.email.controller;
 
-import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
-import com.dragonguard.backend.domain.organization.service.OrganizationEmailFacade;
-import com.dragonguard.backend.global.dto.IdResponse;
-import com.dragonguard.backend.support.docs.RestDocumentTest;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
-
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
 import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -20,11 +10,22 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
+import com.dragonguard.backend.domain.organization.service.OrganizationEmailFacade;
+import com.dragonguard.backend.global.dto.IdResponse;
+import com.dragonguard.backend.support.docs.RestDocumentTest;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+
 @DisplayName("email 컨트롤러의")
 @WebMvcTest(EmailController.class)
 class EmailControllerTest extends RestDocumentTest {
-    @MockBean
-    private OrganizationEmailFacade organizationEmailFacade;
+    @MockBean private OrganizationEmailFacade organizationEmailFacade;
 
     @Test
     @DisplayName("이메일 전송이 수행되는가")
@@ -59,7 +60,11 @@ class EmailControllerTest extends RestDocumentTest {
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("validate email code", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "validate email code",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test

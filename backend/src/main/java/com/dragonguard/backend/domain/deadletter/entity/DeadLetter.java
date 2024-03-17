@@ -4,17 +4,19 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+
 import lombok.*;
+
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 import java.util.UUID;
+
+import javax.persistence.*;
 
 /**
  * @author 김승진
  * @description Kafka의 Dead Letter 엔티티
  */
-
 @Getter
 @Entity
 @SoftDelete
@@ -49,7 +51,13 @@ public class DeadLetter implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public DeadLetter(final String topicName, final String keyName, final Integer partitionId, final Long offsetNumber, final String valueObject, final String groupId) {
+    public DeadLetter(
+            final String topicName,
+            final String keyName,
+            final Integer partitionId,
+            final Long offsetNumber,
+            final String valueObject,
+            final String groupId) {
         this.topicName = topicName;
         this.keyName = keyName;
         this.partitionId = partitionId;

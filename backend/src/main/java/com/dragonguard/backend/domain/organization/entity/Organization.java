@@ -5,29 +5,33 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+
 import lombok.*;
+
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Where;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.*;
 
 /**
  * @author 김승진
  * @description 조직(회사, 대학교) 정보를 담는 DB Entity
  */
-
 @Getter
 @Entity
 @SoftDelete
 @EntityListeners(AuditListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Organization implements Auditable {
-    @Id
-    @GeneratedValue
-    private Long id;
+    @Where(clause = "auth_step = 'ALL'")
+    @OneToMany(mappedBy = "organization")
+    private final Set<Member> members = new HashSet<>();
+
+    @Id @GeneratedValue private Long id;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -38,15 +42,12 @@ public class Organization implements Auditable {
     @Column(nullable = false)
     private String emailEndpoint;
 
-    @Where(clause = "auth_step = 'ALL'")
-    @OneToMany(mappedBy = "organization")
-    private Set<Member> members = new HashSet<>();
-
     @Enumerated(EnumType.STRING)
     private OrganizationStatus organizationStatus = OrganizationStatus.REQUESTED;
 
-    @Formula("(SELECT COALESCE(sum(h.amount), 0) FROM history h LEFT JOIN blockchain b on h.blockchain_id = b.id LEFT JOIN member m ON m.id = b.member_id " +
-            "WHERE m.organization_id = id and m.auth_step = 'ALL')")
+    @Formula(
+            "(SELECT COALESCE(sum(h.amount), 0) FROM history h LEFT JOIN blockchain b on h.blockchain_id = b.id LEFT JOIN member m ON m.id = b.member_id "
+                    + "WHERE m.organization_id = id and m.auth_step = 'ALL')")
     private Long sumOfMemberTokens;
 
     @Setter
@@ -55,7 +56,10 @@ public class Organization implements Auditable {
     private BaseTime baseTime;
 
     @Builder
-    public Organization(final String name, final OrganizationType organizationType, final String emailEndpoint) {
+    public Organization(
+            final String name,
+            final OrganizationType organizationType,
+            final String emailEndpoint) {
         this.name = name;
         this.organizationType = organizationType;
         validateEmailEndPoint(emailEndpoint);

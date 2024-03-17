@@ -2,8 +2,11 @@ package com.dragonguard.backend.config.security.jwt;
 
 import com.dragonguard.backend.config.security.oauth.user.UserPrinciple;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
+
 import io.jsonwebtoken.*;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -14,7 +17,6 @@ import java.util.UUID;
  * @author 김승진
  * @description JWT 토큰을 발급하는 클래스
  */
-
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
@@ -25,15 +27,14 @@ public class JwtTokenProvider {
     private final Key key;
 
     public JwtToken createToken(final UserPrinciple userDetails) {
-        final String accessToken = getToken(userDetails, getClaims(userDetails), ACCESS_TOKEN_EXPIRE_LENGTH);
-        final String refreshToken = getToken(userDetails, getClaims(userDetails), REFRESH_TOKEN_EXPIRE_LENGTH);
+        final String accessToken =
+                getToken(userDetails, getClaims(userDetails), ACCESS_TOKEN_EXPIRE_LENGTH);
+        final String refreshToken =
+                getToken(userDetails, getClaims(), REFRESH_TOKEN_EXPIRE_LENGTH);
 
         saveRefreshToken(refreshToken, userDetails);
 
-        return JwtToken.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        return JwtToken.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
     public boolean validateToken(final String token) {
@@ -51,13 +52,18 @@ public class JwtTokenProvider {
         memberRepository.updateRefreshToken(id, refreshToken);
     }
 
+    private Claims getClaims() {
+        return Jwts.claims();
+    }
+
     private Claims getClaims(final UserPrinciple userDetails) {
         Claims claims = Jwts.claims();
         claims.put(USER_ID_CLAIM_NAME, userDetails.getName());
         return claims;
     }
 
-    private String getToken(final UserPrinciple loginUser, final Claims claims, final Long validationSecond) {
+    private String getToken(
+            final UserPrinciple loginUser, final Claims claims, final Long validationSecond) {
         final long now = new Date().getTime();
 
         return Jwts.builder()

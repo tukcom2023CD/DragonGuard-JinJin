@@ -11,6 +11,7 @@ import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
 import com.dragonguard.backend.domain.organization.dto.response.RelatedRankWithMemberResponse;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants.ComponentModel;
@@ -25,8 +26,9 @@ import java.util.stream.Collectors;
  * @author 김승진
  * @description 멤버 Entity와 dto의 변환을 돕는 클래스
  */
-
-@Mapper(componentModel = ComponentModel.SPRING, imports = {GitRepo.class, GitRepoMember.class, Collectors.class, Optional.class})
+@Mapper(
+        componentModel = ComponentModel.SPRING,
+        imports = {GitRepo.class, GitRepoMember.class, Collectors.class, Optional.class})
 public interface MemberMapper {
     @Mapping(target = "githubId", source = "githubId")
     @Mapping(target = "profileImage", source = "profileUrl")
@@ -35,37 +37,80 @@ public interface MemberMapper {
 
     Member toEntity(final String githubId, final Role role, final AuthStep authStep);
 
-    Member toEntity(final String githubId, final Role role, final AuthStep authStep, final String name, final String profileImage);
+    Member toEntity(
+            final String githubId,
+            final Role role,
+            final AuthStep authStep,
+            final String name,
+            final String profileImage);
 
     @Mapping(target = "organizationRank", source = "relatedRank.organizationRank")
     @Mapping(target = "memberGithubIds", source = "relatedRank.memberGithubIds")
-    @Mapping(target = "tokenAmount", expression = "java(Optional.ofNullable(member.getSumOfTokens()).orElse(0L))")
+    @Mapping(
+            target = "tokenAmount",
+            expression = "java(Optional.ofNullable(member.getSumOfTokens()).orElse(0L))")
     @Mapping(target = "isLast", source = "relatedRank.isLast")
     @Mapping(target = "organization", source = "organization")
-    @Mapping(target = "commits", expression = "java(Optional.ofNullable(member.getSumOfCommits()).orElse(0))")
-    @Mapping(target = "issues", expression = "java(Optional.ofNullable(member.getSumOfIssues()).orElse(0))")
-    @Mapping(target = "pullRequests", expression = "java(Optional.ofNullable(member.getSumOfPullRequests()).orElse(0))")
-    @Mapping(target = "reviews", expression = "java(Optional.ofNullable(member.getSumOfCodeReviews()).orElse(0))")
-    MemberResponse toResponse(final Member member, final Integer rank, final String organization, final RelatedRankWithMemberResponse relatedRank);
+    @Mapping(
+            target = "commits",
+            expression = "java(Optional.ofNullable(member.getSumOfCommits()).orElse(0))")
+    @Mapping(
+            target = "issues",
+            expression = "java(Optional.ofNullable(member.getSumOfIssues()).orElse(0))")
+    @Mapping(
+            target = "pullRequests",
+            expression = "java(Optional.ofNullable(member.getSumOfPullRequests()).orElse(0))")
+    @Mapping(
+            target = "reviews",
+            expression = "java(Optional.ofNullable(member.getSumOfCodeReviews()).orElse(0))")
+    MemberResponse toResponse(
+            final Member member,
+            final Integer rank,
+            final String organization,
+            final RelatedRankWithMemberResponse relatedRank);
 
     @Mapping(target = "rank", source = "rank")
-    @Mapping(target = "tokenAmount", expression = "java(Optional.ofNullable(member.getSumOfTokens()).orElse(0L))")
+    @Mapping(
+            target = "tokenAmount",
+            expression = "java(Optional.ofNullable(member.getSumOfTokens()).orElse(0L))")
     @Mapping(target = "organization", source = "member.organization.name")
-    @Mapping(target = "commits", expression = "java(Optional.ofNullable(member.getSumOfCommits()).orElse(0))")
-    @Mapping(target = "issues", expression = "java(Optional.ofNullable(member.getSumOfIssues()).orElse(0))")
-    @Mapping(target = "pullRequests", expression = "java(Optional.ofNullable(member.getSumOfPullRequests()).orElse(0))")
-    @Mapping(target = "reviews", expression = "java(Optional.ofNullable(member.getSumOfCodeReviews()).orElse(0))")
+    @Mapping(
+            target = "commits",
+            expression = "java(Optional.ofNullable(member.getSumOfCommits()).orElse(0))")
+    @Mapping(
+            target = "issues",
+            expression = "java(Optional.ofNullable(member.getSumOfIssues()).orElse(0))")
+    @Mapping(
+            target = "pullRequests",
+            expression = "java(Optional.ofNullable(member.getSumOfPullRequests()).orElse(0))")
+    @Mapping(
+            target = "reviews",
+            expression = "java(Optional.ofNullable(member.getSumOfCodeReviews()).orElse(0))")
     MemberResponse toResponse(final Member member, final Integer rank);
 
-    @Mapping(target = "gitOrganizations", source = "gitOrganizations", qualifiedByName = "getGitOrganizationNames")
+    @Mapping(
+            target = "gitOrganizations",
+            source = "gitOrganizations",
+            qualifiedByName = "getGitOrganizationNames")
     @Mapping(target = "gitRepos", source = "gitRepos", qualifiedByName = "getGitRepoNames")
     @Mapping(target = "memberProfileImage", source = "memberProfileImage")
-    MemberGitReposAndGitOrganizationsResponse toRepoAndOrgResponse(final String memberProfileImage, final List<GitOrganization> gitOrganizations, final List<GitRepo> gitRepos);
+    MemberGitReposAndGitOrganizationsResponse toRepoAndOrgResponse(
+            final String memberProfileImage,
+            final List<GitOrganization> gitOrganizations,
+            final List<GitRepo> gitRepos);
 
-    @Mapping(target = "commits", expression = "java(Optional.ofNullable(member.getSumOfCommits()).orElse(0))")
-    @Mapping(target = "issues", expression = "java(Optional.ofNullable(member.getSumOfIssues()).orElse(0))")
-    @Mapping(target = "pullRequests", expression = "java(Optional.ofNullable(member.getSumOfPullRequests()).orElse(0))")
-    @Mapping(target = "reviews", expression = "java(Optional.ofNullable(member.getSumOfCodeReviews()).orElse(0))")
+    @Mapping(
+            target = "commits",
+            expression = "java(Optional.ofNullable(member.getSumOfCommits()).orElse(0))")
+    @Mapping(
+            target = "issues",
+            expression = "java(Optional.ofNullable(member.getSumOfIssues()).orElse(0))")
+    @Mapping(
+            target = "pullRequests",
+            expression = "java(Optional.ofNullable(member.getSumOfPullRequests()).orElse(0))")
+    @Mapping(
+            target = "reviews",
+            expression = "java(Optional.ofNullable(member.getSumOfCodeReviews()).orElse(0))")
     @Mapping(target = "profileImage", source = "member.profileImage")
     @Mapping(target = "gitRepos", expression = "java(member.getGitRepoNames())")
     @Mapping(target = "organization", expression = "java(member.getOrganizationName())")
@@ -73,8 +118,11 @@ public interface MemberMapper {
     MemberDetailsResponse toDetailsResponse(final Member member, final Integer rank);
 
     @Named("getGitOrganizationNames")
-    default Set<MemberGitOrganizationResponse> getGitOrganizationNames(final List<GitOrganization> gitOrganizations) {
-        return gitOrganizations.stream().map(org -> new MemberGitOrganizationResponse(org.getName(), org.getProfileImage())).collect(Collectors.toSet());
+    default Set<MemberGitOrganizationResponse> getGitOrganizationNames(
+            final List<GitOrganization> gitOrganizations) {
+        return gitOrganizations.stream()
+                .map(org -> new MemberGitOrganizationResponse(org.getName(), org.getProfileImage()))
+                .collect(Collectors.toSet());
     }
 
     @Named("getGitRepoNames")

@@ -2,6 +2,7 @@ package com.dragonguard.backend.domain.organization.dto.response;
 
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.querydsl.core.annotations.QueryProjection;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
  * @author 김승진
  * @description 조직(회사, 대학교)관련 응답정보를 담는 dto
  */
-
 @Getter
 @Builder
 @NoArgsConstructor
@@ -22,7 +22,12 @@ public class OrganizationResponse {
     private Long tokenSum;
 
     @QueryProjection
-    public OrganizationResponse(Long id, String name, OrganizationType organizationType, String emailEndpoint, Long tokenSum) {
+    public OrganizationResponse(
+            final Long id,
+            final String name,
+            final OrganizationType organizationType,
+            final String emailEndpoint,
+            final Long tokenSum) {
         this.id = id;
         this.name = name;
         this.organizationType = organizationType;

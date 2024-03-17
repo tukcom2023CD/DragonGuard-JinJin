@@ -12,8 +12,14 @@ import com.dragonguard.backend.global.template.service.EntityLoader;
 import java.util.List;
 
 public interface ResultService extends EntityLoader<Result, Long> {
-    UserResultSearchResponse saveResult(final UserClientResponse response, final Search search, final boolean isServiceMember);
-    GitRepoResultResponse saveResultAndGetGitRepoResponse(final GitRepoSearchClientResponse request, final Search search);
+    UserResultSearchResponse saveResult(
+            final UserClientResponse response, final Search search, final boolean isServiceMember);
+
+    GitRepoResultResponse saveResultAndGetGitRepoResponse(
+            final GitRepoSearchClientResponse request, final Search search);
+
     List<Result> findAllBySearchId(final Long searchId);
-    void saveAllResultsWithSearch(final List<ScrapeResult> results, final Long searchId, final List<Result> resultList);
+
+    void saveAllResultsWithSearch(
+            final List<ScrapeResult> results, final Long searchId, final List<Result> resultList);
 }

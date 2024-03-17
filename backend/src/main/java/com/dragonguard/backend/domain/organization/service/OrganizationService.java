@@ -15,11 +15,21 @@ import java.util.UUID;
 
 public interface OrganizationService extends EntityLoader<Organization, Long> {
     IdResponse<Long> saveOrganization(final OrganizationRequest organizationRequest);
+
     void findAndAddMember(final AddMemberRequest addMemberRequest);
-    List<OrganizationResponse> findByType(final OrganizationType organizationType, final Pageable pageable);
+
+    List<OrganizationResponse> findByType(
+            final OrganizationType organizationType, final Pageable pageable);
+
     List<OrganizationResponse> findOrganizationRank(final Pageable pageable);
-    List<OrganizationResponse> findOrganizationRankByType(final OrganizationType type, final Pageable pageable);
-    List<OrganizationResponse> searchOrganization(final OrganizationType type, final String name, final Pageable pageable);
+
+    List<OrganizationResponse> findOrganizationRankByType(
+            final OrganizationType type, final Pageable pageable);
+
+    List<OrganizationResponse> searchOrganization(
+            final OrganizationType type, final String name, final Pageable pageable);
+
     IdResponse<Long> getByName(final String name);
+
     RelatedRankWithMemberResponse findRankingByMemberId(UUID id, String githubId);
 }

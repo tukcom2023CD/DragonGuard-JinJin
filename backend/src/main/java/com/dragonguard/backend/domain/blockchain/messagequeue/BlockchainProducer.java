@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
  * @author 김승진
  * @description 블록체인 토큰 생성 요청을 카프카로 보내는 Producer
  */
-
 @Component
 @RequiredArgsConstructor
 public class BlockchainProducer implements KafkaProducer<BlockchainKafkaRequest> {

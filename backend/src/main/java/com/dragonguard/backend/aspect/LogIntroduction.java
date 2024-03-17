@@ -1,6 +1,7 @@
 package com.dragonguard.backend.aspect;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -13,7 +14,6 @@ import java.util.function.BiConsumer;
  * @author 김승진
  * @description 각종 클래스의 요청에 대해 AOP로 로깅을 진행하는 클래스
  */
-
 @Slf4j
 @Aspect
 @Component

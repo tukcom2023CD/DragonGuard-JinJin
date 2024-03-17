@@ -1,5 +1,16 @@
 package com.dragonguard.backend.domain.gitrepo.controller;
 
+import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
+import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoCompareResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
@@ -7,6 +18,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoMemberCompareRe
 import com.dragonguard.backend.domain.gitrepo.dto.response.*;
 import com.dragonguard.backend.domain.gitrepo.service.GitRepoMemberFacade;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,16 +30,6 @@ import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 
-import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentRequest;
-import static com.dragonguard.backend.support.docs.ApiDocumentUtils.getDocumentResponse;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @DisplayName("gitrepo 컨트롤러의")
 @WebMvcTest(GitRepoController.class)
 class GitRepoControllerTest extends RestDocumentTest {
@@ -37,12 +39,23 @@ class GitRepoControllerTest extends RestDocumentTest {
     @Test
     @DisplayName("레포 멤버 조회가 수행되는가 (수동 업데이트)")
     void getRepoMembers() throws Exception {
-        List<GitRepoMemberResponse> list = List.of(
-                new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
-                new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
-                new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
-                new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true));
-        GitRepoResponse expected = new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
+        List<GitRepoMemberResponse> list =
+                List.of(
+                        new GitRepoMemberResponse(
+                                "ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
+                        new GitRepoMemberResponse(
+                                "HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                        new GitRepoMemberResponse(
+                                "posite", "http://somethingProfileUrl", 99, 1001, 500, true),
+                        new GitRepoMemberResponse(
+                                "Sammuelwoojae",
+                                "http://somethingProfileUrl",
+                                100,
+                                1001,
+                                499,
+                                true));
+        GitRepoResponse expected =
+                new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
         given(gitRepoMemberFacade.findGitRepoInfos(any())).willReturn(expected);
 
         ResultActions perform =
@@ -54,18 +67,33 @@ class GitRepoControllerTest extends RestDocumentTest {
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("get git-repo contributors", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get git-repo contributors",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
     @DisplayName("레포 멤버 조회가 수행되는가")
     void getRepoMembersAndUpdate() throws Exception {
-        List<GitRepoMemberResponse> list = List.of(
-                new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
-                new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
-                new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
-                new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true));
-        GitRepoResponse expected = new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
+        List<GitRepoMemberResponse> list =
+                List.of(
+                        new GitRepoMemberResponse(
+                                "ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
+                        new GitRepoMemberResponse(
+                                "HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                        new GitRepoMemberResponse(
+                                "posite", "http://somethingProfileUrl", 99, 1001, 500, true),
+                        new GitRepoMemberResponse(
+                                "Sammuelwoojae",
+                                "http://somethingProfileUrl",
+                                100,
+                                1001,
+                                499,
+                                true));
+        GitRepoResponse expected =
+                new GitRepoResponse(List.of(1, 1, 1, 2, 3, 4, 5, 6, 24, 212, 32, 4), list);
         given(gitRepoMemberFacade.findGitRepoInfosAndUpdate(any())).willReturn(expected);
 
         ResultActions perform =
@@ -77,22 +105,66 @@ class GitRepoControllerTest extends RestDocumentTest {
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("get git-repo contributors for update", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get git-repo contributors for update",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
     @DisplayName("두 레포 기여자 기여도 비교가 수행되는가 (수동 업데이트)")
     void getTwoGitRepos() throws Exception {
-        TwoGitRepoMemberResponse expected = new TwoGitRepoMemberResponse(List.of(
-                new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
-                new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
-                new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
-                new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true)),
-                List.of(
-                        new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
-                        new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
-                        new GitRepoMemberResponse("posite","http://somethingProfileUrl", 99, 1001, 500, true),
-                        new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true)));
+        TwoGitRepoMemberResponse expected =
+                new TwoGitRepoMemberResponse(
+                        List.of(
+                                new GitRepoMemberResponse(
+                                        "ohksj77",
+                                        "http://somethingProfileUrl",
+                                        100,
+                                        1000,
+                                        500,
+                                        true),
+                                new GitRepoMemberResponse(
+                                        "HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                                new GitRepoMemberResponse(
+                                        "posite",
+                                        "http://somethingProfileUrl",
+                                        99,
+                                        1001,
+                                        500,
+                                        true),
+                                new GitRepoMemberResponse(
+                                        "Sammuelwoojae",
+                                        "http://somethingProfileUrl",
+                                        100,
+                                        1001,
+                                        499,
+                                        true)),
+                        List.of(
+                                new GitRepoMemberResponse(
+                                        "ohksj77",
+                                        "http://somethingProfileUrl",
+                                        100,
+                                        1000,
+                                        500,
+                                        true),
+                                new GitRepoMemberResponse(
+                                        "HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                                new GitRepoMemberResponse(
+                                        "posite",
+                                        "http://somethingProfileUrl",
+                                        99,
+                                        1001,
+                                        500,
+                                        true),
+                                new GitRepoMemberResponse(
+                                        "Sammuelwoojae",
+                                        "http://somethingProfileUrl",
+                                        100,
+                                        1001,
+                                        499,
+                                        true)));
         given(gitRepoMemberFacade.findMembersByGitRepoForCompare(any())).willReturn(expected);
 
         ResultActions perform =
@@ -101,29 +173,76 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/")))
+                                                new GitRepoCompareRequest(
+                                                        "tukcom2023CD/DragonGuard-JinJin",
+                                                        "tukcom2023CD/")))
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("get comparing two git-repos members", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get comparing two git-repos members",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
     @DisplayName("두 레포 기여자 기여도 비교가 수행되는가")
     void getTwoGitReposForUpdate() throws Exception {
-        TwoGitRepoMemberResponse expected = new TwoGitRepoMemberResponse(List.of(
-                new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
-                new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
-                new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
-                new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true)),
-                List.of(
-                        new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
-                        new GitRepoMemberResponse("HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
-                        new GitRepoMemberResponse("posite", "http://somethingProfileUrl", 99, 1001, 500, true),
-                        new GitRepoMemberResponse("Sammuelwoojae", "http://somethingProfileUrl", 100, 1001, 499, true)));
-        given(gitRepoMemberFacade.findMembersByGitRepoForCompareAndUpdate(any())).willReturn(expected);
+        TwoGitRepoMemberResponse expected =
+                new TwoGitRepoMemberResponse(
+                        List.of(
+                                new GitRepoMemberResponse(
+                                        "ohksj77",
+                                        "http://somethingProfileUrl",
+                                        100,
+                                        1000,
+                                        500,
+                                        true),
+                                new GitRepoMemberResponse(
+                                        "HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                                new GitRepoMemberResponse(
+                                        "posite",
+                                        "http://somethingProfileUrl",
+                                        99,
+                                        1001,
+                                        500,
+                                        true),
+                                new GitRepoMemberResponse(
+                                        "Sammuelwoojae",
+                                        "http://somethingProfileUrl",
+                                        100,
+                                        1001,
+                                        499,
+                                        true)),
+                        List.of(
+                                new GitRepoMemberResponse(
+                                        "ohksj77",
+                                        "http://somethingProfileUrl",
+                                        100,
+                                        1000,
+                                        500,
+                                        true),
+                                new GitRepoMemberResponse(
+                                        "HJ39", "http://somethingProfileUrl", 101, 999, 500, true),
+                                new GitRepoMemberResponse(
+                                        "posite",
+                                        "http://somethingProfileUrl",
+                                        99,
+                                        1001,
+                                        500,
+                                        true),
+                                new GitRepoMemberResponse(
+                                        "Sammuelwoojae",
+                                        "http://somethingProfileUrl",
+                                        100,
+                                        1001,
+                                        499,
+                                        true)));
+        given(gitRepoMemberFacade.findMembersByGitRepoForCompareAndUpdate(any()))
+                .willReturn(expected);
 
         ResultActions perform =
                 mockMvc.perform(
@@ -131,33 +250,53 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/")))
+                                                new GitRepoCompareRequest(
+                                                        "tukcom2023CD/DragonGuard-JinJin",
+                                                        "tukcom2023CD/")))
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("get comparing two git-repos members for update", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get comparing two git-repos members for update",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
     @DisplayName("두 레포 비교가 수행되는가 (수동 업데이트)")
     void getGitRepoMembersForCompare() throws Exception {
-        TwoGitRepoResponse expected = new TwoGitRepoResponse(
-                new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
-                        new StatisticsResponse(new SummaryResponse(new IntSummaryStatistics(4, 33, 146, 430)),
-                                new SummaryResponse(new IntSummaryStatistics(4, 1800, 30000, 50000)),
-                                new SummaryResponse(new IntSummaryStatistics(4, 5000, 15000, 30000))),
-                        Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new SummaryResponse(new IntSummaryStatistics(4, 9998, 10000, 29997)),
-                        List.of("http://profileImage", "http://profileImage")),
-                new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
-                        new StatisticsResponse(new SummaryResponse(new IntSummaryStatistics(4, 33, 146, 430)),
-                                new SummaryResponse(new IntSummaryStatistics(4, 1800, 30000, 50000)),
-                                        new SummaryResponse(new IntSummaryStatistics(4, 5000, 15000, 30000))),
-                        Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new SummaryResponse(new IntSummaryStatistics(4, 9998, 10000, 29997)),
-                        List.of("http://profileImage", "http://profileImage")));
+        TwoGitRepoResponse expected =
+                new TwoGitRepoResponse(
+                        new GitRepoCompareResponse(
+                                new GitRepoClientResponse(
+                                        "tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
+                                new StatisticsResponse(
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 33, 146, 430)),
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 1800, 30000, 50000)),
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 5000, 15000, 30000))),
+                                Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
+                                new SummaryResponse(
+                                        new IntSummaryStatistics(4, 9998, 10000, 29997)),
+                                List.of("http://profileImage", "http://profileImage")),
+                        new GitRepoCompareResponse(
+                                new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
+                                new StatisticsResponse(
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 33, 146, 430)),
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 1800, 30000, 50000)),
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 5000, 15000, 30000))),
+                                Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
+                                new SummaryResponse(
+                                        new IntSummaryStatistics(4, 9998, 10000, 29997)),
+                                List.of("http://profileImage", "http://profileImage")));
         given(gitRepoMemberFacade.findTwoGitRepos(any())).willReturn(expected);
 
         ResultActions perform =
@@ -166,33 +305,53 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/")))
+                                                new GitRepoCompareRequest(
+                                                        "tukcom2023CD/DragonGuard-JinJin",
+                                                        "tukcom2023CD/")))
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("get comparing two git-repos", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get comparing two git-repos",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
     @DisplayName("두 레포 비교가 수행되는가")
     void getGitRepoMembersForCompareForUpdate() throws Exception {
-        TwoGitRepoResponse expected = new TwoGitRepoResponse(
-                new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
-                        new StatisticsResponse(new SummaryResponse(new IntSummaryStatistics(4, 33, 146, 430)),
-                                new SummaryResponse(new IntSummaryStatistics(4, 1800, 30000, 50000)),
-                                new SummaryResponse(new IntSummaryStatistics(4, 5000, 15000, 30000))),
-                        Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new SummaryResponse(new IntSummaryStatistics(4, 9998, 10000, 29997)),
-                        List.of("http://profileImage", "http://profileImage")),
-                new GitRepoCompareResponse(new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
-                        new StatisticsResponse(new SummaryResponse(new IntSummaryStatistics(4, 33, 146, 430)),
-                                new SummaryResponse(new IntSummaryStatistics(4, 1800, 30000, 50000)),
-                                new SummaryResponse(new IntSummaryStatistics(4, 5000, 15000, 30000))),
-                        Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
-                        new SummaryResponse(new IntSummaryStatistics(4, 9998, 10000, 29997)),
-                        List.of("http://profileImage", "http://profileImage")));
+        TwoGitRepoResponse expected =
+                new TwoGitRepoResponse(
+                        new GitRepoCompareResponse(
+                                new GitRepoClientResponse(
+                                        "tukcom2023CD/DragonGuard-JinJin", 1, 4, 4, 3, 23, 0),
+                                new StatisticsResponse(
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 33, 146, 430)),
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 1800, 30000, 50000)),
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 5000, 15000, 30000))),
+                                Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
+                                new SummaryResponse(
+                                        new IntSummaryStatistics(4, 9998, 10000, 29997)),
+                                List.of("http://profileImage", "http://profileImage")),
+                        new GitRepoCompareResponse(
+                                new GitRepoClientResponse("tukcom2023CD/", 1, 4, 4, 3, 23, 0),
+                                new StatisticsResponse(
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 33, 146, 430)),
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 1800, 30000, 50000)),
+                                        new SummaryResponse(
+                                                new IntSummaryStatistics(4, 5000, 15000, 30000))),
+                                Map.of("java", 10000, "kotlin", 9999, "swift", 9998),
+                                new SummaryResponse(
+                                        new IntSummaryStatistics(4, 9998, 10000, 29997)),
+                                List.of("http://profileImage", "http://profileImage")));
         given(gitRepoMemberFacade.findTwoGitReposAndUpdate(any())).willReturn(expected);
 
         ResultActions perform =
@@ -201,21 +360,30 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoCompareRequest("tukcom2023CD/DragonGuard-JinJin", "tukcom2023CD/")))
+                                                new GitRepoCompareRequest(
+                                                        "tukcom2023CD/DragonGuard-JinJin",
+                                                        "tukcom2023CD/")))
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("get comparing two git-repos for update", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get comparing two git-repos for update",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 
     @Test
     @DisplayName("두 멤버의 레포 기여도 비교가 수행되는가")
     void getTwoGitRepoMember() throws Exception {
-        GitRepoMemberCompareResponse expected = new GitRepoMemberCompareResponse(
-                new GitRepoMemberResponse("ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
-                new GitRepoMemberResponse("ohksj", "http://somethingProfileUrl", 101, 1001, 501, true));
+        GitRepoMemberCompareResponse expected =
+                new GitRepoMemberCompareResponse(
+                        new GitRepoMemberResponse(
+                                "ohksj77", "http://somethingProfileUrl", 100, 1000, 500, true),
+                        new GitRepoMemberResponse(
+                                "ohksj", "http://somethingProfileUrl", 101, 1001, 501, true));
         given(gitRepoMemberFacade.findTwoGitRepoMember(any())).willReturn(expected);
 
         ResultActions perform =
@@ -224,12 +392,20 @@ class GitRepoControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(
                                         toRequestBody(
-                                                new GitRepoMemberCompareRequest("ohksj77", "tukcom2023CD/DragonGuard-JinJin", "ohksj", "tukcom2023CD/")))
+                                                new GitRepoMemberCompareRequest(
+                                                        "ohksj77",
+                                                        "tukcom2023CD/DragonGuard-JinJin",
+                                                        "ohksj",
+                                                        "tukcom2023CD/")))
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         perform.andExpect(status().isOk());
 
         perform.andDo(print())
-                .andDo(document("get comparing two members contribution", getDocumentRequest(), getDocumentResponse()));
+                .andDo(
+                        document(
+                                "get comparing two members contribution",
+                                getDocumentRequest(),
+                                getDocumentResponse()));
     }
 }

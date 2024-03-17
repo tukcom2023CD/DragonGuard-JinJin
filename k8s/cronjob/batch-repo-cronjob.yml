@@ -1,0 +1,28 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: batch-repo-cronjob
+spec:
+  schedule: "0 50 1,3,5,7,9,11,13,15,17,19,21,23 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: batch-repo-cronjob
+              image: curlimages/curl:7.77.0
+              imagePullPolicy: IfNotPresent
+              command:
+                - "/bin/sh"
+                - "-c"
+                - |
+                  curl -X "POST" "http://gitrank-backend/api/cronjob/git-repos" \
+                       -H 'Cronjob-Auth: ${CRONJOB_AUTH}'
+                       -H 'Content-Type: application/json; charset=utf-8'                  
+              env:
+                - name: CRONJOB_AUTH
+                  valueFrom:
+                    secretKeyRef:
+                      name: gitrank-secret
+                      key: cronjob.auth
+          restartPolicy: Never

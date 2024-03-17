@@ -115,26 +115,6 @@ services:
       - scraping
     tty: true
 
-  prometheus:
-    image: prom/prometheus
-    container_name: gitrank-prometheus
-    restart: on-failure
-    ports:
-      - 9090:9090
-    networks:
-      - app-tier
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-
-  grafana:
-    image: grafana/grafana
-    container_name: gitrank-grafana
-    restart: on-failure
-    ports:
-      - 3000:3000
-    networks:
-      - app-tier
-
 networks:
   app-tier:
     driver: bridge

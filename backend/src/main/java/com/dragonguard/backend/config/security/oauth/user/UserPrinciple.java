@@ -1,8 +1,10 @@
 package com.dragonguard.backend.config.security.oauth.user;
 
 import com.dragonguard.backend.domain.member.entity.Member;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -14,7 +16,6 @@ import java.util.Map;
  * @author 김승진
  * @description UserDetails의 구현체로 유저 계정의 정보를 담는 클래스
  */
-
 @Getter
 @AllArgsConstructor
 public class UserPrinciple implements UserDetails, OAuth2User {

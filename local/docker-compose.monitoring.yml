@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  prometheus:
+  image: prom/prometheus
+  container_name: prometheus
+  restart: always
+  user: root
+  ports:
+    - 9090:9090
+  networks:
+    - monitoring
+  volumes:
+    - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    - ./prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml
+    - prometheus_config:/etc/prometheus
+    - prometheus_data:/prometheus
+
+grafana:
+  image: grafana/grafana
+  container_name: grafana
+  restart: always
+  ports:
+    - 3000:3000
+  networks:
+    - monitoring
+
+alertmanager:
+  image: prom/alertmanager
+  container_name: alertmanager
+  restart: always
+  user: root
+  ports:
+    - 9093:9093
+  environment:
+    - SLACK_API_URL=${SLACK_API_URL}
+  volumes:
+    - ./prometheus/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+  networks:
+    - monitoring
+
+volumes:
+  prometheus_data: null
+  prometheus_config: null
+
+networks:
+  monitoring:

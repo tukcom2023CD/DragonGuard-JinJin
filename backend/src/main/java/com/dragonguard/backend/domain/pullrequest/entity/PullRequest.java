@@ -5,17 +5,15 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
 import com.dragonguard.backend.global.template.entity.Contribution;
+
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * @author 김승진
  * @description 깃허브의 PullRequest 정보를 담는 DB Entity
  */
-
 @Getter
 @Entity
 @SoftDelete
@@ -23,9 +21,7 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PullRequest implements Contribution {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @Id @GeneratedValue private Long id;
 
     @JoinColumn(columnDefinition = "BINARY(16)")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

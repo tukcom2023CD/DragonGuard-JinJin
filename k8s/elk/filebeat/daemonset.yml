@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: filebeat
+spec:
+  selector:
+    matchLabels:
+      app: filebeat
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      containers:
+      - name: filebeat
+        image: docker.elastic.co/beats/filebeat:7.10.0
+        volumeMounts:
+        - name: log-volume
+          mountPath: /var/log
+        - name: config-volume
+          mountPath: /usr/share/filebeat/filebeat.yml
+          subPath: filebeat.yml
+      volumes:
+      - name: log-volume
+        hostPath:
+          path: /var/log
+      - name: config-volume
+        configMap:
+          name: filebeat

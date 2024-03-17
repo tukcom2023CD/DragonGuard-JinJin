@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author 김승진
  * @description 토큰 재발급을 위한 컨트롤러
  */
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -22,8 +21,7 @@ public class AuthController {
 
     @GetMapping("/refresh")
     public ResponseEntity<JwtToken> authorize(
-            @RequestHeader final String refreshToken,
-            @RequestHeader final String accessToken) {
+            @RequestHeader final String refreshToken, @RequestHeader final String accessToken) {
         return ResponseEntity.ok(authService.refreshToken(refreshToken, accessToken));
     }
 }

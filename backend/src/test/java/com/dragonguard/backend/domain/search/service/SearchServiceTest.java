@@ -1,5 +1,9 @@
 package com.dragonguard.backend.domain.search.service;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import com.dragonguard.backend.domain.search.dto.client.GitRepoSearchClientResponse;
 import com.dragonguard.backend.domain.search.dto.client.SearchRepoResponse;
 import com.dragonguard.backend.domain.search.dto.client.SearchUserResponse;
@@ -11,6 +15,7 @@ import com.dragonguard.backend.domain.search.entity.SearchType;
 import com.dragonguard.backend.domain.search.repository.SearchRepository;
 import com.dragonguard.backend.global.template.client.GithubClient;
 import com.dragonguard.backend.support.database.LoginTest;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,10 +25,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 @DisplayName("Search 서비스의")
 class SearchServiceTest extends LoginTest {
     @Autowired private SearchServiceImpl searchService;
@@ -31,48 +32,69 @@ class SearchServiceTest extends LoginTest {
     @MockBean private GithubClient<SearchRequest, SearchRepoResponse> githubRepoClient;
     @MockBean private GithubClient<SearchRequest, SearchUserResponse> githubUserClient;
 
+    @Test
+    @DisplayName("id를 통한 조회가 수행되는가")
+    void loadEntity() {
+        // given
+        Search expected =
+                searchRepository.save(
+                        Search.builder()
+                                .name("ohksj77")
+                                .type(SearchType.USERS)
+                                .page(1)
+                                .filters(List.of(Filter.builder().build()))
+                                .build());
+
+        // when
+        Search result = searchService.loadEntity(expected.getId());
+
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
+
     @Nested
     @DisplayName("검색을 통한 결과 요청 중")
     class SearchAndGetResult {
         @Test
         @DisplayName("레포 검색이 수행되는가")
         void getGitRepoSearchResultByClient() {
-            //given
+            // given
             String repoName = "tukcom2023CD/DragonGuard-JinJin";
-            when(githubRepoClient.requestToGithub(any())).thenReturn(new SearchRepoResponse(new GitRepoSearchClientResponse[]{new GitRepoSearchClientResponse(repoName, "java", "good repo", LocalDateTime.now().toString())}));
+            when(githubRepoClient.requestToGithub(any()))
+                    .thenReturn(
+                            new SearchRepoResponse(
+                                    new GitRepoSearchClientResponse[] {
+                                        new GitRepoSearchClientResponse(
+                                                repoName,
+                                                "java",
+                                                "good repo",
+                                                LocalDateTime.now().toString())
+                                    }));
 
-            //when
-//            List<GitRepoResultResponse> result = searchService.getGitRepoSearchResultByClient(repoName, 1, List.of("language:java"));
+            // when
+            //            List<GitRepoResultResponse> result =
+            // searchService.getGitRepoSearchResultByClient(repoName, 1, List.of("language:java"));
 
-            //then
-//            assertThat(result.get(0).getName()).isEqualTo(repoName);
+            // then
+            //            assertThat(result.get(0).getName()).isEqualTo(repoName);
         }
 
         @Test
         @DisplayName("유저 검색이 수행되는가")
         void getUsersSearchResultByClient() {
-            //given
+            // given
             String userName = "ohksj77";
-            when(githubUserClient.requestToGithub(any())).thenReturn(new SearchUserResponse(new UserClientResponse[]{new UserClientResponse(userName)}));
+            when(githubUserClient.requestToGithub(any()))
+                    .thenReturn(
+                            new SearchUserResponse(
+                                    new UserClientResponse[] {new UserClientResponse(userName)}));
 
-            //when
-//            List<UserResultResponse> result = searchService.getUserSearchResultByClient(userName, 1, List.of("language:java"));
+            // when
+            //            List<UserResultResponse> result =
+            // searchService.getUserSearchResultByClient(userName, 1, List.of("language:java"));
 
-            //then
-//            assertThat(result.get(0).getName()).isEqualTo(userName);
+            // then
+            //            assertThat(result.get(0).getName()).isEqualTo(userName);
         }
-    }
-
-    @Test
-    @DisplayName("id를 통한 조회가 수행되는가")
-    void loadEntity() {
-        //given
-        Search expected = searchRepository.save(Search.builder().name("ohksj77").type(SearchType.USERS).page(1).filters(List.of(Filter.builder().build())).build());
-
-        //when
-        Search result = searchService.loadEntity(expected.getId());
-
-        //then
-        assertThat(result).isEqualTo(expected);
     }
 }

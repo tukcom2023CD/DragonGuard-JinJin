@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @author 김승진
  * @description 이메일 요청에 대한 예외를 처리하는 Controller Advice
  */
-
 @RestControllerAdvice
 public class EmailErrorAdvice {
     @ExceptionHandler(EmailException.class)
     public ResponseEntity<ErrorResponse> emailException(final EmailException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(e.getMessage()));
     }
 }

@@ -1,7 +1,9 @@
 package com.dragonguard.backend.config.security;
 
 import com.dragonguard.backend.config.security.jwt.JwtAuthenticationFilter;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -27,7 +29,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
  * @author 김승진
  * @description Spring Security 설정 클래스
  */
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -40,25 +41,29 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain configure(final HttpSecurity http) throws Exception {
-        return http
-                .cors()
+        return http.cors()
                 .configurationSource(corsConfigurationSource())
                 .and()
                 .csrf()
                 .disable()
-                .httpBasic().disable()
-                .formLogin().disable()
-                .authorizeRequests(requests -> requests.requestMatchers(CorsUtils::isPreFlightRequest)
-                        .permitAll()
-                        .antMatchers("/oauth2/**", "/auth/**", "/actuator/**")
-                        .permitAll()
-                        .antMatchers("/admin/**")
-                        .hasRole("ADMIN")
-                        .anyRequest()
-                        .authenticated())
+                .httpBasic()
+                .disable()
+                .formLogin()
+                .disable()
+                .authorizeRequests(
+                        requests ->
+                                requests.requestMatchers(CorsUtils::isPreFlightRequest)
+                                        .permitAll()
+                                        .antMatchers("/oauth2/**", "/auth/**", "/actuator/**", "/cronjob/**")
+                                        .permitAll()
+                                        .antMatchers("/admin/**")
+                                        .hasRole("ADMIN")
+                                        .anyRequest()
+                                        .authenticated())
                 .oauth2Login(oAuth2LoginConfigurer())
                 .sessionManagement(sessionManagementConfigurer())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(
+                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .accessDeniedHandler(accessDeniedHandler)
@@ -71,11 +76,15 @@ public class SecurityConfig {
     }
 
     private Customizer<OAuth2LoginConfigurer<HttpSecurity>> oAuth2LoginConfigurer() {
-        return o -> o.authorizationEndpoint(a ->
-                        a.baseUri("/oauth2/authorize")
-                                .and().redirectionEndpoint().baseUri("/oauth2/callback/*"))
-                .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
-                .successHandler(authenticationSuccessHandler);
+        return o ->
+                o.authorizationEndpoint(
+                                a ->
+                                        a.baseUri("/oauth2/authorize")
+                                                .and()
+                                                .redirectionEndpoint()
+                                                .baseUri("/oauth2/callback/*"))
+                        .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
+                        .successHandler(authenticationSuccessHandler);
     }
 
     @Bean
