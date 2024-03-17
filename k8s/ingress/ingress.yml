@@ -14,17 +14,3 @@ spec:
             name: gitrank-backend
             port:
               number: 8080
-      - path: /kibana/
-        pathType: Prefix
-        backend:
-          service:
-            name: kibana
-            port:
-              number: 5601
-      - path: /grafana/
-        pathType: Prefix
-        backend:
-          service:
-            name: grafana
-            port:
-              number: 3000
