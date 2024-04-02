@@ -12,6 +12,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,7 @@ public class RedisRankingUtils {
     private static final String USER_RANKING = "userRanking";
     private static final String MEMBER_DETAILS = "memberDetails:";
     private final RedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     public void addUserScore(final Member member) {
         redisTemplate
@@ -52,14 +55,17 @@ public class RedisRankingUtils {
 
     private String convertToJson(final MemberRankResponse memberDetails) {
         try {
-            return new ObjectMapper().writeValueAsString(memberDetails);
+            return objectMapper.writeValueAsString(memberDetails);
         } catch (final JsonProcessingException e) {
             throw new InvalidJsonOperationException();
         }
     }
 
     public List<MemberRankResponse> getTopUsers(final long start, final long end) {
-        return redisTemplate.opsForZSet().reverseRange(USER_RANKING, start, end).stream()
+        return Optional.ofNullable(
+                        redisTemplate.opsForZSet().reverseRange(USER_RANKING, start, end))
+                .orElseGet(Set::of)
+                .stream()
                 .map(UUID::fromString)
                 .map(this::getMemberDetailsFromRedis)
                 .collect(Collectors.toList());
@@ -72,7 +78,7 @@ public class RedisRankingUtils {
 
     private MemberRankResponse convertFromJson(final String memberDetailsJson) {
         try {
-            return new ObjectMapper().readValue(memberDetailsJson, MemberRankResponse.class);
+            return objectMapper.readValue(memberDetailsJson, MemberRankResponse.class);
         } catch (final Exception e) {
             throw new InvalidJsonOperationException();
         }
