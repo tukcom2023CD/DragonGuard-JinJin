@@ -24,7 +24,7 @@ public interface JpaGitOrganizationRepository
             "SELECT DISTINCT go FROM GitOrganization go JOIN FETCH go.gitOrganizationMembers gom JOIN FETCH gom.member m WHERE m = :member")
     List<GitOrganization> findAllByMember(final Member member);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_READ)
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "1500")})
     boolean existsByName(final String name);
 }

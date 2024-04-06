@@ -2,7 +2,6 @@ package com.dragonguard.backend.domain.member.client;
 
 import com.dragonguard.backend.domain.member.dto.client.MemberClientRequest;
 import com.dragonguard.backend.domain.member.dto.client.MemberPullRequestResponse;
-import com.dragonguard.backend.global.annotation.DistributedLock;
 import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.global.template.client.GithubClient;
 
@@ -28,7 +27,6 @@ public class MemberPullRequestClient
     private final WebClient webClient;
 
     @Override
-    @DistributedLock(name = "#request.getGithubId().concat('memberPullRequestClient')")
     public MemberPullRequestResponse requestToGithub(final MemberClientRequest request) {
         return webClient
                 .get()

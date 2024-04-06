@@ -2,14 +2,16 @@ package com.dragonguard.backend.domain.member.client;
 
 import com.dragonguard.backend.domain.member.dto.client.MemberClientRequest;
 import com.dragonguard.backend.domain.member.dto.client.MemberCommitResponse;
-import com.dragonguard.backend.global.annotation.DistributedLock;
 import com.dragonguard.backend.global.exception.WebClientException;
 import com.dragonguard.backend.global.template.client.GithubClient;
-import java.nio.charset.StandardCharsets;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author 김승진
@@ -23,7 +25,6 @@ public class MemberCommitClient implements GithubClient<MemberClientRequest, Mem
     private final WebClient webClient;
 
     @Override
-    @DistributedLock(name = "#request.getGithubId().concat('memberCommitClient')")
     public MemberCommitResponse requestToGithub(final MemberClientRequest request) {
         return webClient
                 .get()

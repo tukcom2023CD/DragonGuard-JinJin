@@ -5,6 +5,7 @@ import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.global.annotation.DistributedLock;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.entity.Contribution;
 import com.dragonguard.backend.global.template.kafka.KafkaProducer;
@@ -26,6 +27,7 @@ public abstract class ContributionService<T extends Contribution, ID>
     private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
     private final BlockchainService blockchainService;
 
+    @DistributedLock(name = "#member.getGithubId().concat(#contributeType.name())")
     public void saveContribution(
             final Member member,
             final Integer contributionNum,
