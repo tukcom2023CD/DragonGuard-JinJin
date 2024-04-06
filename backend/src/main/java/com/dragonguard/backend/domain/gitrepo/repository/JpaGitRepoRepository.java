@@ -16,7 +16,6 @@ import javax.persistence.QueryHint;
  */
 public interface JpaGitRepoRepository extends JpaRepository<GitRepo, Long>, GitRepoRepository {
     @Lock(LockModeType.PESSIMISTIC_READ)
-    @Query("SELECT gr FROM GitRepo gr WHERE gr.name = :name")
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "1500")})
     Optional<GitRepo> findByName(final String name);
 
