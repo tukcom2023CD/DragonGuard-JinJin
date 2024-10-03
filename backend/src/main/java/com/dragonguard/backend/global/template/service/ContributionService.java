@@ -39,11 +39,9 @@ public abstract class ContributionService<T extends Contribution, ID>
 
         if (existsByMemberAndYear(member, year)) {
             updateAndSendTransaction(member, contributionNum, year, blockchain, contributeType);
-            redisRankingUtils.addUserScore(member);
             return;
         }
         contributionRepository.save(commitMapper.toEntity(member, contributionNum, year));
-        redisRankingUtils.addUserScore(member);
         sendTransaction(member, contributionNum.longValue(), blockchain, contributeType);
     }
 

@@ -109,9 +109,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     @Transactional(readOnly = true)
     public List<MemberRankResponse> findMemberRanking(final Pageable pageable) {
-        final int pageSize = pageable.getPageSize();
-        final int offset = pageable.getPageNumber() * pageSize;
-        return redisRankingUtils.getTopUsers(offset, offset + pageSize);
+        return memberRepository.findRanking(pageable);
     }
 
     public void updateWalletAddress(final WalletRequest walletRequest) {
