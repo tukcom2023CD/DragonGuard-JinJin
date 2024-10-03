@@ -12,8 +12,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 /**
@@ -48,7 +46,7 @@ public class MemberController {
 
     /** 유저들의 개인 랭킹 정보를 조회하기 위한 api */
     @GetMapping("/ranking")
-    public ResponseEntity<List<MemberRankResponse>> getRank(
+    public ResponseEntity<MemberRankResponses> getRank(
             @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC)
                     final Pageable pageable) {
         return ResponseEntity.ok(memberFacade.findMemberRanking(pageable));
@@ -56,7 +54,7 @@ public class MemberController {
 
     /** 유저들의 조직에서의 개인 랭킹 정보를 조회하기 위한 api */
     @GetMapping("/ranking/organization")
-    public ResponseEntity<List<MemberRankResponse>> getOrganizationMemberRank(
+    public ResponseEntity<MemberRankResponses> getOrganizationMemberRank(
             @RequestParam Long organizationId,
             @PageableDefault(sort = "tokens", direction = Sort.Direction.DESC)
                     final Pageable pageable) {

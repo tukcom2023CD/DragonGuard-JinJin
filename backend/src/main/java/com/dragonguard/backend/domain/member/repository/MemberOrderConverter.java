@@ -5,10 +5,12 @@ import static com.dragonguard.backend.domain.member.entity.QMember.member;
 import com.dragonguard.backend.global.template.converter.OrderConverter;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
-import java.util.HashMap;
-import java.util.Map;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 김승진
@@ -25,7 +27,12 @@ public class MemberOrderConverter implements OrderConverter {
 
     private void initializeMap() {
         keywordMap.put("commits", member.sumOfCommits);
-        keywordMap.put("tokens", member.sumOfTokens);
+        keywordMap.put(
+                "tokens",
+                member.sumOfCommits
+                        .add(member.sumOfCodeReviews)
+                        .add(member.sumOfIssues)
+                        .add(member.sumOfPullRequests));
     }
 
     @Override

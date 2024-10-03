@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 @TransactionService
 @RequiredArgsConstructor
 public class MemberFacade {
@@ -33,11 +31,11 @@ public class MemberFacade {
         memberService.updateBlockchain();
     }
 
-    public List<MemberRankResponse> findMemberRanking(final Pageable pageable) {
+    public MemberRankResponses findMemberRanking(final Pageable pageable) {
         return memberService.findMemberRanking(pageable);
     }
 
-    public List<MemberRankResponse> findMemberRankingByOrganization(
+    public MemberRankResponses findMemberRankingByOrganization(
             final Long organizationId, final Pageable pageable) {
         return memberService.findMemberRankingByOrganization(organizationId, pageable);
     }

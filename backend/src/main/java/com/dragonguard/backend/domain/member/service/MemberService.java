@@ -108,8 +108,9 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberRankResponse> findMemberRanking(final Pageable pageable) {
-        return memberRepository.findRanking(pageable);
+    public MemberRankResponses findMemberRanking(final Pageable pageable) {
+        final List<MemberRankResponse> ranking = memberRepository.findRanking(pageable);
+        return new MemberRankResponses(ranking);
     }
 
     public void updateWalletAddress(final WalletRequest walletRequest) {
@@ -134,9 +135,11 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberRankResponse> findMemberRankingByOrganization(
+    public MemberRankResponses findMemberRankingByOrganization(
             final Long organizationId, final Pageable pageable) {
-        return memberRepository.findRankingByOrganization(organizationId, pageable);
+        final List<MemberRankResponse> rankingByOrganization =
+                memberRepository.findRankingByOrganization(organizationId, pageable);
+        return new MemberRankResponses(rankingByOrganization);
     }
 
     @Override

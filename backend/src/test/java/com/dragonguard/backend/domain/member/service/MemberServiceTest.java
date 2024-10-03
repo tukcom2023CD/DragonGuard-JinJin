@@ -170,7 +170,9 @@ class MemberServiceTest extends LoginTest {
 
         // when
         List<MemberRankResponse> response =
-                memberService.findMemberRankingByOrganization(org.getId(), PageRequest.of(0, 4));
+                memberService
+                        .findMemberRankingByOrganization(org.getId(), PageRequest.of(0, 4))
+                        .getRanks();
 
         // then
         assertThat(response.stream().map(MemberRankResponse::getId).collect(Collectors.toList()))

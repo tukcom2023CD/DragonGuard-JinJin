@@ -10,7 +10,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
@@ -196,7 +195,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 500L,
                                 Tier.GOLD,
                                 "http://github123123412412412profileUrl"));
-        given(memberFacade.findMemberRanking(any())).willReturn(expected);
+        given(memberFacade.findMemberRanking(any())).willReturn(new MemberRankResponses(expected));
 
         // when
         ResultActions perform =
@@ -206,7 +205,7 @@ class MemberControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
@@ -312,7 +311,8 @@ class MemberControllerTest extends RestDocumentTest {
                                 20L,
                                 Tier.SPROUT,
                                 "http://githubUserProfileImageUrl"));
-        given(memberFacade.findMemberRankingByOrganization(any(), any())).willReturn(expected);
+        given(memberFacade.findMemberRankingByOrganization(any(), any()))
+                .willReturn(new MemberRankResponses(expected));
 
         // when
         ResultActions perform =
