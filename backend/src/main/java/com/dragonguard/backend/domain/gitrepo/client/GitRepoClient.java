@@ -6,7 +6,6 @@ import com.dragonguard.backend.global.template.client.GithubClient;
 
 import lombok.RequiredArgsConstructor;
 
-import org.apache.kafka.common.errors.WakeupException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -38,6 +37,6 @@ public class GitRepoClient implements GithubClient<GitRepoClientRequest, GitRepo
                 .retrieve()
                 .bodyToMono(GitRepoClientResponse.class)
                 .blockOptional()
-                .orElseThrow(WakeupException::new);
+                .orElseThrow(IllegalStateException::new);
     }
 }
