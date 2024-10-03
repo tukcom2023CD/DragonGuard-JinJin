@@ -30,9 +30,7 @@ public class Blockchain implements Auditable {
     @Enumerated(EnumType.STRING)
     private ContributeType contributeType;
 
-    @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition = "BINARY(16)")
     private Member member;
 
