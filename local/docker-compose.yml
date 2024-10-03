@@ -52,7 +52,6 @@ services:
       - app-tier
     depends_on:
       - backend
-      - scraping
     tty: true
 
 networks:
