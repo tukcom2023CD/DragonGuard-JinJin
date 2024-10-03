@@ -10,11 +10,11 @@ import com.dragonguard.backend.global.template.kafka.EventConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
  * @author 김승진
@@ -29,7 +29,7 @@ public class ContributionClientConsumer implements EventConsumer<ContributionEve
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @EventListener
+    @TransactionalEventListener
     @Override
     public void consume(final ContributionEvent event) {
         final Member member =

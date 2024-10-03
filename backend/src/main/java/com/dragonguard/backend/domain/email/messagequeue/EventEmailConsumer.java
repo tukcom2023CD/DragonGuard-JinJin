@@ -7,11 +7,11 @@ import com.dragonguard.backend.utils.EmailSender;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.mail.MessagingException;
 
@@ -26,7 +26,7 @@ public class EventEmailConsumer implements EventConsumer<EmailEvent> {
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @EventListener
+    @TransactionalEventListener
     @Override
     public void consume(final EmailEvent event) {
         try {
