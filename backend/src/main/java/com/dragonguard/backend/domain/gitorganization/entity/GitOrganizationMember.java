@@ -23,10 +23,10 @@ public class GitOrganizationMember implements Auditable {
     @Id @GeneratedValue private Long id;
 
     @JoinColumn
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private GitOrganization gitOrganization;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition = "BINARY(16)")
     private Member member;
 

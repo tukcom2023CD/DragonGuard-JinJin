@@ -30,13 +30,17 @@ public class Blockchain implements Auditable {
     @Enumerated(EnumType.STRING)
     private ContributeType contributeType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(columnDefinition = "BINARY(16)")
     private Member member;
 
     private String address;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "blockchain")
+    @OneToMany(
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            mappedBy = "blockchain")
     private List<History> histories = new ArrayList<>();
 
     @Setter

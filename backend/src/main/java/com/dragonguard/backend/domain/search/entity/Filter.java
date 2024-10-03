@@ -4,6 +4,7 @@ import com.dragonguard.backend.global.audit.AuditListener;
 import com.dragonguard.backend.global.audit.Auditable;
 import com.dragonguard.backend.global.audit.BaseTime;
 import com.dragonguard.backend.global.audit.SoftDelete;
+
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,7 +25,7 @@ public class Filter implements Auditable {
     private String filter;
 
     @JoinColumn
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Search search;
 
     @Setter

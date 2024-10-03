@@ -30,7 +30,7 @@ public class Commit implements Contribution {
     private Integer amount;
 
     @JoinColumn(columnDefinition = "BINARY(16)")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @Setter

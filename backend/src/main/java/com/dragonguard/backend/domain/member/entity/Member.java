@@ -46,12 +46,10 @@ public class Member implements Auditable {
             "https://baobab.scope.klaytn.com/account/%s?tabId=txList";
     private static final Long NO_TOKEN = 0L;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToMany(mappedBy = "member")
     private final List<GitOrganizationMember> gitOrganizationMembers = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "member",
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "member")
     private final List<GitRepoMember> gitRepoMembers = new ArrayList<>();
 
     @Id
@@ -74,19 +72,19 @@ public class Member implements Auditable {
     @Enumerated(EnumType.STRING)
     private AuthStep authStep;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToOne(mappedBy = "member")
     private Commit commit;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToOne(mappedBy = "member")
     private Issue issue;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToOne(mappedBy = "member")
     private PullRequest pullRequest;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToOne(mappedBy = "member")
     private CodeReview codeReview;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToMany(mappedBy = "member")
     private List<Blockchain> blockchains = new ArrayList<>();
 
     @JoinColumn

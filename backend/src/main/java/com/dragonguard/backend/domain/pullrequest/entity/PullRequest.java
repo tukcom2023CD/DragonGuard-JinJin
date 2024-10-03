@@ -24,7 +24,7 @@ public class PullRequest implements Contribution {
     @Id @GeneratedValue private Long id;
 
     @JoinColumn(columnDefinition = "BINARY(16)")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @Column(nullable = false)
