@@ -11,6 +11,7 @@ import com.dragonguard.backend.global.template.entity.Contribution;
 import com.dragonguard.backend.global.template.kafka.EventProducer;
 import com.dragonguard.backend.global.template.mapper.ContributionMapper;
 import com.dragonguard.backend.global.template.repository.ContributionRepository;
+import com.dragonguard.backend.utils.RedisRankingUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,7 @@ public abstract class ContributionService<T extends Contribution, ID>
     private final ContributionMapper<T> commitMapper;
     private final EventProducer<BlockchainEvent> blockchainEventProducer;
     private final BlockchainService blockchainService;
+    private final RedisRankingUtils redisRankingUtils;
 
     @DistributedLock(name = "#member.getGithubId().concat(#contributeType.name())")
     public void saveContribution(
@@ -37,9 +39,11 @@ public abstract class ContributionService<T extends Contribution, ID>
 
         if (existsByMemberAndYear(member, year)) {
             updateAndSendTransaction(member, contributionNum, year, blockchain, contributeType);
+            redisRankingUtils.addUserScore(member);
             return;
         }
         contributionRepository.save(commitMapper.toEntity(member, contributionNum, year));
+        redisRankingUtils.addUserScore(member);
         sendTransaction(member, contributionNum.longValue(), blockchain, contributeType);
     }
 

@@ -10,7 +10,6 @@ import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.service.EntityLoader;
-import com.dragonguard.backend.utils.RedisRankingUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +31,6 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     private final SmartContractService smartContractService;
     private final BlockchainMapper blockchainMapper;
     private final AuthService authService;
-    private final RedisRankingUtils redisRankingUtils;
 
     public void setTransaction(
             final Member member, final long contribution, final ContributeType contributeType) {
@@ -55,7 +53,6 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
 
         if (balance.equals(expected)) {
             blockchain.addHistory(expected, transactionHash);
-            redisRankingUtils.addUserScore(member);
         }
     }
 

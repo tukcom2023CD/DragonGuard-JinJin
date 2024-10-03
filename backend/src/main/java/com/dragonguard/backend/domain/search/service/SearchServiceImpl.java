@@ -13,8 +13,6 @@ import com.dragonguard.backend.global.template.client.GithubClient;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.cache.annotation.Cacheable;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -81,12 +79,10 @@ public class SearchServiceImpl implements SearchService {
         return searchRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    @Cacheable(value = "userResults", key = "{#searchRequest}", cacheManager = "cacheManager")
     public SearchUserResponse requestUserToGithub(final SearchRequest searchRequest) {
         return githubUserClient.requestToGithub(searchRequest);
     }
 
-    @Cacheable(value = "repoResults", key = "{#searchRequest}", cacheManager = "cacheManager")
     public SearchRepoResponse requestRepoToGithub(final SearchRequest searchRequest) {
         return githubRepoClient.requestToGithub(searchRequest);
     }

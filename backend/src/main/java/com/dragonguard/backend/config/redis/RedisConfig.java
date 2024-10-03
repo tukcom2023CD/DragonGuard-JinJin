@@ -19,8 +19,6 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.time.Duration;
-
 /**
  * @author 김승진
  * @description Redis 캐쉬를 사용하기 위한 설정을 등록하는 클래스
@@ -30,7 +28,6 @@ import java.time.Duration;
 @EnableRedisRepositories
 @RequiredArgsConstructor
 public class RedisConfig {
-    private static final Long TIME_TO_LIVE = 1L;
     private static final String REDISSON_HOST_PREFIX = "redis://";
     private static final String URL_DELIMITER = ":";
     private final RedisProperties redisProperties;
@@ -70,8 +67,7 @@ public class RedisConfig {
                                         new StringRedisSerializer()))
                         .serializeValuesWith(
                                 RedisSerializationContext.SerializationPair.fromSerializer(
-                                        new GenericJackson2JsonRedisSerializer()))
-                        .entryTtl(Duration.ofHours(TIME_TO_LIVE));
+                                        new GenericJackson2JsonRedisSerializer()));
 
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(cf)
                 .cacheDefaults(redisCacheConfiguration)
