@@ -1,7 +1,7 @@
 package com.dragonguard.backend.config.security.oauth;
 
 import com.dragonguard.backend.config.security.oauth.user.UserDetailsMapper;
-import com.dragonguard.backend.domain.member.dto.kafka.KafkaContributionRequest;
+import com.dragonguard.backend.domain.member.dto.kafka.ContributionEvent;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.entity.Role;
@@ -9,7 +9,7 @@ import com.dragonguard.backend.domain.member.mapper.MemberMapper;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.kafka.EventProducer;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +30,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
     private final UserDetailsMapper userDetailsMapper;
     private final MemberMapper memberMapper;
-    private final KafkaProducer<KafkaContributionRequest> kafkaContributionClientProducer;
+    private final EventProducer<ContributionEvent> kafkaContributionClientProducer;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -56,7 +56,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         final String githubToken = userRequest.getAccessToken().getTokenValue();
         user.updateGithubToken(githubToken);
 
-        kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
+        kafkaContributionClientProducer.send(new ContributionEvent(githubId));
         return userDetailsMapper.mapToLoginUser(user);
     }
 }

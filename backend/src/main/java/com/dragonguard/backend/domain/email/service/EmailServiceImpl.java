@@ -1,6 +1,6 @@
 package com.dragonguard.backend.domain.email.service;
 
-import com.dragonguard.backend.domain.email.dto.kafka.KafkaEmail;
+import com.dragonguard.backend.domain.email.dto.kafka.EmailEvent;
 import com.dragonguard.backend.domain.email.entity.Email;
 import com.dragonguard.backend.domain.email.exception.EmailException;
 import com.dragonguard.backend.domain.email.mapper.EmailMapper;
@@ -10,7 +10,7 @@ import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.dto.IdResponse;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.kafka.EventProducer;
 import com.dragonguard.backend.utils.RandomCodeGenerator;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
     private final EmailRepository emailRepository;
     private final AuthService authService;
     private final EmailMapper emailMapper;
-    private final KafkaProducer<KafkaEmail> kafkaEmailProducer;
+    private final EventProducer<EmailEvent> kafkaEmailProducer;
     private final RandomCodeGenerator randomCodeGenerator;
 
     public IdResponse<Long> sendAndSaveEmail() {
@@ -60,6 +60,6 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private void requestToSendEmail(final String memberEmail, final int randomCode) {
-        kafkaEmailProducer.send(new KafkaEmail(memberEmail, randomCode));
+        kafkaEmailProducer.send(new EmailEvent(memberEmail, randomCode));
     }
 }

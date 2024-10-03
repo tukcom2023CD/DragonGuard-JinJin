@@ -1,11 +1,11 @@
 package com.dragonguard.backend.domain.member.service;
 
-import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
+import com.dragonguard.backend.domain.member.dto.kafka.RepositoryEvent;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.*;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.annotation.TransactionService;
-import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.kafka.EventProducer;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public class MemberFacade {
     private final AuthService authService;
     private final MemberService memberService;
     private final MemberClientService memberClientService;
-    private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
+    private final EventProducer<RepositoryEvent> kafkaRepositoryProducer;
 
     public void updateContributions() {
         memberService.updateContributions();
@@ -68,7 +68,7 @@ public class MemberFacade {
         if (!memberService.isBlockchainUpdatable(member)) {
             return;
         }
-        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
+        kafkaRepositoryProducer.send(new RepositoryEvent(githubId));
     }
 
     public MemberLoginVerifyResponse verifyMember() {

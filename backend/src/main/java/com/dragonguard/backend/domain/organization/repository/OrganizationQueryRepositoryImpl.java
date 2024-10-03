@@ -116,9 +116,19 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                                                 .eq(OrganizationStatus.ACCEPTED)
                                                 .and(organization.id.eq(organizationId)))
                                 .where(
-                                        member.sumOfTokens
+                                        member.sumOfCommits
+                                                .add(member.sumOfCodeReviews)
+                                                .add(member.sumOfIssues)
+                                                .add(member.sumOfPullRequests)
                                                 .gt(
-                                                        JPAExpressions.select(member.sumOfTokens)
+                                                        JPAExpressions.select(
+                                                                        member.sumOfCommits
+                                                                                .add(
+                                                                                        member.sumOfCodeReviews)
+                                                                                .add(
+                                                                                        member.sumOfIssues)
+                                                                                .add(
+                                                                                        member.sumOfPullRequests))
                                                                 .from(member)
                                                                 .leftJoin(
                                                                         member.organization,
@@ -150,7 +160,13 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
             final int rank, final String githubId, final Long organizationId) {
         final List<String> relatedRank =
                 jpaQueryFactory
-                        .select(member.githubId, member.id, member.sumOfTokens)
+                        .select(
+                                member.githubId,
+                                member.id,
+                                member.sumOfCommits
+                                        .add(member.sumOfCodeReviews)
+                                        .add(member.sumOfIssues)
+                                        .add(member.sumOfPullRequests))
                         .from(member)
                         .leftJoin(member.organization, organization)
                         .on(organization.organizationStatus.eq(OrganizationStatus.ACCEPTED))
@@ -158,7 +174,12 @@ public class OrganizationQueryRepositoryImpl implements OrganizationQueryReposit
                                 member.authStep
                                         .eq(AuthStep.ALL)
                                         .and(member.organization.id.eq(organizationId)))
-                        .orderBy(member.sumOfTokens.desc())
+                        .orderBy(
+                                member.sumOfCommits
+                                        .add(member.sumOfCodeReviews)
+                                        .add(member.sumOfIssues)
+                                        .add(member.sumOfPullRequests)
+                                        .desc())
                         .distinct()
                         .offset(getOffset(rank))
                         .limit(RELATED_RANK_SIZE)

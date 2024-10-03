@@ -33,7 +33,7 @@ public class RedisRankingUtils {
     public void addUserScore(final Member member) {
         redisTemplate
                 .opsForZSet()
-                .add(USER_RANKING, member.getId().toString(), member.getSumOfTokens());
+                .add(USER_RANKING, member.getId().toString(), member.getSumOfContribution());
 
         final MemberRankResponse memberDetails =
                 new MemberRankResponse(

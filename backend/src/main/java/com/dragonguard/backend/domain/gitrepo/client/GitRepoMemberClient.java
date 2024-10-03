@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.gitrepo.client;
 
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResponse;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoEvent;
 import com.dragonguard.backend.domain.gitrepo.exception.WebClientRetryException;
 import com.dragonguard.backend.global.exception.ClientBadRequestException;
 import com.dragonguard.backend.global.exception.WebClientException;
@@ -29,14 +29,14 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class GitRepoMemberClient
-        implements GithubClient<GitRepoInfoRequest, List<GitRepoMemberClientResponse>> {
+        implements GithubClient<GitRepoInfoEvent, List<GitRepoMemberClientResponse>> {
     private static final String PATH_FORMAT = "repos/%s/stats/contributors";
     private static final int MAX_ATTEMPTS = 10;
     private static final int DURATION_OF_MILLIS = 1500;
     private final WebClient webClient;
 
     @Override
-    public List<GitRepoMemberClientResponse> requestToGithub(final GitRepoInfoRequest request) {
+    public List<GitRepoMemberClientResponse> requestToGithub(final GitRepoInfoEvent request) {
         return webClient
                 .get()
                 .uri(

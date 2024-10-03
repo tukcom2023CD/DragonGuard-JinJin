@@ -33,10 +33,6 @@ spring:
     encoding: UTF-8
     baseline-on-migrate: true
 
-  sql:
-    init:
-      mode: always
-
   cache:
     type: redis
     redis:
@@ -45,14 +41,6 @@ spring:
   redis:
     host: gitrank-redis
     port: 6379
-
-  kafka:
-    bootstrap-servers: gitrank-kafka:9092
-    consumer:
-      group-id: gitrank
-      enable-auto-commit: false
-    listener:
-      ack-mode: manual_immediate
 
   batch:
     jdbc:

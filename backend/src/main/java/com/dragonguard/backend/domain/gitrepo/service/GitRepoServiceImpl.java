@@ -3,10 +3,10 @@ package com.dragonguard.backend.domain.gitrepo.service;
 import com.dragonguard.backend.domain.gitrepo.dto.client.*;
 import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributions;
 import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoLanguages;
-import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.kafka.SparkLineKafka;
+import com.dragonguard.backend.domain.gitrepo.dto.kafka.GitRepoEvent;
+import com.dragonguard.backend.domain.gitrepo.dto.kafka.SparkLineEvent;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoEvent;
 import com.dragonguard.backend.domain.gitrepo.dto.response.StatisticsResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.SummaryResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
@@ -18,7 +18,7 @@ import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.client.GithubClient;
-import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.kafka.EventProducer;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,9 +39,9 @@ public class GitRepoServiceImpl implements GitRepoService {
     private final GitRepoRepository gitRepoRepository;
     private final AuthService authService;
     private final GitRepoMapper gitRepoMapper;
-    private final KafkaProducer<SparkLineKafka> kafkaSparkLineProducer;
-    private final KafkaProducer<GitRepoRequest> kafkaGitRepoInfoProducer;
-    private final GithubClient<GitRepoInfoRequest, List<GitRepoMemberClientResponse>>
+    private final EventProducer<SparkLineEvent> kafkaSparkLineProducer;
+    private final EventProducer<GitRepoEvent> kafkaGitRepoInfoProducer;
+    private final GithubClient<GitRepoInfoEvent, List<GitRepoMemberClientResponse>>
             gitRepoMemberClient;
     private final GithubClient<GitRepoClientRequest, GitRepoClientResponse> gitRepoClient;
     private final GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
@@ -195,9 +195,9 @@ public class GitRepoServiceImpl implements GitRepoService {
 
     @Override
     public Optional<List<GitRepoMemberClientResponse>> requestClientGitRepoMember(
-            final GitRepoInfoRequest gitRepoInfoRequest) {
+            final GitRepoInfoEvent gitRepoInfoEvent) {
         List<GitRepoMemberClientResponse> responses =
-                gitRepoMemberClient.requestToGithub(gitRepoInfoRequest);
+                gitRepoMemberClient.requestToGithub(gitRepoInfoEvent);
         if (responses == null || responses.isEmpty()) {
             return Optional.empty();
         }
@@ -230,13 +230,13 @@ public class GitRepoServiceImpl implements GitRepoService {
     }
 
     private void requestKafkaSparkLine(final String githubToken, final Long id) {
-        kafkaSparkLineProducer.send(new SparkLineKafka(githubToken, id));
+        kafkaSparkLineProducer.send(new SparkLineEvent(githubToken, id));
     }
 
     @Override
     public void requestKafkaGitRepoInfo(final String githubToken, final String name) {
         kafkaGitRepoInfoProducer.send(
-                new GitRepoRequest(githubToken, name, LocalDate.now().getYear()));
+                new GitRepoEvent(githubToken, name, LocalDate.now().getYear()));
     }
 
     @Override

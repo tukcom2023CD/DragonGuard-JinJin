@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoClientResponse;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoNameRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoName;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepo.repository.GitRepoRepository;
@@ -17,7 +17,7 @@ import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.gitrepomember.repository.GitRepoMemberRepository;
 import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.template.client.GithubClient;
-import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.kafka.EventProducer;
 import com.dragonguard.backend.support.database.LoginTest;
 import com.dragonguard.backend.support.fixture.member.entity.MemberFixture;
 
@@ -39,7 +39,7 @@ class GitRepoServiceImplTest extends LoginTest {
     @MockBean
     private GithubClient<GitRepoClientRequest, Map<String, Integer>> gitRepoLanguageClient;
 
-    @MockBean private KafkaProducer<GitRepoNameRequest> kafkaIssueProducer;
+    @MockBean private EventProducer<GitRepoName> kafkaIssueProducer;
 
     @Test
     @DisplayName("깃허브 레포지토리 두개 비교를 위해 한 번에 조회가 수행되는가")

@@ -8,7 +8,6 @@ import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
 import com.dragonguard.backend.domain.issue.entity.Issue;
 import com.dragonguard.backend.domain.member.exception.InvalidGithubTokenException;
-import com.dragonguard.backend.domain.member.exception.NoSuchWalletAddressException;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.pullrequest.entity.PullRequest;
 import com.dragonguard.backend.global.audit.AuditListener;
@@ -167,22 +166,16 @@ public class Member implements Auditable {
     }
 
     public void updateTier() {
-        if (sumOfTokens != null && sumOfTokens > NO_TOKEN) {
-            this.tier = checkTier(sumOfTokens);
+        final int sumOfContribution = getSumOfContribution();
+        if (sumOfContribution > NO_TOKEN) {
+            this.tier = checkTier(sumOfContribution);
             return;
         }
-        this.tier = checkTier(getSumOfTokensWithBlockchain());
+        this.tier = checkTier(sumOfContribution);
     }
 
-    private long getSumOfTokensWithBlockchain() {
-        if (blockchains.isEmpty()) {
-            return NO_TOKEN;
-        }
-
-        return this.blockchains.stream()
-                .map(Blockchain::getSumOfAmount)
-                .mapToLong(b -> Long.parseLong(b.toString()))
-                .sum();
+    public int getSumOfContribution() {
+        return sumOfCommits + sumOfIssues + sumOfPullRequests + sumOfPullRequests;
     }
 
     public Tier checkTier(long amount) {
@@ -234,9 +227,6 @@ public class Member implements Auditable {
     }
 
     public String getBlockchainUrl() {
-        if (!isWalletAddressExists()) {
-            throw new NoSuchWalletAddressException();
-        }
         return String.format(BLOCKCHAIN_URL, this.walletAddress);
     }
 
@@ -266,9 +256,7 @@ public class Member implements Auditable {
     }
 
     public void validateWalletAddressAndUpdateTier() {
-        if (isWalletAddressExists()) {
-            updateTier();
-        }
+        updateTier();
     }
 
     public void organizeBlockchain(final Blockchain blockchain) {

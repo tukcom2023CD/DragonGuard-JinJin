@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
-import com.dragonguard.backend.domain.email.dto.kafka.KafkaEmail;
+import com.dragonguard.backend.domain.email.dto.kafka.EmailEvent;
 import com.dragonguard.backend.domain.email.dto.request.EmailRequest;
 import com.dragonguard.backend.domain.email.dto.response.CheckCodeResponse;
 import com.dragonguard.backend.domain.email.entity.Email;
@@ -13,7 +13,7 @@ import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.repository.OrganizationRepository;
 import com.dragonguard.backend.domain.organization.service.OrganizationEmailFacade;
-import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.kafka.EventProducer;
 import com.dragonguard.backend.support.database.LoginTest;
 import com.dragonguard.backend.support.fixture.organization.entity.OrganizationFixture;
 
@@ -35,7 +35,7 @@ class EmailServiceTest extends LoginTest {
     @Autowired private EntityManager em;
     @Autowired private OrganizationRepository organizationRepository;
     @Autowired private MemberRepository memberRepository;
-    @MockBean private KafkaProducer<KafkaEmail> kafkaEmailProducer;
+    @MockBean private EventProducer<EmailEvent> kafkaEmailProducer;
 
     @Test
     @DisplayName("이메일 전송이 수행되는가")

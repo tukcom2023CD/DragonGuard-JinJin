@@ -4,7 +4,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResp
 import com.dragonguard.backend.domain.gitrepo.dto.client.Week;
 import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributions;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoEvent;
 import com.dragonguard.backend.domain.gitrepo.dto.response.TwoGitRepoResponse;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.global.template.service.EntityLoader;
@@ -26,7 +26,7 @@ public interface GitRepoService extends EntityLoader<GitRepo, Long> {
     GitRepo findGitRepo(final String name);
 
     Optional<List<GitRepoMemberClientResponse>> requestClientGitRepoMember(
-            final GitRepoInfoRequest gitRepoInfoRequest);
+            final GitRepoInfoEvent gitRepoInfoEvent);
 
     GitRepoContributions getContributionMap(
             final Set<GitRepoMemberClientResponse> contributions,

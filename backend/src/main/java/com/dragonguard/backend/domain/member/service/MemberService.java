@@ -7,8 +7,8 @@ import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMemb
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
 import com.dragonguard.backend.domain.gitrepomember.entity.GitRepoMember;
-import com.dragonguard.backend.domain.member.dto.kafka.KafkaContributionRequest;
-import com.dragonguard.backend.domain.member.dto.kafka.KafkaRepositoryRequest;
+import com.dragonguard.backend.domain.member.dto.kafka.ContributionEvent;
+import com.dragonguard.backend.domain.member.dto.kafka.RepositoryEvent;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.*;
 import com.dragonguard.backend.domain.member.entity.AuthStep;
@@ -19,7 +19,7 @@ import com.dragonguard.backend.domain.member.repository.MemberRepository;
 import com.dragonguard.backend.domain.organization.service.OrganizationService;
 import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
-import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.kafka.EventProducer;
 import com.dragonguard.backend.global.template.service.EntityLoader;
 import com.dragonguard.backend.utils.RedisRankingUtils;
 
@@ -45,8 +45,8 @@ public class MemberService implements EntityLoader<Member, UUID> {
     private final AuthService authService;
     private final OrganizationService organizationService;
     private final GitOrganizationService gitOrganizationService;
-    private final KafkaProducer<KafkaRepositoryRequest> kafkaRepositoryProducer;
-    private final KafkaProducer<KafkaContributionRequest> kafkaContributionClientProducer;
+    private final EventProducer<RepositoryEvent> kafkaRepositoryProducer;
+    private final EventProducer<ContributionEvent> kafkaContributionClientProducer;
     private final RedisRankingUtils redisRankingUtils;
 
     public Member findMemberOrSaveWithRole(
@@ -73,7 +73,11 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     public boolean isBlockchainUpdatable(final Member member) {
-        return member.getBlockchains().stream()
+        final List<Blockchain> blockchains = member.getBlockchains();
+        if (blockchains.isEmpty()) {
+            return true;
+        }
+        return blockchains.stream()
                 .map(Blockchain::getHistories)
                 .flatMap(List::stream)
                 .allMatch(History::isUpdatable);
@@ -120,7 +124,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         if (!isBlockchainUpdatable(member)) {
             return;
         }
-        kafkaContributionClientProducer.send(new KafkaContributionRequest(githubId));
+        kafkaContributionClientProducer.send(new ContributionEvent(githubId));
     }
 
     private void sendRepositoryRequestToKafka(final String githubId) {
@@ -128,7 +132,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
         if (!isBlockchainUpdatable(member)) {
             return;
         }
-        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(githubId));
+        kafkaRepositoryProducer.send(new RepositoryEvent(githubId));
     }
 
     @Transactional(readOnly = true)
@@ -200,17 +204,15 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public MemberResponse updateContributionsAndGetProfile() {
         final Member member = authService.getLoginUser();
-        kafkaRepositoryProducer.send(new KafkaRepositoryRequest(member.getGithubId()));
+        kafkaRepositoryProducer.send(new RepositoryEvent(member.getGithubId()));
 
-        if (member.isWalletAddressExists()) {
-            sendContributionRequestToKafka(member.getGithubId());
-        }
+        sendContributionRequestToKafka(member.getGithubId());
         return getMemberResponseWithValidateOrganization(member);
     }
 
     public MemberLoginVerifyResponse verifyMember() {
         final AuthStep authStep = authService.getLoginUser().getAuthStep();
-        if (authStep.isGithubOnly()) {
+        if (authStep.isNone()) {
             return new MemberLoginVerifyResponse(false);
         }
         return new MemberLoginVerifyResponse(true);

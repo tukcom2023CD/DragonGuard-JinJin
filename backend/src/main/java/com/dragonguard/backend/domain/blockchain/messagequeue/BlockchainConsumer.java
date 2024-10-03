@@ -1,18 +1,15 @@
 package com.dragonguard.backend.domain.blockchain.messagequeue;
 
-import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaResponse;
+import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainEvent;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.template.kafka.KafkaConsumer;
+import com.dragonguard.backend.global.template.kafka.EventConsumer;
 import com.dragonguard.backend.global.template.service.EntityLoader;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
-import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,24 +21,16 @@ import java.util.UUID;
  */
 @Component
 @RequiredArgsConstructor
-public class BlockchainConsumer implements KafkaConsumer {
+public class BlockchainConsumer implements EventConsumer<BlockchainEvent> {
     private final EntityLoader<Member, UUID> memberService;
     private final BlockchainService blockchainService;
-    private final ObjectMapper objectMapper;
 
-    @Override
+    @Async
     @Transactional
-    @KafkaListener(
-            topics = "gitrank.to.backend.blockchain",
-            containerFactory = "kafkaListenerContainerFactory")
-    public void consume(@Payload final String message, final Acknowledgment acknowledgment)
-            throws JsonProcessingException {
-        final BlockchainKafkaResponse response =
-                objectMapper.readValue(message, BlockchainKafkaResponse.class);
-        final Member member = memberService.loadEntity(response.getMemberId());
-
-        blockchainService.setTransaction(
-                member, response.getAmount(), response.getContributeType());
-        acknowledgment.acknowledge();
+    @EventListener
+    @Override
+    public void consume(final BlockchainEvent event) {
+        final Member member = memberService.loadEntity(event.getMemberId());
+        blockchainService.setTransaction(member, event.getAmount(), event.getContributeType());
     }
 }

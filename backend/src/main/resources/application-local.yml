@@ -41,14 +41,6 @@ spring:
     host: localhost
     port: 6379
 
-  kafka:
-    bootstrap-servers: gitrank-kafka:9092
-    consumer:
-      group-id: gitrank
-      enable-auto-commit: false
-    listener:
-      ack-mode: manual_immediate
-
   batch:
     jdbc:
       initialize-schema: always

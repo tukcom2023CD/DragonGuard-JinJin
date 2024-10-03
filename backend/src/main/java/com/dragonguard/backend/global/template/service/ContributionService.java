@@ -1,6 +1,6 @@
 package com.dragonguard.backend.global.template.service;
 
-import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaRequest;
+import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainEvent;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
@@ -8,7 +8,7 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.annotation.DistributedLock;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.entity.Contribution;
-import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.kafka.EventProducer;
 import com.dragonguard.backend.global.template.mapper.ContributionMapper;
 import com.dragonguard.backend.global.template.repository.ContributionRepository;
 
@@ -24,7 +24,7 @@ public abstract class ContributionService<T extends Contribution, ID>
     private static final long NO_AMOUNT = 0L;
     private final ContributionRepository<T, ID> contributionRepository;
     private final ContributionMapper<T> commitMapper;
-    private final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer;
+    private final EventProducer<BlockchainEvent> blockchainEventProducer;
     private final BlockchainService blockchainService;
 
     @DistributedLock(name = "#member.getGithubId().concat(#contributeType.name())")
@@ -80,8 +80,7 @@ public abstract class ContributionService<T extends Contribution, ID>
         if (isInvalidToTransaction(member, amount, blockchain)) {
             return;
         }
-        blockchainKafkaProducer.send(
-                new BlockchainKafkaRequest(member.getId(), amount, contributeType));
+        blockchainEventProducer.send(new BlockchainEvent(member.getId(), amount, contributeType));
     }
 
     private boolean isInvalidToTransaction(

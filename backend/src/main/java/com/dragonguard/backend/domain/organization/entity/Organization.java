@@ -46,8 +46,19 @@ public class Organization implements Auditable {
     private OrganizationStatus organizationStatus = OrganizationStatus.REQUESTED;
 
     @Formula(
-            "(SELECT COALESCE(sum(h.amount), 0) FROM history h LEFT JOIN blockchain b on h.blockchain_id = b.id LEFT JOIN member m ON m.id = b.member_id "
-                    + "WHERE m.organization_id = id and m.auth_step = 'ALL')")
+            "(SELECT COALESCE(SUM(member_total.total_amount), 0) FROM "
+                    + "(SELECT m.id, "
+                    + "   (COALESCE(SUM(c.amount), 0) + "
+                    + "    COALESCE(SUM(i.amount), 0) + "
+                    + "    COALESCE(SUM(pr.amount), 0) + "
+                    + "    COALESCE(SUM(cr.amount), 0)) as total_amount "
+                    + " FROM member m "
+                    + " LEFT JOIN commit c ON c.member_id = m.id "
+                    + " LEFT JOIN issue i ON i.member_id = m.id "
+                    + " LEFT JOIN pull_request pr ON pr.member_id = m.id "
+                    + " LEFT JOIN code_review cr ON cr.member_id = m.id "
+                    + " WHERE m.organization_id = id AND m.auth_step = 'ALL' "
+                    + " GROUP BY m.id) as member_total)")
     private Long sumOfMemberTokens;
 
     @Setter

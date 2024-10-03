@@ -1,10 +1,10 @@
 package com.dragonguard.backend.domain.commit.service;
 
-import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainKafkaRequest;
+import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainEvent;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.global.annotation.TransactionService;
-import com.dragonguard.backend.global.template.kafka.KafkaProducer;
+import com.dragonguard.backend.global.template.kafka.EventProducer;
 import com.dragonguard.backend.global.template.mapper.ContributionMapper;
 import com.dragonguard.backend.global.template.repository.ContributionRepository;
 import com.dragonguard.backend.global.template.service.ContributionService;
@@ -18,8 +18,8 @@ public class CommitService extends ContributionService<Commit, Long> {
     public CommitService(
             final ContributionRepository<Commit, Long> contributionRepository,
             final ContributionMapper<Commit> commitMapper,
-            final KafkaProducer<BlockchainKafkaRequest> blockchainKafkaProducer,
+            final EventProducer<BlockchainEvent> blockchainEventProducer,
             final BlockchainService blockchainService) {
-        super(contributionRepository, commitMapper, blockchainKafkaProducer, blockchainService);
+        super(contributionRepository, commitMapper, blockchainEventProducer, blockchainService);
     }
 }

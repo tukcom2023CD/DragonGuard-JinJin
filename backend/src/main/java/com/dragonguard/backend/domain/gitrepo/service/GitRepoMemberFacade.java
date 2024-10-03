@@ -5,7 +5,7 @@ import com.dragonguard.backend.domain.gitrepo.dto.client.GitRepoMemberClientResp
 import com.dragonguard.backend.domain.gitrepo.dto.client.Week;
 import com.dragonguard.backend.domain.gitrepo.dto.collection.GitRepoContributions;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoCompareRequest;
-import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoRequest;
+import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoInfoEvent;
 import com.dragonguard.backend.domain.gitrepo.dto.request.GitRepoMemberCompareRequest;
 import com.dragonguard.backend.domain.gitrepo.dto.response.*;
 import com.dragonguard.backend.domain.gitrepo.entity.GitRepo;
@@ -65,9 +65,9 @@ public class GitRepoMemberFacade {
     }
 
     public List<GitRepoMemberResponse> requestToGithub(
-            final GitRepoInfoRequest gitRepoInfoRequest, final GitRepo gitRepo) {
+            final GitRepoInfoEvent gitRepoInfoEvent, final GitRepo gitRepo) {
         return gitRepoService
-                .requestClientGitRepoMember(gitRepoInfoRequest)
+                .requestClientGitRepoMember(gitRepoInfoEvent)
                 .map(HashSet::new)
                 .filter(response -> !this.hasEmptyProfileUrl(response))
                 .map(contribution -> saveAndGetResult(gitRepo, contribution))
@@ -122,14 +122,14 @@ public class GitRepoMemberFacade {
     }
 
     private List<GitRepoMemberResponse> findMembersByGitRepoWithClient(
-            final GitRepoInfoRequest gitRepoInfoRequest) {
-        final GitRepo gitRepo = gitRepoService.findGitRepo(gitRepoInfoRequest.getName());
-        return requestToGithub(gitRepoInfoRequest, gitRepo);
+            final GitRepoInfoEvent gitRepoInfoEvent) {
+        final GitRepo gitRepo = gitRepoService.findGitRepo(gitRepoInfoEvent.getName());
+        return requestToGithub(gitRepoInfoEvent, gitRepo);
     }
 
     private List<GitRepoMemberResponse> findGitRepoMemberResponses(
             final String repo, final Integer year, final String githubToken) {
-        return findMembersByGitRepoWithClient(new GitRepoInfoRequest(githubToken, repo, year));
+        return findMembersByGitRepoWithClient(new GitRepoInfoEvent(githubToken, repo, year));
     }
 
     private TwoGitRepoMemberResponse getTwoGitRepoMemberResponse(
@@ -158,7 +158,7 @@ public class GitRepoMemberFacade {
             return gitRepoMemberMapper.toResponseList(gitRepoMembers);
         }
         return requestToGithub(
-                new GitRepoInfoRequest(githubToken, gitRepo.getName(), LocalDate.now().getYear()),
+                new GitRepoInfoEvent(githubToken, gitRepo.getName(), LocalDate.now().getYear()),
                 gitRepo);
     }
 

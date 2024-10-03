@@ -1,35 +1,35 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.7'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-	id 'com.google.cloud.tools.jib' version '3.2.1'
-	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
-	id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id 'java'
+    id 'org.springframework.boot' version '2.7.7'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'com.google.cloud.tools.jib' version '3.2.1'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 jib {
-	extraDirectories {
-		permissions = [
-				'src/main/resources/db/migration' : '755'
-		]
-		paths {
-			path {
-				from  = 'src/main/resources/db/migration'
-				into = '/src/main/resources/db/migration'
-				includes = ['*.sql']
-			}
-		}
-	}
-	from {
-		image = "openjdk:11-jre-slim"
-	}
-	to {
-		image = "ohksj77/gitrank-backend"
-		tags = ["latest"]
-	}
-	container {
-		jvmFlags = ["-Xms128m", "-Xmx128m"]
-	}
+    extraDirectories {
+        permissions = [
+                'src/main/resources/db/migration': '755'
+        ]
+        paths {
+            path {
+                from = 'src/main/resources/db/migration'
+                into = '/src/main/resources/db/migration'
+                includes = ['*.sql']
+            }
+        }
+    }
+    from {
+        image = "openjdk:11-jre-slim"
+    }
+    to {
+        image = "ohksj77/gitrank-backend"
+        tags = ["latest"]
+    }
+    container {
+        jvmFlags = ["-Xms128m", "-Xmx128m"]
+    }
 }
 
 group = 'com.dragonguard'
@@ -37,113 +37,111 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	querydsl.extendsFrom compileClasspath
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }
 
 repositories {
-	mavenCentral()
-	maven { url 'https://jitpack.io' }
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 ext {
-	queryDslVersion = "5.0.0"
+    queryDslVersion = "5.0.0"
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.redisson:redisson-spring-boot-starter:3.18.0'
-	implementation 'org.springframework.boot:spring-boot-starter-batch'
-	implementation 'org.springframework.kafka:spring-kafka'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	implementation 'com.klaytn.caver:core:1.10.0'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.flywaydb:flyway-mysql'
-	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.18.0'
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'com.klaytn.caver:core:1.10.0'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	testRuntimeOnly 'com.h2database:h2:1.4.200'
-	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    testRuntimeOnly 'com.h2database:h2:1.4.200'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
-	annotationProcessor 'org.projectlombok:lombok'
-	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.springframework.kafka:spring-kafka-test'
-	testImplementation 'org.springframework.batch:spring-batch-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.batch:spring-batch-test'
 
-	testCompileOnly 'org.projectlombok:lombok'
-	testAnnotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
-	jpa = true
-	querydslSourcesDir = querydslDir
+    jpa = true
+    querydslSourcesDir = querydslDir
 }
 sourceSets {
-	main.java.srcDir querydslDir
+    main.java.srcDir querydslDir
 }
 
 configurations {
-	querydsl.extendsFrom compileClasspath
+    querydsl.extendsFrom compileClasspath
 }
 
 compileQuerydsl {
-	options.annotationProcessorPath = configurations.querydsl
+    options.annotationProcessorPath = configurations.querydsl
 }
 
 ext {
-	snippetsDir = file('build/generated-snippets')
+    snippetsDir = file('build/generated-snippets')
 }
 
 bootJar {
-	dependsOn asciidoctor
-	from("${asciidoctor.outputDir}/html5")
-	into 'static/docs'
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}/html5")
+    into 'static/docs'
 }
 
 asciidoctor {
-	inputs.dir snippetsDir
-	dependsOn test
+    inputs.dir snippetsDir
+    dependsOn test
 }
 
 tasks.named('test') {
-	outputs.dir snippetsDir
-	useJUnitPlatform()
+    outputs.dir snippetsDir
+    useJUnitPlatform()
 }
 
 configurations {
-	asciidoctorExtensions
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    asciidoctorExtensions
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 compileJava {
-	options.compilerArgs += [
-			'-Amapstruct.suppressGeneratorTimestamp=true',
-			'-Amapstruct.suppressGeneratorVersionInfoComment=true',
-			'-Amapstruct.verbose=true'
-	]
+    options.compilerArgs += [
+            '-Amapstruct.suppressGeneratorTimestamp=true',
+            '-Amapstruct.suppressGeneratorVersionInfoComment=true',
+            '-Amapstruct.verbose=true'
+    ]
 }

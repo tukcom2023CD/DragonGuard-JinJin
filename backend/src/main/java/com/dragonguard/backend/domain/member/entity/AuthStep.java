@@ -15,16 +15,12 @@ public enum AuthStep {
 
     private final String korean;
 
-    public boolean isGithubOnly() {
-        return this == GITHUB_ONLY;
-    }
-
     public boolean isNone() {
         return this == NONE;
     }
 
     public boolean isServiceMemberAuthStep() {
-        return this != GITHUB_ONLY && this != NONE;
+        return !isNone();
     }
 
     public boolean isAll() {
