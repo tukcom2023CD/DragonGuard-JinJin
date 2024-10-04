@@ -212,11 +212,13 @@ class OrganizationServiceTest extends LoginTest {
 
             // when
             List<OrganizationResponse> companyResult =
-                    organizationEmailFacade.findByType(
-                            OrganizationType.COMPANY, PageRequest.of(0, 20));
+                    organizationEmailFacade
+                            .findByType(OrganizationType.COMPANY, PageRequest.of(0, 20))
+                            .getData();
             List<OrganizationResponse> universityResult =
-                    organizationEmailFacade.findByType(
-                            OrganizationType.UNIVERSITY, PageRequest.of(0, 20));
+                    organizationEmailFacade
+                            .findByType(OrganizationType.UNIVERSITY, PageRequest.of(0, 20))
+                            .getData();
 
             // then
             assertThat(companyResult).hasSize(1);
@@ -230,7 +232,7 @@ class OrganizationServiceTest extends LoginTest {
 
             // when
             List<OrganizationResponse> result =
-                    organizationEmailFacade.getOrganizationRank(PageRequest.of(0, 20));
+                    organizationEmailFacade.getOrganizationRank(PageRequest.of(0, 20)).getData();
 
             // then
             assertThat(result).hasSize(1);
@@ -243,8 +245,10 @@ class OrganizationServiceTest extends LoginTest {
 
             // when
             List<OrganizationResponse> result =
-                    organizationEmailFacade.getOrganizationRankByType(
-                            OrganizationType.UNIVERSITY, PageRequest.of(0, 20));
+                    organizationEmailFacade
+                            .getOrganizationRankByType(
+                                    OrganizationType.UNIVERSITY, PageRequest.of(0, 20))
+                            .getData();
 
             // then
             assertThat(result).hasSize(1);
@@ -257,8 +261,10 @@ class OrganizationServiceTest extends LoginTest {
 
             // when
             List<OrganizationResponse> result =
-                    organizationEmailFacade.searchOrganization(
-                            OrganizationType.UNIVERSITY, "한국공학대학교", PageRequest.of(0, 20));
+                    organizationEmailFacade
+                            .searchOrganization(
+                                    OrganizationType.UNIVERSITY, "한국공학대학교", PageRequest.of(0, 20))
+                            .getData();
 
             // then
             assertThat(result).hasSize(1);

@@ -8,16 +8,16 @@ import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.domain.member.service.AuthService;
 import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
-import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponses;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.dto.IdResponse;
 import com.dragonguard.backend.global.template.service.EntityLoader;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
 
 /**
  * @author 김승진
@@ -59,23 +59,26 @@ public class OrganizationEmailFacade {
         return organizationService.saveOrganization(organizationRequest);
     }
 
-    public List<OrganizationResponse> findByType(
+    public OrganizationResponses findByType(
             final OrganizationType organizationType, final Pageable pageable) {
-        return organizationService.findByType(organizationType, pageable);
+        return new OrganizationResponses(
+                organizationService.findByType(organizationType, pageable));
     }
 
-    public List<OrganizationResponse> getOrganizationRank(final Pageable pageable) {
-        return organizationService.findOrganizationRank(pageable);
+    public OrganizationResponses getOrganizationRank(final Pageable pageable) {
+        return new OrganizationResponses(organizationService.findOrganizationRank(pageable));
     }
 
-    public List<OrganizationResponse> getOrganizationRankByType(
+    public OrganizationResponses getOrganizationRankByType(
             final OrganizationType type, final Pageable pageable) {
-        return organizationService.findOrganizationRankByType(type, pageable);
+        return new OrganizationResponses(
+                organizationService.findOrganizationRankByType(type, pageable));
     }
 
-    public List<OrganizationResponse> searchOrganization(
+    public OrganizationResponses searchOrganization(
             final OrganizationType type, final String name, final Pageable pageable) {
-        return organizationService.searchOrganization(type, name, pageable);
+        return new OrganizationResponses(
+                organizationService.searchOrganization(type, name, pageable));
     }
 
     public IdResponse<Long> getByName(final String name) {

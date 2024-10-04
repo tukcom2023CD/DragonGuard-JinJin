@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.search.controller;
 
-import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponse;
-import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponse;
+import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponses;
+import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponses;
 import com.dragonguard.backend.domain.search.service.SearchResultFacade;
 
 import lombok.RequiredArgsConstructor;
@@ -26,14 +26,14 @@ public class SearchController {
 
     /** 깃허브 유저를 이름으로 검색하는 api */
     @GetMapping(params = "type=USERS")
-    public ResponseEntity<List<UserResultSearchResponse>> getUsersSearchResult(
+    public ResponseEntity<UserResultSearchResponses> getUsersSearchResult(
             @RequestParam final String name, @RequestParam final Integer page) {
         return ResponseEntity.ok(searchService.getUserSearchResultByClient(name, page));
     }
 
     /** 깃허브 repository를 이름으로 검색하는 api */
     @GetMapping(params = "type=REPOSITORIES")
-    public ResponseEntity<List<GitRepoResultResponse>> getReposSearchResult(
+    public ResponseEntity<GitRepoResultResponses> getReposSearchResult(
             @RequestParam(value = "filters", required = false) final List<String> filters,
             @RequestParam final String name,
             @RequestParam final Integer page) {

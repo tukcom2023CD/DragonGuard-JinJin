@@ -1,7 +1,7 @@
 package com.dragonguard.backend.domain.admin.service;
 
 import com.dragonguard.backend.domain.admin.dto.request.AdminDecideRequest;
-import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationResponse;
+import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationResponses;
 import com.dragonguard.backend.domain.admin.mapper.AdminMapper;
 import com.dragonguard.backend.domain.organization.entity.Organization;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
@@ -29,7 +29,7 @@ public class AdminService {
     private final OrganizationRepository organizationRepository;
     private final AdminMapper adminMapper;
 
-    public List<AdminOrganizationResponse> decideRequestedOrganization(
+    public AdminOrganizationResponses decideRequestedOrganization(
             final AdminDecideRequest adminDecideRequest) {
         final Organization organization = getOrganization(adminDecideRequest);
         final OrganizationStatus beforeStatus = organization.getOrganizationStatus();
@@ -39,7 +39,7 @@ public class AdminService {
                 organizationRepository.findAllByOrganizationStatus(
                         beforeStatus, PageRequest.of(DEFAULT_PAGE, DEFAULT_PAGE_SIZE));
 
-        return adminMapper.toResponseList(organizations);
+        return new AdminOrganizationResponses(adminMapper.toResponseList(organizations));
     }
 
     private Organization getOrganization(final AdminDecideRequest adminDecideRequest) {
@@ -49,11 +49,11 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public List<AdminOrganizationResponse> findOrganizationsByStatus(
+    public AdminOrganizationResponses findOrganizationsByStatus(
             final OrganizationStatus status, final Pageable pageable) {
         List<Organization> organizations =
                 organizationRepository.findAllByOrganizationStatus(status, pageable);
 
-        return adminMapper.toResponseList(organizations);
+        return new AdminOrganizationResponses(adminMapper.toResponseList(organizations));
     }
 }

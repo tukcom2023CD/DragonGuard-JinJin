@@ -56,8 +56,10 @@ class AdminServiceTest extends LoginTest {
 
         // when
         List<AdminOrganizationResponse> acceptedList =
-                adminService.findOrganizationsByStatus(
-                        OrganizationStatus.ACCEPTED, PageRequest.of(0, 20));
+                adminService
+                        .findOrganizationsByStatus(
+                                OrganizationStatus.ACCEPTED, PageRequest.of(0, 20))
+                        .getData();
 
         // then
         assertThat(acceptedList).hasSize(2);

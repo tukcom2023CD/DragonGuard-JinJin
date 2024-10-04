@@ -1,6 +1,7 @@
 package com.dragonguard.backend.domain.blockchain.service;
 
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
+import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponses;
 import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.mapper.BlockchainMapper;
@@ -73,9 +74,9 @@ public class BlockchainService implements EntityLoader<Blockchain, Long> {
     }
 
     @Transactional(readOnly = true)
-    public List<BlockchainResponse> getBlockchainList() {
+    public BlockchainResponses getBlockchainList() {
         final UUID memberId = authService.getLoginUserId();
-        return getBlockchainResponses(memberId);
+        return new BlockchainResponses(getBlockchainResponses(memberId));
     }
 
     private List<BlockchainResponse> getBlockchainResponses(final UUID memberId) {

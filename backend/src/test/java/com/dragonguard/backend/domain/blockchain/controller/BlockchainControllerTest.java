@@ -7,10 +7,10 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponse;
+import com.dragonguard.backend.domain.blockchain.dto.response.BlockchainResponses;
 import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.blockchain.service.SmartContractService;
@@ -54,7 +54,7 @@ class BlockchainControllerTest extends RestDocumentTest {
                                 UUID.randomUUID(),
                                 LocalDateTime.now().toString(),
                                 "321321321"));
-        given(blockchainService.getBlockchainList()).willReturn(expected);
+        given(blockchainService.getBlockchainList()).willReturn(new BlockchainResponses(expected));
 
         ResultActions perform =
                 mockMvc.perform(
@@ -62,7 +62,7 @@ class BlockchainControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
-        perform.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
+        perform.andExpect(status().isOk());
 
         perform.andDo(print())
                 .andDo(

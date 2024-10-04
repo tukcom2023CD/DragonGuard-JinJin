@@ -75,7 +75,7 @@ class BlockchainServiceTest extends LoginTest {
                         .collect(Collectors.toList());
 
         // when
-        List<BlockchainResponse> blockchains = blockchainService.getBlockchainList();
+        List<BlockchainResponse> blockchains = blockchainService.getBlockchainList().getData();
 
         // then
         assertThat(blockchains).hasSize(3);

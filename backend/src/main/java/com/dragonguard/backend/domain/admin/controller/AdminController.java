@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.admin.controller;
 
 import com.dragonguard.backend.domain.admin.annotation.Admin;
 import com.dragonguard.backend.domain.admin.dto.request.AdminDecideRequest;
-import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationResponse;
+import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationResponses;
 import com.dragonguard.backend.domain.admin.service.AdminService;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 
@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -35,14 +33,14 @@ public class AdminController {
 
     /** 조직 승인 요청에 대해 관리자의 선택에 대한 요청을 받는 api */
     @PostMapping("/organizations/decide")
-    public ResponseEntity<List<AdminOrganizationResponse>> decideRequest(
+    public ResponseEntity<AdminOrganizationResponses> decideRequest(
             @RequestBody @Valid final AdminDecideRequest adminDecideRequest) {
         return ResponseEntity.ok(adminService.decideRequestedOrganization(adminDecideRequest));
     }
 
     /** 조직의 승인 여부에 따른 조회 */
     @GetMapping("/organizations")
-    public ResponseEntity<List<AdminOrganizationResponse>> getOrganizationsByStatus(
+    public ResponseEntity<AdminOrganizationResponses> getOrganizationsByStatus(
             @RequestParam final OrganizationStatus status, final Pageable pageable) {
         return ResponseEntity.ok(adminService.findOrganizationsByStatus(status, pageable));
     }

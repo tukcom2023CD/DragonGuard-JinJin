@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
 import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponses;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.service.OrganizationEmailFacade;
 import com.dragonguard.backend.global.dto.IdResponse;
@@ -136,7 +137,8 @@ class OrganizationControllerTest extends RestDocumentTest {
                                 2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
                         new OrganizationResponse(
                                 3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
-        given(organizationService.findByType(any(), any())).willReturn(expected);
+        given(organizationService.findByType(any(), any()))
+                .willReturn(new OrganizationResponses(expected));
 
         // when
         ResultActions perform =
@@ -173,7 +175,8 @@ class OrganizationControllerTest extends RestDocumentTest {
                                 2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
                         new OrganizationResponse(
                                 3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
-        given(organizationService.getOrganizationRank(any())).willReturn(expected);
+        given(organizationService.getOrganizationRank(any()))
+                .willReturn(new OrganizationResponses(expected));
 
         // when
         ResultActions perform =
@@ -210,7 +213,8 @@ class OrganizationControllerTest extends RestDocumentTest {
                                 2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
                         new OrganizationResponse(
                                 3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
-        given(organizationService.getOrganizationRankByType(any(), any())).willReturn(expected);
+        given(organizationService.getOrganizationRankByType(any(), any()))
+                .willReturn(new OrganizationResponses(expected));
 
         // when
         ResultActions perform =
@@ -247,7 +251,8 @@ class OrganizationControllerTest extends RestDocumentTest {
                                 2L, "서울대학교", OrganizationType.UNIVERSITY, "snu.ac.kr", 10000L),
                         new OrganizationResponse(
                                 3L, "KAIST", OrganizationType.UNIVERSITY, "kaist.ac.kr", 1000L));
-        given(organizationService.searchOrganization(any(), any(), any())).willReturn(expected);
+        given(organizationService.searchOrganization(any(), any(), any()))
+                .willReturn(new OrganizationResponses(expected));
 
         // when
         ResultActions perform =

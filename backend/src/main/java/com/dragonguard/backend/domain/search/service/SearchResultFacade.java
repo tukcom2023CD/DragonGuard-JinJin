@@ -9,7 +9,9 @@ import com.dragonguard.backend.domain.search.dto.client.UserClientResponse;
 import com.dragonguard.backend.domain.search.dto.kafka.ScrapeResult;
 import com.dragonguard.backend.domain.search.dto.request.SearchRequest;
 import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponse;
+import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponses;
 import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponse;
+import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponses;
 import com.dragonguard.backend.domain.search.entity.Search;
 import com.dragonguard.backend.domain.search.entity.SearchType;
 import com.dragonguard.backend.global.annotation.TransactionService;
@@ -53,19 +55,19 @@ public class SearchResultFacade {
         resultService.saveAllResultsWithSearch(results, searchId, resultList);
     }
 
-    public List<UserResultSearchResponse> getUserSearchResultByClient(
+    public UserResultSearchResponses getUserSearchResultByClient(
             final String name, final Integer page) {
         final SearchRequest searchRequest = new SearchRequest(name, SearchType.USERS, page);
         final Search search = getSearch(searchRequest);
-        return searchUser(searchRequest, search);
+        return new UserResultSearchResponses(searchUser(searchRequest, search));
     }
 
-    public List<GitRepoResultResponse> getGitRepoSearchResultByClient(
+    public GitRepoResultResponses getGitRepoSearchResultByClient(
             final String name, final Integer page, final List<String> filters) {
         final SearchRequest searchRequest =
                 new SearchRequest(name, SearchType.REPOSITORIES, page, filters);
         final Search search = getSearch(searchRequest);
-        return searchRepo(searchRequest, search);
+        return new GitRepoResultResponses(searchRepo(searchRequest, search));
     }
 
     private Search getSearch(final SearchRequest searchRequest) {

@@ -2,7 +2,7 @@ package com.dragonguard.backend.domain.organization.controller;
 
 import com.dragonguard.backend.domain.organization.dto.request.AddMemberRequest;
 import com.dragonguard.backend.domain.organization.dto.request.OrganizationRequest;
-import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponse;
+import com.dragonguard.backend.domain.organization.dto.response.OrganizationResponses;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
 import com.dragonguard.backend.domain.organization.service.OrganizationEmailFacade;
 import com.dragonguard.backend.global.dto.IdResponse;
@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -49,27 +47,27 @@ public class OrganizationController {
 
     /** 조직 타입별 조회 api */
     @GetMapping
-    public ResponseEntity<List<OrganizationResponse>> getOrganizations(
+    public ResponseEntity<OrganizationResponses> getOrganizations(
             @RequestParam final OrganizationType type, final Pageable pageable) {
         return ResponseEntity.ok(organizationService.findByType(type, pageable));
     }
 
     /** 조직 자체의 랭킹을 페이징을 통해 조회하는 api */
     @GetMapping("/ranking/all")
-    public ResponseEntity<List<OrganizationResponse>> getOrganizationRank(final Pageable pageable) {
+    public ResponseEntity<OrganizationResponses> getOrganizationRank(final Pageable pageable) {
         return ResponseEntity.ok(organizationService.getOrganizationRank(pageable));
     }
 
     /** 조직의 타입별 랭킹을 페이징을 통해 조회하는 api */
     @GetMapping("/ranking")
-    public ResponseEntity<List<OrganizationResponse>> getOrganizationRankByType(
+    public ResponseEntity<OrganizationResponses> getOrganizationRankByType(
             @RequestParam final OrganizationType type, final Pageable pageable) {
         return ResponseEntity.ok(organizationService.getOrganizationRankByType(type, pageable));
     }
 
     /** 조직을 이름으로 검색하는 api */
     @GetMapping("/search")
-    public ResponseEntity<List<OrganizationResponse>> searchOrganization(
+    public ResponseEntity<OrganizationResponses> searchOrganization(
             @RequestParam final OrganizationType type,
             @RequestParam final String name,
             final Pageable pageable) {

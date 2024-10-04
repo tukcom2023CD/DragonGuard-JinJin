@@ -9,11 +9,11 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.dragonguard.backend.domain.admin.dto.request.AdminDecideRequest;
 import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationResponse;
+import com.dragonguard.backend.domain.admin.dto.response.AdminOrganizationResponses;
 import com.dragonguard.backend.domain.admin.service.AdminService;
 import com.dragonguard.backend.domain.organization.entity.OrganizationStatus;
 import com.dragonguard.backend.domain.organization.entity.OrganizationType;
@@ -57,7 +57,8 @@ class AdminControllerTest extends RestDocumentTest {
                                 2L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"),
                         new AdminOrganizationResponse(
                                 3L, "Google", OrganizationType.COMPANY, "gmail.com"));
-        given(adminService.decideRequestedOrganization(any())).willReturn(expected);
+        given(adminService.decideRequestedOrganization(any()))
+                .willReturn(new AdminOrganizationResponses(expected));
 
         ResultActions perform =
                 mockMvc.perform(
@@ -69,7 +70,7 @@ class AdminControllerTest extends RestDocumentTest {
                                                         1L, OrganizationStatus.ACCEPTED)))
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
-        perform.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
+        perform.andExpect(status().isOk());
 
         perform.andDo(print())
                 .andDo(
@@ -88,7 +89,8 @@ class AdminControllerTest extends RestDocumentTest {
                                 2L, "한국공학대학교", OrganizationType.UNIVERSITY, "tukorea.ac.kr"),
                         new AdminOrganizationResponse(
                                 3L, "Google", OrganizationType.COMPANY, "gmail.com"));
-        given(adminService.findOrganizationsByStatus(any(), any())).willReturn(expected);
+        given(adminService.findOrganizationsByStatus(any(), any()))
+                .willReturn(new AdminOrganizationResponses(expected));
 
         ResultActions perform =
                 mockMvc.perform(
@@ -96,7 +98,7 @@ class AdminControllerTest extends RestDocumentTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
-        perform.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
+        perform.andExpect(status().isOk());
 
         perform.andDo(print())
                 .andDo(

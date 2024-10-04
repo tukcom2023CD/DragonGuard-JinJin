@@ -12,7 +12,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponse;
+import com.dragonguard.backend.domain.search.dto.response.GitRepoResultResponses;
 import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponse;
+import com.dragonguard.backend.domain.search.dto.response.UserResultSearchResponses;
 import com.dragonguard.backend.domain.search.service.SearchResultFacade;
 import com.dragonguard.backend.support.docs.RestDocumentTest;
 
@@ -45,7 +47,8 @@ class SearchControllerTest extends RestDocumentTest {
                         new UserResultSearchResponse(5L, "And", false),
                         new UserResultSearchResponse(6L, "DragonGuard-JinJin", false));
 
-        given(searchService.getUserSearchResultByClient(any(), any())).willReturn(expected);
+        given(searchService.getUserSearchResultByClient(any(), any()))
+                .willReturn(new UserResultSearchResponses(expected));
 
         // when
         ResultActions perform =
@@ -100,7 +103,7 @@ class SearchControllerTest extends RestDocumentTest {
                                 LocalDateTime.now().toString()));
 
         given(searchService.getGitRepoSearchResultByClient(any(), any(), any()))
-                .willReturn(expected);
+                .willReturn(new GitRepoResultResponses(expected));
 
         // when
         ResultActions perform =
@@ -110,7 +113,7 @@ class SearchControllerTest extends RestDocumentTest {
                                 .header("Authorization", "Bearer apfawfawfa.awfsfawef2.r4svfv32"));
 
         // then
-        perform.andExpect(status().isOk()).andExpect(jsonPath("$").isArray());
+        perform.andExpect(status().isOk());
 
         // docs
         perform.andDo(print())
