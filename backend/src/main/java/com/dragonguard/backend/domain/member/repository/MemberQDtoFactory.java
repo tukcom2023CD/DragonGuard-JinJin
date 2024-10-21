@@ -1,10 +1,11 @@
 package com.dragonguard.backend.domain.member.repository;
 
+import static com.dragonguard.backend.domain.member.entity.QMember.member;
+
 import com.dragonguard.backend.domain.member.dto.response.QMemberRankResponse;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-
-import static com.dragonguard.backend.domain.member.entity.QMember.member;
 
 /**
  * @author 김승진
@@ -19,7 +20,11 @@ public class MemberQDtoFactory {
                 member.id,
                 member.name,
                 member.githubId,
-                member.sumOfTokens,
+                member.sumOfCommits
+                        .add(member.sumOfCodeReviews)
+                        .add(member.sumOfIssues)
+                        .add(member.sumOfPullRequests)
+                        .longValue(),
                 member.tier,
                 member.profileImage);
     }

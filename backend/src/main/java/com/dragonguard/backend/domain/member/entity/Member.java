@@ -120,10 +120,6 @@ public class Member implements Auditable {
     @Formula("(SELECT COALESCE(sum(cr.amount), 0) FROM code_review cr WHERE cr.member_id = id)")
     private Integer sumOfCodeReviews;
 
-    @Formula(
-            "(SELECT COALESCE(sum(h.amount), 0) FROM member m left join blockchain b on b.member_id = m.id left join history h on h.blockchain_id = b.id where m.id = id)")
-    private Long sumOfTokens;
-
     @Builder
     public Member(
             final String name,
@@ -139,6 +135,11 @@ public class Member implements Auditable {
         this.tier = Tier.SPROUT;
         this.authStep = authStep;
         addRoleIfAdmin(role);
+    }
+
+    public Long getSumOfTokens() {
+        return Integer.valueOf(sumOfCommits + sumOfIssues + sumOfPullRequests + sumOfCodeReviews)
+                .longValue();
     }
 
     private void addRoleIfAdmin(final Role role) {
