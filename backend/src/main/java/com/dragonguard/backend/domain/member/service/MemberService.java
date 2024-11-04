@@ -1,7 +1,5 @@
 package com.dragonguard.backend.domain.member.service;
 
-import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
-import com.dragonguard.backend.domain.blockchain.entity.History;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganization;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
 import com.dragonguard.backend.domain.gitorganization.service.GitOrganizationService;
@@ -67,20 +65,7 @@ public class MemberService implements EntityLoader<Member, UUID> {
 
     public void updateContributions() {
         final Member member = authService.getLoginUser();
-        if (isBlockchainUpdatable(member)) {
-            sendGitRepoAndContributionRequestToKafka(member.getGithubId());
-        }
-    }
-
-    public boolean isBlockchainUpdatable(final Member member) {
-        final List<Blockchain> blockchains = member.getBlockchains();
-        if (blockchains.isEmpty()) {
-            return true;
-        }
-        return blockchains.stream()
-                .map(Blockchain::getHistories)
-                .flatMap(List::stream)
-                .allMatch(History::isUpdatable);
+        sendGitRepoAndContributionRequestToKafka(member.getGithubId());
     }
 
     public MemberResponse getMember() {
@@ -119,18 +104,10 @@ public class MemberService implements EntityLoader<Member, UUID> {
     }
 
     private void sendContributionRequestToKafka(final String githubId) {
-        final Member member = getMemberByGithubId(githubId);
-        if (!isBlockchainUpdatable(member)) {
-            return;
-        }
         kafkaContributionClientProducer.send(new ContributionEvent(githubId));
     }
 
     private void sendRepositoryRequestToKafka(final String githubId) {
-        final Member member = getMemberByGithubId(githubId);
-        if (!isBlockchainUpdatable(member)) {
-            return;
-        }
         kafkaRepositoryProducer.send(new RepositoryEvent(githubId));
     }
 

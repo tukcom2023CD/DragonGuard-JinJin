@@ -1,13 +1,7 @@
 package com.dragonguard.backend.domain.member.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
-import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
-import com.dragonguard.backend.domain.blockchain.repository.BlockchainRepository;
-import com.dragonguard.backend.domain.blockchain.service.SmartContractService;
 import com.dragonguard.backend.domain.codereview.entity.CodeReview;
 import com.dragonguard.backend.domain.codereview.repository.CodeReviewRepository;
 import com.dragonguard.backend.domain.commit.entity.Commit;
@@ -33,10 +27,8 @@ import com.dragonguard.backend.support.fixture.organization.entity.OrganizationF
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -51,11 +43,9 @@ class MemberServiceTest extends LoginTest {
     @Autowired private CommitRepository commitRepository;
     @Autowired private IssueRepository issueRepository;
     @Autowired private PullRequestRepository pullRequestRepository;
-    @Autowired private BlockchainRepository blockchainRepository;
     @Autowired private OrganizationRepository organizationRepository;
     @Autowired private CodeReviewRepository codeReviewRepository;
     @Autowired private EntityManager em;
-    @MockBean private SmartContractService smartContractService;
 
     @Test
     @DisplayName("멤버 저장 기능이 수행되는가")
@@ -98,9 +88,6 @@ class MemberServiceTest extends LoginTest {
     void updateBlockchain() {
         // given
         int year = LocalDate.now().getYear();
-        List<Blockchain> before = loginUser.getBlockchains();
-        when(smartContractService.transfer(any(), any(), any())).thenReturn("123123");
-        when(smartContractService.balanceOf(any())).thenReturn(BigInteger.valueOf(200L));
 
         em.flush();
         em.clear();
@@ -120,7 +107,6 @@ class MemberServiceTest extends LoginTest {
         memberService.updateBlockchain();
 
         // then
-        List<Blockchain> after = loginUser.getBlockchains();
         //
         // assertThat(before.stream().map(Blockchain::getAmount).mapToLong(BigInteger::longValue).sum())
         //
@@ -133,13 +119,6 @@ class MemberServiceTest extends LoginTest {
         // given
         loginUser = authService.getLoginUser();
         int contributionNum = 20000;
-        Blockchain blockchain =
-                blockchainRepository.save(
-                        Blockchain.builder()
-                                .member(loginUser)
-                                .contributeType(ContributeType.COMMIT)
-                                .build());
-        blockchain.addHistory(BigInteger.valueOf(20000L), "woiufheawoiuerhg");
 
         loginUser.updateTier();
 

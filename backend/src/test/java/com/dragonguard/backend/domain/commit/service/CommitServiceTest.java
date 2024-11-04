@@ -2,7 +2,6 @@ package com.dragonguard.backend.domain.commit.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.commit.repository.CommitRepository;
 import com.dragonguard.backend.domain.member.repository.MemberRepository;
@@ -31,8 +30,7 @@ class CommitServiceTest extends LoginTest {
         commitService.saveContribution(
                 memberRepository.findById(loginUser.getId()).orElse(null),
                 100,
-                LocalDateTime.now().getYear(),
-                ContributeType.COMMIT);
+                LocalDateTime.now().getYear());
         Optional<Commit> commits =
                 commitRepository.findByMemberAndYear(loginUser, LocalDate.now().getYear());
 

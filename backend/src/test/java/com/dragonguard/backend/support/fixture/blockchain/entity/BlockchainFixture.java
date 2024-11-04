@@ -1,8 +1,6 @@
 package com.dragonguard.backend.support.fixture.blockchain.entity;
 
-import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
-import com.dragonguard.backend.domain.blockchain.entity.ContributeType;
-import com.dragonguard.backend.domain.member.entity.Member;
+import com.dragonguard.backend.domain.member.entity.ContributeType;
 
 import lombok.AllArgsConstructor;
 
@@ -16,8 +14,4 @@ public enum BlockchainFixture {
     ContributeType contributeType;
     BigInteger amount;
     String transactionHash;
-
-    public Blockchain toEntity(Member member) {
-        return new Blockchain(contributeType, member);
-    }
 }

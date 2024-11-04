@@ -1,14 +1,10 @@
 package com.dragonguard.backend.domain.codereview.service;
 
-import com.dragonguard.backend.domain.blockchain.dto.kafka.BlockchainEvent;
-import com.dragonguard.backend.domain.blockchain.service.BlockchainService;
 import com.dragonguard.backend.domain.codereview.entity.CodeReview;
 import com.dragonguard.backend.global.annotation.TransactionService;
-import com.dragonguard.backend.global.template.kafka.EventProducer;
 import com.dragonguard.backend.global.template.mapper.ContributionMapper;
 import com.dragonguard.backend.global.template.repository.ContributionRepository;
 import com.dragonguard.backend.global.template.service.ContributionService;
-import com.dragonguard.backend.utils.RedisRankingUtils;
 
 /**
  * @author 김승진
@@ -19,15 +15,7 @@ public class CodeReviewService extends ContributionService<CodeReview, Long> {
 
     public CodeReviewService(
             final ContributionRepository<CodeReview, Long> contributionRepository,
-            final ContributionMapper<CodeReview> commitMapper,
-            final EventProducer<BlockchainEvent> blockchainEventProducer,
-            final BlockchainService blockchainService,
-            final RedisRankingUtils redisRankingUtils) {
-        super(
-                contributionRepository,
-                commitMapper,
-                blockchainEventProducer,
-                blockchainService,
-                redisRankingUtils);
+            final ContributionMapper<CodeReview> commitMapper) {
+        super(contributionRepository, commitMapper);
     }
 }

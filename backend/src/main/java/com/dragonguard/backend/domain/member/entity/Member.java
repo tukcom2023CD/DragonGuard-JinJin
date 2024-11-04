@@ -1,6 +1,5 @@
 package com.dragonguard.backend.domain.member.entity;
 
-import com.dragonguard.backend.domain.blockchain.entity.Blockchain;
 import com.dragonguard.backend.domain.codereview.entity.CodeReview;
 import com.dragonguard.backend.domain.commit.entity.Commit;
 import com.dragonguard.backend.domain.gitorganization.entity.GitOrganizationMember;
@@ -83,9 +82,6 @@ public class Member implements Auditable {
 
     @OneToOne(mappedBy = "member")
     private CodeReview codeReview;
-
-    @OneToMany(mappedBy = "member")
-    private List<Blockchain> blockchains = new ArrayList<>();
 
     @JoinColumn
     @Where(clause = "organization_status = 'ACCEPTED'")
@@ -258,11 +254,6 @@ public class Member implements Auditable {
         updateTier();
     }
 
-    public void organizeBlockchain(final Blockchain blockchain) {
-        this.blockchains.add(blockchain);
-        updateTier();
-    }
-
     public boolean isServiceMember() {
         return this.authStep.isServiceMemberAuthStep();
     }
@@ -303,10 +294,6 @@ public class Member implements Auditable {
             this.codeReview.delete();
         }
         this.codeReview = null;
-        if (!blockchains.isEmpty()) {
-            this.blockchains.forEach(Blockchain::deleteByMember);
-            this.blockchains = new ArrayList<>();
-        }
         if (organization != null) {
             this.organization.deleteMember(this);
         }

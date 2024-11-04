@@ -3,7 +3,6 @@ package com.dragonguard.backend.domain.member.service;
 import com.dragonguard.backend.domain.member.dto.kafka.RepositoryEvent;
 import com.dragonguard.backend.domain.member.dto.request.WalletRequest;
 import com.dragonguard.backend.domain.member.dto.response.*;
-import com.dragonguard.backend.domain.member.entity.Member;
 import com.dragonguard.backend.global.annotation.TransactionService;
 import com.dragonguard.backend.global.template.kafka.EventProducer;
 
@@ -62,10 +61,6 @@ public class MemberFacade {
     }
 
     private void sendRepositoryRequestToKafka(final String githubId) {
-        final Member member = memberService.getMemberByGithubId(githubId);
-        if (!memberService.isBlockchainUpdatable(member)) {
-            return;
-        }
         kafkaRepositoryProducer.send(new RepositoryEvent(githubId));
     }
 
