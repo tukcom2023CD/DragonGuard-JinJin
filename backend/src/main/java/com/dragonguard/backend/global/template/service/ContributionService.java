@@ -1,7 +1,6 @@
 package com.dragonguard.backend.global.template.service;
 
 import com.dragonguard.backend.domain.member.entity.Member;
-import com.dragonguard.backend.global.annotation.DistributedLock;
 import com.dragonguard.backend.global.exception.EntityNotFoundException;
 import com.dragonguard.backend.global.template.entity.Contribution;
 import com.dragonguard.backend.global.template.mapper.ContributionMapper;
@@ -20,7 +19,6 @@ public abstract class ContributionService<T extends Contribution, ID>
     private final ContributionRepository<T, ID> contributionRepository;
     private final ContributionMapper<T> contributionMapper;
 
-    @DistributedLock(name = "#member.getGithubId().concat(#contributeType.name())")
     public void saveContribution(
             final Member member,
             final Integer contributionNum,
